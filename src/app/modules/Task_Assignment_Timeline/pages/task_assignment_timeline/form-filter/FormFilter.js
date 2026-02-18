@@ -4,7 +4,27 @@ import { DatePickerField } from "../../../../../../_metronic/_partials/controls"
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
-import { FileText, FileSpreadsheet, Sheet } from "lucide-react"; // Export icons
+import { FileText, FileSpreadsheet, Sheet, CirclePlus } from "lucide-react";
+
+/* ---------- PRIORITY LEGEND ---------- */
+const PriorityLegend = () => (
+  <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2">
+      <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
+      <span className="text-md">High</span>
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="w-3 h-3 rounded-full bg-orange-400 inline-block" />
+      <span className="text-md">Medium</span>
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="w-3 h-3 rounded-full bg-green-500 inline-block" />
+      <span className="text-md">Low</span>
+    </div>
+  </div>
+);
 
 export function FormFilter({
   employees = [],
@@ -12,16 +32,17 @@ export function FormFilter({
   ticketStatuses = [],
   priorityLevels = [],
   loading,
-  onPrint, 
+  onPrint,
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
+
   const uiProps = useMemo(
     () => ({
       queryParams: uiContext.queryParams || {},
       setQueryParams: uiContext.setQueryParams,
     }),
-    [uiContext],
+    [uiContext]
   );
 
   const ticketStatusOptions = [
@@ -61,8 +82,6 @@ export function FormFilter({
     uiContext.setShowFilter(true);
   };
 
-  
-
   const handleExport = (type) => {
     if (!queryParams.isFiltered) {
       alert("Please apply filter before downloading.");
@@ -77,16 +96,18 @@ export function FormFilter({
     onPrint(type);
   };
 
-
   return (
     <Formik
       enableReinitialize
       initialValues={{
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
         ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
-        priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
-        ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
-        ticketDateFrom: uiProps.queryParams?.filter?.ticketDateFrom || null,
+        priorityLevelIds:
+          uiProps.queryParams?.filter?.priorityLevelIds || [],
+        ticketDescription:
+          uiProps.queryParams?.filter?.ticketDescription || "",
+        ticketDateFrom:
+          uiProps.queryParams?.filter?.ticketDateFrom || null,
         ticketDateTo: uiProps.queryParams?.filter?.ticketDateTo || null,
         dueDateFrom: uiProps.queryParams?.filter?.dueDateFrom || null,
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
@@ -106,13 +127,13 @@ export function FormFilter({
                     name="ticketTypeIds"
                     label="Ticket Type"
                     value={ticketTypes.filter((tt) =>
-                      values.ticketTypeIds.includes(tt.value),
+                      values.ticketTypeIds.includes(tt.value)
                     )}
                     options={ticketTypes}
                     onChange={(items = []) =>
                       setFieldValue(
                         "ticketTypeIds",
-                        items.map((i) => i.value),
+                        items.map((i) => i.value)
                       )
                     }
                   />
@@ -124,13 +145,13 @@ export function FormFilter({
                     name="priorityLevelIds"
                     label="Priority Level"
                     value={priorityLevels.filter((pl) =>
-                      values.priorityLevelIds.includes(pl.value),
+                      values.priorityLevelIds.includes(pl.value)
                     )}
                     options={priorityLevels}
                     onChange={(items = []) =>
                       setFieldValue(
                         "priorityLevelIds",
-                        items.map((i) => i.value),
+                        items.map((i) => i.value)
                       )
                     }
                   />
@@ -143,7 +164,7 @@ export function FormFilter({
                     label="Ticket Status"
                     value={
                       ticketStatusOptions.find(
-                        (option) => option.value === values.ticketStatus,
+                        (o) => o.value === values.ticketStatus
                       ) || { label: "All", value: null }
                     }
                     options={[
@@ -153,7 +174,7 @@ export function FormFilter({
                     onChange={(e) =>
                       setFieldValue(
                         "ticketStatus",
-                        e?.value === null ? null : e.value,
+                        e?.value === null ? null : e.value
                       )
                     }
                   />
@@ -190,7 +211,9 @@ export function FormFilter({
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="To"
-                      onChange={(d) => setFieldValue("ticketDateTo", d || null)}
+                      onChange={(d) =>
+                        setFieldValue("ticketDateTo", d || null)
+                      }
                     />
                   </div>
                 </div>
@@ -206,14 +229,18 @@ export function FormFilter({
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="From"
-                      onChange={(d) => setFieldValue("dueDateFrom", d || null)}
+                      onChange={(d) =>
+                        setFieldValue("dueDateFrom", d || null)
+                      }
                     />
                     <Field
                       name="dueDateTo"
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="To"
-                      onChange={(d) => setFieldValue("dueDateTo", d || null)}
+                      onChange={(d) =>
+                        setFieldValue("dueDateTo", d || null)
+                      }
                     />
                   </div>
                 </div>
@@ -221,68 +248,77 @@ export function FormFilter({
             </fieldset>
           </Form>
 
-          {/* Buttons & Export Icons */}
-          <div className="flex justify-end gap-2 mt-2">
-            <button
-              type="button"
-              onClick={() => {
-                handleReset();
-                uiProps.setQueryParams({
-                  ...uiProps.queryParams,
-                  filter: {},
-                  pageNumber: 1,
-                  isFiltered: false,
-                });
-                uiContext.setShowFilter(false);
-              }}
-              className="btn btn-light"
-            >
-              Cancel
-            </button>
+          {/* ---------- LEGEND + BUTTON ROW ---------- */}
+          <div className="flex justify-between items-center mt-2">
+            <PriorityLegend />
 
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="btn btn-primary"
-            >
-              Filter
-              {loading && (
-                <span className="ml-3 mr-3 spinner spinner-white"></span>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={uiContext.addNewTicket}
+              >
+                <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" />{" "}
+                Add
+              </button>
+
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                disabled={loading}
+                className="btn btn-primary"
+              >
+                Filter
+                {loading && (
+                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  handleReset();
+                  uiProps.setQueryParams({
+                    ...uiProps.queryParams,
+                    filter: {},
+                    pageNumber: 1,
+                    isFiltered: false,
+                  });
+                  uiContext.setShowFilter(false);
+                }}
+                className="btn btn-light"
+              >
+                Cancel
+              </button>
+
+              {onPrint && (
+                <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
+                  <button
+                    type="button"
+                    className="border-none bg-transparent"
+                    onClick={() => handleExport("pdf")}
+                  >
+                    <FileText className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="border-none bg-transparent"
+                    onClick={() => handleExport("csv")}
+                  >
+                    <FileSpreadsheet className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="border-none bg-transparent"
+                    onClick={() => handleExport("excel")}
+                  >
+                    <Sheet className="w-4 h-4" />
+                  </button>
+                </div>
               )}
-            </button>
-
-            {/* Export Buttons */}
-            {onPrint && (
-              <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  onClick={() => handleExport("pdf")}
-                  disabled={loading || !queryParams.isFiltered || !hasRecords}
-                >
-                  <FileText className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  onClick={() => handleExport("csv")}
-                  disabled={loading || !queryParams.isFiltered || !hasRecords}
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  onClick={() => handleExport("excel")}
-                  disabled={loading || !queryParams.isFiltered || !hasRecords}
-                >
-                  <Sheet className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+            </div>
           </div>
         </>
       )}
