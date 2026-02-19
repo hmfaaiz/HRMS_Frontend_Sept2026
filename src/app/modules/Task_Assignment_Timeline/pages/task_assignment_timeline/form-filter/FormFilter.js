@@ -10,17 +10,41 @@ import { FileText, FileSpreadsheet, Sheet, CirclePlus } from "lucide-react";
 const PriorityLegend = () => (
   <div className="flex items-center gap-4">
     <div className="flex items-center gap-2">
-      <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
+      <span
+        style={{
+          width: "10px",
+          height: "10px",
+          borderRadius: "50%",
+          backgroundColor: "red",
+          display: "inline-block",
+        }}
+      ></span>
       <span className="text-md">High</span>
     </div>
 
     <div className="flex items-center gap-2">
-      <span className="w-3 h-3 rounded-full bg-orange-400 inline-block" />
+      <span
+        style={{
+          width: "10px",
+          height: "10px",
+          borderRadius: "50%",
+          backgroundColor: "orange",
+          display: "inline-block",
+        }}
+      ></span>
       <span className="text-md">Medium</span>
     </div>
 
     <div className="flex items-center gap-2">
-      <span className="w-3 h-3 rounded-full bg-green-500 inline-block" />
+      <span
+        style={{
+          width: "10px",
+          height: "10px",
+          borderRadius: "50%",
+          backgroundColor: "green",
+          display: "inline-block",
+        }}
+      ></span>
       <span className="text-md">Low</span>
     </div>
   </div>
@@ -42,7 +66,7 @@ export function FormFilter({
       queryParams: uiContext.queryParams || {},
       setQueryParams: uiContext.setQueryParams,
     }),
-    [uiContext]
+    [uiContext],
   );
 
   const ticketStatusOptions = [
@@ -102,12 +126,9 @@ export function FormFilter({
       initialValues={{
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
         ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
-        priorityLevelIds:
-          uiProps.queryParams?.filter?.priorityLevelIds || [],
-        ticketDescription:
-          uiProps.queryParams?.filter?.ticketDescription || "",
-        ticketDateFrom:
-          uiProps.queryParams?.filter?.ticketDateFrom || null,
+        priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
+        ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
+        ticketDateFrom: uiProps.queryParams?.filter?.ticketDateFrom || null,
         ticketDateTo: uiProps.queryParams?.filter?.ticketDateTo || null,
         dueDateFrom: uiProps.queryParams?.filter?.dueDateFrom || null,
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
@@ -127,13 +148,13 @@ export function FormFilter({
                     name="ticketTypeIds"
                     label="Ticket Type"
                     value={ticketTypes.filter((tt) =>
-                      values.ticketTypeIds.includes(tt.value)
+                      values.ticketTypeIds.includes(tt.value),
                     )}
                     options={ticketTypes}
                     onChange={(items = []) =>
                       setFieldValue(
                         "ticketTypeIds",
-                        items.map((i) => i.value)
+                        items.map((i) => i.value),
                       )
                     }
                   />
@@ -145,13 +166,13 @@ export function FormFilter({
                     name="priorityLevelIds"
                     label="Priority Level"
                     value={priorityLevels.filter((pl) =>
-                      values.priorityLevelIds.includes(pl.value)
+                      values.priorityLevelIds.includes(pl.value),
                     )}
                     options={priorityLevels}
                     onChange={(items = []) =>
                       setFieldValue(
                         "priorityLevelIds",
-                        items.map((i) => i.value)
+                        items.map((i) => i.value),
                       )
                     }
                   />
@@ -164,7 +185,7 @@ export function FormFilter({
                     label="Ticket Status"
                     value={
                       ticketStatusOptions.find(
-                        (o) => o.value === values.ticketStatus
+                        (o) => o.value === values.ticketStatus,
                       ) || { label: "All", value: null }
                     }
                     options={[
@@ -174,7 +195,7 @@ export function FormFilter({
                     onChange={(e) =>
                       setFieldValue(
                         "ticketStatus",
-                        e?.value === null ? null : e.value
+                        e?.value === null ? null : e.value,
                       )
                     }
                   />
@@ -211,9 +232,7 @@ export function FormFilter({
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="To"
-                      onChange={(d) =>
-                        setFieldValue("ticketDateTo", d || null)
-                      }
+                      onChange={(d) => setFieldValue("ticketDateTo", d || null)}
                     />
                   </div>
                 </div>
@@ -229,18 +248,14 @@ export function FormFilter({
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="From"
-                      onChange={(d) =>
-                        setFieldValue("dueDateFrom", d || null)
-                      }
+                      onChange={(d) => setFieldValue("dueDateFrom", d || null)}
                     />
                     <Field
                       name="dueDateTo"
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="To"
-                      onChange={(d) =>
-                        setFieldValue("dueDateTo", d || null)
-                      }
+                      onChange={(d) => setFieldValue("dueDateTo", d || null)}
                     />
                   </div>
                 </div>
@@ -258,8 +273,7 @@ export function FormFilter({
                 className="btn btn-primary"
                 onClick={uiContext.addNewTicket}
               >
-                <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" />{" "}
-                Add
+                <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" /> Add
               </button>
 
               <button
