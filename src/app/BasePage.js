@@ -453,6 +453,8 @@ const ticket_activity = lazy(()=>
 const task_dashboard = lazy(()=>
  import("./modules/Task_Dashboard/pages/index"))
 
+const subsidiary_wise_payroll_checklist = lazy(() =>
+import("./modules/Subsidiary_Wise_Payroll_Checklist/pages/index"))
 
 const PortalTicketCreation = lazy(()=>
 import("./modules/PortalFacilitatorTicketCreation/pages/index"))
@@ -650,6 +652,7 @@ const ROUTES = {
   ticket_time_report : ticket_time_report,
   ticket_activity : ticket_activity,
   task_dashboard : task_dashboard,
+  subsidiary_wise_payroll_checklist : subsidiary_wise_payroll_checklist,
   portal_ticket_creation : PortalTicketCreation,
   portal_ticket_time_report : portal_ticket_time_report,
   portal_ticket_calendar : portal_ticket_calendar,
