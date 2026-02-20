@@ -56,11 +56,11 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                   />
                   <StatsCard
                     icon={<TicketMinus className="w-5 h-5 text-white" />}
-                    name={"OverDue Tickets"}
+                    name={"Overdue Tickets"}
                     value={data?.totalOverDue?.count}
                     handleCardClick={() => {
                       setModalData({
-                        name: "OverDue Tickets",
+                        name: "Overdue Tickets",
                         data:
                           data?.totalOverDue?.rows?.map((el) => ({
                             ticket_Code: el?.ticketCode,
@@ -208,10 +208,10 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                       ...rest,
                     }),
                   )}
-                  name={"Pending In Porgress Ticket Time Log"}
+                  name={"Pending In Progress Ticket Time Log"}
                   handleClick={(e) =>
                     setModalData({
-                      name: "Pending In Porgress Ticket Time Log",
+                      name: "Pending In Progress Ticket Time Log",
                       data: e,
                     })
                   }
@@ -272,11 +272,11 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                   />
                   <StatsCard
                     icon={<TicketMinus className="w-5 h-5 text-white" />}
-                    name={"OverDue Task"}
+                    name={"Overdue Task"}
                     value={data?.totalOverDue?.count}
                     handleCardClick={() => {
                       setModalData({
-                        name: "OverDue Task",
+                        name: "Overdue Task",
                         data:
                           data?.totalOverDue?.rows?.map((el) => ({
                             ticket_Code: el?.ticketCode,
@@ -410,10 +410,10 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                       ...rest,
                     }),
                   )}
-                  name={"Pending In Porgress Task Time Log"}
+                  name={"Pending In Progress Task Time Log"}
                   handleClick={(e) =>
                     setModalData({
-                      name: "Pending In Porgress Task Time Log",
+                      name: "Pending In Progress Task Time Log",
                       data: e,
                     })
                   }

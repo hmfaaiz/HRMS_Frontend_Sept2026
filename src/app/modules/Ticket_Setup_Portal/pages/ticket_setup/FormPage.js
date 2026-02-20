@@ -34,6 +34,12 @@ export function FormPage({ history }) {
         "_blank",
       );
     },
+    openTicketTimeLogging: (query = null) => {
+      window.open(
+        `/time_logging_portal/read-all-time-log${query ? query : ""}`,
+        "_blank",
+      );
+    },
   };
 
   return (

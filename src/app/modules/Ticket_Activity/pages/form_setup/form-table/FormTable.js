@@ -55,7 +55,6 @@ export function FormTable() {
   useEffect(() => {
     if (
       commentsFilter?.ticketTypeId == 1 ||
-      commentsFilter?.ticketTypeId == 2 ||
       commentsFilter?.ticketTypeId == 3
     ) {
       dispatch(
@@ -74,7 +73,6 @@ export function FormTable() {
   const fetchSubTickets = useCallback(() => {
     if (
       commentsFilter?.ticketTypeId == 1 ||
-      commentsFilter?.ticketTypeId == 2 ||
       commentsFilter?.ticketTypeId == 3
     ) {
       dispatch(
@@ -177,7 +175,6 @@ export function FormTable() {
   return (
     <>
       {(commentsFilter?.ticketTypeId == 1 ||
-        commentsFilter?.ticketTypeId == 2 ||
         commentsFilter?.ticketTypeId == 3) &&
         commentsFilter?.ticketId && (
           <Accordion

@@ -47,7 +47,7 @@ export function FormTable() {
     }),
     shallowEqual,
   );
-console.log("currentState" , currentState)
+  console.log("currentState", currentState);
   const { totalCount, entities, listLoading } = currentState || {};
 
   const dispatch = useDispatch();
@@ -55,7 +55,6 @@ console.log("currentState" , currentState)
   useEffect(() => {
     if (
       commentsFilter?.ticketTypeId == 1 ||
-      commentsFilter?.ticketTypeId == 2 ||
       commentsFilter?.ticketTypeId == 3
     ) {
       dispatch(
@@ -74,7 +73,6 @@ console.log("currentState" , currentState)
   const fetchSubTickets = useCallback(() => {
     if (
       commentsFilter?.ticketTypeId == 1 ||
-      commentsFilter?.ticketTypeId == 2 ||
       commentsFilter?.ticketTypeId == 3
     ) {
       dispatch(
@@ -177,7 +175,6 @@ console.log("currentState" , currentState)
   return (
     <>
       {(commentsFilter?.ticketTypeId == 1 ||
-        commentsFilter?.ticketTypeId == 2 ||
         commentsFilter?.ticketTypeId == 3) &&
         commentsFilter?.ticketId && (
           <Accordion

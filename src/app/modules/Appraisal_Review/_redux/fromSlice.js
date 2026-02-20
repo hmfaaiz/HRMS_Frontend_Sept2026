@@ -7,6 +7,7 @@ const initialState = {
   entities: null,
   userForEdit: undefined,
   employee: [],
+  errorState: null,
 };
 
 export const callTypes = {
@@ -55,6 +56,12 @@ export const appraisalReviewSlice = createSlice({
       state.actionsLoading = false;
       state.userForEdit = null;
     },
-    
+    AppraisalReviewBulkUpdated: (state, action) => {
+      state.errorState = action.payload;
+      state.actionsLoading = false;
+    },
+    clearErrorState: (state, action) => {
+      state.errorState = null;
+    },
   },
 });

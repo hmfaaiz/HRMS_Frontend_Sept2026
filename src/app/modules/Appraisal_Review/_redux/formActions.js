@@ -47,21 +47,27 @@ export const fetchAppraisalReview = (payload) => async (dispatch) => {
 };
 
 export const createOrUpdateAppraisalReview = (payload, onHide) => async (
-  dispatch
+  dispatch,
 ) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .createOrUpdateAppraisalReview(payload)
 
     .then((response) => {
-      dispatch(actions.AppraisalReviewCreated());
-      onHide();
+      if (response?.data?.data?.isBulk) {
+        dispatch(actions.AppraisalReviewBulkUpdated(response?.data?.data));
+      } else {
+        dispatch(actions.AppraisalReviewCreated());
+        onHide();
+      }
     })
     .catch((error) => {
       error.clientMessage = "Can't find Appraisal record";
       toast.error(error?.response?.data?.message || error.clientMessage);
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      onHide();
+      if (!payload?.isBulk) {
+        onHide();
+      }
     });
 };
 
@@ -87,4 +93,8 @@ export const clearAppraisalReview = (onHide) => async (dispatch) => {
   if (onHide) {
     onHide();
   }
+};
+
+export const clearBulkPublishResult = (body) => (dispatch) => {
+  dispatch(actions.clearErrorState());
 };

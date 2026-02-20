@@ -54,6 +54,7 @@ export function FormUIProvider({ formUIEvents, children }) {
     openDeleteDialog: formUIEvents.openDeleteDialog,
     openDetailTimeLog: formUIEvents.openDetailTimeLog,
     openTicketActivity: formUIEvents.openTicketActivity,
+    openTicketTimeLogging : formUIEvents.openTicketTimeLogging,
   };
 
   return (
