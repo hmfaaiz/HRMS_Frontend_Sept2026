@@ -47,10 +47,15 @@ export const projectTimeLogSetupSlice = createSlice({
     },
     timeLogCreated: (state, action) => {
       state.actionsLoading = false;
+      state.entities.unshift(action.payload);
+      state.totalCount += 1;
       state.lastError = null;
     },
     timeLogUpdated: (state, action) => {
       state.actionsLoading = false;
+      state.entities = state.entities.map((entity) =>
+        entity.Id === action.payload.Id ? action.payload : entity,
+      );
       state.dataForEdit = null;
     },
     timeLogDeleted: (state, action) => {

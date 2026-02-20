@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { PriorityType, TicketType } from "../../../../../utils/common";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { Checkbox } from "../../../../../../_metronic/_partials/controls";
 
 const prepareFilter = (queryParams, values) => {
   const { searchText } = values;
@@ -69,7 +70,7 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
             <div className="grid grid-cols-3 gap-x-2 items-end">
-              <div className="grid grid-cols-4 gap-x-2 col-span-2">
+              <div className="grid grid-cols-5 gap-x-2 col-span-2">
                 <div>
                   <SearchSelect
                     name="projectId"
@@ -149,7 +150,7 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                     }}
                   />
                 </div>
-                <div>
+                <div >
                   <SearchSelect
                     name="ticketStatusId"
                     label={<span>Ticket Status</span>}
@@ -172,6 +173,23 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                         filter: {
                           ...formUIProps?.queryParams?.filter,
                           ticketStatusId: e?.value,
+                        },
+                      };
+                      formUIProps.setQueryParams(updateValue);
+                    }}
+                  />
+                </div>
+                 <div className="mt-7">
+                  <Checkbox
+                    isSelected={values?.isGroupByProject}
+                    children={"Project Wise - Ticket Code wise"}
+                    onChange={(e) => {
+                      setFieldValue("isGroupByProject", e?.target.checked);
+                      const updateValue = {
+                        ...formUIProps.queryParams,
+                        filter: {
+                          ...formUIProps?.queryParams?.filter,
+                          isGroupByProject: e?.target.checked,
                         },
                       };
                       formUIProps.setQueryParams(updateValue);

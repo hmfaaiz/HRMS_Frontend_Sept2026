@@ -31,6 +31,8 @@ export function FormCard() {
     csvLoading,
     excelLoading,
     userAccess,
+    report,
+    calendar,
   } = useSelector(
     (state) => ({
       ticket_setup_portal: state.auth.userAccess.ticket_setup_portal,
@@ -38,6 +40,8 @@ export function FormCard() {
       pdfLoading: state?.ticket_setup_portal?.pdfLoading,
       csvLoading: state?.ticket_setup_portal?.csvLoading,
       excelLoading: state?.ticket_setup_portal?.excelLoading,
+      report: state?.auth?.userAccess["portal_ticket_time_report"],
+      calendar: state?.auth?.userAccess["portal_ticket_calendar"],
     }),
     shallowEqual,
   );
@@ -102,6 +106,20 @@ export function FormCard() {
                     el?.isAccess,
                 ),
               },
+              {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) => el?.componentName === "ReadAllAssignmentReport",
+                ),
+              },
+              {
+                name: "Calendar",
+                link: "/portal_ticket_calendar/read-ticket-calendar",
+                isShow: calendar?.find(
+                  (el) => el?.componentName === "ReadTicketCalendar",
+                ),
+              },
             ]}
             isDashboardIcon={true}
           />
@@ -137,6 +155,20 @@ export function FormCard() {
                   (el) =>
                     el?.componentName === "UpdateProjectTimeline" &&
                     el?.isAccess,
+                ),
+              },
+              {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) => el?.componentName === "ReadAllAssignmentReport",
+                ),
+              },
+              {
+                name: "Calendar",
+                link: "/portal_ticket_calendar/read-ticket-calendar",
+                isShow: calendar?.find(
+                  (el) => el?.componentName === "ReadTicketCalendar",
                 ),
               },
             ]}

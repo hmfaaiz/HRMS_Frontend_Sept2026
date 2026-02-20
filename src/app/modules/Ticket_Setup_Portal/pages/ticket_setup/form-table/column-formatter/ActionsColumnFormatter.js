@@ -5,8 +5,9 @@ import {
   Eye,
   FolderClock,
   Pencil,
-  MessageSquareText ,
+  MessageSquareText,
   Trash2,
+  CalendarClockIcon,
 } from "lucide-react";
 
 export function ActionsColumnFormatter(
@@ -24,6 +25,9 @@ export function ActionsColumnFormatter(
     newButtonClick,
     isAccessForAdd,
     openTicketActivity,
+    isAccessForTimeLogging,
+    employeeId,
+    openTicketTimeLogging,
   },
 ) {
   return (
@@ -70,6 +74,25 @@ export function ActionsColumnFormatter(
             style={{ background: "none", border: "none", padding: 0 }}
           >
             <MessageSquareText className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
+      )}
+      {isAccessForTimeLogging && employeeId && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">Ticket Time Logging</Tooltip>
+          }
+        >
+          <button
+            type="button"
+            onClick={() => {
+              openTicketTimeLogging(
+                `?projectId=${row?.projectId}&ticketId=${row?.Id}`,
+              );
+            }}
+            style={{ background: "none", border: "none", padding: 0 }}
+          >
+            <CalendarClockIcon className="w-4 h-4 text-black cursor-pointer" />
           </button>
         </OverlayTrigger>
       )}

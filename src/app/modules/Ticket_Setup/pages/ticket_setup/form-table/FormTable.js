@@ -34,14 +34,21 @@ export function FormTable() {
       newButtonClick: formUIContext.newButtonClick,
       openDetailTimeLog: formUIContext.openDetailTimeLog,
       openTicketActivity: formUIContext.openTicketActivity,
+      openTicketTimeLogging: formUIContext.openTicketTimeLogging,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess, userAccessForTicketActiviy } = useSelector(
+  const {
+    currentState,
+    userAccess,
+    userAccessForTicketActiviy,
+    employeeId,
+  } = useSelector(
     (state) => ({
       currentState: state.ticket_setup,
       userAccess: state?.auth?.userAccess["ticket_setup"],
       userAccessForTicketActiviy: state?.auth?.userAccess["Task"],
+      employeeId: state?.auth?.user?.employeeIdMapping,
     }),
     shallowEqual,
   );
@@ -60,7 +67,12 @@ export function FormTable() {
   );
 
   const isAccessForTicketActivity = userAccessForTicketActiviy?.find(
-    (item) => item.componentName === "ReadTicketActivity",
+    (item) =>
+      item.componentName === "ReadTicketActivity" && item.portalType == 1,
+  );
+
+  const isAccessForTimeLogging = userAccessForTicketActiviy?.find(
+    (item) => item.componentName === "ReadAllTimeLog" && item.portalType == 1,
   );
 
   const isAccessForDelete = userAccess?.find(
@@ -151,11 +163,16 @@ export function FormTable() {
         openDeleteDialog: formUIProps.openDeleteDialog,
         openReadDialog: formUIProps.openReadDialog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
+        openTicketTimeLogging: formUIProps.openTicketTimeLogging,
+        employeeId: employeeId,
         openTicketActivity: formUIProps.openTicketActivity,
         newButtonClick: formUIProps.newButtonClick,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForTicketActivity: isAccessForTicketActivity
           ? isAccessForTicketActivity.isAccess
+          : false,
+        isAccessForTimeLogging: isAccessForTimeLogging
+          ? isAccessForTimeLogging.isAccess
           : false,
         isAccessForAdd: isAccessForAdd ? isAccessForAdd.isAccess : false,
         isAccessForDelete: isAccessForDelete

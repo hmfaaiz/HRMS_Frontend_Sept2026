@@ -171,7 +171,6 @@ export const createTicket = (
         dueDate: "",
         noOfHours: "",
         assignToEmpId: null,
-        ticketStatusId: null,
       });
     } else {
       onHide();
