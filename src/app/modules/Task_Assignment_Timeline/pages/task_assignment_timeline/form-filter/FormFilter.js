@@ -5,51 +5,7 @@ import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/Mu
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
 import { FileText, FileSpreadsheet, Sheet, CirclePlus } from "lucide-react";
-
-/* ---------- PRIORITY LEGEND ---------- */
-const PriorityLegend = () => (
-  <div className="flex items-center gap-4">
-    <div className="flex items-center gap-2">
-      <span
-        style={{
-          width: "10px",
-          height: "10px",
-          borderRadius: "50%",
-          backgroundColor: "red",
-          display: "inline-block",
-        }}
-      ></span>
-      <span className="text-md">High</span>
-    </div>
-
-    <div className="flex items-center gap-2">
-      <span
-        style={{
-          width: "10px",
-          height: "10px",
-          borderRadius: "50%",
-          backgroundColor: "orange",
-          display: "inline-block",
-        }}
-      ></span>
-      <span className="text-md">Medium</span>
-    </div>
-
-    <div className="flex items-center gap-2">
-      <span
-        style={{
-          width: "10px",
-          height: "10px",
-          borderRadius: "50%",
-          backgroundColor: "green",
-          display: "inline-block",
-        }}
-      ></span>
-      <span className="text-md">Low</span>
-    </div>
-  </div>
-);
-
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 export function FormFilter({
   employees = [],
   ticketTypes = [],
@@ -57,6 +13,8 @@ export function FormFilter({
   priorityLevels = [],
   loading,
   onPrint,
+  showTicketDetails,
+  onTicketDetailsChange,
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
@@ -78,7 +36,6 @@ export function FormFilter({
 
   const applyFilter = (values) => {
     const cleanFilter = { ...values };
-
     Object.keys(cleanFilter).forEach((k) => {
       if (
         cleanFilter[k] === null ||
@@ -88,7 +45,6 @@ export function FormFilter({
         delete cleanFilter[k];
       }
     });
-
     uiProps.setQueryParams({
       ...uiProps.queryParams,
       filter: {
@@ -102,7 +58,6 @@ export function FormFilter({
       csv: false,
       excel: false,
     });
-
     uiContext.setShowFilter(true);
   };
 
@@ -111,12 +66,10 @@ export function FormFilter({
       alert("Please apply filter before downloading.");
       return;
     }
-
     if (!hasRecords) {
       alert("No records available to download.");
       return;
     }
-
     onPrint(type);
   };
 
@@ -140,9 +93,7 @@ export function FormFilter({
           <Form className="form form-label-right">
             <fieldset>
               <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
-
               <div className="grid grid-cols-12 gap-4">
-                {/* Ticket Type */}
                 <div className="col-span-6 sm:col-span-3">
                   <MultiSelect
                     name="ticketTypeIds"
@@ -159,8 +110,6 @@ export function FormFilter({
                     }
                   />
                 </div>
-
-                {/* Priority Level */}
                 <div className="col-span-6 sm:col-span-3">
                   <MultiSelect
                     name="priorityLevelIds"
@@ -177,8 +126,6 @@ export function FormFilter({
                     }
                   />
                 </div>
-
-                {/* Ticket Status */}
                 <div className="col-span-6 sm:col-span-3">
                   <SearchSelect
                     name="ticketStatus"
@@ -200,8 +147,6 @@ export function FormFilter({
                     }
                   />
                 </div>
-
-                {/* Ticket Description */}
                 <div className="col-span-6 sm:col-span-3">
                   <label className="form-label">Ticket Description</label>
                   <Field
@@ -211,8 +156,6 @@ export function FormFilter({
                     placeholder="Ticket Description"
                   />
                 </div>
-
-                {/* Ticket Date */}
                 <div className="col-span-12 sm:col-span-6">
                   <p className="text-sm mb-0 text-black font-semibold">
                     Start Date falling between
@@ -236,8 +179,6 @@ export function FormFilter({
                     />
                   </div>
                 </div>
-
-                {/* Due Date */}
                 <div className="col-span-12 sm:col-span-6">
                   <p className="text-sm mb-0 text-black font-semibold">
                     Due Date falling between
@@ -263,11 +204,74 @@ export function FormFilter({
             </fieldset>
           </Form>
 
-          {/* ---------- LEGEND + BUTTON ROW ---------- */}
-          <div className="flex justify-between items-center mt-2">
-            <PriorityLegend />
+          {/* ── Legend row + buttons ── */}
+          <div className="flex justify-between items-center mt-2 flex-wrap gap-2">
+            {/* LEFT: Priority legend + Ticket Details checkbox */}
+            <div className="flex items-center gap-4 flex-wrap">
+              {/* High */}
+              <div className="flex items-center gap-2">
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    backgroundColor: "red",
+                    display: "inline-block",
+                  }}
+                />
+                <span className="text-md">High</span>
+              </div>
+              {/* Medium */}
+              <div className="flex items-center gap-2">
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    backgroundColor: "orange",
+                    display: "inline-block",
+                  }}
+                />
+                <span className="text-md">Medium</span>
+              </div>
+              {/* Low */}
+              <div className="flex items-center gap-2">
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    backgroundColor: "green",
+                    display: "inline-block",
+                  }}
+                />
+                <span className="text-md">Low</span>
+              </div>
 
-            <div className="flex justify-end gap-2">
+              {/* Divider */}
+              <span style={{ borderLeft: "1px solid #ccc", height: 18 }} />
+
+              {/* Ticket Details checkbox */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="ticketDetailsToggle"
+                  checked={showTicketDetails}
+                  onChange={(e) => onTicketDetailsChange(e.target.checked)}
+                  style={{ cursor: "pointer", width: 15, height: 15 }}
+                />
+                <label
+                  htmlFor="ticketDetailsToggle"
+                  className="text-md mb-0"
+                  style={{ cursor: "pointer", userSelect: "none" }}
+                >
+                  Show Ticket Detail
+                </label>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex justify-end gap-2 flex-wrap">
               <button
                 type="button"
                 className="btn btn-primary"
@@ -275,7 +279,6 @@ export function FormFilter({
               >
                 <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" /> Add
               </button>
-
               <button
                 type="submit"
                 onClick={handleSubmit}
@@ -284,10 +287,9 @@ export function FormFilter({
               >
                 Filter
                 {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  <span className="ml-3 mr-3 spinner spinner-white" />
                 )}
               </button>
-
               <button
                 type="button"
                 onClick={() => {
@@ -304,32 +306,52 @@ export function FormFilter({
               >
                 Cancel
               </button>
-
               {onPrint && (
                 <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
-                  <button
-                    type="button"
-                    className="border-none bg-transparent"
-                    onClick={() => handleExport("pdf")}
+                  {/* PDF */}
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="export-pdf-tooltip">Export PDF</Tooltip>
+                    }
                   >
-                    <FileText className="w-4 h-4" />
-                  </button>
+                    <button
+                      type="button"
+                      className="border-none bg-transparent"
+                      onClick={() => handleExport("pdf")}
+                    >
+                      <FileText className="w-4 h-4 cursor-pointer" />
+                    </button>
+                  </OverlayTrigger>
 
-                  <button
-                    type="button"
-                    className="border-none bg-transparent"
-                    onClick={() => handleExport("csv")}
+                  {/* CSV */}
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="export-csv-tooltip">Export CSV</Tooltip>
+                    }
                   >
-                    <FileSpreadsheet className="w-4 h-4" />
-                  </button>
+                    <button
+                      type="button"
+                      className="border-none bg-transparent"
+                      onClick={() => handleExport("csv")}
+                    >
+                      <FileSpreadsheet className="w-4 h-4 cursor-pointer" />
+                    </button>
+                  </OverlayTrigger>
 
-                  <button
-                    type="button"
-                    className="border-none bg-transparent"
-                    onClick={() => handleExport("excel")}
+                  {/* Excel */}
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="export-excel-tooltip">Export Excel</Tooltip>
+                    }
                   >
-                    <Sheet className="w-4 h-4" />
-                  </button>
+                    <button
+                      type="button"
+                      className="border-none bg-transparent"
+                      onClick={() => handleExport("excel")}
+                    >
+                      <Sheet className="w-4 h-4 cursor-pointer" />
+                    </button>
+                  </OverlayTrigger>
                 </div>
               )}
             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
@@ -9,34 +9,152 @@ import {
   PleaseWaitMessage,
 } from "../../../../../../_metronic/_helpers";
 import { format } from "date-fns";
-import {FormColumnFormatter} from "./column-formatter/FormColumnFormatter"
-export function FormTable({ ticketStatuses, ticketTypes, priorityLevels }) {
+import { FormColumnFormatter } from "./column-formatter/FormColumnFormatter";
+import { getUploadUrl } from "../../../../../utils/common";
+import axios from "axios";
+
+const API_URL = process.env.REACT_APP_API_URL;
+
+async function fetchAllDetails(masterId) {
+  const res = await axios.get(
+    `${API_URL}/facilitator_ticket_creation/read-all-facilitator-detail/${masterId}`
+  );
+  return res.data?.data?.Details || [];
+}
+
+const ticketStatusOptions = [
+  { value: 1, label: "Open" },
+  { value: 0, label: "Completed" },
+  { value: 3, label: "Re-opened" },
+  { value: 2, label: "In Review" },
+];
+
+function DetailSubTable({ masterId }) {
+  const [details, setDetails] = useState(null);
+
+  useEffect(() => {
+    if (!masterId) return;
+    fetchAllDetails(masterId)
+      .then((data) => setDetails(data))
+      .catch(() => setDetails([]));
+  }, [masterId]);
+
+  if (details === null)
+    return (
+      <div className="px-4 py-2 text-muted" style={{ fontStyle: "italic" }}>
+        Loading...
+      </div>
+    );
+
+  if (details.length === 0)
+    return (
+      <div className="px-4 py-2 text-muted" style={{ fontStyle: "italic" }}>
+        No detail records found.
+      </div>
+    );
+
+  return (
+    <div style={{ backgroundColor: "#f8f9fc", padding: "8px 24px" }}>
+      <table
+        className="table table-sm table-bordered mb-0"
+        style={{ fontSize: "0.85em" }}
+      >
+        <thead style={{ backgroundColor: "#009EF7", color: "#fff" }}>
+          <tr>
+            <th style={{ width: 20 }} />
+            <th>Ticket Type</th>
+            <th>Remarks</th>
+            <th>Updated By</th>
+            <th>File</th>
+            <th>Created Date</th>
+            <th>Due Date</th>
+            <th>From Time</th>
+            <th>To Time</th>
+            <th>No Of Hours</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {details.map((detail, idx) => {
+            const dueDate = detail.dueDate ? new Date(detail.dueDate) : null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (dueDate) dueDate.setHours(0, 0, 0, 0);
+            const isOverdue = dueDate && dueDate < today;
+
+            return (
+              <tr key={detail.Id || idx}>
+                <td>
+                  <span
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: detail.color || "#808080",
+                      display: "inline-block",
+                    }}
+                  />
+                </td>
+                <td>{detail.ticketType?.formName || ""}</td>
+                <td>
+                  {detail.remarks
+                    ? detail.remarks.length > 60
+                      ? <span title={detail.remarks}>{detail.remarks.substring(0, 60)}…</span>
+                      : detail.remarks
+                    : ""}
+                </td>
+                <td>{detail.AssignByProfile?.fullName || ""}</td>
+                <td>
+                  {detail.file ? (
+                    <a href={getUploadUrl(detail.file)} target="_blank" rel="noopener noreferrer">
+                      Attachment
+                    </a>
+                  ) : ""}
+                </td>
+                <td>{detail.createdAt ? format(new Date(detail.createdAt), "dd-MMM-yyyy") : ""}</td>
+                <td>
+                  {dueDate ? (
+                    <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? 600 : "normal" }}>
+                      {format(dueDate, "dd-MMM-yyyy")}
+                    </span>
+                  ) : ""}
+                </td>
+                <td>{detail.timeRangeFrom || ""}</td>
+                <td>{detail.timeRangeTo || ""}</td>
+                <td>{detail.noOfHours || ""}</td>
+                <td>
+                  {ticketStatusOptions.find((s) => s.value === detail.ticketStatus)?.label || ""}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+
+export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTicketDetails, onExpandedRowsChange }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const dispatch = useDispatch();
 
-  // const uiProps = useMemo(() => ({
-  //   ids: uiContext.ids,
-  //   setIds: uiContext.setIds,
-  //   queryParams: uiContext.queryParams,
-  //   setQueryParams: uiContext.setQueryParams,
-  // }), [uiContext]);
-  const uiProps = useMemo(
-  () => ({
-    ids: uiContext.ids,
-    setIds: uiContext.setIds,
-    queryParams: uiContext.queryParams,
-    setQueryParams: uiContext.setQueryParams,
-    openDetailGridData: uiContext.openDetailGridData,
-    openDetailTimeLog: uiContext.openDetailTimeLog,
-  }),
-  [uiContext]
-);
+  const [expandedRows, setExpandedRows] = useState([]);
 
-  const { currentState, allEmployees } = useSelector(
-    (state) => ({
-      currentState: state.task_assignment_timeline,
-      allEmployees: state.dashboard?.allEmployees || [],
+  const uiProps = useMemo(
+    () => ({
+      ids: uiContext.ids,
+      setIds: uiContext.setIds,
+      queryParams: uiContext.queryParams,
+      setQueryParams: uiContext.setQueryParams,
+      openDetailGridData: uiContext.openDetailGridData,
+      openDetailTimeLog: uiContext.openDetailTimeLog,
     }),
+    [uiContext]
+  );
+
+  const { currentState } = useSelector(
+    (state) => ({ currentState: state.task_assignment_timeline }),
     shallowEqual
   );
 
@@ -48,28 +166,39 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels }) {
     }
   }, [dispatch, uiProps.queryParams]);
 
+  useEffect(() => {
+    uiContext.setHasRecords(
+      uiProps.queryParams.isFiltered &&
+        Array.isArray(entities) &&
+        entities.length > 0
+    );
+  }, [entities, uiProps.queryParams.isFiltered]);
 
   useEffect(() => {
-  uiContext.setHasRecords(
-    uiProps.queryParams.isFiltered &&
-      Array.isArray(entities) &&
-      entities.length > 0
-  );
-}, [entities, uiProps.queryParams.isFiltered]);
+    setExpandedRows([]);
+    onExpandedRowsChange?.([]);
+  }, [uiProps.queryParams]);
+
+ 
+  useEffect(() => {
+    onExpandedRowsChange?.(expandedRows);
+  }, [expandedRows]);
+
+  const handleExpand = (row, isExpand) => {
+    setExpandedRows((prev) => {
+      const next = isExpand
+        ? prev.includes(row.Id) ? prev : [...prev, row.Id]
+        : prev.filter((id) => id !== row.Id);
+      return next;
+    });
+  };
 
   const getPriorityColor = (row) =>
     row.Details?.[0]?.color ||
     priorityLevels.find((p) => p.value === row.priorityLevelId)?.color ||
     "#808080";
 
-  const ticketStatusOptions = [
-    { value: 1, label: "Open" },
-    { value: 0, label: "Completed" },
-    { value: 3, label: "Re-opened" },
-    { value: 2, label: "In Review" },
-  ];
-
- const columns = [
+  const columns = [
     { dataField: "Id", text: "ID", hidden: true },
     {
       dataField: "priorityLevelId",
@@ -120,14 +249,11 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels }) {
       formatter: (_, row) => {
         const dueDate = row.Details?.[0]?.dueDate;
         if (!dueDate) return "";
-
         const due = new Date(dueDate);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         due.setHours(0, 0, 0, 0);
-
         const isOverdue = due < today;
-
         return (
           <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
             {format(due, "dd-MMM-yyyy")}
@@ -154,18 +280,12 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels }) {
       formatter: (_, row) => {
         const dueDate = row.Details?.[0]?.dueDate;
         if (!dueDate) return "";
-
         const due = new Date(dueDate);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         due.setHours(0, 0, 0, 0);
-
-        const isOverdue = due < today;
-
-        return isOverdue ? (
-          <span style={{ color: "red", fontWeight: 600 }}>
-            Over Due
-          </span>
+        return due < today ? (
+          <span style={{ color: "red", fontWeight: 600 }}>Over Due</span>
         ) : null;
       },
     },
@@ -177,16 +297,50 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels }) {
       formatExtraData: {
         openDetailGridData: uiProps.openDetailGridData,
         openDetailTimeLog: uiProps.openDetailTimeLog,
+        showTicketDetails,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
-      style: { minWidth: "100px" },
+      style: { minWidth: "80px" },
     },
   ];
-  // Use queryParams.pageSize directly to control visible rows
+
   const tableData = uiProps.queryParams.isFiltered
     ? entities?.slice(0, uiProps.queryParams.pageSize)
     : [];
+
+  const expandRow = showTicketDetails
+    ? {
+        renderer: (row) => <DetailSubTable masterId={row.Id} />,
+        expanded: expandedRows,
+        expandByColumnOnly: true,
+        onExpand: handleExpand,
+        showExpandColumn: true,
+        expandColumnPosition: "left",
+        expandHeaderColumnRenderer: () => null,
+        expandColumnRenderer: ({ expanded }) => (
+          <button
+            type="button"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: "0 2px",
+              fontSize: "11px",
+              display: "inline-block",
+              transition: "transform 0.15s",
+              transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
+            }}
+          >
+            ▶
+          </button>
+        ),
+      }
+    : {
+        renderer: () => null,
+        showExpandColumn: false,
+        expandByColumnOnly: true,
+      };
 
   return (
     <div className="timeline-scroll-wrapper">
@@ -199,6 +353,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels }) {
         keyField="Id"
         data={tableData}
         columns={columns}
+        expandRow={expandRow}
         onTableChange={getHandlerTableChange(uiProps.setQueryParams)}
       >
         <PleaseWaitMessage entities={tableData} />
