@@ -954,7 +954,7 @@ export function MasterEditForm({
                       <>
                         <hr />
                         <div className="grid grid-cols-2 gap-x-3">
-                          <div>
+                          <div className="border-2 border-black p-1 rounded-sm">
                             <FieldArray name="areaOfDevelopment">
                               {({ remove, push }) => (
                                 <>
@@ -1066,7 +1066,7 @@ export function MasterEditForm({
                               )}
                             </FieldArray>
                           </div>
-                          <div>
+                          <div className="border-2 border-black p-1 rounded-sm">
                             <FieldArray name="areaOfStrength">
                               {({ remove, push }) => (
                                 <>

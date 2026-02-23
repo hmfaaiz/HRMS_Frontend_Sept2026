@@ -432,14 +432,14 @@ export function FormEditForm({
               </fieldset>
             </Form>
             {isHREvaluation && (
-              <div className="p-2 border rounded-md ">
+              <div className="py-2 border rounded-md ">
                 <div className="flex items-center mb-0">
                   <button
                     type="button"
                     onClick={() => setAttSum(!attSum)}
                     className="btn btn-primary btn-elevate"
                   >
-                    Attendance Summary
+                  View Attendance Summary
                   </button>
                 </div>
                 {attSum && (
