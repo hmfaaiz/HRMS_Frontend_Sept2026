@@ -397,6 +397,15 @@ export function FormEditForm({
                           }}
                         />
                       </div>
+                      <div>
+                        <Checkbox
+                          isSelected={values?.excludeEmp}
+                          children={"Exclude Employee in Appraisal Process"}
+                          onChange={(e) => {
+                            setFieldValue("excludeEmp", e?.target?.checked);
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                   <hr className="col-span-2 lg:col-span-3" />

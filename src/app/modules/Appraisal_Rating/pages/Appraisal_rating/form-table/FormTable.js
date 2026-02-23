@@ -101,7 +101,7 @@ export function FormTable() {
     },
     {
       dataField: "points",
-      text: "Points",
+      text: "Rating Value",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

@@ -31,6 +31,8 @@ export function FormTable() {
       openDeleteDialog: formUIContext.openDeleteDialog,
       openReadDialog: formUIContext.openReadDialog,
       panelMode: formUIContext.panelMode,
+      subsidiaryId: formUIContext.subsidiaryId,
+      appraisalCategoryId: formUIContext.appraisalCategoryId,
       setPanelMode: formUIContext.setPanelMode,
     };
   }, [formUIContext]);
@@ -43,7 +45,7 @@ export function FormTable() {
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading } = currentState;
+  const { totalCount, entities, listLoading, actionsLoading } = currentState;
 
   //totalCount = 10
 
@@ -328,15 +330,37 @@ export function FormTable() {
                   <NoRecordsFoundMessage entities={entities} />
                 </BootstrapTable>
               </Pagination>
-              <div className="d-flex justify-content-end mt-3">
+              <div className="d-flex justify-content-end mt-3 gap-x-2 me-1">
                 <button
                   type="button"
                   className="btn btn-primary"
                   disabled={selectedIds.length === 0 || handleBulkLoading}
                   onClick={handleBulkAction}
                 >
-                  Publish Selected ({selectedIds.length})
+                  Finalized Selected ({selectedIds.length})
                   {handleBulkLoading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={
+                    actionsLoading ||
+                    !formUIProps?.appraisalCategoryId ||
+                    !formUIProps?.subsidiaryId
+                  }
+                  onClick={() =>
+                    dispatch(
+                      actions.salaryRecomendationReport({
+                        appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                        subsidiaryId: formUIProps?.subsidiaryId,
+                      }),
+                    )
+                  }
+                >
+                  Salary Recommendation Report
+                  {actionsLoading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}
                 </button>
