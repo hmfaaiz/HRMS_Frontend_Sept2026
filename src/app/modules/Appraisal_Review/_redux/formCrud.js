@@ -11,28 +11,37 @@ export function getAppraisalEmployee(body) {
 export function getAllAppraisalReview(body) {
   return axios.post(
     `${USERS_URL}/appraisal_review/read-all-appraisal-review`,
-    body
+    body,
   );
 }
 
 export function getAppraisalReview(body) {
   return axios.post(
     `${USERS_URL}/appraisal_review/read-appraisal-review`,
-    body
+    body,
   );
 }
 
 export function createOrUpdateAppraisalReview(body) {
   return axios.post(
     `${USERS_URL}/appraisal_review/create-appraisal-review`,
-    body
+    body,
   );
 }
-
 
 export function deleteAppraisalReview(body) {
   return axios.post(
     `${USERS_URL}/appraisal_review/delete-appraisal-review`,
-    body
+    body,
+  );
+}
+
+export function salaryRecomendationReport(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/salary-recommendation-report`,
+    body,
+    {
+      responseType: "arraybuffer",
+    },
   );
 }

@@ -37,6 +37,9 @@ export const appraisalReviewSlice = createSlice({
       state.actionsLoading = false;
       state.employee = action.payload;
     },
+    pdfFetched: (state, action) => {
+      state.actionsLoading = false;
+    },
     AppraisalReviewFetched: (state, action) => {
       const entities = action.payload.data?.data.rows;
       const totalResult = action.payload.data?.data.totalResults;
