@@ -12,6 +12,8 @@ const initialState = {
   ratingDetail: [],
   employeeDetail: null,
   appraisalEmpDetail: {},
+  isHREvaluation: false,
+
 };
 
 export const callTypes = {
@@ -54,6 +56,8 @@ export const appraisalEvaluationSlice = createSlice({
       state.ratingSelection = action.payload?.ratingSelection;
       state.ratingDetail = action.payload?.ratingDetail;
       state.employeeDetail = action.payload?.employeeDetail;
+      state.isHREvaluation = action.payload?.isHREvaluation;
+      state.appraisalEmpDetail = action.payload?.appraisalEmpDetail;
     },
     AppraisalEvaluationUpdated: (state, action) => {
       state.actionsLoading = false;
