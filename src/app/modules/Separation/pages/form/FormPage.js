@@ -113,8 +113,8 @@ export function FormPage() {
         
           status={revertMatch.params.status}
           title="Revert Record"
-          message="Are you sure you want to revert this record?"
-          confirmButtonText="Revert Record"
+          message="Are you sure you want to revert this separation record?"
+          confirmButtonText="Revert"
           onHide={() => history.push("/separation/read-all-separation")}
           actionName="revertSeparation"
         />

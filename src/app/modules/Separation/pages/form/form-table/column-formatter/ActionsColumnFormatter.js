@@ -45,7 +45,7 @@ export function ActionsColumnFormatter(
       {/* Revert */}
       {isAccessForRevert && row.separatedFlag && row.isRevertable &&(
         <OverlayTrigger
-          overlay={<Tooltip id={`edit-tooltip-${row?.employeeId}`}>Revert</Tooltip>}
+          overlay={<Tooltip id={`edit-tooltip-${row?.employeeId}`}>Revert Separation</Tooltip>}
         >
           <a onClick={() => openRevertFormDialog(row?.employeeId,true)}>
             <Undo2  className="w-4 h-4 text-black cursor-pointer" />
