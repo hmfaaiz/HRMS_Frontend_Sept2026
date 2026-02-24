@@ -26,12 +26,13 @@ const formValidation = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   interview_time: Yup.string()
     .required(VALIDATION_MESSAGES.required)
-    .trim()
-    .min(1, VALIDATION_MESSAGES.required) // catches empty string
-    .matches(
-      /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i,
-      "Enter time as hh:mm AM/PM"
-    ),
+    // .trim()
+    // .min(1, VALIDATION_MESSAGES.required) // catches empty string
+    // .matches(
+    //   /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i,
+    //   "Enter time as hh:mm AM/PM"
+    // ),
+    ,
   locationId: Yup.string().required(VALIDATION_MESSAGES.required),
   interviewers: Yup.array()
     .of(
@@ -174,13 +175,13 @@ export default function MasterEditForm({
       initialValues={data}
       validationSchema={formValidation}
       onSubmit={(values) => {
-         const payload = {
-                  ...values,
-                  interview_date: values.interview_date
-                    ? formatDates(values.interview_date, "dd-MMM-yyyy")
-                    : null,
+        const payload = {
+          ...values,
+          interview_date: values.interview_date
+            ? formatDates(values.interview_date, "dd-MMM-yyyy")
+            : null,
 
-                    }
+        }
 
 
         saveForm(payload);
@@ -195,6 +196,7 @@ export default function MasterEditForm({
         setFieldTouched,
       }) => (
         <>
+    { console.log("errors1111",errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -202,6 +204,7 @@ export default function MasterEditForm({
               </div>
             )}
             <Form className="form form-label-right">
+              
               <div >
                 <fieldset disabled={isUserForRead}>
                   <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
@@ -226,9 +229,9 @@ export default function MasterEditForm({
                       />
                     </div>
                     <div className="">
-                      <TimePickerField
+                      {/* <TimePickerField
                         className="form-control"
-                       
+
                         name="interview_time"
                         label={
                           <span>
@@ -241,6 +244,31 @@ export default function MasterEditForm({
                           values?.interview_time ? values.interview_time : ""
                         }
                         onChange={(val) => {
+                          setFieldValue("interview_time", val);
+                        }}
+                        onBlur={() => setFieldTouched("interview_time", true)}
+                        touched={touched.interview_time}
+                        errors={errors.interview_time}
+                      /> */}
+
+                      <label>
+                        <span>Interview Time
+                          <span style={{ color: "red" }}>*</span></span>
+                      </label>
+
+
+                      <input
+                        type="time"
+                        className="form-control"
+                        // disabled={!values.initiator}
+                        name="interview_time"
+                        step="60"
+                        value={
+                          values?.interview_time ? values.interview_time : ""
+                        }
+                        onChange={(e) => {
+
+                          const val = e.target.value;
                           setFieldValue("interview_time", val);
                         }}
                         onBlur={() => setFieldTouched("interview_time", true)}

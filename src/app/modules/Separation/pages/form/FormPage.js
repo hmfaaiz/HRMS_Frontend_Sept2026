@@ -19,6 +19,7 @@ export function FormPage() {
   const editMatch = useRouteMatch("/separation/read-all-separation/:id/edit");
   const newMatch = useRouteMatch("/separation/read-all-separation/new");
   const deleteMatch = useRouteMatch("/separation/read-all-separation/:id/:status/delete");
+  const revertMatch = useRouteMatch("/separation/read-all-separation/:id/:status/revert");
   const convertMatch = useRouteMatch("/separation/read-all-separation/:id/convert");
 
   const FormUIEvents = {
@@ -26,6 +27,7 @@ export function FormPage() {
     openEditFormDialog: (id) => history.push(`/separation/read-all-separation/${id}/edit`),
     openReadFormDialog: (id) => history.push(`/separation/read-all-separation/${id}/read`),
     openDeleteFormDialog: (id, status) => history.push(`/separation/read-all-separation/${id}/${status}/delete`),
+    openRevertFormDialog: (id, status) => history.push(`/separation/read-all-separation/${id}/${status}/revert`),
  
   };
   const {userAccess } = useSelector(
@@ -51,6 +53,12 @@ export function FormPage() {
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteSeparation"
   );
+
+
+  const isAccessForRevert = userAccess?.find(
+    (item) => item.componentName === "RevertSeparation"
+  );
+
 
 
   const accessUser = userAccess.find(
@@ -95,6 +103,20 @@ export function FormPage() {
           confirmButtonText="Delete Record"
           onHide={() => history.push("/separation/read-all-separation")}
           actionName="deleteSeparation"
+        />
+      )} 
+
+  {revertMatch && isAccessForRevert &&(
+        <FormDynamicDialogModal
+          show={true}
+          id={revertMatch.params.id}
+        
+          status={revertMatch.params.status}
+          title="Revert Record"
+          message="Are you sure you want to revert this record?"
+          confirmButtonText="Revert Record"
+          onHide={() => history.push("/separation/read-all-separation")}
+          actionName="revertSeparation"
         />
       )} 
  
