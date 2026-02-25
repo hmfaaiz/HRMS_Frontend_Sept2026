@@ -33,7 +33,7 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
       assignByToBeSelected: Yup.number()
         .nullable()
         .when("assignTo", (assignTo, schema) => {
-          if (Number(assignTo) === Number(currentUser)) {
+          if (Number(assignTo) === Number(currentUser) && !value.Id) {
             return schema
               .required("Assign By is required")
               .notOneOf(
@@ -251,7 +251,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
 
-
+{console.log("errors111",errors,values)}
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
@@ -346,7 +346,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  {Number(values?.assignTo) === Number(currentUser?.employeeIdMapping) && (
+                  {Number(values?.assignTo) === Number(currentUser?.employeeIdMapping) && !formData.Id &&(
                     <div className="">
                       <SearchSelect
                         name="assignByToBeSelected"

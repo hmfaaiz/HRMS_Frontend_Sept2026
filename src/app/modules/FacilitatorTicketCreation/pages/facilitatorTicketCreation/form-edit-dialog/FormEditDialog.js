@@ -55,7 +55,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     roles,
     centers,
     userStatusTypes,
-    isuserForRead,
+    isuserForRead, currentUser,
   } = useSelector((state) => ({
 
 
@@ -65,6 +65,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
     isuserForRead: state.facilitator_ticket_creation.userForRead,
+    currentUser: state.auth.user,
   }));
 
 
@@ -76,7 +77,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   const saveForm = async (formData, clearForm) => {
-
+console.log("formData111111",formData)
     formData.noOfHours = parseFloat(formData.noOfHours)
 
     formUIProps.setId("");
@@ -94,7 +95,11 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       } else if (typeof formData?.file == "string") {
         formData.file = formData.file;
       }
+      if (formData.assignTo !== currentUser?.employeeIdMapping){
+          delete formData.assignByToBeSelected
 
+      }
+      
 
 
       dispatch(actions.createTicketCreation(formData, disbaleLoading, clearForm));
@@ -128,7 +133,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         receiverSubsidiaryId: formData.receiverSubsidiaryId,
         assignBy: formData.assignBy,
         ticketStatus: formData.ticketStatus,
-      
+
 
 
 
@@ -152,7 +157,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       await dispatch(actions.updateTicketCreation(formUpdatedFields, disbaleLoading, clearForm));
 
       await dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
-      await  dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
+      await dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
     }
 
 
