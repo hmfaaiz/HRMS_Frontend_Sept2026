@@ -479,6 +479,9 @@ const ticket_activity_portal = lazy(()=>
 const project_timeline_portal = lazy(() =>
 import ("./modules/Project_Timeline_Portal/pages/index"))
 
+const task_configuration = lazy(() =>
+import ("./modules/TaskConfiguration/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -660,7 +663,8 @@ const ROUTES = {
   ticket_setup_portal : ticket_setup_portal,
   time_logging_portal : time_logging_portal,
   ticket_activity_portal : ticket_activity_portal,
-    project_timeline_portal : project_timeline_portal,
+  project_timeline_portal : project_timeline_portal,
+  task_configuration : task_configuration,
 
 };
 

@@ -16,7 +16,7 @@ import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
-import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
+import { FetchAllFacilitatorEmployee, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 
 // percentage: Yup.string().required("Required*"),
 const facilitator_ticket_creationEditSchema = (value) => {
@@ -141,13 +141,13 @@ export function FormEditForm({
   useEffect(() => {
     if (!formData.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
+      dispatch(fetchMasterTicketType());
       dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
       dispatch(FetchAllFacilitatorEmployee(formData?.ticketStatus));
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, allEmployees, facilitatorEmployeeList,currentUser } = useSelector((state) => {
+  const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
@@ -167,67 +167,28 @@ export function FormEditForm({
   ];
 
 
-  // const calculateHours = (fromTime, toTime) => {
-  //   if (!fromTime || !toTime) return 0;
 
-  //   // Convert string like "12:49 PM" to Date objects
-  //   const parseTime = (timeStr) => {
-  //     const [time, modifier] = timeStr.split(" "); // ["12:49", "PM"]
-  //     let [hours, minutes] = time.split(":").map(Number);
+  const calculateHours = (fromTime, toTime) => {
+    if (!fromTime || !toTime) return 0;
 
-  //     if (modifier === "PM" && hours < 12) hours += 12;
-  //     if (modifier === "AM" && hours === 12) hours = 0;
-
-  //     return { hours, minutes };
-  //   };
-
-  //   const from = parseTime(fromTime);
-  //   const to = parseTime(toTime);
-
-  //   // Total hours difference
-  //   let diffHours = to.hours - from.hours;
-  //   let diffMinutes = to.minutes - from.minutes;
-
-  //   if (diffMinutes < 0) {
-  //     diffMinutes += 60;
-  //     diffHours -= 1;
-  //   }
-
-  //   const totalHours = diffHours + diffMinutes / 60;
-
-  //   // Prevent negative hours
-   
-  //   return totalHours > 0 ? totalHours : 0;
-  // };
-
-  const setAssignTo = (setFieldValue) => {
-    console.log("setFieldValue111112222", facilitatorEmployeeList[0].value)
-
-   
-
-  }
-
-     const calculateHours = (fromTime, toTime) => {
-        if (!fromTime || !toTime) return 0;
-
-        // "13:45" → total minutes
-        const parseTime = (timeStr) => {
-            const [hours, minutes] = timeStr.split(":").map(Number);
-            return hours * 60 + minutes;
-        };
-
-        const fromMinutes = parseTime(fromTime);
-        const toMinutes = parseTime(toTime);
-
-        let diffMinutes = toMinutes - fromMinutes;
-
-        //  JIRA concept: next day consider
-        if (diffMinutes <= 0) {
-            diffMinutes += 24 * 60;
-        }
-
-        return diffMinutes / 60;
+    // "13:45" → total minutes
+    const parseTime = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
     };
+
+    const fromMinutes = parseTime(fromTime);
+    const toMinutes = parseTime(toTime);
+
+    let diffMinutes = toMinutes - fromMinutes;
+
+    //  JIRA concept: next day consider
+    if (diffMinutes <= 0) {
+      diffMinutes += 24 * 60;
+    }
+
+    return diffMinutes / 60;
+  };
 
 
   // useEffect(()=>{
@@ -277,7 +238,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
         <>
-     
+
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -310,12 +271,12 @@ export function FormEditForm({
                         // }
                       }}
                       value={
-                        dashboard.allTicketTypeList.find(
+                        dashboard.allMasterTicketType.find(
                           (option) => option.value === values.ticketTypeId
                         ) || null
                       }
-                      // options={dashboard.allTicketTypeList}
-                      options={dashboard.allTicketTypeList.filter(option => option.label !== "Escalation Ticket")}
+                      // options={dashboard.allMasterTicketType}
+                      options={dashboard.allMasterTicketType}
                       error={errors.ticketTypeId}
                       touched={touched.ticketTypeId}
                     />
@@ -368,41 +329,41 @@ export function FormEditForm({
                   </div> */}
 
                   <div className="">
-  <SearchSelect
-    name="assignTo"
-    label={
-      <span>
-        Assign To<span style={{ color: "red" }}>*</span>
-      </span>
-    }
-    // Disable if read mode, no initiator, or auto-assigned
-    isDisabled={
-      isUserForRead || 
-      !values.initiator || 
-      facilitatorEmployeeList?.length === 1
-    }
-    onChange={(e) => {
-      setFieldValue("assignTo", e.value || null);
-    }}
-    // Auto-assign if only 1 record
-    value={
-      facilitatorEmployeeList?.length === 1
-        ? facilitatorEmployeeList[0]
-        : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
-    }
-    // options={facilitatorEmployeeList.map((op)=>{
-    //   op.value==currentUser.employeeIdMapping
-    // })}
-  options={facilitatorEmployeeList.map(op => ({
-  label: op.label,
-  value: op.value,
-  isDisabled: String(op.value) == String(currentUser.employeeIdMapping)
-}))}
+                    <SearchSelect
+                      name="assignTo"
+                      label={
+                        <span>
+                          Assign To<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      // Disable if read mode, no initiator, or auto-assigned
+                      isDisabled={
+                        isUserForRead ||
+                        !values.initiator ||
+                        facilitatorEmployeeList?.length === 1
+                      }
+                      onChange={(e) => {
+                        setFieldValue("assignTo", e.value || null);
+                      }}
+                      // Auto-assign if only 1 record
+                      value={
+                        facilitatorEmployeeList?.length === 1
+                          ? facilitatorEmployeeList[0]
+                          : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
+                      }
+                      // options={facilitatorEmployeeList.map((op)=>{
+                      //   op.value==currentUser.employeeIdMapping
+                      // })}
+                      options={facilitatorEmployeeList.map(op => ({
+                        label: op.label,
+                        value: op.value,
+                        isDisabled: String(op.value) == String(currentUser.employeeIdMapping)
+                      }))}
 
-    error={errors.assignTo}
-    touched={touched.assignTo}
-  />
-</div>
+                      error={errors.assignTo}
+                      touched={touched.assignTo}
+                    />
+                  </div>
 
 
                   <div className="">
@@ -490,27 +451,27 @@ export function FormEditForm({
                     />
                   </div> */}
 
-      <div>
-                                        <label>
-                                            <span>From Time</span>
-                                        </label>
+                  <div>
+                    <label>
+                      <span>From Time</span>
+                    </label>
 
-                                        <input
-                                            type="time"
-                                            className="form-control"
-                                            // disabled={!values.initiator}
-                                            name="timeRangeFrom"
-                                            step="60"   //  minutes only (no seconds)
-                                            value={values.timeRangeFrom || ""}
-                                            onChange={(e) => {
-                                                const val = e.target.value;
-                                                setFieldValue("timeRangeFrom", val);
+                    <input
+                      type="time"
+                      className="form-control"
+                      // disabled={!values.initiator}
+                      name="timeRangeFrom"
+                      step="60"   //  minutes only (no seconds)
+                      value={values.timeRangeFrom || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFieldValue("timeRangeFrom", val);
 
-                                                const hours = calculateHours(val, values.timeRangeTo);
-                                                setFieldValue("noOfHours", hours.toFixed(2));
-                                            }}
-                                        />
-                                    </div>
+                        const hours = calculateHours(val, values.timeRangeTo);
+                        setFieldValue("noOfHours", hours.toFixed(2));
+                      }}
+                    />
+                  </div>
 
                   {/* <div className="">
                     <label>
@@ -537,27 +498,27 @@ export function FormEditForm({
                       errors={errors.timeRangeTo}
                     />
                   </div> */}
- <div>
-                                        <label>
-                                            <span>To Time</span>
-                                        </label>
+                  <div>
+                    <label>
+                      <span>To Time</span>
+                    </label>
 
-                                        <input
-                                            type="time"
-                                            className="form-control"
-                                            // disabled={!values.initiator}
-                                            name="timeRangeTo"
-                                            step="60"
-                                            value={values.timeRangeTo || ""}
-                                            onChange={(e) => {
-                                                const val = e.target.value;
-                                                setFieldValue("timeRangeTo", val);
+                    <input
+                      type="time"
+                      className="form-control"
+                      // disabled={!values.initiator}
+                      name="timeRangeTo"
+                      step="60"
+                      value={values.timeRangeTo || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFieldValue("timeRangeTo", val);
 
-                                                const hours = calculateHours(values.timeRangeFrom, val);
-                                                setFieldValue("noOfHours", hours.toFixed(2));
-                                            }}
-                                        />
-                                    </div>
+                        const hours = calculateHours(values.timeRangeFrom, val);
+                        setFieldValue("noOfHours", hours.toFixed(2));
+                      }}
+                    />
+                  </div>
 
 
                   <div className="">
@@ -1096,10 +1057,10 @@ export function FormEditForm({
               <button
                 type="button"
                 onClick={() => {
-                  
-          if ( facilitatorEmployeeList?.length === 1) {
-    values.assignTo = facilitatorEmployeeList[0].value;
-  }
+
+                  if (facilitatorEmployeeList?.length === 1) {
+                    values.assignTo = facilitatorEmployeeList[0].value;
+                  }
                   handleSubmit();
                   // setId("");
                   // handleReset();

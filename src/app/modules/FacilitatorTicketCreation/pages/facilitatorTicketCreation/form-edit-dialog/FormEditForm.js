@@ -142,7 +142,6 @@ export function FormEditForm({
   useEffect(() => {
     if (!formData.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
       dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
       dispatch(fetchMasterTicketType());
       dispatch(FetchAllFacilitatorEmployee(formData?.ticketStatus));
@@ -278,7 +277,7 @@ export function FormEditForm({
                           (option) => option.value === values.ticketTypeId
                         ) || null
                       }
-                      // options={dashboard.allTicketTypeList}
+                    
                       options={dashboard.allMasterTicketType}
                       error={errors.ticketTypeId}
                       touched={touched.ticketTypeId}

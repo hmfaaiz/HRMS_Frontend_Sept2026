@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 import { uploadFile } from "../../../../Dashboard/_redux/dashboardActions";
+import { formatDates } from "../../../../../utils/common";
 
 
 export function FormEditDialog({ id, show, onHide, userForRead }) {
@@ -77,9 +78,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   const saveForm = async (formData, clearForm) => {
-console.log("formData111111",formData)
-    formData.noOfHours = parseFloat(formData.noOfHours)
 
+    formData.noOfHours = parseFloat(formData.noOfHours)
+    formData.dueDate = formatDates(formData?.dueDate, "yyyy-MM-dd");
+    console.log("formData111111", formData)
     formUIProps.setId("");
 
     if (!formData.Id) {
@@ -95,11 +97,11 @@ console.log("formData111111",formData)
       } else if (typeof formData?.file == "string") {
         formData.file = formData.file;
       }
-      if (formData.assignTo !== currentUser?.employeeIdMapping){
-          delete formData.assignByToBeSelected
+      if (formData.assignTo !== currentUser?.employeeIdMapping) {
+        delete formData.assignByToBeSelected
 
       }
-      
+
 
 
       dispatch(actions.createTicketCreation(formData, disbaleLoading, clearForm));
