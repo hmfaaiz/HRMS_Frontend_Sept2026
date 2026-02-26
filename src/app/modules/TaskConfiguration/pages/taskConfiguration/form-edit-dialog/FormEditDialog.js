@@ -50,7 +50,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
     actionsLoading: state.users.actionsLoading,
-    user: state.users, // change for users to receipt
+    user: state.users,
     userForEdit: state.task_configuration.userForEdit,
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
@@ -109,11 +109,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       <FormEditDialogHeader id={id} isUserForRead={userForRead} />
       <FormEditForm
         saveForm={saveForm}
-        user={userForEdit || formUIProps.initUser}
+        formData={userForEdit || formUIProps.initUser}
         onHide={onHide}
         roles={roles}
-        centers={centers}
-        userStatusTypes={userStatusTypes}
+
         isUserForRead={userForRead}
         enableLoading={enableLoading}
         loading={loading}

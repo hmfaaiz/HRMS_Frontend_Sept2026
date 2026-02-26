@@ -41,7 +41,7 @@ const taskConfigEditSchema = Yup.object().shape({
 
 export function FormEditForm({
   saveForm,
-  user,
+  formData,
   actionsLoading,
   onHide,
   isUserForRead,
@@ -51,18 +51,17 @@ export function FormEditForm({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!user.Id) {
+    if (!formData.Id) {
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
 
       dispatch(fetchRoles());
     }
-  }, [dispatch, user.Id]);
+  }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, roles } = useSelector((state) => {
+  const { roles } = useSelector((state) => {
     return {
-      currentState: state.task_configuration,
-      userAccess: state?.auth?.userAccess["task_configuration"],
+   
       roles: state.users?.roles?.allRoles || []
     };
   }, shallowEqual);
@@ -71,7 +70,7 @@ export function FormEditForm({
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={user}
+      initialValues={formData}
       validationSchema={taskConfigEditSchema}
       onSubmit={(values) => {
         enableLoading();

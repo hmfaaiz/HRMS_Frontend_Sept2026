@@ -47,34 +47,7 @@ export function FormCard() {
   const { entities } = currentState;
 
   return (
-    // <>
-    //   <Card>
-    //     <CardHeader title={CurrentModuleName()}>
-    //       <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
-    //         <div className="col-6">
-    //           <FormFIlter />
-    //         </div>
-
-    //         <div className=" p-2">
-    //           <CardHeaderToolbar>
-    //             {accessUser && (
-    //               <button
-    //                 type="button"
-    //                 className="btn btn-primary"
-    //                 onClick={FormUIProps.newFormButtonClick}
-    //               >
-    //                 + Add Task Configuration
-    //               </button>
-    //             )}
-    //           </CardHeaderToolbar>
-    //         </div>
-    //       </div>
-    //     </CardHeader>
-
-    //     <CardBody>
-    //       <FormTable />
-    //     </CardBody>
-    //   </Card>
+   
       <TCard name={CurrentModuleName()}>
         <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
           <FormFIlter />
