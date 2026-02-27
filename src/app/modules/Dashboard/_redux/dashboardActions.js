@@ -829,3 +829,18 @@ export const fetchMasterTicketType = () => async (
       dispatch(actions.AllMasterTicketTypeFetched({}));
     });
 };
+
+export const fetchCompanyEmployeesData = () => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllCompanyEmployeesData()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllCompanyEmployeesDataFetched(entities));
+      return entities
+    })
+    .catch((error) => {
+      dispatch(actions.AllCompanyEmployeesDataFetched({}));
+    });
+};

@@ -105,6 +105,7 @@ export function ResponseColumnFormatter(
       >
         <a onClick={() => {
           setReceiveMode(true);
+          setReadMode(false)
           setId(row.Id);
         }}>
           <Reply className="w-4 h-4 text-black cursor-pointer" />
