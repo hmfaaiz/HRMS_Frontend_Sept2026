@@ -117,7 +117,7 @@ export function ActionsColumnFormatter(
       </OverlayTrigger>
 
       {/* Edit */}
-      {isAccessForEdit && row?.isActive && (
+      {isAccessForEdit && row?.isActive && employeeId == row?.Project?.projectOwnerEmpId && (
         <OverlayTrigger overlay={<Tooltip id={`edit-${row.Id}`}>Edit</Tooltip>}>
           <a className="cursor-pointer" onClick={() => openEditDialog(row.Id)}>
             <Pencil className="w-4 h-4 text-black" />

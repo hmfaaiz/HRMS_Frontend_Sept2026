@@ -63,7 +63,6 @@ const initialDashboardState = {
   employeeList: [], /// current Employee level report to employee
   logedInEmpoyee: null,
   leaveBalances: [],
-  profileInfo: null,
   contactInfo: null,
   experienceInfo: null,
   skillsInfo: null,
@@ -112,6 +111,8 @@ const initialDashboardState = {
   allTicket: [],
   ticket: {},
   allMasterTicketType: [],
+  portalInfo : {},
+  profileInfo : {},
   allCompanyEmployeesData: [],
 };
 
@@ -296,10 +297,6 @@ export const dashboardSlice = createSlice({
       state.error = null;
       state.leaveBalances = leaveBalances;
     },
-    ProfileInfoFetched: (state, action) => {
-      state.error = null;
-      state.profileInfo = action.payload;
-    },
     ContactInfoFetched: (state, action) => {
       state.error = null;
       state.contactInfo = action.payload;
@@ -470,7 +467,12 @@ export const dashboardSlice = createSlice({
     AllMasterTicketTypeFetched: (state, action) => {
       state.allMasterTicketType = action.payload;
     },
-    
+    ProfileInfoFetched: (state, action) => {
+      state.profileInfo = action.payload;
+    },
+    PortalInfoFetched: (state, action) => {
+      state.portalInfo = action.payload;
+    },
     AllCompanyEmployeesDataFetched: (state, action) => {
       state.allCompanyEmployeesData = action.payload;
     },
