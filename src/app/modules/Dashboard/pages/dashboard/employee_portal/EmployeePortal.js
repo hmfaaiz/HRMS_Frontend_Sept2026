@@ -420,7 +420,7 @@ const CompactViewCard = ({ Icon, name, link, count, showCount = true }) => {
         <div className="relative bg-tsecondary w-20 h-20 p-3 rounded-lg flex items-center justify-center">
           {/* Bell icon at top-left */}
           {count > 0 ? (
-            <Bell className="absolute -top-2 bg-tprimary rounded-full p-1 -left-2 w-5 h-5 text-tsecondary" />
+            <Bell className="absolute -top-2 bg-red-600 rounded-full p-1 -left-2 w-5 h-5 text-tsecondary" />
           ) : null}
           <h4 className="text-black font-bold text-base sm:text-xl">
             {count > 0 ? count : "00"}
