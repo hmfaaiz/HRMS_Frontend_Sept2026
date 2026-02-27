@@ -113,6 +113,7 @@ const initialDashboardState = {
   allMasterTicketType: [],
   portalInfo : {},
   profileInfo : {},
+  allCompanyEmployeesData: [],
 };
 
 export const callTypes = {
@@ -471,6 +472,9 @@ export const dashboardSlice = createSlice({
     },
     PortalInfoFetched: (state, action) => {
       state.portalInfo = action.payload;
+    },
+    AllCompanyEmployeesDataFetched: (state, action) => {
+      state.allCompanyEmployeesData = action.payload;
     },
 
   }

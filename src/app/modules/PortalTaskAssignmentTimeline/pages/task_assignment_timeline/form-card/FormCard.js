@@ -14,17 +14,17 @@ export function FormCard() {
 
   const { 
     allEmployees, 
-    ticketTypes, 
+    allMasterTicketType, 
     ticketStatuses, 
     priorityLevels,
     listLoading ,
     pdfLoading,
     csvLoading,
-    excelLoading
+    excelLoading,
   } = useSelector(
     (state) => ({
       allEmployees: state.dashboard?.allEmployees || [],
-      ticketTypes: state.dashboard?.allTicketTypeList || [],
+      allMasterTicketType: state.dashboard?.allMasterTicketType || [],
       ticketStatuses: state.dashboard?.allTicketStatus || [],
       priorityLevels: state.dashboard?.priorityLevelList || [],
       listLoading: state.portal_task_assignment_timeline?.listLoading,
@@ -56,7 +56,7 @@ export function FormCard() {
 
   useEffect(() => {
     dispatch(actions.FetchAllFacilitatorEmployee());
-    dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
+    dispatch(actions.fetchMasterTicketType());
     dispatch(actions.fetchAllTicketStatus());
     dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
   }, [dispatch]);
@@ -68,14 +68,14 @@ export function FormCard() {
       <FormFilter
         loading={listLoading || pdfLoading || csvLoading || excelLoading}
         employees={allEmployees}
-        ticketTypes={ticketTypes.filter(option => option.label !== "Escalation Ticket")}
+        ticketTypes={allMasterTicketType}
         ticketStatuses={ticketStatuses}
         priorityLevels={priorityLevels}
         onPrint={print}
       />
       <FormTable 
         ticketStatuses={ticketStatuses} 
-        ticketTypes={ticketTypes} 
+        ticketTypes={allMasterTicketType} 
         priorityLevels={priorityLevels}
       />
     

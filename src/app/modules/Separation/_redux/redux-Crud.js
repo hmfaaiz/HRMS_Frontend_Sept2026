@@ -54,3 +54,8 @@ export function uploadFile(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);
 }
 
+//Revert
+export function revertSeparation(id) {
+
+  return axios.put(`${USERS_URL}/separation/revert-separation/${id}`);
+}

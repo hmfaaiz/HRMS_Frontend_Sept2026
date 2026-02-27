@@ -4,7 +4,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Generatejob_offer_letter } from "../../../../_redux/redux-Actions";
-import { CirclePower, Download, Eye, Pencil, Send, Trash2 } from "lucide-react";
+import { CirclePower, Download, Eye, Pencil, Send, Trash2, Undo2 } from "lucide-react";
 export function ActionsColumnFormatter(
   cellContent,
   row,
@@ -21,7 +21,7 @@ export function ActionsColumnFormatter(
     isAccessForView,
     isAccessForDelete,
     isAccessForConvert,
-    isAccessForOfferLetter,
+    isAccessForOfferLetter,isAccessForRevert,openRevertFormDialog
   }
 ) {
   const isUserRead = false;
@@ -42,8 +42,18 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {/* Edit */}
-      {isAccessForEdit && !row.separatedFlag &&(
+      {/* Revert */}
+      {isAccessForRevert && row.separatedFlag && row.isRevertable &&(
+        <OverlayTrigger
+          overlay={<Tooltip id={`edit-tooltip-${row?.employeeId}`}>Revert Separation</Tooltip>}
+        >
+          <a onClick={() => openRevertFormDialog(row?.employeeId,true)}>
+            <Undo2  className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )} 
+      
+        {isAccessForEdit && !row.separatedFlag &&(
         <OverlayTrigger
           overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}
         >
@@ -62,15 +72,18 @@ export function ActionsColumnFormatter(
             </Tooltip>
           }
         >
-          {row.isActive ? (
+          {/* {row.isActive ? ( */}
             <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
-          ) : (
+          {/* ) 
+          : (
             <a onClick={() => openActiveFormDialog(row.Id, row.isActive)}>
               <CirclePower className="w-4 h-4 text-black cursor-pointer" />
             </a>
-          )}
+          )
+          
+          } */}
         </OverlayTrigger>
       )}
 

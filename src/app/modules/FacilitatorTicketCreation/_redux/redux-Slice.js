@@ -75,25 +75,9 @@ export const FacilitatorTicketCreationSlice = createSlice({
         },
 
         receiveFetched: (state, action) => {
-
-
-            // const entities = action.payload.data?.data.rows;
-
-            // const totalResult = action.payload.data?.data.totalResults;
-
-
-
-            // state.listLoading = false;
-            // state.error = null;
-            // state.receiveEntities = entities;
-            // state.receiveTotalCount = totalResult;
-
-
             const rows = action.payload.data?.data.rows || [];
             const totalResult = action.payload.data?.data.totalResults || 0;
 
-            // flatten all Details from all parents
-            // const allDetails = rows.flatMap(parent => parent.Details || []);
 
             const allDetails = rows.flatMap(parent =>
                 (parent.Details || []).map(detail => ({
@@ -154,7 +138,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
             // Backend se data aa raha hai (single object OR array)
             const data = action.payload;
-          
+
 
             state.listLoading = false;
             state.error = null;
@@ -174,8 +158,8 @@ export const FacilitatorTicketCreationSlice = createSlice({
         },
 
         TimeLogFetchedForEdit: (state, action) => {
-           
-   
+
+
             state.actionsLoading = false;
             state.timeLogForEdit = action.payload.timeLogForEdit;
             state.error = null;
@@ -183,36 +167,18 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
 
 
-
-
-
-        // ticketCreationCreated: (state, action) => {
-
-        //     state.actionsLoading = false;
-        //     state.error = null;
-        //     state.entities.unshift(action.payload);
-        // },
-
-
         ticketCreationCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
+            // state.entities.unshift(action.payload);
+            if (action.payload.receiver) {
+                state.receiveEntities.unshift(action.payload);
+            } else {
+                state.entities.unshift(action.payload);
+            }
 
-            // Clone the payload to avoid direct mutation
-            // let payload = JSON.stringify(action.payload);
-            // let payloadObj = JSON.parse(payload);
 
-            // // If basis_of_gratuityId is 0, set "Gross", if 1, set "Basis"
-            // if (payloadObj.basis_of_gratuityId == 0) {
 
-            //     payloadObj.basis_of_gratuity = "Gross";
-            // } else if (payloadObj.basis_of_gratuityId == 1) {
-
-            //     payloadObj.basis_of_gratuity = "Basis";
-            // }
-
-            // Add the modified payload to the beginning of the entities list
-            state.entities.unshift(action.payload);
         },
 
 

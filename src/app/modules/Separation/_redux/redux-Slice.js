@@ -103,6 +103,17 @@ export const SeparationSlice = createSlice({
       );
     },
 
+    SeparationReverted: (state, action) => {
+      state.error = null;
+      state.actionsLoading = false;
+
+      state.entities = state.entities.map((el) =>
+        el.Id === action.payload.Id
+          ? { ...el, separatedFlag: false, isRevertable: false }
+          : el
+      );
+    },
+
     JobPostedStatus: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
@@ -153,16 +164,16 @@ export const SeparationSlice = createSlice({
       });
     },
 
-     pdfFetched: (state, action) => {
-            state.pdfLoading = false;
-        },
+    pdfFetched: (state, action) => {
+      state.pdfLoading = false;
+    },
 
-        csvFetched: (state, action) => {
-            state.csvLoading = false;
-        },
+    csvFetched: (state, action) => {
+      state.csvLoading = false;
+    },
 
-        excelFetched: (state, action) => {
-            state.excelLoading = false;
-        },
+    excelFetched: (state, action) => {
+      state.excelLoading = false;
+    },
   },
 });
