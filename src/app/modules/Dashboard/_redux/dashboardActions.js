@@ -421,6 +421,48 @@ export const getAttendance = (setLoading) => (dispatch) => {
     });
 };
 
+export const getEmployeeProfileInfo = () => (dispatch) => {
+  return requestFromServer
+    .getEmpProfileInfo()
+    .then((res) => {
+      dispatch(actions.ProfileInfoFetched(res?.data?.data));
+    })
+    .catch((error) => {
+      toast.error(error?.response?.data?.message || "Something went wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+export const getEmployeePortalInfo = (setLoading) => (dispatch) => {
+  setLoading(true)
+  return requestFromServer
+    .getPortalInfo()
+    .then((res) => {
+      dispatch(actions.PortalInfoFetched(res?.data?.data));
+      setLoading(false);
+    })
+    .catch((error) => {
+      setLoading(false)
+      toast.error(error?.response?.data?.message || "Something went wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
 export const getCurrentTime = (setLoading) => (dispatch) => {
   return requestFromServer
     .getCurrentDateTime(Intl.DateTimeFormat().resolvedOptions().timeZone)
@@ -748,6 +790,15 @@ export const fetchUsersByCompanyId = (Id) => async (dispatch) => {
     .catch(() => {
       dispatch(actions.UsersByCompanyFetched([]));
     });
+};
+
+export const updateAndSetPortalDashboardView = (body , setVal) => async (dispatch) => {
+  return await requestFromServer
+    .updatePortalDashboardType(body)
+    .then((response) => {
+      let data = response?.data?.data ;
+      setVal(data);
+    })
 };
 
 export const fetchAllActiveCustomers = () => async (dispatch) => {

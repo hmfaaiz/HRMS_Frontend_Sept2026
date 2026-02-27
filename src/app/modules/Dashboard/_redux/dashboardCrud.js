@@ -156,9 +156,22 @@ export function getExitReason(id) {
   return axios.get(`${USERS_URL}/settings/read-all-exit-reason/${id}`);
 }
 
+export function updatePortalDashboardType(body) {
+  return axios.post(`${USERS_URL}/settings/update-portal-view` , body);
+}
+
 export async function getAttendance(body) {
   return axios.post(`${USERS_URL}/emp_portal/read-attendance` , body);
 }
+
+export async function getPortalInfo() {
+  return axios.get(`${USERS_URL}/emp_portal/get-employee-portal-info`);
+}
+
+export async function getEmpProfileInfo() {
+  return axios.get(`${USERS_URL}/emp_portal/get-employee-profile`);
+}
+
 
 export async function getCurrentDateTime(payload) {
   return axios.get(`https://timeapi.io/api/time/current/zone?timeZone=${payload}`);

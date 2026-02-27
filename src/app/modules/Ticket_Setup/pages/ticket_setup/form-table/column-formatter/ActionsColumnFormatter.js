@@ -124,7 +124,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Delete / Activate */}
-      {isAccessForDelete && row?.isActive && (
+      {isAccessForDelete && row?.isActive && employeeId == row?.Project?.projectOwnerEmpId && (
         <OverlayTrigger
           overlay={<Tooltip id={`action-${row.Id}`}>Delete</Tooltip>}
         >

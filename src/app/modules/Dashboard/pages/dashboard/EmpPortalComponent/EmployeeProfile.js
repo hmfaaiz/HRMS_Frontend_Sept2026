@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import { ChevronUp, StarIcon } from "lucide-react";
+import { ChevronUp, LayoutGrid, List, StarIcon } from "lucide-react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as action from "../../../_redux/dashboardActions";
 import useWindowSize from "../../../../../utils/useWindowSize";
 import { AttendanceMarking } from "./AttendanceMarking";
-import { Link } from "react-router-dom";
-import { JobRequestion } from "./JobRequestion";
-import { ResignationRequest } from "./EmployeeSeparation";
-import { AppraisalEvaluation } from "./AppraisalEvaluation";
-import { CompanyDocument } from "./CompanyDocument";
-const formatDate = (date, fmt) => (date ? format(new Date(date), fmt) : "N/A");
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const renderInfoGrid = (data, fields) => (
   <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
@@ -24,45 +19,24 @@ const renderInfoGrid = (data, fields) => (
   </div>
 );
 
-const renderStars = (ratingScale) => {
-  const rating = ratingScale / 2;
-  return [1, 2, 3, 4, 5].map((i) => (
-    <StarIcon
-      key={i}
-      size={13}
-      className={
-        rating >= i
-          ? "text-yellow-500 fill-yellow-500"
-          : rating >= i - 0.5
-          ? "text-yellow-400 fill-yellow-400"
-          : "text-gray-300"
-      }
-    />
-  ));
-};
-
-const EmployeeProfile = ({ isAttMarkShow }) => {
+const EmployeeProfile = ({
+  isAttMarkShow,
+  updateCompactView,
+  isCompactView,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const { width } = useWindowSize();
   const dispatch = useDispatch();
-  const { user, data, contactInfo, skillsInfo, leave } = useSelector(
+  const { profileInfo } = useSelector(
     (state) => ({
-      user: state?.auth?.user,
-      data: state?.dashboard?.profileInfo,
-      contactInfo: state?.dashboard?.contactInfo,
-      skillsInfo: state?.dashboard?.skillsInfo,
-      leave: state?.auth?.userAccess["Leave Request"],
+      profileInfo: state?.dashboard?.profileInfo,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   useEffect(() => {
-    if (user?.employeeIdMapping) {
-      dispatch(action.fetchProfileInfo(user.employeeIdMapping));
-      dispatch(action.fetchContactInfo(user.employeeIdMapping));
-      dispatch(action.fetchSkillsInfo(user.employeeIdMapping));
-    }
-  }, [user?.employeeIdMapping, dispatch]);
+    dispatch(action.getEmployeeProfileInfo());
+  }, []);
 
   useEffect(() => {
     if (width >= 1280) {
@@ -77,11 +51,49 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
   return (
     <>
       {/* Profile Header */}
-      <div className="p-3 rounded-lg bg-white w-full">
-        <div className="d-flex align-items-center">
+      <div className="p-3 rounded-lg bg-white w-full relative">
+        {/* Top right icons */}
+        {isAttMarkShow && (
+          <div className="absolute top-2 right-2 flex gap-1">
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="products-edit-tooltip">Compact View</Tooltip>
+              }
+            >
+              <button
+                onClick={() => updateCompactView()}
+                className={`p-1 rounded-sm transition-colors duration-200 w-7 h-7 border-none flex items-center justify-center ${
+                  isCompactView
+                    ? "bg-tprimary text-white"
+                    : "bg-gray-300 text-black hover:bg-gray-400"
+                }`}
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+            </OverlayTrigger>
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="products-edit-tooltip">Detail View</Tooltip>
+              }
+            >
+              <button
+                onClick={() => updateCompactView()}
+                className={`p-1 rounded-sm transition-colors duration-200 w-7 h-7 border-none flex items-center justify-center ${
+                  !isCompactView
+                    ? "bg-tprimary text-white"
+                    : "bg-gray-300 text-black hover:bg-gray-400"
+                }`}
+              >
+                <List className="w-4" />
+              </button>
+            </OverlayTrigger>
+          </div>
+        )}
+
+        <div className="d-flex align-items-center mt-2">
           <img
             src={
-              data?.profile_image ||
+              profileInfo?.profileInfo?.profile_image ||
               toAbsoluteUrl("/media/users/profileImage.png")
             }
             alt="Profile"
@@ -92,25 +104,30 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
               e.target.src = toAbsoluteUrl("/media/users/profileImage.png");
             }}
           />
-          <div className="text-black mx-5">
+          <div className="text-black mx-5 mt-5 relative">
             <h5 className="font-weight-boldest text-black">
-              {[data?.firstName, data?.middleName, data?.lastName]
+              {[
+                profileInfo?.profileInfo?.firstName,
+                profileInfo?.profileInfo?.middleName,
+                profileInfo?.profileInfo?.lastName,
+              ]
                 .filter(Boolean)
                 .join(" ")}
             </h5>
-            <p className="text-sm m-0">{data?.department?.deptName || ""}</p>
-            <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
+            <p className="text-sm m-0">
+              {profileInfo?.profileInfo?.department?.deptName || ""}
+            </p>
+            <p className="text-sm m-0">
+              {profileInfo?.profileInfo?.designation?.formName || ""}
+            </p>
           </div>
         </div>
-        {isAttMarkShow &&
-          leave?.find(
-            (el) => el?.componentName === "CreateLeaveRequest" && el?.isAccess
-          ) && <AttendanceMarking />}
+        {isAttMarkShow && <AttendanceMarking />}
       </div>
 
       {/* Employee Details */}
       <div className="px-5 py-2 rounded-lg bg-white w-full">
-        {data ? (
+        {profileInfo?.profileInfo ? (
           <>
             <div className="flex flex-row justify-between items-center">
               <h5 className="font-weight-bolder m-0 py-1">Employee Details</h5>
@@ -130,46 +147,59 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
                 {/* <h6 className="font-bold mb-0 text-primary my-2 mt-4">
                   Office Information
                 </h6> */}
-                {renderInfoGrid(data, [
-                  // ["Company", data?.company?.name],
-                  // ["Subsidiary", data?.subsidiary?.name],
+                {renderInfoGrid(profileInfo?.profileInfo, [
+                  // ["Company", profileInfo?.profileInfo?.company?.name],
+                  // ["Subsidiary", profileInfo?.profileInfo?.subsidiary?.name],
                   [
                     "Reporting To",
-                    data?.ReportTo
-                      ? `${data?.ReportTo?.firstName || ""} ${data?.ReportTo
-                          ?.middleName || ""} ${data?.ReportTo?.lastName ||
-                          ""}`.trim()
+                    profileInfo?.profileInfo?.ReportTo
+                      ? `${profileInfo?.profileInfo?.ReportTo?.firstName ||
+                          ""} ${profileInfo?.profileInfo?.ReportTo
+                          ?.middleName || ""} ${profileInfo?.profileInfo
+                          ?.ReportTo?.lastName || ""}`.trim()
                       : null,
                   ],
-                  ["Grade", data?.grade?.formName],
-                  // ["Payroll Group", data?.payrollGroup?.formName],
-                  // ["Team", data?.team?.formName],
-                  ["Employee Type", data?.employeeType?.formName],
-                  ["Employee Status", data?.employeeStatus?.formName],
-                  ["Default Shift", data?.defaultShift?.name],
+                  ["Grade", profileInfo?.profileInfo?.grade?.formName],
+                  // ["Payroll Group", profileInfo?.profileInfo?.payrollGroup?.formName],
+                  // ["Team", profileInfo?.profileInfo?.team?.formName],
+                  [
+                    "Employee Type",
+                    profileInfo?.profileInfo?.employeeType?.formName,
+                  ],
+                  [
+                    "Employee Status",
+                    profileInfo?.profileInfo?.employeeStatus?.formName,
+                  ],
+                  [
+                    "Default Shift",
+                    profileInfo?.profileInfo?.defaultShift?.name,
+                  ],
                 ])}
 
                 {/* Personal Information */}
                 {/* <h6 className="font-bold mb-0 text-primary my-2 mt-6">
                   Personal Information
                 </h6> */}
-                {renderInfoGrid(data, [
-                  // ["Country", data?.country?.name],
-                  // ["City", data?.city?.name],
-                  ["Location", data?.location?.formName],
-                  // ["Region", data?.region?.formName],
-                  // ["Gender", data?.gender],
-                  ["Date of Joining", data?.dateOfJoining],
-                  ["Date of Confirmation", data?.dateOfConfirmation],
+                {renderInfoGrid(profileInfo?.profileInfo, [
+                  // ["Country", profileInfo?.profileInfo?.country?.name],
+                  // ["City", profileInfo?.profileInfo?.city?.name],
+                  ["Location", profileInfo?.profileInfo?.location?.formName],
+                  // ["Region", profileInfo?.profileInfo?.region?.formName],
+                  // ["Gender", profileInfo?.profileInfo?.gender],
+                  ["Date of Joining", profileInfo?.profileInfo?.dateOfJoining],
+                  [
+                    "Date of Confirmation",
+                    profileInfo?.profileInfo?.dateOfConfirmation,
+                  ],
                   // [
                   //   "Date of Birth",
-                  //   formatDate(data?.dateOfBirth, "dd-MMM-yyyy"),
+                  //   formatDate(profileInfo?.profileInfo?.dateOfBirth, "dd-MMM-yyyy"),
                   // ],
-                  ["ID Card No", data?.nic_no],
-                  // ["Official Email", data?.email_official],
-                  // ["Cell No", data?.phone_cell],
-                  // ["Phone (Home)", data?.phone_home],
-                  // ["Passport No", data?.passportNo],
+                  ["ID Card No", profileInfo?.profileInfo?.nic_no],
+                  // ["Official Email", profileInfo?.profileInfo?.email_official],
+                  // ["Cell No", profileInfo?.profileInfo?.phone_cell],
+                  // ["Phone (Home)", profileInfo?.profileInfo?.phone_home],
+                  // ["Passport No", profileInfo?.profileInfo?.passportNo],
                 ])}
               </>
             )}
@@ -185,27 +215,16 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
           <h6 className="font-bold mb-0 text-primary my-2">
             Emergency Contact
           </h6>
-          {contactInfo?.length > 0 ? (
-            renderInfoGrid(contactInfo[0], [
-              ["Name", contactInfo[0]?.relation_name],
-              ["Relation", contactInfo[0]?.relation_text],
-              ["Contact No", contactInfo[0]?.contactNo],
+          {profileInfo?.contactInfo?.length > 0 ? (
+            renderInfoGrid(profileInfo?.contactInfo[0], [
+              ["Name", profileInfo?.contactInfo[0]?.relation_name],
+              ["Relation", profileInfo?.contactInfo[0]?.relation_text],
+              ["Contact No", profileInfo?.contactInfo[0]?.contactNo],
             ])
           ) : (
             <p className="text-sm mb-0">No Contact Info Found</p>
           )}
         </div>
-      )}
-
-      {/* Skills */}
-      {isOpen && (
-        <>
-          {" "}
-          {/* <ResignationRequest />
-          <AppraisalEvaluation />
-          <JobRequestion />
-          <CompanyDocument /> */}
-        </>
       )}
     </>
   );
