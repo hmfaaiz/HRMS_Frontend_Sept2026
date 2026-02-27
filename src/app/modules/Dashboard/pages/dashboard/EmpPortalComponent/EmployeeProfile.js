@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import { ChevronUp, LayoutGrid, List, StarIcon } from "lucide-react";
+import { ChevronUp, LayoutGrid, List, StarIcon, UsersRound } from "lucide-react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as action from "../../../_redux/dashboardActions";
 import useWindowSize from "../../../../../utils/useWindowSize";
@@ -23,6 +23,8 @@ const EmployeeProfile = ({
   isAttMarkShow,
   updateCompactView,
   isCompactView,
+  team,
+  setAttModalData,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { width } = useWindowSize();
@@ -124,110 +126,173 @@ const EmployeeProfile = ({
         </div>
         {isAttMarkShow && <AttendanceMarking />}
       </div>
-
-      {/* Employee Details */}
-      <div className="px-5 py-2 rounded-lg bg-white w-full">
-        {profileInfo?.profileInfo ? (
-          <>
-            <div className="flex flex-row justify-between items-center">
-              <h5 className="font-weight-bolder m-0 py-1">Employee Details</h5>
-              {width < 1280 && (
-                <ChevronUp
-                  onClick={() => setIsOpen((prev) => !prev)}
-                  className={`w-5 h-5 font-bold cursor-pointer ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
-                />
-              )}
-            </div>
-
-            {/* Office Information */}
-            {isOpen && (
+      {!isCompactView ? (
+        <>
+          {/* Employee Details */}
+          <div className="px-5 py-2 rounded-lg bg-white w-full">
+            {profileInfo?.profileInfo ? (
               <>
-                {/* <h6 className="font-bold mb-0 text-primary my-2 mt-4">
+                <div className="flex flex-row justify-between items-center">
+                  <h5 className="font-weight-bolder m-0 py-1">
+                    Employee Details
+                  </h5>
+                  {width < 1280 && (
+                    <ChevronUp
+                      onClick={() => setIsOpen((prev) => !prev)}
+                      className={`w-5 h-5 font-bold cursor-pointer ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  )}
+                </div>
+
+                {/* Office Information */}
+                {isOpen && (
+                  <>
+                    {/* <h6 className="font-bold mb-0 text-primary my-2 mt-4">
                   Office Information
                 </h6> */}
-                {renderInfoGrid(profileInfo?.profileInfo, [
-                  // ["Company", profileInfo?.profileInfo?.company?.name],
-                  // ["Subsidiary", profileInfo?.profileInfo?.subsidiary?.name],
-                  [
-                    "Reporting To",
-                    profileInfo?.profileInfo?.ReportTo
-                      ? `${profileInfo?.profileInfo?.ReportTo?.firstName ||
-                          ""} ${profileInfo?.profileInfo?.ReportTo
-                          ?.middleName || ""} ${profileInfo?.profileInfo
-                          ?.ReportTo?.lastName || ""}`.trim()
-                      : null,
-                  ],
-                  ["Grade", profileInfo?.profileInfo?.grade?.formName],
-                  // ["Payroll Group", profileInfo?.profileInfo?.payrollGroup?.formName],
-                  // ["Team", profileInfo?.profileInfo?.team?.formName],
-                  [
-                    "Employee Type",
-                    profileInfo?.profileInfo?.employeeType?.formName,
-                  ],
-                  [
-                    "Employee Status",
-                    profileInfo?.profileInfo?.employeeStatus?.formName,
-                  ],
-                  [
-                    "Default Shift",
-                    profileInfo?.profileInfo?.defaultShift?.name,
-                  ],
-                ])}
+                    {renderInfoGrid(profileInfo?.profileInfo, [
+                      // ["Company", profileInfo?.profileInfo?.company?.name],
+                      // ["Subsidiary", profileInfo?.profileInfo?.subsidiary?.name],
+                      [
+                        "Reporting To",
+                        profileInfo?.profileInfo?.ReportTo
+                          ? `${profileInfo?.profileInfo?.ReportTo?.firstName ||
+                              ""} ${profileInfo?.profileInfo?.ReportTo
+                              ?.middleName || ""} ${profileInfo?.profileInfo
+                              ?.ReportTo?.lastName || ""}`.trim()
+                          : null,
+                      ],
+                      ["Grade", profileInfo?.profileInfo?.grade?.formName],
+                      // ["Payroll Group", profileInfo?.profileInfo?.payrollGroup?.formName],
+                      // ["Team", profileInfo?.profileInfo?.team?.formName],
+                      [
+                        "Employee Type",
+                        profileInfo?.profileInfo?.employeeType?.formName,
+                      ],
+                      [
+                        "Employee Status",
+                        profileInfo?.profileInfo?.employeeStatus?.formName,
+                      ],
+                      [
+                        "Default Shift",
+                        profileInfo?.profileInfo?.defaultShift?.name,
+                      ],
+                    ])}
 
-                {/* Personal Information */}
-                {/* <h6 className="font-bold mb-0 text-primary my-2 mt-6">
+                    {/* Personal Information */}
+                    {/* <h6 className="font-bold mb-0 text-primary my-2 mt-6">
                   Personal Information
                 </h6> */}
-                {renderInfoGrid(profileInfo?.profileInfo, [
-                  // ["Country", profileInfo?.profileInfo?.country?.name],
-                  // ["City", profileInfo?.profileInfo?.city?.name],
-                  ["Location", profileInfo?.profileInfo?.location?.formName],
-                  // ["Region", profileInfo?.profileInfo?.region?.formName],
-                  // ["Gender", profileInfo?.profileInfo?.gender],
-                  ["Date of Joining", profileInfo?.profileInfo?.dateOfJoining],
-                  [
-                    "Date of Confirmation",
-                    profileInfo?.profileInfo?.dateOfConfirmation,
-                  ],
-                  // [
-                  //   "Date of Birth",
-                  //   formatDate(profileInfo?.profileInfo?.dateOfBirth, "dd-MMM-yyyy"),
-                  // ],
-                  ["ID Card No", profileInfo?.profileInfo?.nic_no],
-                  // ["Official Email", profileInfo?.profileInfo?.email_official],
-                  // ["Cell No", profileInfo?.profileInfo?.phone_cell],
-                  // ["Phone (Home)", profileInfo?.profileInfo?.phone_home],
-                  // ["Passport No", profileInfo?.profileInfo?.passportNo],
-                ])}
+                    {renderInfoGrid(profileInfo?.profileInfo, [
+                      // ["Country", profileInfo?.profileInfo?.country?.name],
+                      // ["City", profileInfo?.profileInfo?.city?.name],
+                      [
+                        "Location",
+                        profileInfo?.profileInfo?.location?.formName,
+                      ],
+                      // ["Region", profileInfo?.profileInfo?.region?.formName],
+                      // ["Gender", profileInfo?.profileInfo?.gender],
+                      [
+                        "Date of Joining",
+                        profileInfo?.profileInfo?.dateOfJoining,
+                      ],
+                      [
+                        "Date of Confirmation",
+                        profileInfo?.profileInfo?.dateOfConfirmation,
+                      ],
+                      // [
+                      //   "Date of Birth",
+                      //   formatDate(profileInfo?.profileInfo?.dateOfBirth, "dd-MMM-yyyy"),
+                      // ],
+                      ["ID Card No", profileInfo?.profileInfo?.nic_no],
+                      // ["Official Email", profileInfo?.profileInfo?.email_official],
+                      // ["Cell No", profileInfo?.profileInfo?.phone_cell],
+                      // ["Phone (Home)", profileInfo?.profileInfo?.phone_home],
+                      // ["Passport No", profileInfo?.profileInfo?.passportNo],
+                    ])}
+                  </>
+                )}
               </>
+            ) : (
+              <p className="text-sm text-red-500">Employee Data Not Exists</p>
             )}
-          </>
-        ) : (
-          <p className="text-sm text-red-500">Employee Data Not Exists</p>
-        )}
-      </div>
+          </div>
 
-      {/* Emergency Contact */}
-      {isOpen && (
-        <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
-          <h6 className="font-bold mb-0 text-primary my-2">
-            Emergency Contact
-          </h6>
-          {profileInfo?.contactInfo?.length > 0 ? (
-            renderInfoGrid(profileInfo?.contactInfo[0], [
-              ["Name", profileInfo?.contactInfo[0]?.relation_name],
-              ["Relation", profileInfo?.contactInfo[0]?.relation_text],
-              ["Contact No", profileInfo?.contactInfo[0]?.contactNo],
-            ])
-          ) : (
-            <p className="text-sm mb-0">No Contact Info Found</p>
+          {/* Emergency Contact */}
+          {isOpen && (
+            <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
+              <h6 className="font-bold mb-0 text-primary my-2">
+                Emergency Contact
+              </h6>
+              {profileInfo?.contactInfo?.length > 0 ? (
+                renderInfoGrid(profileInfo?.contactInfo[0], [
+                  ["Name", profileInfo?.contactInfo[0]?.relation_name],
+                  ["Relation", profileInfo?.contactInfo[0]?.relation_text],
+                  ["Contact No", profileInfo?.contactInfo[0]?.contactNo],
+                ])
+              ) : (
+                <p className="text-sm mb-0">No Contact Info Found</p>
+              )}
+            </div>
           )}
-        </div>
+        </>
+      ) : (
+        <TeamCardCompact team={team} setAttModalData={setAttModalData} />
       )}
     </>
   );
 };
 
 export default EmployeeProfile;
+
+const TeamCardCompact = ({ team, setAttModalData }) => {
+  return (
+    <div className="bg-white rounded-lg px-3 py-6 space-y-3 relative w-full row-span-2 h-fit">
+      {/* Left section: Icon and label */}
+      <div className="p-3">
+        <UsersRound className="w-24 h-24 text-black" />
+      </div>
+      <div className="p-3 flex justify-between items-center mt-3">
+        <span className="text-tprimary font-bold text-base sm:text-xl py-1 flex items-center truncate line-clamp-1">
+          Team Members
+        </span>
+        <span className="text-tprimary  text-base sm:text-2xl font-extrabold py-1 flex items-center truncate line-clamp-1">
+          {team?.length}
+        </span>
+      </div>
+
+      <div className="p-3 flex justify-between items-center mt-3">
+        <span
+          onClick={() =>
+            setAttModalData(
+              team?.filter((e) =>
+                e?.t_attendances[0]?.status.includes("Present"),
+              ),
+            )
+          }
+          className="text-white rounded-full cursor-pointer bg-green-600 px-5 py-3 text-md font-semibold text-center"
+        >
+          Present{" "}
+          {team?.filter((e) => e?.t_attendances[0]?.status.includes("Present"))
+            ?.length || 0}
+        </span>
+        <span
+          onClick={() =>
+            setAttModalData(
+              team?.filter(
+                (e) => !e?.t_attendances[0]?.status.includes("Present"),
+              ),
+            )
+          }
+          className="text-white rounded-full bg-red-600 cursor-pointer px-5 py-3 text-md font-semibold text-center"
+        >
+          Absents{" "}
+          {team?.filter((e) => !e?.t_attendances[0]?.status.includes("Present"))
+            ?.length || 0}
+        </span>
+      </div>
+    </div>
+  );
+};

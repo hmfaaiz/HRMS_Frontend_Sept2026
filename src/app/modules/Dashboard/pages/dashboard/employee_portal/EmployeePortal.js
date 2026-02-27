@@ -28,12 +28,12 @@ import {
   UserRoundX,
   PanelsTopLeft,
   HeartHandshake,
-  UsersRound,
 } from "lucide-react";
 import TableModel from "../../../../Task_Dashboard/pages/form-setup/form-data/TableModel";
 
 export const EmployeePortal = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [attModalData, setAttModalData] = useState(null);
   const [isCompactView, setIsCompactView] = useState(false);
   const dispatch = useDispatch();
 
@@ -67,6 +67,8 @@ export const EmployeePortal = () => {
               />
             </div>
             <EmployeeProfile
+              team={portalInfo?.reportingEmployee}
+              setAttModalData={setAttModalData}
               updateCompactView={() => {
                 dispatch(
                   action.updateAndSetPortalDashboardView(
@@ -93,6 +95,8 @@ export const EmployeePortal = () => {
                 <CompactView
                   moduleRights={moduleRights}
                   portalInfo={portalInfo}
+                  attModalData={attModalData}
+                  setAttModalData={setAttModalData}
                 />
               </div>
             ) : (
@@ -214,8 +218,12 @@ const DetailView = ({ portalInfo, moduleRights }) => {
   );
 };
 
-const CompactView = ({ portalInfo, moduleRights }) => {
-  const [attModalData, setAttModalData] = useState(null);
+const CompactView = ({
+  portalInfo,
+  moduleRights,
+  attModalData,
+  setAttModalData,
+}) => {
   const {
     leave,
     attendance,
@@ -281,11 +289,7 @@ const CompactView = ({ portalInfo, moduleRights }) => {
   );
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 ">
-      <TeamCardCompact
-        team={portalInfo?.reportingEmployee}
-        setAttModalData={setAttModalData}
-      />
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 ">
       {/* Attendance Request */}
       {moduleRights?.find((e) => e?.value == 3)?.allow && isAttRequest ? (
         <CompactViewCard
@@ -342,13 +346,12 @@ const CompactView = ({ portalInfo, moduleRights }) => {
           link={"/portal_ticket_creation/read-all-facilitator-ticket-creation"}
         />
       ) : null}
-      <div className="lg:block hidden"></div>
       {/* /// Project Management  */}
       {moduleRights?.find((e) => e?.value == 7)?.allow &&
       isProjectManagement ? (
         <CompactViewCard
           Icon={PanelsTopLeft}
-          name={"Project Mgt."}
+          name={"Project Management"}
           count={portalInfo?.projectManagementPendingTask}
           link={"/ticket_setup_portal/read-all-ticket-setup"}
         />
@@ -424,56 +427,6 @@ const CompactViewCard = ({ Icon, name, link, count, showCount = true }) => {
           </h4>
         </div>
       ) : null}
-    </div>
-  );
-};
-
-const TeamCardCompact = ({ team, setAttModalData }) => {
-  return (
-    <div className="bg-white rounded-lg px-3 py-7 space-y-3 relative w-full row-span-2 h-full">
-      {/* Left section: Icon and label */}
-      <div className="p-3">
-        <UsersRound className="w-24 h-24 text-black" />
-      </div>
-      <div className="p-3 flex justify-between items-center mt-3">
-        <span className="text-tprimary font-bold text-base sm:text-xl py-1 flex items-center truncate line-clamp-1">
-          Team Members
-        </span>
-        <span className="text-tprimary  text-base sm:text-2xl font-extrabold py-1 flex items-center truncate line-clamp-1">
-          {team?.length}
-        </span>
-      </div>
-
-      <div className="p-3 flex justify-between items-center mt-3">
-        <span
-          onClick={() =>
-            setAttModalData(
-              team?.filter((e) =>
-                e?.t_attendances[0]?.status.includes("Present"),
-              ),
-            )
-          }
-          className="text-white rounded-full cursor-pointer bg-green-600 px-5 py-3 text-md font-semibold text-center"
-        >
-          Present{" "}
-          {team?.filter((e) => e?.t_attendances[0]?.status.includes("Present"))
-            ?.length || 0}
-        </span>
-        <span
-          onClick={() =>
-            setAttModalData(
-              team?.filter(
-                (e) => !e?.t_attendances[0]?.status.includes("Present"),
-              ),
-            )
-          }
-          className="text-white rounded-full bg-red-600 cursor-pointer px-5 py-3 text-md font-semibold text-center"
-        >
-          Absents{" "}
-          {team?.filter((e) => !e?.t_attendances[0]?.status.includes("Present"))
-            ?.length || 0}
-        </span>
-      </div>
     </div>
   );
 };
