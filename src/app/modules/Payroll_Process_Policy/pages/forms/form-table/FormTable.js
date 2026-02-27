@@ -333,9 +333,9 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
       subsidiaryId: Yup.string()
         .required(VALIDATION_MESSAGES.required),
       // payroll_templateId: Yup.string(),
-      // employer_uniqueId: Yup.string()
-      //   .notRequired()
-      //   .max(20, 'Max 20 Characters'),
+      employer_uniqueId: Yup.string()
+        .notRequired()
+        .max(20, 'Max 20 Characters'),
       payroll_approverId: Yup.string()
         .notRequired(),
       basicSalaryId: Yup.string()
@@ -530,7 +530,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
     subsidiaryId: "",
     companyId: "",
     // payroll_templateId: "",
-    // employer_uniqueId: "",
+    employer_uniqueId: "",
     payroll_approverId: "",
     payroll_groupId: "",
     basicSalaryId: "",
@@ -634,7 +634,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
         subsidiaryId: user.subsidiaryId,
         companyId: user.companyId,
         // payroll_templateId: user.payroll_templateId,
-        // employer_uniqueId: user.employer_uniqueId,
+        employer_uniqueId: user.employer_uniqueId,
         payroll_approverId: user.payroll_approverId,
         payroll_groupId: user.payroll_groupId,
         basicSalaryId: user.basicSalaryId,
@@ -2024,6 +2024,19 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                         </select>
                         {errors.journalChequeAccountId && touched.journalChequeAccountId && <ErrorMessage className="form-feedBack" name="journalChequeAccountId" component="div" />}
                       </div>
+
+                       <div className="">
+                      <Field
+                        name="employer_uniqueId"
+                        component={Input}
+                        type="text"
+                       
+                        placeholder="Employeer value"
+                        value={values.employer_uniqueId}
+                        label={<label>Employer Unique Id</label>}
+                        autoComplete="off"
+                      />
+                    </div>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
