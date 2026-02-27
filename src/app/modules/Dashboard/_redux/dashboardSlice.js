@@ -112,6 +112,7 @@ const initialDashboardState = {
   allTicket: [],
   ticket: {},
   allMasterTicketType: [],
+  allCompanyEmployeesData: [],
 };
 
 export const callTypes = {
@@ -468,6 +469,10 @@ export const dashboardSlice = createSlice({
     },
     AllMasterTicketTypeFetched: (state, action) => {
       state.allMasterTicketType = action.payload;
+    },
+    
+    AllCompanyEmployeesDataFetched: (state, action) => {
+      state.allCompanyEmployeesData = action.payload;
     },
 
   }

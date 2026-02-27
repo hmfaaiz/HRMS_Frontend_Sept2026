@@ -16,7 +16,7 @@ import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
-import { FetchAllFacilitatorEmployee, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { FetchAllFacilitatorEmployee, fetchCompanyEmployeesData, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 
 // percentage: Yup.string().required("Required*"),
 const facilitator_ticket_creationEditSchema = (value, currentUser) => {
@@ -145,14 +145,16 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
       dispatch(fetchMasterTicketType());
       dispatch(FetchAllFacilitatorEmployee(formData?.ticketStatus));
+      dispatch(fetchCompanyEmployeesData());
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser } = useSelector((state) => {
+  const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser,allCompanyEmployeesData } = useSelector((state) => {
     return {
       currentState: state.facilitator_ticket_creation,
       userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
       allEmployees: state.dashboard.allEmployees,
+      allCompanyEmployeesData: state.dashboard.allCompanyEmployeesData,
       facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList,
       currentUser: state.auth.user,
     };
@@ -708,9 +710,9 @@ export function FormEditForm({
                             setFieldValue("assignBy", e.value || null);
                           }}
                           value={
-                            allEmployees?.find(option => option.value === values.assignBy) || null
+                            allCompanyEmployeesData?.find(option => option.value === values.assignBy) || null
                           }
-                          options={allEmployees}
+                          options={allCompanyEmployeesData}
 
                         />
                       </div>

@@ -277,3 +277,7 @@ export const getTicketById = async (body) => {
 export const getAllMasterTicketType = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-master-ticket-type`, body);
 };
+
+export const getAllCompanyEmployeesData = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-profile-by-company`);
+};

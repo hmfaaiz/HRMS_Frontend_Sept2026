@@ -15,7 +15,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 
 const taskConfigEditSchema = Yup.object().shape({
-  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  // subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   companyTaskApproverId: Yup.array().nullable(),
   teamTicketApproverId: Yup.array().nullable(),
@@ -91,7 +91,7 @@ export function FormEditForm({
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
-                    <div className="col-span-1">
+                    {/* <div className="col-span-1">
 
                       <SubsidiarySelect
                         name="subsidiaryId"
@@ -111,7 +111,7 @@ export function FormEditForm({
                           setFieldValue("subsidiaryId", e.value || null);
                         }}
                       />
-                    </div>
+                    </div> */}
 
 
                     <div className="">
@@ -123,7 +123,7 @@ export function FormEditForm({
 
 
 
-                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                      <div className="overflow-auto max-h-32 border-none scrollbar-fancy">
                         {roles?.map((option) => (
                           <div key={option.Id} className="flex justify-start items-center">
                             <input className="mr-1"
@@ -159,7 +159,7 @@ export function FormEditForm({
 
 
 
-                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                      <div className="overflow-auto max-h-32 border-none scrollbar-fancy">
                         {roles?.map((option) => (
                           <div key={option.Id} className="flex justify-start items-center">
                             <input className="mr-1"

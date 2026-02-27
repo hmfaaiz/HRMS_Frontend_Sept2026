@@ -271,7 +271,7 @@ export function ResponseTable() {
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate <= today;
+        const isExpiredOrToday = dueDate < today;
 
         return (
           <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>

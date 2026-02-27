@@ -78,8 +78,8 @@ export function FormTable() {
   const columns = [
 
     {
-      dataField: "Subsidiary.name",
-      text: "Subsidiary",
+      dataField: "Company.name",
+      text: "Company",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
