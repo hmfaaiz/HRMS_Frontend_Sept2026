@@ -17,6 +17,7 @@ import { TimePickerField } from "../../../../../../_metronic/_partials/controls/
 
 import DatePicker from "react-datepicker";
 import { useFormUIContext } from "../FormUIContext";
+import { formatDates } from "../../../../../utils/common";
 
 const facilitator_ticket_creationEditSchema = (value) => {
     return Yup.object()
@@ -205,6 +206,7 @@ export function TimeLogForm({ onHide }) {
 
         timeLogData.noOfHours = parseFloat(timeLogData.noOfHours)
         timeLogData.detailId = formUIProps?.detailId || timeLogData.detailId
+        timeLogData.loggedDate = formatDates(timeLogData?.loggedDate, "yyyy-MM-dd");
 
 
 
@@ -442,6 +444,7 @@ export function TimeLogForm({ onHide }) {
                                         />
 
                                     </div>
+                                    
 
 
                                 </div>
@@ -449,7 +452,7 @@ export function TimeLogForm({ onHide }) {
 
 
 
-                                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                                <div className="grid grid-cols-4 gap-x-3 gap-y-10">
 
 
 
