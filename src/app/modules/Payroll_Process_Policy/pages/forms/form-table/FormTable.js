@@ -335,6 +335,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
       // payroll_templateId: Yup.string(),
       employer_uniqueId: Yup.string()
         .notRequired()
+        .nullable()
         .max(20, 'Max 20 Characters'),
       payroll_approverId: Yup.string()
         .notRequired(),
@@ -744,6 +745,9 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
       if (!objValidate.bankCode) {
         newErrors[`bankCode-${index}`] = VALIDATION_MESSAGES.required;
       }
+      else if (objValidate.bankCode?.toString()?.trim()?.length > 25) {
+  newErrors[`bankCode-${index}`] = `Max 25 Characters`;
+}
       // Check if factorValue is required
       if (!objValidate.bankAccountNo) {
         newErrors[`bankAccountNo-${index}`] = VALIDATION_MESSAGES.required;
