@@ -336,7 +336,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
       employer_uniqueId: Yup.string()
         .notRequired()
         .nullable()
-        .max(20, 'Max 20 Characters'),
+        .max(25, 'Max 25 Characters'),
       payroll_approverId: Yup.string()
         .notRequired(),
       basicSalaryId: Yup.string()
