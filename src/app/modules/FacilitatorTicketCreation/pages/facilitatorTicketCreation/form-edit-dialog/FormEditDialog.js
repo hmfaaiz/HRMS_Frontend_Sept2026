@@ -81,7 +81,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
     formData.noOfHours = parseFloat(formData.noOfHours)
     formData.dueDate = formatDates(formData?.dueDate, "yyyy-MM-dd");
-    formData.ticketDate = formatDates(formData?.ticketDate, "yyyy-MM-dd");
+    formData.ticketDate = formatDates(new Date(), "yyyy-MM-dd");
 
     formUIProps.setId("");
 
