@@ -51,15 +51,18 @@ const AdminHead = ({
                   <SearchSelect
                     options={[
                       ...options,
-                      ...moduleRights?.map((e) => ({
-                        ...e,
-                        label:
-                          e?.label.charAt(0).toUpperCase() + e?.label.slice(1),
-                      })),
+                      ...moduleRights
+                        ?.filter((e) => e.value != "7")
+                        ?.map((e) => ({
+                          ...e,
+                          label:
+                            e?.label.charAt(0).toUpperCase() +
+                            e?.label.slice(1),
+                        })),
                     ]}
                     value={(() => {
                       const selected = [...options, ...moduleRights]?.find(
-                        (opt) => opt.value === activeTab
+                        (opt) => opt.value === activeTab,
                       );
 
                       return selected
@@ -86,32 +89,26 @@ const AdminHead = ({
                     name="subsidiaryId"
                     isDisabled={!allSubsidiaryList}
                     onChange={(e) => {
-                      let v = e?.value == "all" ? "" : e?.value
+                      let v = e?.value == "all" ? "" : e?.value;
                       setSummaryFilter({
                         ...summaryFilter,
                         subsidiaryId: e.value,
                         departmentId: "",
                         appraisalPeriodId: "",
                       });
-                      dispatch(updateDefaultSubsidiary(v || null)).then(
-                        () => {
-                          dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-                        }
-                      );
+                      dispatch(updateDefaultSubsidiary(v || null)).then(() => {
+                        dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+                      });
                       dispatch(fetchAllParentDept(v));
-                      dispatch(
-                        getActiveFiscalYear("activeFiscalYear", v)
-                      );
-                      dispatch(
-                        fetchAllAppraisalPeriodDataBySubsidiaryId(v)
-                      );
+                      dispatch(getActiveFiscalYear("activeFiscalYear", v));
+                      dispatch(fetchAllAppraisalPeriodDataBySubsidiaryId(v));
                     }}
                     value={
                       summaryFilter?.subsidiaryId === "all"
                         ? { value: "all", label: "All" }
                         : allSubsidiaryList?.find(
                             (option) =>
-                              option.value === summaryFilter?.subsidiaryId
+                              option.value === summaryFilter?.subsidiaryId,
                           ) || null
                     }
                     options={[
@@ -168,10 +165,10 @@ const AdminHead = ({
                       value={
                         dashboard?.appraisalPeriodBySubList?.find(
                           (option) =>
-                            option?.value === summaryFilter?.appraisalPeriodId
+                            option?.value === summaryFilter?.appraisalPeriodId,
                         ) ||
                         dashboard?.appraisalPeriodBySubList?.find(
-                          (option) => option?.isActive
+                          (option) => option?.isActive,
                         ) ||
                         null
                       }
@@ -199,7 +196,7 @@ const AdminHead = ({
                           dashboard?.allAppraisalCategory?.find(
                             (option) =>
                               option.value ===
-                              summaryFilter?.appraisalCategoryId
+                              summaryFilter?.appraisalCategoryId,
                           )) ||
                         dashboard?.allAppraisalCategory?.[0] ||
                         null

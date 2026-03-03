@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { format } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import { ChevronUp, LayoutGrid, List, StarIcon, UsersRound } from "lucide-react";
+import { ChevronUp, LayoutGrid, Maximize2, UsersRound } from "lucide-react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as action from "../../../_redux/dashboardActions";
 import useWindowSize from "../../../../../utils/useWindowSize";
 import { AttendanceMarking } from "./AttendanceMarking";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 
 const renderInfoGrid = (data, fields) => (
   <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
@@ -25,19 +25,28 @@ const EmployeeProfile = ({
   isCompactView,
   team,
   setAttModalData,
+  handleDetailViewChange,
+  detailViewType,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [profileInfo, setProfileInfo] = useState(false);
   const { width } = useWindowSize();
   const dispatch = useDispatch();
-  const { profileInfo } = useSelector(
+  const { role, employeeId } = useSelector(
     (state) => ({
-      profileInfo: state?.dashboard?.profileInfo,
+      role: state?.auth?.user?.role,
+      employeeId: state?.auth?.user?.employeeIdMapping,
     }),
     shallowEqual,
   );
 
   useEffect(() => {
-    dispatch(action.getEmployeeProfileInfo());
+    let data = JSON.parse(sessionStorage.getItem("profile_info"));
+    if (data?.profileInfo?.Id != employeeId) {
+      dispatch(action.getEmployeeProfileInfo(setProfileInfo));
+    }else{
+      setProfileInfo(data)
+    }
   }, []);
 
   useEffect(() => {
@@ -50,6 +59,20 @@ const EmployeeProfile = ({
     }
   }, [width]);
 
+  const getOptions = (role) => {
+    const options = [];
+    options.push({ label: "Self View", value: 1 });
+    // If isSupervisor is true
+    if (role?.isSupervisor) {
+      options.push({ label: "Manager View", value: 2 });
+    }
+    // If isMgt is true
+    if (role?.isMgt) {
+      options.push({ label: "Management View", value: 3 });
+    }
+    return options;
+  };
+
   return (
     <>
       {/* Profile Header */}
@@ -57,6 +80,21 @@ const EmployeeProfile = ({
         {/* Top right icons */}
         {isAttMarkShow && (
           <div className="absolute top-2 right-2 flex gap-1">
+            {/* <SearchSelect isDisabled={} /> */}
+            {!isCompactView && (
+              <div className="w-[9.5rem]">
+                <SearchSelect
+                  isDisabled={!role?.isMgt || !role?.isSupervisor}
+                  options={getOptions(role)}
+                  value={
+                    getOptions(role)?.find(
+                      (el) => el?.value == detailViewType,
+                    ) || { label: "As Self", value: 1 }
+                  }
+                  onChange={(e) => handleDetailViewChange(e)}
+                />
+              </div>
+            )}
             <OverlayTrigger
               overlay={
                 <Tooltip id="products-edit-tooltip">Compact View</Tooltip>
@@ -86,7 +124,7 @@ const EmployeeProfile = ({
                     : "bg-gray-300 text-black hover:bg-gray-400"
                 }`}
               >
-                <List className="w-4" />
+                <Maximize2 className="w-4" />
               </button>
             </OverlayTrigger>
           </div>
@@ -249,10 +287,10 @@ export default EmployeeProfile;
 
 const TeamCardCompact = ({ team, setAttModalData }) => {
   return (
-    <div className="bg-white rounded-lg px-3 py-6 space-y-3 relative w-full row-span-2 h-fit">
+    <div className="bg-white/60 hover:bg-white/100 rounded-lg px-3 py-6 space-y-3 relative w-full row-span-2 h-fit">
       {/* Left section: Icon and label */}
       <div className="p-3">
-        <UsersRound className="w-24 h-24 text-black" />
+        <UsersRound strokeWidth={0.5} className="w-24 h-24 text-tprimary" />
       </div>
       <div className="p-3 flex justify-between items-center mt-3">
         <span className="text-tprimary font-bold text-base sm:text-xl py-1 flex items-center truncate line-clamp-1">
@@ -263,7 +301,7 @@ const TeamCardCompact = ({ team, setAttModalData }) => {
         </span>
       </div>
 
-      <div className="p-3 flex justify-between items-center mt-3">
+      <div className="p-3 flex gap-14 justify-start items-center mt-3">
         <span
           onClick={() =>
             setAttModalData(
@@ -286,7 +324,7 @@ const TeamCardCompact = ({ team, setAttModalData }) => {
               ),
             )
           }
-          className="text-white rounded-full bg-red-600 cursor-pointer px-5 py-3 text-md font-semibold text-center"
+          className="text-white rounded-full btn-danger cursor-pointer px-5 py-3 text-md font-semibold text-center"
         >
           Absents{" "}
           {team?.filter((e) => !e?.t_attendances[0]?.status.includes("Present"))
