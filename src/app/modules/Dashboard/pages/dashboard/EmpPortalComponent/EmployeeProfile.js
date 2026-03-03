@@ -61,14 +61,14 @@ const EmployeeProfile = ({
 
   const getOptions = (role) => {
     const options = [];
-    options.push({ label: "As Self", value: 1 });
+    options.push({ label: "Self View", value: 1 });
     // If isSupervisor is true
     if (role?.isSupervisor) {
-      options.push({ label: "As Manager", value: 2 });
+      options.push({ label: "Manager View", value: 2 });
     }
     // If isMgt is true
     if (role?.isMgt) {
-      options.push({ label: "As Management", value: 3 });
+      options.push({ label: "Management View", value: 3 });
     }
     return options;
   };
@@ -82,7 +82,7 @@ const EmployeeProfile = ({
           <div className="absolute top-2 right-2 flex gap-1">
             {/* <SearchSelect isDisabled={} /> */}
             {!isCompactView && (
-              <div className="w-36">
+              <div className="w-[9.5rem]">
                 <SearchSelect
                   isDisabled={!role?.isMgt || !role?.isSupervisor}
                   options={getOptions(role)}
