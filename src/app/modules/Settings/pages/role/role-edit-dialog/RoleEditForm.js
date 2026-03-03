@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input } from "../../../../../../_metronic/_partials/controls";
+import { Checkbox, Input } from "../../../../../../_metronic/_partials/controls";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Modal } from "react-bootstrap";
@@ -83,6 +83,12 @@ export function RoleEditForm({
                     {errors.isActive && touched.isActive && (
                       <div className="text-danger">{errors.isActive}</div>
                     )}
+                  </div>
+                  <div>
+                    <Checkbox children={"Manager View"} isSelected={values?.isSupervisor} onChange={(e)=> setFieldValue("isSupervisor" , e?.target.checked)} />
+                  </div>
+                  <div>
+                    <Checkbox children={"Management View"} isSelected={values?.isMgt} onChange={(e)=> setFieldValue("isMgt" , e?.target.checked)} />
                   </div>
                 </div>
               </Form>

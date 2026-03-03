@@ -164,8 +164,8 @@ export async function getAttendance(body) {
   return axios.post(`${USERS_URL}/emp_portal/read-attendance` , body);
 }
 
-export async function getPortalInfo() {
-  return axios.get(`${USERS_URL}/emp_portal/get-employee-portal-info`);
+export async function getPortalInfo(body) {
+  return axios.post(`${USERS_URL}/emp_portal/get-employee-portal-info` , body);
 }
 
 export async function getEmpProfileInfo() {

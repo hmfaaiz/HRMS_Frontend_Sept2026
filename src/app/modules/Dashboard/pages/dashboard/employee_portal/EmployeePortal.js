@@ -30,11 +30,15 @@ import {
   HeartHandshake,
 } from "lucide-react";
 import TableModel from "../../../../Task_Dashboard/pages/form-setup/form-data/TableModel";
+import { LoanDetailMgt } from "../EmpPortalComponent/LoanDetailMgt";
+import { AttendanceSummaryMgt } from "../EmpPortalComponent/AttendanceSummaryMgt";
+import { LeaveBalanceDetailMgt } from "../EmpPortalComponent/LeaveBalanceDetailMgt";
 
 export const EmployeePortal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [attModalData, setAttModalData] = useState(null);
   const [isCompactView, setIsCompactView] = useState(false);
+  const [detailViewType, setDetailViewType] = useState("1");
   const dispatch = useDispatch();
 
   const { announcement, portalInfo, moduleRights } = useSelector(
@@ -48,7 +52,7 @@ export const EmployeePortal = () => {
 
   useEffect(() => {
     dispatch(action.fetchAnnouncementData());
-    dispatch(action.getEmployeePortalInfo(setIsLoading));
+    dispatch(action.getEmployeePortalInfo(setIsLoading, detailViewType));
     dispatch(action.fetchModuleRights());
     dispatch(action.updateAndSetPortalDashboardView({}, setIsCompactView));
   }, []);
@@ -76,6 +80,11 @@ export const EmployeePortal = () => {
                     setIsCompactView,
                   ),
                 );
+              }}
+              detailViewType={detailViewType}
+              handleDetailViewChange={(e) => {
+                setDetailViewType(e?.value);
+                dispatch(action.getEmployeePortalInfo(setIsLoading, e?.value));
               }}
               isCompactView={isCompactView}
               isAttMarkShow={true}
@@ -111,6 +120,7 @@ export const EmployeePortal = () => {
                 <DetailView
                   portalInfo={portalInfo}
                   moduleRights={moduleRights}
+                  detailViewType={detailViewType}
                 />
               </div>
             )}
@@ -126,7 +136,7 @@ export const EmployeePortal = () => {
   );
 };
 
-const DetailView = ({ portalInfo, moduleRights }) => {
+const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
   return (
     <>
       {portalInfo?.reportingEmployee &&
@@ -156,21 +166,43 @@ const DetailView = ({ portalInfo, moduleRights }) => {
       moduleRights?.find((e) => e?.value == 4)?.allow ? (
         <div className="flex flex-col md:flex-row gap-4">
           {moduleRights?.find((e) => e?.value == 3)?.allow ? (
-            <AttendanceSummary
-              attendanceSummary={portalInfo?.attendanceSummary}
-            />
+            detailViewType == 1 ? (
+              <AttendanceSummary
+                attendanceSummary={portalInfo?.attendanceSummary}
+              />
+            ) : (
+              <AttendanceSummaryMgt
+                attendanceSummary={portalInfo?.attendanceSummary?.[0] || {}}
+              />
+            )
           ) : null}
           {moduleRights?.find((e) => e?.value == 2)?.allow ? (
-            <LeaveBalanceDetail leaveBalances={portalInfo?.leaveBalance} />
+            detailViewType == 1 ? (
+              <LeaveBalanceDetail leaveBalances={portalInfo?.leaveBalance} />
+            ) : (
+              <LeaveBalanceDetailMgt
+                leaveBalances={portalInfo?.leaveBalance?.[0] || {}}
+              />
+            )
           ) : null}
           {moduleRights?.find((e) => e?.value == 4)?.allow ? (
-            <EmployeeLoanDetail
-              entities={
-                portalInfo?.loanRequest?.length > 0
-                  ? portalInfo?.loanRequest
-                  : []
-              }
-            />
+            detailViewType == 1 ? (
+              <EmployeeLoanDetail
+                entities={
+                  portalInfo?.loanRequest?.length > 0
+                    ? portalInfo?.loanRequest
+                    : []
+                }
+              />
+            ) : (
+              <LoanDetailMgt
+                entities={
+                  portalInfo?.loanRequest?.length > 0
+                    ? portalInfo?.loanRequest
+                    : []
+                }
+              />
+            )
           ) : null}
         </div>
       ) : null}
@@ -248,44 +280,95 @@ const CompactView = ({
     }),
     shallowEqual,
   );
-
   const isLeaveRequest = leave?.find(
-    (el) => el?.componentName === "ReadAllLeaveRequest" && el?.isResourceShow,
+    (el) =>
+      el?.componentName === "ReadAllLeaveRequest" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
   );
+
+  const isLeaveApproval = leave?.find(
+    (el) =>
+      el?.componentName === "ReadAllLeaveApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
   const isAttRequest = attendance?.find(
     (el) =>
-      el?.componentName === "ReadAllAttendanceRequest" && el?.isResourceShow,
+      el?.componentName === "ReadAllAttendanceRequest" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
+  const isAttApproval = attendance?.find(
+    (el) =>
+      el?.componentName === "ReadAllAttendanceApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
   );
 
   const isLoanRequest = loan?.find(
-    (el) => el?.componentName === "ReadAllLoanRequest" && el?.isResourceShow,
+    (el) =>
+      el?.componentName === "ReadAllLoanRequest" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
+  const isLoanApproval = loan?.find(
+    (el) =>
+      el?.componentName === "ReadAllLoanApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
   );
 
   const isAccessForResignationRequest = resignation?.find(
-    (el) => el?.componentName === "ReadAllResignation" && el?.isResourceShow,
+    (el) =>
+      el?.componentName === "ReadAllResignation" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
+  const isAccessForResignationApproval = resignation?.find(
+    (el) =>
+      el?.componentName === "ReadAllResignationApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
   );
 
   const isAccessForJobReq = requisition_job_vacancy?.find(
-    (el) => el?.componentName === "ReadRequisitionJobVacancy" && el?.isAccess,
+    (el) =>
+      el?.componentName === "ReadRequisitionJobVacancy" &&
+      el?.isAccess &&
+      el?.portalType == 2,
   );
 
   const isAppraisalEvaluation = appraisalEval?.find(
     (el) =>
-      el?.componentName === "ReadAllAppraisalEvaluation" && el?.isResourceShow,
+      el?.componentName === "ReadAllAppraisalEvaluation" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
   );
 
   const isCompanyDocPortal = company_doc_portal?.find(
     (el) =>
-      el?.componentName === "ReadAllCompanyDocPortal" && el?.isResourceShow,
+      el?.componentName === "ReadAllCompanyDocPortal" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
   );
 
   const isHelpDesk = portal_ticket_creation?.find(
     (el) =>
-      el?.componentName === "ReadFacilitatorTicketCreation" && el?.isAccess,
+      el?.componentName === "ReadFacilitatorTicketCreation" &&
+      el?.isAccess &&
+      el?.portalType == 2,
   );
 
   const isProjectManagement = ticket_setup_portal?.find(
-    (el) => el?.componentName === "ReadTicketSetup" && el?.isAccess,
+    (el) =>
+      el?.componentName === "ReadTicketSetup" &&
+      el?.isAccess &&
+      el?.portalType == 2,
   );
 
   return (
@@ -295,6 +378,11 @@ const CompactView = ({
         <CompactViewCard
           Icon={UserCheck}
           name={"Attendance"}
+          countLink={
+            isAttApproval
+              ? "/attendance_approval/read-all-attendance-approval"
+              : false
+          }
           count={portalInfo?.attApproval}
           link={"/attendance_request/read-all-attendance-request"}
         />
@@ -304,6 +392,9 @@ const CompactView = ({
         <CompactViewCard
           Icon={UserRoundX}
           name={"Leave"}
+          countLink={
+            isLeaveApproval ? "/leave-approval/read-all-leave-approval" : false
+          }
           count={portalInfo?.leaveApproval}
           link={"/leave-request/read-all-leave-request"}
         />
@@ -313,6 +404,9 @@ const CompactView = ({
         <CompactViewCard
           Icon={Banknote}
           name={"Loan"}
+          countLink={
+            isLoanApproval ? "/loan_approval/read-all-loan-approval" : false
+          }
           count={portalInfo?.loanApproval}
           link={"/loan_request/read-all-loan-request"}
         />
@@ -324,6 +418,11 @@ const CompactView = ({
           Icon={FileUser}
           name={"Resignation"}
           count={portalInfo?.resignApproval}
+          countLink={
+            isAccessForResignationApproval
+              ? "/resignation_approval/read-all-resignation-approval"
+              : false
+          }
           link={"/employee_resignation/read-all-resignation"}
         />
       ) : null}
@@ -356,7 +455,6 @@ const CompactView = ({
           link={"/ticket_setup_portal/read-all-ticket-setup"}
         />
       ) : null}
-
       {/* /// Job Requisition */}
       {moduleRights?.find((e) => e?.value == 5)?.allow && isAccessForJobReq ? (
         <CompactViewCard
@@ -399,15 +497,22 @@ const CompactView = ({
   );
 };
 
-const CompactViewCard = ({ Icon, name, link, count, showCount = true }) => {
+const CompactViewCard = ({
+  Icon,
+  name,
+  link,
+  count,
+  showCount = true,
+  countLink,
+}) => {
   return (
-    <div className="bg-white rounded-lg px-3 py-7 flex items-center space-x-3 justify-between h-fit relative w-full">
+    <div className="bg-white/60 rounded-lg px-3 py-7 flex items-center space-x-3 justify-between h-fit relative w-full hover:bg-white/100">
       {/* Left section: Icon and label */}
       <div className="p-3">
-        <Icon className="w-12 h-12 text-tprimary" />
+        <Icon strokeWidth={1} className="w-12 h-12 text-tprimary" />
         <div>
           <a key={name} href={link}>
-            <h3 className="mt-1 text-black font-bold text-base sm:text-lg py-1 flex items-center truncate line-clamp-1">
+            <h3 className="mt-1 text-tprimary font-bold text-base sm:text-lg py-1 flex items-center truncate line-clamp-1">
               {name}
               <ChevronRight className="w-5 h-5 ml-1" />
             </h3>
@@ -417,15 +522,18 @@ const CompactViewCard = ({ Icon, name, link, count, showCount = true }) => {
 
       {/* Right section: value box with Bell icon */}
       {showCount ? (
-        <div className="relative bg-tsecondary w-20 h-20 p-3 rounded-lg flex items-center justify-center">
+        <a
+          href={countLink || link}
+          className="relative bg-tprimary w-20 h-20 p-3 rounded-lg flex items-center justify-center"
+        >
           {/* Bell icon at top-left */}
           {count > 0 ? (
-            <Bell className="absolute -top-2 bg-red-600 rounded-full p-1 -left-2 w-5 h-5 text-tsecondary" />
+            <Bell className="absolute -top-2 btn-danger rounded-full p-1.5 -left-2 w-6 h-6 text-tsecondary" />
           ) : null}
-          <h4 className="text-black font-bold text-base sm:text-xl">
-            {count > 0 ? count : "00"}
+          <h4 className="text-white font-bold text-base sm:text-xl">
+            {count > 0 ? count : "0"}
           </h4>
-        </div>
+        </a>
       ) : null}
     </div>
   );
