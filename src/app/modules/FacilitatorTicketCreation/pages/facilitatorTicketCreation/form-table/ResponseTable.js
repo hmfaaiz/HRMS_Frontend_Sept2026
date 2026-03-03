@@ -261,7 +261,7 @@ export function ResponseTable() {
       style: {
         minWidth: "30px",
       },
-      formatter: (cell) => {
+      formatter: (cell,row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -271,7 +271,12 @@ export function ResponseTable() {
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate < today;
+        // const isExpiredOrToday = dueDate < today;
+         const createdDate = new Date(row.createdAt);
+        createdDate.setHours(0, 0, 0, 0);
+
+       
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
           <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
@@ -373,7 +378,7 @@ export function ResponseTable() {
       style: {
         minWidth: "10px",
       },
-      formatter: (cell) => {
+      formatter: (cell,row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -383,7 +388,12 @@ export function ResponseTable() {
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate <= today;
+        // const isExpiredOrToday = dueDate < today;
+         const createdDate = new Date(row.createdAt);
+        createdDate.setHours(0, 0, 0, 0);
+
+       
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
           <>

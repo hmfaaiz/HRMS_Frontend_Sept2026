@@ -31,7 +31,7 @@ export function ActionsColumnFormatter(
   today.setHours(0, 0, 0, 0);
 
   let isOverdue = false;
-  isOverdue = dueDate <= today;
+  isOverdue = dueDate < today;
   return (
     <div className="space-x-2">
 
@@ -90,7 +90,7 @@ export function ResponseColumnFormatter(
   today.setHours(0, 0, 0, 0);
 
   let isOverdue = false;
-  isOverdue = dueDate <= today;
+  isOverdue = dueDate < today;
   return (
     <div className="space-x-2">
       {/* {isOverdue && (
