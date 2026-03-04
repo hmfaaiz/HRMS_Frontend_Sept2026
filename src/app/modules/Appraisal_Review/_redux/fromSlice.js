@@ -7,6 +7,7 @@ const initialState = {
   entities: null,
   userForEdit: undefined,
   employee: [],
+  errorState: null,
 };
 
 export const callTypes = {
@@ -36,6 +37,9 @@ export const appraisalReviewSlice = createSlice({
       state.actionsLoading = false;
       state.employee = action.payload;
     },
+    pdfFetched: (state, action) => {
+      state.actionsLoading = false;
+    },
     AppraisalReviewFetched: (state, action) => {
       const entities = action.payload.data?.data.rows;
       const totalResult = action.payload.data?.data.totalResults;
@@ -55,6 +59,12 @@ export const appraisalReviewSlice = createSlice({
       state.actionsLoading = false;
       state.userForEdit = null;
     },
-    
+    AppraisalReviewBulkUpdated: (state, action) => {
+      state.errorState = action.payload;
+      state.actionsLoading = false;
+    },
+    clearErrorState: (state, action) => {
+      state.errorState = null;
+    },
   },
 });

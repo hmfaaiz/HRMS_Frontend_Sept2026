@@ -88,6 +88,7 @@ export function FormTable() {
         //     : data.sourceType === "TIMELOG"
         //       ? data?.workDescription
         //       : "",
+        ticketStatus: data?.ticketStatus,
         sourceType: data.sourceType,
         timeRange: `${data?.timeRangeFrom} - ${data?.timeRangeTo}`,
         dateRange: `${data?.from} - ${data?.to}`,
@@ -212,7 +213,7 @@ export function FormTable() {
                 color: "white",
                 borderRadius: "6px",
                 padding: "2px",
-                height: "60%",
+                height: "65%",
               },
             };
           }}
@@ -222,26 +223,33 @@ export function FormTable() {
             event: ({ event }) => (
               <>
 
-                <div className="custom-tooltip" >
-                  {event.title}  {event.profileImage && (
-                    <img
-                      src={event.profileImage}
-                      alt="Profile"
-                      style={{
-                        width: "18px",
-                        height: "18px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  )}
+                <div className="custom-tooltip"  >
+                  <div style={{ display: "flex",alignItems: "center", gap: "5px"}}>
+
+
+                    {event?.ticketStatus == 0 && (
+                      <div style={{ display: "flex", alignItems: "center", }}>
+                        <div
+                        className="w-[10px] h-[10px] rounded-full bg-[#39FF14]"
+                        ></div>
+
+                      </div>
+                    )}
+                    {event.title}  {event.profileImage && (
+                      <img
+                        src={event.profileImage}
+                        alt="Profile"
+                        style={{
+                          width: "18px",
+                          height: "18px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    )}
+
+                  </div>
                 </div>
-                {/* <div style={{ fontSize: "12px" }}>
-                  {event.ticket}
-                  {event.sourceType === "TIMELOG" && event.noOfHours
-                    ? ` - ${event.noOfHours} hrs`
-                    : ""}
-                </div> */}
 
 
 

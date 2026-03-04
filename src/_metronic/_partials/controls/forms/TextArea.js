@@ -22,6 +22,7 @@ export function TextArea({
   withFeedbackLabel = true,
   customFeedbackLabel,
   type = "text",
+  rows = 4,
   ...props
 }) {
   return (
@@ -33,7 +34,7 @@ export function TextArea({
         className={getFieldCSSClasses(touched[field.name], errors[field.name])}
         {...field}
         {...props}
-        rows={4}
+        rows={rows}
       />
       {withFeedbackLabel && (
         <FieldFeedbackLabel

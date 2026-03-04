@@ -5,8 +5,9 @@ import {
   Eye,
   FolderClock,
   Pencil,
-  MessageSquareText ,
+  MessageSquareText,
   Trash2,
+  CalendarClockIcon,
 } from "lucide-react";
 
 export function ActionsColumnFormatter(
@@ -24,6 +25,9 @@ export function ActionsColumnFormatter(
     newButtonClick,
     isAccessForAdd,
     openTicketActivity,
+    isAccessForTimeLogging,
+    employeeId,
+    openTicketTimeLogging,
   },
 ) {
   return (
@@ -54,6 +58,23 @@ export function ActionsColumnFormatter(
             </a>
           </OverlayTrigger>
         )}
+      {isAccessForTimeLogging && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">Ticket Time Logging</Tooltip>
+          }
+        >
+          <button
+            type="button"
+            onClick={() => {
+              openTicketTimeLogging();
+            }}
+            style={{ background: "none", border: "none", padding: 0 }}
+          >
+            <CalendarClockIcon className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
+      )}
       {isAccessForTicketActivity && (
         <OverlayTrigger
           overlay={
@@ -103,7 +124,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Delete / Activate */}
-      {isAccessForDelete && row?.isActive && (
+      {isAccessForDelete && row?.isActive && employeeId == row?.Project?.projectOwnerEmpId && (
         <OverlayTrigger
           overlay={<Tooltip id={`action-${row.Id}`}>Delete</Tooltip>}
         >

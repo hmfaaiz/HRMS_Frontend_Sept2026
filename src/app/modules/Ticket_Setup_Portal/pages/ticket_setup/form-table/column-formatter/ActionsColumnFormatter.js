@@ -5,8 +5,9 @@ import {
   Eye,
   FolderClock,
   Pencil,
-  MessageSquareText ,
+  MessageSquareText,
   Trash2,
+  CalendarClockIcon,
 } from "lucide-react";
 
 export function ActionsColumnFormatter(
@@ -24,6 +25,9 @@ export function ActionsColumnFormatter(
     newButtonClick,
     isAccessForAdd,
     openTicketActivity,
+    isAccessForTimeLogging,
+    employeeId,
+    openTicketTimeLogging,
   },
 ) {
   return (
@@ -73,6 +77,25 @@ export function ActionsColumnFormatter(
           </button>
         </OverlayTrigger>
       )}
+      {isAccessForTimeLogging && employeeId && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">Ticket Time Logging</Tooltip>
+          }
+        >
+          <button
+            type="button"
+            onClick={() => {
+              openTicketTimeLogging(
+                `?projectId=${row?.projectId}&ticketId=${row?.Id}`,
+              );
+            }}
+            style={{ background: "none", border: "none", padding: 0 }}
+          >
+            <CalendarClockIcon className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
+      )}
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Detail Time Log</Tooltip>}
       >
@@ -94,7 +117,7 @@ export function ActionsColumnFormatter(
       </OverlayTrigger>
 
       {/* Edit */}
-      {isAccessForEdit && row?.isActive && (
+      {isAccessForEdit && row?.isActive && employeeId == row?.Project?.projectOwnerEmpId && (
         <OverlayTrigger overlay={<Tooltip id={`edit-${row.Id}`}>Edit</Tooltip>}>
           <a className="cursor-pointer" onClick={() => openEditDialog(row.Id)}>
             <Pencil className="w-4 h-4 text-black" />

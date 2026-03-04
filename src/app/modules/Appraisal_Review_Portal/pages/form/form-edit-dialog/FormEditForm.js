@@ -16,7 +16,7 @@ import { CirclePlus, Eye, Trash2, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import * as actions from "../../../_redux/formActions";
 import { useFromUIContext } from "../FormUIContext";
-import { TextArea } from "../../../../../../_metronic/_partials/controls";
+import { Checkbox, Input, TextArea } from "../../../../../../_metronic/_partials/controls";
 import { decodeHtml } from "../../../../../utils/common";
 
 const formValidation = (minPoint, maxPoint) =>
@@ -65,6 +65,65 @@ const formValidation = (minPoint, maxPoint) =>
     additionalRemarks: Yup.string()
       .nullable()
       .optional(),
+    areaOfDevelopment: Yup.array()
+      .of(
+        Yup.object().shape({
+          title: Yup.string().when("$hasArea", {
+            is: true,
+            then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+            otherwise: (schema) => schema.optional(),
+          }),
+          description: Yup.string().when("$hasArea", {
+            is: true,
+            then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+            otherwise: (schema) => schema.optional(),
+          }),
+        }),
+      )
+      .test("area-validation", "Title and Description are required", function(
+        value,
+      ) {
+        if (!value || value.length === 0) return true;
+
+        return value.every(
+          (item) =>
+            item &&
+            item.title &&
+            item.title.trim() !== "" &&
+            item.description &&
+            item.description.trim() !== "",
+        );
+      }),
+
+    areaOfStrength: Yup.array()
+      .of(
+        Yup.object().shape({
+          title: Yup.string().when("$hasArea", {
+            is: true,
+            then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+            otherwise: (schema) => schema.optional(),
+          }),
+          description: Yup.string().when("$hasArea", {
+            is: true,
+            then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+            otherwise: (schema) => schema.optional(),
+          }),
+        }),
+      )
+      .test("area-strength", "Title and Description are required", function(
+        value,
+      ) {
+        if (!value || value.length === 0) return true;
+
+        return value.every(
+          (item) =>
+            item &&
+            item.title &&
+            item.title.trim() !== "" &&
+            item.description &&
+            item.description.trim() !== "",
+        );
+      }),
   });
 
 function calculateWeightedScore(setupArray = [], weight = 0) {
@@ -83,10 +142,9 @@ function calculateWeightedScore(setupArray = [], weight = 0) {
 }
 
 function truncateText(text = "", maxLength = 90) {
-  if (!text) return "";
+  if (!text) return "-";
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 }
-
 export function MasterEditForm({
   saveFrom,
   user,
@@ -155,7 +213,7 @@ export function MasterEditForm({
           user?.maxPoint || 1,
         )}
       >
-        {({ handleSubmit, values, setFieldValue, isValid }) => {
+        {({ handleSubmit, values, setFieldValue, isValid , touched , errors }) => {
           return (
             <>
               <ScoreCalculator values={values} setFieldValue={setFieldValue} />
@@ -239,7 +297,7 @@ export function MasterEditForm({
                       panelMode={formUIProps?.panelMode}
                     />
                     {/* HR Evaluation */}
-                    {values?.hrSetup?.length > 0 && (
+                    {values?.hrSetup?.length > 0 ? (
                       <>
                         <hr />
                         <FieldArray name="hrSetup">
@@ -342,9 +400,9 @@ export function MasterEditForm({
                           }}
                         </FieldArray>
                       </>
-                    )}
+                    ) : null}
                     {/* General Evaluation */}
-                    {values?.generalSetup?.length > 0 && (
+                    {values?.generalSetup?.length > 0 ? (
                       <>
                         <hr />
                         <FieldArray name="generalSetup">
@@ -468,9 +526,9 @@ export function MasterEditForm({
                           }}
                         </FieldArray>
                       </>
-                    )}
+                    ) : null}
                     {/* Goal Assessment */}
-                    {values?.goalSetup?.length > 0 && (
+                    {values?.goalSetup?.length > 0 ? (
                       <>
                         <hr />
                         <FieldArray name="goalSetup">
@@ -594,9 +652,10 @@ export function MasterEditForm({
                           }}
                         </FieldArray>
                       </>
-                    )}
+                    ) : null}
 
-                    {values?.employeeId && (
+                    {/* Manager's Overall Assessment */}
+                    {values?.employeeId ? (
                       <>
                         <hr />
                         <div className="mt-4">
@@ -747,10 +806,10 @@ export function MasterEditForm({
                           </div>
                         </div>
                       </>
-                    )}
+                    ) : null}
 
                     {/* {Recommendation of increment && ( */}
-                    {values?.employeeId && (
+                    {values?.employeeId ? (
                       <div>
                         <h6 className="font-bold mb-0 text-primary">
                           Increment Suggested :{" "}
@@ -774,9 +833,9 @@ export function MasterEditForm({
                           %
                         </h6>
                       </div>
-                    )}
+                    ) : null}
                     {/* Recomentdation */}
-                    {values?.selfRecommendation && (
+                    {values?.selfRecommendation ? (
                       <>
                         <hr />
                         <div className="mt-4">
@@ -826,10 +885,29 @@ export function MasterEditForm({
                           </div>
                         </div>
                       </>
-                    )}
-
-                    {values?.employeeId && (
+                    ) : null}
+                    {values?.employeeId ? (
                       <>
+                        <div className="w-3/12 my-1">
+                          <Checkbox
+                            name="promotionRecommendedByManager"
+                            isSelected={values?.promotionRecommendedByManager}
+                            onChange={(e) => {
+                              setFieldValue(
+                                "promotionRecommendedByManager",
+                                e.target.checked,
+                              );
+                            }}
+                            children={
+                              <label>
+                                <span className="font-bold">
+                                  Promotion Recommended by Manager
+                                </span>
+                              </label>
+                            }
+                            disabled={values?.isFinalize || isUserForRead}
+                          />
+                        </div>
                         <div className="w-3/12">
                           <Field
                             name="incrementPercentageRecommendedByManager"
@@ -846,6 +924,7 @@ export function MasterEditForm({
                           <Field
                             name="managerRecomendationAfterFinalization"
                             component={TextArea}
+                            rows={2}
                             // label="Manager Recommendation after Finalization"
                             label={
                               <span className="font-bold">
@@ -860,6 +939,7 @@ export function MasterEditForm({
                           <Field
                             name="additionalRemarks"
                             component={TextArea}
+                            rows={2}
                             // label="Additional Remarks"
                             label={
                               <span className="font-bold">HR Remarks</span>
@@ -868,7 +948,238 @@ export function MasterEditForm({
                           />
                         </div>{" "}
                       </>
-                    )}
+                    ) : null}
+                    {/* area of development and training needs (if any) */}
+                    {values?.employeeId ? (
+                      <>
+                        <hr />
+                        <div className="grid grid-cols-2 gap-x-3">
+                          <div className="border-2 border-black p-1 rounded-sm">
+                            <FieldArray name="areaOfDevelopment">
+                              {({ remove, push }) => (
+                                <>
+                                  <div className="flex justify-between items-center">
+                                    <h6 className="font-bold mb-0 text-primary">
+                                      Areas of Development{"  "}
+                                    </h6>
+                                    {!isUserForRead && (
+                                      <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={() =>
+                                          push({
+                                            title: "",
+                                            description: "",
+                                          })
+                                        }
+                                      >
+                                        <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                                        Add
+                                      </button>
+                                    )}
+                                  </div>
+                                  {/* Table Starts */}
+                                  <div className="w-full overflow-x-auto">
+                                    <div className="react-bootstrap-table table-responsive">
+                                      <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                                        <thead>
+                                          <tr className="custom-table-header">
+                                            <td>Title</td>
+                                            <td>Description</td>
+                                            <td className="text-right">
+                                              Action
+                                            </td>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {values?.areaOfDevelopment?.length >
+                                            0 &&
+                                            values?.areaOfDevelopment?.map(
+                                              (row, index) => (
+                                                <tr>
+                                                  <td>
+                                                    <Field
+                                                      name={`areaOfDevelopment[${index}].title`}
+                                                      component={Input}
+                                                      disabled={isUserForRead}
+                                                      className={`form-control ${
+                                                        errors
+                                                          ?.areaOfDevelopment?.[
+                                                          index
+                                                        ]?.title &&
+                                                        touched
+                                                          ?.areaOfDevelopment?.[
+                                                          index
+                                                        ]?.title
+                                                          ? "is-invalid"
+                                                          : ""
+                                                      }`}
+                                                    />
+                                                  </td>
+                                                  <td>
+                                                    <Field
+                                                      name={`areaOfDevelopment[${index}].description`}
+                                                      component={Input}
+                                                      disabled={isUserForRead}
+                                                      className={`form-control ${
+                                                        errors
+                                                          ?.areaOfDevelopment?.[
+                                                          index
+                                                        ]?.description &&
+                                                        touched
+                                                          ?.areaOfDevelopment?.[
+                                                          index
+                                                        ]?.description
+                                                          ? "is-invalid"
+                                                          : ""
+                                                      }`}
+                                                    />
+                                                  </td>
+                                                  <td className="text-right">
+                                                    <button
+                                                      disabled={isUserForRead}
+                                                      className="border-none bg-transparent"
+                                                      type="button"
+                                                      onClick={() => {
+                                                        remove(index);
+                                                      }}
+                                                    >
+                                                      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                                    </button>
+                                                  </td>
+                                                </tr>
+                                              ),
+                                            )}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                  {errors?.areaOfDevelopment && (
+                                    <span className="invalid-feedback">
+                                      {typeof errors?.areaOfDevelopment ===
+                                      "string"
+                                        ? errors?.areaOfDevelopment
+                                        : ""}
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                            </FieldArray>
+                          </div>
+                          <div className="border-2 border-black p-1 rounded-sm">
+                            <FieldArray name="areaOfStrength">
+                              {({ remove, push }) => (
+                                <>
+                                  <div className="flex justify-between items-center">
+                                    <h6 className="font-bold mb-0 text-primary">
+                                      Areas of Strength{"  "}
+                                    </h6>
+                                    {!isUserForRead && (
+                                      <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={() =>
+                                          push({
+                                            title: "",
+                                            description: "",
+                                          })
+                                        }
+                                      >
+                                        <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                                        Add
+                                      </button>
+                                    )}
+                                  </div>
+                                  {/* Table Starts */}
+                                  <div className="w-full overflow-x-auto">
+                                    <div className="react-bootstrap-table table-responsive">
+                                      <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                                        <thead>
+                                          <tr className="custom-table-header">
+                                            <td>Title</td>
+                                            <td>Description</td>
+                                            <td className="text-right">
+                                              Action
+                                            </td>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {values?.areaOfStrength?.length > 0 &&
+                                            values?.areaOfStrength?.map(
+                                              (row, index) => (
+                                                <tr>
+                                                  <td>
+                                                    <Field
+                                                      name={`areaOfStrength[${index}].title`}
+                                                      disabled={isUserForRead}
+                                                      component={Input}
+                                                      className={`form-control ${
+                                                        errors
+                                                          ?.areaOfStrength?.[
+                                                          index
+                                                        ]?.title &&
+                                                        touched
+                                                          ?.areaOfStrength?.[
+                                                          index
+                                                        ]?.title
+                                                          ? "is-invalid"
+                                                          : ""
+                                                      }`}
+                                                    />
+                                                  </td>
+                                                  <td>
+                                                    <Field
+                                                      name={`areaOfStrength[${index}].description`}
+                                                      component={Input}
+                                                      disabled={isUserForRead}
+                                                      className={`form-control ${
+                                                        errors
+                                                          ?.areaOfStrength?.[
+                                                          index
+                                                        ]?.description &&
+                                                        touched
+                                                          ?.areaOfStrength?.[
+                                                          index
+                                                        ]?.description
+                                                          ? "is-invalid"
+                                                          : ""
+                                                      }`}
+                                                    />
+                                                  </td>
+                                                  <td className="text-right">
+                                                    <button
+                                                      disabled={isUserForRead}
+                                                      className="border-none bg-transparent"
+                                                      type="button"
+                                                      onClick={() => {
+                                                        remove(index);
+                                                      }}
+                                                    >
+                                                      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                                    </button>
+                                                  </td>
+                                                </tr>
+                                              ),
+                                            )}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                  {errors?.areaOfStrength && (
+                                    <span className="invalid-feedback">
+                                      {typeof errors?.areaOfStrength ===
+                                      "string"
+                                        ? errors?.areaOfStrength
+                                        : ""}
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                            </FieldArray>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
                     {/* )} */}
                   </fieldset>
                 </Form>

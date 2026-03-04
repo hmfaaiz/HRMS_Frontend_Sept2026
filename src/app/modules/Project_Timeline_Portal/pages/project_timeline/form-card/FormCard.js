@@ -20,6 +20,8 @@ export function FormCard() {
     ticketStatuses,
     listLoading,
     auth,
+    report,
+    calendar,
   } = useSelector(
     (state) => ({
       projects: state.dashboard?.allProjects || [],
@@ -30,6 +32,8 @@ export function FormCard() {
       csvLoading: state.project_timeline_portal?.csvLoading,
       excelLoading: state.project_timeline_portal?.excelLoading,
       auth: state?.auth,
+      report: state?.auth?.userAccess["portal_ticket_time_report"],
+      calendar: state?.auth?.userAccess["portal_ticket_calendar"],
     }),
     shallowEqual,
   );
@@ -96,6 +100,20 @@ export function FormCard() {
                     el?.isAccess,
                 ),
               },
+              {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) => el?.componentName === "ReadAllAssignmentReport",
+                ),
+              },
+              {
+                name: "Calendar",
+                link: "/portal_ticket_calendar/read-ticket-calendar",
+                isShow: calendar?.find(
+                  (el) => el?.componentName === "ReadTicketCalendar",
+                ),
+              },
             ]}
             isDashboardIcon={true}
           />
@@ -130,6 +148,20 @@ export function FormCard() {
                   (el) =>
                     el?.componentName === "ReadAllTicketComments" &&
                     el?.isAccess,
+                ),
+              },
+              {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) => el?.componentName === "ReadAllAssignmentReport",
+                ),
+              },
+              {
+                name: "Calendar",
+                link: "/portal_ticket_calendar/read-ticket-calendar",
+                isShow: calendar?.find(
+                  (el) => el?.componentName === "ReadTicketCalendar",
                 ),
               },
             ]}

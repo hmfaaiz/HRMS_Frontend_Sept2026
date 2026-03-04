@@ -152,6 +152,12 @@ export function FormPage({ history }) {
         "_blank",
       );
     },
+    openTicketTimeLogging: (query = null) => {
+      window.open(
+        `/time_logging/read-all-time-log`,
+        "_blank",
+      );
+    },
   };
 
   return (

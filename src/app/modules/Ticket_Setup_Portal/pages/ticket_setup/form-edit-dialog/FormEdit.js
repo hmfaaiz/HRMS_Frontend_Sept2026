@@ -257,7 +257,7 @@ export function FormEditForm({
                       }
                       value={dashboard?.allProjects?.find(
                         (el) => el?.value == values?.projectId,
-                      )}
+                      ) || null}
                       options={dashboard.allProjects || []}
                       error={errors.projectId}
                       isDisabled={id}
@@ -310,7 +310,7 @@ export function FormEditForm({
                       }
                       value={TicketType?.find(
                         (el) => el?.value == values?.ticketTypeId,
-                      )}
+                      ) || null}
                       options={TicketType || []}
                       error={errors.ticketTypeId}
                       touched={touched.ticketTypeId}
@@ -392,7 +392,7 @@ export function FormEditForm({
                         }
                         value={PriorityType?.find(
                           (el) => el?.value == values?.priority,
-                        )}
+                        ) || null}
                         options={PriorityType || []}
                         error={errors.priority}
                         touched={touched.priority}

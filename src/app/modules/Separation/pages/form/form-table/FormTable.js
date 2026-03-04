@@ -30,6 +30,7 @@ export function FormTable() {
       setQueryParams: formUIContext.setQueryParams,
       openEditFormDialog: formUIContext.openEditFormDialog,
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      openRevertFormDialog: formUIContext.openRevertFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       openConvertFormDialog: formUIContext.openConvertFormDialog,
@@ -75,6 +76,9 @@ export function FormTable() {
   });
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteSeparation"
+  );
+  const isAccessForRevert = userAccess?.find(
+    (item) => item.componentName === "RevertSeparation"
   );
 
 
@@ -187,12 +191,14 @@ export function FormTable() {
         // pdfGenerateLoading,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        openRevertFormDialog: formUIProps.openRevertFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
 
 
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForRevert: isAccessForRevert ? isAccessForRevert.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,

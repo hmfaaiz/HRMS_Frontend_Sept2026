@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
@@ -16,9 +16,12 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
+import { X } from "lucide-react";
 
 export function FormTable() {
   //Users UI Context
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [handleBulkLoading, setHandleBulkLoading] = useState(false);
   const formUIContext = useFromUIContext();
   const formUIProps = useMemo(() => {
     return {
@@ -28,18 +31,21 @@ export function FormTable() {
       openDeleteDialog: formUIContext.openDeleteDialog,
       openReadDialog: formUIContext.openReadDialog,
       panelMode: formUIContext.panelMode,
+      subsidiaryId: formUIContext.subsidiaryId,
+      appraisalCategoryId: formUIContext.appraisalCategoryId,
       setPanelMode: formUIContext.setPanelMode,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess, errorState } = useSelector((state) => {
     return {
       currentState: state.appraisal_review,
+      errorState: state.appraisal_review?.errorState,
       userAccess: state?.auth?.userAccess["appraisal_review"],
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading } = currentState;
+  const { totalCount, entities, listLoading, actionsLoading } = currentState;
 
   //totalCount = 10
 
@@ -55,15 +61,15 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateAppraisalReview"
+    (item) => item.componentName === "UpdateAppraisalReview",
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteAppraisalReview"
+    (item) => item.componentName === "DeleteAppraisalReview",
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadAppraisalReview"
+    (item) => item.componentName === "ReadAppraisalReview",
   );
   // Table columns
   const columns = [
@@ -196,6 +202,90 @@ export function FormTable() {
     },
   ];
 
+  // top of component (inside FormTable)
+  const keyField = "Id";
+
+  // ...
+
+  const selectRow = {
+    mode: "checkbox",
+    clickToSelect: false,
+    // Disable rows jinka isFinalize true ho
+    nonSelectable: (entities || [])
+      .filter((r) => r?.isFinalize === true)
+      .map((r) => r?.[keyField])
+      .filter(Boolean),
+
+    nonSelectableStyle: { opacity: 1 },
+
+    // Header checkbox (Select All) - IMPORTANT: onChange pass karo
+    selectionHeaderRenderer: ({ mode, checked, indeterminate, onChange }) => (
+      <input
+        type={mode}
+        checked={checked}
+        ref={(input) => {
+          if (input) input.indeterminate = indeterminate;
+        }}
+        onChange={onChange}
+      />
+    ),
+
+    // Row checkbox - IMPORTANT: disabled + onChange pass karo
+    selectionRenderer: ({ mode, checked, disabled, onChange }) => (
+      <input
+        type={mode}
+        checked={checked}
+        disabled={disabled || handleBulkLoading}
+        onChange={onChange}
+      />
+    ),
+
+    // Controlled selection
+    selected: selectedIds,
+
+    onSelect: (row, isSelect) => {
+      const rowId = row?.[keyField];
+      if (!rowId) return;
+
+      // safety: published rows select na hon
+      if (row?.isFinalize === true) return;
+
+      setSelectedIds((prev) => {
+        if (isSelect) return [...new Set([...prev, rowId])];
+        return prev.filter((id) => id !== rowId);
+      });
+    },
+
+    onSelectAll: (isSelect, rows) => {
+      if (isSelect) {
+        // Select all EXCEPT published rows
+        const ids = (rows || [])
+          .filter((r) => r?.isFinalize !== true)
+          .map((r) => r?.[keyField])
+          .filter(Boolean);
+
+        setSelectedIds(ids);
+      } else {
+        setSelectedIds([]);
+      }
+    },
+  };
+
+  const handleBulkAction = () => {
+    setHandleBulkLoading(true);
+    dispatch(
+      actions.createOrUpdateAppraisalReview({
+        Ids: selectedIds,
+        isBulk: true,
+      }),
+    ).then(() => {
+      // refresh list after deletion
+      dispatch(actions.fetchAllAppraisalReview(formUIProps.queryParams));
+      setSelectedIds([]);
+      setHandleBulkLoading(false);
+    });
+  };
+
   //Table pagination properties
   const paginationOptions = {
     custom: true,
@@ -205,37 +295,169 @@ export function FormTable() {
     page: formUIProps.queryParams.pageNumber,
   };
 
+  const handleCloseBulkResult = () => {
+    dispatch(actions.clearBulkPublishResult());
+    // agar clear action nahi hai to local state se hide karlo
+  };
+
   return (
     <div className="w-full overflow-x-auto scrollbar-fancy">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            >
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                {...paginationTableProps}
+            <>
+              <Pagination
+                isLoading={listLoading}
+                paginationProps={paginationProps}
               >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
-            </Pagination>
+                <BootstrapTable
+                  wrapperClasses="table-responsive"
+                  bordered={false}
+                  classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                  bootstrap4
+                  remote
+                  keyField="Id"
+                  data={entities === null ? [] : entities}
+                  columns={columns}
+                  defaultSorted={uiHelpers.defaultSorted}
+                  selectRow={selectRow}
+                  onTableChange={getHandlerTableChange(
+                    formUIProps.setQueryParams,
+                  )}
+                  {...paginationTableProps}
+                >
+                  <PleaseWaitMessage entities={entities} />
+                  <NoRecordsFoundMessage entities={entities} />
+                </BootstrapTable>
+              </Pagination>
+              <div className="d-flex justify-content-end mt-3 gap-x-2 me-1">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={selectedIds.length === 0 || handleBulkLoading}
+                  onClick={handleBulkAction}
+                >
+                  Finalized Selected ({selectedIds.length})
+                  {handleBulkLoading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={
+                    actionsLoading ||
+                    !formUIProps?.appraisalCategoryId ||
+                    !formUIProps?.subsidiaryId
+                  }
+                  onClick={() =>
+                    dispatch(
+                      actions.salaryRecomendationReport({
+                        appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                        subsidiaryId: formUIProps?.subsidiaryId,
+                      }),
+                    )
+                  }
+                >
+                  Salary Recommendation Report
+                  {actionsLoading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+              </div>
+            </>
           );
         }}
       </PaginationProvider>
+      <BulkPublishSummary
+        bulkResult={errorState}
+        onClose={handleCloseBulkResult}
+      />
     </div>
   );
 }
+
+const BulkPublishSummary = ({ bulkResult, onClose }) => {
+  if (!bulkResult?.isBulk) return null;
+
+  const results = bulkResult?.results || [];
+  const successCount = bulkResult?.successCount ?? 0;
+  const unsuccessCount = bulkResult?.unsuccessCount ?? 0;
+
+  return (
+    <div className="mb-1">
+      <div className="card">
+        <div className="card-body py-1 mt-1 bg-tsecondary">
+          <div className="d-flex align-items-center justify-content-between">
+            <div className="text-xs">
+              <strong>Bulk Publish Result:</strong>{" "}
+              <span className="text-primary">Success: {successCount}</span>{" "}
+              <span className="text-danger ml-1">Failed: {unsuccessCount}</span>
+              <span className="text-muted ml-1">
+                Total: {bulkResult?.totalEmployees ?? results.length}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              className="btn btn-sm btn-light"
+              onClick={onClose}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="mt-1 table-responsive">
+            <table className="table table-sm mb-0">
+              <thead>
+                <tr className="text-xs">
+                  <th>Employee</th>
+                  <th style={{ width: 110 }}>Status</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((r) => {
+                  const isSuccess = r?.status === "success";
+                  return (
+                    <tr key={r.employeeId} className="text-xs">
+                      <td>{r.employeeName || "Unknown"}</td>
+                      <td
+                        className={isSuccess ? "text-primary" : "text-danger"}
+                      >
+                        {isSuccess ? "Success" : "Failed"}
+                      </td>
+                      <td
+                        className={isSuccess ? "text-primary" : "text-danger"}
+                        style={{ whiteSpace: "pre-wrap" }} // \n ko show karega
+                      >
+                        {isSuccess ? r.message : r.message}
+                      </td>
+                    </tr>
+                  );
+                })}
+
+                {results.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="text-muted"
+                      style={{ fontSize: "12px" }}
+                    >
+                      No bulk result found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Optional: lines list */}
+          {/* <div className="mt-2" style={{ fontSize: "12px", whiteSpace: "pre-wrap" }}>
+            {(bulkResult?.lines || []).join("\n")}
+          </div> */}
+        </div>
+      </div>
+    </div>
+  );
+};

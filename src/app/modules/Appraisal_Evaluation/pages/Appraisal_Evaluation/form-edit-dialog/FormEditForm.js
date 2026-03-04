@@ -59,17 +59,24 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { actionsLoading, userForEdit, employeeDetail } = useSelector(
-    (state) => {
-      return {
-        actionsLoading: state.appraisal_evaluation?.actionsLoading,
-        userForEdit: state.appraisal_evaluation?.userForEdit,
-        employeeDetail: state.appraisal_evaluation?.employeeDetail,
-      };
-    }
-  );
+  const {
+    actionsLoading,
+    userForEdit,
+    employeeDetail,
+    isHREvaluation,
+    appraisalEmpDetail,
+  } = useSelector((state) => {
+    return {
+      actionsLoading: state.appraisal_evaluation?.actionsLoading,
+      userForEdit: state.appraisal_evaluation?.userForEdit,
+      employeeDetail: state.appraisal_evaluation?.employeeDetail,
+      appraisalEmpDetail: state.appraisal_evaluation?.appraisalEmpDetail,
+      isHREvaluation: state.appraisal_evaluation?.isHREvaluation,
+    };
+  });
 
   const [currentQues, setCurrentQues] = useState(null);
+  const [attSum, setAttSum] = useState(false);
   const [localUserForEdit, setLocalUserForEdit] = useState([]);
 
   // Sync local state with Redux state
@@ -118,7 +125,7 @@ export function FormEditForm({
 
   const navigateToNextQuestion = (currentValues) => {
     let currentIndex = localUserForEdit.findIndex(
-      (el) => el?.Id === currentValues?.Id
+      (el) => el?.Id === currentValues?.Id,
     );
 
     if (currentIndex !== -1 && currentIndex < localUserForEdit.length - 1) {
@@ -135,7 +142,7 @@ export function FormEditForm({
         Object.keys(errors).reduce((acc, key) => {
           acc[key] = true;
           return acc;
-        }, {})
+        }, {}),
       );
       return;
     }
@@ -150,12 +157,12 @@ export function FormEditForm({
       enableLoading();
       try {
         await dispatch(
-          actions.updateAppraisalEvaluation({ values, isLast: false })
+          actions.updateAppraisalEvaluation({ values, isLast: false }),
         );
 
         // Update local state
         const updatedLocalUserForEdit = localUserForEdit.map((question) =>
-          question.Id === values.Id ? { ...question, ...values } : question
+          question.Id === values.Id ? { ...question, ...values } : question,
         );
         setLocalUserForEdit(updatedLocalUserForEdit);
 
@@ -180,7 +187,7 @@ export function FormEditForm({
         Object.keys(errors).reduce((acc, key) => {
           acc[key] = true;
           return acc;
-        }, {})
+        }, {}),
       );
       return;
     }
@@ -188,13 +195,13 @@ export function FormEditForm({
     enableLoading();
     try {
       await dispatch(
-        actions.updateAppraisalEvaluation({ values, isLast: true })
+        actions.updateAppraisalEvaluation({ values, isLast: true }),
       );
       // Update local state
       const updatedLocalUserForEdit = localUserForEdit.map((question) =>
         question.Id === values.Id
           ? { ...question, ...values, isSubmitted: true }
-          : question
+          : question,
       );
       setLocalUserForEdit(updatedLocalUserForEdit);
 
@@ -220,7 +227,14 @@ export function FormEditForm({
       }}
       validationSchema={formSchema}
     >
-      {({ setFieldValue, validateForm, setTouched, errors, values , touched }) => (
+      {({
+        setFieldValue,
+        validateForm,
+        setTouched,
+        errors,
+        values,
+        touched,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && !currentQues && (
@@ -255,7 +269,7 @@ export function FormEditForm({
                   <div className="font-medium text-tprimary">
                     Question{" "}
                     {localUserForEdit?.findIndex(
-                      (el) => el?.Id == currentQues?.Id
+                      (el) => el?.Id == currentQues?.Id,
                     ) + 1}
                   </div>
                   <div className="col-span-5 whitespace-pre-line">
@@ -286,7 +300,7 @@ export function FormEditForm({
                                   setFieldValue("ratingName", el?.name);
                                   setFieldValue(
                                     "ratingDescription",
-                                    el?.description
+                                    el?.description,
                                   );
                                 }}
                                 children={el?.name}
@@ -315,15 +329,15 @@ export function FormEditForm({
                                   Math.abs(curr.points - value) <
                                   Math.abs(prev.points - value)
                                     ? curr
-                                    : prev
+                                    : prev,
                               );
                               setFieldValue(
                                 "ratingName",
-                                nearest?.name || null
+                                nearest?.name || null,
                               );
                               setFieldValue(
                                 "ratingDescription",
-                                nearest?.description || null
+                                nearest?.description || null,
                               );
                             }
                           }}
@@ -345,7 +359,8 @@ export function FormEditForm({
                         {ratingSelection
                           ? ratingDetail?.ratingList?.find(
                               (el, ind) =>
-                                Number(el?.points) == Number(values?.selfRating)
+                                Number(el?.points) ==
+                                Number(values?.selfRating),
                             )?.name
                           : values?.selfRating}
                       </span>
@@ -416,6 +431,75 @@ export function FormEditForm({
                 </div>
               </fieldset>
             </Form>
+            {isHREvaluation && (
+              <div className="py-2 border rounded-md ">
+                <div className="flex items-center mb-0">
+                  <button
+                    type="button"
+                    onClick={() => setAttSum(!attSum)}
+                    className="btn btn-primary btn-elevate"
+                  >
+                  View Attendance Summary
+                  </button>
+                </div>
+                {attSum && (
+                  <div className="w-full overflow-x-auto">
+                    <div className="react-bootstrap-table table-responsive">
+                      <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <thead>
+                          <tr className="custom-table-header">
+                            <th scope="col">Working Days</th>
+                            <th scope="col">Present Days</th>
+                            <th scope="col">On Time</th>
+                            <th scope="col">Late In</th>
+                            <th scope="col">Early Out</th>
+                            <th scope="col">Half Days</th>
+                            <th scope="col">Leaves</th>
+                            <th scope="col">Absent</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail
+                                ?.workingDays ?? "-"}
+                            </td>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail
+                                ?.presentDays ?? "-"}
+                            </td>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail?.onTime ??
+                                "-"}
+                            </td>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail?.lateIn ??
+                                "-"}
+                            </td>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail
+                                ?.earlyGoing ?? "-"}
+                            </td>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail?.halfDay ??
+                                "-"}
+                            </td>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail?.onLeave ??
+                                "-"}
+                            </td>
+                            <td>
+                              {appraisalEmpDetail?.attendanceDetail
+                                ?.absentDay ?? "-"}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </Modal.Body>
           <Modal.Footer className="flex justify-between items-center">
             {/* Center section for question navigation buttons */}

@@ -251,9 +251,11 @@ export function FormEditForm({
                           Project <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      value={dashboard?.allProjects?.find(
-                        (el) => el?.value == values?.projectId,
-                      )}
+                      value={
+                        dashboard?.allProjects?.find(
+                          (el) => el?.value == values?.projectId,
+                        ) || null
+                      }
                       options={dashboard.allProjects || []}
                       error={errors.projectId}
                       isDisabled={id}
@@ -304,9 +306,11 @@ export function FormEditForm({
                           Ticket Type <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      value={TicketType?.find(
-                        (el) => el?.value == values?.ticketTypeId,
-                      )}
+                      value={
+                        TicketType?.find(
+                          (el) => el?.value == values?.ticketTypeId,
+                        ) || null
+                      }
                       options={TicketType || []}
                       error={errors.ticketTypeId}
                       touched={touched.ticketTypeId}
@@ -386,9 +390,11 @@ export function FormEditForm({
                             Priority <span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        value={PriorityType?.find(
-                          (el) => el?.value == values?.priority,
-                        )}
+                        value={
+                          PriorityType?.find(
+                            (el) => el?.value == values?.priority,
+                          ) || null
+                        }
                         options={PriorityType || []}
                         error={errors.priority}
                         touched={touched.priority}
@@ -428,7 +434,7 @@ export function FormEditForm({
                       value={[
                         { label: "Select", value: null },
                         ...dashboard?.allEmployees,
-                      ]?.find((el) => el?.value === values?.assignToEmpId)}
+                      ]?.find((el) => el?.value === values?.assignToEmpId) || null}
                       options={
                         [
                           { label: "Select", value: null },
@@ -451,9 +457,11 @@ export function FormEditForm({
                           Report To <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      value={[, ...dashboard?.allEmployees]?.find(
-                        (el) => el?.value === values?.reportToEmpId,
-                      )}
+                      value={
+                        [, ...dashboard?.allEmployees]?.find(
+                          (el) => el?.value === values?.reportToEmpId,
+                        ) || null
+                      }
                       options={[, ...dashboard?.allEmployees] || []}
                       error={errors.reportToEmpId}
                       touched={touched.reportToEmpId}
@@ -476,13 +484,16 @@ export function FormEditForm({
                           </span>
                         }
                         disabled={values?.ticketTypeId != 1}
-                        value={dashboard?.allTicket
-                          ?.filter(
-                            (el) =>
-                              el?.ticketType == 1 &&
-                              el?.projectId == values?.projectId,
-                          )
-                          ?.find((el) => el?.value == values?.parentEpicId)}
+                        value={
+                          dashboard?.allTicket
+                            ?.filter(
+                              (el) =>
+                                el?.ticketType == 1 &&
+                                el?.projectId == values?.projectId,
+                            )
+                            ?.find((el) => el?.value == values?.parentEpicId) ||
+                          null
+                        }
                         options={
                           dashboard?.allTicket?.filter(
                             (el) =>
@@ -514,13 +525,16 @@ export function FormEditForm({
                         disabled={
                           values?.ticketTypeId != 4 || values?.ticketTypeId != 5
                         }
-                        value={dashboard?.allTicket
-                          ?.filter(
-                            (el) =>
-                              el?.ticketType == 3 &&
-                              el?.parentEpicId == values.parentEpicId,
-                          )
-                          ?.find((el) => el?.value == values?.parentTaskId)}
+                        value={
+                          dashboard?.allTicket
+                            ?.filter(
+                              (el) =>
+                                el?.ticketType == 3 &&
+                                el?.parentEpicId == values.parentEpicId,
+                            )
+                            ?.find((el) => el?.value == values?.parentTaskId) ||
+                          null
+                        }
                         options={
                           dashboard?.allTicket?.filter(
                             (el) =>

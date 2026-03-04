@@ -54,7 +54,7 @@ export const updateTimeLog = (data) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   try {
     const res = await requestFromServer.updateTimeLog(data);
-    dispatch(actions.timeLogUpdated());
+    dispatch(actions.timeLogUpdated(res.data?.data));
     toast.success(SERVER_MESSAGES.updatedSuccess);
   } catch (error) {
     dispatch(actions.catchError({ error, callType: callTypes.action }));

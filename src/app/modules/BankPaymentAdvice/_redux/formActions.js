@@ -142,7 +142,7 @@ export const generateDubaiBankAdviceCSV = (filter, document, labels = {}) => asy
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'bank_advice.txt');
+      link.setAttribute('download', 'bank_advice.sif');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.adviceFetched({}));

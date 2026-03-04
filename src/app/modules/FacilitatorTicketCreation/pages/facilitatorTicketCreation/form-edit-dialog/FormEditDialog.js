@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 import { uploadFile } from "../../../../Dashboard/_redux/dashboardActions";
+import { formatDates } from "../../../../../utils/common";
 
 
 export function FormEditDialog({ id, show, onHide, userForRead }) {
@@ -55,7 +56,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     roles,
     centers,
     userStatusTypes,
-    isuserForRead,
+    isuserForRead, currentUser,
   } = useSelector((state) => ({
 
 
@@ -65,6 +66,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
     isuserForRead: state.facilitator_ticket_creation.userForRead,
+    currentUser: state.auth.user,
   }));
 
 
@@ -78,6 +80,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const saveForm = async (formData, clearForm) => {
 
     formData.noOfHours = parseFloat(formData.noOfHours)
+    formData.dueDate = formatDates(formData?.dueDate, "yyyy-MM-dd");
+    formData.ticketDate = formatDates(new Date(), "yyyy-MM-dd");
 
     formUIProps.setId("");
 
@@ -93,6 +97,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         }
       } else if (typeof formData?.file == "string") {
         formData.file = formData.file;
+      }
+      if (formData.assignTo !== currentUser?.employeeIdMapping) {
+        delete formData.assignByToBeSelected
+
       }
 
 
@@ -128,7 +136,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         receiverSubsidiaryId: formData.receiverSubsidiaryId,
         assignBy: formData.assignBy,
         ticketStatus: formData.ticketStatus,
-      
+
 
 
 
@@ -152,7 +160,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       await dispatch(actions.updateTicketCreation(formUpdatedFields, disbaleLoading, clearForm));
 
       await dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
-      await  dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
+      await dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
     }
 
 

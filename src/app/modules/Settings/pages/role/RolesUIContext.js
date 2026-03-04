@@ -29,9 +29,10 @@ export function RolesUIProvider({ rolesUIEvents, children }) {
   }, [])
 
   const initRole = {
-   
     name: "",
-    isActive:true
+    isActive:true,
+    isMgt : false,
+    isSupervisor : false,
   }
 
   const value = {

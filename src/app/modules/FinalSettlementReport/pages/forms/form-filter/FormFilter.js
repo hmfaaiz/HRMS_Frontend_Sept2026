@@ -23,8 +23,8 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { FetchAllApprovedFSEmp, fetchAllDepartmentBySubsidiaryIds } from "../../../../Dashboard/_redux/dashboardActions";
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  subsidiaryId: Yup.date().required(VALIDATION_MESSAGES.required),
-  employeeId: Yup.date().required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
 });
 
 //Prepare new Filter

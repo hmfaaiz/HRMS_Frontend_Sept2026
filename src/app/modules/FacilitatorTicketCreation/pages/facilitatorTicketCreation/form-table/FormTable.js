@@ -42,7 +42,7 @@ export function FormTable() {
       setMasterId: formUIContext.setMasterId,
       setDetailId: formUIContext.setDetailId,
       detailId: formUIContext.detailId,
-      
+
     };
   }, [formUIContext]);
 
@@ -77,7 +77,7 @@ export function FormTable() {
     (item) => item.componentName === "ReadFacilitatorTicketCreation"
   );
 
- 
+
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -122,7 +122,7 @@ export function FormTable() {
       },
     },
 
-            {
+    {
       dataField: "ticketCode",
       text: "Ticket Code",
       sort: false,
@@ -137,7 +137,7 @@ export function FormTable() {
       },
     },
 
-        {
+    {
       dataField: "ticketType.formName",
       text: "Ticket Type",
       sort: false,
@@ -243,7 +243,7 @@ export function FormTable() {
       style: {
         minWidth: "30px",
       },
-      formatter: (cell) => {
+      formatter: (cell,row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -253,7 +253,12 @@ export function FormTable() {
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate <= today;
+        // const isExpiredOrToday = dueDate < today;
+         const createdDate = new Date(row.createdAt);
+        createdDate.setHours(0, 0, 0, 0);
+
+       
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
           <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
@@ -354,7 +359,7 @@ export function FormTable() {
       style: {
         minWidth: "10px",
       },
-      formatter: (cell) => {
+      formatter: (cell, row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -363,8 +368,11 @@ export function FormTable() {
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
+        const createdDate = new Date(row.createdAt);
+        createdDate.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate <= today;
+       
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
           <>
@@ -458,29 +466,29 @@ export function FormTable() {
           );
         }}
       </PaginationProvider> */}
-    
-            <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
 
-                // })}
-                // {...paginationTableProps}
-              >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
+      <BootstrapTable
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        remote
+        keyField="Id"
+        data={entities === null ? [] : entities}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(
+          formUIProps.setQueryParams
+        )}
+      // selectRow={getSelectRow({
+      //   entities,
+
+      // })}
+      // {...paginationTableProps}
+      >
+        <PleaseWaitMessage entities={entities} />
+        <NoRecordsFoundMessage entities={entities} />
+      </BootstrapTable>
     </div>
   );
 }
