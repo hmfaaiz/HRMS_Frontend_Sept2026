@@ -421,11 +421,12 @@ export const getAttendance = (setLoading) => (dispatch) => {
     });
 };
 
-export const getEmployeeProfileInfo = () => (dispatch) => {
+export const getEmployeeProfileInfo = (setProfileInfo) => (dispatch) => {
   return requestFromServer
     .getEmpProfileInfo()
     .then((res) => {
-      dispatch(actions.ProfileInfoFetched(res?.data?.data));
+      setProfileInfo(res?.data?.data);
+      sessionStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
     })
     .catch((error) => {
       toast.error(error?.response?.data?.message || "Something went wrong", {
@@ -440,16 +441,18 @@ export const getEmployeeProfileInfo = () => (dispatch) => {
     });
 };
 
-export const getEmployeePortalInfo = (setLoading) => (dispatch) => {
-  setLoading(true)
+export const getEmployeePortalInfo = (setLoading, detailViewType) => (
+  dispatch,
+) => {
+  setLoading(true);
   return requestFromServer
-    .getPortalInfo()
+    .getPortalInfo({ detailViewType })
     .then((res) => {
       dispatch(actions.PortalInfoFetched(res?.data?.data));
       setLoading(false);
     })
     .catch((error) => {
-      setLoading(false)
+      setLoading(false);
       toast.error(error?.response?.data?.message || "Something went wrong", {
         position: "top-right",
         autoClose: 5000,
@@ -461,7 +464,6 @@ export const getEmployeePortalInfo = (setLoading) => (dispatch) => {
       });
     });
 };
-
 
 export const getCurrentTime = (setLoading) => (dispatch) => {
   return requestFromServer
@@ -792,13 +794,15 @@ export const fetchUsersByCompanyId = (Id) => async (dispatch) => {
     });
 };
 
-export const updateAndSetPortalDashboardView = (body , setVal) => async (dispatch) => {
+export const updateAndSetPortalDashboardView = (body, setVal) => async (
+  dispatch,
+) => {
   return await requestFromServer
     .updatePortalDashboardType(body)
     .then((response) => {
-      let data = response?.data?.data ;
+      let data = response?.data?.data;
       setVal(data);
-    })
+    });
 };
 
 export const fetchAllActiveCustomers = () => async (dispatch) => {
@@ -841,7 +845,7 @@ export const fetchAllTicket = (employeeId = null, projectId = null) => async (
   dispatch,
 ) => {
   return await requestFromServer
-    .getAllTicket({ employeeId , projectId })
+    .getAllTicket({ employeeId, projectId })
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllTicketFetch(entities));
@@ -851,45 +855,39 @@ export const fetchAllTicket = (employeeId = null, projectId = null) => async (
     });
 };
 
-export const fetchTicketById = (Id) => async (
-  dispatch,
-) => {
+export const fetchTicketById = (Id) => async (dispatch) => {
   return await requestFromServer
-    .getTicketById({ Id})
+    .getTicketById({ Id })
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.TicketFetch(entities));
-      return entities
+      return entities;
     })
     .catch((error) => {
       dispatch(actions.TicketFetch({}));
     });
 };
 
-export const fetchMasterTicketType = () => async (
-  dispatch,
-) => {
+export const fetchMasterTicketType = () => async (dispatch) => {
   return await requestFromServer
     .getAllMasterTicketType()
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllMasterTicketTypeFetched(entities));
-      return entities
+      return entities;
     })
     .catch((error) => {
       dispatch(actions.AllMasterTicketTypeFetched({}));
     });
 };
 
-export const fetchCompanyEmployeesData = () => async (
-  dispatch,
-) => {
+export const fetchCompanyEmployeesData = () => async (dispatch) => {
   return await requestFromServer
     .getAllCompanyEmployeesData()
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllCompanyEmployeesDataFetched(entities));
-      return entities
+      return entities;
     })
     .catch((error) => {
       dispatch(actions.AllCompanyEmployeesDataFetched({}));

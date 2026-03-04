@@ -59,6 +59,8 @@ export function RoleEditDialog({ id, show, onHide }) {
       const roleUpdatedFields = {
         id: id,
         name: roleValues.name,
+        isMgt: roleValues.isMgt,
+        isSupervisor: roleValues.isSupervisor,
         isActive:roleValues.isActive
       }
       

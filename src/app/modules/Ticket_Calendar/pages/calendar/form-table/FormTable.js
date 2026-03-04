@@ -230,7 +230,7 @@ export function FormTable() {
                     {event?.ticketStatus == 0 && (
                       <div style={{ display: "flex", alignItems: "center", }}>
                         <div
-                        className="w-[10px] h-[10px] rounded-full bg-green-500"
+                        className="w-[10px] h-[10px] rounded-full bg-[#39FF14]"
                         ></div>
 
                       </div>
