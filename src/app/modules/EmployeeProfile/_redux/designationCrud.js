@@ -58,4 +58,11 @@ export function getAllUserStatusTypes(body) {
 }
 
 
-
+// ── Employee Profile PDF ────
+export function downloadEmpProfilePdfRequest(employeeId) {
+  return axios.post(
+    `${USERS_URL}/profile/read-all-profile`,
+    { profilePdf: employeeId },
+    { responseType: "arraybuffer" }
+  );
+}

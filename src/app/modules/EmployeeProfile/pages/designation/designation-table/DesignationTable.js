@@ -18,6 +18,8 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useDesignationUIContext } from "../DesignationUIContext";
 import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/last-trips-vehicles-table/column-formatter/CreatedColumnFormatter";
 import { format } from "date-fns";
+import { downloadEmpProfilePdf } from "../../../_redux/designationActions";
+
 
 export function DesignationTable({onHide}) {
   //Users UI Context
@@ -47,7 +49,7 @@ export function DesignationTable({onHide}) {
   );
 
   
-  const { totalCount, entities, listLoading } = currentState;
+  const { totalCount, entities, listLoading, profilePdfLoading } = currentState;
 
   //totalCount = 10
 
@@ -164,6 +166,9 @@ export function DesignationTable({onHide}) {
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,
+        dispatch,
+  profilePdfLoading,
+  downloadEmpProfilePdf,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",

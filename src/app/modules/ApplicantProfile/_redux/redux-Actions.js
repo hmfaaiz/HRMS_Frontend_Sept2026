@@ -1,7 +1,8 @@
 import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
-import { ApplicantProfileSlice, callTypes } from "./redux-Slice";
+import { ApplicantProfileSlice, callTypes, } from "./redux-Slice";
 import { toast } from "react-toastify";
+import {downloadApplicantProfilePdfRequest} from "./redux-Crud"
 
 const { actions } = ApplicantProfileSlice;
 
@@ -371,5 +372,31 @@ export const Generatejob_offer_letter = (body) => async (dispatch) => {
         toast.error(SERVER_MESSAGES.pdfFail);
       }
       dispatch(actions.stopCall());
+    });
+};
+
+export const downloadApplicantProfilePdf = (applicantId) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.profilePdf }));
+
+  return downloadApplicantProfilePdfRequest(applicantId)
+    .then((res) => {
+      const blob    = new Blob([res.data], { type: "application/pdf" });
+      const url     = URL.createObjectURL(blob);
+      const link    = document.createElement("a");
+      link.href     = url;
+      link.setAttribute("download", `applicant_profile_${applicantId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      dispatch(actions.profilePdfFetched());
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.profilePdf }));
+      toast.error(SERVER_MESSAGES.pdfFail, {
+        position: "top-right", autoClose: 5000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+      });
     });
 };

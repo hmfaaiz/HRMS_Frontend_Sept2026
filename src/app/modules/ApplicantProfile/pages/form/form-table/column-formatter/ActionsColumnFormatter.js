@@ -4,7 +4,8 @@ import { shallowEqual, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Generatejob_offer_letter } from "../../../../_redux/redux-Actions";
-import { CirclePower, Download, Eye, Pencil, Send, Trash2 } from "lucide-react";
+import { CirclePower, Download, Eye, FileText, Pencil, Send, Trash2 } from "lucide-react";
+
 export function ActionsColumnFormatter(
   cellContent,
   row,
@@ -22,54 +23,24 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     isAccessForConvert,
     isAccessForOfferLetter,
+    downloadApplicantProfilePdf,
+    profilePdfLoading,
   }
 ) {
-  const isUserRead = false;
   const dateOfJoining = row?.details_applicant_vacancy?.[0]?.dateOfJoining;
   const isFutureJoiningDate = dateOfJoining
     ? new Date(dateOfJoining) > new Date()
-    : true; // if no date, treat as future (disable)
-  
+    : true;
+
   return (
     <div className="space-x-2">
+
+      {/* ── Job Completion column buttons ── */}
       {isAccessForConvert && row.isToConvertToEmployee && (
-        // <OverlayTrigger
-        //   overlay={
-        //     <Tooltip id="emp-convert-tooltip">
-        //       {isFutureJoiningDate
-        //         ? "Joining date not reached yet"
-        //         : "Convert to Employee"}</Tooltip>
-        //   }
-        // >
-        //   {/* <a className="" onClick={() => openConvertFormDialog(row.Id)}>
-
-        //     <Send className="w-4 h-4 text-black cursor-pointer" />
-        //   </a> */}
-
-
-        //   <span>
-        //     <a
-        //       className={`${isFutureJoiningDate
-        //           ? "pointer-events-none opacity-50 cursor-not-allowed"
-        //           : ""
-        //         }`}
-        //       onClick={() => {
-        //         if (!isFutureJoiningDate) openConvertFormDialog(row.Id);
-        //       }}
-        //     >
-        //       <Send
-        //         className={`w-4 h-4 text-black ${isFutureJoiningDate ? "opacity-80" : "cursor-pointer"
-        //           }`}
-        //       />
-        //     </a>
-        //   </span>
-        // </OverlayTrigger>
         <OverlayTrigger
           overlay={
             <Tooltip id="emp-convert-tooltip">
-              {isFutureJoiningDate
-                ? "Joining date not reached yet"
-                : "Convert to Employee"}
+              {isFutureJoiningDate ? "Joining date not reached yet" : "Convert to Employee"}
             </Tooltip>
           }
           placement="top"
@@ -87,29 +58,35 @@ export function ActionsColumnFormatter(
             }}
           >
             <Send
-              className={`w-4 h-4 text-black ${isFutureJoiningDate ? "opacity-50" : "cursor-pointer"
-                }`}
+              className={`w-4 h-4 text-black ${isFutureJoiningDate ? "opacity-50" : "cursor-pointer"}`}
             />
           </span>
         </OverlayTrigger>
-
-
       )}
 
       {isAccessForOfferLetter && row.isToShowOfferLetter && (
-        <OverlayTrigger
-          overlay={
-            <Tooltip id="emp-letter-tooltip">Download Offer Letter</Tooltip>
-          }
-        >
+        <OverlayTrigger overlay={<Tooltip id="emp-letter-tooltip">Download Offer Letter</Tooltip>}>
           <a
             disabled={pdfGenerateLoading}
             className=""
-            onClick={() => {
-              dispatch(Generatejob_offer_letter(row.Id));
-            }}
+            onClick={() => dispatch(Generatejob_offer_letter(row.Id))}
           >
             <Download className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+
+      {downloadApplicantProfilePdf && (
+        <OverlayTrigger overlay={<Tooltip id="profile-pdf-tooltip">Download Profile PDF</Tooltip>}>
+          <a
+            className=""
+            style={{
+              opacity: profilePdfLoading ? 0.5 : 1,
+              pointerEvents: profilePdfLoading ? "none" : "auto",
+            }}
+            onClick={() => dispatch(downloadApplicantProfilePdf(row.Id))}
+          >
+            <FileText className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
@@ -125,9 +102,7 @@ export function ActionsColumnFormatter(
 
       {/* Edit */}
       {isAccessForEdit && !row?.jobPostingStatus && row.isToUpdateDelete && (
-        <OverlayTrigger
-          overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}
-        >
+        <OverlayTrigger overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}>
           <a onClick={() => openEditFormDialog(row.Id)}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
@@ -157,21 +132,18 @@ export function ActionsColumnFormatter(
 
       {/* Reopening */}
       {isAccessForEdit && row?.jobPostingStatus == 3 && (
-        <OverlayTrigger
-          overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}
-        >
+        <OverlayTrigger overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}>
           <a
             className="btn btn-icon posting-button"
             onClick={() => openEditFormDialog(row.Id)}
           >
             <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")} />
             </span>
           </a>
         </OverlayTrigger>
       )}
+
     </div>
   );
 }
