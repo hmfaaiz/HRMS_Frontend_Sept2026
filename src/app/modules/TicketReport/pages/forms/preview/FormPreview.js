@@ -28,8 +28,15 @@ const PivotRow = ({ row, dateColumns, level = 0 }) => {
         <td style={indent}>{getRowLabel(row)}</td>
         <td style={{ textAlign: "center" }}>{row.logged ? Number(row.logged).toFixed(2) : ""}</td>
         {dateColumns.map((d) => (
+          // <td key={d.key} style={{ textAlign: "center" }}>
+          //   {row.dates?.[d.key] ?? row[d.key] ?? ""}
+          // </td>
           <td key={d.key} style={{ textAlign: "center" }}>
-            {row.dates?.[d.key] ?? row[d.key] ?? ""}
+            {row.dates?.[d.key] != null
+              ? Number(row.dates[d.key]).toFixed(2)
+              : row[d.key] != null
+                ? Number(row[d.key]).toFixed(2)
+                : ""}
           </td>
         ))}
       </tr>
