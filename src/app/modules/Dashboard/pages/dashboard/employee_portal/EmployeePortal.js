@@ -158,7 +158,15 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
                 }
               />
             </div>
-            <EmployeePortalMenu name="My Details" />
+            <EmployeePortalMenu
+              name={
+                detailViewType == 1
+                  ? "My Details"
+                  : detailViewType == 2
+                  ? "Department Details"
+                  : "Company Details"
+              }
+            />
           </>
         )}
       {moduleRights?.find((e) => e?.value == 3)?.allow ||
