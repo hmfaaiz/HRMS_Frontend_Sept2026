@@ -114,19 +114,17 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={
             <Tooltip id="delete-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
+              { "Delete" }
             </Tooltip>
           }
         >
-          {row.isActive ? (
+         
             <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
-          ) : (
-            <a onClick={() => openActiveFormDialog(row.Id, row.isActive)}>
-              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          )}
+          
+           
+          
         </OverlayTrigger>
       )}
 
