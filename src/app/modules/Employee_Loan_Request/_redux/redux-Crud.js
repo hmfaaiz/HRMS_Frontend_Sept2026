@@ -61,3 +61,21 @@ export function updateApprovedStatus(data) {
    
   return axios.put(`${USERS_URL}/employee_loan_request/update-loan-approved-status`, data);
 }
+
+export function downloadLoanPdfRequest(loanId) {
+  return axios.post(
+    `${USERS_URL}/employee_loan_request/read-all-employee-loan-request`,
+    { pdf: loanId },
+    { responseType: "arraybuffer" }  
+  );
+}
+
+
+// ── Loan Completion PDF 
+export function downloadLoanCompletionPdfRequest(loanId) {
+  return axios.post(
+    `${USERS_URL}/employee_loan_request/read-all-employee-loan-request`,
+    { completionPdf: loanId },
+    { responseType: "arraybuffer" }
+  );
+}

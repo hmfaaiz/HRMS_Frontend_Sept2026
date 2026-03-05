@@ -16,17 +16,22 @@ const initialEmpProfileState = {
 export const callTypes = {
     list: "list",
     action: "action",
+    profilePdf: "profilePdf",
 };
 
 export const empProfileSlice = createSlice({
     name: "emp profile",
     initialState: initialEmpProfileState,
+     profilePdfLoading: false,
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } else {
+            } else if (action.payload.callType === callTypes.profilePdf) {
+                state.profilePdfLoading = false;  
+            } 
+            else {
                 state.actionsLoading = false;
             }
         },
@@ -34,7 +39,10 @@ export const empProfileSlice = createSlice({
             state.error = null;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = true;
-            } else {
+            } 
+            else if (action.payload.callType === callTypes.profilePdf) {
+                state.profilePdfLoading = true;   
+            }else {
                 state.actionsLoading = true;
             }
         },
@@ -50,6 +58,9 @@ export const empProfileSlice = createSlice({
             state.entities = entities;
             state.totalCount = totalResult;
         },
+        profilePdfFetched: (state) => {
+            state.profilePdfLoading = false;  
+},
 
         //get User By ID
         emp_profileFetchedForEdit: (state, action) => {
