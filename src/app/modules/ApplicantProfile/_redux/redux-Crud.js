@@ -61,3 +61,10 @@ export function generatejob_offer_letter(body) {
   return axios.post(`${USERS_URL}/applicant_profile/generate-offer-letter`, body,config);
 }
 
+export function downloadApplicantProfilePdfRequest(applicantId) {
+  return axios.post(
+    `${USERS_URL}/applicant_profile/read-all-applicant-profile`,
+    { profilePdf: applicantId },
+    { responseType: "arraybuffer" }
+  );
+}

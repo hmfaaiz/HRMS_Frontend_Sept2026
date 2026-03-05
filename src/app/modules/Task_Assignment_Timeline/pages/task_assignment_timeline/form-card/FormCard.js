@@ -7,18 +7,17 @@ import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { fetchTaskAssignmentTimeline } from "../../../_redux/redux-Actions";
-
+import {  fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 export function FormCard() {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const dispatch = useDispatch();
 
   const [showTicketDetails, setShowTicketDetails] = useState(false);
 
-  // Tracks which master row Ids are currently expanded in the table
-  // Passed to export so backend can include their detail rows in the file
   const [expandedMasterIds, setExpandedMasterIds] = useState([]);
 
   const {
+    
     allEmployees,
     ticketTypes,
     ticketStatuses,
@@ -30,7 +29,7 @@ export function FormCard() {
   } = useSelector(
     (state) => ({
       allEmployees: state.dashboard?.allEmployees || [],
-      ticketTypes: state.dashboard?.allTicketTypeList || [],
+      ticketTypes: state.dashboard?.allMasterTicketType || [],
       ticketStatuses: state.dashboard?.allTicketStatus || [],
       priorityLevels: state.dashboard?.priorityLevelList || [],
       listLoading: state.task_assignment_timeline?.listLoading,
@@ -48,8 +47,6 @@ export function FormCard() {
       csv: false,
       excel: false,
       [type]: true,
-      // Pass expanded master Ids and whether ticket details mode is ON
-      // Backend uses these to include detail rows under each expanded ticket
       showTicketDetails,
       expandedMasterIds: showTicketDetails ? expandedMasterIds : [],
     };
@@ -64,8 +61,8 @@ export function FormCard() {
 
   useEffect(() => {
     dispatch(actions.FetchAllFacilitatorEmployee());
-    dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
-    dispatch(actions.fetchAllTicketStatus());
+    dispatch(fetchMasterTicketType());
+     dispatch(actions.fetchAllTicketStatus());
     dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
   }, [dispatch]);
 
@@ -74,7 +71,7 @@ export function FormCard() {
       <FormFilter
         loading={listLoading || pdfLoading || csvLoading || excelLoading}
         employees={allEmployees}
-        ticketTypes={ticketTypes.filter((o) => o.label !== "Escalation Ticket")}
+        ticketTypes={ticketTypes}
         ticketStatuses={ticketStatuses}
         priorityLevels={priorityLevels}
         onPrint={print}
