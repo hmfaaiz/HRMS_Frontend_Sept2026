@@ -26,6 +26,10 @@ import { CircleMinus  } from "lucide-react";
 
 export function FormPage({ history }) {
   const dispatch = useDispatch();
+
+  //shared state for applicant detail toggle
+  const [showApplicantDetails, setShowApplicantDetails] = useState(false);
+
   const FormUIEvents = {
     newFormButtonClick: () => {
       history.push("/job_vacancy/read-all-job-vacancy/new");
@@ -223,23 +227,30 @@ export function FormPage({ history }) {
                     eventKey="0"
                     className="flex justify-start text-bold"
                   >
-                   
-                    {activeKey === "0" ? <CircleMinus  className="h-4 w-4 text-black mr-1"/> : <CirclePlus  className="h-4 w-4 text-black mr-1"/>}<span className="text-black">Filters</span>
-
+                    {activeKey === "0"
+                      ? <CircleMinus className="h-4 w-4 text-black mr-1" />
+                      : <CirclePlus className="h-4 w-4 text-black mr-1" />}
+                    <span className="text-black">Filters</span>
                   </Accordion.Toggle>
                 </div>
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 
-                  <>
-                    <FormFIlter />
-                  </>
+                <>
+                  {/*pass toggle state + handler into FormFIlter ── */}
+                  <FormFIlter
+                    showApplicantDetails={showApplicantDetails}
+                    onApplicantDetailsChange={setShowApplicantDetails}
+                  />
+                </>
               
               </Accordion.Collapse>
             </Card>
           </Accordion>
         </div>
-        <FormCard />
+
+        {/*pass toggle state + handler into FormCard ── */}
+        <FormCard showApplicantDetails={showApplicantDetails} onApplicantDetailsChange={setShowApplicantDetails} />
       </TCard>
       <Switch>
         {/* NEW */}

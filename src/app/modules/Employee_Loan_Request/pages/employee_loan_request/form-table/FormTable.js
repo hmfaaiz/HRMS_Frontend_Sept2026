@@ -316,7 +316,7 @@ function ExpandedRowRenderer({ row }) {
   return <InstallmentDetailTable details={details || []} loading={loading} />;
 }
 
-export function FormTable() {
+export function FormTable({ showDetails }) {
   const formUIContext = useFormUIContext();
   const [expandedRows, setExpandedRows] = useState([]);
   const dispatch = useDispatch();
@@ -343,8 +343,10 @@ export function FormTable() {
   const { totalCount, entities, listLoading, pdfLoading, completionPdfLoading } = currentState;
 
   useEffect(() => {
-    setExpandedRows([]);
-  }, [formUIProps.queryParams, formUIProps.employeeId]);
+    if (!showDetails) {
+      setExpandedRows([]);
+    }
+  }, [showDetails]);
 
   useEffect(() => {
     formUIProps.setIds("");
@@ -366,38 +368,45 @@ export function FormTable() {
     );
   };
 
-  const expandRow = {
-    renderer: (row) => <ExpandedRowRenderer row={row} />,
-    expanded: expandedRows,
-    expandByColumnOnly: true,
-    onExpand: handleExpand,
-    showExpandColumn: true,
-    expandColumnPosition: "left",
-    expandHeaderColumnRenderer: () => null,
-    expandColumnRenderer: ({ expanded }) => (
-      <button
-        type="button"
-        title={expanded ? "Collapse" : "View installment schedule"}
-        style={{
-          background: "none", border: "none", cursor: "pointer",
-          padding: "2px 4px", display: "inline-flex",
-          alignItems: "center", justifyContent: "center",
-        }}
-      >
-        <span style={{
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          width: 20, height: 20, borderRadius: "50%",
-          background: expanded ? "#009EF7" : "#e2eaf5",
-          color: expanded ? "#fff" : "#4a5568",
-          fontSize: 10, fontWeight: 700,
-          transition: "background 0.2s, transform 0.2s",
-          transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
-        }}>
-          ▶
-        </span>
-      </button>
-    ),
-  };
+  const expandRow = showDetails
+    ? {
+        renderer: (row) => <ExpandedRowRenderer row={row} />,
+        expanded: expandedRows,
+        expandByColumnOnly: true,
+        onExpand: handleExpand,
+        showExpandColumn: true,
+        expandColumnPosition: "left",
+        expandHeaderColumnRenderer: () => null,
+        expandColumnRenderer: ({ expanded }) => (
+          <button
+            type="button"
+            title={expanded ? "Collapse" : "View installment schedule"}
+            style={{
+              background: "none", border: "none", cursor: "pointer",
+              padding: "2px 4px", display: "inline-flex",
+              alignItems: "center", justifyContent: "center",
+            }}
+          >
+            <span style={{
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              width: 20, height: 20, borderRadius: "50%",
+              background: expanded ? "#009EF7" : "#e2eaf5",
+              color: expanded ? "#fff" : "#4a5568",
+              fontSize: 10, fontWeight: 700,
+              transition: "background 0.2s, transform 0.2s",
+              transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
+            }}>
+              ▶
+            </span>
+          </button>
+        ),
+      }
+    : {
+        renderer: () => null,
+        expanded: [],
+        expandByColumnOnly: true,
+        showExpandColumn: false,
+      };
 
   const columns = [
     {
@@ -475,9 +484,10 @@ export function FormTable() {
         isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
         dispatch,
         pdfDownloading: pdfLoading,
-        completionPdfLoading,          // ← pass down
+        completionPdfLoading,
         downloadLoanPdf,
-        downloadLoanCompletionPdf,     // ← pass down
+        downloadLoanCompletionPdf,
+        showDetails,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -501,6 +511,7 @@ export function FormTable() {
           {({ paginationProps, paginationTableProps }) => (
             <Pagination isLoading={listLoading} paginationProps={paginationProps}>
               <BootstrapTable
+                key={showDetails ? "expanded" : "collapsed"}
                 wrapperClasses="table-responsive"
                 bordered={false}
                 classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
