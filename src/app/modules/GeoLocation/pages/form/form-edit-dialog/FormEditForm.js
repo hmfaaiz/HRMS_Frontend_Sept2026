@@ -83,6 +83,7 @@ export function FormEditForm({
         ...user,
         autoAttendance: user?.autoAttendance ?? false,
         autoTracking: user?.autoTracking ?? false,
+        isLateReasonAllow: user?.isLateReasonAllow ?? false,
       }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
@@ -139,11 +140,17 @@ export function FormEditForm({
                           setFieldValue(
                             "autoTracking",
                             existingRecord.autoTracking ?? false
+                          );  
+                          
+                          setFieldValue(
+                            "isLateReasonAllow",
+                            existingRecord.isLateReasonAllow ?? false
                           );
                         } else {
                           setFieldValue("geoLocations", []);
                           setFieldValue("autoAttendance", false);
                           setFieldValue("autoTracking", false);
+                          setFieldValue("isLateReasonAllow", false);
                         }
                       }}
                       value={
@@ -174,11 +181,23 @@ export function FormEditForm({
                     <Checkbox
                       isSelected={values?.autoTracking}
                       children={
-                        "Mark Attendance automatically when Attendance App changes the Status (In Range or Out of Range)"
+                        "Mark attendance automatically when attendance App changes the Status (In Range or Out of Range)"
                       }
                       disabled={isUserForRead || actionsLoading}
                       onChange={() =>
                         setFieldValue("autoTracking", !values?.autoTracking)
+                      }
+                    />
+                  </div> 
+                   <div>
+                    <Checkbox
+                      isSelected={values?.isLateReasonAllow}
+                      children={
+                        "Allow submitting late reason "
+                      }
+                      disabled={isUserForRead || actionsLoading}
+                      onChange={() =>
+                        setFieldValue("isLateReasonAllow", !values?.isLateReasonAllow)
                       }
                     />
                   </div>
