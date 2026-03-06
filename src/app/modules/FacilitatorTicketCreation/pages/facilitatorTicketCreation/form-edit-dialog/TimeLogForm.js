@@ -206,7 +206,7 @@ export function TimeLogForm({ onHide }) {
 
         timeLogData.noOfHours = parseFloat(timeLogData.noOfHours)
         timeLogData.detailId = formUIProps?.detailId || timeLogData.detailId
-        timeLogData.loggedDate = formatDates(timeLogData?.loggedDate, "yyyy-MM-dd");
+        timeLogData.loggedDate = formatDates(timeLogData?.loggedDate || new Date(), "yyyy-MM-dd");
 
 
 
