@@ -14,7 +14,8 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { CirclePlus, FileSpreadsheet, FileText, Sheet } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import * as actions from "../../../_redux/redux-Actions";
-export function FormCard() {
+
+export function FormCard({ showApplicantDetails, onApplicantDetailsChange }) {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
   const FormUIProps = useMemo(() => {
@@ -77,86 +78,108 @@ export function FormCard() {
 
   return (
     <>
-      <div className="flex md:col-span-2 items-center gap-2 md:justify-end  ">
-        {accessUser && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={FormUIProps.newFormButtonClick}
-          >
-            <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
-            Add
-          </button>
-        )}
+      <div className="flex items-center justify-between gap-2 mt-2">
 
-        <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ">
-          <OverlayTrigger
-            overlay={<Tooltip id="products-edit-tooltip">Export PDF</Tooltip>}
+        {/* LEFT: Show Applicant Details checkbox */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="applicantDetailsToggle"
+            checked={!!showApplicantDetails}
+            onChange={(e) => onApplicantDetailsChange?.(e.target.checked)}
+            style={{ cursor: "pointer", width: 15, height: 15 }}
+          />
+          <label
+            htmlFor="applicantDetailsToggle"
+            className="text-md mb-0"
+            style={{ cursor: "pointer", userSelect: "none" }}
           >
+            Show Applicant Details
+          </label>
+        </div>
+
+        {/* RIGHT: Add button + export icons */}
+        <div className="flex items-center gap-2">
+          {accessUser && (
             <button
               type="button"
-              className="border-none bg-transparent"
-              disabled={pdfLoading}
+              className="btn btn-primary"
+              onClick={FormUIProps.newFormButtonClick}
+            >
+              <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+              Add
+            </button>
+          )}
+
+          <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+            <OverlayTrigger
+              overlay={<Tooltip id="products-edit-tooltip">Export PDF</Tooltip>}
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={pdfLoading}
               onClick={() => {
                 print("pdf");
               }}
-            >
+              >
               {/* Print PDF */}
-              <FileText className="w-4 h-4 text-black cursor-pointer" />
+                <FileText className="w-4 h-4 text-black cursor-pointer" />
               {/* {pdfLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )} */}
-            </button>
-          </OverlayTrigger>
+              </button>
+            </OverlayTrigger>
 
-          <OverlayTrigger
-            overlay={<Tooltip id="products-edit-tooltip">Export CSV</Tooltip>}
-          >
-            <button
-              type="button"
-              className="border-none bg-transparent"
-              disabled={csvLoading}
+            <OverlayTrigger
+              overlay={<Tooltip id="products-edit-tooltip">Export CSV</Tooltip>}
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={csvLoading}
               onClick={() => {
                 print("csv");
               }}
-            >
+              >
               {/* Print CSV
                  */}
 
-              <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
+                <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
               {/* {csvLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )} */}
-            </button>
-          </OverlayTrigger>
-          <OverlayTrigger
+              </button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
             overlay={
               <Tooltip id="products-edit-tooltip">Export Excel</Tooltip>
             }
-          >
-            <button
-              type="button"
-              className="border-none bg-transparent"
-              disabled={excelLoading}
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={excelLoading}
               onClick={() => {
                 print("excel");
               }}
-            >
+              >
               {/* Print Excel
                  */}
 
-              <Sheet className="w-4 h-4 text-black cursor-pointer" />
+                <Sheet className="w-4 h-4 text-black cursor-pointer" />
               {/* {excelLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )} */}
-            </button>
-          </OverlayTrigger>
+              </button>
+            </OverlayTrigger>
+          </div>
         </div>
-
 
       </div>
 
-      <FormTable />
+      <FormTable showApplicantDetails={showApplicantDetails} />
     </>
   );
 }

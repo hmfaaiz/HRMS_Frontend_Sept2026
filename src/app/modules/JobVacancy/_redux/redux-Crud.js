@@ -56,3 +56,27 @@ export function closeJobVacancy(body) {
 
   return axios.patch(`${USERS_URL}/job_vacancy/close-job-vacancy`, body);
 }
+export function fetchApplicantsForVacancy(jobVacancyId) {
+  return axios
+    .post(`${USERS_URL}/applicant_profile/read-all-applicant-profile`, {
+      pageSize: 1000,
+      pageNumber: 1,
+      filter: {},
+    })
+    .then((res) => {
+      const all = res.data?.data?.rows || [];
+      return all.filter((applicant) =>
+        (applicant.details_applicant_vacancy || []).some(
+          (v) => v.jobVacancyId === parseInt(jobVacancyId)
+        )
+      );
+    });
+}
+
+export function generateJobVacancyReportRequest(jobVacancyId) {
+  return axios.post(
+    `${USERS_URL}/job_vacancy/read-all-job-vacancy`,
+    { vacancyReport: jobVacancyId },   
+    { responseType: "arraybuffer" }
+  );
+}

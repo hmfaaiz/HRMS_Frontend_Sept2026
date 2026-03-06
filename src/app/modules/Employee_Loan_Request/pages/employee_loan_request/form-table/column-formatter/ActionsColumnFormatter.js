@@ -67,7 +67,7 @@
 
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CirclePower, Download, FileCheck, Pencil, Trash2, ListCollapse, BookCheck } from "lucide-react";
+import { CirclePower, Pencil, Trash2, ListCollapse, BookCheck } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -83,18 +83,19 @@ export function ActionsColumnFormatter(
     setIsFileReq,
     dispatch,
     pdfDownloading,
-    completionPdfLoading, 
+    completionPdfLoading,
     downloadLoanPdf,
-    downloadLoanCompletionPdf, 
+    downloadLoanCompletionPdf,
+    showDetails,
   }
 ) {
-  //loan is "Completed" when approved AND isLoanContinuing is false
+  // Loan is "Completed" when approved AND isLoanContinuing is false
   const isCompleted = row.approved_status === 1 && !row.isLoanContinuing;
 
   return (
     <div className="space-x-2 d-flex align-items-center justify-content-end">
-      {/* ── Download Loan Completion Report PDF (only when Completed) ── */}
-      {isCompleted && (
+
+      {showDetails && isCompleted && (
         <OverlayTrigger
           overlay={<Tooltip id={`book-check-tooltip-${row.Id}`}>Loan Completion Report</Tooltip>}
         >
@@ -110,20 +111,21 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {/* ── Download Loan Detail Report PDF (always visible) ── */}
-      <OverlayTrigger
-        overlay={<Tooltip id={`list-collapse-tooltip-${row.Id}`}>Loan Detail Report</Tooltip>}
-      >
-        <a
-          onClick={() => !pdfDownloading && dispatch(downloadLoanPdf(row.Id))}
-          style={{
-            cursor: pdfDownloading ? "not-allowed" : "pointer",
-            opacity: pdfDownloading ? 0.5 : 1,
-          }}
+      {showDetails && (
+        <OverlayTrigger
+          overlay={<Tooltip id={`list-collapse-tooltip-${row.Id}`}>Loan Detail Report</Tooltip>}
         >
-          <ListCollapse className="w-4 h-4 text-black" />
-        </a>
-      </OverlayTrigger>
+          <a
+            onClick={() => !pdfDownloading && dispatch(downloadLoanPdf(row.Id))}
+            style={{
+              cursor: pdfDownloading ? "not-allowed" : "pointer",
+              opacity: pdfDownloading ? 0.5 : 1,
+            }}
+          >
+            <ListCollapse className="w-4 h-4 text-black" />
+          </a>
+        </OverlayTrigger>
+      )}
 
       {/* ── Edit ── */}
       {isAccessForEdit && row.isActive && row?.isLoanContinuing && (

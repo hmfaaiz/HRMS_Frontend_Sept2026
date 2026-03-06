@@ -14,12 +14,15 @@ const initialJobVacancyState = {
     pdfLoading: false,
     csvLoading: false,
     excelLoading: false,
+    reportPdfLoading: false, 
 };
 
 
 export const callTypes = {
     list: "list",
     action: "action",
+    reportPdf: "reportPdf",  
+
 };
 
 export const JobVacancySlice = createSlice({
@@ -41,7 +44,12 @@ export const JobVacancySlice = createSlice({
             }
             else if (action.payload.callType === callTypes.xlsx) {
                 state.excelLoading = false;
-            }
+            } 
+            else if (action.payload.callType === callTypes.reportPdf) {
+                state.reportPdfLoading = false;   
+                }else {
+            state.actionsLoading = false;
+  }
 
         },
 
@@ -154,7 +162,9 @@ export const JobVacancySlice = createSlice({
         excelFetched: (state, action) => {
             state.excelLoading = false;
         },
-
+        reportPdfFetched: (state) => {
+    state.reportPdfLoading = false;
+  },
 
         startCall: (state, action) => {
             state.error = null;
@@ -162,9 +172,12 @@ export const JobVacancySlice = createSlice({
                 state.listLoading = true;
             } else if (action.payload.callType === callTypes.pdfGenerate) {
                 state.pdfGenerateLoading = true;
-            } else {
+            } else if (action.payload.callType === callTypes.reportPdf) {
+                state.reportPdfLoading = true;    
+                } 
+            else {
                 state.actionsLoading = true;
-            }
+            } 
         },
 
 
