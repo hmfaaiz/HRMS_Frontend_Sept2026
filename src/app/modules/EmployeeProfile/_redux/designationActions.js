@@ -2,6 +2,7 @@ import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./designationCrud";
 import { empProfileSlice, callTypes } from "./employeeProfileSlice";
 import { toast } from "react-toastify";
+import { downloadEmpProfilePdfRequest } from "./designationCrud";
 
 const { actions } = empProfileSlice;
 // const { roleActions } = getAllrolesSlice
@@ -261,4 +262,30 @@ export const fetchUserStatusTypes = (body) => (dispatch) => {
 export const clearForm = () => (dispatch) => {
 
   return dispatch(actions.emp_profileFetchedForEdit({ userForEdit: undefined }));
+};
+
+export const downloadEmpProfilePdf = (employeeId) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.profilePdf }));
+
+  return downloadEmpProfilePdfRequest(employeeId)
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.setAttribute("download", `employee_profile_report_${employeeId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(pdfUrl);
+      dispatch(actions.profilePdfFetched());
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Employee Profile PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.profilePdf }));
+      toast.error("Failed to generate Employee Profile Report", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    });
 };

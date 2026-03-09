@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
@@ -21,6 +21,10 @@ import TCard from "../../../../../utils/common-modules/TCard";
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
+
+  // ── Independent of employee selection ──
+  const [showDetails, setShowDetails] = useState(false);
+
   const FormUIProps = useMemo(() => {
     return {
       employeeId: FormUIContext.employeeId,
@@ -35,9 +39,7 @@ export function FormCard() {
   useEffect(() => {}, [FormUIProps]);
 
   const { userAccess } = useSelector(
-    (state) => ({
-      userAccess: state.auth.userAccess.employee_loan_request,
-    }),
+    (state) => ({ userAccess: state.auth.userAccess.employee_loan_request }),
     shallowEqual
   );
 
@@ -45,17 +47,13 @@ export function FormCard() {
     (item) => item.componentName === "CreateEmployeeLoanRequest"
   );
 
-  const { currentState } = useSelector((state) => {
-    return {
-      currentState: state.employee_loan_request,
-      userAccess: state?.auth?.userAccess["employee_loan_request"],
-    };
-  }, shallowEqual);
+  const { currentState } = useSelector((state) => ({
+    currentState: state.employee_loan_request,
+    userAccess: state?.auth?.userAccess["employee_loan_request"],
+  }), shallowEqual);
 
   const { dashboard } = useSelector(
-    (state) => ({
-      dashboard: state.dashboard,
-    }),
+    (state) => ({ dashboard: state.dashboard }),
     shallowEqual
   );
 
@@ -70,67 +68,45 @@ export function FormCard() {
   }, [dispatch, FormUIProps.employeeId]);
 
   return (
-    // <>
-    //   <Card>
-    //     <CardHeader title={CurrentModuleName()}></CardHeader>
+    <TCard name={CurrentModuleName()}>
+      <EmployeeSelect
+        setemployeeId={FormUIProps.setemployeeId}
+        setPanelMode={FormUIProps.setPanelMode}
+        panelMode={FormUIProps.panelMode}
+      />
+      <br />
 
-    //     <CardBody>
-    //       <EmployeeSelect
-    //         setemployeeId={FormUIProps.setemployeeId}
-    //         setPanelMode={FormUIProps.setPanelMode}
-    //         panelMode={FormUIProps.panelMode}
-    //       />
-    //       <br />
-    //       {/* <hr /> */}
+      <EmployeeProfile
+        employeeId={FormUIProps.employeeId}
+        panelMode={FormUIProps.panelMode}
+      />
 
-    //       <EmployeeProfile
-    //         employeeId={FormUIProps.employeeId}
-    //         panelMode={FormUIProps.panelMode}
-    //       />
-    //       {/* EmployeeProfile Ends */}
+      <FormEditDialog
+        id={FormUIProps.id}
+        employeeId={FormUIProps.employeeId}
+      />
 
-    //       {/* <br /> */}
-    //       {/* <hr /> */}
-    //       {/* FormEditDialog Starts */}
-    //       <FormEditDialog
-    //         id={FormUIProps.id}
-    //         employeeId={FormUIProps.employeeId}
-    //       />
-    //       {/* FormEditDialog Ends */}
+      <br />
+      <hr />
 
-    //       <br />
-    //       <hr />
-    //       <FormTable />
-    //     </CardBody>
-    //   </Card>
-      <TCard name={CurrentModuleName()}>
-        <EmployeeSelect
-          setemployeeId={FormUIProps.setemployeeId}
-          setPanelMode={FormUIProps.setPanelMode}
-          panelMode={FormUIProps.panelMode}
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          id="loanDetailsToggle"
+          checked={showDetails}
+          onChange={(e) => setShowDetails(e.target.checked)}
+          style={{ cursor: "pointer", width: 15, height: 15 }}
         />
-        <br />
-        {/* <hr /> */}
+        <label
+          htmlFor="loanDetailsToggle"
+          className="text-md mb-0"
+          style={{ cursor: "pointer", userSelect: "none" }}
+        >
+          Show Installment Details
+        </label>
+      </div>
 
-        <EmployeeProfile
-          employeeId={FormUIProps.employeeId}
-          panelMode={FormUIProps.panelMode}
-        />
-        {/* EmployeeProfile Ends */}
-
-        {/* <br /> */}
-        {/* <hr /> */}
-        {/* FormEditDialog Starts */}
-        <FormEditDialog
-          id={FormUIProps.id}
-          employeeId={FormUIProps.employeeId}
-        />
-        {/* FormEditDialog Ends */}
-
-        <br />
-        <hr />
-        <FormTable />
-      </TCard>
-    // </>
+      <FormTable showDetails={showDetails} />
+    </TCard>
   );
 }

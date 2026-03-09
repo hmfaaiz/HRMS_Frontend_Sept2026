@@ -99,8 +99,8 @@ export function ResponseColumnFormatter(
         </span>
       )} */}
 
-
-      <OverlayTrigger
+{(row?.ticketStatus !=0) && (
+     <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Response</Tooltip>}
       >
         <a onClick={() => {
@@ -111,6 +111,9 @@ export function ResponseColumnFormatter(
           <Reply className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
+
+)}
+   
 
 
       <OverlayTrigger
@@ -151,6 +154,8 @@ export function ResponseColumnFormatter(
         </button>
       </OverlayTrigger>
 
+      {(row?.ticketStatus !=0) && (
+
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
       >
@@ -169,7 +174,7 @@ export function ResponseColumnFormatter(
           <CalendarClock  className="w-4 h-4 text-black cursor-pointer" />
         </button>
       </OverlayTrigger>
-
+      )}
 
 
     </div>
@@ -186,8 +191,10 @@ export function TimeLogsColumnFormatter(
   return (
     <div className="space-x-2">
 
+{row?.MasterDetailTimeLog?.ticketStatus != 0 && (
+  <>
 
-      <OverlayTrigger
+   <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
       >
         <button
@@ -203,11 +210,19 @@ export function TimeLogsColumnFormatter(
       </OverlayTrigger>
 
 
+
+
+
       <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
         <a onClick={() => openDeleteHandler(row.Id, row.detailId)}>
           <Trash2 className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
+  </>
+
+        )
+}
+     
     </div>
   );
 }

@@ -2,9 +2,8 @@ import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
 import { JobVacancySlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
-
+import {generateJobVacancyReportRequest} from "./redux-Crud"
 const { actions } = JobVacancySlice;
-
 
 export const fetchJobVacancy = (queryparm) => async (dispatch) => {
 
@@ -324,5 +323,35 @@ export const closeJobVacancy = (id) => (dispatch) => {
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       toast.error(error.response.data.message);
+    });
+};
+
+export const fetchApplicantsForVacancy = (jobVacancyId) => () => {
+  return requestFromServer.fetchApplicantsForVacancy(jobVacancyId);
+};
+
+export const downloadJobVacancyReport = (jobVacancyId) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.reportPdf }));
+
+  return generateJobVacancyReportRequest(jobVacancyId)
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.setAttribute("download", `JobVacancy_Report.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(pdfUrl);
+      dispatch(actions.reportPdfFetched());
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Job Vacancy Report";
+      dispatch(actions.catchError({ error, callType: callTypes.reportPdf }));
+      toast.error("Failed to generate Job Vacancy Report", {
+        position: "top-right",
+        autoClose: 5000,
+      });
     });
 };

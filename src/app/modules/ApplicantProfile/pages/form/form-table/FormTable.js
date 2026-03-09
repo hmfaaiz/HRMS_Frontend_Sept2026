@@ -17,9 +17,9 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { getFileName, getUploadUrl } from "../../../../../utils/common";
+import { downloadApplicantProfilePdf } from "../../../_redux/redux-Actions";
 
 export function FormTable() {
-  //Users UI Context
   const formUIContext = useFormUIContext();
 
   const formUIProps = useMemo(() => {
@@ -33,71 +33,49 @@ export function FormTable() {
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       openConvertFormDialog: formUIContext.openConvertFormDialog,
-
     };
   }, [formUIContext]);
 
-
-  const { currentState, userAccess, pdfGenerateLoading } = useSelector(
-    (state) => {
-      return {
-
-
-        currentState: state.applicant_profile,
-        pdfGenerateLoading: state.applicant_profile.pdfGenerateLoading,
-        userAccess: state?.auth?.userAccess["applicant_profile"],
-      }
-    },
+  const { currentState, userAccess, pdfGenerateLoading, profilePdfLoading } = useSelector(
+    (state) => ({
+      currentState: state.applicant_profile,
+      pdfGenerateLoading: state.applicant_profile.pdfGenerateLoading,
+      profilePdfLoading: state.applicant_profile.profilePdfLoading,
+      userAccess: state?.auth?.userAccess["applicant_profile"],
+    }),
     shallowEqual
   );
 
-
   const { totalCount, entities, listLoading } = currentState;
-
-  //totalCount = 10
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     formUIProps.setIds([]);
-
-
     dispatch(actions.fetchApplicantProfile(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
-
 
   const isAccessForView = userAccess?.find(
     (item) => item.componentName === "ReadApplicantProfile"
   );
-
-  const isAccessForEdit = userAccess?.find((item) => {
-    return item.componentName === "UpdateApplicantProfile";
-  });
+  const isAccessForEdit = userAccess?.find(
+    (item) => item.componentName === "UpdateApplicantProfile"
+  );
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteApplicantProfile"
   );
-
   const isAccessForConvert = userAccess?.find(
     (item) => item.componentName === "ConvertApplicantEmployee"
   );
 
-
-
-
-
   const columns = [
-
-
-
     {
       dataField: "applicantCode",
       text: "Applicant Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
+      style: { minWidth: "50px" },
     },
     {
       dataField: "FullName",
@@ -105,111 +83,64 @@ export function FormTable() {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "150px",
-      },
+      style: { minWidth: "150px" },
     },
-    // {
-    //   dataField: "additional_summary",
-    //   text: "Address",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "30px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
-    //   }
-    // },
-
-
-
     {
       dataField: "email_personal",
       text: "Personal Email",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
+      style: { minWidth: "100px" },
     },
-
     {
       dataField: "phone_cell",
       text: "Cell No.",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
+      style: { minWidth: "100px" },
     },
-
     {
       dataField: "file",
       text: "File",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
-      // formatter: (cell, row) => (
-
-      //   <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-      //     <span>{getFileName(cell)}</span>
-      //   </a>
-      // )
+      style: { minWidth: "100px" },
       formatter: (cell) => {
         if (!cell) return "";
-
         return (
           <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
             View CV
           </a>
         );
-      }
-
-
+      },
     },
-
-
     {
       dataField: "detailsApplicantVacancy.JobVacancy.JobName",
       text: "Job Applied",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
+      style: { minWidth: "100px" },
     },
-
     {
       dataField: "detailsApplicantVacancy.applicationDate",
-      text: "Application Date ",
+      text: "Application Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
+      style: { minWidth: "100px" },
     },
-
     {
       dataField: "detailsApplicantVacancy.ApplicationStatus.formName",
       text: "Applicant Status",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
+      style: { minWidth: "100px" },
     },
-
     {
       dataField: "",
       text: "Job Completion",
@@ -218,17 +149,13 @@ export function FormTable() {
       formatExtraData: {
         dispatch,
         pdfGenerateLoading,
-
         openConvertFormDialog: formUIProps.openConvertFormDialog,
         isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
         isAccessForOfferLetter: true,
       },
-
       classes: "text-end pr-0",
       headerClasses: "text-end pr-3",
-      style: {
-        minWidth: "100px",
-      },
+      style: { minWidth: "100px" },
     },
     {
       dataField: "action",
@@ -237,31 +164,22 @@ export function FormTable() {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         dispatch,
-        // pdfGenerateLoading,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
-
-
+        downloadApplicantProfilePdf,  
+        profilePdfLoading,             
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
-
-
+        isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
       },
-
       classes: "text-end pr-0",
       headerClasses: "text-end pr-3",
-      style: {
-        minWidth: "100px",
-      },
+      style: { minWidth: "100px" },
     },
   ];
 
-  //Table pagination properties
   const paginationOptions = {
     custom: true,
     totalSize: totalCount,
@@ -275,10 +193,7 @@ export function FormTable() {
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            >
+            <Pagination isLoading={listLoading} paginationProps={paginationProps}>
               <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
@@ -289,13 +204,7 @@ export function FormTable() {
                 data={entities === null ? [] : entities}
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
-
-                // })}
+                onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}
                 {...paginationTableProps}
               >
                 <PleaseWaitMessage entities={entities} />

@@ -2971,7 +2971,7 @@ export function DesignationEditForm({
 
                       <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
                         <h3>Contact Information</h3>
-                        <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
                           <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
                             <td></td>
                             <td>Name</td>
@@ -3052,7 +3052,7 @@ export function DesignationEditForm({
                       <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
                         <h3>Work Experience</h3>
-                        <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
                           <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
                             <td></td>
                             <td>Company</td>
@@ -3193,7 +3193,7 @@ export function DesignationEditForm({
                       <br></br>
                       <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
                         <h3>Academic Info</h3>
-                        <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
                           <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
                             <td></td>
                             <td>Institution</td>
@@ -3352,7 +3352,7 @@ export function DesignationEditForm({
                       <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
                         <h3>Employee Skills</h3>
-                        <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
                           <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
 
                             <td></td>
@@ -3471,7 +3471,7 @@ export function DesignationEditForm({
                       <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
                         <h3>Incident Info</h3>
-                        <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
                           <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
 
                             <td></td>

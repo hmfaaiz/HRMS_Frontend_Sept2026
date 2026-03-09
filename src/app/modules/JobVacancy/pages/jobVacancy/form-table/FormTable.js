@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
 } from "react-bootstrap-table2-paginator";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
+import { downloadJobVacancyReport } from "../../../_redux/redux-Actions";
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -17,10 +18,11 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
+import { ApplicantsDetailTable } from "./ApplicantDetailTable";
 
-export function FormTable() {
-  //Users UI Context
+export function FormTable({ showApplicantDetails }) {
   const formUIContext = useFormUIContext();
+  const [expandedRows, setExpandedRows] = useState([]);
 
   const formUIProps = useMemo(() => {
     return {
@@ -45,11 +47,21 @@ export function FormTable() {
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading } = currentState;
-
+  const { totalCount, entities, listLoading, reportPdfLoading } = currentState;
   //totalCount = 10
 
   const dispatch = useDispatch();
+
+  // Collapse all expanded rows when filters change
+  useEffect(() => {
+    setExpandedRows([]);
+  }, [formUIProps.queryParams]);
+
+  useEffect(() => {
+    if (!showApplicantDetails) {
+      setExpandedRows([]);
+    }
+  }, [showApplicantDetails]);
 
   useEffect(() => {
     formUIProps.setIds([]);
@@ -96,13 +108,65 @@ export function FormTable() {
     }
   };
 
-  const vacancyStatusOptions = [
+    const vacancyStatusOptions = [
     { value: null, label: "All" },
     { value: 0, label: "Vacancy not posted" },
     { value: 1, label: "Currently Posted" },
     { value: 2, label: "On Hold" },
     { value: 3, label: "Closed / Expired Job" },
   ];
+
+  // ── Expand row handlers ──
+  const handleExpand = (row, isExpand) => {
+    setExpandedRows((prev) =>
+      isExpand
+        ? prev.includes(row.Id) ? prev : [...prev, row.Id]
+        : prev.filter((id) => id !== row.Id)
+    );
+  };
+
+  // Expand row config: only active when showApplicantDetails is true
+  const expandRow = showApplicantDetails
+    ? {
+        renderer: (row) => <ApplicantsDetailTable row={row} />,
+        expanded: expandedRows,
+        expandByColumnOnly: true,
+        onExpand: handleExpand,
+        showExpandColumn: true,
+        expandColumnPosition: "left",
+        expandHeaderColumnRenderer: () => null,
+        expandColumnRenderer: ({ expanded }) => (
+          <button
+            type="button"
+            title={expanded ? "Collapse applicants" : "View applicants"}
+            style={{
+              background: "none", border: "none", cursor: "pointer",
+              padding: "2px 4px", display: "inline-flex",
+              alignItems: "center", justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                width: 22, height: 22, borderRadius: "50%",
+                background: expanded ? "#3699FF" : "#e2eaf5",
+                color: expanded ? "#fff" : "#4a5568",
+                fontSize: 10, fontWeight: 700,
+                transition: "background 0.2s, transform 0.2s",
+                transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
+              }}
+            >
+              ▶
+            </span>
+          </button>
+        ),
+      }
+    : {
+        renderer: () => null,
+        showExpandColumn: false,
+        expandByColumnOnly: true,
+      };
+
 
   const columns = [
     {
@@ -199,6 +263,7 @@ export function FormTable() {
         isAccessForHold: isAccessForHold ? isAccessForHold.isAccess : false,
 
         isAccessForClose: isAccessForClose ? isAccessForClose.isAccess : false,
+        isAccessForReport: false,
       },
 
       classes: "text-center pr-4",
@@ -220,9 +285,12 @@ export function FormTable() {
         openReadFormDialog: formUIProps.openReadFormDialog,
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
+        // report download only visible when showApplicantDetails is true
+        isAccessForReport: showApplicantDetails ? true : false,
+        isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
+        reportPdfLoading,
+        downloadJobVacancyReport,
+        dispatch,
       },
 
       classes: "text-right pr-0",
@@ -260,6 +328,7 @@ export function FormTable() {
                 keyField="Id"
                 data={entities === null ? [] : entities}
                 columns={columns}
+                expandRow={expandRow}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams

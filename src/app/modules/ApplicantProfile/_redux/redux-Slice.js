@@ -22,11 +22,13 @@ export const callTypes = {
     list: "list",
     action: "action",
     pdfGenerate: "pdfGenerate",
+     profilePdf: "profilePdf",
 };
 
 export const ApplicantProfileSlice = createSlice({
     name: "applicantProfile",
     initialState: initialApplicantProfileState,
+    profilePdfLoading: false,
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
@@ -45,6 +47,9 @@ export const ApplicantProfileSlice = createSlice({
             else if (action.payload.callType === callTypes.xlsx) {
                 state.excelLoading = false;
             }
+            else if (action.payload.callType === callTypes.profilePdf) {
+                state.profilePdfLoading = false;
+            }
             else {
                 state.actionsLoading = false;
             }
@@ -57,6 +62,8 @@ export const ApplicantProfileSlice = createSlice({
             } else if (action.payload.callType === callTypes.pdfGenerate) {
                 state.pdfGenerateLoading = true;
             }
+             else if (action.payload.callType === callTypes.profilePdf) {
+                state.profilePdfLoading = true;   }
 
             else {
                 state.actionsLoading = true;
@@ -190,6 +197,9 @@ export const ApplicantProfileSlice = createSlice({
         excelFetched: (state, action) => {
             state.excelLoading = false;
         },
+      profilePdfFetched: (state) => {
+        state.profilePdfLoading = false;
+ },
 
 
         startCall: (state, action) => {
