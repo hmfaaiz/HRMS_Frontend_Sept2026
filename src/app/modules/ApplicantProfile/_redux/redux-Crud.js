@@ -68,3 +68,11 @@ export function downloadApplicantProfilePdfRequest(applicantId) {
     { responseType: "arraybuffer" }
   );
 }
+
+export function downloadApplicantVacancyReportRequest(applicantId, jobVacancyId) {
+  return axios.post(
+    `${USERS_URL}/applicant_profile/generate-vacancy-report`,
+    { applicantId, jobVacancyId },   // ← jobVacancyId added
+    { responseType: "arraybuffer" }
+  );
+}
