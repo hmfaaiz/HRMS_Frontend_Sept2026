@@ -13,6 +13,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import axios from "axios";
 import * as actions from "../../../_redux/redux-Actions";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import {
   fetchAllCity,
   fetchAllCountry,
@@ -37,6 +38,8 @@ import { AmountInput } from "../../../../../../_metronic/_partials/controls/form
 import { CirclePlus, Trash2, Upload, User } from "lucide-react";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { ClipboardList } from "lucide-react";
+import { downloadApplicantVacancyReport } from "../../../_redux/redux-Actions";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
@@ -1077,512 +1080,359 @@ export function FormEditForm({
                 {/* Details Job Vacancy */}
 
                 <FieldArray name="details_applicant_vacancy">
-                  {({ push, remove }) => (
-                    <>
-                      <div className="flex justify-between items-center">
-                        <h6 className="font-bold mb-0 text-primary">
-                          Applicant Vacancy{"  "}
-                        </h6>
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          id="Other"
-                          onClick={() =>
-                            push({
-                              jobVacancyId: "",
-                              applicationDate: "",
-                              applicationStatusId: "",
-                              statusDate: "",
-                              appointmentTypeId: "", //  fix this key name
-                            })
-                          }
-                        >
-                          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                          Add
-                        </button>
-                      </div>
-                      <div className="w-full overflow-x-auto">
-                        <div className="react-bootstrap-table table-responsive">
-                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                            <tr className="custom-table-header">
-                              <td className="">Job Vacancy</td>
-                              <td className="">Application Date</td>
-                              <td className="">Application Status</td>
-                              <td className=""> Status Date</td>
+  {({ push, remove }) => (
+    <>
+      <div className="flex justify-between items-center">
+        <h6 className="font-bold mb-0 text-primary">
+          Applicant Vacancy{"  "}
+        </h6>
+        <button
+          type="button"
+          className="btn btn-primary"
+          id="Other"
+          onClick={() =>
+            push({
+              jobVacancyId: "",
+              applicationDate: "",
+              applicationStatusId: "",
+              statusDate: "",
+              appointmentTypeId: "", //  fix this key name
+            })
+          }
+        >
+          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+          Add
+        </button>
+      </div>
+      <div className="w-full overflow-x-auto">
+        <div className="react-bootstrap-table table-responsive">
+          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+            <tr className="custom-table-header">
+  <td className="">Job Vacancy</td>
+  <td className="">Application Date</td>
+  <td className="">Application Status</td>
+  <td className=""> Status Date</td>
+  <td className="">Appointment Type</td>
+  <td className="">Signed File</td>
+  <td className="">Active Vacancy</td>
+  <td className="text-right">Action</td>
+</tr>
 
-                              <td className="">Appointment Type</td>
-                              <td className="">Signed File</td>
-                              <td className="">Active Vacancy</td>
-                              <td className="text-right">Action</td>
-                            </tr>
-
-                            <tbody>
-                              {values?.details_applicant_vacancy &&
-                                values?.details_applicant_vacancy?.length > 0 &&
-                                values?.details_applicant_vacancy?.map(
-                                  (detail, index) => (
-                                    <tr key={index}>
-                                      {/* job vacancy selection */}
-                                      <td>
-                                        <SearchSelect
-                                          name={`details_applicant_vacancy[${index}].jobVacancyId`}
-                                          className="form-control"
+            <tbody>
+              {values?.details_applicant_vacancy &&
+                values?.details_applicant_vacancy?.length > 0 &&
+                values?.details_applicant_vacancy?.map(
+                  (detail, index) => (
+                    <tr key={index}>
+                      {/* job vacancy selection */}
+                      <td>
+                        <SearchSelect
+                          name={`details_applicant_vacancy[${index}].jobVacancyId`}
+                          className="form-control"
                                           style={{
                                             width: "200px",
                                             zIndex: 9999,
                                           }}
-                                          isDisabled={
-                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
-                                            selectedJobVacancy(
-                                              values.details_applicant_vacancy[
-                                              index
-                                              ]
-                                            )?.jobPostingStatus == 3
-                                          }
-                                          value={
-                                            dashboard?.allJobVacancyList?.find(
-                                              (x) =>
-                                                x.value ===
-                                                values
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ]?.jobVacancyId
-                                            ) || null
-                                          }
-                                          // onChange={async (e) => {
-                                          //   setFieldValue(
-                                          //     `details_applicant_vacancy[${index}].jobVacancyId`,
-                                          //     e?.value
-                                          //   );
-                                          //   const result = await printSkills(formData, values.details_applicant_vacancy);
+                          isDisabled={
+                            isdataForRead ||
+                            values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                            selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                          }
+                          value={
+                            dashboard?.allJobVacancyList?.find(
+                              (x) => x.value === values.details_applicant_vacancy[index]?.jobVacancyId
+                            ) || null
+                          }
+                          onChange={async (e) => {
+                            setFieldValue(
+                              `details_applicant_vacancy[${index}].jobVacancyId`,
+                              e?.value
+                            );
+                            const updatedVacancyArray = values.details_applicant_vacancy.map(
+                              (item, i) =>
+                                i === index ? { ...item, jobVacancyId: e?.value } : item
+                            );
+                            const result = await printSkills(formData, updatedVacancyArray);
+                            if (result?.details_applicant_skills) {
+                              setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                            }
+                          }}
+                          options={
+                            dashboard?.allJobVacancyList
+                              ?.filter(
+                                (x) =>
+                                  x?.jobPostingStatus === 1 &&
+                                  (!values?.subsidiaryId || x?.subsidiaryId === values?.subsidiaryId)
+                              )
+                              .map((x) => ({
+                                label: x.label,
+                                value: x.value,
+                                disabled: values.details_applicant_vacancy.some(
+                                  (el) => el.jobVacancyId === x.value
+                                ),
+                              })) || []
+                          }
+                          getOptionLabel={(x) => x.label}
+                          getOptionValue={(x) => x.value}
+                          isOptionDisabled={(x) => x.disabled}
+                          placeholder="Select--"
+                        />
+                        {errors.details_applicant_vacancy?.[index]?.jobVacancyId &&
+                          touched.details_applicant_vacancy?.[index]?.jobVacancyId && (
+                            <div className="text-danger">
+                              {errors.details_applicant_vacancy[index]?.jobVacancyId}
+                            </div>
+                          )}
+                      </td>
 
-                                          //   
-                                          //   if (result?.details_applicant_skills) {
-                                          //     setFieldValue("details_applicant_skills", result.details_applicant_skills);
-                                          //   }
+                      {/* Application Date */}
+                      <td>
+                        <DatePicker
+                          className="form-control"
+                          placeholderText="Select Date"
+                          selected={
+                            values?.details_applicant_vacancy?.[index]?.applicationDate
+                              ? new Date(values.details_applicant_vacancy[index].applicationDate)
+                              : null
+                          }
+                          onChange={(date) => {
+                            const selectedDate = formatDates(date, "yyyy-MM-dd");
+                            setFieldValue(
+                              `details_applicant_vacancy[${index}].applicationDate`,
+                              selectedDate
+                            );
+                          }}
+                          dateFormat="dd-MMM-yyyy"
+                          name={`details_applicant_vacancy[${index}].applicationDate`}
+                          disabled={
+                            isdataForRead ||
+                            values.details_applicant_vacancy?.[index]?.activeCV ||
+                            values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                            selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                          }
+                          maxDate={new Date()}
+                          showPopperArrow={false}
+                        />
+                        {errors.details_applicant_vacancy?.[index]?.applicationDate &&
+                          touched.details_applicant_vacancy?.[index]?.applicationDate && (
+                            <div className="text-danger">
+                              {errors.details_applicant_vacancy[index].applicationDate}
+                            </div>
+                          )}
+                      </td>
 
-                                          // }}
+                      {/* Application Status */}
+                      <td>
+                        <SearchSelect
+                          name={`details_applicant_vacancy[${index}].applicationStatusId`}
+                          className="form-control"
+                          style={{ width: "130px" }}
+                          isDisabled={
+                            values.details_applicant_vacancy?.[index]?.activeCV ||
+                            values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                            isdataForRead ||
+                            selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                          }
+                          value={
+                            dashboard?.allApplicationStatusList?.find(
+                              (x) => x.value === values.details_applicant_vacancy[index]?.applicationStatusId
+                            ) || null
+                          }
+                          onChange={(e) => {
+                            setFieldValue(
+                              `details_applicant_vacancy[${index}].applicationStatusId`,
+                              e?.value
+                            );
+                            const selectedDate = formatDates(new Date(), "yyyy-MM-dd");
+                            setFieldValue(
+                              `details_applicant_vacancy[${index}].statusDate`,
+                              selectedDate
+                            );
+                          }}
+                          options={dashboard?.allApplicationStatusList || []}
+                          getOptionLabel={(x) => x.label}
+                          getOptionValue={(x) => x.value}
+                          placeholder="Select Status"
+                        />
+                        {errors.details_applicant_vacancy?.[index]?.applicationStatusId &&
+                          touched.details_applicant_vacancy?.[index]?.applicationStatusId && (
+                            <div className="text-danger">
+                              {errors.details_applicant_vacancy[index].applicationStatusId}
+                            </div>
+                          )}
+                      </td>
 
-                                          onChange={async (e) => {
-                                            // Step 1: Update the field
-                                            setFieldValue(
-                                              `details_applicant_vacancy[${index}].jobVacancyId`,
-                                              e?.value
-                                            );
+                      {/* Status Date */}
+                      <td>
+                        <DatePicker
+                          className="form-control"
+                          placeholderText="Select Date"
+                          selected={
+                            values?.details_applicant_vacancy?.[index]?.statusDate
+                              ? new Date(values.details_applicant_vacancy[index].statusDate)
+                              : null
+                          }
+                          onChange={(date) => {
+                            const selectedDate = formatDates(date, "yyyy-MM-dd");
+                            setFieldValue(
+                              `details_applicant_vacancy[${index}].statusDate`,
+                              selectedDate
+                            );
+                          }}
+                          dateFormat="dd-MMM-yyyy"
+                          name={`details_applicant_vacancy[${index}].statusDate`}
+                          autoComplete="off"
+                          disabled={true}
+                          maxDate={new Date()}
+                          showPopperArrow={false}
+                        />
+                        {errors.details_applicant_vacancy?.[index]?.statusDate &&
+                          touched.details_applicant_vacancy?.[index]?.statusDate && (
+                            <div className="text-danger">
+                              {errors.details_applicant_vacancy[index].statusDate}
+                            </div>
+                          )}
+                      </td>
 
-                                            // Step 2: Manually construct updated array
-                                            const updatedVacancyArray = values.details_applicant_vacancy.map(
-                                              (item, i) =>
-                                                i === index
-                                                  ? {
-                                                    ...item,
-                                                    jobVacancyId: e?.value,
-                                                  }
-                                                  : item
-                                            );
+                      {/* Appointment Type */}
+                      <td>
+                        <SearchSelect
+                          name={`details_applicant_vacancy[${index}].appointmentTypeId`}
+                          className="form-control"
+                          style={{ width: "130px" }}
+                          isDisabled={
+                            isdataForRead ||
+                            values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                            selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                          }
+                          value={
+                            dashboard?.allAppointmentTypeList?.find(
+                              (x) => x.value === values.details_applicant_vacancy[index]?.appointmentTypeId
+                            ) || null
+                          }
+                          onChange={(e) => {
+                            setFieldValue(
+                              `details_applicant_vacancy[${index}].appointmentTypeId`,
+                              e?.value
+                            );
+                          }}
+                          options={dashboard?.allAppointmentTypeList || []}
+                          getOptionLabel={(x) => x.label}
+                          getOptionValue={(x) => x.value}
+                          placeholder="Select Status"
+                        />
+                        {errors.details_applicant_vacancy?.[index]?.appointmentTypeId &&
+                          touched.details_applicant_vacancy?.[index]?.appointmentTypeId && (
+                            <div className="text-danger">
+                              {errors.details_applicant_vacancy[index].appointmentTypeId}
+                            </div>
+                          )}
+                      </td>
 
-                                            // Step 3: Call with updated array
-                                            const result = await printSkills(
-                                              formData,
-                                              updatedVacancyArray
-                                            );
+                      {/* Signed File */}
+                      <td>
+                        {values.details_applicant_vacancy[index].acceptFile ? (
+                          <a
+                            href={getUploadUrl(values.details_applicant_vacancy[index].acceptFile)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View File
+                          </a>
+                        ) : (
+                          <span>No File</span>
+                        )}
+                      </td>
 
-                                            if (
-                                              result?.details_applicant_skills
-                                            ) {
-                                              setFieldValue(
-                                                "details_applicant_skills",
-                                                result.details_applicant_skills
-                                              );
-                                            }
-                                          }}
-                                          options={
-                                            dashboard?.allJobVacancyList
-                                              ?.filter(
-                                                (x) =>
-                                                  x?.jobPostingStatus === 1 && //  Only include items where jobPostingStatus === 1
-                                                  (!values?.subsidiaryId ||
-                                                    x?.subsidiaryId ===
-                                                    values?.subsidiaryId) //  Optional filter by subsidiaryId
-                                              )
-                                              .map((x) => ({
-                                                label: x.label,
-                                                value: x.value,
-                                                disabled: values.details_applicant_vacancy.some(
-                                                  (el) =>
-                                                    el.jobVacancyId === x.value
-                                                ),
-                                              })) || []
-                                          }
-                                          getOptionLabel={(x) => x.label}
-                                          getOptionValue={(x) => x.value}
-                                          isOptionDisabled={(x) => x.disabled}
-                                          placeholder="Select--"
-                                        />
+                      {/* Active Vacancy */}
+                      <td>
+                        <input
+                          name={`details_applicant_vacancy[${index}].activeCV`}
+                          type="checkbox"
+                          disabled={
+                            isdataForRead ||
+                            values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                            selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                          }
+                          checked={values.details_applicant_vacancy?.[index]?.activeCV}
+                          onChange={(e) => {
+                            setFieldValue(
+                              `details_applicant_vacancy[${index}].activeCV`,
+                              e.target.checked
+                            );
+                            if (e.target.checked) {
+                              setFieldValue(
+                                `details_applicant_vacancy[${index}].applicationStatusId`,
+                                values.applicantStatusId
+                              );
+                            }
+                          }}
+                        />
+                      </td>
 
-                                        {errors.details_applicant_vacancy?.[
-                                          index
-                                        ]?.jobVacancyId &&
-                                          touched.details_applicant_vacancy?.[
-                                            index
-                                          ]?.jobVacancyId && (
-                                            <div className="text-danger">
-                                              {
-                                                errors
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ]?.jobVacancyId
-                                              }
-                                            </div>
-                                          )}
-                                      </td>
+                      {/* ── Report Download Button (NEW) ── */}
+                     <td className="text-right">
+  <div className="flex items-center justify-end gap-2">
 
-                                      <td>
-                                        <DatePicker
-                                          className="form-control"
-                                          // component={DatePickerField}
+    {/* Report download — only visible for saved rows */}
+    {detail.Id && (
+      <OverlayTrigger
+        overlay={
+          <Tooltip id={`vacancy-report-tooltip-${index}`}>
+            Vacancy Report
+          </Tooltip>
+        }
+      >
+        <button
+          type="button"
+          className="border-none bg-transparent"
+          onClick={() =>
+            dispatch(
+              downloadApplicantVacancyReport(values.Id, detail.jobVacancyId)
+            )
+          }
+        >
+          <ClipboardList className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+    )}
 
-                                          placeholderText="Select Date"
-                                          selected={
-                                            values?.details_applicant_vacancy?.[
-                                              index
-                                            ]?.applicationDate
-                                              ? new Date(
-                                                values.details_applicant_vacancy[
-                                                  index
-                                                ].applicationDate
-                                              )
-                                              : null
-                                          }
-                                          onChange={(date) => {
-                                            const selectedDate = formatDates(
-                                              date,
-                                              "yyyy-MM-dd"
-                                            ); // or use date.toISOString().split('T')[0]
-                                            setFieldValue(
-                                              `details_applicant_vacancy[${index}].applicationDate`,
-                                              selectedDate
-                                            );
-                                          }}
-                                          dateFormat="dd-MMM-yyyy"
-                                          name={`details_applicant_vacancy[${index}].applicationDate`}
-                                          disabled={
-                                            isdataForRead || values.details_applicant_vacancy?.[index]?.activeCV || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
-                                            selectedJobVacancy(
-                                              values.details_applicant_vacancy[
-                                              index
-                                              ]
-                                            )?.jobPostingStatus == 3
-                                          }
-                                          maxDate={new Date()} // optional: restrict future dates
-                                          showPopperArrow={false}
-                                        />
+    {/* Delete */}
+    <button
+      disabled={
+        isdataForRead ||
+        values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+        selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+      }
+      className="border-none bg-transparent"
+      type="button"
+      onClick={async () => {
+        deleteApplicantVacancyDetail(detail.Id);
+        const updatedVacancies = values.details_applicant_vacancy.filter(
+          (_, i) => i !== index
+        );
+        remove(index);
+        const result = await printSkills(formData, updatedVacancies, detail.Id);
+        if (result?.details_applicant_skills) {
+          setFieldValue("details_applicant_skills", result.details_applicant_skills);
+        }
+      }}
+    >
+      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+    </button>
 
-                                        {errors.details_applicant_vacancy?.[
-                                          index
-                                        ]?.applicationDate &&
-                                          touched.details_applicant_vacancy?.[
-                                            index
-                                          ]?.applicationDate && (
-                                            <div className="text-danger">
-                                              {
-                                                errors
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ].applicationDate
-                                              }
-                                            </div>
-                                          )}
-                                      </td>
-
-                                      {/* applicant status */}
-
-                                      <td>
-                                        <SearchSelect
-                                          name={`details_applicant_vacancy[${index}].applicationStatusId`}
-                                          className="form-control"
-                                          style={{ width: "130px" }}
-                                          isDisabled={values.details_applicant_vacancy?.[index]?.activeCV || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
-                                            isdataForRead ||
-                                            selectedJobVacancy(
-                                              values.details_applicant_vacancy[
-                                              index
-                                              ]
-                                            )?.jobPostingStatus == 3
-                                          }
-                                          value={
-                                            dashboard?.allApplicationStatusList?.find(
-                                              (x) =>
-                                                x.value ===
-                                                values
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ]?.applicationStatusId
-                                            ) || null
-                                          }
-                                          onChange={(e) => {
-                                            setFieldValue(
-                                              `details_applicant_vacancy[${index}].applicationStatusId`,
-                                              e?.value
-                                            );
-
-                                            const selectedDate = formatDates(
-                                              new Date(),
-                                              "yyyy-MM-dd"
-                                            );
-                                            setFieldValue(
-                                              `details_applicant_vacancy[${index}].statusDate`,
-                                              selectedDate
-                                            );
-                                          }}
-                                          options={
-                                            dashboard?.allApplicationStatusList ||
-                                            []
-                                          }
-                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                          getOptionValue={(x) => x.value} // optional: customize value extraction
-                                          placeholder="Select Status"
-                                        />
-
-                                        {errors.details_applicant_vacancy?.[
-                                          index
-                                        ]?.applicationStatusId &&
-                                          touched.details_applicant_vacancy?.[
-                                            index
-                                          ]?.applicationStatusId && (
-                                            <div className="text-danger">
-                                              {
-                                                errors
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ].applicationStatusId
-                                              }
-                                            </div>
-                                          )}
-                                      </td>
-
-                                      <td>
-                                        <DatePicker
-                                          className="form-control"
-
-                                          // component={DatePickerField}
-
-                                          placeholderText="Select Date"
-                                          selected={
-                                            values?.details_applicant_vacancy?.[
-                                              index
-                                            ]?.statusDate
-                                              ? new Date(
-                                                values.details_applicant_vacancy[
-                                                  index
-                                                ].statusDate
-                                              )
-                                              : null
-                                          }
-                                          onChange={(date) => {
-                                            const selectedDate = formatDates(
-                                              date,
-                                              "yyyy-MM-dd"
-                                            ); // or use date.toISOString().split('T')[0]
-                                            setFieldValue(
-                                              `details_applicant_vacancy[${index}].statusDate`,
-                                              selectedDate
-                                            );
-                                          }}
-                                          dateFormat="dd-MMM-yyyy"
-                                          name={`details_applicant_vacancy[${index}].statusDate`}
-                                          autoComplete="off"
-                                          disabled={true}
-                                          maxDate={new Date()} // optional: restrict future dates
-                                          showPopperArrow={false}
-                                        />
-
-                                        {errors.details_applicant_vacancy?.[
-                                          index
-                                        ]?.statusDate &&
-                                          touched.details_applicant_vacancy?.[
-                                            index
-                                          ]?.statusDate && (
-                                            <div className="text-danger">
-                                              {
-                                                errors
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ].statusDate
-                                              }
-                                            </div>
-                                          )}
-                                      </td>
-
-                                      {/* allAppointmentTypeList */}
-                                      <td>
-                                        <SearchSelect
-                                          name={`details_applicant_vacancy[${index}].appointmentTypeId`}
-                                          className="form-control"
-                                          style={{ width: "130px" }}
-                                          isDisabled={
-                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
-                                            selectedJobVacancy(
-                                              values.details_applicant_vacancy[
-                                              index
-                                              ]
-                                            )?.jobPostingStatus == 3
-                                          }
-                                          value={
-                                            dashboard?.allAppointmentTypeList?.find(
-                                              (x) =>
-                                                x.value ===
-                                                values
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ]?.appointmentTypeId
-                                            ) || null
-                                          }
-                                          onChange={(e) => {
-                                            setFieldValue(
-                                              `details_applicant_vacancy[${index}].appointmentTypeId`,
-                                              e?.value
-                                            );
-                                          }}
-                                          options={
-                                            dashboard?.allAppointmentTypeList ||
-                                            []
-                                          }
-                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                          getOptionValue={(x) => x.value} // optional: customize value extraction
-                                          placeholder="Select Status"
-                                        />
-
-                                        {errors.details_applicant_vacancy?.[
-                                          index
-                                        ]?.appointmentTypeId &&
-                                          touched.details_applicant_vacancy?.[
-                                            index
-                                          ]?.appointmentTypeId && (
-                                            <div className="text-danger">
-                                              {
-                                                errors
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ].appointmentTypeId
-                                              }
-                                            </div>
-                                          )}
-                                      </td >
-                                      <td>
-                                        {/* Check if the file URL/path exists before rendering the link */}
-                                        {values.details_applicant_vacancy[index].acceptFile ? (
-                                          <a
-                                            href={getUploadUrl(values.details_applicant_vacancy[index].acceptFile)}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                          >
-                                            View File
-                                          </a>
-                                        ) : (
-                                          <span>No File</span> // Or render nothing, or another placeholder
-                                        )}
-                                      </td>
-
-                                      <td>
-                                        <input
-                                          name={`details_applicant_vacancy[${index}].activeCV`}
-                                          type="checkbox"
-                                          disabled={
-                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
-                                            selectedJobVacancy(
-                                              values.details_applicant_vacancy[
-                                              index
-                                              ]
-                                            )?.jobPostingStatus == 3
-                                          }
-                                          checked={
-                                            values.details_applicant_vacancy?.[
-                                              index
-                                            ]?.activeCV
-                                          }
-                                          onChange={(e) => {
-                                            setFieldValue(
-                                              `details_applicant_vacancy[${index}].activeCV`,
-                                              e.target.checked
-                                            );
-
-                                            if (e.target.checked) {
-                                              setFieldValue(
-                                                `details_applicant_vacancy[${index}].applicationStatusId`,
-                                                values.applicantStatusId
-                                              );
-                                            }
-                                          }}
-                                        />
-                                        {errors.details_applicant_vacancy?.[
-                                          index
-                                        ]?.activeCV &&
-                                          touched.details_applicant_vacancy?.[
-                                            index
-                                          ]?.activeCV && (
-                                            <div className="text-danger">
-                                              {
-                                                errors
-                                                  .details_applicant_vacancy[
-                                                  index
-                                                ].activeCV
-                                              }
-                                            </div>
-                                          )}
-                                      </td>
-
-                                      <td className="text-right">
-                                        <button
-                                          disabled={
-                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
-                                            selectedJobVacancy(
-                                              values.details_applicant_vacancy[
-                                              index
-                                              ]
-                                            )?.jobPostingStatus == 3
-                                          }
-                                          className="border-none bg-transparent "
-                                          type="button"
-                                          onClick={async () => {
-                                            deleteApplicantVacancyDetail(
-                                              detail.Id
-                                            );
-                                            const updatedVacancies = values.details_applicant_vacancy.filter(
-                                              (_, i) => i !== index
-                                            ); // ❗️ manually filter
-
-                                            remove(index); // update Formik
-
-                                            const result = await printSkills(
-                                              formData,
-                                              updatedVacancies,
-                                              detail.Id
-                                            ); // ❗️ directly pass updated
-
-                                            if (
-                                              result?.details_applicant_skills
-                                            ) {
-                                              setFieldValue(
-                                                "details_applicant_skills",
-                                                result.details_applicant_skills
-                                              );
-                                            }
-                                          }}
-                                        >
-                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                        </button>
-                                      </td>
-                                    </tr>
-                                  )
-                                )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </FieldArray>
+  </div>
+</td>
+                    </tr>
+                  )
+                )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  )}
+</FieldArray>
                 {typeof errors.details_applicant_vacancy === "string" && (
                   <div className="text-danger">
                     {errors.details_applicant_vacancy}
