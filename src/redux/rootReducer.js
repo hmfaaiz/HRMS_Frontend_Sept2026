@@ -195,6 +195,7 @@ import { projectTimeLogPortalSlice } from "../app/modules/Project_TimeLog_Portal
 import { ticketActivityPortalSlice } from "../app/modules/Ticket_Activity_Portal/_redux/redux-Slice";
 import { projectTimelinePortalSlice } from "../app/modules/Project_Timeline_Portal/_redux/redux-Slice";
 import { TaskConfigurationSlice } from "../app/modules/TaskConfiguration/_redux/redux-Slice";
+import { CustomerUserManagementSlice } from "../app/modules/Customer_User_Management/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -385,6 +386,7 @@ export const rootReducer = combineReducers({
   project_timeline_portal : projectTimelinePortalSlice.reducer,
   ticket_activity_portal : ticketActivityPortalSlice.reducer,
   task_configuration : TaskConfigurationSlice.reducer,
+  customer_user_management : CustomerUserManagementSlice.reducer,
 });
 
 export function* rootSaga() {

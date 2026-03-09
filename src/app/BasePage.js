@@ -482,6 +482,9 @@ import ("./modules/Project_Timeline_Portal/pages/index"))
 const task_configuration = lazy(() =>
 import ("./modules/TaskConfiguration/pages/index"))
 
+const customer_user = lazy(() =>
+import ("./modules/Customer_User_Management/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -665,7 +668,7 @@ const ROUTES = {
   ticket_activity_portal : ticket_activity_portal,
   project_timeline_portal : project_timeline_portal,
   task_configuration : task_configuration,
-
+  customer_user : customer_user,
 };
 
 export default function BasePage() {

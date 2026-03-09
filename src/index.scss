@@ -484,7 +484,7 @@ label {
 
 .shortlabel {
   display: inline-block;
-  max-width: 25ch;       /* ~25 characters width */
+  max-width: 30ch;       /* ~25 characters width */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

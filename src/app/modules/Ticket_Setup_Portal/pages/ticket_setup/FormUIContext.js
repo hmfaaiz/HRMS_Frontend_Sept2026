@@ -40,6 +40,7 @@ export function FormUIProvider({ formUIEvents, children }) {
     parentEpicId: null,
     parentTaskId: null,
     noOfHours: 0,
+    file: null,
   };
 
   const value = {
