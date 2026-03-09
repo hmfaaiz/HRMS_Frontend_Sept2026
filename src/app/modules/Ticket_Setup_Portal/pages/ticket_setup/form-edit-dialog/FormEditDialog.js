@@ -28,22 +28,50 @@ export function FormEditDialog({ id, show, onHide, userForRead, query }) {
   // Save customer (create or update)
   const saveForm = async (payload, addMore, setValues) => {
     enableLoading();
-    if (!id) {
-      await dispatch(
-        actions.createTicket(
-          payload,
-          disableLoading,
-          onHide,
-          addMore,
-          setValues,
-        ),
-      );
-      if (queryParams) await dispatch(actions.fetchTickets(queryParams));
+
+    if (payload.file && typeof payload.file == "object") {
+      actions.uploadImage(payload.file).then(async (res) => {
+        if (!id) {
+          await dispatch(
+            actions.createTicket(
+              { ...payload, file: res.data.filename },
+              disableLoading,
+              onHide,
+              addMore,
+              setValues,
+            ),
+          );
+          if (queryParams) await dispatch(actions.fetchTickets(queryParams));
+        } else {
+          await dispatch(
+            actions.updateTicket(
+              { ...payload, file: res.data.filename },
+              disableLoading,
+              onHide,
+            ),
+          );
+          if (queryParams) await dispatch(actions.fetchTickets(queryParams));
+        }
+      });
     } else {
-      await dispatch(actions.updateTicket(payload, disableLoading, onHide));
-      if (queryParams) await dispatch(actions.fetchTickets(queryParams));
+      if (!id) {
+        await dispatch(
+          actions.createTicket(
+            payload,
+            disableLoading,
+            onHide,
+            addMore,
+            setValues,
+          ),
+        );
+        if (queryParams) await dispatch(actions.fetchTickets(queryParams));
+      } else {
+        await dispatch(actions.updateTicket(payload, disableLoading, onHide));
+        if (queryParams) await dispatch(actions.fetchTickets(queryParams));
+      }
     }
   };
+
   return (
     <Modal size="lg" show={show} onHide={onHide}>
       <FormEditDialogHeader id={id} isUserForRead={userForRead} />

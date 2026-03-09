@@ -10,13 +10,13 @@ export function createTicket(body) {
 // Get All Tickets
 export function getAllTickets(body) {
   const config = {
-    responseType: (body.pdf || body.excel || body.csv) ? "arraybuffer" : "json",
+    responseType: body.pdf || body.excel || body.csv ? "arraybuffer" : "json",
   };
 
   return axios.post(
     `${API_URL}/ticket_setup/read-all-ticket-setup`,
     body,
-    config
+    config,
   );
 }
 
@@ -41,4 +41,8 @@ export function getLatestTicketNumBaseOnProjectId(body) {
 
 export function getTimeLogDetail(body) {
   return axios.post(`${API_URL}/ticket_setup/get-ticket-time-log`, body);
+}
+
+export function uploadImage(body) {
+  return axios.post(`${API_URL}/file-upload`, body);
 }

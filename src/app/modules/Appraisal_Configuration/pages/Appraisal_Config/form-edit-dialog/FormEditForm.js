@@ -89,6 +89,18 @@ const formSchema = Yup.object()
     approvers: Yup.array()
       .min(1, VALIDATION_MESSAGES.required)
       .required(VALIDATION_MESSAGES.required),
+    appraisalDays: Yup.number()
+      .integer("Only whole numbers are allowed") //  ensures no decimals
+      .nullable()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
+      .required(VALIDATION_MESSAGES.required),
+    probationDays: Yup.number()
+      .integer("Only whole numbers are allowed") //  ensures no decimals
+      .nullable()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
+      .required(VALIDATION_MESSAGES.required),
   })
   .test(
     "sum-must-be-100",
@@ -484,6 +496,52 @@ export function FormEditForm({
                           isDisabled:
                             e?.value == values?.signIncrementLetter1Id,
                         }))}
+                      />
+                    </div>
+                  </div>
+                  <hr className="col-span-2 lg:col-span-3" />
+                  <div className="grid grid-cols-2 lg:grid-cols-3 col-span-2 lg:col-span-3 gap-x-3">
+                    <p className="text-tprimary text-sm col-span-2 font-semibold lg:col-span-3 mb-0">
+                      Auto Evaluation Process Generation
+                    </p>
+                    <div>
+                      <Field
+                        name="appraisalDays"
+                        component={Input}
+                        type="number"
+                        label={
+                          <span
+                            className="shortlabel"
+                            title="Auto Generate Appraisal Evaluation of Employees [X] days before the 'Appraisal Period' ends."
+                          >
+                            Auto Generate Appraisal Evaluation of Employees [X]
+                            days before the 'Appraisal Period' ends.
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("appraisalDays", e?.target?.value);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Field
+                        name="probationDays"
+                        component={Input}
+                        type="number"
+                        label={
+                          <span
+                            className="shortlabel"
+                            title="Auto Generate Probation Evaluation of Employees [X] days before the 'Date of Confirmation Due'."
+                          >
+                            Auto Generate Probation Evaluation of Employees [X]
+                            days before the 'Date of Confirmation Due'.
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("probationDays", e?.target?.value);
+                        }}
                       />
                     </div>
                   </div>

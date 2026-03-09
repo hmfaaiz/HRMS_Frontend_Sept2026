@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -19,10 +19,13 @@ import {
 import * as actions from "../../../_redux/redux-Actions";
 import {
   formatDates,
+  getFileName,
+  getUploadUrl,
   PriorityType,
   TicketType,
 } from "../../../../../utils/common";
 import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
+import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 
 /* ---------------- COMPONENT ---------------- */
 export function FormEditForm({
@@ -37,6 +40,7 @@ export function FormEditForm({
   query,
 }) {
   const dispatch = useDispatch();
+  const inputFile = useRef(null);
   const { dashboard } = useSelector((state) => state);
   const [formData, setFormData] = useState({});
   const { auth } = useSelector((state) => state);
@@ -431,10 +435,13 @@ export function FormEditForm({
                     <SearchSelect
                       name="assignToEmpId"
                       label={<span>Assign To</span>}
-                      value={[
-                        { label: "Select", value: null },
-                        ...dashboard?.allEmployees,
-                      ]?.find((el) => el?.value === values?.assignToEmpId) || null}
+                      value={
+                        [
+                          { label: "Select", value: null },
+                          ...dashboard?.allEmployees,
+                        ]?.find((el) => el?.value === values?.assignToEmpId) ||
+                        null
+                      }
                       options={
                         [
                           { label: "Select", value: null },
@@ -550,6 +557,45 @@ export function FormEditForm({
                       />
                     </div>
                   )}
+                  <div>
+                    <FileUpload
+                      label={<>Attachment</>}
+                      id="file"
+                      name="file"
+                      type="file"
+                      isEdit={isUserForRead}
+                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
+                    />
+
+                    {(formData?.file || values?.file) && (
+                      <div className="mt-2">
+                        <label>Existing File:</label>
+
+                        <a
+                          href={
+                            typeof (values?.file || formData?.file) === "string"
+                              ? getUploadUrl(values?.file || formData?.file)
+                              : URL.createObjectURL(
+                                  values?.file || formData?.file,
+                                )
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-primary text-sm"
+                        >
+                          {typeof (values?.file || formData?.file) === "string"
+                            ? getFileName(values?.file || formData?.file)
+                            : values?.file?.name || formData?.file}
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </fieldset>
             </Form>

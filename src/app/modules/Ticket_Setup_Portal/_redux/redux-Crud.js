@@ -42,3 +42,8 @@ export function getLatestTicketNumBaseOnProjectId(body) {
 export function getTimeLogDetail(body) {
   return axios.post(`${API_URL}/ticket_setup_portal/get-ticket-time-log`, body);
 }
+
+
+export function uploadImage(body) {
+  return axios.post(`${API_URL}/file-upload`, body);
+}

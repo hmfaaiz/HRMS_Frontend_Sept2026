@@ -117,7 +117,7 @@ export function ActionsColumnFormatter(
       </OverlayTrigger>
 
       {/* Edit */}
-      {isAccessForEdit && row?.isActive && employeeId == row?.Project?.projectOwnerEmpId && (
+      {isAccessForEdit && row?.isActive && (
         <OverlayTrigger overlay={<Tooltip id={`edit-${row.Id}`}>Edit</Tooltip>}>
           <a className="cursor-pointer" onClick={() => openEditDialog(row.Id)}>
             <Pencil className="w-4 h-4 text-black" />
@@ -126,18 +126,20 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Delete / Activate */}
-      {isAccessForDelete && row?.isActive && (
-        <OverlayTrigger
-          overlay={<Tooltip id={`action-${row.Id}`}>Delete</Tooltip>}
-        >
-          <a
-            className="cursor-pointer"
-            onClick={() => openDeleteDialog(row.Id)}
+      {isAccessForDelete &&
+        row?.isActive &&
+        employeeId == row?.Project?.projectOwnerEmpId && (
+          <OverlayTrigger
+            overlay={<Tooltip id={`action-${row.Id}`}>Delete</Tooltip>}
           >
-            <Trash2 className="w-4 h-4 text-black" />
-          </a>
-        </OverlayTrigger>
-      )}
+            <a
+              className="cursor-pointer"
+              onClick={() => openDeleteDialog(row.Id)}
+            >
+              <Trash2 className="w-4 h-4 text-black" />
+            </a>
+          </OverlayTrigger>
+        )}
     </div>
   );
 }
