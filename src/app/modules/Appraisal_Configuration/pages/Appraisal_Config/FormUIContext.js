@@ -41,6 +41,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     signIncrementLetter1Id : '',
     signIncrementLetter2Id : '',
     approvers : [],
+    probationDays : "",
+    appraisalDays : "",
   };
 
   const value = {

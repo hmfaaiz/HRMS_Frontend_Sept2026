@@ -44,8 +44,8 @@ const EmployeeProfile = ({
     let data = JSON.parse(sessionStorage.getItem("profile_info"));
     if (data?.profileInfo?.Id != employeeId) {
       dispatch(action.getEmployeeProfileInfo(setProfileInfo));
-    }else{
-      setProfileInfo(data)
+    } else {
+      setProfileInfo(data);
     }
   }, []);
 
@@ -81,20 +81,7 @@ const EmployeeProfile = ({
         {isAttMarkShow && (
           <div className="absolute top-2 right-2 flex gap-1">
             {/* <SearchSelect isDisabled={} /> */}
-            {!isCompactView && (
-              <div className="w-[9.5rem]">
-                <SearchSelect
-                  isDisabled={!role?.isMgt || !role?.isSupervisor}
-                  options={getOptions(role)}
-                  value={
-                    getOptions(role)?.find(
-                      (el) => el?.value == detailViewType,
-                    ) || { label: "As Self", value: 1 }
-                  }
-                  onChange={(e) => handleDetailViewChange(e)}
-                />
-              </div>
-            )}
+
             <OverlayTrigger
               overlay={
                 <Tooltip id="products-edit-tooltip">Compact View</Tooltip>
@@ -162,6 +149,25 @@ const EmployeeProfile = ({
             </p>
           </div>
         </div>
+        {isAttMarkShow && !isCompactView && (
+          <div className="flex justify-end">
+            <div className="w-40">
+              <SearchSelect
+                isDisabled={!role?.isMgt || !role?.isSupervisor}
+                options={getOptions(role)}
+                value={
+                  getOptions(role)?.find(
+                    (el) => el?.value == detailViewType,
+                  ) || {
+                    label: "As Self",
+                    value: 1,
+                  }
+                }
+                onChange={(e) => handleDetailViewChange(e)}
+              />
+            </div>
+          </div>
+        )}
         {isAttMarkShow && <AttendanceMarking />}
       </div>
       {!isCompactView ? (
@@ -287,7 +293,7 @@ export default EmployeeProfile;
 
 const TeamCardCompact = ({ team, setAttModalData }) => {
   return (
-    <div className="bg-white/60 hover:bg-white/100 rounded-lg px-3 py-6 space-y-3 relative w-full row-span-2 h-fit">
+    <div className="bg-white rounded-lg px-3 py-6 space-y-3 relative w-full row-span-2 h-fit">
       {/* Left section: Icon and label */}
       <div className="p-3">
         <UsersRound strokeWidth={0.5} className="w-24 h-24 text-tprimary" />

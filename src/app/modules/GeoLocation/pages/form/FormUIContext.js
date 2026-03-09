@@ -30,6 +30,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     Id: null,
     subsidiaryId: null,
     autoTracking: false,
+    isLateReasonAllow: false,
     autoAttendance: false,
     geoLocations: [],
   };
