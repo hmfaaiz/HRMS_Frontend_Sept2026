@@ -85,14 +85,17 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.string().nullable(), // Optional if social_security_member is false
     }),
 
-  pension_accNo: Yup.string()
+ 
+
+     pension_accNo: Yup.string()
     // .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("pension_member", {
-      is: true, // Condition to check if pension_member is true
-      then: Yup.string()
-      .max(30, "Maximum 30 characters allowed")
-      .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.string().nullable(), // Optional if pension_member is false
+      is: true, // Condition to check if eobi_member is true
+      then: (schema) =>
+        schema
+          .required(VALIDATION_MESSAGES.required)
+          .max(30, "Maximum 30 characters allowed"),
+      otherwise: Yup.string().nullable(), // Optional if eobi_member is false
     }),
 
   // company_from_accNo: Yup.string()
