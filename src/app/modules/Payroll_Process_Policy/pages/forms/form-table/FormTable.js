@@ -71,6 +71,7 @@ export function FormTable(user) {
   const [defEmailRecipents, setDefaultEmailRecipents] = useState([]); //  For Email Recipents
   const [defEOBIAllowances, setDefaultEOBIAllowances] = useState([]);
   const [defProvidentFundAllowances, setDefaultProvidentFundAllowances] = useState([]);
+  const [defPensionAllowances, setDefaultPensionAllowances] = useState([]);
   const [defSESSIAllowances, setDefaultSESSIAllowances] = useState([]);
   const [defBank, setDefaultBanks] = useState({});
   const [otherErrors, setotherErrors] = useState({})
@@ -190,17 +191,28 @@ export function FormTable(user) {
     );
   }, [currentState.userForEdit?.tran_payroll_policy_sessiAllowances]);
 
-console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowances1111",currentState?.userForEdit?.tran_payroll_policy_providentFundAllowances)
+
 
   useEffect(() => {
     const eobiAllowance = currentState.userForEdit?.tran_payroll_policy_providentFundAllowances?.map((x) => {
       return x.earningId
     }) || [];
-    console.log("eobiAllowance1111",eobiAllowance)
+  
     setDefaultProvidentFundAllowances(
       [...eobiAllowance]
     );
   }, [currentState.userForEdit?.tran_payroll_policy_providentFundAllowances]);
+
+
+  useEffect(() => {
+    const pensionAllowance = currentState.userForEdit?.tran_payroll_policy_pensionAllowances?.map((x) => {
+      return x.earningId
+    }) || [];
+  
+    setDefaultPensionAllowances(
+      [...pensionAllowance]
+    );
+  }, [currentState.userForEdit?.tran_payroll_policy_pensionAllowances]);
 
 
 
@@ -243,12 +255,23 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
 
   const handleCheckboxChangeFor_providentFundAllowances = (option) => {
-    console.log("option111",option)
+
     setDefaultProvidentFundAllowances((prevState) =>
       prevState.includes(option)
         ? prevState.filter(item => item !== option)
         : [...prevState, option]
     );
+  };
+
+
+    const handleCheckboxChangeFor_pensionFundAllowances = (option) => {
+   
+    setDefaultPensionAllowances((prevState) =>
+      prevState.includes(option)
+        ? prevState.filter(item => item !== option)
+        : [...prevState, option]
+    );
+  
   };
 
   const deleteRowBankInfo = (element) => {
@@ -521,6 +544,47 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
         }),
 
 
+
+          // Provident Fund 
+          pensionAllowanceId: Yup.number()
+  .when("isPensionAllowance", {
+    is: true,
+    then: Yup.number()
+      .typeError("Please select Pension Allowance")
+      .required(VALIDATION_MESSAGES.required)
+      .notOneOf([-1], "Please select Pension Allowance"),
+    otherwise: Yup.number().notRequired(),
+  }),
+ 
+
+         pa_employer_percent: Yup.number()
+      .nullable()
+        .when('isPensionAllowance', {
+          is: true, 
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+      	pa_employee_percent: Yup.number()
+      .nullable()
+        .when('isPensionAllowance', {
+          is: true, 
+
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+
+
+      	pensionAllowanceId: Yup.number()
+      .nullable()
+        .when('isPensionAllowance', {
+          is: true, 
+
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+
+
+
     },
 
   );
@@ -600,6 +664,15 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
     pf_eligibility:0,
 
 
+   // --  Provident Fund Configuration
+    isPensionAllowance: false,
+    	pensionAllowanceId: null,
+    pensionAllowancesId:null,
+    	pa_employer_percent:null,
+    pa_employee_percent:null,
+  
+
+
     SalaryPolicy:0,
 
     OvertimeBasis:"",
@@ -616,11 +689,11 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
     page: FormUIProps.queryParams.pageNumber,
   };
 
-  const SavePayrollPolicy = async (user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances) => {
-
+  const SavePayrollPolicy = async (user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances,pensionAllowances) => {
+console.log("pensionAllowances11111",pensionAllowances)
     if (!user.Id) {
 
-      await dispatch(actions.create_Payroll_Policy(user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances));
+      await dispatch(actions.create_Payroll_Policy(user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances,pensionAllowances));
       //  const list = await dispatch(actions.fetchUsers(usersUIProps.queryParams));
 
 
@@ -716,10 +789,19 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
         pf_employee_percent: user.pf_employee_percent,
         pf_eligibility: user.pf_eligibility,
 
+
+        isPensionAllowance: user.isPensionAllowance,
+        pensionAllowanceId: user.pensionAllowanceId,
+        pensionAllowancesId: user.pensionAllowancesId,
+
+        pa_employer_percent: user.pa_employer_percent,
+        pa_employee_percent: user.pa_employee_percent,
+       
+
       };
+console.log("update_Payroll_Policy8888888888",pensionAllowances)
 
-
-      await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList,providentFundAllowances));
+      await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList,providentFundAllowances,pensionAllowances));
       // await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }
   };
@@ -870,7 +952,8 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
             } else {
               defaultCount = 0
               setotherErrors(validate());
-              SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances, defProvidentFundAllowances);
+             
+              SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances, defProvidentFundAllowances,defPensionAllowances);
 
               if (user.formid) {
                 dispatch(actions.fetchUser(null));
@@ -1737,6 +1820,113 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                   <hr></hr>
 
                 </div>
+
+                     <div>
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                 Pension Allowance
+                  </h6>
+
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="flex  items-start">
+                      <label className="flex items-center space-x-1">
+
+                        <input className="mr-1"
+
+                          name="isPensionAllowance"
+                          type="checkbox"
+                          onChange={(e) => {
+                            setFieldValue('isPensionAllowance', e.target.checked)
+                          }}
+                          checked={values.isPensionAllowance}
+                        />
+                        Enable Pension Allowance
+                      </label>
+                    </div>
+
+
+                    <div className="">
+                      {<label>Pension Allowance{Boolean(values.isPensionAllowance) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+                        disabled={!Boolean(values.isPensionAllowance)}
+                        onChange={(e) => {
+                          setFieldValue('pensionAllowanceId', e.target.value)
+                        }}
+                        value={values.pensionAllowanceId}
+                        name="pensionAllowanceId">
+                        <option value=""> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.pensionAllowanceId && touched.pensionAllowanceId && <ErrorMessage className="form-feedBack" name="pensionAllowanceId" component="div" />}
+                    </div>
+
+                    
+
+
+                  </div>
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isPensionAllowance)}
+                        name="pa_employer_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employeer value"
+                        value={values.pa_employer_percent}
+                        label={<span>Employer(%){Boolean(values.isPensionAllowance) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isPensionAllowance)}
+                        name="pa_employee_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employee value"
+                        label={<span>Employee(%){Boolean(values.isPensionAllowance) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <label>  Providen Fund Allowances </label>
+
+
+
+
+                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+
+                        {dashboard.allEarnings.map((option) => (
+                          <div key={option.value} className="flex justify-start items-center border-none">
+
+                            <input className="mr-1"
+                              disabled={!Boolean(values.isPensionAllowance)}
+                              name="pensionAllowancesId"
+                              type="checkbox"
+                              checked={defPensionAllowances?.includes(option.value)}
+                              onChange={() => handleCheckboxChangeFor_pensionFundAllowances(option.value)}
+                            />
+                            <label> {option.label} </label>
+                          </div>
+                        ))}
+                      </div>
+
+
+
+
+
+
+
+
+                    </div>
+                  </div>
+
+                  <hr></hr>
+
+                </div>
+
 
 
 

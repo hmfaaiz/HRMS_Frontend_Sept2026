@@ -708,7 +708,7 @@ console.log("grossSalary111111",data)
 
   const addRow = (element) => {
 
-console.log("element.target.id11111",element.target.id)
+
     if (element.target.id === "Other") {
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList,
@@ -1115,7 +1115,9 @@ console.log("element.target.id11111",element.target.id)
 
 
 
-
+    { key: "pension_accNo", updatedKey: "updatedPension_accNo", label: "Pension Account" },
+    { key: "pension_member", updatedKey: "updatedPension_member", label: "Pension Member" },
+    { key: "pension_reg_date", updatedKey: "updatedPension_reg_date", label: "Pension Registration Date" },
 
 
 
@@ -1125,9 +1127,7 @@ console.log("element.target.id11111",element.target.id)
     // { key: "pf_member", updatedKey: "updatedPf_member", label: "Provident Fund Member" },
     // { key: "pf_reg_date", updatedKey: "updatedPf_reg_date", label: "Provident Fund Registration Date" },
 
-    // { key: "pension_accNo", updatedKey: "updatedPension_accNo", label: "Pension Account" },
-    // { key: "pension_member", updatedKey: "updatedPension_member", label: "Pension Member" },
-    // { key: "pension_reg_date", updatedKey: "updatedPension_reg_date", label: "Pension Registration Date" },
+  
     // { key: "profit_member", updatedKey: "updatedProfit_member", label: "Profit Member" },
     // { key: "regularity_allowance", updatedKey: "updatedRegularity_allowance", label: "Regularity Allowance" },
     // { key: "punctuality_allowance", updatedKey: "updatedPunctuality_allowance", label: "Punctuality Allowance" },
@@ -1198,6 +1198,10 @@ console.log("element.target.id11111",element.target.id)
                 basicFactor: defBasicSalaryFactor || values.basicFactor,
                 gratuity_startDate: values.gratuity_startDate
                   ? formatDates(values.gratuity_startDate, "dd-MMM-yyyy")
+                  : null,
+                  
+                pension_reg_date: values.pension_reg_date
+                  ? formatDates(values.pension_reg_date, "dd-MMM-yyyy")
                   : null,
                 eobi_reg_date: values.eobi_reg_date
                   ? formatDates(values.eobi_reg_date, "dd-MMM-yyyy")
@@ -3864,6 +3868,113 @@ console.log("element.target.id11111",element.target.id)
                 </div>
 
               </div>
+
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+                                    <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
+                                     Pension Allowance
+                                    </h6>
+                                    <div className="space-y-1">
+                                      <div
+                                        style={{
+                                          fontSize: "10.2px",
+                                          // fontWeight: "bold",
+                                          // padding: "2px",
+                                        }}
+                                        className="text-black mt-1 justify-start items-center grid md:grid-cols-2"
+                                      >
+              
+                                        <div className="flex  items-center col-span-1">
+                                          <input
+                                            type="checkbox"
+                                            className="p-0 m-0 mr-1 "
+                                            name="pension_member"
+                                            disabled={dataForRead}
+                                            onChange={(e) => {
+                                              setFieldValue("pension_member", e.target.checked);
+                                            
+                                              setFieldValue("pension_reg_date", null);
+                                              setFieldValue("pension_accNo", "");
+                                              setPensionDate("");
+                                            }}
+                                            onBlur={handleBlur}
+                                            value={values.pension_member}
+                                            checked={values.pension_member}
+                                          />{" "}
+                                          Pension Member
+              
+                                        </div>
+              
+                                   
+              
+              
+              
+              
+                                      </div>
+                                      <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                                        <div>
+                                          {
+                                            <label>
+                                              {" "}
+                                              Date Of Registration
+                                              {Boolean(values.pension_member) && (
+                                                <span style={{ color: "red" }}>*</span>
+                                              )}{" "}
+                                            </label>
+                                          }
+              
+                                          <DatePicker
+                                            className="form-control"
+                                            placeholder="Enter Pension Allowance Reg Date"
+                                            selected={values.pension_member && defPension}
+                                            label="Pension Reg Date"
+                                            onChange={(date) => {
+                                              setFieldValue("pension_reg_date", date);
+                                              setPensionDate(date);
+                                            }}
+                                            timeInputLabel="Time:"
+                                            dateFormat="dd-MMM-yyyy"
+                                            // showTimeInput
+                                            name="pension_reg_date"
+                                            autoComplete="off"
+                                            disabled={!values.pension_member || dataForRead}
+              
+                                            minDate={
+                                              dateOfBirth
+                                                ? new Date(dateOfBirth)
+                                                : null
+                                            }
+                                          />
+                                          <ErrorMessage
+                                            className="form-feedBack"
+                                            name="pension_reg_date"
+                                            component="div"
+                                          />
+                                        </div>
+                                        <div>
+                                          <Field
+                                            name="pension_accNo"
+                                            // type="number"
+                                            component={Input}
+                                          
+                                            placeholder="Enter Pension Account No"
+                                            label={
+                                              <span>
+                                                {" "}
+                                               Pension Account No
+                                                {Boolean(values.pension_member) && (
+                                                  <span style={{ color: "red" }}>*</span>
+                                                )}{" "}
+                                              </span>
+                                            }
+                                            autoComplete="off"
+                                            disabled={!values.pension_member || dataForRead}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+              
+                                  </div>
+              
 
 
 

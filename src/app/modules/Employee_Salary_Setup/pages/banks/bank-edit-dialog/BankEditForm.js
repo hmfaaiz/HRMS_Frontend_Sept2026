@@ -85,12 +85,17 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.string().nullable(), // Optional if social_security_member is false
     }),
 
-  pension_accNo: Yup.string()
+ 
+
+     pension_accNo: Yup.string()
     // .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("pension_member", {
-      is: true, // Condition to check if pension_member is true
-      then: Yup.string().required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.string().nullable(), // Optional if pension_member is false
+      is: true, // Condition to check if eobi_member is true
+      then: (schema) =>
+        schema
+          .required(VALIDATION_MESSAGES.required)
+          .max(30, "Maximum 30 characters allowed"),
+      otherwise: Yup.string().nullable(), // Optional if eobi_member is false
     }),
 
   // company_from_accNo: Yup.string()
@@ -989,7 +994,11 @@ export function BankEditForm({
               {
                 ...values,
 
-                gratuity_startDate: values.gratuity_startDate
+                pension_reg_date: values.pension_reg_date
+                  ? formatDates(values.pension_reg_date, "dd-MMM-yyyy")
+                  : null,
+                  
+                  gratuity_startDate: values.gratuity_startDate
                   ? formatDates(values.gratuity_startDate, "dd-MMM-yyyy")
                   : null,
                 eobi_reg_date: values.eobi_reg_date
@@ -2669,6 +2678,114 @@ export function BankEditForm({
                       </div>
 
                     </div>
+
+
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+                      <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
+                       Pension Allowance
+                      </h6>
+                      <div className="space-y-1">
+                        <div
+                          style={{
+                            fontSize: "10.2px",
+                            // fontWeight: "bold",
+                            // padding: "2px",
+                          }}
+                          className="text-black mt-1 justify-start items-center grid md:grid-cols-2"
+                        >
+
+                          <div className="flex  items-center col-span-1">
+                            <input
+                              type="checkbox"
+                              className="p-0 m-0 mr-1 "
+                              name="pension_member"
+                              disabled={isUserForRead}
+                              onChange={(e) => {
+                                setFieldValue("pension_member", e.target.checked);
+                              
+                                setFieldValue("pension_reg_date", null);
+                                setFieldValue("pension_accNo", "");
+                                setPensionDate("");
+                              }}
+                              onBlur={handleBlur}
+                              value={values.pension_member}
+                              checked={values.pension_member}
+                            />{" "}
+                            Pension Member
+
+                          </div>
+
+                     
+
+
+
+
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                          <div>
+                            {
+                              <label>
+                                {" "}
+                                Date Of Registration
+                                {Boolean(values.pension_member) && (
+                                  <span style={{ color: "red" }}>*</span>
+                                )}{" "}
+                              </label>
+                            }
+
+                            <DatePicker
+                              className="form-control"
+                              placeholder="Enter Pension Allowance Reg Date"
+                              selected={values.pension_member && defPension}
+                              label="Pension Reg Date"
+                              onChange={(date) => {
+                                setFieldValue("pension_reg_date", date);
+                                setPensionDate(date);
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd-MMM-yyyy"
+                              // showTimeInput
+                              name="pension_reg_date"
+                              autoComplete="off"
+                              disabled={!values.pension_member || isUserForRead}
+
+                              minDate={
+                                dateOfBirth
+                                  ? new Date(dateOfBirth)
+                                  : null
+                              }
+                            />
+                            <ErrorMessage
+                              className="form-feedBack"
+                              name="pension_reg_date"
+                              component="div"
+                            />
+                          </div>
+                          <div>
+                            <Field
+                              name="pension_accNo"
+                              // type="number"
+                              component={Input}
+                            
+                              placeholder="Enter Pension Account No"
+                              label={
+                                <span>
+                                  {" "}
+                                 Pension Account No
+                                  {Boolean(values.pension_member) && (
+                                    <span style={{ color: "red" }}>*</span>
+                                  )}{" "}
+                                </span>
+                              }
+                              autoComplete="off"
+                              disabled={!values.pension_member || isUserForRead}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
 
 
                   </div>
