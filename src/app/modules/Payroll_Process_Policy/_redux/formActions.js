@@ -128,7 +128,7 @@ export const create_Payroll_Policy = (Payroll_Policy_ForCreation, emailRecipentL
 
 export const update_Payroll_Policy = (user, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList,pensionAllowancesList) => (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
-  console.log("defPensionAllowanceskkkkkk",pensionAllowancesList)
+
   return requestFromServer
     .update_Payroll_Policy(user, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList,pensionAllowancesList)
     .then((response) => {

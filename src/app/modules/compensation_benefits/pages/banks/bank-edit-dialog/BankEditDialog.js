@@ -105,6 +105,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         earningId : user.earningId,
         deductionId : user.deductionId,
         gratuity_member : user.gratuity_member,
+        pensionAllowance : user.pensionAllowance,
         overtime_allowance : user.overtime_allowance,
         shift_allowance : user.shift_allowance,
         regularity_allowance : user.regularity_allowance,

@@ -546,28 +546,40 @@ export function FormTable(user) {
 
 
           // Provident Fund 
-          	pensionAllowanceId: Yup.number()
-          .nullable()
-        .when('isPensionAllowance', {
-          is: true, // if select value is 2
-          then: Yup.number().required(VALIDATION_MESSAGES.required),
-          otherwise: Yup.number().notRequired(),
-        }),
+          pensionAllowanceId: Yup.number()
+  .when("isPensionAllowance", {
+    is: true,
+    then: Yup.number()
+      .typeError("Please select Pension Allowance")
+      .required(VALIDATION_MESSAGES.required)
+      .notOneOf([-1], "Please select Pension Allowance"),
+    otherwise: Yup.number().notRequired(),
+  }),
  
 
          pa_employer_percent: Yup.number()
       .nullable()
         .when('isPensionAllowance', {
-          is: true, // if select value is 2
-          then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
+          is: true, 
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
       	pa_employee_percent: Yup.number()
       .nullable()
         .when('isPensionAllowance', {
-          is: true, // if select value is 2
+          is: true, 
 
-          then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+
+
+      	pensionAllowanceId: Yup.number()
+      .nullable()
+        .when('isPensionAllowance', {
+          is: true, 
+
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
 
@@ -940,7 +952,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
             } else {
               defaultCount = 0
               setotherErrors(validate());
-              console.log("pensionAllowances6666666666666",defPensionAllowances)
+             
               SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances, defProvidentFundAllowances,defPensionAllowances);
 
               if (user.formid) {
@@ -1841,7 +1853,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         }}
                         value={values.pensionAllowanceId}
                         name="pensionAllowanceId">
-                        <option value="-1"> Select</option>
+                        <option value=""> Select</option>
                         {
                           dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
                             return <option value={x.value}> {x.label} </option>

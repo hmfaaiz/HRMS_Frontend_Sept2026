@@ -45,6 +45,7 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
     earningId: "",
     deductionId: "",
     gratuity_member: "",
+    pensionAllowance: "",
     overtime_allowance: "",
     shift_allowance: "",
     regularity_allowance: "",
