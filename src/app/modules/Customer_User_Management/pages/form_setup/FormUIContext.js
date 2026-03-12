@@ -32,7 +32,7 @@ export function FormUIProvider({ formUIEvents, children }) {
     lastName: "",
     designation: "",
     email: "",
-    password: "",
+    password: String(Math.floor(Math.random() * 900000) + 100000),
     isActive: true,
   };
 
