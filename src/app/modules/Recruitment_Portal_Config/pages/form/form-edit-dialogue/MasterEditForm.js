@@ -1,12 +1,12 @@
 import { Field, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
-import { themeColor } from "../FormUIHelper";
 import {
   Checkbox,
   Input,
 } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
+import { themeColor } from "../../../../../utils/constants";
 
 const profilePercentageConfigFields = [
   {
