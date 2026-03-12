@@ -1874,7 +1874,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         component={Input}
                         type="number"
                         placeholder="Employeer value"
-                        value={values.pa_employer_percent}
+                        value={values?.pa_employer_percent || 0.00}
                         label={<span>Employer(%){Boolean(values.isPensionAllowance) && <span style={{ color: 'red' }}>*</span>}</span>}
                         autoComplete="off"
                       />
@@ -1886,6 +1886,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         component={Input}
                         type="number"
                         placeholder="Employee value"
+                         value={values?.pa_employee_percent || 0.00}
                         label={<span>Employee(%){Boolean(values.isPensionAllowance) && <span style={{ color: 'red' }}>*</span>}</span>}
                         autoComplete="off"
                       />
