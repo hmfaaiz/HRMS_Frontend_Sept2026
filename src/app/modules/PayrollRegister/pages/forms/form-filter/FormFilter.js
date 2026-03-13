@@ -194,6 +194,19 @@ export function FormFilter({
     );
   };
 
+
+  const getLoanExcel = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(
+      actions.generateRegisterLoanExcel(
+        newQueryParams.filter,
+        document,
+        labels
+      )
+    );
+  };
+
   const [
     payrollPayableAccountApproverPermission,
     setPayrollPayableAccountApproverPermission,
@@ -840,10 +853,30 @@ export function FormFilter({
                             className="btn btn-primary btn-elevate mt-3 h-9"
                           >
                             Payroll Disbursement Report
-                            {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                            {/* <SVG
-                                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                                /> */}
+                       
+                            <Download className="w-4 h-4 ml-2" />
+                            {/* </span> */}
+                            {registerExcelLoading && (
+                              <span className="ml-3 mr-3 spinner spinner-white"></span>
+                            )}
+                          </button>
+
+
+
+                             <button
+                            onClick={() => {
+                              getLoanExcel(values);
+                            }}
+                            disabled={
+                              registerExcelLoading ||
+                              !values.subsidiaryId ||
+                              !values.monthId
+                            }
+                            type="button"
+                            className="btn btn-primary btn-elevate mt-3 h-9 ml-1"
+                          >
+                            Payroll Loan Report
+                     
                             <Download className="w-4 h-4 ml-2" />
                             {/* </span> */}
                             {registerExcelLoading && (
