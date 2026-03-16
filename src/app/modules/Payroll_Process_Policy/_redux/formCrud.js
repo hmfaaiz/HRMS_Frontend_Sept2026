@@ -3,8 +3,8 @@ import axios from "axios";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 //Create payroll,Policy
-export function create_Payroll_Policy(body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList) {
-  return axios.post(`${USERS_URL}/payroll_process_policy/create-payroll-process-policy`, { body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList ,providentFundAllowancesList});
+export function create_Payroll_Policy(body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList,pensionAllowancesList) {
+  return axios.post(`${USERS_URL}/payroll_process_policy/create-payroll-process-policy`, { body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList ,providentFundAllowancesList,pensionAllowancesList});
 }
 
 
@@ -19,8 +19,8 @@ export function get_Payroll_Policy_ById(id) {
 }
 
 //Update
-export function update_Payroll_Policy(body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList) {
-  return axios.put(`${USERS_URL}/payroll_process_policy/update-payroll-process-policy`, { body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList ,providentFundAllowancesList});
+export function update_Payroll_Policy(body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList,pensionAllowancesList) {
+  return axios.put(`${USERS_URL}/payroll_process_policy/update-payroll-process-policy`, { body, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList ,providentFundAllowancesList,pensionAllowancesList});
 }
 
 //Delete

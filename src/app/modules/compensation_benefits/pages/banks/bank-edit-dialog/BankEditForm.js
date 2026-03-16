@@ -1317,6 +1317,8 @@ export function BankEditForm({
                           />{" "}
                           Overtime
                         </div>
+
+                        
                       </div>
                       <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                         <div>
@@ -1475,6 +1477,19 @@ export function BankEditForm({
                             checked={values.pf_member}
                           />{" "}
                           PF Member
+                        </div>
+
+                              <div className="flex justify-start items-center">
+                          <input
+                            type="checkbox"
+                            className="p-0 m-0 mr-1 "
+                            name="pensionAllowance"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.pensionAllowance}
+                            checked={values.pensionAllowance}
+                          />{" "}
+                         	Pension Allowance
                         </div>
                         {/* <div className="flex justify-start items-center">
                           <input

@@ -159,7 +159,7 @@ export function FormEditForm({
                       <Field
                         name="password"
                         component={Input}
-                        type="password"
+                        type="text"
                         label={
                           <span>
                             {" "}

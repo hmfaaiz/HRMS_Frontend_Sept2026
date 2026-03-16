@@ -487,6 +487,9 @@ import ("./modules/Customer_User_Management/pages/index"))
 
 const cash_payment_against_loan = lazy(() =>
 import ("./modules/Cash_Payment_Against_Loan/pages/index"))
+const customer_config = lazy(() =>
+import ("./modules/Customer_Configuration/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -672,6 +675,7 @@ const ROUTES = {
   task_configuration : task_configuration,
   customer_user : customer_user,
   cash_payment_against_loan : cash_payment_against_loan,
+  customer_config : customer_config,
 };
 
 export default function BasePage() {
