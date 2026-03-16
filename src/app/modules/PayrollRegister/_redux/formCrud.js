@@ -101,3 +101,10 @@ export async function generateLoanExcel(body) {
   });
 }
 
+
+export async function generateGratuityExcel(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-gratuity-excel`, body,{
+    responseType:'arraybuffer'
+  });
+}
+
