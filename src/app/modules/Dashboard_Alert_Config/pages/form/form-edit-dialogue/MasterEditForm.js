@@ -6,7 +6,6 @@ import {
   dashletType,
   PeriodType,
   smallTableTheme,
-  themeColor,
 } from "../FormUIHelper";
 import {
   Checkbox,
