@@ -261,6 +261,75 @@ export const generateRegisterJVCreditExcel = (filter, document, labels = {}) => 
 };
 
 
+export const generateRegisterLoanExcel = (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.registerGDExcel }));
+  return requestFromServer.generateLoanExcel({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger file download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'Payroll Loan Report.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.registerGDExcelFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Loan Report";
+      const decodedData = new TextDecoder().decode(error?.response.data);
+      const jsonData = JSON.parse(decodedData);
+      dispatch(actions.catchError({ error, callType: callTypes.registerGDExcel }));
+      toast.error( jsonData?.message || "Please provide Subsidiary and Month", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
+export const generateRegisterGratuityExcel = (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.registerGDExcel }));
+  return requestFromServer.generateGratuityExcel({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger file download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'Payroll Gratuity Report.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.registerGDExcelFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Gratuity Report";
+      const decodedData = new TextDecoder().decode(error?.response.data);
+      const jsonData = JSON.parse(decodedData);
+      dispatch(actions.catchError({ error, callType: callTypes.registerGDExcel }));
+   
+      toast.error( jsonData?.message || "Please provide Subsidiary and Month", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
 //preview
 
 export const fetchPreviewRegisterPdf = (filter, document, labels = {}) => async (dispatch) => {
