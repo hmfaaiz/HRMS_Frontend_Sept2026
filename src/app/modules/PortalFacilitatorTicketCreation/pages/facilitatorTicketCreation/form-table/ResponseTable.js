@@ -48,7 +48,7 @@ export function ResponseTable() {
   const { currentState, userAccess } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
-      userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
+      userAccess: state?.auth?.userAccess["portal_ticket_creation"],
     };
   }, shallowEqual);
 
@@ -64,17 +64,7 @@ export function ResponseTable() {
     dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, receiveTotalCount]);
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateFacilitatorTicketCreation"
-  );
 
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteFacilitatorTicketCreation"
-  );
-
-  const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadFacilitatorTicketCreation"
-  );
 
 
   // Table columns

@@ -16,10 +16,10 @@ import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
-import { FetchAllFacilitatorEmployee, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { FetchAllFacilitatorEmployee, fetchCompanyEmployeesData, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 
 // percentage: Yup.string().required("Required*"),
-const facilitator_ticket_creationEditSchema = (value) => {
+const facilitator_ticket_creationEditSchema = (value, currentUser) => {
   return Yup.object()
     .shape({
       file: Yup.string().nullable(),
@@ -29,6 +29,24 @@ const facilitator_ticket_creationEditSchema = (value) => {
 
         .nullable()
         .required(VALIDATION_MESSAGES.required),
+
+      assignByToBeSelected: Yup.number()
+        .nullable()
+        .when("assignTo", (assignTo, schema) => {
+          if (Number(assignTo) === Number(currentUser) && !value.Id) {
+            return schema
+              .required("Assign By is required")
+              .notOneOf(
+                [Yup.ref("assignTo")],
+                "Assign By cannot be the same as Assign To"
+              );
+          }
+
+          return schema.notOneOf(
+            [Yup.ref("assignTo")],
+            "Assign By cannot be the same as Assign To"
+          );
+        }),
 
       priorityLevelId: Yup.number()
 
@@ -45,23 +63,6 @@ const facilitator_ticket_creationEditSchema = (value) => {
         .nullable()
         .required(VALIDATION_MESSAGES.required),
 
-      // ticketDate: Yup.date()
-
-      //   .nullable()
-      //   .required(VALIDATION_MESSAGES.required),
-
-      // timeRangeFrom: Yup.string()
-
-      //   .nullable()
-      //   // .required(VALIDATION_MESSAGES.required)
-      //   ,
-
-
-      // timeRangeTo: Yup.string()
-
-      //   .nullable()
-      //   // .required(VALIDATION_MESSAGES.required)
-      //   ,
 
       timeRangeFrom: Yup.string()
         .when("timeRangeTo", {
@@ -141,17 +142,19 @@ export function FormEditForm({
   useEffect(() => {
     if (!formData.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchMasterTicketType());
       dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
+      dispatch(fetchMasterTicketType());
       dispatch(FetchAllFacilitatorEmployee(formData?.ticketStatus));
+      dispatch(fetchCompanyEmployeesData());
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser } = useSelector((state) => {
+  const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser,allCompanyEmployeesData } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
-      userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
+      userAccess: state?.auth?.userAccess["portal_ticket_creation"],
       allEmployees: state.dashboard.allEmployees,
+      allCompanyEmployeesData: state.dashboard.allCompanyEmployeesData,
       facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList,
       currentUser: state.auth.user,
     };
@@ -165,6 +168,7 @@ export function FormEditForm({
     { value: 3, label: "Re-opened" },
     { value: 2, label: "Send for Review" },
   ];
+
 
 
 
@@ -219,8 +223,8 @@ export function FormEditForm({
 
 
       }}
-      // validationSchema={facilitator_ticket_creationEditSchema}
-      validationSchema={facilitator_ticket_creationEditSchema(formData)}
+
+      validationSchema={facilitator_ticket_creationEditSchema(formData, currentUser?.employeeIdMapping)}
       onSubmit={(values, { resetForm }) => {
         enableLoading();
 
@@ -275,7 +279,7 @@ export function FormEditForm({
                           (option) => option.value === values.ticketTypeId
                         ) || null
                       }
-                      // options={dashboard.allMasterTicketType}
+                    
                       options={dashboard.allMasterTicketType}
                       error={errors.ticketTypeId}
                       touched={touched.ticketTypeId}
@@ -307,26 +311,6 @@ export function FormEditForm({
                   </div>
 
 
-                  {/* <div className="">
-                    <SearchSelect
-                      name="assignTo"
-                      label={
-                        <span>
-                          Assign To<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isUserForRead || !values.initiator || facilitatorEmployeeList?.length == 1}
-                      onChange={(e) => {
-                        setFieldValue("assignTo", e.value || null);
-                      }}
-                      value={
-                        facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
-                      }
-                      options={facilitatorEmployeeList}
-                      error={errors.assignTo}
-                      touched={touched.assignTo}
-                    />
-                  </div> */}
 
                   <div className="">
                     <SearchSelect
@@ -338,7 +322,7 @@ export function FormEditForm({
                       }
                       // Disable if read mode, no initiator, or auto-assigned
                       isDisabled={
-                        isUserForRead ||
+                        isUserForRead || receiveMode ||
                         !values.initiator ||
                         facilitatorEmployeeList?.length === 1
                       }
@@ -351,19 +335,56 @@ export function FormEditForm({
                           ? facilitatorEmployeeList[0]
                           : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
                       }
-                      // options={facilitatorEmployeeList.map((op)=>{
-                      //   op.value==currentUser.employeeIdMapping
-                      // })}
+
                       options={facilitatorEmployeeList.map(op => ({
                         label: op.label,
                         value: op.value,
-                        isDisabled: String(op.value) == String(currentUser.employeeIdMapping)
+                        // isDisabled: String(op.value) == String(currentUser.employeeIdMapping)
                       }))}
 
                       error={errors.assignTo}
                       touched={touched.assignTo}
                     />
                   </div>
+
+                  {Number(values?.assignTo) === Number(currentUser?.employeeIdMapping) && !formData.Id &&(
+                    <div className="">
+                      <SearchSelect
+                        name="assignByToBeSelected"
+                        label={
+                          <span>
+                            Assign By<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        // Disable if read mode, no initiator, or auto-assigned
+                        isDisabled={
+                          isUserForRead || receiveMode ||
+                          !values.initiator ||
+                          facilitatorEmployeeList?.length === 1
+                        }
+                        onChange={(e) => {
+                          setFieldValue("assignByToBeSelected", e.value || null);
+                        }}
+                        // Auto-assign if only 1 record
+                        value={
+                          facilitatorEmployeeList?.length === 1
+                            ? facilitatorEmployeeList[0]
+                            : facilitatorEmployeeList?.find(option => option.value === values.assignByToBeSelected) || null
+                        }
+
+                        options={facilitatorEmployeeList.map(op => ({
+                          label: op.label,
+                          value: op.value,
+
+                        }))}
+
+                        error={errors.assignByToBeSelected}
+                        touched={touched.assignByToBeSelected}
+                      />
+                    </div>
+                  )}
+
+
 
 
                   <div className="">
@@ -422,34 +443,7 @@ export function FormEditForm({
 
 
 
-                  {/* <div className="">
-                    <label>
-                      <span>
-                        From Time
 
-                      </span>
-                    </label>
-                    <TimePickerField
-                      className="form-control"
-                      disabled={!values.initiator}
-
-                      name="timeRangeFrom"
-
-
-
-                      value={
-                        values?.timeRangeFrom ? values.timeRangeFrom : ""
-                      }
-                      onChange={(val) => {
-                        setFieldValue("timeRangeFrom", val);
-                        const hours = calculateHours(val, values.timeRangeTo);
-                        setFieldValue("noOfHours", hours.toFixed(2)); // 2 decimal places
-                      }}
-                      // onBlur={() => setFieldTouched("timeRangeFrom", true)}
-                      touched={touched.timeRangeFrom}
-                      errors={errors.timeRangeFrom}
-                    />
-                  </div> */}
 
                   <div>
                     <label>
@@ -473,31 +467,8 @@ export function FormEditForm({
                     />
                   </div>
 
-                  {/* <div className="">
-                    <label>
-                      <span>
-                        To Time
 
-                      </span>
-                    </label>
-                    <TimePickerField
-                      className="form-control"
-                      disabled={!values.initiator}
-                      name="timeRangeTo"
 
-                      value={
-                        values?.timeRangeTo ? values.timeRangeTo : ""
-                      }
-                      onChange={(val) => {
-                        setFieldValue("timeRangeTo", val);
-                        const hours = calculateHours(values.timeRangeFrom, val);
-                        setFieldValue("noOfHours", hours.toFixed(2));
-                      }}
-                      // onBlur={() => setFieldTouched("timeRangeTo", true)}
-                      touched={touched.timeRangeTo}
-                      errors={errors.timeRangeTo}
-                    />
-                  </div> */}
                   <div>
                     <label>
                       <span>To Time</span>
@@ -739,12 +710,14 @@ export function FormEditForm({
                             setFieldValue("assignBy", e.value || null);
                           }}
                           value={
-                            allEmployees?.find(option => option.value === values.assignBy) || null
+                            allCompanyEmployeesData?.find(option => option.value === values.assignBy) || null
                           }
-                          options={allEmployees}
+                          options={allCompanyEmployeesData}
 
                         />
                       </div>
+
+
                       <div className="col-span-3">
                         <Field
                           name="remarks"
