@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Employee Document";
+    let _title = id ? "" : "Add Task Assignment";
     if (id) {
-      _title = `Edit Employee Document`;
+      _title = `Edit Task Assignment`;
     } //else if (isUserForRead) {
     //   _title = `Read user '}'`
     // }
@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View Employee Document"}
+          {!isUserForRead ? title : "View Task Assignment"}
         </Modal.Title>
       </Modal.Header>
     </>
