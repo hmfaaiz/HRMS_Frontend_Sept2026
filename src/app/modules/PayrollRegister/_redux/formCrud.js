@@ -93,3 +93,18 @@ export async function generateDubaiBankAdvice(body) {
     responseType:'arraybuffer'
   });
 }
+
+
+export async function generateLoanExcel(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-loan-excel`, body,{
+    responseType:'arraybuffer'
+  });
+}
+
+
+export async function generateGratuityExcel(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-gratuity-excel`, body,{
+    responseType:'arraybuffer'
+  });
+}
+

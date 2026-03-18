@@ -42,8 +42,8 @@ export function FormCard() {
     shallowEqual
   );
 
-  const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateTicketCreation"
+  const accessUser = userAccess?.find(
+    (item) => item?.componentName === "CreateTicketCreation"
   );
 
   const { currentState } = useSelector((state) => {

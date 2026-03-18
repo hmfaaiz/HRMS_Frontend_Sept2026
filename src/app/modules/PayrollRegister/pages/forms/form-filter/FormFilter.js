@@ -194,6 +194,31 @@ export function FormFilter({
     );
   };
 
+
+  const getLoanExcel = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(
+      actions.generateRegisterLoanExcel(
+        newQueryParams.filter,
+        document,
+        labels
+      )
+    );
+  };
+
+  const getGratuityExcel = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(
+      actions.generateRegisterGratuityExcel(
+        newQueryParams.filter,
+        document,
+        labels
+      )
+    );
+  };
+
   const [
     payrollPayableAccountApproverPermission,
     setPayrollPayableAccountApproverPermission,
@@ -680,28 +705,7 @@ export function FormFilter({
                         Payroll Expense Report
                       </h6>
                       <div className="grid md:grid-cols-5 gap-x-3 mb-2">
-                        {/* <div className="col-span-1 flex justify-start ">
-                            <input className="mr-1 mt-0 align-top bg-slate-500"
-                              name="groupByEmployee"
-                              type="checkbox"
-                              // onChange={handleChange}
-                              onChange={() => {
-                                setFieldValue("groupByEmployee", !values?.groupByEmployee)
-                                setFieldValue("groupByDepartment", null)
-                                setFieldValue("groupByLocation", null)
-                              }
-
-                              }
-                              onBlur={handleBlur}
-                              value={values.groupByEmployee}
-                              checked={values.groupByEmployee}
-
-                            />
-                            <label>Group By Employee</label>
-
-
-
-                          </div> */}
+               
 
                         <div className="col-span-1 flex items-start">
                           <label className="flex items-center space-x-1">
@@ -725,23 +729,7 @@ export function FormFilter({
                           </label>
                         </div>
 
-                        {/* <div className="col-span-1 flex justify-start items-center">
-                            <input className="mr-1"
-                              name="groupByDepartment"
-                              type="checkbox"
-                              disabled={values.groupByEmployee}
-                              // onChange={handleChange}
-                              onChange={() => setFieldValue("groupByDepartment", !values?.groupByDepartment)}
-                              onBlur={handleBlur}
-                              value={values.groupByDepartment}
-                              checked={values.groupByDepartment}
-
-                            />
-                            <label>Group By Department</label>
-
-
-
-                          </div> */}
+            
 
                         <div className="col-span-1">
                           <label className="flex items-center">
@@ -764,23 +752,6 @@ export function FormFilter({
                           </label>
                         </div>
 
-                        {/* <div className="col-span-1 flex justify-start items-center">
-                            <input className="mr-1"
-                              name="groupByLocation"
-                              type="checkbox"
-                              disabled={values.groupByEmployee}
-                              // onChange={handleChange}
-                              onChange={() => setFieldValue("groupByLocation", !values?.groupByLocation)}
-                              onBlur={handleBlur}
-
-                              checked={values.groupByLocation}
-                              label="Approved for Payroll"
-                            />
-                            <label>Group By Location</label>
-
-
-
-                          </div> */}
 
                         <div className="col-span-1">
                           <label className="flex items-center">
@@ -802,7 +773,10 @@ export function FormFilter({
                           </label>
                         </div>
 
-                        <div className="col-span-2 flex justify-end">
+                        
+                      </div>
+
+                      <div className="col-span-3 flex justify-end">
                           <button
                             onClick={() => {
                               getJVExcel(values);
@@ -840,10 +814,51 @@ export function FormFilter({
                             className="btn btn-primary btn-elevate mt-3 h-9"
                           >
                             Payroll Disbursement Report
-                            {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                            {/* <SVG
-                                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                                /> */}
+                       
+                            <Download className="w-4 h-4 ml-2" />
+                            {/* </span> */}
+                            {registerExcelLoading && (
+                              <span className="ml-3 mr-3 spinner spinner-white"></span>
+                            )}
+                          </button>
+
+
+
+                             <button
+                            onClick={() => {
+                              getLoanExcel(values);
+                            }}
+                            disabled={
+                              registerExcelLoading ||
+                              !values.subsidiaryId ||
+                              !values.monthId
+                            }
+                            type="button"
+                            className="btn btn-primary btn-elevate mt-3 h-9 ml-1"
+                          >
+                            Payroll Loan Report
+                     
+                            <Download className="w-4 h-4 ml-2" />
+                            {/* </span> */}
+                            {registerExcelLoading && (
+                              <span className="ml-3 mr-3 spinner spinner-white"></span>
+                            )}
+                          </button>
+
+                             <button
+                            onClick={() => {
+                              getGratuityExcel(values);
+                            }}
+                            disabled={
+                              registerExcelLoading ||
+                              !values.subsidiaryId ||
+                              !values.monthId
+                            }
+                            type="button"
+                            className="btn btn-primary btn-elevate mt-3 h-9 ml-1"
+                          >
+                            Payroll Gratuity Report
+                     
                             <Download className="w-4 h-4 ml-2" />
                             {/* </span> */}
                             {registerExcelLoading && (
@@ -851,7 +866,6 @@ export function FormFilter({
                             )}
                           </button>
                         </div>
-                      </div>
                     </div>
                   )}
                 </fieldset>
