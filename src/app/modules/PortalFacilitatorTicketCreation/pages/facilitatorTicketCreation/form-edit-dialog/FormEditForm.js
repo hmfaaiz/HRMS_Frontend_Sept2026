@@ -16,7 +16,7 @@ import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
-import { FetchAllFacilitatorEmployee, fetchCompanyEmployeesData, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { FetchAllFacilitatorEmployee, fetchCompanyEmployeesData, fetchCurrentParentTask, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 
 // percentage: Yup.string().required("Required*"),
 const facilitator_ticket_creationEditSchema = (value, currentUser) => {
@@ -146,13 +146,14 @@ export function FormEditForm({
       dispatch(fetchMasterTicketType());
       dispatch(FetchAllFacilitatorEmployee(formData?.ticketStatus));
       dispatch(fetchCompanyEmployeesData());
+      dispatch(fetchCurrentParentTask());
     }
   }, [dispatch, formData.Id]);
 
   const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser,allCompanyEmployeesData } = useSelector((state) => {
     return {
-      currentState: state.portal_ticket_creation,
-      userAccess: state?.auth?.userAccess["portal_ticket_creation"],
+      currentState: state.facilitator_ticket_creation,
+      userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
       allEmployees: state.dashboard.allEmployees,
       allCompanyEmployeesData: state.dashboard.allCompanyEmployeesData,
       facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList,
@@ -252,7 +253,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
 
-
+{console.log("errors111",errors,values)}
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
@@ -588,6 +589,29 @@ export function FormEditForm({
 
                     </div>
                   </div>
+                       <div className="">
+                    <SearchSelect
+                      name="parentId"
+                      label={
+                        <span>
+                          Parent Task
+                        </span>
+                      }
+                      isDisabled={isUserForRead || !values.initiator || receiveMode}
+                      onChange={(e) => {
+                        setFieldValue("parentId", e.value || null);
+                   
+                      }}
+                      value={
+                        dashboard.allCurrentParentTask?.find(
+                          (option) => option.value === values.parentId
+                        ) || null
+                      }
+                    
+                      options={dashboard?.allCurrentParentTask}
+         
+                    />
+                  </div>
 
                   {formData?.file && (
                     <div className="">
@@ -845,6 +869,10 @@ export function FormEditForm({
                         </div>
 
                       )}
+
+                      
+             
+
                     </>
 
 
