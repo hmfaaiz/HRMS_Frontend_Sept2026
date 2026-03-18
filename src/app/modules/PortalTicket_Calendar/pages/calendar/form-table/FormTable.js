@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 
 const localizer = momentLocalizer(moment);
 
@@ -53,8 +54,6 @@ export function FormTable() {
     return new Date(sorted[0].from);
   };
 
-
-
   const truncate = (text, max = 9) => {
     if (!text) return "";
     if (currentView === "month") {
@@ -82,6 +81,7 @@ export function FormTable() {
 
         start: moment(data.from, "DD-MMM-YYYY").toDate(),
         end: moment(data.to, "DD-MMM-YYYY").endOf("day").toDate(),
+        allDay: true,
         // description: data.sourceType === "FACILITATOR"
         //   ? data?.ticketDescription
         //   : data.sourceType === "TICKET"
@@ -89,6 +89,7 @@ export function FormTable() {
         //     : data.sourceType === "TIMELOG"
         //       ? data?.workDescription
         //       : "",
+        ticketStatus: data?.ticketStatus,
         sourceType: data.sourceType,
         timeRange: `${data?.timeRangeFrom} - ${data?.timeRangeTo}`,
         dateRange: `${data?.from} - ${data?.to}`,
@@ -157,7 +158,7 @@ export function FormTable() {
           localizer={localizer}
           events={events}
           views={['month', 'week', 'day']}
-          defaultView="month"
+          defaultView="week"
           onView={(view) => setCurrentView(view)}
           date={currentDate}                    // Controlled date
           onNavigate={(date) => setCurrentDate(date)}
@@ -213,7 +214,7 @@ export function FormTable() {
                 color: "white",
                 borderRadius: "6px",
                 padding: "2px",
-                height: "60%",
+                height: "65%",
               },
             };
           }}
@@ -223,26 +224,33 @@ export function FormTable() {
             event: ({ event }) => (
               <>
 
-                <div className="custom-tooltip" >
-                  {event.title}  {event.profileImage && (
-                    <img
-                      src={event.profileImage}
-                      alt="Profile"
-                      style={{
-                        width: "18px",
-                        height: "18px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  )}
+                <div className="custom-tooltip"  >
+                  <div style={{ display: "flex",alignItems: "center", gap: "5px"}}>
+
+
+                    {event?.ticketStatus == 0 && (
+                      <div style={{ display: "flex", alignItems: "center", }}>
+                        <div
+                        className="w-[10px] h-[10px] rounded-full bg-[#39FF14]"
+                        ></div>
+
+                      </div>
+                    )}
+                    {event.title}  {event.profileImage && (
+                      <img
+                        src={event.profileImage}
+                        alt="Profile"
+                        style={{
+                          width: "18px",
+                          height: "18px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    )}
+
+                  </div>
                 </div>
-                {/* <div style={{ fontSize: "12px" }}>
-                  {event.ticket}
-                  {event.sourceType === "TIMELOG" && event.noOfHours
-                    ? ` - ${event.noOfHours} hrs`
-                    : ""}
-                </div> */}
 
 
 

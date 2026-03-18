@@ -44,7 +44,7 @@ export function DetailTable() {
   const { currentState, userAccess } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
-      userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
+      userAccess: state?.auth?.userAccess["portal_ticket_creation"],
     };
   }, shallowEqual);
 

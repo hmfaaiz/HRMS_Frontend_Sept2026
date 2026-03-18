@@ -35,17 +35,15 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-  const { userAccess, dashboard } = useSelector(
+  const {  dashboard } = useSelector(
     (state) => ({
-      userAccess: state.auth.userAccess.facilitator_ticket_creation,
+
       dashboard: state.dashboard,
     }),
     shallowEqual
   );
 
-  const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateTicketCreation"
-  );
+
 
   const { currentState ,report,calendar,portal_task_assignment_timeline} = useSelector((state) => {
     return {
