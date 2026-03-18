@@ -254,7 +254,7 @@ export function FormTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.createdAt);
+         const createdDate = new Date(row.ticketDate);
         createdDate.setHours(0, 0, 0, 0);
 
        
@@ -368,7 +368,7 @@ export function FormTable() {
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(row.createdAt);
+        const createdDate = new Date(row.ticketDate);
         createdDate.setHours(0, 0, 0, 0);
 
        
