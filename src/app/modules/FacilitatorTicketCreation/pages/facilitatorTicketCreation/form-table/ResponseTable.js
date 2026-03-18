@@ -272,7 +272,7 @@ export function ResponseTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.createdAt);
+         const createdDate = new Date(row.ticketDate);
         createdDate.setHours(0, 0, 0, 0);
 
        
@@ -389,7 +389,7 @@ export function ResponseTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.createdAt);
+         const createdDate = new Date(row.ticketDate);
         createdDate.setHours(0, 0, 0, 0);
 
        
