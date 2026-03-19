@@ -590,48 +590,52 @@ export function MasterEditForm({
                         />
                       </div>
 
-                      <div className="text-black mt-1">
+                     <div>
+                      <label title="Mark Employee as Early Out if Working hours are less than selected hours" className="shortlabel">
+                        Mark Employee as Early Out if Working Hours are less than selected hours
+                      </label>
+                      <Field
+                      name="markEarlyOut"
+                      component={TimeInput}
+                      placeholder="Enter Time 00:00"
+                      error={errors.markEarlyOut}
+                      autoComplete="off"
+                      />
+                      </div>
+
+                      <div className="text-black mt-4">
                         <label>Working Days</label>
-                        <div className="overflow-auto">
-                          <div className="multi-select">
-                            <div
-                              className="p-0 m-0 flex gap-2 justify-start items-start flex-wrap"
-                              style={{
-                                fontSize: "10.2px",
-                                // fontWeight: "bold",
-                                // padding: "2px",
-                              }}
-                            >
-                              {Object.values(WEEK_DAY_STRING).map((day) => (
-                                <div
-                                  key={day}
-                                  className="flex justify-start items-start"
-                                >
-                                  <input
-                                    className="p-0 m-0 mr-1 "
-                                    name="workingdays"
-                                    type="checkbox"
-                                    checked={defWeekDays?.includes(day)}
-                                    onChange={() => {
-                                      handleCheckboxChangeFor_WeekDays(
-                                        day,
-                                        setFieldValue,
-                                        values
-                                      );
-                                      //setDefaultWeekDays(day)
-                                    }}
-                                  />
-                                  {day}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <ErrorMessage
-                          className="form-feedBack"
-                          name="workingdays"
-                          component="div"
-                        />
+                        <div
+                        className="" // enable horizontal scroll
+                        style={{ whiteSpace: "nowrap", fontSize: "10.2px" }}
+                        >
+                          {Object.values(WEEK_DAY_STRING).map((day) => (
+                            <label
+                            key={day}
+                            className="inline-flex items-center mr-4" 
+>
+                            <input
+                              type="checkbox"
+                              name="workingdays"
+                              className="mr-1"
+                              checked={defWeekDays?.includes(day)}
+                              onChange={() =>
+                              handleCheckboxChangeFor_WeekDays(
+                              day,
+                              setFieldValue,
+                              values,
+                               )
+                              }
+                             />
+                             {day}
+                             </label>
+                             ))}
+                           </div>
+                           <ErrorMessage
+                            className="form-feedBack"
+                            name="workingdays"
+                            component="div"
+                          />
                       </div>
                     </div>
                   </div>
