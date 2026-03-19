@@ -83,7 +83,7 @@ export const deleteRecord = (id, disableLoading, onHide) => (dispatch) => {
         });
 };
 
-export const fetchAllEmployeeShiftList = () => async (dispatch) => {
+export const fetchAllEmployeeShiftList = (key) => async (dispatch) => {
     return await requestFromServer
         .getAllEmployeeShiftList({
             sortOrder: "DESC",
@@ -93,9 +93,9 @@ export const fetchAllEmployeeShiftList = () => async (dispatch) => {
         })
         .then((response) => {
             const entities = response?.data?.data?.rows || [];
-            dispatch(actions.AllChildMenusFetch({  entities }));
+            dispatch(actions.AllChildMenusFetch({ key, entities }));
         })
         .catch((error) => {
-            dispatch(actions.AllChildMenusFetch({ entities: [] }));
+            dispatch(actions.AllChildMenusFetch({key, entities: [] }));
         });
 };
