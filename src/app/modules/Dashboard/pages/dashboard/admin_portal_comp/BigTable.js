@@ -127,18 +127,18 @@ export function BigTable({ data, setBigTableModalData }) {
         <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
 
         {data?.data.length > 0 ? (
-          <lable
+          <label
             className={`text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`}
             onClick={() => setBigTableModalData(data)}
           >
             View All
-          </lable>
+          </label>
         ) : (
-          <lable
+          <label
             className={`text-gray-500 cursor-not-allowed font-medium text-xs`}
           >
             View All
-          </lable>
+          </label>
         )}
       </div>
       <div

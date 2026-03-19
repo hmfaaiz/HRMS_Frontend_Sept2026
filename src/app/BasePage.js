@@ -489,6 +489,8 @@ const cash_payment_against_loan = lazy(() =>
 import ("./modules/Cash_Payment_Against_Loan/pages/index"))
 const customer_config = lazy(() =>
 import ("./modules/Customer_Configuration/pages/index"))
+const tada_configuration = lazy(() =>
+import ("./modules/Tada_Configuration/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -676,6 +678,7 @@ const ROUTES = {
   customer_user : customer_user,
   cash_payment_against_loan : cash_payment_against_loan,
   customer_config : customer_config,
+  t_tada_config: tada_configuration,
 };
 
 export default function BasePage() {
@@ -684,13 +687,13 @@ export default function BasePage() {
 
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
-console.log("UserAccess in BasePage: ", UserAccess);
   const SettingsAccess = auth?.userAccess?.Settings;
   // );
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
         {/* <Route path='vehicles/read-all-vehicles' component={VehicleManagment} /> */}
+        <Route path="/tada_config" component={tada_configuration} />
         {Object.keys(UserAccess).map((access, key) => {
           const accessName = access.replace(/ /g, "").toLowerCase();
         

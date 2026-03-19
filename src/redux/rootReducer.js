@@ -198,6 +198,7 @@ import { TaskConfigurationSlice } from "../app/modules/TaskConfiguration/_redux/
 import { CustomerUserManagementSlice } from "../app/modules/Customer_User_Management/_redux/redux-Slice";
 import { loanCashPaymentSlice } from "../app/modules/Cash_Payment_Against_Loan/_redux/redux-Slice";
 import { CustomerConfigurationSlice } from "../app/modules/Customer_Configuration/_redux/redux-Slice";
+import { tada_configurationSlice } from "../app/modules/Tada_Configuration/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -391,6 +392,7 @@ export const rootReducer = combineReducers({
   customer_user_management : CustomerUserManagementSlice.reducer,
   cash_payment_against_loan : loanCashPaymentSlice.reducer,
   customer_config : CustomerConfigurationSlice.reducer,
+  t_tada_config: tada_configurationSlice.reducer,
 });
 
 export function* rootSaga() {

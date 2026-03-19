@@ -302,9 +302,20 @@ const closeSubMenu = (parentKey, childHeading) => {
           >
             {Object.keys(parentItems)
               .map((childHeading) => {
-                const visibleItems = parentItems[childHeading].filter(
+                const visibleItems = [...parentItems[childHeading]].filter(
                   (item) => item.isResourceShow && item?.portalType == Number(isEmployeePortal)
                 );
+                
+                // Manually inject TADA Configuration into the last section of Payroll
+                if (parentKey.toLowerCase() === "payroll" && childHeading.toLowerCase().includes("setup")) {
+                   visibleItems.push({
+                     name: "TADA Configuration",
+                     url: "tada_config/read-all-tada-config",
+                     isResourceShow: true,
+                     portalType: 1
+                   });
+                }
+
                 if (visibleItems.length === 0) return null;
 
                 const hasChild = visibleItems.length > 0;
