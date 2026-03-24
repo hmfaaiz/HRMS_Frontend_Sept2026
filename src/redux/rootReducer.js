@@ -198,6 +198,7 @@ import { TaskConfigurationSlice } from "../app/modules/TaskConfiguration/_redux/
 import { CustomerUserManagementSlice } from "../app/modules/Customer_User_Management/_redux/redux-Slice";
 import { loanCashPaymentSlice } from "../app/modules/Cash_Payment_Against_Loan/_redux/redux-Slice";
 import { CustomerConfigurationSlice } from "../app/modules/Customer_Configuration/_redux/redux-Slice";
+import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice"
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -391,6 +392,7 @@ export const rootReducer = combineReducers({
   customer_user_management : CustomerUserManagementSlice.reducer,
   cash_payment_against_loan : loanCashPaymentSlice.reducer,
   customer_config : CustomerConfigurationSlice.reducer,
+  temporary_shift_setup : employeeTempShiftSlice.reducer,
 });
 
 export function* rootSaga() {

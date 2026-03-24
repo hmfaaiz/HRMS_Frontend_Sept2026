@@ -361,7 +361,7 @@ export function FormTable() {
                 >
                   Salary Recommendation Report
                   {actionsLoading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    <span className="ml-3 mr-5 spinner spinner-white"></span>
                   )}
                 </button>
               </div>
