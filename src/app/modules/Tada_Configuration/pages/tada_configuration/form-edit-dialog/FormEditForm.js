@@ -47,8 +47,8 @@ export function FormEditForm({
   useEffect(() => {
     dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList")); // Grades
     dispatch(fetchAllFormsMenu(158, "allDesignations")); // Designations
-    dispatch(fetchAllFormsMenu(552, "allTransportModeList")); // Transport Modes
-    dispatch(fetchAllFormsMenu(551, "allHotelEntitlementList")); // Hotel Entitlements
+    dispatch(fetchAllFormsMenu(551, "allTransportModeList")); // Transport Modes
+    dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList")); // Hotel Entitlements
   }, [dispatch]);
 
   const transportOptions = dashboard?.allTransportModeList || [];
@@ -97,6 +97,8 @@ export function FormEditForm({
                       <Field
                         name="isGradeWise"
                         component={Checkbox}
+                        isSelected={values.isGradeWise}
+                        disabled={isUserForRead || values.isDesignationWise}
                         onChange={(e) => {
                           const checked = e.target.checked;
                           setFieldValue("isGradeWise", checked);
@@ -107,7 +109,7 @@ export function FormEditForm({
                         }}
                       />
                     </div>
-                    <label className="col-span-5 text-sm font-medium">Grade Wise</label>
+                    <label className={`col-span-5 text-sm font-medium ${values.isDesignationWise ? "text-muted" : ""}`}>Grade Wise</label>
                     <div className="col-span-6 flex items-center space-x-2">
                        <div className="flex-1">
                         <SearchSelect
@@ -130,6 +132,8 @@ export function FormEditForm({
                       <Field
                         name="isDesignationWise"
                         component={Checkbox}
+                        isSelected={values.isDesignationWise}
+                        disabled={isUserForRead || values.isGradeWise}
                         onChange={(e) => {
                           const checked = e.target.checked;
                           setFieldValue("isDesignationWise", checked);
@@ -140,7 +144,7 @@ export function FormEditForm({
                         }}
                       />
                     </div>
-                    <label className="col-span-5 text-sm font-medium">Designation Wise</label>
+                    <label className={`col-span-5 text-sm font-medium ${values.isGradeWise ? "text-muted" : ""}`}>Designation Wise</label>
                     <div className="col-span-6 flex items-center space-x-2">
                        <div className="flex-1">
                         <SearchSelect
@@ -182,7 +186,13 @@ export function FormEditForm({
                       <MultiSelect
                         options={hotelOptions}
                         value={values.hotelEntitlementIds}
-                        onChange={(val) => setFieldValue("hotelEntitlementIds", val)}
+                        onChange={(val) => {
+                          setFieldValue("hotelEntitlementIds", val);
+                          // Clear amount if "Self" is removed
+                          if (!val?.some(opt => opt.label?.toLowerCase().includes("self"))) {
+                            setFieldValue("hotelEntitlementSelfAmount", 0);
+                          }
+                        }}
                         disabled={isUserForRead}
                         error={errors.hotelEntitlementIds}
                         touched={touched.hotelEntitlementIds}
@@ -194,12 +204,12 @@ export function FormEditForm({
                   {/* If Hotel Entitlement is Self... */}
                   <div className="grid grid-cols-12 items-center gap-4">
                     <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium leading-tight">If Hotel Entitlement is Self then Amount for each day</label>
+                    <label className={`col-span-5 text-sm font-medium leading-tight ${!values.hotelEntitlementIds?.some(opt => opt.label?.toLowerCase().includes("self")) ? "text-muted" : ""}`}>If Hotel Entitlement is Self then Amount for each day</label>
                     <div className="col-span-6">
                       <AmountInput
                         field={{ name: "hotelEntitlementSelfAmount", value: values.hotelEntitlementSelfAmount }}
                         form={{ touched, errors, setFieldValue, setFieldTouched }}
-                        disabled={isUserForRead}
+                        disabled={isUserForRead || !values.hotelEntitlementIds?.some(opt => opt.label?.toLowerCase().includes("self"))}
                         placeholder="0"
                       />
                     </div>

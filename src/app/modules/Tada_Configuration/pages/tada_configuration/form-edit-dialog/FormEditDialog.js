@@ -39,8 +39,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     // Transform data for backend (picking first selection as a Number for strict backend validation)
     const payload = {
       ...values,
-      modeOfTransportId: Number(values.modeOfTransportIds?.[0]?.value) || 0,
-      hotelEntitlementId: Number(values.hotelEntitlementIds?.[0]?.value) || 0,
+      modeOfTransportId: values.modeOfTransportIds?.map(x => x.value)?.join(",") || "",
+      hotelEntitlementId: values.hotelEntitlementIds?.map(x => x.value)?.join(",") || "",
       gradeId: values.gradeId ? Number(values.gradeId) : null,
       designationId: values.designationId ? Number(values.designationId) : null,
     };

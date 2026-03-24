@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-paginator";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/redux-Actions";
 import {
   getHandlerTableChange,
@@ -29,10 +30,11 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector(
+  const { currentState, userAccess, dashboard } = useSelector(
     (state) => ({
       currentState: state.t_tada_config,
       userAccess: state?.auth?.userAccess["t_tada_config"],
+      dashboard: state.dashboard,
     }),
     shallowEqual
   );
@@ -43,25 +45,51 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setIds([]);
     dispatch(actions.fetchTadaConfigs(formUIProps.queryParams));
+    // Fetch dropdown lists to map IDs to Names in the table
+    dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList"));
+    dispatch(fetchAllFormsMenu(158, "allDesignations"));
+    dispatch(fetchAllFormsMenu(552, "allTransportModeList"));
+    dispatch(fetchAllFormsMenu(551, "allHotelEntitlementList"));
   }, [formUIProps.queryParams, dispatch]);
 
   const isAccessForEdit = userAccess?.find((item) => item.componentName === "UpdateTadaConfiguration") || { isAccess: true };
   const isAccessForDelete = userAccess?.find((item) => item.componentName === "DeleteTadaConfiguration") || { isAccess: true };
 
+  // Helper function to map comma-separated IDs to their names
+  const getNamesFromIds = (commaSeparatedIds, optionsList) => {
+    if (!commaSeparatedIds || !optionsList) return "N/A";
+    const ids = commaSeparatedIds.toString().split(",");
+    const names = optionsList
+      .filter((opt) => ids.includes(opt.value.toString()))
+      .map((opt) => opt.label);
+    return names.length > 0 ? names.join(", ") : "N/A";
+  };
+
   const columns = [
     {
-      dataField: "Grade.name",
+      dataField: "gradeId",
       text: "Grade",
-      formatter: (cell) => cell || "N/A",
+      formatter: (cell, row) => row.Grade?.name || getNamesFromIds(cell, dashboard?.allEmployeeGradeList),
     },
     {
-      dataField: "Designation.name",
+      dataField: "designationId",
       text: "Designation",
-      formatter: (cell) => cell || "N/A",
+      formatter: (cell, row) => row.Designation?.name || getNamesFromIds(cell, dashboard?.allDesignations),
+    },
+    {
+      dataField: "modeOfTransportId",
+      text: "Mode of Transport",
+      formatter: (cell) => getNamesFromIds(cell, dashboard?.allTransportModeList),
+    },
+    {
+      dataField: "hotelEntitlementId",
+      text: "Hotel Entitlement",
+      formatter: (cell) => getNamesFromIds(cell, dashboard?.allHotelEntitlementList),
     },
     {
       dataField: "hotelEntitlementSelfAmount",
-      text: "Hotel Amount",
+      text: "Hotel Self Amount",
+      formatter: (cell) => cell || "N/A",
     },
     {
       dataField: "dailyAllowanceAmount",
