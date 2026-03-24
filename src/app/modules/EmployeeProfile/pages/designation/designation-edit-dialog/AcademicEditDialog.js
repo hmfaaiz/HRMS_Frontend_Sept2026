@@ -127,6 +127,7 @@ export function AcademicEditDialog({ id, show, onHide, userForRead }) {
         dateOfBirth: user.dateOfBirth,
         dateOfRetirement: user.dateOfRetirement,
         relation_name: user.relation_name,
+        allowResignationRequest: user.allowResignationRequest,
       };
 
 

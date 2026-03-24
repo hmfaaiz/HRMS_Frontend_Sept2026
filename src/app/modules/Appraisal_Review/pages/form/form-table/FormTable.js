@@ -17,7 +17,7 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
 import { X } from "lucide-react";
-
+import { downloadAppraisalFinalizationPdf,  } from "../../../_redux/formActions";
 export function FormTable() {
   //Users UI Context
   const [selectedIds, setSelectedIds] = useState([]);
@@ -45,7 +45,7 @@ export function FormTable() {
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading, actionsLoading } = currentState;
+  const { totalCount, entities, listLoading, actionsLoading, finalizationPdfLoading  } = currentState;
 
   //totalCount = 10
 
@@ -193,6 +193,9 @@ export function FormTable() {
           ? isAccessForDelete.isAccess
           : false,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
+        dispatch,
+        downloadAppraisalFinalizationPdf,
+        finalizationPdfLoading,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -330,7 +333,7 @@ export function FormTable() {
                   <NoRecordsFoundMessage entities={entities} />
                 </BootstrapTable>
               </Pagination>
-              <div className="d-flex justify-content-end mt-3 gap-x-2 me-1">
+              <div className="d-flex justify-content-end mt-3 gap-x-2 me-1 mr-4">
                 <button
                   type="button"
                   className="btn btn-primary"

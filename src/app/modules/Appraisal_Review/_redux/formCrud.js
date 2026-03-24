@@ -45,3 +45,12 @@ export function salaryRecomendationReport(body) {
     },
   );
 }
+
+
+export function downloadAppraisalFinalizationPdfRequest(reviewId) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/appraisal-finalization-report`,
+    { appraisalReviewPdf: reviewId },
+    { responseType: "arraybuffer" },
+  );
+}
