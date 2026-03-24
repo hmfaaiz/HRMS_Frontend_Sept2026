@@ -135,3 +135,30 @@ export const salaryRecomendationReport = (payload) => async (dispatch) => {
       );
     });
 };
+export const downloadAppraisalFinalizationPdf = (reviewId) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.finalizationPdf }));
+ 
+  return requestFromServer.downloadAppraisalFinalizationPdfRequest(reviewId)
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      const pdfUrl  = URL.createObjectURL(pdfBlob);
+ 
+      const link = document.createElement("a");
+      link.href  = pdfUrl;
+      link.setAttribute("download", `appraisal_finalization_report.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(pdfUrl);
+ 
+      dispatch(actions.finalizationPdfFetched());
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Appraisal Finalization PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.finalizationPdf }));
+      toast.error("Failed to generate Appraisal Finalization Report", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    });
+};
