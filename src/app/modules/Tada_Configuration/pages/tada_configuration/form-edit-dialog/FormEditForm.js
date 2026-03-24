@@ -24,8 +24,14 @@ const TadaConfigSchema = Yup.object().shape({
     is: true,
     then: Yup.string().required(VALIDATION_MESSAGES.required),
   }),
-  modeOfTransportIds: Yup.array().min(1, "Select at least one mode of transport"),
-  hotelEntitlementIds: Yup.array().min(1, "Select at least one hotel entitlement"),
+  modeOfTransportIds: Yup.array().min(
+    1,
+    "Select at least one mode of transport",
+  ),
+  hotelEntitlementIds: Yup.array().min(
+    1,
+    "Select at least one hotel entitlement",
+  ),
   hotelEntitlementSelfAmount: Yup.number().min(0, "Amount cannot be negative"),
   dailyAllowanceAmount: Yup.number().min(0, "Amount cannot be negative"),
   taxiFareAmount: Yup.number().min(0, "Amount cannot be negative"),
@@ -42,7 +48,10 @@ export function FormEditForm({
   id,
 }) {
   const dispatch = useDispatch();
-  const { dashboard } = useSelector((state) => ({ dashboard: state.dashboard }), shallowEqual);
+  const { dashboard } = useSelector(
+    (state) => ({ dashboard: state.dashboard }),
+    shallowEqual,
+  );
 
   useEffect(() => {
     dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList")); // Grades
@@ -73,11 +82,11 @@ export function FormEditForm({
       }) => (
         <>
           {/* Initialize Multi-select from backend strings */}
-          <InitializeMultiSelect 
-            user={user} 
-            transportOptions={transportOptions} 
-            hotelOptions={hotelOptions} 
-            setFieldValue={setFieldValue} 
+          <InitializeMultiSelect
+            user={user}
+            transportOptions={transportOptions}
+            hotelOptions={hotelOptions}
+            setFieldValue={setFieldValue}
             values={values}
           />
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -88,9 +97,7 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
-                
                 <div className="space-y-4 max-w-4xl pt-4">
-                  
                   {/* Grade Wise */}
                   <div className="grid grid-cols-12 items-center gap-4">
                     <div className="col-span-1">
@@ -98,7 +105,7 @@ export function FormEditForm({
                         name="isGradeWise"
                         component={Checkbox}
                         isSelected={values.isGradeWise}
-                        disabled={isUserForRead || values.isDesignationWise}
+                        disabled={isUserForRead}
                         onChange={(e) => {
                           const checked = e.target.checked;
                           setFieldValue("isGradeWise", checked);
@@ -109,20 +116,32 @@ export function FormEditForm({
                         }}
                       />
                     </div>
-                    <label className={`col-span-5 text-sm font-medium ${values.isDesignationWise ? "text-muted" : ""}`}>Grade Wise</label>
+                    <label
+                      className={`col-span-5 text-sm font-medium ${
+                        values.isDesignationWise ? "text-muted" : ""
+                      }`}
+                    >
+                      Grade Wise
+                    </label>
                     <div className="col-span-6 flex items-center space-x-2">
-                       <div className="flex-1">
+                      <div className="flex-1">
                         <SearchSelect
                           name="gradeId"
                           isDisabled={isUserForRead || !values.isGradeWise}
-                          onChange={(e) => setFieldValue("gradeId", e.value || "")}
-                          value={dashboard?.allEmployeeGradeList?.find(opt => opt.value === values.gradeId) || null}
+                          onChange={(e) =>
+                            setFieldValue("gradeId", e.value || "")
+                          }
+                          value={
+                            dashboard?.allEmployeeGradeList?.find(
+                              (opt) => opt.value === values.gradeId,
+                            ) || null
+                          }
                           options={dashboard?.allEmployeeGradeList}
                           error={errors.gradeId}
                           touched={touched.gradeId}
                           placeholder="Select Grade"
                         />
-                       </div>
+                      </div>
                     </div>
                   </div>
 
@@ -133,7 +152,7 @@ export function FormEditForm({
                         name="isDesignationWise"
                         component={Checkbox}
                         isSelected={values.isDesignationWise}
-                        disabled={isUserForRead || values.isGradeWise}
+                        disabled={isUserForRead}
                         onChange={(e) => {
                           const checked = e.target.checked;
                           setFieldValue("isDesignationWise", checked);
@@ -144,32 +163,50 @@ export function FormEditForm({
                         }}
                       />
                     </div>
-                    <label className={`col-span-5 text-sm font-medium ${values.isGradeWise ? "text-muted" : ""}`}>Designation Wise</label>
+                    <label
+                      className={`col-span-5 text-sm font-medium ${
+                        values.isGradeWise ? "text-muted" : ""
+                      }`}
+                    >
+                      Designation Wise
+                    </label>
                     <div className="col-span-6 flex items-center space-x-2">
-                       <div className="flex-1">
+                      <div className="flex-1">
                         <SearchSelect
                           name="designationId"
-                          isDisabled={isUserForRead || !values.isDesignationWise}
-                          onChange={(e) => setFieldValue("designationId", e.value || "")}
-                          value={dashboard?.allDesignations?.find(opt => opt.value === values.designationId) || null}
+                          isDisabled={
+                            isUserForRead || !values.isDesignationWise
+                          }
+                          onChange={(e) =>
+                            setFieldValue("designationId", e.value || "")
+                          }
+                          value={
+                            dashboard?.allDesignations?.find(
+                              (opt) => opt.value === values.designationId,
+                            ) || null
+                          }
                           options={dashboard?.allDesignations}
                           error={errors.designationId}
                           touched={touched.designationId}
                           placeholder="Select Designation"
                         />
-                       </div>
+                      </div>
                     </div>
                   </div>
 
                   {/* Mode of Transport (Multi-select) */}
                   <div className="grid grid-cols-12 items-center gap-4">
                     <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">Mode of Transport</label>
+                    <label className="col-span-5 text-sm font-medium">
+                      Mode of Transport
+                    </label>
                     <div className="col-span-6">
                       <MultiSelect
                         options={transportOptions}
                         value={values.modeOfTransportIds}
-                        onChange={(val) => setFieldValue("modeOfTransportIds", val)}
+                        onChange={(val) =>
+                          setFieldValue("modeOfTransportIds", val)
+                        }
                         disabled={isUserForRead}
                         error={errors.modeOfTransportIds}
                         touched={touched.modeOfTransportIds}
@@ -181,7 +218,9 @@ export function FormEditForm({
                   {/* Hotel Entitlement (Multi-select) */}
                   <div className="grid grid-cols-12 items-center gap-4">
                     <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">Hotel Entitlement</label>
+                    <label className="col-span-5 text-sm font-medium">
+                      Hotel Entitlement
+                    </label>
                     <div className="col-span-6">
                       <MultiSelect
                         options={hotelOptions}
@@ -189,7 +228,11 @@ export function FormEditForm({
                         onChange={(val) => {
                           setFieldValue("hotelEntitlementIds", val);
                           // Clear amount if "Self" is removed
-                          if (!val?.some(opt => opt.label?.toLowerCase().includes("self"))) {
+                          if (
+                            !val?.some((opt) =>
+                              opt.label?.toLowerCase().includes("self"),
+                            )
+                          ) {
                             setFieldValue("hotelEntitlementSelfAmount", 0);
                           }
                         }}
@@ -204,12 +247,35 @@ export function FormEditForm({
                   {/* If Hotel Entitlement is Self... */}
                   <div className="grid grid-cols-12 items-center gap-4">
                     <div className="col-span-1"></div>
-                    <label className={`col-span-5 text-sm font-medium leading-tight ${!values.hotelEntitlementIds?.some(opt => opt.label?.toLowerCase().includes("self")) ? "text-muted" : ""}`}>If Hotel Entitlement is Self then Amount for each day</label>
+                    <label
+                      className={`col-span-5 text-sm font-medium leading-tight ${
+                        !values.hotelEntitlementIds?.some((opt) =>
+                          opt.label?.toLowerCase().includes("self"),
+                        )
+                          ? "text-muted"
+                          : ""
+                      }`}
+                    >
+                      If Hotel Entitlement is Self then Amount for each day
+                    </label>
                     <div className="col-span-6">
                       <AmountInput
-                        field={{ name: "hotelEntitlementSelfAmount", value: values.hotelEntitlementSelfAmount }}
-                        form={{ touched, errors, setFieldValue, setFieldTouched }}
-                        disabled={isUserForRead || !values.hotelEntitlementIds?.some(opt => opt.label?.toLowerCase().includes("self"))}
+                        field={{
+                          name: "hotelEntitlementSelfAmount",
+                          value: values.hotelEntitlementSelfAmount,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={
+                          isUserForRead ||
+                          !values.hotelEntitlementIds?.some((opt) =>
+                            opt.label?.toLowerCase().includes("self"),
+                          )
+                        }
                         placeholder="0"
                       />
                     </div>
@@ -218,11 +284,21 @@ export function FormEditForm({
                   {/* Daily Allowance */}
                   <div className="grid grid-cols-12 items-center gap-4">
                     <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">Daily Allowance</label>
+                    <label className="col-span-5 text-sm font-medium">
+                      Daily Allowance
+                    </label>
                     <div className="col-span-6">
                       <AmountInput
-                        field={{ name: "dailyAllowanceAmount", value: values.dailyAllowanceAmount }}
-                        form={{ touched, errors, setFieldValue, setFieldTouched }}
+                        field={{
+                          name: "dailyAllowanceAmount",
+                          value: values.dailyAllowanceAmount,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
                         disabled={isUserForRead}
                         placeholder="0"
                       />
@@ -232,23 +308,36 @@ export function FormEditForm({
                   {/* Taxi Fare per KM */}
                   <div className="grid grid-cols-12 items-center gap-4">
                     <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">Taxi Fare per KM</label>
+                    <label className="col-span-5 text-sm font-medium">
+                      Taxi Fare per KM
+                    </label>
                     <div className="col-span-6">
                       <AmountInput
-                        field={{ name: "taxiFareAmount", value: values.taxiFareAmount }}
-                        form={{ touched, errors, setFieldValue, setFieldTouched }}
+                        field={{
+                          name: "taxiFareAmount",
+                          value: values.taxiFareAmount,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
                         disabled={isUserForRead}
                         placeholder="0"
                       />
                     </div>
                   </div>
-
                 </div>
               </fieldset>
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <button type="button" onClick={onHide} className="btn btn-light btn-elevate">
+            <button
+              type="button"
+              onClick={onHide}
+              className="btn btn-light btn-elevate"
+            >
               {isUserForRead ? "Close" : "Cancel"}
             </button>
             {!isUserForRead && (
@@ -258,7 +347,10 @@ export function FormEditForm({
                 className="btn btn-primary btn-elevate"
                 disabled={loading}
               >
-                Save {loading && <span className="ml-3 spinner spinner-white"></span>}
+                Save{" "}
+                {loading && (
+                  <span className="ml-3 spinner spinner-white"></span>
+                )}
               </button>
             )}
           </Modal.Footer>
@@ -269,28 +361,54 @@ export function FormEditForm({
 }
 
 // Helper component to initialize multi-select fields from backend
-function InitializeMultiSelect({ user, transportOptions, hotelOptions, setFieldValue, values }) {
-  useEffect(() => {
-    if (user && user.id && transportOptions.length > 0 && values.modeOfTransportIds.length === 0) {
-      if (user.modeOfTransportId) {
-        // String or Number
-        const ids = user.modeOfTransportId.toString().split(",");
-        const selected = transportOptions.filter(opt => ids.includes(opt.value.toString()));
-        if (selected.length > 0) setFieldValue("modeOfTransportIds", selected);
-      }
-    }
-  }, [user, transportOptions, setFieldValue, values.modeOfTransportIds.length]);
+function InitializeMultiSelect({
+  user,
+  transportOptions,
+  hotelOptions,
+  setFieldValue,
+}) {
+  const initializedUserRef = React.useRef(null);
 
   useEffect(() => {
-    if (user && user.id && hotelOptions.length > 0 && values.hotelEntitlementIds.length === 0) {
-      if (user.hotelEntitlementId) {
-        // String or Number
-        const ids = user.hotelEntitlementId.toString().split(",");
-        const selected = hotelOptions.filter(opt => ids.includes(opt.value.toString()));
-        if (selected.length > 0) setFieldValue("hotelEntitlementIds", selected);
+    const userId = user?.id || user?.Id;
+    // Initialize if we have a user and haven't initialized for THIS specific user object reference yet
+    if (userId && initializedUserRef.current !== user) {
+      // Initialize Transport
+      if (transportOptions.length > 0) {
+        if (user.modeOfTransportId) {
+          const ids = Array.isArray(user.modeOfTransportId)
+            ? user.modeOfTransportId.map(String)
+            : user.modeOfTransportId.toString().split(",");
+          const selected = transportOptions.filter((opt) =>
+            ids.includes(opt.value.toString()),
+          );
+          setFieldValue("modeOfTransportIds", selected);
+        } else {
+          setFieldValue("modeOfTransportIds", []);
+        }
+      }
+
+      // Initialize Hotel
+      if (hotelOptions.length > 0) {
+        if (user.hotelEntitlementId) {
+          const ids = Array.isArray(user.hotelEntitlementId)
+            ? user.hotelEntitlementId.map(String)
+            : user.hotelEntitlementId.toString().split(",");
+          const selected = hotelOptions.filter((opt) =>
+            ids.includes(opt.value.toString()),
+          );
+          setFieldValue("hotelEntitlementIds", selected);
+        } else {
+          setFieldValue("hotelEntitlementIds", []);
+        }
+      }
+
+      // Mark as initialized for this object reference
+      if (transportOptions.length > 0 && hotelOptions.length > 0) {
+        initializedUserRef.current = user;
       }
     }
-  }, [user, hotelOptions, setFieldValue, values.hotelEntitlementIds.length]);
+  }, [user, transportOptions, hotelOptions, setFieldValue]);
 
   return null;
 }

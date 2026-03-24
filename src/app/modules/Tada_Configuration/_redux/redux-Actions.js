@@ -72,7 +72,7 @@ export const updateTadaConfig = (user, disbaleLoading, onHide) => (dispatch) => 
   return requestFromServer
     .updateTadaConfig(user)
     .then((response) => {
-      const updatedTadaConfig = response?.config?.data;
+      const updatedTadaConfig = response.data?.data;
       dispatch(actions.tadaConfigUpdated({ updatedTadaConfig }));
       disbaleLoading();
       onHide();
