@@ -678,7 +678,7 @@ const ROUTES = {
   customer_user : customer_user,
   cash_payment_against_loan : cash_payment_against_loan,
   customer_config : customer_config,
-  t_tada_config: tada_configuration,
+  tada_config: tada_configuration,
 };
 
 export default function BasePage() {
@@ -693,7 +693,6 @@ export default function BasePage() {
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
         {/* <Route path='vehicles/read-all-vehicles' component={VehicleManagment} /> */}
-        <Route path="/tada_config" component={tada_configuration} />
         {Object.keys(UserAccess).map((access, key) => {
           const accessName = access.replace(/ /g, "").toLowerCase();
         
