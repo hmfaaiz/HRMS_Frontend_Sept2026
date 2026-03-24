@@ -2099,7 +2099,7 @@ export function DesignationEditForm({
           email_official: user?.email_official || "",
           email_personal: user?.email_personal || "",
           geoLocationIds : user?.geoLocationIds == null ? [] : user?.geoLocationIds,
-
+          allowResignationRequest: user?.allowResignationRequest ? true : false,
 
         }}
 
@@ -4107,6 +4107,27 @@ export function DesignationEditForm({
                           type="text"
                         />
                       </div>
+                      <div className="flex items-center gap-2 mt-4">
+                        <input
+                        name="allowResignationRequest"
+                        type="checkbox"
+                        onChange={() =>
+                          setFieldValue(
+                          "allowResignationRequest",
+                           !values?.allowResignationRequest
+                        )
+                      }
+                      onBlur={handleBlur}
+                      value={values.allowResignationRequest}
+                      checked={!!values.allowResignationRequest}
+                      />
+                      <label>Allow Employee to Submit Resignation Request</label>
+                      <ErrorMessage
+                      className="form-feedBack"
+                      name="allowResignationRequest"
+                      component="div"
+                    />
+                    </div>
                       {localizationId == 2 && <div>
                         <Field
                           name="sourceOfHire"
