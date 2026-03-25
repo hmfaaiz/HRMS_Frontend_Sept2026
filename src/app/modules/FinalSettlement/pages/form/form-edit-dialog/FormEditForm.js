@@ -591,6 +591,10 @@ export function FormEditForm({
                     )}
 
 
+                  </div>
+
+                  <div className="col-span-5 flex items-end justify-start gap-3 mt-6 " style={{ pointerEvents: 'auto', opacity: 1 }}>
+
                     {payrollMonthEligibility === false &&
                       <span>
                         Last Working Date of Employee does not falls in any Payroll Month.
@@ -598,7 +602,6 @@ export function FormEditForm({
                       </span>
                     }
                   </div>
-
 
 
 
