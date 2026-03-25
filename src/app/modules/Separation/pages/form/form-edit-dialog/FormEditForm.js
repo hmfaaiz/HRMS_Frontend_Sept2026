@@ -52,7 +52,7 @@ export const getSeparationEditSchema = (formData) => {
         .required(VALIDATION_MESSAGES.required),
 
       exitReasonId: Yup.number()
-      .nullable()
+        .nullable()
         .required(VALIDATION_MESSAGES.required),
 
 
@@ -79,7 +79,7 @@ export const getSeparationEditSchema = (formData) => {
 
 
       finalSettlementPolicy: Yup.number()
-      .nullable()
+        .nullable()
 
         .required(VALIDATION_MESSAGES.required),
 
@@ -87,7 +87,7 @@ export const getSeparationEditSchema = (formData) => {
 
         .required(VALIDATION_MESSAGES.required),
       noticePeriodtype: Yup.number()
-      .nullable()
+        .nullable()
 
         .required(VALIDATION_MESSAGES.required),
 
@@ -96,7 +96,18 @@ export const getSeparationEditSchema = (formData) => {
         is: true,
         then: (schema) => schema.required(VALIDATION_MESSAGES.required),
         otherwise: (schema) => schema.notRequired(),
+
+
       }),
+
+   notEligibleForFinalSettlementRemarks: Yup.string().nullable().when("isNotEligibleForFinalSettlement", {
+        is: true,
+        then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+        otherwise: (schema) => schema.notRequired(),
+
+        
+      }),
+
 
 
 
@@ -149,7 +160,7 @@ export function FormEditForm({
   const [separateMode, setSeparateMode] = useState("");
   const [empPayrollInfo, setEmpPayrollInfo] = useState("");
   const [empSalInfo, setSalInfo] = useState("");
-  const [ isRoleSeparationApprover, setIsRoleSeparationApprover] = useState("");
+  const [isRoleSeparationApprover, setIsRoleSeparationApprover] = useState("");
 
 
 
@@ -167,7 +178,7 @@ export function FormEditForm({
 
       dispatch(fetchAllFormsMenu(526, "allExitTypeList"));
       dispatch(fetchExitReasonData(formData?.exitTypeId));
-      dispatch(fetchPayrollConfigApproverPermission( "allPayrollConfigApproverPermissionList" ) );
+      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"));
       dispatch(
         fetchAllEmployeesWithNoPermissionData(
           "allEmployeesWithNoPermissionList"
@@ -212,7 +223,7 @@ export function FormEditForm({
     { value: 1, label: "Policy # 01" },
     { value: 2, label: "Policy # 02" },
     { value: 3, label: "Policy # 03" },
-  
+
   ];
 
   const allNoticePeriodType = [
@@ -296,35 +307,35 @@ export function FormEditForm({
     };
   }, [FormUIContext]);
 
-  console.log("qqqqqqqqqqqqq",dashboard?.allPayrollConfigApproverPermissionList)
+  console.log("qqqqqqqqqqqqq", dashboard?.allPayrollConfigApproverPermissionList)
 
 
-useEffect(() => {
-  // Filter the permissions based on the subsidiaryId
-  const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
-    (entity) => entity.subsidiaryId === Number(formData?.subsidiaryId)
-  );
+  useEffect(() => {
+    // Filter the permissions based on the subsidiaryId
+    const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
+      (entity) => entity.subsidiaryId === Number(formData?.subsidiaryId)
+    );
 
-  console.log("Filtered Permission:", formData.subsidiaryId, filteredPermission);
+    console.log("Filtered Permission:", formData.subsidiaryId, filteredPermission);
 
-  if (filteredPermission?.length > 0) {
-    const permission = filteredPermission[0]; // Access the first matching permission
+    if (filteredPermission?.length > 0) {
+      const permission = filteredPermission[0]; // Access the first matching permission
 
-    const roleId = String(auth?.user?.roleId).trim();
-    
-    // Checking against salaryApproverId, loanApproverId, and payrollApproverId
-    const separationApproverIds = permission?.separationApproverId?.map((id) => String(id).trim());
+      const roleId = String(auth?.user?.roleId).trim();
 
-    // Check if the roleId exists in separationApproverId
-    setIsRoleSeparationApprover(separationApproverIds?.includes(roleId));
+      // Checking against salaryApproverId, loanApproverId, and payrollApproverId
+      const separationApproverIds = permission?.separationApproverId?.map((id) => String(id).trim());
 
-    console.log("separationApproverId:", isRoleSeparationApprover);
-  } else {
-    console.log("No permissions found for the given subsidiaryId.");
-  }
+      // Check if the roleId exists in separationApproverId
+      setIsRoleSeparationApprover(separationApproverIds?.includes(roleId));
 
-}, [formData?.subsidiaryId]); // Re-run this effect if formData.subsidiaryId changes
-console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
+      console.log("separationApproverId:", isRoleSeparationApprover);
+    } else {
+      console.log("No permissions found for the given subsidiaryId.");
+    }
+
+  }, [formData?.subsidiaryId]); // Re-run this effect if formData.subsidiaryId changes
+  console.log("aaaaa11111", formData?.isFromPortal, isRoleSeparationApprover)
 
   return (
     <Formik
@@ -382,7 +393,7 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
                     </div>
 
                     {/* Policy #03 */}
-              
+
                     <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
                       <h3 className="text-lg font-semibold text-primary mb-2">
                         Policy # 03 [Separated Employees]
@@ -560,16 +571,16 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
                         const value = e.value === "Select" ? null : Number(e.value);
                         setFieldValue("employeeId", value);
                         setEmpPayrollInfo(
-    !e?.approvedForPayroll
-      ? "Note: Employee is not approved for payroll, so this employee will not be part of Final Settlement Process"
-      : "" // agar approved ho to blank
-  );
+                          !e?.approvedForPayroll
+                            ? "Note: Employee is not approved for payroll, so this employee will not be part of Final Settlement Process"
+                            : "" // agar approved ho to blank
+                        );
 
-  setSalInfo(
-    !(e?.hasSalary?.approved)
-      ? "Note: Salary Setup is not defined for selected employee, so this employee will not be part of Final Settlement Process"
-      : "" // agar salary approved ho to blank
-  );
+                        setSalInfo(
+                          !(e?.hasSalary?.approved)
+                            ? "Note: Salary Setup is not defined for selected employee, so this employee will not be part of Final Settlement Process"
+                            : "" // agar salary approved ho to blank
+                        );
 
 
                         const selectedEmp = activeEmployeeList?.find(
@@ -643,10 +654,10 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
                 />
 
 
-<div>
-  <label className="form-feedBack">{empPayrollInfo && <p>{empPayrollInfo}</p>}</label>
- <label className="form-feedBack"> {empSalInfo && <p>{empSalInfo}</p>}</label>
-</div>
+                <div>
+                  <label className="form-feedBack">{empPayrollInfo && <p>{empPayrollInfo}</p>}</label>
+                  <label className="form-feedBack"> {empSalInfo && <p>{empSalInfo}</p>}</label>
+                </div>
 
                 <hr></hr>
                 {/* Personal Information */}
@@ -670,7 +681,7 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
                         isDisabled={isdataForRead || !values.employeeId}
                         onChange={(e) => {
                           setFieldValue("exitTypeId", e.value || null);
-                          setFieldValue("exitReasonId",  null);
+                          setFieldValue("exitReasonId", null);
                           dispatch(fetchExitReasonData(e.value));
                         }}
                         value={
@@ -948,7 +959,7 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
                       </div>
                       <SearchSelect
                         name="acceptedEmployeeId"
-                        isDisabled={isdataForRead || !values.employeeId ||( values?.isFromPortal && !isRoleSeparationApprover)}
+                        isDisabled={isdataForRead || !values.employeeId || (values?.isFromPortal && !isRoleSeparationApprover)}
                         // onBlur={() => {
                         //   handleBlur({ target: { name: "countryId" } });
                         // }}
@@ -995,7 +1006,7 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
                         className="form-control"
                         placeholder="Date of Resignation Acceptance"
                         component={DatePickerField}
-                        disabled={!values.employeeId || ( values?.isFromPortal && !isRoleSeparationApprover)}
+                        disabled={!values.employeeId || (values?.isFromPortal && !isRoleSeparationApprover)}
                         selected={
                           values?.resignationAcceptanceDate
                             ? new Date(values.resignationAcceptanceDate)
@@ -1152,12 +1163,12 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
                     )}
 
 
-            
+
 
                     {(formData?.resignationAttachment || values?.resignationAttachment) && (
                       <div className="mt-2">
                         <label>Existing File:</label>
-                     
+
                         <a
                           href={
                             typeof (values?.resignationAttachment || formData?.resignationAttachment) === "string"
@@ -1221,9 +1232,48 @@ console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
 
 
 
+                <div className="grid lg:grid-cols-6 gap-x-3">
+                  <div className="">
+                    <label className="flex items-center gap-2">
+                      <Field
+                        type="checkbox"
+                        name="isNotEligibleForFinalSettlement"
+                        checked={values.isNotEligibleForFinalSettlement}
+                        onChange={(e) => {setFieldValue("isNotEligibleForFinalSettlement", e.target.checked)
+
+                          setFieldValue("notEligibleForFinalSettlementRemarks", "")
+                        }}
+                      />
+                      <span>
+                        Mark as not eligible for final settlement
+                      </span>
+                    </label>
+                    {errors.isNotEligibleForFinalSettlement && touched.isNotEligibleForFinalSettlement && (
+                      <div className="invalid-feedback">{errors.isNotEligibleForFinalSettlement}</div>
+                    )}
+                  </div>
 
 
 
+                  <div className="md:col-span-4">
+                    <Field
+                      name="notEligibleForFinalSettlementRemarks"
+                      component={TextArea}
+                      disabled={!values.isNotEligibleForFinalSettlement}
+                      placeholder="Enter remarks"
+                      className="form-control"  
+                      label={
+                        <span>
+
+                          Reason for not eligible for final settlement remarks
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+
+                  </div>
+
+                </div>
 
               </fieldset>
 

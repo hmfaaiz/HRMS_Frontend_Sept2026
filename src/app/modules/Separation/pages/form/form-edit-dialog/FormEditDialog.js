@@ -132,6 +132,11 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
         separatedFlag: formData.separatedFlag,
         reinstatedFlag: formData.reinstatedFlag,
         reinstatedRemarks: formData.reinstatedRemarks,
+
+        isNotEligibleForFinalSettlement: formData.isNotEligibleForFinalSettlement,
+        notEligibleForFinalSettlementRemarks: formData.notEligibleForFinalSettlementRemarks,
+
+
       };
 
 
