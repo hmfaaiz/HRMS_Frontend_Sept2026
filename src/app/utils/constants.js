@@ -427,6 +427,9 @@ export const VALIDATION_MESSAGES = {
   maxAgeNinetyNineValue: 'Should not be greater than 99',
   endDateMustBeAfterStartDate: "End date must be after start date",
   minAgeFifteenValue:'Must be at least 15 years old',
+  atLeastOneTransport: 'Select at least one mode of transport',
+  atLeastOneHotel: 'Select at least one hotel entitlement',
+  amountCannotBeNegative: 'Amount cannot be negative',
 }
 
 //Server Response Messages

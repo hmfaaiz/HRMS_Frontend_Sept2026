@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useFormUIContext } from "../FormUIContext";
-import { FormFIlter } from "../form-filter/FormFIlter";
+import { FormFilter } from "../form-filter/FormFilter";
 import { FormTable } from "../form-table/FormTable";
 import { useSelector, shallowEqual } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
@@ -19,20 +19,22 @@ export function FormCard() {
     (state) => ({
       userAccess: state.auth?.userAccess?.t_tada_config || [],
     }),
-    shallowEqual
+    shallowEqual,
   );
   const moduleName = CurrentModuleName();
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateTadaConfiguration" || item.componentName === "CreateT_Tada_Config"
+    (item) =>
+      item.componentName === "CreateTadaConfiguration" ||
+      item.componentName === "CreateT_Tada_Config",
   );
-  
-  const canCreate = accessUser || true; 
+
+  const canCreate = accessUser || true;
 
   return (
     <TCard name={moduleName}>
       <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-        <FormFIlter />
+        <FormFilter />
         <div className="flex items-center gap-2">
           {canCreate && (
             <>

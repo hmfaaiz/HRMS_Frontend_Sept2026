@@ -36,18 +36,22 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const saveForm = async (values) => {
     enableLoading();
     
-    // Transform data for backend (picking first selection as a Number for strict backend validation)
-    const payload = {
-      ...values,
-      modeOfTransportId: values.modeOfTransportIds?.map(x => x.value)?.join(",") || "",
-      hotelEntitlementId: values.hotelEntitlementIds?.map(x => x.value)?.join(",") || "",
-      gradeId: values.gradeId ? Number(values.gradeId) : null,
-      designationId: values.designationId ? Number(values.designationId) : null,
-    };
+    // Clean up payload (remove metadata and supplemental objects that Joi rejects)
+    const { 
+      Id, createdBy, updatedBy, createdAt, updatedAt, 
+      Grade, Designation, Company, Subsidiary, ModeOfTransports, HotelEntitlements,
+      ...rawValues 
+    } = values;
 
-    // Remove multi-select helper fields not allowed by the backend
-    delete payload.modeOfTransportIds;
-    delete payload.hotelEntitlementIds;
+    const payload = {
+      ...rawValues,
+      id: rawValues.id || Id, // Ensure id is present and lowercase
+      gradeId: rawValues.gradeId ? Number(rawValues.gradeId) : null,
+      designationId: rawValues.designationId ? Number(rawValues.designationId) : null,
+      subsidiaryId: rawValues.subsidiaryId ? Number(rawValues.subsidiaryId) : null,
+      modeOfTransportId: Array.isArray(rawValues.modeOfTransportId) ? rawValues.modeOfTransportId.map(Number) : [],
+      hotelEntitlementId: Array.isArray(rawValues.hotelEntitlementId) ? rawValues.hotelEntitlementId.map(Number) : [],
+    };
 
     if (!payload.id) {
       dispatch(actions.createTadaConfig(payload, disableLoading, onHide));
@@ -59,7 +63,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
   return (
     <Modal
-      size="xl"
+      size="lg"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"

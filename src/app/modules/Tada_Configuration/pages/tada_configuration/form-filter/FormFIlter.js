@@ -1,6 +1,6 @@
-import React, { useMemo } from "react"
+import React, { useMemo, useCallback } from "react"
 import { Formik } from "formik"
-import { isEqual } from "lodash"
+import { isEqual, debounce } from "lodash"
 import { useFormUIContext } from "../FormUIContext"
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch"
 
@@ -16,7 +16,8 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFIlter({ listLoading }) {
+export function FormFilter() {
+
   const FormUIContext = useFormUIContext()
 
   const formUIProps = useMemo(() => {
@@ -34,15 +35,20 @@ export function FormFIlter({ listLoading }) {
     }
   }
 
+  const debouncedApplyFilter = useCallback(
+    debounce((values) => applyFilter(values), 500), 
+    []
+  );
+
   return (
     <>
       <Formik
         enableReinitialize={true}
         initialValues={{
-          searchText: "",
+          searchText: ""
         }}
         onSubmit={(values) => {
-          applyFilter(values)
+          debouncedApplyFilter(values)
         }}
       >
         {({
@@ -51,14 +57,14 @@ export function FormFIlter({ listLoading }) {
           handleBlur,
           setFieldValue,
         }) => (
-          <form onSubmit={handleSubmit} className="form form-label-right">
-            <InputSearch
-              values={values}
-              fieldName="searchText"
-              setFieldValue={setFieldValue}
-              handleBlur={handleBlur}
-              handleSubmit={handleSubmit}
-            />
+          <form className="form form-label-right" style={{margin: '0.8rem 0'}}>
+              <InputSearch
+                values={values}
+                fieldName="searchText"
+                setFieldValue={setFieldValue}
+                handleBlur={handleBlur}
+                handleSubmit={handleSubmit}
+              />
           </form>
         )}
       </Formik>

@@ -1,13 +1,13 @@
 export const initialValues = {
   id: undefined,
   companyId: 1,
-  subsidiaryId: 1,
+  subsidiaryId: "", // Single-select Number
   gradeId: "",
   designationId: "",
-  isGradeWise: false,
+  isGradeWise: true,
   isDesignationWise: false,
-  modeOfTransportIds: [],
-  hotelEntitlementIds: [],
+  modeOfTransportId: [],
+  hotelEntitlementId: [],
   hotelEntitlementSelfAmount: 0,
   dailyAllowanceAmount: 0,
   taxiFareAmount: 0,

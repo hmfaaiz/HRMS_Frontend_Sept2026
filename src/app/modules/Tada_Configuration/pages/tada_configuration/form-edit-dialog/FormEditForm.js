@@ -9,32 +9,40 @@ import {
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
-import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllFormsMenu,
+  fetchAllSubsidiaryData,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 const TadaConfigSchema = Yup.object().shape({
   isGradeWise: Yup.boolean(),
   isDesignationWise: Yup.boolean(),
-  gradeId: Yup.string().when("isGradeWise", {
-    is: true,
-    then: Yup.string().required(VALIDATION_MESSAGES.required),
-  }),
-  designationId: Yup.string().when("isDesignationWise", {
-    is: true,
-    then: Yup.string().required(VALIDATION_MESSAGES.required),
-  }),
-  modeOfTransportIds: Yup.array().min(
+  gradeId: Yup.string()
+    .nullable()
+    .when("isGradeWise", {
+      is: true,
+      then: Yup.string().required(VALIDATION_MESSAGES.required),
+    }),
+  designationId: Yup.string()
+    .nullable()
+    .when("isDesignationWise", {
+      is: true,
+      then: Yup.string().required(VALIDATION_MESSAGES.required),
+    }),
+  subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
+  modeOfTransportId: Yup.array().min(
     1,
-    "Select at least one mode of transport",
+    VALIDATION_MESSAGES.atLeastOneTransport,
   ),
-  hotelEntitlementIds: Yup.array().min(
+  hotelEntitlementId: Yup.array().min(
     1,
-    "Select at least one hotel entitlement",
+    VALIDATION_MESSAGES.atLeastOneHotel,
   ),
-  hotelEntitlementSelfAmount: Yup.number().min(0, "Amount cannot be negative"),
-  dailyAllowanceAmount: Yup.number().min(0, "Amount cannot be negative"),
-  taxiFareAmount: Yup.number().min(0, "Amount cannot be negative"),
+  hotelEntitlementSelfAmount: Yup.number().min(0, VALIDATION_MESSAGES.amountCannotBeNegative),
+  dailyAllowanceAmount: Yup.number().min(0, VALIDATION_MESSAGES.amountCannotBeNegative),
+  taxiFareAmount: Yup.number().min(0, VALIDATION_MESSAGES.amountCannotBeNegative),
 });
 
 export function FormEditForm({
@@ -48,8 +56,11 @@ export function FormEditForm({
   id,
 }) {
   const dispatch = useDispatch();
-  const { dashboard } = useSelector(
-    (state) => ({ dashboard: state.dashboard }),
+  const { dashboard, entities } = useSelector(
+    (state) => ({ 
+      dashboard: state.dashboard,
+      entities: state.t_tada_config?.entities
+    }),
     shallowEqual,
   );
 
@@ -58,6 +69,7 @@ export function FormEditForm({
     dispatch(fetchAllFormsMenu(158, "allDesignations")); // Designations
     dispatch(fetchAllFormsMenu(551, "allTransportModeList")); // Transport Modes
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList")); // Hotel Entitlements
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList")); // Subsidiaries
   }, [dispatch]);
 
   const transportOptions = dashboard?.allTransportModeList || [];
@@ -72,23 +84,22 @@ export function FormEditForm({
         saveForm(values);
       }}
     >
-      {({
-        handleSubmit,
-        errors,
-        touched,
-        values,
-        setFieldValue,
-        setFieldTouched,
-      }) => (
-        <>
-          {/* Initialize Multi-select from backend strings */}
-          <InitializeMultiSelect
-            user={user}
-            transportOptions={transportOptions}
-            hotelOptions={hotelOptions}
-            setFieldValue={setFieldValue}
-            values={values}
-          />
+      {(formikProps) => {
+        const {
+          handleSubmit,
+          errors,
+          touched,
+          values,
+          setFieldValue,
+          setFieldTouched,
+        } = formikProps;
+
+        const subConfigs = entities?.filter(ent => String(ent.subsidiaryId) === String(values.subsidiaryId)) || [];
+        const hasGradeRecords = subConfigs.some(ent => ent.isGradeWise);
+        const hasDesignationRecords = subConfigs.some(ent => ent.isDesignationWise);
+
+        return (
+          <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -97,236 +108,302 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
-                <div className="space-y-4 max-w-4xl pt-4">
-                  {/* Grade Wise */}
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1">
-                      <Field
-                        name="isGradeWise"
-                        component={Checkbox}
-                        isSelected={values.isGradeWise}
-                        disabled={isUserForRead}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setFieldValue("isGradeWise", checked);
-                          if (checked) {
-                            setFieldValue("isDesignationWise", false);
-                            setFieldValue("designationId", "");
-                          }
-                        }}
-                      />
-                    </div>
-                    <label
-                      className={`col-span-5 text-sm font-medium ${
-                        values.isDesignationWise ? "text-muted" : ""
-                      }`}
-                    >
-                      Grade Wise
-                    </label>
-                    <div className="col-span-6 flex items-center space-x-2">
-                      <div className="flex-1">
-                        <SearchSelect
-                          name="gradeId"
-                          isDisabled={isUserForRead || !values.isGradeWise}
-                          onChange={(e) =>
-                            setFieldValue("gradeId", e.value || "")
-                          }
-                          value={
-                            dashboard?.allEmployeeGradeList?.find(
-                              (opt) => opt.value === values.gradeId,
-                            ) || null
-                          }
-                          options={dashboard?.allEmployeeGradeList}
-                          error={errors.gradeId}
-                          touched={touched.gradeId}
-                          placeholder="Select Grade"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-4 pt-4">
+                  {/* Row 1: Subsidiary, Grade, Designation */}
 
-                  {/* Designation Wise */}
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1">
-                      <Field
-                        name="isDesignationWise"
-                        component={Checkbox}
-                        isSelected={values.isDesignationWise}
-                        disabled={isUserForRead}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setFieldValue("isDesignationWise", checked);
-                          if (checked) {
-                            setFieldValue("isGradeWise", false);
-                            setFieldValue("gradeId", "");
-                          }
-                        }}
-                      />
-                    </div>
-                    <label
-                      className={`col-span-5 text-sm font-medium ${
-                        values.isGradeWise ? "text-muted" : ""
-                      }`}
-                    >
-                      Designation Wise
-                    </label>
-                    <div className="col-span-6 flex items-center space-x-2">
-                      <div className="flex-1">
-                        <SearchSelect
-                          name="designationId"
-                          isDisabled={
-                            isUserForRead || !values.isDesignationWise
-                          }
-                          onChange={(e) =>
-                            setFieldValue("designationId", e.value || "")
-                          }
-                          value={
-                            dashboard?.allDesignations?.find(
-                              (opt) => opt.value === values.designationId,
-                            ) || null
-                          }
-                          options={dashboard?.allDesignations}
-                          error={errors.designationId}
-                          touched={touched.designationId}
-                          placeholder="Select Designation"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  {/* Subsidiary */}
+                  <div>
+                    <SearchSelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isUserForRead || !!id}
+                      onChange={(e) => {
+                        const subId = e.value || null;
+                        setFieldValue("subsidiaryId", subId);
 
-                  {/* Mode of Transport (Multi-select) */}
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">
-                      Mode of Transport
-                    </label>
-                    <div className="col-span-6">
-                      <MultiSelect
-                        options={transportOptions}
-                        value={values.modeOfTransportIds}
-                        onChange={(val) =>
-                          setFieldValue("modeOfTransportIds", val)
+                        // Auto-select type for new records if subsidiary already has data
+                        if (subId && !id) {
+                          const existingSubConfigs = entities?.filter(
+                            (ent) => String(ent.subsidiaryId) === String(subId),
+                          );
+                          if (existingSubConfigs?.length > 0) {
+                            if (existingSubConfigs[0].isGradeWise) {
+                              setFieldValue("isGradeWise", true);
+                              setFieldValue("isDesignationWise", false);
+                              setFieldValue("designationId", null);
+                            } else if (existingSubConfigs[0].isDesignationWise) {
+                              setFieldValue("isDesignationWise", true);
+                              setFieldValue("isGradeWise", false);
+                              setFieldValue("gradeId", null);
+                            }
+                          }
                         }
-                        disabled={isUserForRead}
-                        error={errors.modeOfTransportIds}
-                        touched={touched.modeOfTransportIds}
-                        placeholder="Select Mode of Transport"
-                      />
-                    </div>
+                      }}
+                      value={
+                        dashboard?.allSubsidiaryList?.find(
+                          (opt) =>
+                            String(opt.value) === String(values.subsidiaryId),
+                        ) || null
+                      }
+                      options={dashboard?.allSubsidiaryList}
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      placeholder="Select Subsidiary"
+                    />
                   </div>
 
-                  {/* Hotel Entitlement (Multi-select) */}
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">
-                      Hotel Entitlement
-                    </label>
-                    <div className="col-span-6">
-                      <MultiSelect
-                        options={hotelOptions}
-                        value={values.hotelEntitlementIds}
-                        onChange={(val) => {
-                          setFieldValue("hotelEntitlementIds", val);
-                          // Clear amount if "Self" is removed
-                          if (
-                            !val?.some((opt) =>
-                              opt.label?.toLowerCase().includes("self"),
-                            )
-                          ) {
-                            setFieldValue("hotelEntitlementSelfAmount", 0);
-                          }
-                        }}
-                        disabled={isUserForRead}
-                        error={errors.hotelEntitlementIds}
-                        touched={touched.hotelEntitlementIds}
-                        placeholder="Select Hotel Entitlement"
-                      />
-                    </div>
+                  {/* Grade Select (with Checkbox in Label) */}
+                  <div className="tada-config-option">
+                    <SearchSelect
+                      name="gradeId"
+                      label={
+                        <div className="flex items-center space-x-2">
+                          <Field
+                            name="isGradeWise"
+                            component={Checkbox}
+                            isSelected={values.isGradeWise}
+                            disabled={isUserForRead || !values.subsidiaryId || hasDesignationRecords}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setFieldValue("isGradeWise", checked);
+                              if (checked) {
+                                setFieldValue("isDesignationWise", false);
+                                setFieldValue("designationId", null);
+                              } else {
+                                setFieldValue("gradeId", null);
+                              }
+                            }}
+                          />
+                          <span>
+                            Grade{" "}
+                            {values.isGradeWise && (
+                              <span style={{ color: "red" }}>*</span>
+                            )}
+                          </span>
+                        </div>
+                      }
+                      isDisabled={isUserForRead || !values.isGradeWise || !values.subsidiaryId}
+                      onChange={(e) =>
+                        setFieldValue("gradeId", e.value || null)
+                      }
+                      value={
+                        dashboard?.allEmployeeGradeList?.find(
+                          (opt) => String(opt.value) === String(values.gradeId),
+                        ) || null
+                      }
+                      options={dashboard?.allEmployeeGradeList}
+                      error={errors.gradeId}
+                      touched={touched.gradeId}
+                      placeholder="Select Grade"
+                    />
                   </div>
 
-                  {/* If Hotel Entitlement is Self... */}
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1"></div>
+                  {/* Designation Select (with Checkbox in Label) */}
+                  <div className="tada-config-option">
+                    <SearchSelect
+                      name="designationId"
+                      label={
+                        <div className="flex items-center space-x-2">
+                          <Field
+                            name="isDesignationWise"
+                            component={Checkbox}
+                            isSelected={values.isDesignationWise}
+                            disabled={isUserForRead || !values.subsidiaryId || hasGradeRecords}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setFieldValue("isDesignationWise", checked);
+                              if (checked) {
+                                setFieldValue("isGradeWise", false);
+                                setFieldValue("gradeId", null);
+                              } else {
+                                setFieldValue("designationId", null);
+                              }
+                            }}
+                          />
+                          <span>
+                            Designation{" "}
+                            {values.isDesignationWise && (
+                              <span style={{ color: "red" }}>*</span>
+                            )}
+                          </span>
+                        </div>
+                      }
+                      isDisabled={isUserForRead || !values.isDesignationWise || !values.subsidiaryId}
+                      onChange={(e) =>
+                        setFieldValue("designationId", e.value || null)
+                      }
+                      value={
+                        dashboard?.allDesignations?.find(
+                          (opt) =>
+                            String(opt.value) === String(values.designationId),
+                        ) || null
+                      }
+                      options={dashboard?.allDesignations}
+                      error={errors.designationId}
+                      touched={touched.designationId}
+                      placeholder="Select Designation"
+                    />
+                  </div>
+
+                  {/* Row 2: Mode of Transport, Hotel Entitlement, Hotel Self Amount */}
+
+                  {/* Mode of Transport */}
+                  <div>
+                    <MultiSelect
+                      label={
+                        <span>
+                          Mode of Transport
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      options={transportOptions}
+                      value={
+                        transportOptions.filter((opt) =>
+                          values.modeOfTransportId?.some(
+                            (val) => String(val) === String(opt.value),
+                          ),
+                        ) || []
+                      }
+                      onChange={(val) => {
+                        setFieldTouched("modeOfTransportId", true);
+                        setFieldValue(
+                          "modeOfTransportId",
+                          val?.map((opt) => String(opt.value)) || [],
+                        );
+                      }}
+                      disabled={isUserForRead || !values.subsidiaryId}
+                      error={errors.modeOfTransportId}
+                      touched={touched.modeOfTransportId}
+                      placeholder="Select Mode"
+                    />
+                  </div>
+
+                  {/* Hotel Entitlement */}
+                  <div>
+                    <MultiSelect
+                      label={
+                        <span>
+                          Hotel Entitlement
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      options={hotelOptions}
+                      value={
+                        hotelOptions.filter((opt) =>
+                          values.hotelEntitlementId?.some(
+                            (val) => String(val) === String(opt.value),
+                          ),
+                        ) || []
+                      }
+                      onChange={(val) => {
+                        setFieldTouched("hotelEntitlementId", true);
+                        const selectedIds =
+                          val?.map((opt) => String(opt.value)) || [];
+                        setFieldValue("hotelEntitlementId", selectedIds);
+
+                        // Clear amount if "Self" is removed
+                        if (
+                          !val?.some((opt) =>
+                            opt.label?.toLowerCase().includes("self"),
+                          )
+                        ) {
+                          setFieldValue("hotelEntitlementSelfAmount", 0);
+                        }
+                      }}
+                      disabled={isUserForRead || !values.subsidiaryId}
+                      error={errors.hotelEntitlementId}
+                      touched={touched.hotelEntitlementId}
+                      placeholder="Select Entitlement"
+                    />
+                  </div>
+
+                  {/* Hotel Self Amount */}
+                  <div>
                     <label
-                      className={`col-span-5 text-sm font-medium leading-tight ${
-                        !values.hotelEntitlementIds?.some((opt) =>
-                          opt.label?.toLowerCase().includes("self"),
-                        )
+                      className={`text-sm font-medium ${
+                        !values.hotelEntitlementId?.some((id) => {
+                          const opt = hotelOptions.find(
+                            (o) => String(o.value) === String(id),
+                          );
+                          return opt?.label?.toLowerCase().includes("self");
+                        })
                           ? "text-muted"
                           : ""
                       }`}
                     >
-                      If Hotel Entitlement is Self then Amount for each day
+                      Hotel Self Amount (Daily)
                     </label>
-                    <div className="col-span-6">
-                      <AmountInput
-                        field={{
-                          name: "hotelEntitlementSelfAmount",
-                          value: values.hotelEntitlementSelfAmount,
-                        }}
-                        form={{
-                          touched,
-                          errors,
-                          setFieldValue,
-                          setFieldTouched,
-                        }}
-                        disabled={
-                          isUserForRead ||
-                          !values.hotelEntitlementIds?.some((opt) =>
-                            opt.label?.toLowerCase().includes("self"),
-                          )
-                        }
-                        placeholder="0"
-                      />
-                    </div>
+                    <AmountInput
+                      field={{
+                        name: "hotelEntitlementSelfAmount",
+                        value: values.hotelEntitlementSelfAmount,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      disabled={
+                        isUserForRead ||
+                        !values.subsidiaryId ||
+                        !values.hotelEntitlementId?.some((id) => {
+                          const opt = hotelOptions.find(
+                            (o) => String(o.value) === String(id),
+                          );
+                          return opt?.label?.toLowerCase().includes("self");
+                        })
+                      }
+                      placeholder="0"
+                    />
                   </div>
+
+                  {/* Row 3: Daily Allowance, Taxi Fare */}
 
                   {/* Daily Allowance */}
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">
+                  <div>
+                    <label className="text-sm font-medium">
                       Daily Allowance
                     </label>
-                    <div className="col-span-6">
-                      <AmountInput
-                        field={{
-                          name: "dailyAllowanceAmount",
-                          value: values.dailyAllowanceAmount,
-                        }}
-                        form={{
-                          touched,
-                          errors,
-                          setFieldValue,
-                          setFieldTouched,
-                        }}
-                        disabled={isUserForRead}
-                        placeholder="0"
-                      />
-                    </div>
+                    <AmountInput
+                      field={{
+                        name: "dailyAllowanceAmount",
+                        value: values.dailyAllowanceAmount,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      disabled={isUserForRead || !values.subsidiaryId}
+                      placeholder="0"
+                    />
                   </div>
 
-                  {/* Taxi Fare per KM */}
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1"></div>
-                    <label className="col-span-5 text-sm font-medium">
+                  {/* Taxi Fare */}
+                  <div>
+                    <label className="text-sm font-medium">
                       Taxi Fare per KM
                     </label>
-                    <div className="col-span-6">
-                      <AmountInput
-                        field={{
-                          name: "taxiFareAmount",
-                          value: values.taxiFareAmount,
-                        }}
-                        form={{
-                          touched,
-                          errors,
-                          setFieldValue,
-                          setFieldTouched,
-                        }}
-                        disabled={isUserForRead}
-                        placeholder="0"
-                      />
-                    </div>
+                    <AmountInput
+                      field={{
+                        name: "taxiFareAmount",
+                        value: values.taxiFareAmount,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      disabled={isUserForRead || !values.subsidiaryId}
+                      placeholder="0"
+                    />
                   </div>
                 </div>
               </fieldset>
@@ -355,60 +432,8 @@ export function FormEditForm({
             )}
           </Modal.Footer>
         </>
-      )}
-    </Formik>
-  );
-}
-
-// Helper component to initialize multi-select fields from backend
-function InitializeMultiSelect({
-  user,
-  transportOptions,
-  hotelOptions,
-  setFieldValue,
-}) {
-  const initializedUserRef = React.useRef(null);
-
-  useEffect(() => {
-    const userId = user?.id || user?.Id;
-    // Initialize if we have a user and haven't initialized for THIS specific user object reference yet
-    if (userId && initializedUserRef.current !== user) {
-      // Initialize Transport
-      if (transportOptions.length > 0) {
-        if (user.modeOfTransportId) {
-          const ids = Array.isArray(user.modeOfTransportId)
-            ? user.modeOfTransportId.map(String)
-            : user.modeOfTransportId.toString().split(",");
-          const selected = transportOptions.filter((opt) =>
-            ids.includes(opt.value.toString()),
-          );
-          setFieldValue("modeOfTransportIds", selected);
-        } else {
-          setFieldValue("modeOfTransportIds", []);
-        }
-      }
-
-      // Initialize Hotel
-      if (hotelOptions.length > 0) {
-        if (user.hotelEntitlementId) {
-          const ids = Array.isArray(user.hotelEntitlementId)
-            ? user.hotelEntitlementId.map(String)
-            : user.hotelEntitlementId.toString().split(",");
-          const selected = hotelOptions.filter((opt) =>
-            ids.includes(opt.value.toString()),
-          );
-          setFieldValue("hotelEntitlementIds", selected);
-        } else {
-          setFieldValue("hotelEntitlementIds", []);
-        }
-      }
-
-      // Mark as initialized for this object reference
-      if (transportOptions.length > 0 && hotelOptions.length > 0) {
-        initializedUserRef.current = user;
-      }
-    }
-  }, [user, transportOptions, hotelOptions, setFieldValue]);
-
-  return null;
+      );
+    }}
+  </Formik>
+);
 }

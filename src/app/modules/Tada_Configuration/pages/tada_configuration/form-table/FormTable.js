@@ -1,8 +1,13 @@
 import React, { useEffect, useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-paginator";
+import paginationFactory, {
+  PaginationProvider,
+} from "react-bootstrap-table2-paginator";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllFormsMenu,
+  fetchAllSubsidiaryData,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/redux-Actions";
 import {
   getHandlerTableChange,
@@ -36,10 +41,14 @@ export function FormTable() {
       userAccess: state?.auth?.userAccess["t_tada_config"],
       dashboard: state.dashboard,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
-  const { totalCount, entities, listLoading } = currentState || { totalCount: 0, entities: [], listLoading: false };
+  const { totalCount, entities, listLoading } = currentState || {
+    totalCount: 0,
+    entities: [],
+    listLoading: false,
+  };
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,15 +59,28 @@ export function FormTable() {
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllFormsMenu(552, "allTransportModeList"));
     dispatch(fetchAllFormsMenu(551, "allHotelEntitlementList"));
+    dispatch(fetchAllSubsidiaryData("allSubidiaryList"));
   }, [formUIProps.queryParams, dispatch]);
 
-  const isAccessForEdit = userAccess?.find((item) => item.componentName === "UpdateTadaConfiguration") || { isAccess: true };
-  const isAccessForDelete = userAccess?.find((item) => item.componentName === "DeleteTadaConfiguration") || { isAccess: true };
+  const isAccessForEdit = userAccess?.find(
+    (item) => item.componentName === "UpdateTadaConfiguration",
+  ) || { isAccess: true };
+  const isAccessForDelete = userAccess?.find(
+    (item) => item.componentName === "DeleteTadaConfiguration",
+  ) || { isAccess: true };
 
-  // Helper function to map comma-separated IDs to their names
-  const getNamesFromIds = (commaSeparatedIds, optionsList) => {
-    if (!commaSeparatedIds || !optionsList) return "N/A";
-    const ids = commaSeparatedIds.toString().split(",");
+  // Helper function to map IDs (array or comma-separated string) to their names
+  const getNamesFromIds = (inputIds, optionsList) => {
+    if (!inputIds || !optionsList) return "N/A";
+
+    // Normalize input to an array of strings
+    const ids = Array.isArray(inputIds)
+      ? inputIds.map(String)
+      : inputIds
+          .toString()
+          .split(",")
+          .map((s) => s.trim());
+
     const names = optionsList
       .filter((opt) => ids.includes(opt.value.toString()))
       .map((opt) => opt.label);
@@ -67,24 +89,42 @@ export function FormTable() {
 
   const columns = [
     {
+      dataField: "subsidiaryId",
+      text: "Subsidiary",
+      formatter: (cell, row) =>
+        row.Subsidiary?.name ||
+        getNamesFromIds(cell, dashboard?.allSubidiaryList),
+    },
+    {
       dataField: "gradeId",
       text: "Grade",
-      formatter: (cell, row) => row.Grade?.name || getNamesFromIds(cell, dashboard?.allEmployeeGradeList),
+      formatter: (cell, row) =>
+        row.Grade?.formName ||
+        row.Grade?.name ||
+        getNamesFromIds(cell, dashboard?.allEmployeeGradeList),
     },
+
     {
       dataField: "designationId",
       text: "Designation",
-      formatter: (cell, row) => row.Designation?.name || getNamesFromIds(cell, dashboard?.allDesignations),
+      formatter: (cell, row) =>
+        row.Designation?.formName ||
+        row.Designation?.name ||
+        getNamesFromIds(cell, dashboard?.allDesignations),
     },
     {
       dataField: "modeOfTransportId",
       text: "Mode of Transport",
-      formatter: (cell) => getNamesFromIds(cell, dashboard?.allTransportModeList),
+      formatter: (cell, row) =>
+        row.ModeOfTransports?.map((m) => m.formName).join(", ") ||
+        getNamesFromIds(cell, dashboard?.allTransportModeList),
     },
     {
       dataField: "hotelEntitlementId",
       text: "Hotel Entitlement",
-      formatter: (cell) => getNamesFromIds(cell, dashboard?.allHotelEntitlementList),
+      formatter: (cell, row) =>
+        row.HotelEntitlements?.map((h) => h.formName).join(", ") ||
+        getNamesFromIds(cell, dashboard?.allHotelEntitlementList),
     },
     {
       dataField: "hotelEntitlementSelfAmount",
@@ -132,10 +172,7 @@ export function FormTable() {
     <div className="w-full">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => (
-          <Pagination
-            isLoading={listLoading}
-            paginationProps={paginationProps}
-          >
+          <Pagination isLoading={listLoading} paginationProps={paginationProps}>
             <BootstrapTable
               wrapperClasses="table-responsive"
               bordered={false}
