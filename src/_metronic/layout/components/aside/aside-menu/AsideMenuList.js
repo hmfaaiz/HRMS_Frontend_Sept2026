@@ -302,9 +302,10 @@ const closeSubMenu = (parentKey, childHeading) => {
           >
             {Object.keys(parentItems)
               .map((childHeading) => {
-                const visibleItems = parentItems[childHeading].filter(
+                const visibleItems = [...parentItems[childHeading]].filter(
                   (item) => item.isResourceShow && item?.portalType == Number(isEmployeePortal)
                 );
+
                 if (visibleItems.length === 0) return null;
 
                 const hasChild = visibleItems.length > 0;

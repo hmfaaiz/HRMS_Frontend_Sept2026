@@ -148,12 +148,12 @@ import { AttendanceSummarySlice } from "../app/modules/Attendance_Summary/_redux
 import { attAppUserSlice } from "../app/modules/Attendance_App_User/_redux/redux-Slice";
 import { FinalSettlementReportSlice } from "../app/modules/FinalSettlementReport/_redux/FinalSettlementReportSlice";
 import { PayrollIncomeTaxReportSlice } from "../app/modules/PayrollIncomeTaxReport/_redux/PayrollIncomeTaxReportSlice";
-import {oneTimeAllowanceSlice} from "../app/modules/One_Time_Allowances/_redux/fromSlice";
+import { oneTimeAllowanceSlice } from "../app/modules/One_Time_Allowances/_redux/fromSlice";
 import { PayrollGratuityReportSlice } from "../app/modules/PayrollGratuityReport/_redux/formSlice";
-import { PayrollOvertimeSlice } from "../app/modules/PayrollOverTimeReport/_redux/formSlice"
-import { CompanyDocumentSlice } from "../app/modules/CompanyDocument/_redux/redux-Slice"
-import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal/_redux/redux-Slice"
-import { EmployeeDocumentSlice } from "../app/modules/EmployeeDocument/_redux/redux-Slice"
+import { PayrollOvertimeSlice } from "../app/modules/PayrollOverTimeReport/_redux/formSlice";
+import { CompanyDocumentSlice } from "../app/modules/CompanyDocument/_redux/redux-Slice";
+import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal/_redux/redux-Slice";
+import { EmployeeDocumentSlice } from "../app/modules/EmployeeDocument/_redux/redux-Slice";
 import { appraisalReviewSlice } from "../app/modules/Appraisal_Review/_redux/fromSlice";
 import { empAppraisalReviewSlice } from "../app/modules/Appraisal_Review_Portal/_redux/fromSlice";
 import { AttendanceCorrectionSlice } from "../app/modules/AttendanceCorrection/_redux/AttendanceSlice";
@@ -162,24 +162,23 @@ import { appraisalStatusSlice } from "../app/modules/Appraisal_Status_Employee_W
 import { BankPaymentAdviceSlice } from "../app/modules/BankPaymentAdvice/_redux/formSlice";
 import { FacilitatorTicketCreationSlice } from "../app/modules/FacilitatorTicketCreation/_redux/redux-Slice";
 
-
 import { facilitatorSetupSlice } from "../app/modules/Facilitator_Setup/_redux/facilitatorSetupSlice";
 
 import { FacilitatorOwnershipSlice } from "../app/modules/Facilitator_Ownership/_redux/redux-Slice";
 
-import {customerSetupSlice} from "../app/modules/Customer_Setup/_redux/redux-Slice"
+import { customerSetupSlice } from "../app/modules/Customer_Setup/_redux/redux-Slice";
 
-import {SubsidiaryWiseOnboardingChecklistSlice } from "../app/modules/Subsidiary_Wise_Onboarding_Checklist/_redux/redux-Slice";
+import { SubsidiaryWiseOnboardingChecklistSlice } from "../app/modules/Subsidiary_Wise_Onboarding_Checklist/_redux/redux-Slice";
 
 import { projectSetupSlice } from "../app/modules/Project_Setup/_redux/redux-Slice";
 import { ticketSetupSlice } from "../app/modules/Ticket_Setup/_redux/redux-Slice";
 
-import {ticketStatusSlice} from "../app/modules/Ticket_Status/_redux/redux-Slice";
-import {projectTimelineSlice} from "../app/modules/Project_Timeline/_redux/redux-Slice";
-import {taskAssignmentTimelineSlice} from "../app/modules/Task_Assignment_Timeline/_redux/redux-Slice"
-import {TicketCalendarSlice} from "../app/modules/Ticket_Calendar/_redux/redux-Slice";
+import { ticketStatusSlice } from "../app/modules/Ticket_Status/_redux/redux-Slice";
+import { projectTimelineSlice } from "../app/modules/Project_Timeline/_redux/redux-Slice";
+import { taskAssignmentTimelineSlice } from "../app/modules/Task_Assignment_Timeline/_redux/redux-Slice";
+import { TicketCalendarSlice } from "../app/modules/Ticket_Calendar/_redux/redux-Slice";
 import { projectTimeLogSetupSlice } from "../app/modules/Project_TimeLog/_redux/redux-Slice";
-import {EmployeeOnboardingChecklistSlice} from "../app/modules/Employee_Onboarding_Checklist/_redux/redux-Slice"
+import { EmployeeOnboardingChecklistSlice } from "../app/modules/Employee_Onboarding_Checklist/_redux/redux-Slice";
 import { TicketTimeReportSlice } from "../app/modules/TicketReport/_redux/formSlice";
 import { ticketActivitySlice } from "../app/modules/Ticket_Activity/_redux/redux-Slice";
 import { TaskDashboardSlice } from "../app/modules/Task_Dashboard/_redux/redux-Slice";
@@ -189,7 +188,6 @@ import { PortalTicketTimeReportSlice } from "../app/modules/PortalTicketReport/_
 import { PortalTicketCalendarSlice } from "../app/modules/PortalTicket_Calendar/_redux/redux-Slice";
 import { portalTaskAssignmentTimelineSlice } from "../app/modules/PortalTaskAssignmentTimeline/_redux/redux-Slice";
 
-
 import { ticketSetupPortalSlice } from "../app/modules/Ticket_Setup_Portal/_redux/redux-Slice";
 import { projectTimeLogPortalSlice } from "../app/modules/Project_TimeLog_Portal/_redux/redux-Slice";
 import { ticketActivityPortalSlice } from "../app/modules/Ticket_Activity_Portal/_redux/redux-Slice";
@@ -198,7 +196,8 @@ import { TaskConfigurationSlice } from "../app/modules/TaskConfiguration/_redux/
 import { CustomerUserManagementSlice } from "../app/modules/Customer_User_Management/_redux/redux-Slice";
 import { loanCashPaymentSlice } from "../app/modules/Cash_Payment_Against_Loan/_redux/redux-Slice";
 import { CustomerConfigurationSlice } from "../app/modules/Customer_Configuration/_redux/redux-Slice";
-import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice"
+import { tada_configurationSlice } from "../app/modules/Tada_Configuration/_redux/redux-Slice";
+import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -319,46 +318,47 @@ export const rootReducer = combineReducers({
   loan_workflow_admin: LoanWorkflowAdminSlice.reducer,
   resignation_request: ResignationRequestSlice.reducer,
   resignation_approval: ResignationApprovalSlice.reducer,
-  ResignationWorkflowStatus : ResignationWorkflowStatusSlice.reducer,
-  chart_of_accounts : ChartOfAccountSlice.reducer,
-  audit_trail : AuditTrailReportSlice.reducer,
-  appraisal_rating : appraisalRatingSlice.reducer,
-  appraisal_period_setup : AppraisalPeriodsSetupSlice.reducer,
-  appraisal_config : appraisalConfigSlice.reducer,
-  general_evaluation_setup : GeneralEvaluationSetupSlice.reducer,
-  hr_evaluation_setup : HrEvaluationSetupSlice.reducer,
-  appraisal_publish : appraisalPublishSlice.reducer,
-  requisition_job_vacancy : RequisitionJobVacancySlice.reducer,
-  hr_requisition_job_vacancy : HRRequisitionJobVacancySlice.reducer,
-  appraisal_evaluation : appraisalEvaluationSlice.reducer,
-  designation_wise_goal_setup : DesignationWiseGoalSetupSlice.reducer,
-  employee_goal_setup : EmployeeGoalSetupSlice.reducer,
-  contribution_report : ContributionReportSlice.reducer,
-  release_payslip : releasePayslipSlice.reducer,
-  designation_dep_map_for_exit_clearance : DesignationDepMapforExitClearanceSlice.reducer,
-  exit_clearance : ExitClearanceSlice.reducer,
-  resignation_workflow_admin : ResignationWorkflowAdminSlice.reducer,
-  final_settlement : FinalSettlementSlice.reducer,
-  geo_location : GeoLocationSlice.reducer,
-  attendance_summary : AttendanceSummarySlice.reducer,
-  att_app_user : attAppUserSlice.reducer,
-  final_settlement_report : FinalSettlementReportSlice.reducer,
-  income_tax_report : PayrollIncomeTaxReportSlice.reducer,
-  onetime_allowance : oneTimeAllowanceSlice.reducer,
-  gratuity_report : PayrollGratuityReportSlice.reducer,
-  overtime_report : PayrollOvertimeSlice.reducer,
-  company_doc : CompanyDocumentSlice.reducer,
-  company_doc_portal : CompanyDocumentPortalSlice.reducer,
-  employee_doc : EmployeeDocumentSlice.reducer,
-  appraisal_review : appraisalReviewSlice.reducer,
-  attendance_correction : AttendanceCorrectionSlice.reducer,
-  appraisal_finalization : appraisalFinalizationSlice.reducer,
-  appraisal_status : appraisalStatusSlice.reducer,
-  bank_advice : BankPaymentAdviceSlice.reducer,
-  facilitator_ticket_creation : FacilitatorTicketCreationSlice.reducer,
+  ResignationWorkflowStatus: ResignationWorkflowStatusSlice.reducer,
+  chart_of_accounts: ChartOfAccountSlice.reducer,
+  audit_trail: AuditTrailReportSlice.reducer,
+  appraisal_rating: appraisalRatingSlice.reducer,
+  appraisal_period_setup: AppraisalPeriodsSetupSlice.reducer,
+  appraisal_config: appraisalConfigSlice.reducer,
+  general_evaluation_setup: GeneralEvaluationSetupSlice.reducer,
+  hr_evaluation_setup: HrEvaluationSetupSlice.reducer,
+  appraisal_publish: appraisalPublishSlice.reducer,
+  requisition_job_vacancy: RequisitionJobVacancySlice.reducer,
+  hr_requisition_job_vacancy: HRRequisitionJobVacancySlice.reducer,
+  appraisal_evaluation: appraisalEvaluationSlice.reducer,
+  designation_wise_goal_setup: DesignationWiseGoalSetupSlice.reducer,
+  employee_goal_setup: EmployeeGoalSetupSlice.reducer,
+  contribution_report: ContributionReportSlice.reducer,
+  release_payslip: releasePayslipSlice.reducer,
+  designation_dep_map_for_exit_clearance:
+    DesignationDepMapforExitClearanceSlice.reducer,
+  exit_clearance: ExitClearanceSlice.reducer,
+  resignation_workflow_admin: ResignationWorkflowAdminSlice.reducer,
+  final_settlement: FinalSettlementSlice.reducer,
+  geo_location: GeoLocationSlice.reducer,
+  attendance_summary: AttendanceSummarySlice.reducer,
+  att_app_user: attAppUserSlice.reducer,
+  final_settlement_report: FinalSettlementReportSlice.reducer,
+  income_tax_report: PayrollIncomeTaxReportSlice.reducer,
+  onetime_allowance: oneTimeAllowanceSlice.reducer,
+  gratuity_report: PayrollGratuityReportSlice.reducer,
+  overtime_report: PayrollOvertimeSlice.reducer,
+  company_doc: CompanyDocumentSlice.reducer,
+  company_doc_portal: CompanyDocumentPortalSlice.reducer,
+  employee_doc: EmployeeDocumentSlice.reducer,
+  appraisal_review: appraisalReviewSlice.reducer,
+  attendance_correction: AttendanceCorrectionSlice.reducer,
+  appraisal_finalization: appraisalFinalizationSlice.reducer,
+  appraisal_status: appraisalStatusSlice.reducer,
+  bank_advice: BankPaymentAdviceSlice.reducer,
+  facilitator_ticket_creation: FacilitatorTicketCreationSlice.reducer,
 
   facilitator_setup: facilitatorSetupSlice.reducer,
-  emp_appraisal : empAppraisalReviewSlice.reducer,
+  emp_appraisal: empAppraisalReviewSlice.reducer,
 
   facilitator_ownership: FacilitatorOwnershipSlice.reducer,
 
@@ -366,33 +366,35 @@ export const rootReducer = combineReducers({
 
   onboarding_checklist: SubsidiaryWiseOnboardingChecklistSlice.reducer,
 
-  project_setup : projectSetupSlice.reducer,
-  ticket_setup : ticketSetupSlice.reducer,
-  ticket_status : ticketStatusSlice.reducer,
-  project_timeline : projectTimelineSlice.reducer,
-  task_assignment_timeline  : taskAssignmentTimelineSlice.reducer,
-  ticket_calendar : TicketCalendarSlice.reducer,
+  project_setup: projectSetupSlice.reducer,
+  ticket_setup: ticketSetupSlice.reducer,
+  ticket_status: ticketStatusSlice.reducer,
+  project_timeline: projectTimelineSlice.reducer,
+  task_assignment_timeline: taskAssignmentTimelineSlice.reducer,
+  ticket_calendar: TicketCalendarSlice.reducer,
 
-  project_timelog : projectTimeLogSetupSlice.reducer,
-  employee_onboarding_checklist : EmployeeOnboardingChecklistSlice.reducer,
-  ticket_time_report : TicketTimeReportSlice.reducer,
-  ticket_activity : ticketActivitySlice.reducer,
-  task_dashboard : TaskDashboardSlice.reducer,
+  project_timelog: projectTimeLogSetupSlice.reducer,
+  employee_onboarding_checklist: EmployeeOnboardingChecklistSlice.reducer,
+  ticket_time_report: TicketTimeReportSlice.reducer,
+  ticket_activity: ticketActivitySlice.reducer,
+  task_dashboard: TaskDashboardSlice.reducer,
 
-  subsidiary_wise_payroll_checklist : SubsidiaryWisePayrollChecklistSlice.reducer,
-  portal_ticket_creation : PortalFacilitatorTicketCreationSlice.reducer,
-  portal_ticket_time_report : PortalTicketTimeReportSlice.reducer,
-  portal_ticket_calendar : PortalTicketCalendarSlice.reducer,
-  portal_task_assignment_timeline : portalTaskAssignmentTimelineSlice.reducer,
-  ticket_setup_portal : ticketSetupPortalSlice.reducer,
-  project_timelog_portal : projectTimeLogPortalSlice.reducer,
-  project_timeline_portal : projectTimelinePortalSlice.reducer,
-  ticket_activity_portal : ticketActivityPortalSlice.reducer,
-  task_configuration : TaskConfigurationSlice.reducer,
-  customer_user_management : CustomerUserManagementSlice.reducer,
-  cash_payment_against_loan : loanCashPaymentSlice.reducer,
-  customer_config : CustomerConfigurationSlice.reducer,
-  temporary_shift_setup : employeeTempShiftSlice.reducer,
+  subsidiary_wise_payroll_checklist:
+    SubsidiaryWisePayrollChecklistSlice.reducer,
+  portal_ticket_creation: PortalFacilitatorTicketCreationSlice.reducer,
+  portal_ticket_time_report: PortalTicketTimeReportSlice.reducer,
+  portal_ticket_calendar: PortalTicketCalendarSlice.reducer,
+  portal_task_assignment_timeline: portalTaskAssignmentTimelineSlice.reducer,
+  ticket_setup_portal: ticketSetupPortalSlice.reducer,
+  project_timelog_portal: projectTimeLogPortalSlice.reducer,
+  project_timeline_portal: projectTimelinePortalSlice.reducer,
+  ticket_activity_portal: ticketActivityPortalSlice.reducer,
+  task_configuration: TaskConfigurationSlice.reducer,
+  customer_user_management: CustomerUserManagementSlice.reducer,
+  cash_payment_against_loan: loanCashPaymentSlice.reducer,
+  customer_config: CustomerConfigurationSlice.reducer,
+  t_tada_config: tada_configurationSlice.reducer,
+  temporary_shift_setup: employeeTempShiftSlice.reducer,
 });
 
 export function* rootSaga() {
