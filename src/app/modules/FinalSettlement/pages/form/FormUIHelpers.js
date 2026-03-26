@@ -28,4 +28,5 @@ export const initialFilter = {
   employeeTypeId: "",
   designationId: "",
   subsidiaryLabel:"",departmentLabel:"",designationLabel:"",employeeLabel:"",isNotEligibleForFinalSettlementLabel:"",isNotEligibleForFinalSettlement:false,
+  isFinalizedLabel:"",isFinalized:false,
 }
