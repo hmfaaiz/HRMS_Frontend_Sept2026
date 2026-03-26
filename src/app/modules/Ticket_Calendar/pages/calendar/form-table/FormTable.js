@@ -81,6 +81,7 @@ export function FormTable() {
 
         start: moment(data.from, "DD-MMM-YYYY").toDate(),
         end: moment(data.to, "DD-MMM-YYYY").endOf("day").toDate(),
+        allDay: true,
         // description: data.sourceType === "FACILITATOR"
         //   ? data?.ticketDescription
         //   : data.sourceType === "TICKET"
@@ -157,7 +158,7 @@ export function FormTable() {
           localizer={localizer}
           events={events}
           views={['month', 'week', 'day']}
-          defaultView="month"
+          defaultView="week"
           onView={(view) => setCurrentView(view)}
           date={currentDate}                    // Controlled date
           onNavigate={(date) => setCurrentDate(date)}

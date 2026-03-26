@@ -23,9 +23,10 @@ export const initialFilter = {
   sortOrder: "asc",
   pageSize: 5,
   pageNumber: 1,
-    subsidiaryId: "",
+  subsidiaryId: "",
   departmentId: "",
   employeeTypeId: "",
   designationId: "",
-  subsidiaryLabel:"",departmentLabel:"",designationLabel:"",employeeLabel:""
+  subsidiaryLabel:"",departmentLabel:"",designationLabel:"",employeeLabel:"",isNotEligibleForFinalSettlementLabel:"",isNotEligibleForFinalSettlement:false,
+  isFinalizedLabel:"",isFinalized:false,
 }

@@ -31,7 +31,7 @@ export function ActionsColumnFormatter(
   today.setHours(0, 0, 0, 0);
 
   let isOverdue = false;
-  isOverdue = dueDate <= today;
+  isOverdue = dueDate < today;
   return (
     <div className="space-x-2">
 
@@ -90,7 +90,7 @@ export function ResponseColumnFormatter(
   today.setHours(0, 0, 0, 0);
 
   let isOverdue = false;
-  isOverdue = dueDate <= today;
+  isOverdue = dueDate < today;
   return (
     <div className="space-x-2">
       {/* {isOverdue && (
@@ -99,17 +99,21 @@ export function ResponseColumnFormatter(
         </span>
       )} */}
 
-
-      <OverlayTrigger
+{(row?.ticketStatus !=0) && (
+     <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Response</Tooltip>}
       >
         <a onClick={() => {
           setReceiveMode(true);
+          setReadMode(false)
           setId(row.Id);
         }}>
           <Reply className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
+
+)}
+   
 
 
       <OverlayTrigger
@@ -150,6 +154,8 @@ export function ResponseColumnFormatter(
         </button>
       </OverlayTrigger>
 
+      {(row?.ticketStatus !=0) && (
+
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
       >
@@ -168,7 +174,7 @@ export function ResponseColumnFormatter(
           <CalendarClock  className="w-4 h-4 text-black cursor-pointer" />
         </button>
       </OverlayTrigger>
-
+      )}
 
 
     </div>
@@ -185,8 +191,10 @@ export function TimeLogsColumnFormatter(
   return (
     <div className="space-x-2">
 
+{row?.MasterDetailTimeLog?.ticketStatus != 0 && (
+  <>
 
-      <OverlayTrigger
+   <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
       >
         <button
@@ -202,11 +210,19 @@ export function TimeLogsColumnFormatter(
       </OverlayTrigger>
 
 
+
+
+
       <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
         <a onClick={() => openDeleteHandler(row.Id, row.detailId)}>
           <Trash2 className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
+  </>
+
+        )
+}
+     
     </div>
   );
 }

@@ -492,6 +492,9 @@ import ("./modules/Customer_Configuration/pages/index"))
 const tada_configuration = lazy(() =>
 import ("./modules/Tada_Configuration/pages/index"))
 
+const employee_temporary_shift_setup = lazy(() =>
+import ("./modules/Temporary_Shift_Setup/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -678,7 +681,11 @@ const ROUTES = {
   customer_user : customer_user,
   cash_payment_against_loan : cash_payment_against_loan,
   customer_config : customer_config,
+<<<<<<< HEAD
   tada_config: tada_configuration,
+=======
+  temporary_shift_setup : employee_temporary_shift_setup
+>>>>>>> 2ec60f308270a74da76fd3adbe00b767adbb2ae3
 };
 
 export default function BasePage() {

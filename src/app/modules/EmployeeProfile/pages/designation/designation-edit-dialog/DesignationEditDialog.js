@@ -243,7 +243,7 @@ export function DesignationEditDialog({
         hod: user?.hod,
         geoLocationIds : user?.geoLocationIds,
         allowedAnywhere : user?.allowedAnywhere,
-    
+        allowResignationRequest: user?.allowResignationRequest,
       };
 
       await dispatch(

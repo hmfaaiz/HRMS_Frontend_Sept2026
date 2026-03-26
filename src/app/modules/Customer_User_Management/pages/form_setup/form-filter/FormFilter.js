@@ -93,6 +93,19 @@ export function FormFilter({ accessUser, newButtonClick }) {
                     }}
                   />
                 </div>
+                {values?.customerId ? (
+                  <p className="m-0 underline font-size-sm text-black flex items-end ms-2">
+                    <a
+                      target="_blank"
+                      href={`${process.env.REACT_APP_CUSTOMER_PORTAL_URL +
+                        values?.customerId}`}
+                    >
+                      Go To Customer Portal
+                    </a>
+                  </p>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="flex gap-2 justify-end items-center">
                 <InputSearch

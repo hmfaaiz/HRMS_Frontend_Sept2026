@@ -152,6 +152,8 @@ export function FormTable() {
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "130px" },
+      formatter: (cell, row) =>
+        row?.customerUserId ? `${row?.CustomerUser?.name} (Customer)` : cell,
     },
     {
       dataField: "action",

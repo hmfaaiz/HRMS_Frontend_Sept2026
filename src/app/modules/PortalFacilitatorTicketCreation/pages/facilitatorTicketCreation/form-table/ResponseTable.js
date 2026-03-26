@@ -48,7 +48,7 @@ export function ResponseTable() {
   const { currentState, userAccess } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
-      userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
+      userAccess: state?.auth?.userAccess["portal_ticket_creation"],
     };
   }, shallowEqual);
 
@@ -64,17 +64,6 @@ export function ResponseTable() {
     dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, receiveTotalCount]);
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateFacilitatorTicketCreation"
-  );
-
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteFacilitatorTicketCreation"
-  );
-
-  const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadFacilitatorTicketCreation"
-  );
 
 
   // Table columns
@@ -204,35 +193,35 @@ export function ResponseTable() {
         return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
     },
-    // {
-    //   dataField: "AssignByProfile.department.deptName",
-    //   text: "Department",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "100px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-    //   },
-    // },
+    {
+      dataField: "AssignByProfile.department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
 
-    // {
-    //   dataField: "AssignByProfile.designation.formName",
-    //   text: "Designation",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "100px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-    //   },
-    // },
+    {
+      dataField: "AssignByProfile.designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
 
 
 
@@ -261,7 +250,7 @@ export function ResponseTable() {
       style: {
         minWidth: "30px",
       },
-      formatter: (cell) => {
+      formatter: (cell,row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -271,7 +260,12 @@ export function ResponseTable() {
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate <= today;
+        // const isExpiredOrToday = dueDate < today;
+         const createdDate = new Date(row.ticketDate);
+        createdDate.setHours(0, 0, 0, 0);
+
+       
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
           <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
@@ -373,7 +367,7 @@ export function ResponseTable() {
       style: {
         minWidth: "10px",
       },
-      formatter: (cell) => {
+      formatter: (cell,row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -383,7 +377,12 @@ export function ResponseTable() {
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate <= today;
+        // const isExpiredOrToday = dueDate < today;
+         const createdDate = new Date(row.ticketDate);
+        createdDate.setHours(0, 0, 0, 0);
+
+       
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
           <>

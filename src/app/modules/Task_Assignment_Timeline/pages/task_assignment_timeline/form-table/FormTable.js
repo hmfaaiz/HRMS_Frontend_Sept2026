@@ -234,7 +234,10 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       dataField: "Details[0].AssignToProfile.fullName",
       text: "Current Owner",
       style: { minWidth: "160px" },
-      formatter: (_, row) => row.Details?.[0]?.AssignToProfile?.fullName || "",
+     formatter: (_, row) => {
+      const lastDetail = row.Details?.[row.Details.length - 1];
+      return lastDetail?.AssignToProfile?.fullName || "";
+},
     },
     {
       dataField: "ticketDate",
@@ -247,19 +250,21 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       text: "Due Date",
       style: { minWidth: "130px" },
       formatter: (_, row) => {
-        const dueDate = row.Details?.[0]?.dueDate;
-        if (!dueDate) return "";
-        const due = new Date(dueDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        due.setHours(0, 0, 0, 0);
-        const isOverdue = due < today;
-        return (
-          <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
-            {format(due, "dd-MMM-yyyy")}
-          </span>
-        );
-      },
+  const lastDetail = row.Details?.[row.Details.length - 1];
+  const dueDate = lastDetail?.dueDate;
+
+  if (!dueDate) return "";
+  const due = new Date(dueDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+  const isOverdue = due < today;
+  return (
+    <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
+      {format(due, "dd-MMM-yyyy")}
+    </span>
+  );
+},
     },
     {
       dataField: "Details[0].noOfHours",
@@ -270,7 +275,14 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       dataField: "ticketStatus",
       text: "Status",
       style: { minWidth: "120px" },
-      formatter: (c) => ticketStatusOptions.find((s) => s.value === c)?.label || "",
+      formatter: (_, row) => {
+  const lastDetail = row.Details?.[row.Details.length - 1];
+  return (
+    ticketStatusOptions.find(
+      (s) => s.value === lastDetail?.ticketStatus
+    )?.label || ""
+  );
+},
     },
     {
       dataField: "overdue",
@@ -278,15 +290,16 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       isDummyField: true,
       style: { minWidth: "50px" },
       formatter: (_, row) => {
-        const dueDate = row.Details?.[0]?.dueDate;
+        const lastDetail = row.Details?.[row.Details.length - 1];
+const dueDate = lastDetail?.dueDate;
         if (!dueDate) return "";
         const due = new Date(dueDate);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         due.setHours(0, 0, 0, 0);
-        return due < today ? (
-          <span style={{ color: "red", fontWeight: 600 }}>Over Due</span>
-        ) : null;
+      return due < today ? (
+  <span style={{ color: "red", fontWeight: 600 }}>Over Due</span>
+) : null;
       },
     },
     {

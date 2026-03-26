@@ -98,7 +98,7 @@ export function DetailTimeLogsTable() {
       formatter: (cell) => (cell ? (cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell) : ""),
     },
     {
-      dataField: "createdAt",
+      dataField: "loggedDate",
       text: "Logged Date",
       sort: false,
       sortCaret: sortCaret,
