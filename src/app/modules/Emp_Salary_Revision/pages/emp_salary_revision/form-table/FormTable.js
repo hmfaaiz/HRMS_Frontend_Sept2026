@@ -47,7 +47,7 @@ export function FormTable() {
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading } = currentState;
+  const { totalCount, entities, listLoading, salaryRevisionPdfLoading  } = currentState;
 
   //totalCount = 10
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
@@ -175,6 +175,7 @@ export function FormTable() {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         dispatch,
+        salaryRevisionPdfLoading
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",

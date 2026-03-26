@@ -60,3 +60,9 @@ export function fetchEmployeeSalaryEarningListFromProcedure(body) {
 
 return axios.post(`${USERS_URL}/emp_salary_revision/read-salary-policy-byfilters`,body);
 }
+export function downloadSalaryRevisionPdfRequest(Id) {
+  return axios.get(
+    `${USERS_URL}/emp_salary_revision/salary-revision-report/${Id}`,
+    { responseType: "arraybuffer" }
+  );
+}
