@@ -331,7 +331,7 @@ export function FormFIlter({ listLoading, user }) {
                 </div>
               </div>
 
-           
+
 
 
               <div>
@@ -349,20 +349,20 @@ export function FormFIlter({ listLoading, user }) {
                 />
               </div>
 
-                 <div className="">
+              {/* <div className="">
                 <label className="flex items-center gap-2">
                   <Field
                     type="checkbox"
                     name="isNotEligibleForFinalSettlement"
                     checked={values.isNotEligibleForFinalSettlement}
-                  
+
 
                     onChange={(e) => {
 
                       const updatedQueryParams = {
                         ...formUIProps.queryParams,
                         isNotEligibleForFinalSettlement: e.target.checked,
-                        isNotEligibleForFinalSettlementLabel:"Not eligible for final settlement",
+                        isNotEligibleForFinalSettlementLabel: "Not eligible for final settlement",
                         pageNumber: 1,
                       };
 
@@ -375,6 +375,38 @@ export function FormFIlter({ listLoading, user }) {
                   />
                   <span>
                     Not eligible for final settlement
+                  </span>
+                </label>
+
+              </div> */}
+
+
+              <div className="">
+                <label className="flex items-center gap-2">
+                  <Field
+                    type="checkbox"
+                    name="isFinalized"
+                    checked={values.isFinalized}
+
+
+                    onChange={(e) => {
+
+                      const updatedQueryParams = {
+                        ...formUIProps.queryParams,
+                        isFinalized: e.target.checked,
+                        isFinalizedLabel: "Finalized",
+                        pageNumber: 1,
+                      };
+
+
+                      formUIProps.setQueryParams(updatedQueryParams);
+
+
+
+                    }}
+                  />
+                  <span>
+                    Finalized
                   </span>
                 </label>
 
