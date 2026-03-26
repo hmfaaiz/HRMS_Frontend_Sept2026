@@ -3,8 +3,8 @@ import SVG from "react-inlinesvg";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { fetchPreviousEmpSalaryById, updateUserAccess } from "../../../../_redux/redux-Actions";
-import { CirclePower, Eye, Pencil, Trash2 } from "lucide-react";
+import { fetchPreviousEmpSalaryById, updateUserAccess, downloadSalaryRevisionPdf } from "../../../../_redux/redux-Actions";
+import { CirclePower, Eye,FileText, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -23,6 +23,7 @@ export function ActionsColumnFormatter(
     setIsFileReq,
     isForDelete,
     dispatch,
+    salaryRevisionPdfLoading,
   }
 ) {
   const isUserRead = false;
@@ -32,6 +33,28 @@ export function ActionsColumnFormatter(
 
   return (
     <div className="space-x-2">
+      {row.Id && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={`sal-rev-pdf-${row.Id}`}>
+              Salary Revision Report
+            </Tooltip>
+          }
+        >
+          <a
+            onClick={() =>
+              !salaryRevisionPdfLoading &&
+              dispatch(downloadSalaryRevisionPdf(row.Id))
+            }
+            style={{
+              cursor: salaryRevisionPdfLoading ? "not-allowed" : "pointer",
+              opacity: salaryRevisionPdfLoading ? 0.5 : 1,
+            }}
+          >
+            <FileText className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
       {" "}
       {row.isForRead && (
         <OverlayTrigger

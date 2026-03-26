@@ -219,7 +219,12 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
       moduleRights?.find((e) => e?.value == 5)?.allow ? (
         <div className="flex flex-col md:flex-row gap-4">
           {moduleRights?.find((e) => e?.value == "separation")?.allow ? (
-            <ResignationRequest />
+            <ResignationRequest
+            isDisabled={
+              portalInfo?.allowResignationRequest === 0 ||
+              portalInfo?.allowResignationRequest === false
+              }
+            />
           ) : null}
           {moduleRights?.find((e) => e?.value == 6)?.allow ? (
             <AppraisalEvaluation />
@@ -431,7 +436,11 @@ const CompactView = ({
               ? "/resignation_approval/read-all-resignation-approval"
               : false
           }
-          link={"/employee_resignation/read-all-resignation"}
+          link={
+      portalInfo?.allowResignationRequest === 0 || portalInfo?.allowResignationRequest === false
+        ? "/resignation_approval/read-all-resignation-approval"  // disabled ---- go to approval
+        : "/employee_resignation/read-all-resignation"            // enabled ---- go to submission
+    }
         />
       ) : null}
       {/* Appraisal Evaluation */}

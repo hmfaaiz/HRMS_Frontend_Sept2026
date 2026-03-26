@@ -8,11 +8,13 @@ const initialState = {
   userForEdit: undefined,
   employee: [],
   errorState: null,
+  finalizationPdfLoading: false,
 };
 
 export const callTypes = {
   list: "list",
   action: "action",
+  finalizationPdf: "finalizationPdf",
 };
 
 export const appraisalReviewSlice = createSlice({
@@ -22,14 +24,18 @@ export const appraisalReviewSlice = createSlice({
     catchError: (state, action) => {
       if (action.payload.callType === callTypes.list) {
         state.listLoading = false;
-      } else {
+         } else if (action.payload.callType === callTypes.finalizationPdf) {
+      state.finalizationPdfLoading = false;  
+    } else {
         state.actionsLoading = false;
       }
     },
     startCall: (state, action) => {
       if (action.payload.callType === callTypes.list) {
         state.listLoading = true;
-      } else {
+         } else if (action.payload.callType === callTypes.finalizationPdf) {
+      state.finalizationPdfLoading = true;   
+    }  else {
         state.actionsLoading = true;
       }
     },
@@ -66,5 +72,8 @@ export const appraisalReviewSlice = createSlice({
     clearErrorState: (state, action) => {
       state.errorState = null;
     },
+    finalizationPdfFetched: (state) => {
+    state.finalizationPdfLoading = false;
+  },
   },
 });

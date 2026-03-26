@@ -490,6 +490,9 @@ import ("./modules/Cash_Payment_Against_Loan/pages/index"))
 const customer_config = lazy(() =>
 import ("./modules/Customer_Configuration/pages/index"))
 
+const employee_temporary_shift_setup = lazy(() =>
+import ("./modules/Temporary_Shift_Setup/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -676,6 +679,7 @@ const ROUTES = {
   customer_user : customer_user,
   cash_payment_against_loan : cash_payment_against_loan,
   customer_config : customer_config,
+  temporary_shift_setup : employee_temporary_shift_setup
 };
 
 export default function BasePage() {

@@ -22,6 +22,8 @@ const initialEmpSalaryRevisionState = {
     dataForEdit: false,
     previousSalaryComparison:null,
     dataForSalaryComparison:false,
+    salaryRevisionPdfLoading: false,        
+
 
 };
 
@@ -29,6 +31,8 @@ const initialEmpSalaryRevisionState = {
 export const callTypes = {
     list: "list",
     action: "action",
+      salaryRevisionPdf: "salaryRevisionPdf", 
+
 };
 
 export const EmpSalaryRevisionSlice = createSlice({
@@ -39,7 +43,9 @@ export const EmpSalaryRevisionSlice = createSlice({
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } else {
+            } else if (action.payload.callType === callTypes.salaryRevisionPdf) {
+    state.salaryRevisionPdfLoading = false;
+  }else {
                 state.actionsLoading = false;
             }
         },
@@ -130,7 +136,9 @@ export const EmpSalaryRevisionSlice = createSlice({
             // state.totalCount = totalResult;
          
         },
-
+        salaryRevisionPdfFetched: (state) => {
+  state.salaryRevisionPdfLoading = false;
+},
 
 
 

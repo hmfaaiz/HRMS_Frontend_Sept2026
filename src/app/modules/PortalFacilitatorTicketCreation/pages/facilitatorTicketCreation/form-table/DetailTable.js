@@ -182,7 +182,7 @@ export function DetailTable() {
     },
 
 {
-      dataField: "createdAt",
+      dataField: "ticketDate",
       text: "Created Date",
       sort: false,
       sortCaret: sortCaret,

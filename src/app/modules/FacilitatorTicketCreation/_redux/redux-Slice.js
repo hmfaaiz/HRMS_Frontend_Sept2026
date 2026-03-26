@@ -86,6 +86,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
                     ticketCode: parent.ticketCode,
+                    isPermanent:parent.ticketStatus==0   
                 })));
 
             state.listLoading = false;

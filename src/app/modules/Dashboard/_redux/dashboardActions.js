@@ -893,3 +893,17 @@ export const fetchCompanyEmployeesData = () => async (dispatch) => {
       dispatch(actions.AllCompanyEmployeesDataFetched({}));
     });
 };
+
+export const fetchCurrentParentTask = () => async (dispatch) => {
+  
+  return await requestFromServer
+    .getAllCurrentParentTask()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllCurrentParentTaskFetched(entities));
+      return entities;
+    })
+    .catch((error) => {
+      dispatch(actions.AllCurrentParentTaskFetched({}));
+    });
+};

@@ -211,3 +211,35 @@ export const fetchPreviousEmpSalaryComp = (Id) => async (dispatch) => {
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
 };
+export const downloadSalaryRevisionPdf = (Id) => (dispatch) => {
+  dispatch(actions.catchError({
+    error: null,
+    callType: callTypes.salaryRevisionPdf,
+  }));
+  
+  dispatch({ type: "EmpSalaryRevisionSlice/startSalaryRevPdfCall" });
+ 
+  return requestFromServer.downloadSalaryRevisionPdfRequest(Id)
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+ 
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.setAttribute("download", `salary_revision_report.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(pdfUrl);
+ 
+      dispatch(actions.salaryRevisionPdfFetched());
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Salary Revision PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.salaryRevisionPdf }));
+      toast.error("Failed to generate Salary Revision Report", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    });
+};
