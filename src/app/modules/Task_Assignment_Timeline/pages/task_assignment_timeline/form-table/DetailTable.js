@@ -125,19 +125,20 @@ export function DetailTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "130px" },
-      formatter: (cell) => {
+      formatter: (cell, row) => {
         if (!cell) return "";
         const due = new Date(cell);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         due.setHours(0, 0, 0, 0);
-        const isOverdue = due < today;
+        const status = row?.Details?.[0]?.ticketStatus; 
+        const isOverdue = due < today && status !== 0;
         return (
-          <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? 600 : "normal" }}>
-            {format(due, "dd-MMM-yyyy")}
-          </span>
-        );
-      },
+    <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? 600 : "normal",}}>
+      {format(due, "dd-MMM-yyyy")}
+    </span>
+  );
+},
     },
     {
       dataField: "timeRangeFrom",
