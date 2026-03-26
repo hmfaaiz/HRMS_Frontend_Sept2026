@@ -32,4 +32,4 @@ export const sizePerPageList = [
   { text: "100", value: 100 },
 ];
 
-// export const defaultSorted = [{ dataField: "id", order: "asc" }];
+export const defaultSorted = [{ dataField: "id", order: "asc" }];
