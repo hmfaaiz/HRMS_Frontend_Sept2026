@@ -16,11 +16,11 @@ export const initialValues = {
 
 export const initialFilter = {
   filter: {
-    searchQuery: ""
+    searchQuery: "",
   },
   sortOrder: "ASC",
   pageSize: 10,
-  pageNumber: 1
+  pageNumber: 1,
 };
 
 export const sizePerPageList = [
@@ -28,8 +28,8 @@ export const sizePerPageList = [
   { text: "5", value: 5 },
   { text: "10", value: 10 },
   { text: "25", value: 25 },
-  { text: "50", value: 50},
-  { text: "100", value: 100},
-]
+  { text: "50", value: 50 },
+  { text: "100", value: 100 },
+];
 
-export const defaultSorted = [{ dataField: "id", order: "asc" }];
+// export const defaultSorted = [{ dataField: "id", order: "asc" }];
