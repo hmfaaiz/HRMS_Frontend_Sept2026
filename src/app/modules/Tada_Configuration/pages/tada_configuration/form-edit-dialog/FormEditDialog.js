@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { FormEditForm } from "./FormEditForm";
-import { FormEditDialogHeader } from './FormEditDialogHeader'
+import { FormEditDialogHeader } from "./FormEditDialogHeader";
 import * as actions from "../../../_redux/redux-Actions";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,34 +23,54 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const disableLoading = () => setLoading(false);
 
   const dispatch = useDispatch();
-  const { userForEdit } = useSelector((state) => ({
-    userForEdit: state.t_tada_config?.userForEdit,
-  }), shallowEqual);
+  const { userForEdit } = useSelector(
+    (state) => ({
+      userForEdit: state.t_tada_config?.userForEdit,
+    }),
+    shallowEqual,
+  );
 
   useEffect(() => {
-    if (show) {
+    if (show && id) {
       dispatch(actions.fetchTadaConfig(id));
     }
   }, [id, dispatch, show]);
 
   const saveForm = async (values) => {
     enableLoading();
-    
+
     // Clean up payload (remove metadata and supplemental objects that Joi rejects)
-    const { 
-      Id, createdBy, updatedBy, createdAt, updatedAt, 
-      Grade, Designation, Company, Subsidiary, ModeOfTransports, HotelEntitlements,
-      ...rawValues 
+    const {
+      Id,
+      createdBy,
+      updatedBy,
+      createdAt,
+      updatedAt,
+      Grade,
+      Designation,
+      Company,
+      Subsidiary,
+      ModeOfTransports,
+      HotelEntitlements,
+      ...rawValues
     } = values;
 
     const payload = {
       ...rawValues,
       id: rawValues.id || Id, // Ensure id is present and lowercase
       gradeId: rawValues.gradeId ? Number(rawValues.gradeId) : null,
-      designationId: rawValues.designationId ? Number(rawValues.designationId) : null,
-      subsidiaryId: rawValues.subsidiaryId ? Number(rawValues.subsidiaryId) : null,
-      modeOfTransportId: Array.isArray(rawValues.modeOfTransportId) ? rawValues.modeOfTransportId.map(Number) : [],
-      hotelEntitlementId: Array.isArray(rawValues.hotelEntitlementId) ? rawValues.hotelEntitlementId.map(Number) : [],
+      designationId: rawValues.designationId
+        ? Number(rawValues.designationId)
+        : null,
+      subsidiaryId: rawValues.subsidiaryId
+        ? Number(rawValues.subsidiaryId)
+        : null,
+      modeOfTransportId: Array.isArray(rawValues.modeOfTransportId)
+        ? rawValues.modeOfTransportId.map(Number)
+        : [],
+      hotelEntitlementId: Array.isArray(rawValues.hotelEntitlementId)
+        ? rawValues.hotelEntitlementId.map(Number)
+        : [],
     };
 
     if (!payload.id) {

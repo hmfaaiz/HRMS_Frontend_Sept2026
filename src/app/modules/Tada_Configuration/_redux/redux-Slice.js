@@ -52,9 +52,14 @@ export const tada_configurationSlice = createSlice({
             const id = action.payload.id || action.payload.Id;
             state.error = null;
             state.actionsLoading = false;
-            state.entities = state.entities.filter(
+            const prev = state.entities;
+            state.entities = prev.filter(
                 (el) => (el.id || el.Id) !== id
             );
+            // Keep count in sync
+            if (state.entities.length < prev.length) {
+                state.totalCount = Math.max(0, state.totalCount - 1);
+            }
         },
         tadaConfigCreated: (state, action) => {
             state.actionsLoading = false;
@@ -64,6 +69,8 @@ export const tada_configurationSlice = createSlice({
             } else {
                 state.entities = [action.payload];
             }
+            // Keep count in sync
+            state.totalCount = (state.totalCount || 0) + 1;
         },
         tadaConfigUpdated: (state, action) => {
             state.error = null;

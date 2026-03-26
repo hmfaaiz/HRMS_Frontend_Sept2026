@@ -6,7 +6,6 @@ import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
 export function FormDeleteDialog({ id, status, show, onHide }) {
-
   const [loading, setLoading] = useState(false);
   const usersUIContext = useFormUIContext();
   const usersUIProps = useMemo(() => {
@@ -18,7 +17,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   const dispatch = useDispatch();
   const { isLoading } = useSelector(
     (state) => ({ isLoading: state.t_tada_config.actionsLoading }),
-    shallowEqual
+    shallowEqual,
   );
 
   const enableLoading = () => {
@@ -73,9 +72,9 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <button
             type="button"
             onClick={deleteTadaConfig}
-            className="btn btn-primary btn-elevate"
+            className="btn btn-danger"
           >
-            Delete Record
+            Delete
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}
