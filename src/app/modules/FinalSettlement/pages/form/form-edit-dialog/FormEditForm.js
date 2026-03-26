@@ -300,25 +300,25 @@ export function FormEditForm({
     setFieldValue("netFinalSettlementAmount", netFinalSettlementAmount.toFixed(2));
     setToBeCalculated(false)
   };
-const callAttendanceSummaryDate=(employeeId) => {
+  const callAttendanceSummaryDate = (employeeId) => {
     if (employeeId) {
-        getSeparatedAttSummaryEmpById(employeeId)
-            .then((res) => {
-                const result = res?.data?.data;
+      getSeparatedAttSummaryEmpById(employeeId)
+        .then((res) => {
+          const result = res?.data?.data;
 
-                // if false -> set empty object
-                if (!result || result === false) {
-                    setData({});
-                } else {
-                    setData( result);
-                }
-            })
-            .catch(() => setData({}));
+          // if false -> set empty object
+          if (!result || result === false) {
+            setData({});
+          } else {
+            setData(result);
+          }
+        })
+        .catch(() => setData({}));
     } else {
-        setData({});
+      setData({});
     }
-};
-console.log("attSumPanelMode222",data)
+  };
+  console.log("attSumPanelMode222", data)
   return (
     <Formik
       enableReinitialize={true}
@@ -419,7 +419,7 @@ console.log("attSumPanelMode222",data)
                     dispatch(finalSettlementById({ "employeeId": values.employeeId, "paidDays": values.paidDays || 0 }))
 
                     setConfirmationModal(false);
-                      setHitAttSum(!hitAttSummary);
+                    setHitAttSum(!hitAttSummary);
                   }}
                   className="btn btn-primary btn-elevate"
                 >
@@ -458,7 +458,7 @@ console.log("attSumPanelMode222",data)
                         setFieldValue("employeeId", value);
                         dispatch(fetchAllEarningList(1, "", e.value, true));
                         dispatch(fetchAllDeductionList(2, "", e.value));
-                         setAttSumPanelMode(false)
+                        setAttSumPanelMode(false)
                         const selectedEmp = activeEmployeeList?.find(
                           (emp) => emp.value === value
                         );
@@ -488,10 +488,17 @@ console.log("attSumPanelMode222",data)
                             (entity) => entity.employeeId === option.value
                           );
 
+                          const notForFinalSettlement = entities?.some(
+                            (entity) =>
+                              entity.employeeId === option.value &&
+                              entity.Separation?.isNotEligibleForFinalSettlement === true
+                          );
+
+
                           return {
                             label: option.label,
                             value: option.value,
-                            isDisabled: isAlreadyUsed, // disable if already used
+                            isDisabled: isAlreadyUsed || notForFinalSettlement // disable if already used
                           };
                         }) || []
                       }
@@ -573,7 +580,7 @@ console.log("attSumPanelMode222",data)
                           setAttSumPanelMode(!attSumPanelMode)
                           setSeparatePanel(false)
                           setPanelMode(false)
-                          
+
 
                         }}
                         disabled={!values?.employeeId}
@@ -583,6 +590,10 @@ console.log("attSumPanelMode222",data)
                       </button>
                     )}
 
+
+                  </div>
+
+                  <div className="col-span-5 flex items-end justify-start gap-3 mt-6 " style={{ pointerEvents: 'auto', opacity: 1 }}>
 
                     {payrollMonthEligibility === false &&
                       <span>
@@ -594,9 +605,8 @@ console.log("attSumPanelMode222",data)
 
 
 
-
                 </div>
-            {    console.log("attSumPanelMode111",attSumPanelMode)}
+                {console.log("attSumPanelMode111", attSumPanelMode)}
                 <EmployeeProfile
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={panelMode}
@@ -626,7 +636,7 @@ console.log("attSumPanelMode222",data)
                           onClick={() => {
                             setConfirmationModal(true);
                             setAttSumPanelMode(false)
-                       
+
                           }
 
                           }

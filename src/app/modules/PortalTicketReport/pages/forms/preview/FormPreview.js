@@ -123,7 +123,7 @@ function FormPreview({ data }) {
 
       <table
         className="border-collapse table-auto"
-        style={{ minWidth: `${(dateColumns.length + 2) * 150}px` }}
+        style={{ minWidth: `${(dateColumns.length + 2) * 80}px` }}
       >
         <thead>
           <tr style={{ backgroundColor: "#4F81BD", color: "white" }}>
