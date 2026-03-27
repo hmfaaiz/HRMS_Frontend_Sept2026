@@ -122,7 +122,62 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .nullable(),
       // .required(VALIDATION_MESSAGES.required),
 
+
+      // alertFromDate: Yup.string().nullable().when("isForAlert", {
+      //   is: true,
+      //   then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+      //   otherwise: (schema) => schema.notRequired(),
+
+      // }),
+
+      // alertEndDate: Yup.string().nullable().when("isForAlert", {
+      //   is: true,
+      //   then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+      //   otherwise: (schema) => schema.notRequired(),
+
+
+      // }),
+
+      alertFromDate: Yup.date()
+  .nullable()
+  .when("isForAlert", {
+    is: true,
+    then: (schema) =>
+      schema
+        .required(VALIDATION_MESSAGES.required)
+        .test(
+          "from-date-check",
+          "Start Date must be earlier than End Date",
+          function (value) {
+            const { alertEndDate } = this.parent;
+            if (!value || !alertEndDate) return true;
+            return new Date(value) <= new Date(alertEndDate);
+          }
+        ),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+alertEndDate: Yup.date()
+  .nullable()
+  .when("isForAlert", {
+    is: true,
+    then: (schema) =>
+      schema
+        .required(VALIDATION_MESSAGES.required)
+        .test(
+          "end-date-check",
+          "End Date must be later than Start Date",
+          function (value) {
+            const { alertFromDate } = this.parent;
+            if (!value || !alertFromDate) return true;
+            return new Date(value) >= new Date(alertFromDate);
+          }
+        ),
+    otherwise: (schema) => schema.notRequired(),
+  }),
     }
+
+
     );
 };
 
@@ -150,7 +205,7 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser,allCompanyEmployeesData } = useSelector((state) => {
+  const { currentState, userAccess, allEmployees, facilitatorEmployeeList, currentUser, allCompanyEmployeesData } = useSelector((state) => {
     return {
       currentState: state.facilitator_ticket_creation,
       userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
@@ -203,7 +258,7 @@ export function FormEditForm({
   //   }
 
   // },[facilitatorEmployeeList])
-
+  console.log("formData111111", formData)
   return (
     <Formik
       enableReinitialize={true}
@@ -253,7 +308,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
 
-{console.log("errors111",errors,values)}
+                {console.log("errors111", errors, values)}
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
@@ -280,7 +335,7 @@ export function FormEditForm({
                           (option) => option.value === values.ticketTypeId
                         ) || null
                       }
-                    
+
                       options={dashboard.allMasterTicketType}
                       error={errors.ticketTypeId}
                       touched={touched.ticketTypeId}
@@ -325,7 +380,7 @@ export function FormEditForm({
                       isDisabled={
                         isUserForRead || receiveMode ||
                         !values.initiator ||
-                        facilitatorEmployeeList?.length === 1
+                        facilitatorEmployeeList?.length === 1 || !values.ticketTypeId
                       }
                       onChange={(e) => {
                         setFieldValue("assignTo", e.value || null);
@@ -348,7 +403,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  {Number(values?.assignTo) === Number(currentUser?.employeeIdMapping) && !formData.Id &&(
+                  {Number(values?.assignTo) === Number(currentUser?.employeeIdMapping) && !formData.Id && (
                     <div className="">
                       <SearchSelect
                         name="assignByToBeSelected"
@@ -388,7 +443,7 @@ export function FormEditForm({
 
 
 
-                  <div className="">
+                  {/* <div className="">
                     <label>
                       {" "}
                       Ticket Date<span style={{ color: "red" }}>*</span>
@@ -412,7 +467,46 @@ export function FormEditForm({
                         {errors.ticketDate}
                       </div>
                     )}
+                  </div> */}
+
+                  {/*  AlertWork26326 { */}
+                  <div className="">
+                    <label>
+                      {" "}
+                      Start Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <DatePicker
+                      className="form-control"
+                      placeholder="Ticket Date"
+                      // selected={
+                      //   values?.ticketDate ? new Date(values.ticketDate) : new Date()
+                      // }
+                      selected={
+                        values?.ticketDate ? new Date(values.ticketDate) : null
+                      }
+                      onChange={(date) => {
+                        setFieldValue("ticketDate", date)
+                        setFieldValue("isForAlert", false)
+
+                        setFieldValue("alertFromDate", "")
+                        setFieldValue("alertEndDate", "")
+                      }}
+                      disabled={isUserForRead || !values.initiator}
+                      dateFormat="dd-MMM-yyyy"
+                      name="ticketDate"
+                      autoComplete="off"
+                      minDate={new Date().setDate(new Date().getDate() - 14)}
+                      // maxDate={values?.dueDate || new Date().setDate(new Date().getDate() + 14)}
+                      maxDate={new Date(Math.min(values?.dueDate ? new Date(values.dueDate).getTime() : new Date().setDate(new Date().getDate() + 14), new Date().setDate(new Date().getDate() + 14)))}
+                    />
+
+                    {touched.ticketDate && errors.ticketDate && (
+                      <div className="invalid-feedback d-block">
+                        {errors.ticketDate}
+                      </div>
+                    )}
                   </div>
+                  {/* // AlertWork26326 } */}
 
                   <div className="">
                     <label>
@@ -421,17 +515,23 @@ export function FormEditForm({
                     </label>
                     <DatePicker
                       className="form-control"
-                      placeholder="Job Date"
+                      placeholder="Due Date"
                       selected={
                         values?.dueDate ? new Date(values.dueDate) : null
                       }
-                      onChange={(date) => setFieldValue("dueDate", date)}
+                      onChange={(date) => {
+                        setFieldValue("dueDate", date)
+                        setFieldValue("isForAlert", false)
+
+                        setFieldValue("alertFromDate", "")
+                        setFieldValue("alertEndDate", "")
+                      }}
                       disabled={isUserForRead || !values.initiator}
                       dateFormat="dd-MMM-yyyy"
                       name="dueDate"
                       autoComplete="off"
-                      minDate={new Date()}
-                    // maxDate={new Date()}
+                      minDate={new Date(values.ticketDate)}
+                      // maxDate={new Date().setDate(new Date().getDate() + 365)}
                     />
 
                     {touched.dueDate && errors.dueDate && (
@@ -454,7 +554,7 @@ export function FormEditForm({
                     <input
                       type="time"
                       className="form-control"
-                      // disabled={!values.initiator}
+                      disabled={isUserForRead || !values.initiator}
                       name="timeRangeFrom"
                       step="60"   //  minutes only (no seconds)
                       value={values.timeRangeFrom || ""}
@@ -478,7 +578,7 @@ export function FormEditForm({
                     <input
                       type="time"
                       className="form-control"
-                      // disabled={!values.initiator}
+                      disabled={isUserForRead || !values.initiator}
                       name="timeRangeTo"
                       step="60"
                       value={values.timeRangeTo || ""}
@@ -513,7 +613,7 @@ export function FormEditForm({
                       placeholder="Enter no of hours"
                       type="number"
 
-                      disabled={values.timeRangeFrom || values.timeRangeTo}
+                      disabled={values?.timeRangeFrom || values?.timeRangeTo || !values?.initiator}
                     />
 
                   </div>
@@ -525,47 +625,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
 
-                  {/* <div className="">
-                    <label htmlFor="ticketStatus">
-                      Ticket Status<span style={{ color: "red" }}>*</span>
 
-                    </label>
-
-                    <Field
-                      name="ticketStatus"
-                      as="select"
-                      className="form-control"
-                      disabled={isUserForRead}
-                      onChange={(e) => {
-                        setFieldValue(
-                          "ticketStatus",
-                          e.target.value === "N/A" ? null : e.target.value
-                        );
-
-
-                      }}
-                    >
-
-
-                      {[
-
-                        ...ticketStatusOptions, // This renders the rest of the options
-                      ].map((option) => (
-                        <option key={option.value} value={String(option.value)}
-                          disabled={!values.initiator && (option.value === 1 || option.value === 3)}
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </Field>
-
-                    {errors.ticketStatus &&
-                      touched.ticketStatus && (
-                        <div className="text-danger">
-                          {errors.ticketStatus}
-                        </div>
-                      )}
-                  </div> */}
 
                   <div className="col-span-3">
                     <Field
@@ -589,7 +649,8 @@ export function FormEditForm({
 
                     </div>
                   </div>
-                       <div className="">
+
+                  <div className="">
                     <SearchSelect
                       name="parentId"
                       label={
@@ -600,18 +661,101 @@ export function FormEditForm({
                       isDisabled={isUserForRead || !values.initiator || receiveMode}
                       onChange={(e) => {
                         setFieldValue("parentId", e.value || null);
-                   
+
                       }}
                       value={
                         dashboard.allCurrentParentTask?.find(
                           (option) => option.value === values.parentId
                         ) || null
                       }
-                    
+
                       options={dashboard?.allCurrentParentTask}
-         
+
                     />
                   </div>
+
+                  {/* // AlertWork26326 } */}
+                  <div className="">
+                    <label className="flex items-center gap-2 mt-3">
+                      <Field
+                        type="checkbox"
+                        name="isForAlert"
+                        disabled={!values.initiator || isUserForRead}
+                        checked={values.isForAlert}
+                        onChange={(e) => {
+                          setFieldValue("isForAlert", e.target.checked)
+
+                          setFieldValue("alertFromDate", "")
+                          setFieldValue("alertEndDate", "")
+                        }}
+                      />
+                      <span>
+                        For Dashboard Reminder
+                      </span>
+                    </label>
+                    {errors.isForAlert && touched.isForAlert && (
+                      <div className="invalid-feedback">{errors.isForAlert}</div>
+                    )}
+                  </div>
+
+                  {/*  AlertWork26326 { */}
+                  <div className="">
+                    <label>
+                      {" "}
+                      Reminder Start Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <DatePicker
+                      className="form-control"
+                      placeholder="Alert Start Date"
+
+                      selected={
+                        values?.alertFromDate ? new Date(values.alertFromDate) : null
+                      }
+                      onChange={(date) => setFieldValue("alertFromDate", date)}
+                      disabled={isUserForRead || !values.initiator || !values.isForAlert}
+                      dateFormat="dd-MMM-yyyy"
+                      name="alertFromDate"
+                      autoComplete="off"
+                      minDate={new Date()}
+                      maxDate={values?.alertEndDate}
+
+                    />
+
+                    {touched.alertFromDate && errors.alertFromDate && (
+                      <div className="invalid-feedback d-block">
+                        {errors.alertFromDate}
+                      </div>
+                    )}
+                  </div>
+                  {/* // AlertWork26326 } */}
+
+                  <div className="">
+                    <label>
+                      {" "}
+                      Reminder End Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <DatePicker
+                      className="form-control"
+                      placeholder="Due Date"
+                      selected={
+                        values?.alertEndDate ? new Date(values.alertEndDate) : null
+                      }
+                      onChange={(date) => setFieldValue("alertEndDate", date)}
+                      disabled={isUserForRead || !values.initiator || !values.isForAlert}
+                      dateFormat="dd-MMM-yyyy"
+                      name="alertEndDate"
+                      autoComplete="off"
+                      minDate={new Date(values?.alertFromDate)}
+                      maxDate={new Date(values?.dueDate)}
+                    />
+
+                    {touched.alertEndDate && errors.alertEndDate && (
+                      <div className="invalid-feedback d-block">
+                        {errors.alertEndDate}
+                      </div>
+                    )}
+                  </div>
+
 
                   {formData?.file && (
                     <div className="">
@@ -870,8 +1014,8 @@ export function FormEditForm({
 
                       )}
 
-                      
-             
+
+
 
                     </>
 
