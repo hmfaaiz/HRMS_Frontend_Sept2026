@@ -5,7 +5,7 @@ import { useSelector, shallowEqual } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus } from "lucide-react";
-import { FormFilter } from "../form-filter/FormFilter";
+import { FormFilter } from "../form-filter/FormFIlter";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -24,10 +24,8 @@ export function FormCard() {
   const moduleName = CurrentModuleName();
 
   const accessUser = userAccess.find(
-    (item) =>
-      item.componentName === "CreateTadaConfig" 
+    (item) => item.componentName === "CreateTadaConfig",
   );
-
 
   return (
     <TCard name={moduleName}>
