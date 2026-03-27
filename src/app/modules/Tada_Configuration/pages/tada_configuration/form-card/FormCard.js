@@ -24,10 +24,8 @@ export function FormCard() {
   const moduleName = CurrentModuleName();
 
   const accessUser = userAccess.find(
-    (item) =>
-      item.componentName === "CreateTadaConfig" 
+    (item) => item.componentName === "CreateTadaConfig",
   );
-
 
   return (
     <TCard name={moduleName}>
