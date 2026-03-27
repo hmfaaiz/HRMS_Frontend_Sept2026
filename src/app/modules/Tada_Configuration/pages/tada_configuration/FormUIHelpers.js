@@ -9,6 +9,7 @@ export const initialValues = {
   modeOfTransportId: [],
   hotelEntitlementId: [],
   hotelEntitlementSelfAmount: 0,
+  ishotelEntitlementSelfAmountWise: false,
   dailyAllowanceAmount: 0,
   taxiFareAmount: 0,
   isActive: true,

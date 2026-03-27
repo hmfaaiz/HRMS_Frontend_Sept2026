@@ -71,16 +71,7 @@ export function FormEditForm({
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
-      hotelEntitlementSelfAmount: Yup.number()
-        .min(0, VALIDATION_MESSAGES.amountCannotBeNegative)
-        .when("ishotelEntitlementSelfAmountWise", {
-          is: true,
-          then: (schema) =>
-            schema
-              .moreThan(0, VALIDATION_MESSAGES.amountGreaterThanZero)
-              .required(VALIDATION_MESSAGES.required),
-          otherwise: (schema) => schema.notRequired().nullable(),
-        }),
+     
       dailyAllowanceAmount: Yup.number().min(
         0,
         VALIDATION_MESSAGES.amountCannotBeNegative,
@@ -373,7 +364,7 @@ export function FormEditForm({
                     </div>
 
                     {/* Hotel Self Amount */}
-                    <div className="tada-config-option">
+                    {/* <div className="tada-config-option">
                       <div className="flex items-center space-x-2 mb-[4px] text-sm font-medium">
                         <Field
                           name="ishotelEntitlementSelfAmountWise"
@@ -413,10 +404,53 @@ export function FormEditForm({
                           !values.subsidiaryId ||
                           !values.ishotelEntitlementSelfAmountWise
                         }
+                        disabled={true}                 
+                        placeholder="0"
+                      />
+                    </div> */}
+                    {/* Hotel Self Amount Section - Amount field permanently disabled */}
+                    <div className="tada-config-option">
+                      <div className="flex items-center space-x-2 mb-[4px] text-sm font-medium">
+                        <Field
+                          name="ishotelEntitlementSelfAmountWise"
+                          component={Checkbox}
+                          isSelected={values.ishotelEntitlementSelfAmountWise}
+                          disabled={isUserForRead || !values.subsidiaryId}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setFieldValue("ishotelEntitlementSelfAmountWise", checked);
+
+                            if (!checked) {
+                              setFieldValue("hotelEntitlementSelfAmount", 0);
+                              setFieldTouched("hotelEntitlementSelfAmount", false);
+                              setFieldError("hotelEntitlementSelfAmount", undefined);
+                            }
+                          }}
+                        />
+                        <span>
+                          Allow Self entitlement for Hotel
+                          {values.ishotelEntitlementSelfAmountWise && (
+                            <span style={{ color: "red" }}>*</span>
+                          )}
+                        </span>
+                      </div>
+
+                      {/* Amount field - Permanently disabled */}
+                      <AmountInput
+                        field={{
+                          name: "hotelEntitlementSelfAmount",
+                          value: values.hotelEntitlementSelfAmount || 0,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={true}
                         placeholder="0"
                       />
                     </div>
-
                     {/* Row 3: Daily Allowance, Taxi Fare */}
 
                     {/* Daily Allowance */}
