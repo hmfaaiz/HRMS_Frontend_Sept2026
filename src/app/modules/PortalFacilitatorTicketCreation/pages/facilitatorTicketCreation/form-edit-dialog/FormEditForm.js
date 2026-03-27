@@ -325,7 +325,7 @@ export function FormEditForm({
                       isDisabled={
                         isUserForRead || receiveMode ||
                         !values.initiator ||
-                        facilitatorEmployeeList?.length === 1
+                        facilitatorEmployeeList?.length === 1 || !values.ticketTypeId
                       }
                       onChange={(e) => {
                         setFieldValue("assignTo", e.value || null);
