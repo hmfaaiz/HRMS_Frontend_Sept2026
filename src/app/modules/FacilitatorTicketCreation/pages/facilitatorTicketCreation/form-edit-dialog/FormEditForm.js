@@ -151,7 +151,7 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
           function (value) {
             const { alertEndDate } = this.parent;
             if (!value || !alertEndDate) return true;
-            return new Date(value) < new Date(alertEndDate);
+            return new Date(value) <= new Date(alertEndDate);
           }
         ),
     otherwise: (schema) => schema.notRequired(),
@@ -166,11 +166,11 @@ alertEndDate: Yup.date()
         .required(VALIDATION_MESSAGES.required)
         .test(
           "end-date-check",
-          "End Date must be later than From Date",
+          "End Date must be later than Start Date",
           function (value) {
             const { alertFromDate } = this.parent;
             if (!value || !alertFromDate) return true;
-            return new Date(value) > new Date(alertFromDate);
+            return new Date(value) >= new Date(alertFromDate);
           }
         ),
     otherwise: (schema) => schema.notRequired(),
