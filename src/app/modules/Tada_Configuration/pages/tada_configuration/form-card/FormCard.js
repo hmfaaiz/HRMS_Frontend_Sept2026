@@ -17,7 +17,7 @@ export function FormCard() {
   }, [FormUIContext]);
   const { userAccess } = useSelector(
     (state) => ({
-      userAccess: state.auth?.userAccess?.t_tada_config || [],
+      userAccess: state.auth?.userAccess?.tada_config,
     }),
     shallowEqual,
   );
@@ -25,18 +25,16 @@ export function FormCard() {
 
   const accessUser = userAccess.find(
     (item) =>
-      item.componentName === "CreateTadaConfiguration" ||
-      item.componentName === "CreateT_Tada_Config",
+      item.componentName === "CreateTadaConfig" 
   );
 
-  const canCreate = accessUser || true;
 
   return (
     <TCard name={moduleName}>
       <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
         <FormFilter />
         <div className="flex items-center gap-2">
-          {canCreate && (
+          {accessUser && (
             <>
               <button
                 type="button"

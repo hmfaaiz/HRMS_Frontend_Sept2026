@@ -31,10 +31,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   );
 
   useEffect(() => {
-    if (show && id) {
-      dispatch(actions.fetchTadaConfig(id));
-    }
-  }, [id, dispatch, show]);
+    dispatch(actions.fetchTadaConfig(id));
+  }, [id, dispatch]);
 
   const saveForm = async (values) => {
     enableLoading();
