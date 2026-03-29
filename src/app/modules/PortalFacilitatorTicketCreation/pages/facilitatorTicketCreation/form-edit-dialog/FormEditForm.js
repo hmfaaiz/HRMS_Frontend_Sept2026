@@ -30,22 +30,35 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .nullable()
         .required(VALIDATION_MESSAGES.required),
 
+      // ticketDescription: Yup.string()
+      //   .nullable()
+      //   .required(VALIDATION_MESSAGES.required),
+
+      // assignByToBeSelected: Yup.number()
+      //   .nullable()
+      //   .when("assignTo", (assignTo, schema) => {
+      //     if (Number(assignTo) === Number(currentUser) && !value.Id) {
+      //       return schema
+      //         .required("Assign By is required")
+      //         .notOneOf(
+      //           [Yup.ref("assignTo")],
+      //           "Assign By cannot be the same as Assign To"
+      //         );
+      //     }
+
+      //     return schema.notOneOf(
+      //       [Yup.ref("assignTo")],
+      //       "Assign By cannot be the same as Assign To"
+      //     );
+      //   }),
+
       assignByToBeSelected: Yup.number()
         .nullable()
         .when("assignTo", (assignTo, schema) => {
           if (Number(assignTo) === Number(currentUser) && !value.Id) {
-            return schema
-              .required("Assign By is required")
-              .notOneOf(
-                [Yup.ref("assignTo")],
-                "Assign By cannot be the same as Assign To"
-              );
+            return schema.required("Assign By is required");
           }
-
-          return schema.notOneOf(
-            [Yup.ref("assignTo")],
-            "Assign By cannot be the same as Assign To"
-          );
+          return schema; // no more notOneOf check
         }),
 
       priorityLevelId: Yup.number()
@@ -59,6 +72,12 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .required(VALIDATION_MESSAGES.required),
 
       dueDate: Yup.date()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+
+      ticketDate: Yup.date()
 
         .nullable()
         .required(VALIDATION_MESSAGES.required),
@@ -119,8 +138,8 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
 
       ticketDescription: Yup.string()
         .trim()
-        .nullable(),
-      // .required(VALIDATION_MESSAGES.required),
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
 
 
       // alertFromDate: Yup.string().nullable().when("isForAlert", {
@@ -139,42 +158,42 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
       // }),
 
       alertFromDate: Yup.date()
-  .nullable()
-  .when("isForAlert", {
-    is: true,
-    then: (schema) =>
-      schema
-        .required(VALIDATION_MESSAGES.required)
-        .test(
-          "from-date-check",
-          "Start Date must be earlier than End Date",
-          function (value) {
-            const { alertEndDate } = this.parent;
-            if (!value || !alertEndDate) return true;
-            return new Date(value) <= new Date(alertEndDate);
-          }
-        ),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+        .nullable()
+        .when("isForAlert", {
+          is: true,
+          then: (schema) =>
+            schema
+              .required(VALIDATION_MESSAGES.required)
+              .test(
+                "from-date-check",
+                "Start Date must be earlier than End Date",
+                function (value) {
+                  const { alertEndDate } = this.parent;
+                  if (!value || !alertEndDate) return true;
+                  return new Date(value) <= new Date(alertEndDate);
+                }
+              ),
+          otherwise: (schema) => schema.notRequired(),
+        }),
 
-alertEndDate: Yup.date()
-  .nullable()
-  .when("isForAlert", {
-    is: true,
-    then: (schema) =>
-      schema
-        .required(VALIDATION_MESSAGES.required)
-        .test(
-          "end-date-check",
-          "End Date must be later than Start Date",
-          function (value) {
-            const { alertFromDate } = this.parent;
-            if (!value || !alertFromDate) return true;
-            return new Date(value) >= new Date(alertFromDate);
-          }
-        ),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+      alertEndDate: Yup.date()
+        .nullable()
+        .when("isForAlert", {
+          is: true,
+          then: (schema) =>
+            schema
+              .required(VALIDATION_MESSAGES.required)
+              .test(
+                "end-date-check",
+                "End Date must be later than Start Date",
+                function (value) {
+                  const { alertFromDate } = this.parent;
+                  if (!value || !alertFromDate) return true;
+                  return new Date(value) >= new Date(alertFromDate);
+                }
+              ),
+          otherwise: (schema) => schema.notRequired(),
+        }),
     }
 
 
@@ -258,7 +277,7 @@ export function FormEditForm({
   //   }
 
   // },[facilitatorEmployeeList])
-  console.log("formData111111", formData)
+
   return (
     <Formik
       enableReinitialize={true}
@@ -266,9 +285,10 @@ export function FormEditForm({
         ...formData,
         remarks: !isUserForRead ? "" : formData.remarks || "",
         file: !isUserForRead ? "" : formData.file || "",
-        ticketStatus: !formData?.ticketStatus
+         ticketDescription:formData?.Master?.ticketDescription ?? "",
+        ticketStatus: formData?.ticketStatus == null
           ? 1
-          : formData?.isUserForRead
+          : isUserForRead
             ? formData.ticketStatus
             : formData?.initiator
               ? formData.ticketStatus
@@ -531,7 +551,7 @@ export function FormEditForm({
                       name="dueDate"
                       autoComplete="off"
                       minDate={new Date(values.ticketDate)}
-                      // maxDate={new Date().setDate(new Date().getDate() + 365)}
+                    // maxDate={new Date().setDate(new Date().getDate() + 365)}
                     />
 
                     {touched.dueDate && errors.dueDate && (
@@ -634,13 +654,13 @@ export function FormEditForm({
                       disabled={receiveMode || formData?.Master?.ticketDescription}
                       placeholder="Enter ticket description"
                       className="form-control" // Force full height
-                      value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
+                      // value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
 
                       label={
                         <span>
                           {" "}
                           Ticket Description
-                          {/* <span style={{ color: "red" }}>*</span> */}
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       autoComplete="off"

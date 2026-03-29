@@ -17,6 +17,8 @@ import { CircleMinus, CirclePlus } from "lucide-react";
 import { FormFIlter } from "../form-filter/FormFIlter";
 import { ReceiveFIlter } from "../form-filter/ReceiveFilter";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
+import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
+import { getEmployeeHierarchy, requestRaisedBySenior } from "../../../../Dashboard/_redux/dashboardActions";
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
@@ -32,25 +34,29 @@ export function FormCard() {
       setPanelMode: FormUIContext.setPanelMode,
       readMode: FormUIContext.readMode,
       setReadMode: FormUIContext.setReadMode,
+      currentLevel: FormUIContext.currentLevel,
+      setCurrentLevel: FormUIContext.setCurrentLevel,
     };
   }, [FormUIContext]);
 
-  const {  dashboard } = useSelector(
+  const { dashboard, allowRequestBySenior } = useSelector(
     (state) => ({
 
       dashboard: state.dashboard,
+      allowRequestBySenior: state.dashboard.allowRequestBySenior,
     }),
     shallowEqual
   );
 
 
 
-  const { currentState ,report,calendar,portal_task_assignment_timeline} = useSelector((state) => {
+  const { currentState, report, calendar, portal_task_assignment_timeline ,user} = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       portal_task_assignment_timeline: state?.auth?.userAccess["portal_task_assignment_timeline"],
       report: state?.auth?.userAccess["portal_ticket_time_report"],
       calendar: state?.auth?.userAccess["portal_ticket_calendar"],
+      user: state?.auth?.user,
     };
   }, shallowEqual);
 
@@ -60,7 +66,19 @@ export function FormCard() {
       dispatch(fetchAllActiveEmployees());
   }, [dispatch, FormUIProps.employeeId]);
 
-  const { entities } = currentState;
+  useEffect(() => {
+    FormUIProps.setemployeeId(user?.employeeIdMapping);
+    dispatch(requestRaisedBySenior());
+    if (allowRequestBySenior) {
+      FormUIProps.setCurrentLevel(1);
+    }
+  }, [user, allowRequestBySenior]);
+
+  useEffect(() => {
+    if (FormUIProps?.currentLevel > 0) {
+      dispatch(getEmployeeHierarchy(FormUIProps?.currentLevel));
+    }
+  }, [FormUIProps?.currentLevel]);
 
   return (
 
@@ -71,16 +89,16 @@ export function FormCard() {
             name={CurrentModuleName()}
             isBackButton={true}
             isDashboardRedirect={true}
-                 menuOptions={[
+            menuOptions={[
 
-                     {
+              {
                 name: "Task Assignment Timeline",
                 link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
                 isShow: portal_task_assignment_timeline?.find(
                   (el) =>
                     el?.componentName === "ReadTaskAssignmentTimeline"
                 ),
-              }, 
+              },
               {
                 name: "Report",
                 link: "/portal_ticket_time_report/read-all-project-report",
@@ -97,7 +115,7 @@ export function FormCard() {
                     el?.componentName === "ReadTicketCalendar"
                 ),
               },
-       
+
             ]}
             isDashboardIcon={true}
           />
@@ -111,16 +129,16 @@ export function FormCard() {
             name={CurrentModuleName()}
             isBackButton={true}
             isDashboardRedirect={true}
-              menuOptions={[
+            menuOptions={[
 
-                     {
+              {
                 name: "Task Assignment Timeline",
                 link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
                 isShow: portal_task_assignment_timeline?.find(
                   (el) =>
                     el?.componentName === "ReadTaskAssignmentTimeline"
                 ),
-              }, 
+              },
               {
                 name: "Report",
                 link: "/portal_ticket_time_report/read-all-project-report",
@@ -137,7 +155,7 @@ export function FormCard() {
                     el?.componentName === "ReadTicketCalendar"
                 ),
               },
-       
+
             ]}
             isDashboardIcon={true}
           />
@@ -155,6 +173,19 @@ export function FormCard() {
             <h6 className="font-bold mb-0 text-primary my-2">
               Ticket (Receive)
             </h6>
+
+            {FormUIProps?.currentLevel > 0 && (
+              <>
+                {" "}
+                <EmployeeSelect />
+                <br />
+                {/* <EmployeeProfile
+                  employeeId={FormUIProps.employeeId}
+                  panelMode={FormUIProps.panelMode}
+                /> */}
+                <br />{" "}
+              </>
+            )}
 
             <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
 

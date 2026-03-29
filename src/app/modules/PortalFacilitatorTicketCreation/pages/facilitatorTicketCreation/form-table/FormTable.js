@@ -42,14 +42,16 @@ export function FormTable() {
       setMasterId: formUIContext.setMasterId,
       setDetailId: formUIContext.setDetailId,
       detailId: formUIContext.detailId,
+      employeeId: formUIContext.employeeId,
 
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess, user } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       userAccess: state?.auth?.userAccess["portal_ticket_creation"],
+      user: state?.auth?.user,
     };
   }, shallowEqual);
 
@@ -62,8 +64,16 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setId([]);
 
-    dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
-  }, [formUIProps.queryParams, dispatch, totalCount]);
+    // dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
+
+    dispatch(
+      actions.fetchTicketCreations
+        ({
+          ...formUIProps.queryParams,
+          employeeId: formUIProps.employeeId,
+        })
+    );
+  }, [formUIProps.queryParams, formUIProps.employeeId, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateFacilitatorTicketCreation"
@@ -243,7 +253,7 @@ export function FormTable() {
       style: {
         minWidth: "30px",
       },
-      formatter: (cell,row) => {
+      formatter: (cell, row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -254,10 +264,10 @@ export function FormTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.ticketDate);
+        const createdDate = new Date(row.ticketDate);
         createdDate.setHours(0, 0, 0, 0);
 
-       
+
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
@@ -371,7 +381,7 @@ export function FormTable() {
         const createdDate = new Date(row.ticketDate);
         createdDate.setHours(0, 0, 0, 0);
 
-       
+
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
@@ -409,7 +419,7 @@ export function FormTable() {
         // setIsFileReq : formUIProps.setIsFileReq,
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
-
+        user,
 
 
       },

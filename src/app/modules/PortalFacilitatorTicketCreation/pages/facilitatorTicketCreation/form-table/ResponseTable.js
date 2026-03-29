@@ -42,13 +42,15 @@ export function ResponseTable() {
       openTicketTimeLog: formUIContext.openTicketTimeLog,
       
       openDetailTimeLog: formUIContext.openDetailTimeLog,
+      employeeId: formUIContext.employeeId,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess,user } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       userAccess: state?.auth?.userAccess["portal_ticket_creation"],
+       user: state?.auth?.user,
     };
   }, shallowEqual);
 
@@ -59,10 +61,16 @@ export function ResponseTable() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    formUIProps.setId([]);
 
-    dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
-  }, [formUIProps.queryParams, dispatch, receiveTotalCount]);
+
+    formUIProps.setId([]);
+dispatch(
+  actions.fetchReceiveTickets({
+    ...formUIProps.queryParams,
+    employeeId: formUIProps.employeeId,
+  })
+);
+  }, [formUIProps.queryParams,formUIProps.employeeId, dispatch, receiveTotalCount]);
 
 
 
@@ -412,6 +420,7 @@ export function ResponseTable() {
         openTicketTimeLog: formUIProps.openTicketTimeLog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
         setReadMode: formUIProps.setReadMode,
+        user,
 
       },
       classes: "text-right pr-0",
