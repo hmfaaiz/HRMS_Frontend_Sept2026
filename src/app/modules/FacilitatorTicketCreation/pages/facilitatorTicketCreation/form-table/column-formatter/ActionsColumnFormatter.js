@@ -155,7 +155,7 @@ export function ResponseColumnFormatter(
         </button>
       </OverlayTrigger>
 
-      {(row?.ticketStatus !=0) && (
+    {(!row?.isPermanent) && (
 
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
