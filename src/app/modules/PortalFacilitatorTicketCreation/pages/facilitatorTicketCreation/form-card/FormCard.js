@@ -50,7 +50,7 @@ export function FormCard() {
 
 
 
-  const { currentState, report, calendar, portal_task_assignment_timeline ,user} = useSelector((state) => {
+  const { currentState, report, calendar, portal_task_assignment_timeline, user } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       portal_task_assignment_timeline: state?.auth?.userAccess["portal_task_assignment_timeline"],
@@ -164,6 +164,18 @@ export function FormCard() {
 
 
         <div className="px-3 py-2 rounded-lg bg-white">
+          {FormUIProps?.currentLevel > 0 && (
+            <>
+              {" "}
+              <EmployeeSelect />
+              <br />
+              {/* <EmployeeProfile
+                  employeeId={FormUIProps.employeeId}
+                  panelMode={FormUIProps.panelMode}
+                /> */}
+              <br />{" "}
+            </>
+          )}
 
 
           <div>
@@ -174,18 +186,6 @@ export function FormCard() {
               Ticket (Receive)
             </h6>
 
-            {FormUIProps?.currentLevel > 0 && (
-              <>
-                {" "}
-                <EmployeeSelect />
-                <br />
-                {/* <EmployeeProfile
-                  employeeId={FormUIProps.employeeId}
-                  panelMode={FormUIProps.panelMode}
-                /> */}
-                <br />{" "}
-              </>
-            )}
 
             <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
 
@@ -261,17 +261,19 @@ export function FormCard() {
 
             <ResponseTable />
 
+            <br />
+            {(FormUIProps?.employeeId == user?.employeeIdMapping) && (
 
+              <>
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  Ticket Detail
+                </h6>
 
-            <h6 className="font-bold mb-0 text-primary my-2">
-              Ticket Detail
-            </h6>
+                <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} />
 
-            <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} />
+              </>
 
-
-
-
+            )}
 
             <h6 className="font-bold mb-0 text-primary my-2">
               Ticket (Send)

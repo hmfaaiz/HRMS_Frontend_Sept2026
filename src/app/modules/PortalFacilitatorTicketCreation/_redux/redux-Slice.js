@@ -172,9 +172,11 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
             state.actionsLoading = false;
             state.error = null;
             // state.entities.unshift(action.payload);
-            if (action.payload.receiver) {
+            if (action.payload.receiver || action.payload.isSelf) {
                 state.receiveEntities.unshift(action.payload);
-            } else {
+            } 
+ 
+            else {
                 state.entities.unshift(action.payload);
             }
 
