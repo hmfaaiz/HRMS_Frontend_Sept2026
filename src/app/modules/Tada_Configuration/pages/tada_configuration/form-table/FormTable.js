@@ -38,7 +38,7 @@ export function FormTable() {
   const { currentState, userAccess, dashboard } = useSelector(
     (state) => ({
       currentState: state.t_tada_config,
-      userAccess: state?.auth?.userAccess["t_tada_config"],
+      userAccess: state?.auth?.userAccess["tada_config"],
       dashboard: state.dashboard,
     }),
     shallowEqual,
@@ -63,28 +63,25 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateTadaConfiguration",
-  ) || { isAccess: true };
+    (item) => item.componentName === "UpdateTadaConfig",
+  );
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteTadaConfiguration",
-  ) || { isAccess: true };
+    (item) => item.componentName === "DeleteTadaConfig",
+  );
 
   // Helper function to map IDs (array or comma-separated string) to their names
   const getNamesFromIds = (inputIds, optionsList) => {
-    if (!inputIds || !optionsList) return "N/A";
+    if (!inputIds || !optionsList) return "";
 
-    // Normalize input to an array of strings
     const ids = Array.isArray(inputIds)
       ? inputIds.map(String)
-      : inputIds
-          .toString()
-          .split(",")
-          .map((s) => s.trim());
+      : inputIds.toString().split(",").map((s) => s.trim());
 
     const names = optionsList
       .filter((opt) => ids.includes(opt.value.toString()))
       .map((opt) => opt.label);
-    return names.length > 0 ? names.join(", ") : "N/A";
+
+    return names.length > 0 ? names.join(", ") : "";
   };
 
   const columns = [
@@ -127,17 +124,20 @@ export function FormTable() {
         getNamesFromIds(cell, dashboard?.allHotelEntitlementList),
     },
     {
-      dataField: "hotelEntitlementSelfAmount",
-      text: "Hotel Self Amount",
-      formatter: (cell) => cell || "N/A",
+      dataField: "ishotelEntitlementSelfAmountWise",
+      text: "Allow Self entitlement for Hotel",
+      formatter: (cell) => (cell === true || cell === "true" ? "Yes" : "No"),
+      align: "center",
+      headerAlign: "center",
+      style: { width: "200px" },
     },
     {
       dataField: "dailyAllowanceAmount",
-      text: "Daily Allowance",
+      text: "Entitled Daily Allowance",
     },
     {
       dataField: "taxiFareAmount",
-      text: "Taxi Fare",
+      text: "Entitled Taxi Fare per KM",
     },
     {
       dataField: "action",
