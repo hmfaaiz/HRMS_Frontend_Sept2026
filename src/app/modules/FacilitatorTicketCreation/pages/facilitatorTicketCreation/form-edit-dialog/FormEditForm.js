@@ -1046,7 +1046,7 @@ export function FormEditForm({
                 )}
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
-
+  {(!formData.isSelf) && (
                   <div className="col-span-3">
                     <Field
                       name="remarks"
@@ -1067,7 +1067,7 @@ export function FormEditForm({
 
                     </div>
                   </div>
-
+  )}
 
 
                   <div className="">

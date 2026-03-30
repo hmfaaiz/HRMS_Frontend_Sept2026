@@ -285,7 +285,7 @@ export function FormEditForm({
         ...formData,
         remarks: !isUserForRead ? "" : formData.remarks || "",
         file: !isUserForRead ? "" : formData.file || "",
-         ticketDescription:formData?.Master?.ticketDescription ?? "",
+        ticketDescription: formData?.Master?.ticketDescription ?? "",
         ticketStatus: formData?.ticketStatus == null
           ? 1
           : isUserForRead
@@ -1058,30 +1058,32 @@ export function FormEditForm({
                   </>
                 )}
 
+
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
-                  <div className="col-span-3">
-                    <Field
-                      name="remarks"
-                      component={TextArea}
-                      placeholder="Enter remarks"
-                      className="form-control" // Force full height
+                  {(!formData.isSelf) && (
 
-                      label={
-                        <span>
-                          {" "}
-                          Remarks
+                    <div className="col-span-3">
+                      <Field
+                        name="remarks"
+                        component={TextArea}
+                        placeholder="Enter remarks"
+                        className="form-control" // Force full height
 
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
-                    <div>
+                        label={
+                          <span>
+                            {" "}
+                            Remarks
+
+                          </span>
+                        }
+                        autoComplete="off"
+                      />
+
 
                     </div>
-                  </div>
 
-
+                  )}
 
                   <div className="">
                     <label htmlFor="ticketStatus">
@@ -1187,6 +1189,8 @@ export function FormEditForm({
 
 
 
+
+
               </fieldset>
             </Form>
           </Modal.Body>
@@ -1221,6 +1225,7 @@ export function FormEditForm({
             {!isUserForRead && (
               <button
                 type="button"
+
                 onClick={() => {
 
                   if (facilitatorEmployeeList?.length === 1) {
