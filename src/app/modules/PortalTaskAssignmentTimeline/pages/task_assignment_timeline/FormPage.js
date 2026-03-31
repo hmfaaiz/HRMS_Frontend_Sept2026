@@ -1,5 +1,6 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
+import { Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 import { TaskAssignmentTimelineUIProvider } from "./FormUIContext";
@@ -8,7 +9,11 @@ import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalM
 import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-export function FormPage() {
+import { DetailData } from "./modal/DetailData";
+import { DetailTimeLog } from "./modal/DetailTimeLog";
+import { FormUIProvider } from "../../../FacilitatorTicketCreation/pages/facilitatorTicketCreation/FormUIContext";
+
+export function FormPage({ history }) {
 
     const { report,calendar,portal_ticket_creation} = useSelector((state) => {
       return {
@@ -20,9 +25,40 @@ export function FormPage() {
       };
     }, shallowEqual);
 
-   
+      const taskAssignmentTimelineUIEvents = {
+    openDetailGridData: (masterId) => {
+      history.push(
+        `/portal_task_assignment_timeline/read-all-task-assignment-timeline/${masterId}/detail`
+      );
+    },
+    openDetailTimeLog: (detailId) => {
+      history.push(
+        `/portal_task_assignment_timeline/read-all-task-assignment-timeline/${detailId}/detailtimelog`
+      );
+    },
+    addNewTicket: () => {
+      window.open(
+        "/facilitator_ticket_creation/read-all-facilitator-ticket-creation",
+        "_blank"
+      );
+    },
+  };
+
+     const facilitatorFormUIEvents = {
+    openDetailGridData: () => {},
+    openDetailTimeLog: () => {},
+    openTicketTimeLog: () => {},
+    newFormButtonClick: () => {},
+    openEditFormDialog: () => {},
+    openDeleteFormDialog: () => {},
+    openActiveFormDialog: () => {},
+    openReadFormDialog: () => {},
+    openReceiveFormDialog: () => {},
+  };
   return (
-    <TaskAssignmentTimelineUIProvider>
+    <TaskAssignmentTimelineUIProvider
+       taskAssignmentTimelineUIEvents={taskAssignmentTimelineUIEvents}
+    >
       {/* Task Assignment Timeline List / Card */}
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
@@ -104,6 +140,52 @@ export function FormPage() {
             />
           </div>
  <div className="px-3 py-2 rounded-lg bg-white">
+
+     {/* Detail modal route */}
+        <Route path="/portal_task_assignment_timeline/read-all-task-assignment-timeline/:masterId/detail">
+          {({ history, match }) => (
+            <DetailData
+              show={match != null}
+              detailId={match && match.params.masterId}
+              onHide={() =>
+                history.push("/portal_task_assignment_timeline/read-all-task-assignment-timeline")
+              }
+            />
+          )}
+        </Route>
+  
+        {/* Detail Time Log modal route */}
+        {/* <Route path="/portal_task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
+          {({ history, match }) => (
+            <FormUIProvider FormUIEvents={facilitatorFormUIEvents}>
+              <DetailTimeLog
+                show={match != null}
+                detailId={match && match.params.detailId}
+                onHide={() =>
+                  history.push("/portal_task_assignment_timeline/read-all-task-assignment-timeline")
+                }
+              />
+            </FormUIProvider>
+          )}
+        </Route> */}
+  
+  <Route path="/portal_task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
+    {({ history, match }) => {
+      const show = match != null;
+      const detailId = match?.params.detailId;
+  
+      return (
+        <DetailTimeLog
+          show={show}
+          detailId={detailId}
+          onHide={() =>
+            history.push("/portal_task_assignment_timeline/read-all-task-assignment-timeline")
+          }
+        />
+      );
+    }}
+  </Route>
+  
 
 
           <FormCard />
