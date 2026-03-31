@@ -93,3 +93,25 @@ export const fetchTaskAssignmentTimeline = (queryParams) => async (dispatch) => 
 export const clearTaskAssignmentTimeline = () => (dispatch) => {
   dispatch(actions.timelineCleared());
 };
+
+
+export const fetchAllFacilitatorTimeLogDetail = (Id) => (dispatch) => {
+
+
+  if (!Id) {
+    return dispatch(actions.FacilitatorTimeLogDetailFetched({ detailData: undefined }));
+  }
+
+  return requestFromServer
+    .getAllFacilitatorTimeLogDetail(Id)
+    .then((response) => {
+      const entities = response.data.data.rows;
+    
+      dispatch(actions.FacilitatorTimeLogDetailFetched(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+

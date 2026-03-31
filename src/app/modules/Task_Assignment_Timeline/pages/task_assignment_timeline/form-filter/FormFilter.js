@@ -85,6 +85,9 @@ export function FormFilter({
         ticketDateTo: uiProps.queryParams?.filter?.ticketDateTo || null,
         dueDateFrom: uiProps.queryParams?.filter?.dueDateFrom || null,
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
+
+        priorityLevelIds: priorityLevels.map(pl => pl.value) || [],
+        ticketTypeIds: ticketTypes.map(pl => pl.value) || []
       }}
       onSubmit={applyFilter}
     >
@@ -98,7 +101,7 @@ export function FormFilter({
                   <MultiSelect
                     name="ticketTypeIds"
                     label="Ticket Type"
-                    value={ticketTypes.filter((tt) =>
+                    value={ticketTypes?.filter((tt) =>
                       values.ticketTypeIds.includes(tt.value),
                     )}
                     options={ticketTypes}
