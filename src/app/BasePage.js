@@ -544,6 +544,10 @@ const employee_temporary_shift_setup = lazy(() =>
   import("./modules/Temporary_Shift_Setup/pages/index"),
 );
 
+const project_sprint = lazy(() =>
+  import("./modules/Project_Sprint/pages/index"),
+);
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -731,6 +735,7 @@ const ROUTES = {
   customer_config: customer_config,
   tada_config: tada_configuration,
   temporary_shift_setup: employee_temporary_shift_setup,
+  project_sprint : project_sprint,
 };
 
 export default function BasePage() {

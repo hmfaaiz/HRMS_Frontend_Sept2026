@@ -14,14 +14,35 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { Checkbox } from "../../../../../../_metronic/_partials/controls";
 
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values;
+  const {
+    searchText,
+    projectId,
+    ticketTypeId,
+    priority,
+    ticketStatusId,
+    isGroupByProject,
+  } = values || {};
   const newQueryParams = { ...queryParams };
   const filter = {};
 
   if (searchText) {
     filter.searchQuery = searchText;
   }
-
+  if (isGroupByProject) {
+    filter.isGroupByProject = isGroupByProject;
+  }
+  if (ticketStatusId) {
+    filter.ticketStatusId = ticketStatusId;
+  }
+  if (priority) {
+    filter.priority = priority;
+  }
+  if (ticketTypeId) {
+    filter.ticketTypeId = ticketTypeId;
+  }
+  if (projectId) {
+    filter.projectId = projectId;
+  }
   newQueryParams.filter = filter;
   return newQueryParams;
 };
@@ -62,6 +83,7 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
           ticketTypeId: "",
           priority: "",
           ticketStatusId: "",
+          isGroupByProject: false,
         }}
         onSubmit={(values) => {
           applyFilter(values);
@@ -89,14 +111,15 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                     }
                     onChange={(e) => {
                       setFieldValue("projectId", e?.value);
-                      const updateValue = {
-                        ...formUIProps.queryParams,
-                        filter: {
-                          ...formUIProps?.queryParams?.filter,
-                          projectId: e?.value,
-                        },
-                      };
-                      formUIProps.setQueryParams(updateValue);
+                      handleSubmit();
+                      // const updateValue = {
+                      //   ...formUIProps.queryParams,
+                      //   filter: {
+                      //     ...formUIProps?.queryParams?.filter,
+                      //     projectId: e?.value,
+                      //   },
+                      // };
+                      // formUIProps.setQueryParams(updateValue);
                     }}
                   />
                 </div>
@@ -114,14 +137,15 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                     }
                     onChange={(e) => {
                       setFieldValue("ticketTypeId", e?.value);
-                      const updateValue = {
-                        ...formUIProps.queryParams,
-                        filter: {
-                          ...formUIProps?.queryParams?.filter,
-                          ticketTypeId: e?.value,
-                        },
-                      };
-                      formUIProps.setQueryParams(updateValue);
+                      // const updateValue = {
+                      //   ...formUIProps.queryParams,
+                      //   filter: {
+                      //     ...formUIProps?.queryParams?.filter,
+                      //     ticketTypeId: e?.value,
+                      //   },
+                      // };
+                      handleSubmit();
+                      // formUIProps.setQueryParams(updateValue);
                     }}
                   />
                 </div>
@@ -139,18 +163,19 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                     }
                     onChange={(e) => {
                       setFieldValue("priority", e?.value);
-                      const updateValue = {
-                        ...formUIProps.queryParams,
-                        filter: {
-                          ...formUIProps?.queryParams?.filter,
-                          priority: e?.value,
-                        },
-                      };
-                      formUIProps.setQueryParams(updateValue);
+                      handleSubmit();
+                      // const updateValue = {
+                      //   ...formUIProps.queryParams,
+                      //   filter: {
+                      //     ...formUIProps?.queryParams?.filter,
+                      //     priority: e?.value,
+                      //   },
+                      // };
+                      // formUIProps.setQueryParams(updateValue);
                     }}
                   />
                 </div>
-                <div >
+                <div>
                   <SearchSelect
                     name="ticketStatusId"
                     label={<span>Ticket Status</span>}
@@ -168,31 +193,33 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                     }
                     onChange={(e) => {
                       setFieldValue("ticketStatusId", e?.value);
-                      const updateValue = {
-                        ...formUIProps.queryParams,
-                        filter: {
-                          ...formUIProps?.queryParams?.filter,
-                          ticketStatusId: e?.value,
-                        },
-                      };
-                      formUIProps.setQueryParams(updateValue);
+                      // const updateValue = {
+                      //   ...formUIProps.queryParams,
+                      //   filter: {
+                      //     ...formUIProps?.queryParams?.filter,
+                      //     ticketStatusId: e?.value,
+                      //   },
+                      // };
+                      // formUIProps.setQueryParams(updateValue);
+                      handleSubmit();
                     }}
                   />
                 </div>
-                 <div className="mt-7">
+                <div className="mt-7">
                   <Checkbox
                     isSelected={values?.isGroupByProject}
-                    children={"Project Wise - Ticket Code wise"}
+                    children={"Ticket Code wise"}
                     onChange={(e) => {
                       setFieldValue("isGroupByProject", e?.target.checked);
-                      const updateValue = {
-                        ...formUIProps.queryParams,
-                        filter: {
-                          ...formUIProps?.queryParams?.filter,
-                          isGroupByProject: e?.target.checked,
-                        },
-                      };
-                      formUIProps.setQueryParams(updateValue);
+                      // const updateValue = {
+                      //   ...formUIProps.queryParams,
+                      //   filter: {
+                      //     ...formUIProps?.queryParams?.filter,
+                      //     isGroupByProject: e?.target.checked,
+                      //   },
+                      // };
+                      // formUIProps.setQueryParams(updateValue);
+                      handleSubmit();
                     }}
                   />
                 </div>
