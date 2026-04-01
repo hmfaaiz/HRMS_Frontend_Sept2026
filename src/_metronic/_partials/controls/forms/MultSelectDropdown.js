@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-// ── Moved OUTSIDE to prevent recreation on every render ──────────────────────
+// ── Moved OUTSIDE to prevent recreation on every render ────────────────────
 
 const MultiValue = () => null;
 
@@ -26,7 +26,9 @@ const ClearIndicator = (props) => {
 
 const ValueContainer = ({ children, selectProps, ...props }) => {
   const selectedValues = props.getValue();
+  const allValues = props?.options || [];
 
+  console.log("allValuesallValues", allValues);
   return (
     <components.ValueContainer {...props} selectProps={selectProps}>
       {selectedValues.length > 0 ? (
@@ -35,7 +37,9 @@ const ValueContainer = ({ children, selectProps, ...props }) => {
           onClick={() => selectProps.onMenuOpen?.()} // ← change this line
           className="text-[10.4px] text-gray-700 truncate whitespace-nowrap overflow-hidden mr-8"
         >
-          {selectedValues.map((v) => v?.label).join(", ")}
+          {allValues?.length - 1 == selectedValues?.length
+            ? "All"
+            : selectedValues.map((v) => v?.label).join(", ")}
         </div>
       ) : (
         children
@@ -44,7 +48,7 @@ const ValueContainer = ({ children, selectProps, ...props }) => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────────────────────────────
 
 const CUSTOM_COMPONENTS = { MultiValue, ValueContainer, ClearIndicator };
 
