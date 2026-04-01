@@ -389,9 +389,9 @@ export const getApplicantProfileEditSchema = (formData) => {
             // applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
             statusDate: Yup.date().nullable(),
             // .required(VALIDATION_MESSAGES.required),
-            appointmentTypeId: Yup.number()
-              .nullable()
-              .required(VALIDATION_MESSAGES.required),
+            // appointmentTypeId: Yup.number()
+            //   .nullable()
+            //   .required(VALIDATION_MESSAGES.required),
           })
         )
         .test(
@@ -1096,7 +1096,7 @@ export function FormEditForm({
               applicationDate: "",
               applicationStatusId: "",
               statusDate: "",
-              appointmentTypeId: "", //  fix this key name
+              // appointmentTypeId: "", //  fix this key name
             })
           }
         >
@@ -1112,7 +1112,7 @@ export function FormEditForm({
   <td className="">Application Date</td>
   <td className="">Application Status</td>
   <td className=""> Status Date</td>
-  <td className="">Appointment Type</td>
+  {/* <td className="">Appointment Type</td> */}
   <td className="">Signed File</td>
   <td className="">Active Vacancy</td>
   <td className="text-right">Action</td>
@@ -1295,7 +1295,7 @@ export function FormEditForm({
                       </td>
 
                       {/* Appointment Type */}
-                      <td>
+                      {/* <td>
                         <SearchSelect
                           name={`details_applicant_vacancy[${index}].appointmentTypeId`}
                           className="form-control"
@@ -1327,7 +1327,7 @@ export function FormEditForm({
                               {errors.details_applicant_vacancy[index].appointmentTypeId}
                             </div>
                           )}
-                      </td>
+                      </td> */}
 
                       {/* Signed File */}
                       <td>
