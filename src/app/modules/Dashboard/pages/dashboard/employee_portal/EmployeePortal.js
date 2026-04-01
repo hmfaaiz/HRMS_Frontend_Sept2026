@@ -16,6 +16,7 @@ import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
 import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
 import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
+import { ReimbursementDetail } from "../EmpPortalComponent/ReimbursementDetail";
 import {
   Banknote,
   Bell,
@@ -245,9 +246,19 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
           ) : null}
           {moduleRights?.find((e) => e?.value == 7)?.allow ? (
             <ProjectManagement />
-          ) : null}
+          ) : null} 
         </div>
       ) : null}
+//Reimbursement
+<div className="flex flex-col md:flex-row gap-4">
+  <ReimbursementDetail
+    entities={
+      portalInfo?.reimbursementRequest?.length > 0
+        ? portalInfo?.reimbursementRequest
+        : []
+    }
+  />
+</div>
 
       {moduleRights?.find((e) => e?.value == 3)?.allow ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

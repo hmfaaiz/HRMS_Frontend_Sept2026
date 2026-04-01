@@ -493,6 +493,9 @@ import ("./modules/Customer_Configuration/pages/index"))
 const employee_temporary_shift_setup = lazy(() =>
 import ("./modules/Temporary_Shift_Setup/pages/index"))
 
+const reimbursement_claim_request = lazy (() =>
+import ("./modules/Reimbursement_Claim_Request/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -679,7 +682,8 @@ const ROUTES = {
   customer_user : customer_user,
   cash_payment_against_loan : cash_payment_against_loan,
   customer_config : customer_config,
-  temporary_shift_setup : employee_temporary_shift_setup
+  temporary_shift_setup : employee_temporary_shift_setup,
+  reimbursement_claim_request : reimbursement_claim_request,
 };
 
 export default function BasePage() {
