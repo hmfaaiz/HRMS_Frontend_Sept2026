@@ -223,7 +223,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         />
       ),
     },
-    { dataField: "ticketCode", text: "Ticket Code", style: { minWidth: "130px" } },
+    { dataField: "ticketCode", text: "Ticket Code", style: { minWidth: "70px" } },
     {
       dataField: "ticketType.formName",
       text: "Ticket Type",
@@ -236,7 +236,22 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     //   style: { minWidth: "120px" },
     //   formatter: (_, row) => row.priorityLevel?.formName || "N/A",
     // },
-    { dataField: "ticketDescription", text: "Description", style: { minWidth: "240px" } },
+    // { dataField: "ticketDescription", text: "Description", style: { minWidth: "100px" } },
+    {
+          dataField: "ticketDescription",
+          text: "Description",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "70px",
+          },
+          formatter: (cell) => {
+            if (!cell) return "";
+            return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+          },
+          },
+    
 //     {
 //       dataField: "Details[0].AssignToProfile.fullName",
 //       text: "Current Owner",
@@ -269,7 +284,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "ticketDate",
       text: "Ticket Date",
-      style: { minWidth: "50px" },
+      style: { minWidth: "70px" },
       formatter: (c) => c && format(new Date(c), "dd-MMM-yyyy"),
     },
 //     {
@@ -297,7 +312,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "Details[0].dueDate",
       text: "Due Date",
-      style: { minWidth: "50px" },
+      style: { minWidth: "70px" },
       formatter: (_, row) => {
   const lastDetail = row?.Details[0];
 
@@ -324,7 +339,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
   {
   dataField: "completionDate",
   text: "Completion Date",
-  style: { minWidth: "50px" },
+  style: { minWidth: "70px" },
   formatter: (_, row) => {
     const completionDate = row?.completionDate;
 
@@ -343,12 +358,12 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "Details[0].noOfHours",
       text: "Hours",
-      style: { minWidth: "50px" },
+      style: { minWidth: "30px" },
     },
     {
       dataField: "ticketStatus",
       text: "Status",
-      style: { minWidth: "120px" },
+      style: { minWidth: "70px" },
       formatter: (_, row) => {
   // const lastDetail = row?.Details?.[row?.Details.length - 1];
   return (
@@ -384,7 +399,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "50px",
+        minWidth: "70px",
       },
       formatter: (cell, row) => {
        
@@ -427,7 +442,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
-      style: { minWidth: "80px" },
+      style: { minWidth: "30px" },
     },
   ];
 
