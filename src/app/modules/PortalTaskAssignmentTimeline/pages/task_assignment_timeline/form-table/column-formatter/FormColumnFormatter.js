@@ -10,7 +10,7 @@ export function FormColumnFormatter(
   return (
     <div className="space-x-2">
 
-      {!showTicketDetails && (
+      {/* {!showTicketDetails && (
         <OverlayTrigger
           overlay={<Tooltip id={`detail-${row.Id}`}>Detail</Tooltip>}
         >
@@ -22,7 +22,7 @@ export function FormColumnFormatter(
             <LayoutList className="w-4 h-4 text-black cursor-pointer" />
           </button>
         </OverlayTrigger>
-      )}
+      )} */}
 
       <OverlayTrigger
         overlay={<Tooltip id={`timelog-${row.Id}`}>Detail Time Log</Tooltip>}
