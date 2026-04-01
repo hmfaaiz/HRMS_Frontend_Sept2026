@@ -539,7 +539,9 @@ const customer_config = lazy(() =>
 const tada_configuration = lazy(() =>
   import("./modules/Tada_Configuration/pages/index"),
 );
-
+const preapprovaltravelrequest = lazy(() =>
+  import("./modules/PreApproval_Travel_Request/pages/index"),
+);
 const employee_temporary_shift_setup = lazy(() =>
   import("./modules/Temporary_Shift_Setup/pages/index"),
 );
@@ -730,6 +732,7 @@ const ROUTES = {
   cash_payment_against_loan: cash_payment_against_loan,
   customer_config: customer_config,
   tada_config: tada_configuration,
+  preapproval_travel_request : preapprovaltravelrequest,
   temporary_shift_setup: employee_temporary_shift_setup,
 };
 

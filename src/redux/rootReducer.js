@@ -197,6 +197,7 @@ import { CustomerUserManagementSlice } from "../app/modules/Customer_User_Manage
 import { loanCashPaymentSlice } from "../app/modules/Cash_Payment_Against_Loan/_redux/redux-Slice";
 import { CustomerConfigurationSlice } from "../app/modules/Customer_Configuration/_redux/redux-Slice";
 import { tada_configurationSlice } from "../app/modules/Tada_Configuration/_redux/redux-Slice";
+import { preapproval_travel_requestSlice } from "../app/modules/PreApproval_Travel_Request/_redux/redux-Slice";
 import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
@@ -394,6 +395,7 @@ export const rootReducer = combineReducers({
   cash_payment_against_loan: loanCashPaymentSlice.reducer,
   customer_config: CustomerConfigurationSlice.reducer,
   t_tada_config: tada_configurationSlice.reducer,
+  t_preapproval_travel_request: preapproval_travel_requestSlice.reducer,
   temporary_shift_setup: employeeTempShiftSlice.reducer,
 });
 

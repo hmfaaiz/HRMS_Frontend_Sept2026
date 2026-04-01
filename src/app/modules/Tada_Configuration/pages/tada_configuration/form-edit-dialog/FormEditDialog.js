@@ -37,7 +37,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const saveForm = async (values) => {
     enableLoading();
 
-    // Clean up payload (remove metadata and supplemental objects that Joi rejects)
     const {
       Id,
       createdBy,
