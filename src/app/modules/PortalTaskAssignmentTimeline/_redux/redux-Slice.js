@@ -8,6 +8,9 @@ const initialState = {
   pdfLoading: false,
   csvLoading: false,
   excelLoading: false,
+  timeLogForEdit: undefined,
+   timeLogsTotalCount: 0,
+    timelogsEntities: null,
 };
 
 export const callTypes = {
@@ -50,6 +53,29 @@ export const portalTaskAssignmentTimelineSlice = createSlice({
       state.excelLoading = false;
       state.lastError = null;
     },
+
+      TimeLogFetchedForEdit: (state, action) => {
+
+
+            state.actionsLoading = false;
+            state.timeLogForEdit = action.payload.timeLogForEdit;
+            state.error = null;
+        },
+
+
+          FacilitatorTimeLogDetailFetched: (state, action) => {
+            state.listLoading = false;
+            state.error = null;
+
+            // Backend se data aa raha hai (single object OR array)
+            const data = action.payload;
+
+
+            state.listLoading = false;
+            state.error = null;
+            state.timelogsEntities = data || [];
+            state.timeLogsTotalCount = data.length; // total number of details
+        },
     pdfFetched: (state) => { state.pdfLoading = false; },
     csvFetched: (state) => { state.csvLoading = false; },
     excelFetched: (state) => { state.excelLoading = false; },

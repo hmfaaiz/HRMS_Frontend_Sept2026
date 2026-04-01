@@ -145,7 +145,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         isForAlert: formData.isForAlert,
         alertFromDate: formData.alertFromDate,
         alertEndDate: formData.alertEndDate,
-
+        isSelf: formData.isSelf,
 
 
 

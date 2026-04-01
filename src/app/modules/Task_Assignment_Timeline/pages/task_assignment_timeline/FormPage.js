@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { TaskAssignmentTimelineUIProvider } from "./FormUIContext";
 import { FormCard } from "./form-card/FormCard";
 import { DetailData } from "./modal/DetailData";
-import { DetailTimeLog } from "../../../FacilitatorTicketCreation/pages/facilitatorTicketCreation/modal/DetailTimeLog";
+import { DetailTimeLog } from "./modal/DetailTimeLog";
 import { FormUIProvider } from "../../../FacilitatorTicketCreation/pages/facilitatorTicketCreation/FormUIContext";
 
 export function FormPage({ history }) {
@@ -60,7 +60,7 @@ export function FormPage({ history }) {
       </Route>
 
       {/* Detail Time Log modal route */}
-      <Route path="/task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
+      {/* <Route path="/task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
         {({ history, match }) => (
           <FormUIProvider FormUIEvents={facilitatorFormUIEvents}>
             <DetailTimeLog
@@ -72,7 +72,24 @@ export function FormPage({ history }) {
             />
           </FormUIProvider>
         )}
-      </Route>
+      </Route> */}
+
+<Route path="/task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
+  {({ history, match }) => {
+    const show = match != null;
+    const detailId = match?.params.detailId;
+
+    return (
+      <DetailTimeLog
+        show={show}
+        detailId={detailId}
+        onHide={() =>
+          history.push("/task_assignment_timeline/read-all-task-assignment-timeline")
+        }
+      />
+    );
+  }}
+</Route>
 
       <FormCard />
 

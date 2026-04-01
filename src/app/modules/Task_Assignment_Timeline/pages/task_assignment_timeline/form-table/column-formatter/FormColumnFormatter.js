@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { FolderClock, LayoutList } from "lucide-react";
+import { FolderClock, LayoutList, Pencil, Trash2 } from "lucide-react";
 export function FormColumnFormatter(
   cellContent,
   row,
@@ -10,7 +10,7 @@ export function FormColumnFormatter(
   return (
     <div className="space-x-2">
 
-      {!showTicketDetails && (
+      {/* {!showTicketDetails && (
         <OverlayTrigger
           overlay={<Tooltip id={`detail-${row.Id}`}>Detail</Tooltip>}
         >
@@ -22,7 +22,7 @@ export function FormColumnFormatter(
             <LayoutList className="w-4 h-4 text-black cursor-pointer" />
           </button>
         </OverlayTrigger>
-      )}
+      )} */}
 
       <OverlayTrigger
         overlay={<Tooltip id={`timelog-${row.Id}`}>Detail Time Log</Tooltip>}
@@ -30,7 +30,7 @@ export function FormColumnFormatter(
         <button
           type="button"
           onClick={() => {
-            const detailId = row.Details?.[0]?.Id;
+            const detailId = row.Id;
             if (detailId) {
               openDetailTimeLog(detailId);
             }
@@ -41,6 +41,51 @@ export function FormColumnFormatter(
         </button>
       </OverlayTrigger>
 
+    </div>
+  );
+}
+
+export function TimeLogsColumnFormatter(
+  cellContent,
+  row,
+  rowIndex,
+  { openDeleteHandler, setReceiveMode, setReadMode, setId, setDetailId, openEditHandler }
+) {
+  return (
+    <div className="space-x-2">
+
+{row?.MasterDetailTimeLog?.ticketStatus != 0 && (
+  <>
+
+   <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            openEditHandler(row.Id, row.detailId);
+          }}
+
+          style={{ background: 'none', border: 'none', padding: 0 }}
+        >
+          <Pencil className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+
+
+
+
+
+      <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
+        <a onClick={() => openDeleteHandler(row.Id, row.detailId)}>
+          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+        </a>
+      </OverlayTrigger>
+  </>
+
+        )
+}
+     
     </div>
   );
 }
