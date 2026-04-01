@@ -30,7 +30,7 @@ export function FormCard() {
       csvLoading: state?.ticket_setup?.csvLoading,
       excelLoading: state?.ticket_setup?.excelLoading,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   const accessUser = userAccess?.find(
@@ -48,7 +48,7 @@ export function FormCard() {
     };
 
     await dispatch(actions.fetchTickets(updatedQueryParams));
-    
+
     // Reset the export flags after download completes
     updatedQueryParams = {
       ...formUIProps.queryParams,
@@ -120,7 +120,46 @@ export function FormCard() {
           }
         />
       </div>
+      <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "red",
+              display: "inline-block",
+            }}
+          ></span>
+          <span className="text-xs">High</span>
+        </div>
 
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "orange",
+              display: "inline-block",
+            }}
+          ></span>
+          <span className="text-xs">Medium</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "green",
+              display: "inline-block",
+            }}
+          ></span>
+          <span className="text-xs">Low</span>
+        </div>
+      </div>
       <FormTable />
     </TCard>
   );

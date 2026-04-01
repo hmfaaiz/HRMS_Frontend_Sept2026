@@ -112,9 +112,9 @@ export function ReceiveFIlter({ listLoading, user }) {
   const ticketStatusOptions = [
 
     { value: 1, label: "Open" },
-    { value: 0, label: "Completed" },
-    { value: 3, label: "Re-opened" },
-    { value: 2, label: "Send for Review" },
+    { value: 0, label: "Completed by owner" },
+    // { value: 3, label: "Re-opened" },
+    // { value: 2, label: "Send for Review" },
   ];
   return (
     <>

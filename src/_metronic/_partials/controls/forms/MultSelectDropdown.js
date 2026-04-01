@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import Select, { components } from "react-select";
 import { makeStyles } from "@material-ui/core";
 
@@ -11,6 +11,42 @@ const useStyles = makeStyles(() => ({
     color: "#374151",
   },
 }));
+
+// ── Moved OUTSIDE to prevent recreation on every render ──────────────────────
+
+const MultiValue = () => null;
+
+const ClearIndicator = (props) => {
+  const selected = props.getValue();
+  if (selected?.length > 0) {
+    return <components.ClearIndicator {...props} />;
+  }
+  return null;
+};
+
+const ValueContainer = ({ children, selectProps, ...props }) => {
+  const selectedValues = props.getValue();
+
+  return (
+    <components.ValueContainer {...props} selectProps={selectProps}>
+      {selectedValues.length > 0 ? (
+        <div
+          title={selectedValues.map((v) => v?.label).join(", ")}
+          onClick={() => selectProps.onMenuOpen?.()} // ← change this line
+          className="text-[10.4px] text-gray-700 truncate whitespace-nowrap overflow-hidden mr-8"
+        >
+          {selectedValues.map((v) => v?.label).join(", ")}
+        </div>
+      ) : (
+        children
+      )}
+    </components.ValueContainer>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+const CUSTOM_COMPONENTS = { MultiValue, ValueContainer, ClearIndicator };
 
 const MultiSelect = ({
   label,
@@ -25,23 +61,16 @@ const MultiSelect = ({
 }) => {
   const wrapperRef = useRef(null);
   const selectRef = useRef(null);
-
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // CLOSE on outside click (works in modal too)
+  // Close on outside click (works in modal too)
   useEffect(() => {
     const handler = (e) => {
       if (!wrapperRef.current) return;
-
-      // if click is outside wrapper => close
       if (!wrapperRef.current.contains(e.target)) {
         setMenuOpen(false);
-
-        // also blur select (extra safety)
-        if (selectRef.current?.blur) selectRef.current.blur();
       }
     };
-
     document.addEventListener("mousedown", handler, true);
     return () => document.removeEventListener("mousedown", handler, true);
   }, []);
@@ -62,55 +91,25 @@ const MultiSelect = ({
       onChange([]);
       return;
     }
-
-    // ALL selected
     if (selected.some((opt) => opt.value === "")) {
-      onChange([...options?.filter((el) => !el?.isDisabled)]); //  clone
+      onChange([...options?.filter((el) => !el?.isDisabled)]);
       return;
     }
-
-    onChange([...selected]); // clone
+    onChange([...selected]);
   };
 
-  /* ---------- Custom Value Container (FIX) ---------- */
-  const ValueContainer = ({ children, ...props }) => {
-    const selectedValues = props.getValue();
-
-    return (
-      <components.ValueContainer {...props}>
-        {selectedValues.length > 0 ? (
-          <div
-            title={selectedValues?.map((v) => v?.label)?.join(", ")}
-            onClick={(e) => setMenuOpen(!menuOpen)}
-            className="text-[10.4px] text-gray-700 truncate whitespace-nowrap overflow-hidden mr-8"
-          >
-            {selectedValues?.map((v) => v?.label)?.join(", ")}
-          </div>
-        ) : (
-          children
-        )}
-      </components.ValueContainer>
-    );
-  };
-
-  /* ---------- Hide badges ---------- */
-  const MultiValue = () => null;
-
-  // Show clear button whenever at least 1 value is selected
-  const ClearIndicator = (props) => {
-    if (value?.length > 0) {
-      return <components.ClearIndicator {...props} />;
-    }
-    return null;
-  };
+  // Passed via selectProps so ValueContainer can toggle without closure issues
+  const handleMenuToggle = useCallback(() => {
+    setMenuOpen((prev) => !prev);
+  }, []);
 
   const customStyles = {
-    control: (base, state) => ({
+    control: (base) => ({
       ...base,
-      border: error ? "0.5px solid #000000" : "0.5px solid #000000", // same border always
-      backgroundColor: disabled ? "#e6f8ff" : "#e6f8ff",
+      border: error && touched ? "0.5px solid #f64e60" : "0.5px solid #000000",
+      backgroundColor: "#e6f8ff",
       fontSize: "10.4px",
-      "&:hover": { borderColor: error ? "#000000" : "#000000" }, // matches default border
+      "&:hover": { borderColor: error && touched ? "#f64e60" : "#000000" },
       boxShadow: "none",
       minHeight: "initial",
       borderRadius: "0.32rem",
@@ -145,8 +144,7 @@ const MultiSelect = ({
       "&:active": { backgroundColor: "#000000", color: "white" },
       cursor: state.isDisabled ? "not-allowed" : "pointer",
     }),
-    multiValue: (base) => ({ ...base, display: "none", fontSize: "10.4px" }), // hide badges
-    // CUSTOM INDICATOR STYLES
+    multiValue: (base) => ({ ...base, display: "none", fontSize: "10.4px" }),
     clearIndicator: (base) => ({
       ...base,
       padding: "0px 1px",
@@ -194,13 +192,11 @@ const MultiSelect = ({
         onMenuClose={() => setMenuOpen(false)}
         onFocus={() => setMenuOpen(true)}
         onBlur={() => setMenuOpen(false)}
-        components={{
-          MultiValue,
-          ValueContainer,
-          ClearIndicator,
-        }}
+        onMenuToggle={handleMenuToggle} // custom prop consumed by ValueContainer
+        components={CUSTOM_COMPONENTS} // stable reference — never recreated
         {...props}
       />
+
       {error && touched ? (
         <div className="invalid-feedback">{error}</div>
       ) : null}

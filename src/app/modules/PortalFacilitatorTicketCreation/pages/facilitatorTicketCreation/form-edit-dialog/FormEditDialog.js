@@ -78,10 +78,17 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   const saveForm = async (formData, clearForm) => {
-
+   
+    // AlertWork26326 {
     formData.noOfHours = parseFloat(formData.noOfHours)
     formData.dueDate = formatDates(formData?.dueDate, "yyyy-MM-dd");
-    formData.ticketDate = formatDates(new Date(), "yyyy-MM-dd");
+    formData.ticketDate = formatDates(formData?.ticketDate, "yyyy-MM-dd");
+    formData.alertFromDate = formatDates(formData?.alertFromDate, "yyyy-MM-dd");
+    formData.alertEndDate = formatDates(formData?.alertEndDate, "yyyy-MM-dd");
+    formData.isSelf = Number(formData.assignByToBeSelected) === Number(formData.assignTo);
+  
+    // formData.ticketDate = formatDates(new Date(), "yyyy-MM-dd");
+    // AlertWork26326 }
 
     formUIProps.setId("");
 
@@ -137,6 +144,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         assignBy: formData.assignBy,
         ticketStatus: formData.ticketStatus,
 
+        isForAlert: formData.isForAlert,
+        alertFromDate: formData.alertFromDate,
+        alertEndDate: formData.alertEndDate,
+        isSelf: formData.isSelf,
 
 
 

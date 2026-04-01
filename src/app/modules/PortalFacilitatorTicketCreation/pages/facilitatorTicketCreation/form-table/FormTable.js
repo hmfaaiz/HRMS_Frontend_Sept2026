@@ -42,14 +42,16 @@ export function FormTable() {
       setMasterId: formUIContext.setMasterId,
       setDetailId: formUIContext.setDetailId,
       detailId: formUIContext.detailId,
+      employeeId: formUIContext.employeeId,
 
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess, user } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       userAccess: state?.auth?.userAccess["portal_ticket_creation"],
+      user: state?.auth?.user,
     };
   }, shallowEqual);
 
@@ -62,8 +64,16 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setId([]);
 
-    dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
-  }, [formUIProps.queryParams, dispatch, totalCount]);
+    // dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
+
+    dispatch(
+      actions.fetchTicketCreations
+        ({
+          ...formUIProps.queryParams,
+          employeeId: formUIProps.employeeId,
+        })
+    );
+  }, [formUIProps.queryParams, formUIProps.employeeId, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateFacilitatorTicketCreation"
@@ -131,9 +141,9 @@ export function FormTable() {
       style: {
         minWidth: "30px",
       },
-      formatter: (cell) => {
+       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -148,7 +158,7 @@ export function FormTable() {
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -163,7 +173,7 @@ export function FormTable() {
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -176,9 +186,9 @@ export function FormTable() {
       style: {
         minWidth: "70px",
       },
-      formatter: (cell) => {
+        formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
 
 
@@ -195,28 +205,28 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "70px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
-    {
-      dataField: "AssignToProfile.department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
+    // {
+    //   dataField: "AssignToProfile.department.deptName",
+    //   text: "Department",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "100px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+    //   },
+    // },
 
     {
       dataField: "AssignToProfile.designation.formName",
@@ -225,11 +235,11 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "40px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -241,9 +251,9 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "50px",
       },
-      formatter: (cell,row) => {
+      formatter: (cell, row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -254,10 +264,10 @@ export function FormTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.ticketDate);
+        const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
-       
+
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
@@ -275,11 +285,11 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "50px",
       },
-      formatter: (cell) => {
+       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
 
 
@@ -294,13 +304,12 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "50px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
-
 
 
 
@@ -314,11 +323,11 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "20px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
 
 
@@ -334,7 +343,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "20px",
       },
       formatter: (cell) => {
         if (cell === null || cell === undefined) return "";
@@ -357,7 +366,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "50px",
       },
       formatter: (cell, row) => {
         if (!cell) return "";
@@ -368,10 +377,10 @@ export function FormTable() {
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(row.ticketDate);
+        const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
-       
+
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
@@ -409,7 +418,7 @@ export function FormTable() {
         // setIsFileReq : formUIProps.setIsFileReq,
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
-
+        user,
 
 
       },

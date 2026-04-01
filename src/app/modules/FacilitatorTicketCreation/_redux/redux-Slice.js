@@ -86,6 +86,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
                     ticketCode: parent.ticketCode,
+                    isPermanent:parent.ticketStatus==0   
                 })));
 
             state.listLoading = false;
@@ -171,7 +172,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
             state.actionsLoading = false;
             state.error = null;
             // state.entities.unshift(action.payload);
-            if (action.payload.receiver) {
+            if (action.payload.receiver || action.payload.isSelf) {
                 state.receiveEntities.unshift(action.payload);
             } else {
                 state.entities.unshift(action.payload);

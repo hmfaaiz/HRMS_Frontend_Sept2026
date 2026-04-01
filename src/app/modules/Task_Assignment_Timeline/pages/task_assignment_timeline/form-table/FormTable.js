@@ -3,16 +3,22 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
 import * as actions from "../../../_redux/redux-Actions";
+import { Pagination } from "../../../../../../_metronic/_partials/controls";
+import paginationFactory, {
+  PaginationProvider,
+} from "react-bootstrap-table2-paginator";
 import {
   getHandlerTableChange,
+  headerSortingClasses,
   NoRecordsFoundMessage,
   PleaseWaitMessage,
+  sortCaret,
 } from "../../../../../../_metronic/_helpers";
 import { format } from "date-fns";
 import { FormColumnFormatter } from "./column-formatter/FormColumnFormatter";
 import { getUploadUrl } from "../../../../../utils/common";
 import axios from "axios";
-
+import * as uiHelpers from "../FormUIHelpers";
 const API_URL = process.env.REACT_APP_API_URL;
 
 async function fetchAllDetails(masterId) {
@@ -158,7 +164,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     shallowEqual
   );
 
-  const { entities, listLoading } = currentState || {};
+  const { totalCount, entities, listLoading } = currentState || {};
 
   useEffect(() => {
     if (uiProps.queryParams.isFiltered) {
@@ -194,10 +200,11 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
   };
 
   const getPriorityColor = (row) =>
-    row.Details?.[0]?.color ||
+    row?.Details?.[0]?.color ||
     priorityLevels.find((p) => p.value === row.priorityLevelId)?.color ||
     "#808080";
 
+  
   const columns = [
     { dataField: "Id", text: "ID", hidden: true },
     {
@@ -220,89 +227,195 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "ticketType.formName",
       text: "Ticket Type",
-      style: { minWidth: "140px" },
+      style: { minWidth: "100px" },
       formatter: (_, row) => row.ticketType?.formName || "N/A",
     },
-    {
-      dataField: "priorityLevel.formName",
-      text: "Priority",
-      style: { minWidth: "120px" },
-      formatter: (_, row) => row.priorityLevel?.formName || "N/A",
-    },
+    // {
+    //   dataField: "priorityLevel.formName",
+    //   text: "Priority",
+    //   style: { minWidth: "120px" },
+    //   formatter: (_, row) => row.priorityLevel?.formName || "N/A",
+    // },
     { dataField: "ticketDescription", text: "Description", style: { minWidth: "240px" } },
+//     {
+//       dataField: "Details[0].AssignToProfile.fullName",
+//       text: "Current Owner",
+//       style: { minWidth: "160px" },
+//      formatter: (_, row) => {
+//       const lastDetail = row.Details?.[row.Details.length - 1];
+//       return lastDetail?.AssignToProfile?.fullName || "";
+// },
+//     },
+//there should be deligation fields
     {
-      dataField: "Details[0].AssignToProfile.fullName",
-      text: "Current Owner",
-      style: { minWidth: "160px" },
+      dataField: "Details[0].AssignByProfile.fullName",
+      text: "Assign By",
+      style: { minWidth: "100px" },
      formatter: (_, row) => {
-      const lastDetail = row.Details?.[row.Details.length - 1];
+      const lastDetail = row?.Details?.[row?.Details.length - 1];
+      return lastDetail?.AssignByProfile?.fullName || "";
+}
+}, 
+
+{
+      dataField: "Details[0].AssignToProfile.fullName",
+      text: "Assign To",
+      style: { minWidth: "100px" },
+     formatter: (_, row) => {
+      const lastDetail = row?.Details?.[row?.Details.length - 1];
       return lastDetail?.AssignToProfile?.fullName || "";
+}
 },
-    },
     {
       dataField: "ticketDate",
       text: "Ticket Date",
-      style: { minWidth: "130px" },
+      style: { minWidth: "50px" },
       formatter: (c) => c && format(new Date(c), "dd-MMM-yyyy"),
     },
+//     {
+//       dataField: "Details[0].dueDate",
+//       text: "Due Date",
+//       style: { minWidth: "50px" },
+//       formatter: (_, row) => {
+//   const lastDetail = row?.Details?.[row?.Details.length - 1];
+//   const dueDate = lastDetail?.dueDate;
+
+//   if (!dueDate) return "";
+//   const due = new Date(dueDate);
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0);
+//   due.setHours(0, 0, 0, 0);
+//   const isOverdue = due < today;
+//   return (
+//     <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
+//       {format(due, "dd-MMM-yyyy")}
+//     </span>
+//   );
+// },
+//     }, 
+    
     {
       dataField: "Details[0].dueDate",
       text: "Due Date",
-      style: { minWidth: "130px" },
+      style: { minWidth: "50px" },
       formatter: (_, row) => {
-  const lastDetail = row.Details?.[row.Details.length - 1];
-  const dueDate = lastDetail?.dueDate;
+  const lastDetail = row?.Details[0];
 
+ const dueDate = new Date (lastDetail?.dueDate);
   if (!dueDate) return "";
   const due = new Date(dueDate);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  due.setHours(0, 0, 0, 0);
-  const isOverdue = due < today;
+         dueDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        const createdDate = new Date(lastDetail.createdAt);
+        createdDate.setHours(0, 0, 0, 0);
+
+     
+       
+        const isOverdue = dueDate < today && dueDate < createdDate || dueDate < today && lastDetail.ticketStatus != 0;
+
   return (
     <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
       {format(due, "dd-MMM-yyyy")}
     </span>
   );
 },
-    },
+    },    
+  {
+  dataField: "completionDate",
+  text: "Completion Date",
+  style: { minWidth: "50px" },
+  formatter: (_, row) => {
+    const completionDate = row?.completionDate;
+
+    if (!completionDate) return "";
+
+    const date = new Date(completionDate);
+    date.setHours(0, 0, 0, 0);
+
+    return (
+      <span>
+        {format(date, "dd-MMM-yyyy")}
+      </span>
+    );
+  },
+},
     {
       dataField: "Details[0].noOfHours",
       text: "Hours",
-      style: { minWidth: "100px" },
+      style: { minWidth: "50px" },
     },
     {
       dataField: "ticketStatus",
       text: "Status",
       style: { minWidth: "120px" },
       formatter: (_, row) => {
-  const lastDetail = row.Details?.[row.Details.length - 1];
+  // const lastDetail = row?.Details?.[row?.Details.length - 1];
   return (
     ticketStatusOptions.find(
-      (s) => s.value === lastDetail?.ticketStatus
+      (s) => s.value === row?.ticketStatus
     )?.label || ""
   );
 },
     },
-    {
-      dataField: "overdue",
+//     {
+//       dataField: "overdue",
+//       text: "",
+//       isDummyField: true,
+//       style: { minWidth: "50px" },
+//       formatter: (_, row) => {
+//         const lastDetail = row?.Details?.[row?.Details.length - 1];
+// const dueDate = lastDetail?.dueDate;
+//         if (!dueDate) return "";
+//         const due = new Date(dueDate);
+//         const today = new Date();
+//         today.setHours(0, 0, 0, 0);
+//         due.setHours(0, 0, 0, 0);
+//       return due < today ? (
+//   <span style={{ color: "red", fontWeight: 600 }}>Over Due</span>
+// ) : null;
+//       },
+//     },
+   
+   {
+      dataField: "overDue",
       text: "",
-      isDummyField: true,
-      style: { minWidth: "50px" },
-      formatter: (_, row) => {
-        const lastDetail = row.Details?.[row.Details.length - 1];
-const dueDate = lastDetail?.dueDate;
-        if (!dueDate) return "";
-        const due = new Date(dueDate);
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+      formatter: (cell, row) => {
+       
+        if (!row) return "";
+       const lastDetail = row?.Details[0];
+        const dueDate = new Date (lastDetail.dueDate);
         const today = new Date();
+
+        // Reset time (compare only the date)
+        dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        due.setHours(0, 0, 0, 0);
-      return due < today ? (
-  <span style={{ color: "red", fontWeight: 600 }}>Over Due</span>
-) : null;
+        const createdDate = new Date(lastDetail.createdAt);
+        createdDate.setHours(0, 0, 0, 0);
+
+     
+       
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && lastDetail.ticketStatus != 0;
+
+        return (
+          <>
+            {isExpiredOrToday && (
+              <span style={{ color: "red", fontWeight: 600, marginLeft: "5px" }}>
+                Over Due
+              </span>
+            )}
+          </>
+        );
       },
     },
-    {
+
+{
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -355,8 +468,24 @@ const dueDate = lastDetail?.dueDate;
         expandByColumnOnly: true,
       };
 
+ 
+        const paginationOptions = {
+          custom: true,
+          totalSize: totalCount,
+          sizePerPageList: uiHelpers.sizePerPageList,
+          sizePerPage: uiProps.queryParams.pageSize,
+          page: uiProps.queryParams.pageNumber,
+        };
+    console.log("tableData111111",tableData)
   return (
     <div className="timeline-scroll-wrapper">
+          <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+              {({ paginationProps, paginationTableProps }) => {
+                return (
+                  <Pagination
+                    isLoading={listLoading}
+                    paginationProps={paginationProps}
+                  >
       <BootstrapTable
         wrapperClasses=""
         bordered={false}
@@ -368,10 +497,16 @@ const dueDate = lastDetail?.dueDate;
         columns={columns}
         expandRow={expandRow}
         onTableChange={getHandlerTableChange(uiProps.setQueryParams)}
+          {...paginationTableProps}
       >
         <PleaseWaitMessage entities={tableData} />
         {!tableData.length && <NoRecordsFoundMessage entities={tableData} />}
       </BootstrapTable>
+           </Pagination>
+
+                    );
+                   }}
+                 </PaginationProvider>
     </div>
   );
 }

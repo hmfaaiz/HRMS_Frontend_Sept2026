@@ -91,6 +91,7 @@ export function ResponseColumnFormatter(
 
   let isOverdue = false;
   isOverdue = dueDate < today;
+  console.log("row111111111",row)
   return (
     <div className="space-x-2">
       {/* {isOverdue && (
@@ -99,7 +100,7 @@ export function ResponseColumnFormatter(
         </span>
       )} */}
 
-{(row?.ticketStatus !=0) && (
+{(!row?.isPermanent) && (
      <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Response</Tooltip>}
       >
@@ -154,7 +155,7 @@ export function ResponseColumnFormatter(
         </button>
       </OverlayTrigger>
 
-      {(row?.ticketStatus !=0) && (
+    {(!row?.isPermanent) && (
 
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}

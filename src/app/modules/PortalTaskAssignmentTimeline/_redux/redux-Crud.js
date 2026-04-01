@@ -9,3 +9,9 @@ export function getTaskAssignmentTimeline(body) {
   };
   return axios.post(`${API_URL}/portal_task_assignment_timeline/read-all-task-assignment-timeline`, body, config);
 }
+
+
+export function getAllFacilitatorTimeLogDetail(Id) {
+
+  return axios.get(`${API_URL}/portal_task_assignment_timeline/read-all-facilitator-timelog-detail/${Id}`);
+}

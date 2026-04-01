@@ -180,10 +180,10 @@ export function DetailTable() {
 
 
     },
-
+// AlertWork26326 {
 {
       dataField: "ticketDate",
-      text: "Created Date",
+      text: "Start Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -196,6 +196,8 @@ export function DetailTable() {
         return format(new Date(cell), "dd-MMM-yyyy");
       },
     },
+
+    // AlertWork26326 }
     {
       dataField: "dueDate",
       text: "Due Date",

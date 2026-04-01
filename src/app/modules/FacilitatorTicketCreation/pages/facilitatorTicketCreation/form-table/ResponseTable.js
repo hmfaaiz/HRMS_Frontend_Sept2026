@@ -272,7 +272,7 @@ export function ResponseTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.ticketDate);
+         const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
        
@@ -389,7 +389,7 @@ export function ResponseTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.ticketDate);
+         const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
        
@@ -440,6 +440,8 @@ export function ResponseTable() {
     sizePerPage: formUIProps.queryParams.pageSize,
     page: formUIProps.queryParams.pageNumber,
   };
+
+
 
   return (
     <div className="w-full overflow-x-auto">

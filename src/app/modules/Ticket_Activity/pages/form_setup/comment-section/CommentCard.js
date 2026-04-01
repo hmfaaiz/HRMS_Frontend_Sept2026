@@ -11,15 +11,15 @@ export default function CommentCard({
   userId,
 }) {
   const employee = data?.Employee;
-
   const employeeName = employee
-    ? `${employee?.firstName ||
-        ""}${employee?.middleName ? " " + employee.middleName : ""}${
-        employee?.lastName ? " " + employee.lastName : ""
-      }`.trim()
+    ? `${employee?.firstName || ""}${
+        employee?.middleName ? " " + employee.middleName : ""
+      }${employee?.lastName ? " " + employee.lastName : ""}`.trim()
+    : data?.customerUserId
+    ? `${data?.CustomerUser?.name}`
     : "Unknown";
 
-  const employeeCode = employee?.employeeCode || "";
+  const employeeCode = employee?.employeeCode || "Customer";
 
   const createdAt = data?.createdAt ? new Date(data.createdAt) : null;
   const updatedAt = data?.updatedAt ? new Date(data.updatedAt) : null;

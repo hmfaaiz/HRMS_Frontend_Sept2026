@@ -9,6 +9,7 @@ const { actions } = ticketSetupPortalSlice;
 export const fetchTickets = (queryParams) => async (dispatch) => {
   // PDF Export
   // PDF Export
+  if (!queryParams?.filter?.projectId) return;
   if (queryParams.pdf) {
     dispatch(actions.startCall({ callType: callTypes.pdf }));
     return requestFromServer

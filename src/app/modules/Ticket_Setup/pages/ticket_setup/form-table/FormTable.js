@@ -85,12 +85,29 @@ export function FormTable() {
   // Table columns
   const columns = [
     {
-      dataField: "Project.projectName",
-      text: "Project",
+      dataField: "priority",
+      text: "",
       sort: false,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "100px" },
+      style: { minWidth: "5px" },
+      formatter: (cell) => {
+        const color = PriorityType?.find((e) => e.value == cell)?.color;
+
+        return (
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <span
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: color,
+                display: "inline-block",
+              }}
+            ></span>
+          </span>
+        );
+      },
     },
     {
       dataField: "ticketCode",
@@ -118,16 +135,6 @@ export function FormTable() {
       formatter: (cell) =>
         cell ? TicketType?.find((e) => e.value == cell)?.label : "",
     },
-    {
-      dataField: "priority",
-      text: "Priority",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "60px" },
-      formatter: (cell) =>
-        cell ? PriorityType?.find((e) => e.value == cell)?.label : "",
-    },
 
     {
       dataField: "TicketStatus.statusName",
@@ -152,6 +159,8 @@ export function FormTable() {
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "130px" },
+      formatter: (cell, row) =>
+        row?.customerUserId ? `${row?.CustomerUser?.name} (Customer)` : cell,
     },
     {
       dataField: "action",

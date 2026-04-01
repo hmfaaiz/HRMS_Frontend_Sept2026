@@ -81,18 +81,18 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
       </div>
       <div className="text-right w-full flex justify-end">
         {data?.data.length > 0 ? (
-          <lable
+          <label
             className={`text-black cursor-pointer w-fit font-medium underline text-xs hover:text-tprimary flex justify-end`}
             onClick={() => setSmallTableModalData(data)}
           >
             Expand
-          </lable>
+          </label>
         ) : (
-          <lable
+          <label
             className={`text-gray-500 cursor-not-allowed w-fit font-medium text-xs flex justify-end`}
           >
             Expand
-          </lable>
+          </label>
         )}
       </div>
     </div>
