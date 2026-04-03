@@ -114,6 +114,7 @@ const initialDashboardState = {
   portalInfo : {},
   allCompanyEmployeesData: [],
   allCurrentParentTask: [],
+  allAlertTask: [],
 };
 
 export const callTypes = {
@@ -476,6 +477,11 @@ export const dashboardSlice = createSlice({
 
    AllCurrentParentTaskFetched: (state, action) => {
       state.allCurrentParentTask = action.payload;
+    },  
+    
+    AllAlertTaskFetched: (state, action) => {
+      state.allAlertTask = action.payload;
+      console.log("state.allAlertTask111111",state.allAlertTask)
     },
 
   }

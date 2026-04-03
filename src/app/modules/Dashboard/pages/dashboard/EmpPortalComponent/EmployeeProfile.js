@@ -7,6 +7,7 @@ import useWindowSize from "../../../../../utils/useWindowSize";
 import { AttendanceMarking } from "./AttendanceMarking";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { Link } from "react-router-dom";
 
 const renderInfoGrid = (data, fields) => (
   <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
@@ -36,9 +37,20 @@ const EmployeeProfile = ({
     (state) => ({
       role: state?.auth?.user?.role,
       employeeId: state?.auth?.user?.employeeIdMapping,
+
+
     }),
     shallowEqual,
   );
+
+  const { allAlertTask, portal_ticket_creation } = useSelector((state) => {
+    return {
+      allAlertTask: state.dashboard.allAlertTask,
+      portal_ticket_creation: state?.auth?.userAccess.portal_ticket_creation,
+
+    };
+  }, shallowEqual);
+
 
   useEffect(() => {
     let data = JSON.parse(sessionStorage.getItem("profile_info"));
@@ -47,6 +59,7 @@ const EmployeeProfile = ({
     } else {
       setProfileInfo(data);
     }
+    dispatch(action.fetchAllAlertTasks());
   }, []);
 
   useEffect(() => {
@@ -89,11 +102,10 @@ const EmployeeProfile = ({
             >
               <button
                 onClick={() => updateCompactView()}
-                className={`p-1 rounded-sm transition-colors duration-200 w-7 h-7 border-none flex items-center justify-center ${
-                  isCompactView
-                    ? "bg-tprimary text-white"
-                    : "bg-gray-300 text-black hover:bg-gray-400"
-                }`}
+                className={`p-1 rounded-sm transition-colors duration-200 w-7 h-7 border-none flex items-center justify-center ${isCompactView
+                  ? "bg-tprimary text-white"
+                  : "bg-gray-300 text-black hover:bg-gray-400"
+                  }`}
               >
                 <LayoutGrid className="w-4 h-4" />
               </button>
@@ -105,11 +117,10 @@ const EmployeeProfile = ({
             >
               <button
                 onClick={() => updateCompactView()}
-                className={`p-1 rounded-sm transition-colors duration-200 w-7 h-7 border-none flex items-center justify-center ${
-                  !isCompactView
-                    ? "bg-tprimary text-white"
-                    : "bg-gray-300 text-black hover:bg-gray-400"
-                }`}
+                className={`p-1 rounded-sm transition-colors duration-200 w-7 h-7 border-none flex items-center justify-center ${!isCompactView
+                  ? "bg-tprimary text-white"
+                  : "bg-gray-300 text-black hover:bg-gray-400"
+                  }`}
               >
                 <Maximize2 className="w-4" />
               </button>
@@ -183,9 +194,8 @@ const EmployeeProfile = ({
                   {width < 1280 && (
                     <ChevronUp
                       onClick={() => setIsOpen((prev) => !prev)}
-                      className={`w-5 h-5 font-bold cursor-pointer ${
-                        isOpen ? "rotate-180" : ""
-                      }`}
+                      className={`w-5 h-5 font-bold cursor-pointer ${isOpen ? "rotate-180" : ""
+                        }`}
                     />
                   )}
                 </div>
@@ -203,9 +213,9 @@ const EmployeeProfile = ({
                         "Reporting To",
                         profileInfo?.profileInfo?.ReportTo
                           ? `${profileInfo?.profileInfo?.ReportTo?.firstName ||
-                              ""} ${profileInfo?.profileInfo?.ReportTo
+                            ""} ${profileInfo?.profileInfo?.ReportTo
                               ?.middleName || ""} ${profileInfo?.profileInfo
-                              ?.ReportTo?.lastName || ""}`.trim()
+                                ?.ReportTo?.lastName || ""}`.trim()
                           : null,
                       ],
                       ["Grade", profileInfo?.profileInfo?.grade?.formName],
@@ -265,7 +275,7 @@ const EmployeeProfile = ({
           </div>
 
           {/* Emergency Contact */}
-          {isOpen && (
+          {/* {isOpen && (
             <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
               <h6 className="font-bold mb-0 text-primary my-2">
                 Emergency Contact
@@ -280,6 +290,58 @@ const EmployeeProfile = ({
                 <p className="text-sm mb-0">No Contact Info Found</p>
               )}
             </div>
+          )} */}
+
+
+
+          {isOpen && portal_ticket_creation?.length > 0 && allAlertTask?.rows?.length > 0  && (
+
+            <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
+
+
+              <div className="font-size-xs text-black font-bold">
+
+                <h6 className="font-bold mb-0 text-primary my-2 underline">
+                  <Link to="/portal_ticket_creation/read-all-facilitator-ticket-creation">
+                    Task Reminder
+                  </Link>
+                </h6>
+              </div>
+
+
+              {allAlertTask?.rows?.length > 0 ? (
+                <>
+                  {/* Header Row */}
+                  <div className="grid grid-cols-3 gap-2 font-semibold border-b pb-1 mb-2 text-gray-700 text-xs">
+                    <span className="truncate">Ticket Code</span>
+                    <span className="truncate">Ticket Description</span>
+                    <span className="truncate">Due Date</span>
+                  </div>
+
+                  {/* Data Rows */}
+                  {allAlertTask.rows.map((item, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-3 gap-2 border-b py-2 text-gray-800 text-xs"
+                    >
+                      <span className="truncate font-medium">{item.ticketCode || "N/A"}</span>
+
+                      <span className="truncate font-medium pointer" title={item.ticketDescription}>
+                        {item.ticketDescription
+                          ? item.ticketDescription.length > 15
+                            ? item.ticketDescription.substring(0, 15) + "..."
+                            : item.ticketDescription
+                          : "N/A"}
+                      </span>
+
+                      <span className="truncate">{item.dueDate || "N/A"}</span>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <p className="text-sm mb-0">No Data Found</p>
+              )}
+            </div>
           )}
         </>
       ) : (
@@ -292,51 +354,114 @@ const EmployeeProfile = ({
 export default EmployeeProfile;
 
 const TeamCardCompact = ({ team, setAttModalData }) => {
+
+  const { allAlertTask, portal_ticket_creation } = useSelector((state) => {
+    return {
+      allAlertTask: state.dashboard.allAlertTask,
+      portal_ticket_creation: state?.auth?.userAccess.portal_ticket_creation,
+
+    };
+  }, shallowEqual);
   return (
-    <div className="bg-white rounded-lg px-3 py-6 space-y-3 relative w-full row-span-2 h-fit">
-      {/* Left section: Icon and label */}
-      <div className="p-3">
-        <UsersRound strokeWidth={0.5} className="w-24 h-24 text-tprimary" />
-      </div>
-      <div className="p-3 flex justify-between items-center mt-3">
-        <span className="text-tprimary font-bold text-base sm:text-xl py-1 flex items-center truncate line-clamp-1">
-          Team Members
-        </span>
-        <span className="text-tprimary  text-base sm:text-2xl font-extrabold py-1 flex items-center truncate line-clamp-1">
-          {team?.length}
-        </span>
+    <>
+      <div className="bg-white rounded-lg px-3 py-6 space-y-3 relative w-full row-span-2 h-fit">
+        {/* Left section: Icon and label */}
+        <div className="p-3">
+          <UsersRound strokeWidth={0.5} className="w-24 h-24 text-tprimary" />
+        </div>
+        <div className="p-3 flex justify-between items-center mt-3">
+          <span className="text-tprimary font-bold text-base sm:text-xl py-1 flex items-center truncate line-clamp-1">
+            Team Members
+          </span>
+          <span className="text-tprimary  text-base sm:text-2xl font-extrabold py-1 flex items-center truncate line-clamp-1">
+            {team?.length}
+          </span>
+        </div>
+
+        <div className="p-3 flex gap-14 justify-start items-center mt-3">
+          <span
+            onClick={() =>
+              setAttModalData(
+                team?.filter((e) =>
+                  e?.t_attendances[0]?.status.includes("Present"),
+                ),
+              )
+            }
+            className="text-white rounded-full cursor-pointer bg-green-600 px-5 py-3 text-md font-semibold text-center"
+          >
+            Present{" "}
+            {team?.filter((e) => e?.t_attendances[0]?.status.includes("Present"))
+              ?.length || 0}
+          </span>
+          <span
+            onClick={() =>
+              setAttModalData(
+                team?.filter(
+                  (e) => !e?.t_attendances[0]?.status.includes("Present"),
+                ),
+              )
+            }
+            className="text-white rounded-full btn-danger cursor-pointer px-5 py-3 text-md font-semibold text-center"
+          >
+            Absents{" "}
+            {team?.filter((e) => !e?.t_attendances[0]?.status.includes("Present"))
+              ?.length || 0}
+          </span>
+        </div>
+
+
+
       </div>
 
-      <div className="p-3 flex gap-14 justify-start items-center mt-3">
-        <span
-          onClick={() =>
-            setAttModalData(
-              team?.filter((e) =>
-                e?.t_attendances[0]?.status.includes("Present"),
-              ),
-            )
-          }
-          className="text-white rounded-full cursor-pointer bg-green-600 px-5 py-3 text-md font-semibold text-center"
-        >
-          Present{" "}
-          {team?.filter((e) => e?.t_attendances[0]?.status.includes("Present"))
-            ?.length || 0}
-        </span>
-        <span
-          onClick={() =>
-            setAttModalData(
-              team?.filter(
-                (e) => !e?.t_attendances[0]?.status.includes("Present"),
-              ),
-            )
-          }
-          className="text-white rounded-full btn-danger cursor-pointer px-5 py-3 text-md font-semibold text-center"
-        >
-          Absents{" "}
-          {team?.filter((e) => !e?.t_attendances[0]?.status.includes("Present"))
-            ?.length || 0}
-        </span>
-      </div>
-    </div>
+      {portal_ticket_creation?.length > 0 && allAlertTask?.rows?.length > 0  && (
+        <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
+
+
+          <div className="font-size-xs text-black font-bold">
+
+            <h6 className="font-bold mb-0 text-primary my-2 underline">
+              <Link to="/portal_ticket_creation/read-all-facilitator-ticket-creation">
+                Task Reminder
+              </Link>
+            </h6>
+          </div>
+
+
+          {allAlertTask?.rows?.length > 0 ? (
+            <>
+              {/* Header Row */}
+              <div className="grid grid-cols-3 gap-2 font-semibold border-b pb-1 mb-2 text-gray-700 text-xs">
+                <span className="truncate">Ticket Code</span>
+                <span className="truncate">Ticket Description</span>
+                <span className="truncate">Due Date</span>
+              </div>
+
+              {/* Data Rows */}
+              {allAlertTask.rows.map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-3 gap-2 border-b py-2 text-gray-800 text-xs"
+                >
+                  <span className="truncate font-medium">{item.ticketCode || "N/A"}</span>
+
+                  <span className="truncate font-medium pointer" title={item.ticketDescription}>
+                    {item.ticketDescription
+                      ? item.ticketDescription.length > 15
+                        ? item.ticketDescription.substring(0, 15) + "..."
+                        : item.ticketDescription
+                      : "N/A"}
+                  </span>
+
+                  <span className="truncate">{item.dueDate || "N/A"}</span>
+                </div>
+              ))}
+            </>
+          ) : (
+            <p className="text-sm mb-0">No Data Found</p>
+          )}
+
+        </div>
+      )}
+    </>
   );
 };
