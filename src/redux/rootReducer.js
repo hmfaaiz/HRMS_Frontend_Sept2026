@@ -201,6 +201,7 @@ import { tada_configurationSlice } from "../app/modules/Tada_Configuration/_redu
 import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
 import { projectSprintSlice } from "../app/modules/Project_Sprint/_redux/redux-Slice";
 
+import { ReimbursementApprovalSlice } from "../app/modules/Reimbursement_Claim_Approval/_redux/redux-Slice"
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -396,6 +397,7 @@ export const rootReducer = combineReducers({
   customer_config : CustomerConfigurationSlice.reducer,
   reimbursement_claim_request : ReimbursementClaimSlice.reducer,
   t_tada_config: tada_configurationSlice.reducer,
+  reimbursement_claim_approval: ReimbursementApprovalSlice.reducer,
   temporary_shift_setup: employeeTempShiftSlice.reducer,
   project_sprint : projectSprintSlice.reducer,
 });

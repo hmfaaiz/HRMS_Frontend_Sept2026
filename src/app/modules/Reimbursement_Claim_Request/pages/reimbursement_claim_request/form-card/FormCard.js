@@ -84,10 +84,10 @@ export function FormCard() {
   const menuOptions = [
     {
       name: "Approval",
-      link: "/reimbursement_approval/read-all-reimbursement-approval",
+      link: "/reimbursement_claim_approval/read-all-reimbursement-claim-approval",
       isShow: loan?.find(
         (el) =>
-          el?.componentName === "ReadAllReimbursementApproval" &&
+          el?.componentName === "ReadAllReimbursementClaimApproval" &&
           el?.isResourceShow
       ),
     },
