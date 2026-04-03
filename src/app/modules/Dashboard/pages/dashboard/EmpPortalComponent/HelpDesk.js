@@ -12,7 +12,7 @@ export const HelpDesk = () => {
     shallowEqual
   );
 
-  console.log("portal_ticket_creation111111", portal_ticket_creation)
+
   return (
     <>
       <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">

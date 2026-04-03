@@ -1351,7 +1351,7 @@ export function FormEditForm({
                           type="checkbox"
                           disabled={
                             isdataForRead ||
-                            values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                            // values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                             selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
                           }
                           checked={values.details_applicant_vacancy?.[index]?.activeCV}

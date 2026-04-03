@@ -907,3 +907,17 @@ export const fetchCurrentParentTask = () => async (dispatch) => {
       dispatch(actions.AllCurrentParentTaskFetched({}));
     });
 };
+
+export const fetchAllAlertTasks = () => async (dispatch) => {
+  
+  return await requestFromServer
+    .getAllAlertTasks()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllAlertTaskFetched(entities));
+      return entities;
+    })
+    .catch((error) => {
+      dispatch(actions.getAllAlertTasks({}));
+    });
+};
