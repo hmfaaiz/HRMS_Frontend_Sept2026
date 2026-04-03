@@ -16,14 +16,14 @@ export function ReimbursementDetail({ entities }) {
     (el) =>
       el?.componentName === "ReadAllReimbursementClaimRequest" &&
       el?.portalType == 2 &&
-      el?.isResourceShow,
+      el?.isActive,
   );
 
   const isReimbursementApproval = reimbursement_claim_approval?.find(
     (el) =>
       el?.componentName === "ReadAllReimbursementClaimApproval" &&
       el?.portalType == 2 &&
-      el?.isResourceShow,
+      el?.isActive,
   );
 
   return (
