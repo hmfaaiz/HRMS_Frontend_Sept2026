@@ -196,9 +196,10 @@ import { TaskConfigurationSlice } from "../app/modules/TaskConfiguration/_redux/
 import { CustomerUserManagementSlice } from "../app/modules/Customer_User_Management/_redux/redux-Slice";
 import { loanCashPaymentSlice } from "../app/modules/Cash_Payment_Against_Loan/_redux/redux-Slice";
 import { CustomerConfigurationSlice } from "../app/modules/Customer_Configuration/_redux/redux-Slice";
-import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
 import { ReimbursementClaimSlice } from "../app/modules/Reimbursement_Claim_Request/_redux/redux-Slice";
 import { tada_configurationSlice } from "../app/modules/Tada_Configuration/_redux/redux-Slice";
+import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
+import { projectSprintSlice } from "../app/modules/Project_Sprint/_redux/redux-Slice";
 
 import { ReimbursementApprovalSlice } from "../app/modules/Reimbursement_Claim_Approval/_redux/redux-Slice"
 export const rootReducer = combineReducers({
@@ -394,10 +395,11 @@ export const rootReducer = combineReducers({
   customer_user_management : CustomerUserManagementSlice.reducer,
   cash_payment_against_loan : loanCashPaymentSlice.reducer,
   customer_config : CustomerConfigurationSlice.reducer,
-  temporary_shift_setup : employeeTempShiftSlice.reducer,
   reimbursement_claim_request : ReimbursementClaimSlice.reducer,
   t_tada_config: tada_configurationSlice.reducer,
   reimbursement_claim_approval: ReimbursementApprovalSlice.reducer,
+  temporary_shift_setup: employeeTempShiftSlice.reducer,
+  project_sprint : projectSprintSlice.reducer,
 });
 
 export function* rootSaga() {

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Formik, Form, Field } from "formik";
 import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
@@ -6,6 +6,8 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
 import { FileText, FileSpreadsheet, Sheet, CirclePlus } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { fetchAllEmployeesWithNoPermissionData } from "../../../../../../_metronic/redux/dashboardActions";
+import { useDispatch, useSelector } from "react-redux";
 export function FormFilter({
   employees = [],
   ticketTypes = [],
@@ -18,7 +20,7 @@ export function FormFilter({
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
-
+  const dispatch = useDispatch();
   const uiProps = useMemo(
     () => ({
       queryParams: uiContext.queryParams || {},
@@ -73,12 +75,25 @@ export function FormFilter({
     onPrint(type);
   };
 
+    const {
+      allEmployeesWithNoPermissionList,
+    
+    } = useSelector((state) => state.dashboard);
+  useEffect(() => {
+    dispatch(
+      fetchAllEmployeesWithNoPermissionData("allEmployeesWithNoPermissionList"),
+    );
+  }, [dispatch]);
+  const allEmployeesMap = useMemo(() => {
+    return new Map(allEmployeesWithNoPermissionList?.map((item) => [item.value, item]));
+  }, [allEmployeesWithNoPermissionList]);
   return (
     <Formik
       enableReinitialize
       initialValues={{
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
-        ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
+        // ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
+        ticketStatus: 1,
         priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
         ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
         ticketDateFrom: uiProps.queryParams?.filter?.ticketDateFrom || null,
@@ -96,8 +111,11 @@ export function FormFilter({
           <Form className="form form-label-right">
             <fieldset>
               <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6 sm:col-span-3">
+              <div className="grid grid-cols-12 gap-4 mb-2 ">
+ 
+
+
+             <div className="col-span-6 sm:col-span-2">
                   <MultiSelect
                     name="ticketTypeIds"
                     label="Ticket Type"
@@ -113,7 +131,7 @@ export function FormFilter({
                     }
                   />
                 </div>
-                <div className="col-span-6 sm:col-span-3">
+               <div className="col-span-6 sm:col-span-2">
                   <MultiSelect
                     name="priorityLevelIds"
                     label="Priority Level"
@@ -129,7 +147,7 @@ export function FormFilter({
                     }
                   />
                 </div>
-                <div className="col-span-6 sm:col-span-3">
+              <div className="col-span-6 sm:col-span-2">
                   <SearchSelect
                     name="ticketStatus"
                     label="Ticket Status"
@@ -150,7 +168,7 @@ export function FormFilter({
                     }
                   />
                 </div>
-                <div className="col-span-6 sm:col-span-3">
+              <div className="col-span-6 sm:col-span-2">
                   <label className="form-label">Ticket Description</label>
                   <Field
                     name="ticketDescription"
@@ -159,6 +177,36 @@ export function FormFilter({
                     placeholder="Ticket Description"
                   />
                 </div>
+                      <div className="col-span-6 sm:col-span-2">
+                         <Field
+                           name="employeeId"
+                           component={SearchSelect}
+                          
+                           onChange={(e) => {
+                             const value = e.value == "All" ? "" : e.value;
+                             setFieldValue("employeeId", value);
+                           }}
+                           label={<span>Employee</span>}
+                           // value={
+                           //   allEmployeesMap?.get(values?.reportTo || "") || ""
+                           // }
+                           value={
+                             values.employeeId === ""
+                               ? { label: "All", value: "" }
+                               : allEmployeesMap?.get(values.employeeId) || ""
+                           }
+                           autoComplete="off"
+                           // options={allEmployees}
+                           options={[
+                             { label: "All", value: "" },
+                             ...(Array.isArray(allEmployeesWithNoPermissionList)
+                               ? allEmployeesWithNoPermissionList
+                               : []),
+                           ]}
+                         />
+                       </div>
+                </div>
+                  <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-12 sm:col-span-6">
                   <p className="text-sm mb-0 text-black font-semibold">
                     Start Date falling between
@@ -203,7 +251,7 @@ export function FormFilter({
                     />
                   </div>
                 </div>
-              </div>
+       </div>
             </fieldset>
           </Form>
 
