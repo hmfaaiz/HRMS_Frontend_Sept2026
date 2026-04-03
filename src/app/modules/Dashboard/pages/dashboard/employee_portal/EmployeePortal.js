@@ -24,6 +24,7 @@ import {
   ChevronRight,
   FileUser,
   FolderCheck,
+  Receipt, 
   TrendingUpDown,
   UserCheck,
   UserRoundX,
@@ -149,6 +150,7 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
                 attendanceApprovalCount={portalInfo?.attApproval || 0}
                 loanApprovalCount={portalInfo?.loanApproval || 0}
                 resignationApprovalCount={portalInfo?.resignApproval || 0}
+                reimbursementApprovalCount={portalInfo?.reimbursementPending || 0}
                 moduleRights={moduleRights}
               />
               <ReportingEmpTable
@@ -249,7 +251,7 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
           ) : null} 
         </div>
       ) : null}
-      
+
       <div className="flex flex-col md:flex-row gap-4">
         {moduleRights?.find((e) => e?.value == 4)?.allow ? (
           <ReimbursementDetail />
@@ -286,6 +288,8 @@ const CompactView = ({
     company_doc_portal,
     portal_ticket_creation,
     ticket_setup_portal,
+    reimbursement_claim_request,
+    reimbursement_claim_approval,
   } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
@@ -297,6 +301,8 @@ const CompactView = ({
       company_doc_portal: state?.auth?.userAccess.company_doc_portal,
       portal_ticket_creation: state?.auth?.userAccess.portal_ticket_creation,
       ticket_setup_portal: state?.auth?.userAccess["ticket_setup_portal"],
+      reimbursement_claim_request: state?.auth?.userAccess["reimbursement_claim_request"],
+      reimbursement_claim_approval: state?.auth?.userAccess["reimbursement_claim_approval"],
     }),
     shallowEqual,
   );
@@ -391,6 +397,18 @@ const CompactView = ({
       el?.portalType == 2,
   );
 
+  const isReimbursementRequest = reimbursement_claim_request?.find(
+  (el) =>
+    el?.componentName === "ReadAllReimbursementClaimRequest" &&
+    el?.portalType == 2 &&
+    el?.isResourceShow,
+);
+const isReimbursementApproval = reimbursement_claim_approval?.find(
+  (el) =>
+    el?.componentName === "ReadAllReimbursementClaimApproval" &&
+    el?.portalType == 2 &&
+    el?.isResourceShow,
+);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 ">
       {/* Attendance Request */}
@@ -431,6 +449,23 @@ const CompactView = ({
           link={"/loan_request/read-all-loan-request"}
         />
       ) : null}
+      {/* Reimbursement Claim */}
+      {moduleRights?.find((e) => e?.value == 4)?.allow &&
+      isReimbursementRequest ? (
+        <CompactViewCard
+          Icon={Receipt}
+          name={"Reimbursement"}
+          count={portalInfo?.reimbursementPending}
+          countLink={
+            isReimbursementApproval
+              ? "/reimbursement_claim_approval/read-all-reimbursement-claim-approval"
+              : false
+          }
+          link={
+            "/reimbursement_claim_request/read-all-reimbursement-claim-request"
+          }
+        />
+      ) : null}
       {/* Seperation Request  */}
       {moduleRights?.find((e) => e?.value == "separation")?.allow &&
       isAccessForResignationRequest ? (
@@ -444,10 +479,11 @@ const CompactView = ({
               : false
           }
           link={
-      portalInfo?.allowResignationRequest === 0 || portalInfo?.allowResignationRequest === false
-        ? "/resignation_approval/read-all-resignation-approval"  // disabled ---- go to approval
-        : "/employee_resignation/read-all-resignation"            // enabled ---- go to submission
-    }
+            portalInfo?.allowResignationRequest === 0 ||
+            portalInfo?.allowResignationRequest === false
+              ? "/resignation_approval/read-all-resignation-approval" // disabled ---- go to approval
+              : "/employee_resignation/read-all-resignation" // enabled ---- go to submission
+          }
         />
       ) : null}
       {/* Appraisal Evaluation */}

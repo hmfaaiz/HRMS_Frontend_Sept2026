@@ -5,14 +5,16 @@ export const PendingRequestSelf = ({
   leaveApprovalCount,
   loanApprovalCount,
   resignationApprovalCount,
+  reimbursementApprovalCount,
   moduleRights,
 }) => {
-  const { leave, loan, attendance, resignation } = useSelector(
+  const { leave, loan, attendance, resignation, reimbursement_claim_approval } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
       loan: state?.auth?.userAccess["Payroll"],
       attendance: state?.auth?.userAccess["Attendance"],
       resignation: state?.auth?.userAccess["Resignation"],
+      reimbursement_claim_approval: state?.auth?.userAccess["reimbursement_claim_approval"],
     }),
     shallowEqual,
   );
@@ -50,11 +52,23 @@ export const PendingRequestSelf = ({
       el?.componentName === "ReadAllResignationWorkflowStatus" &&
       el?.isResourceShow,
   );
+  const isReimbursementApproval = reimbursement_claim_approval?.find(
+  (el) =>
+    el?.componentName === "ReadAllReimbursementClaimApproval" &&
+    el?.isResourceShow,
+);
+
+const isReimbursementWorkflowStatus = reimbursement_claim_approval?.find(
+  (el) =>
+    el?.componentName === "ReadAllReimbursementClaimWorkflowStatus" &&
+    el?.isResourceShow,
+);
 
   return (
     <>
       {moduleRights?.find((e) => e?.value == 3)?.allow ||
       moduleRights?.find((e) => e?.value == 2)?.allow ||
+      moduleRights?.find((e) => e?.value == 4)?.allow ||
       moduleRights?.find((e) => e?.value == 4)?.allow ||
       moduleRights?.find((e) => e?.value == "separation")?.allow ? (
         <div className="p-3 rounded-lg bg-white w-full flex flex-col max-h-max sm:max-h-56 overflow-y-auto justify-between">
@@ -157,6 +171,40 @@ export const PendingRequestSelf = ({
                     ) : (
                       <label className="opacity-50 cursor-not-allowed">
                         Workflow Status{" "}
+                      </label>
+                    )}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+            {moduleRights?.find((e) => e?.value == 4)?.allow ? (
+              <div className="bg-tsecondary font-weight-bolder w-full px-4 py-3 rounded-lg d-flex gap-2 sm:gap-5 lg:gap-11 flex-column justify-content-between">
+                <div className="text-primary d-flex justify-content-between">
+                  <h6 className="m-0 text-lg font-bold">Reimbursement</h6>
+                  <h6 className="m-0 text-lg font-bold">
+                    {reimbursementApprovalCount}
+                  </h6>
+                </div>
+                <div className="font-size-xs flex flex-col max-sm:flex-row max-sm:gap-4 text-black mt-2">
+                  <p className="m-0 underline">
+                    {isReimbursementApproval ? (
+                      <a href="/reimbursement_claim_approval/read-all-reimbursement-claim-approval">
+                        Request Approval
+                      </a>
+                    ) : (
+                      <label className="opacity-50 cursor-not-allowed">
+                        Request Approval
+                      </label>
+                    )}
+                  </p>
+                  <p className="m-0 underline">
+                    {isReimbursementWorkflowStatus ? (
+                      <a href="/reimbursement_claim_workflow_status/read-all-reimbursement-claim-workflow-status">
+                        Workflow Status
+                      </a>
+                    ) : (
+                      <label className="opacity-50 cursor-not-allowed">
+                        Workflow Status
                       </label>
                     )}
                   </p>
