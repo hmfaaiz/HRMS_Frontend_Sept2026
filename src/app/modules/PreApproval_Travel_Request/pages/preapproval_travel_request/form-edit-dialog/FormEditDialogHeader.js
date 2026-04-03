@@ -8,14 +8,14 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
 
   const { userForEdit, actionsLoading } = useSelector(
     (state) => ({
-      userForEdit: state.t_tada_config.userForEdit,
-      actionsLoading: state.t_tada_config.actionsLoading,
+      userForEdit: state.t_preapproval_travel_request.userForEdit,
+      actionsLoading: state.t_preapproval_travel_request.actionsLoading,
     }),
     shallowEqual
   );
 
   useEffect(() => {
-    let _title = id ? "Edit TADA Configuration" : "Add TADA Configuration";
+    let _title = id ? "Edit PreApproval Travel Request" : "Add PreApproval Travel Request";
     setTitle(_title);
   }, [id, userForEdit, actionsLoading]);
 
@@ -24,7 +24,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {isUserForRead ? "View TADA Configuration" : title}
+          {isUserForRead ? "View PreApproval Travel Request" : title}
         </Modal.Title>
       </Modal.Header>
     </>

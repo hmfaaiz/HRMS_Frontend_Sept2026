@@ -16,7 +16,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
 
   const dispatch = useDispatch();
   const { isLoading } = useSelector(
-    (state) => ({ isLoading: state.t_tada_config.actionsLoading }),
+    (state) => ({ isLoading: state.t_preapproval_travel_request.actionsLoading }),
     shallowEqual,
   );
 
@@ -34,11 +34,11 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
     }
   }, [id, onHide, show]);
 
-  const deleteTadaConfig = () => {
+  const deletePreApprovalTravelRequest = () => {
     enableLoading();
-    dispatch(actions.deleteTadaConfig(id)).then(() => {
+    dispatch(actions.deletePreApprovalTravelRequest(id)).then(() => {
       onHide();
-      dispatch(actions.fetchTadaConfigs(usersUIProps.queryParams));
+      dispatch(actions.fetchPreApprovalTravelRequests(usersUIProps.queryParams));
       disableLoading();
     });
   };
@@ -71,7 +71,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteTadaConfig}
+            onClick={deletePreApprovalTravelRequest}
             className="btn btn-danger"
           >
             Delete

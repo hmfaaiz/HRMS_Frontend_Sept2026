@@ -9,14 +9,16 @@ export function EmployeeSelect({
   setEmployeeId,
   panelMode,
   setPanelMode,
+  onCancel,
+  disabled = false,
 }) {
   const dispatch = useDispatch();
-  
+
   const { allEmployees } = useSelector(
     (state) => ({
       allEmployees: state.dashboard.allEmployees,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   return (
@@ -46,7 +48,9 @@ export function EmployeeSelect({
                     }
                   }}
                   value={
-                    allEmployees?.find((opt) => opt.value === values.employeeId) || null
+                    allEmployees?.find(
+                      (opt) => opt.value === values.employeeId,
+                    ) || null
                   }
                   options={[
                     { label: "Select", value: "" },
@@ -58,15 +62,18 @@ export function EmployeeSelect({
                       : []),
                   ]}
                   isSearchable={true}
+                  isDisabled={disabled}
                 />
               </div>
 
               {/* Action Buttons */}
-              <div className="col-span-12 md:col-span-8 lg:col-span-9 flex flex-wrap gap-2 mt-4 md:mt-0 pb-[2px]">
+              <div className="col-span-12 md:col-span-8 lg:col-span-9 flex flex-wrap items-center gap-2 mt-4 md:mt-0 pb-[2px]">
                 {/* View Details Button */}
                 <button
                   type="button"
-                  className={`btn ${panelMode ? "btn-light" : "btn-primary"} d-flex align-items-center gap-2`}
+                  className={`btn ${
+                    panelMode ? "btn-light" : "btn-primary"
+                  } d-flex align-items-center gap-2`}
                   onClick={() => setPanelMode(!panelMode)}
                 >
                   {panelMode ? (
@@ -107,6 +114,18 @@ export function EmployeeSelect({
                   <History className="w-4 h-4" />
                   Last Travel Details
                 </button>
+
+                {/* Close/Cross Button to Exit Mode */}
+                <div className="ml-auto">
+                  <button
+                    type="button"
+                    className="bg-transparent border-0 p-0 ml-2"
+                    onClick={onCancel}
+                    title="Close"
+                  >
+                    <XCircle className="w-5 h-5 text-black cursor-pointer" />
+                  </button>
+                </div>
               </div>
             </div>
           </Form>

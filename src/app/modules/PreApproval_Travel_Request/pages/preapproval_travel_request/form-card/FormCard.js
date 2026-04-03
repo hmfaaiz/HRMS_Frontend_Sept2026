@@ -9,10 +9,9 @@ import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashb
 import { getEmployeeProfileById } from "../../../../../../_metronic/redux/dashboardCrud";
 import { FormEditForm } from "../form-edit-dialog/FormEditForm";
 import { FormTable } from "../form-table/FormTable";
-import { ApprovalCard } from "../approval-card/ApprovalCard";
 import { FormFilter } from "../form-filter/FormFilter";
-import { CirclePlus } from "lucide-react";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { CirclePlus, XCircle } from "lucide-react";
+import * as actions from "../../../_redux/redux-Actions";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -20,7 +19,13 @@ export function FormCard() {
   const [employeeError, setEmployeeError] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [editRowData, setEditRowData] = useState(null);
-  
+  const [isViewMode, setIsViewMode] = useState(false);
+  const [viewRowData, setViewRowData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const enableLoading = () => setLoading(true);
+  const disableLoading = () => setLoading(false);
+
   const FormUIProps = useMemo(() => {
     return {
       panelMode: FormUIContext.panelMode,
@@ -85,6 +90,8 @@ export function FormCard() {
     setEmployeeError("");
     setIsEditMode(false);
     setEditRowData(null);
+    setIsViewMode(false);
+    setViewRowData(null);
     FormUIProps.setEmployeeId(null);
     FormUIProps.setPanelMode(false);
     FormUIProps.setUserForEdit({}); // Open form with empty object
@@ -94,8 +101,24 @@ export function FormCard() {
   const handleEditFromTable = (row) => {
     setIsEditMode(true);
     setEditRowData(row);
+    setIsViewMode(false);
+    setViewRowData(null);
     setEmployeeError("");
     FormUIProps.setUserForEdit(row);
+    FormUIProps.setEmployeeId(row.employeeId);
+    FormUIProps.setPanelMode(false);
+  };
+
+  // Handle View from table - opens read-only form
+  const handleViewFromTable = (row) => {
+    setIsViewMode(true);
+    setViewRowData(row);
+    setIsEditMode(false);
+    setEditRowData(null);
+    setEmployeeError("");
+    FormUIProps.setEmployeeId(row.employeeId);
+    FormUIProps.setUserForEdit(null);
+    FormUIProps.setPanelMode(false);
   };
 
   // Handle Cancel
@@ -106,6 +129,29 @@ export function FormCard() {
     setEmployeeError("");
     setIsEditMode(false);
     setEditRowData(null);
+    setIsViewMode(false);
+    setViewRowData(null);
+  };
+
+  const saveForm = (values) => {
+    enableLoading();
+    if (!values.id) {
+      dispatch(
+        actions.createPreApprovalTravelRequest(
+          values,
+          disableLoading,
+          handleCancel,
+        ),
+      );
+    } else {
+      dispatch(
+        actions.updatePreApprovalTravelRequest(
+          values,
+          disableLoading,
+          handleCancel,
+        ),
+      );
+    }
   };
 
   return (
@@ -128,11 +174,14 @@ export function FormCard() {
           </div>
         </div>
 
-        <FormTable onEditClick={handleEditFromTable} />
+        <FormTable
+          onEditClick={handleEditFromTable}
+          onViewClick={handleViewFromTable}
+        />
       </TCard>
 
       {/* Employee Selection and Form Card - Only shown when add button triggers it */}
-      {FormUIProps.userForEdit && !isEditMode && (
+      {FormUIProps.userForEdit && !isEditMode && !isViewMode && (
         <div className="px-3 py-2 rounded-lg bg-white mt-4">
           <div className="mb-4">
             <EmployeeSelect
@@ -140,6 +189,7 @@ export function FormCard() {
               setEmployeeId={FormUIProps.setEmployeeId}
               panelMode={FormUIProps.panelMode}
               setPanelMode={FormUIProps.setPanelMode}
+              onCancel={handleCancel}
             />
           </div>
 
@@ -155,19 +205,68 @@ export function FormCard() {
                 employeeId={FormUIProps.employeeId}
                 employeeDetails={employeeDetails}
                 onCancel={handleCancel}
+                saveForm={saveForm}
+                onHide={handleCancel}
+                disableLoading={disableLoading}
               />
             </>
           )}
-
         </div>
       )}
 
-      {/* Approval Card - Only shown when edit button is clicked */}
+      {/* Form - shown when edit button is clicked */}
       {isEditMode && editRowData && (
-        <div className="px-3 py-2 rounded-lg bg-white mt-4">
-          <ApprovalCard
-            userForEdit={editRowData}
+        <div className="px-3 py-2 rounded-lg bg-white mt-4 relative">
+          <div className="mb-4">
+            <EmployeeSelect
+              employeeId={editRowData.employeeId}
+              setEmployeeId={() => {}}
+              panelMode={FormUIProps.panelMode}
+              setPanelMode={FormUIProps.setPanelMode}
+              onCancel={handleCancel}
+              disabled={true}
+            />
+          </div>
+          <EmployeeProfile
+            employeeId={editRowData.employeeId}
+            panelMode={FormUIProps.panelMode}
+          />
+          <br />
+          <FormEditForm
+            employeeId={editRowData.employeeId}
+            employeeDetails={employeeDetails}
             onCancel={handleCancel}
+            saveForm={saveForm}
+            user={editRowData}
+            isReadOnly={false}
+          />
+        </div>
+      )}
+
+      {/* View Card - Read-only form shown when Eye icon is clicked */}
+      {isViewMode && viewRowData && (
+        <div className="px-3 py-2 rounded-lg bg-white mt-4 relative">
+          <div className="mb-4">
+            <EmployeeSelect
+              employeeId={viewRowData.employeeId}
+              setEmployeeId={() => {}}
+              panelMode={FormUIProps.panelMode}
+              setPanelMode={FormUIProps.setPanelMode}
+              onCancel={handleCancel}
+              disabled={true}
+            />
+          </div>
+          <EmployeeProfile
+            employeeId={viewRowData.employeeId}
+            panelMode={FormUIProps.panelMode}
+          />
+          <br />
+          <FormEditForm
+            employeeId={viewRowData.employeeId}
+            employeeDetails={employeeDetails}
+            onCancel={handleCancel}
+            user={viewRowData}
+            isReadOnly={true}
           />
         </div>
       )}

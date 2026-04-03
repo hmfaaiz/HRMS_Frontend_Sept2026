@@ -25,13 +25,13 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const dispatch = useDispatch();
   const { userForEdit } = useSelector(
     (state) => ({
-      userForEdit: state.t_tada_config?.userForEdit,
+      userForEdit: state.t_preapproval_travel_request?.userForEdit,
     }),
     shallowEqual,
   );
 
   useEffect(() => {
-    dispatch(actions.fetchTadaConfig(id));
+    dispatch(actions.fetchPreApprovalTravelRequest(id));
   }, [id, dispatch]);
 
   const saveForm = async (values) => {
@@ -72,10 +72,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     };
 
     if (!payload.id) {
-      dispatch(actions.createTadaConfig(payload, disableLoading, onHide));
+      dispatch(actions.createPreApprovalTravelRequest(payload, disableLoading, onHide));
     } else {
-      await dispatch(actions.updateTadaConfig(payload, disableLoading, onHide));
-      await dispatch(actions.fetchTadaConfigs(formUIProps.queryParams));
+      await dispatch(actions.updatePreApprovalTravelRequest(payload, disableLoading, onHide));
+      await dispatch(actions.fetchPreApprovalTravelRequests(formUIProps.queryParams));
     }
   };
 

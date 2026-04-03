@@ -3,6 +3,7 @@ import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
+import { fetchTadaConfigByEmployeeId } from "../../../_redux/redux-Actions";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
@@ -13,11 +14,23 @@ import DatePicker from "react-datepicker";
 import { Plus, Trash2, CirclePlus, Calendar } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
-export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
+export function FormEditForm({
+  employeeId,
+  employeeDetails,
+  onCancel,
+  saveForm,
+  onHide,
+  disableLoading,
+  user,
+  isReadOnly,
+}) {
   const dispatch = useDispatch();
-  const { dashboard } = useSelector(
+  const { dashboard, employeeEntitlement, auth } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
+      employeeEntitlement:
+        state.t_preapproval_travel_request.employeeEntitlement,
+      auth: state.auth,
     }),
     shallowEqual,
   );
@@ -31,6 +44,29 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
   }, [dispatch]);
+
+  const isRoleTravelApprover = useMemo(() => {
+    const roleId = String(auth?.user?.roleId || "").trim();
+    const preApprover = employeeEntitlement?.preApprover;
+
+    if (!roleId || !preApprover) return false;
+
+    const preApproverIds = Array.isArray(preApprover)
+      ? preApprover.map((id) => String(id).trim())
+      : String(preApprover)
+          .split(",")
+          .map((id) => id.trim());
+
+    return preApproverIds.includes(roleId);
+  }, [auth?.user?.roleId, employeeEntitlement?.preApprover]);
+
+  const effectiveEmployeeId = employeeId || user?.employeeId || user?.Id;
+
+  React.useEffect(() => {
+    if (effectiveEmployeeId) {
+      dispatch(fetchTadaConfigByEmployeeId(effectiveEmployeeId));
+    }
+  }, [effectiveEmployeeId, dispatch]);
 
   // Validation Schema
   const formValidation = Yup.object().shape({
@@ -47,7 +83,17 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
       .of(
         Yup.object().shape({
           fromLocation: Yup.string().required(VALIDATION_MESSAGES.required),
-          toLocation: Yup.string().required(VALIDATION_MESSAGES.required),
+          toLocation: Yup.string()
+            .required(VALIDATION_MESSAGES.required)
+            .test(
+              "different-locations",
+              "From and To locations cannot be the same",
+              function (value) {
+                const { fromLocation } = this.parent;
+                if (!value || !fromLocation) return true; // Skip if either is empty
+                return value !== fromLocation;
+              },
+            ),
           fromDate: Yup.date()
             .typeError(VALIDATION_MESSAGES.required)
             .required(VALIDATION_MESSAGES.required),
@@ -55,13 +101,12 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
             .typeError(VALIDATION_MESSAGES.required)
             .required(VALIDATION_MESSAGES.required)
             .min(Yup.ref("fromDate"), VALIDATION_MESSAGES.endDateError),
-          toLocation: Yup.string().required(VALIDATION_MESSAGES.required),
           modeOfTravel: Yup.string().required(VALIDATION_MESSAGES.required),
           classOfTravel: Yup.string().required(VALIDATION_MESSAGES.required),
           hotelEntitlement: Yup.string().when(
-            "accommodationRequired",
-            (accommodationRequired, schema) => {
-              return accommodationRequired
+            ["accommodationRequired", "selfEntitlement"],
+            (accommodationRequired, selfEntitlement, schema) => {
+              return accommodationRequired && !selfEntitlement
                 ? schema.required(VALIDATION_MESSAGES.required)
                 : schema.nullable();
             },
@@ -108,51 +153,77 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
       },
     ),
     travelRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
+    taxiFareRate: Yup.number().nullable(),
   });
 
-  const segmentTemplate = {
-    fromLocation: "",
-    toLocation: "",
-    fromDate: null,
-    toDate: null,
-    modeOfTravel: "",
-    classOfTravel: "",
-    accommodationRequired: false,
-    hotelEntitlement: "",
-    hotelEntitlementAmount: 0,
-    selfEntitlement: false,
-    selfAmount: 0,
-  };
+  // Combined Template logic for create/edit
+  const initialValues = useMemo(() => {
+    if (user && (user.Id || user.id)) {
+      return {
+        ...user,
+        advanceRequested: user.advanceRequired,
+        dailyAllowanceDays: Math.floor(user.dailyAllowanceDay || 0),
+        travelSegments:
+          user.Master?.map((m) => ({
+            fromLocation: m.fromLocationId,
+            toLocation: m.toLocationId,
+            fromDate: m.fromDate ? new Date(m.fromDate) : null,
+            toDate: m.toDate ? new Date(m.toDate) : null,
+            modeOfTravel: m.modeOfTravelId,
+            classOfTravel: m.classOfTravelId,
+            accommodationRequired: m.accomodationRequired,
+            hotelEntitlement: m.hotelEntitlementId,
+            hotelEntitlementAmount: m.hotelEntitlementAmount,
+            selfEntitlement: m.selfEntitlement,
+            selfAmount: m.selfAmount,
+          })) || [],
+        travelRemarks: user.travelRequestRemarks || "",
+      };
+    }
 
-  const initialValues = {
-    employeeId: employeeId || "",
-    purposeOfTravel: "",
-    projectName: "",
-    travelType: "",
-    dailyAllowanceRate: 0,
-    dailyAllowanceDays: 0,
-    dailyAllowanceAmount: 0,
-    advanceRequested: false,
-    advanceAmount: 0,
-    advanceRemarks: "",
-    taxiFareRate: 0,
-    travelSegments: [
-      { ...segmentTemplate },
-      { ...segmentTemplate }
-    ],
-    travelRemarks: "",
-  };
+    const segmentTemplate = {
+      fromLocation: "",
+      toLocation: "",
+      fromDate: null,
+      toDate: null,
+      modeOfTravel: "",
+      classOfTravel: "",
+      accommodationRequired: false,
+      hotelEntitlement: "",
+      hotelEntitlementAmount: 0,
+      selfEntitlement: false,
+      selfAmount: 0,
+    };
+
+    return {
+      employeeId: employeeId || "",
+      purposeOfTravel: "",
+      projectName: "",
+      travelType: "",
+      dailyAllowanceRate: 0,
+      dailyAllowanceDays: 0,
+      dailyAllowanceAmount: 0,
+      advanceRequested: false,
+      advanceAmount: 0,
+      advanceRemarks: "",
+      taxiFareRate: 0,
+      travelSegments: [{ ...segmentTemplate }, { ...segmentTemplate }],
+      travelRemarks: "",
+    };
+  }, [user, employeeId]);
 
   return (
     <div className="mt-4">
       <Formik
+        enableReinitialize={true}
         initialValues={initialValues}
         validationSchema={formValidation}
         onSubmit={(values) => {
           const payload = {
-            companyId: employeeDetails?.companyId,
-            subsidiaryId: employeeDetails?.subsidiaryId,
-            employeeId: employeeId,
+            id: user?.Id || user?.id,
+            companyId: employeeDetails?.companyId || user?.companyId,
+            subsidiaryId: employeeDetails?.subsidiaryId || user?.subsidiaryId,
+            employeeId: employeeId || user?.employeeId,
             purposeOfTravel: values.purposeOfTravel,
             projectName: values.projectName,
             travelType: values.travelType,
@@ -166,7 +237,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
               : "",
             travelRemarks: values.travelRemarks,
             taxiFareRate: values.taxiFareRate,
-            request_status: "P",
+            request_status: values.request_status || "P",
             Master: values.travelSegments.map((segment) => ({
               fromLocationId: segment.fromLocation,
               toLocationId: segment.toLocation,
@@ -182,21 +253,21 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
             })),
           };
 
-          const disableLoading = () => console.log("Loading disabled");
-          const onHide = () => console.log("Form hidden");
-
-          console.log("PAYLOAD:", payload);
-
-          dispatch(
-            actions.createPreApprovalTravelRequest(
-              payload,
-              disableLoading,
-              onHide,
-            ),
-          );
+          if (saveForm) {
+            saveForm(payload);
+          } else {
+            console.error("saveForm prop missing in FormEditForm");
+          }
         }}
       >
-        {({ values, setFieldValue, errors, touched }) => {
+        {({
+          isSubmitting,
+          values,
+          setFieldValue,
+          errors,
+          touched,
+          submitForm,
+        }) => {
           // Auto-calculation logic for Daily Allowance (Days and Amount)
           // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useEffect(() => {
@@ -228,6 +299,20 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
             }
           }, [values.travelSegments, values.dailyAllowanceDays, setFieldValue]);
 
+          // Round-Trip Synchronizer: Ensures last row destination = first row origin
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          React.useEffect(() => {
+            const length = values.travelSegments.length;
+            if (length > 1) {
+              const origin = values.travelSegments[0]?.fromLocation;
+              const lastDestination = values.travelSegments[length - 1]?.toLocation;
+
+              if (origin && lastDestination !== origin) {
+                setFieldValue(`travelSegments.${length - 1}.toLocation`, origin);
+              }
+            }
+          }, [values.travelSegments, setFieldValue]);
+
           // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useEffect(() => {
             const amount =
@@ -238,6 +323,57 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
             values.dailyAllowanceDays,
             setFieldValue,
           ]);
+
+          // Auto-populate from TADA Configuration
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          React.useEffect(() => {
+            if (employeeEntitlement && !(user?.Id || user?.id)) {
+              if (employeeEntitlement.dailyAllowanceAmount) {
+                setFieldValue(
+                  "dailyAllowanceRate",
+                  employeeEntitlement.dailyAllowanceAmount,
+                );
+              }
+              if (employeeEntitlement.taxiFareAmount) {
+                setFieldValue(
+                  "taxiFareRate",
+                  employeeEntitlement.taxiFareAmount,
+                );
+              }
+            }
+          }, [employeeEntitlement, user?.Id, user?.id, setFieldValue]);
+
+          const filteredTransportOptions = useMemo(() => {
+            if (
+              !employeeEntitlement ||
+              !employeeEntitlement.modeOfTransportId ||
+              !Array.isArray(employeeEntitlement.modeOfTransportId) ||
+              employeeEntitlement.modeOfTransportId.length === 0
+            )
+              return transportOptions;
+            return transportOptions.filter((opt) =>
+              employeeEntitlement.modeOfTransportId.includes(String(opt.value)),
+            );
+          }, [transportOptions, employeeEntitlement]);
+
+          const filteredHotelOptions = useMemo(() => {
+            if (
+              !employeeEntitlement ||
+              !employeeEntitlement.hotelEntitlementId ||
+              !Array.isArray(employeeEntitlement.hotelEntitlementId) ||
+              employeeEntitlement.hotelEntitlementId.length === 0
+            )
+              return hotelOptions;
+            return hotelOptions.filter((opt) =>
+              employeeEntitlement.hotelEntitlementId.includes(
+                String(opt.value),
+              ),
+            );
+          }, [hotelOptions, employeeEntitlement]);
+
+          const isPolicyDefined = !!employeeEntitlement && !isReadOnly;
+          const hasEntitlement = !!employeeEntitlement;
+          const isFormDisabled = !isPolicyDefined || !!isReadOnly;
 
           return (
             <Form className="form form-label-right">
@@ -254,6 +390,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                       className="form-control"
                       style={{ backgroundColor: "#eefbff" }}
                       placeholder="Purpose of Travel"
+                      disabled={!isPolicyDefined}
                     />
                     {errors.purposeOfTravel && touched.purposeOfTravel && (
                       <div className="form-feedBack">
@@ -270,6 +407,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                       className="form-control"
                       style={{ backgroundColor: "#eefbff" }}
                       placeholder="Project Name"
+                      disabled={!isPolicyDefined}
                     />
                     {errors.projectName && touched.projectName && (
                       <div className="form-feedBack">{errors.projectName}</div>
@@ -284,6 +422,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                       name="travelType"
                       className="form-control"
                       style={{ backgroundColor: "#eefbff" }}
+                      disabled={!isPolicyDefined}
                     >
                       <option value="">Select</option>
                       <option value="Official">Official</option>
@@ -300,7 +439,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
               {/* Travel Segments (FieldArray) */}
               <div className="w-full">
                 <FieldArray name="travelSegments">
-                  {() => (
+                  {(arrayHelpers) => (
                     <>
                       {errors.travelSegments &&
                         typeof errors.travelSegments === "string" && (
@@ -308,6 +447,48 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                             {errors.travelSegments}
                           </div>
                         )}
+                      {!isReadOnly && (
+                        <div className="flex justify-end items-center mb-4">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            disabled={!isPolicyDefined}
+                            onClick={() => {
+                              const segments = [...values.travelSegments];
+                              const lastIndex = segments.length - 1;
+                              const originLocation =
+                                segments[0]?.fromLocation || "";
+
+                              // 1. Clear the toLocation of the previous last row
+                              // so the user can select an intermediate destination
+                              setFieldValue(
+                                `travelSegments.${lastIndex}.toLocation`,
+                                "",
+                              );
+
+                              // 2. Add new row with current chaining logic:
+                              // fromLocation = cleared to allow user to pick next leg
+                              // toLocation = origin (forcing round trip to be the end)
+                              arrayHelpers.push({
+                                fromLocation: "",
+                                toLocation: originLocation,
+                                fromDate: segments[lastIndex]?.toDate || null,
+                                toDate: null,
+                                modeOfTravel: "",
+                                classOfTravel: "",
+                                accommodationRequired: false,
+                                hotelEntitlement: "",
+                                hotelEntitlementAmount: 0,
+                                selfEntitlement: false,
+                                selfAmount: 0,
+                              });
+                            }}
+                          >
+                            <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
+                            Add
+                          </button>
+                        </div>
+                      )}
                       <div
                         className="react-bootstrap-table table-responsive"
                         style={{ overflowX: "auto" }}
@@ -352,6 +533,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                 Self Entitlement
                               </td>
                               <td style={{ minWidth: "100px" }}>Self Amount</td>
+                              <td style={{ minWidth: "40px" }}></td>
                             </tr>
                           </thead>
                           <tbody>
@@ -362,6 +544,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     as="select"
                                     name={`travelSegments.${index}.fromLocation`}
                                     className="form-control"
+                                    disabled={!isPolicyDefined}
                                     onChange={(e) => {
                                       const val = e.target.value;
                                       setFieldValue(
@@ -384,7 +567,11 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                   >
                                     <option value="">Select</option>
                                     {locationOptions.map((opt) => (
-                                      <option key={opt.value} value={opt.value}>
+                                      <option
+                                        key={opt.value}
+                                        value={opt.value}
+                                        disabled={opt.value == segment.toLocation}
+                                      >
                                         {opt.label}
                                       </option>
                                     ))}
@@ -406,6 +593,18 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     as="select"
                                     name={`travelSegments.${index}.toLocation`}
                                     className="form-control"
+                                    disabled={
+                                      !isPolicyDefined ||
+                                      (values.travelSegments.length > 1 &&
+                                        index ===
+                                          values.travelSegments.length - 1)
+                                    }
+                                    style={
+                                      values.travelSegments.length > 1 &&
+                                      index === values.travelSegments.length - 1
+                                        ? { backgroundColor: "#f3f6f9" }
+                                        : {}
+                                    }
                                     onChange={(e) => {
                                       const val = e.target.value;
                                       setFieldValue(
@@ -427,7 +626,13 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                   >
                                     <option value="">Select</option>
                                     {locationOptions.map((opt) => (
-                                      <option key={opt.value} value={opt.value}>
+                                      <option
+                                        key={opt.value}
+                                        value={opt.value}
+                                        disabled={
+                                          opt.value == segment.fromLocation
+                                        }
+                                      >
                                         {opt.label}
                                       </option>
                                     ))}
@@ -446,6 +651,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                 <td>
                                   <DatePicker
                                     className="form-control"
+                                    disabled={!isPolicyDefined}
                                     selected={
                                       segment.fromDate
                                         ? new Date(segment.fromDate)
@@ -463,6 +669,15 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     placeholderText="Select Date"
                                     popperClassName="z-[9999]"
                                     popperPlacement="bottom"
+                                    minDate={
+                                      index > 0 &&
+                                      values.travelSegments[index - 1]?.toDate
+                                        ? new Date(
+                                            values.travelSegments[index - 1]
+                                              .toDate,
+                                          )
+                                        : null
+                                    }
                                   />
                                   {errors.travelSegments?.[index]?.fromDate &&
                                     touched.travelSegments?.[index]
@@ -475,6 +690,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                 <td>
                                   <DatePicker
                                     className="form-control"
+                                    disabled={!isPolicyDefined}
                                     selected={
                                       segment.toDate
                                         ? new Date(segment.toDate)
@@ -503,6 +719,11 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     placeholderText="Select Date"
                                     popperClassName="z-[9999]"
                                     popperPlacement="bottom"
+                                    minDate={
+                                      segment.fromDate
+                                        ? new Date(segment.fromDate)
+                                        : null
+                                    }
                                   />
                                   {errors.travelSegments?.[index]?.toDate &&
                                     touched.travelSegments?.[index]?.toDate && (
@@ -516,9 +737,10 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     as="select"
                                     name={`travelSegments.${index}.modeOfTravel`}
                                     className="form-control"
+                                    disabled={!isPolicyDefined}
                                   >
                                     <option value="">Select</option>
-                                    {transportOptions.map((opt) => (
+                                    {filteredTransportOptions.map((opt) => (
                                       <option key={opt.value} value={opt.value}>
                                         {opt.label}
                                       </option>
@@ -541,9 +763,10 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     as="select"
                                     name={`travelSegments.${index}.classOfTravel`}
                                     className="form-control"
+                                    disabled={!isPolicyDefined}
                                   >
                                     <option value="">Select</option>
-                                    {transportOptions.map((opt) => (
+                                    {filteredTransportOptions.map((opt) => (
                                       <option key={opt.value} value={opt.value}>
                                         {opt.label}
                                       </option>
@@ -564,6 +787,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                 <td className="text-center align-middle">
                                   <div className="flex justify-center items-center h-full">
                                     <Checkbox
+                                      disabled={!isPolicyDefined}
                                       isSelected={segment.accommodationRequired}
                                       onChange={(e) => {
                                         const checked = e.target.checked;
@@ -610,7 +834,8 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     className="form-control"
                                     disabled={
                                       !segment.accommodationRequired ||
-                                      segment.selfEntitlement
+                                      segment.selfEntitlement ||
+                                      !isPolicyDefined
                                     }
                                     onChange={(e) => {
                                       const val = e.target.value;
@@ -631,7 +856,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     }}
                                   >
                                     <option value="">Select</option>
-                                    {hotelOptions.map((opt) => (
+                                    {filteredHotelOptions.map((opt) => (
                                       <option key={opt.value} value={opt.value}>
                                         {opt.label}
                                       </option>
@@ -667,7 +892,8 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     disabled={
                                       !segment.accommodationRequired ||
                                       !segment.hotelEntitlement ||
-                                      segment.selfEntitlement
+                                      segment.selfEntitlement ||
+                                      !isPolicyDefined
                                     }
                                     value={
                                       !segment.accommodationRequired ||
@@ -703,7 +929,9 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     <Checkbox
                                       disabled={
                                         !segment.accommodationRequired ||
-                                        !!segment.hotelEntitlement
+                                        !!segment.hotelEntitlement ||
+                                        !isPolicyDefined ||
+                                        !employeeEntitlement?.ishotelEntitlementSelfAmountWise
                                       }
                                       isSelected={segment.selfEntitlement}
                                       onChange={(e) => {
@@ -749,7 +977,8 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                     disabled={
                                       !segment.accommodationRequired ||
                                       !segment.selfEntitlement ||
-                                      !!segment.hotelEntitlement
+                                      !!segment.hotelEntitlement ||
+                                      !isPolicyDefined
                                     }
                                     value={
                                       !segment.accommodationRequired ||
@@ -769,6 +998,18 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                                         }
                                       </div>
                                     )}
+                                </td>
+                                <td className="text-center align-middle">
+                                  {!isReadOnly && index >= 2 && (
+                                    <button
+                                      type="button"
+                                      className="bg-transparent border-0 p-0"
+                                      disabled={!isPolicyDefined}
+                                      onClick={() => arrayHelpers.remove(index)}
+                                    >
+                                      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                    </button>
+                                  )}
                                 </td>
                               </tr>
                             ))}
@@ -790,8 +1031,14 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                     </h6>
                     <div className="grid grid-cols-3 gap-x-2">
                       <div>
-                        <label className="text-xs font-semibold block mb-1">
+                        <label className="text-xs font-semibold mb-1 flex items-center gap-1">
                           Rate <span className="text-danger">*</span>
+                          {employeeEntitlement?.dailyAllowanceAmount && (
+                            <span className="text-muted font-normal ml-1">
+                              (Limit ={" "}
+                              {employeeEntitlement.dailyAllowanceAmount})
+                            </span>
+                          )}
                         </label>
                         <Field
                           type="number"
@@ -800,6 +1047,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                           style={{ backgroundColor: "#eefbff" }}
                           placeholder="0"
                           min="0"
+                          disabled={!isPolicyDefined}
                         />
                         {errors.dailyAllowanceRate &&
                           touched.dailyAllowanceRate && (
@@ -845,7 +1093,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
 
                   {/* Taxi Fare */}
                   <div className="col-span-2 md:col-span-1">
-                    <h6 className="font-bold mb-3 text-primary text-sm">
+                    <h6 className="font-bold text-primary text-sm">
                       Taxi Fare per KM
                     </h6>
                     <div>
@@ -876,10 +1124,16 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                           Advance required
                         </span>
                         <Checkbox
+                          disabled={isFormDisabled}
                           isSelected={values.advanceRequested}
-                          onChange={(e) =>
-                            setFieldValue("advanceRequested", e.target.checked)
-                          }
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setFieldValue("advanceRequested", checked);
+                            if (!checked) {
+                              setFieldValue("advanceAmount", 0);
+                              setFieldValue("advanceRemarks", "");
+                            }
+                          }}
                         />
                       </div>
                       <div>
@@ -896,7 +1150,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                           style={{ backgroundColor: "#eefbff" }}
                           placeholder="0"
                           min="0"
-                          disabled={!values.advanceRequested}
+                          disabled={isFormDisabled || !values.advanceRequested}
                         />
                         {errors.advanceAmount && touched.advanceAmount && (
                           <div className="form-feedBack text-xs mt-1">
@@ -924,7 +1178,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                       style={{ backgroundColor: "#eefbff" }}
                       rows="3"
                       placeholder="Enter advance remarks..."
-                      disabled={!values.advanceRequested}
+                      disabled={isFormDisabled || !values.advanceRequested}
                     />
                     {errors.advanceRemarks && touched.advanceRemarks && (
                       <div className="form-feedBack text-xs mt-1">
@@ -936,7 +1190,8 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                 <div className="grid grid-cols-12 gap-x-3 mt-4">
                   <div className="col-span-6">
                     <label className="text-xs font-semibold">
-                      Travel Request Remarks <span className="text-danger">*</span>
+                      Remarks
+                      <span className="text-danger">*</span>
                     </label>
                     <Field
                       as="textarea"
@@ -945,6 +1200,7 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                       style={{ backgroundColor: "#eefbff" }}
                       rows="3"
                       placeholder="Enter travel remarks..."
+                      disabled={!isPolicyDefined}
                     />
                     {errors.travelRemarks && touched.travelRemarks && (
                       <div className="form-feedBack text-xs mt-1">
@@ -962,14 +1218,33 @@ export function FormEditForm({ employeeId, employeeDetails, onCancel }) {
                   className="btn btn-light btn-sm font-bold px-6"
                   onClick={onCancel}
                 >
-                  Cancel
+                  {isReadOnly ? "Close" : "Cancel"}
                 </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-sm font-bold px-8"
-                >
-                  Save
-                </button>
+                {!isReadOnly && (
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-sm font-bold px-8"
+                    disabled={isFormDisabled}
+                  >
+                    Save
+                  </button>
+                )}
+                {!isReadOnly &&
+                  isRoleTravelApprover &&
+                  user?.request_status === "P" && (
+                  <button
+                    type="button"
+                    className="btn btn-success btn-sm font-bold px-8"
+                    disabled={isSubmitting || !hasEntitlement}
+                    onClick={() => {
+                      setFieldValue("request_status", "A");
+                      // Use setTimeout to ensure Formik state updates before submitting
+                      setTimeout(() => submitForm(), 0);
+                    }}
+                  >
+                    Approve
+                  </button>
+                )}
               </div>
             </Form>
           );

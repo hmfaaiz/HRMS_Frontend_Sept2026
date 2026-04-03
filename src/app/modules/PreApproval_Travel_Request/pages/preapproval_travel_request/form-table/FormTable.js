@@ -1,54 +1,69 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
 } from "react-bootstrap-table2-paginator";
-import { useDispatch } from "react-redux";
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import {
   NoRecordsFoundMessage,
   PleaseWaitMessage,
   sortCaret,
+  getHandlerTableChange,
 } from "../../../../../../_metronic/_helpers";
+import * as uiHelpers from "../FormUIHelpers";
 
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 
-export function FormTable({ onEditClick }) {
-  const { employeeId, setUserForEdit, setPanelMode } = useFormUIContext();
+export function FormTable({ onEditClick, onViewClick }) {
+  const FormUIContext = useFormUIContext();
+  const FormUIProps = useMemo(() => {
+    return {
+      employeeId: FormUIContext.employeeId,
+      setUserForEdit: FormUIContext.setUserForEdit,
+      setPanelMode: FormUIContext.setPanelMode,
+      queryParams: FormUIContext.queryParams,
+      setQueryParams: FormUIContext.setQueryParams,
+      openEditFormDialog: FormUIContext.openEditFormDialog,
+      openDeleteFormDialog: FormUIContext.openDeleteFormDialog,
+    };
+  }, [FormUIContext]);
 
-  // Mock data - replace with entities from Redux later
-  const travelRequests = [
-    {
-      id: 1,
-      purpose: "Trip for Client Visit",
-      project: "Project-X",
-      travelType: "International",
-      date: "27-Nov-2025",
-      status: 0,
-    },
-    {
-      id: 2,
-      purpose: "Internal Audit",
-      project: "Standard Ops",
-      travelType: "Domestic",
-      date: "22-Jul-2025",
-      status: 1,
-    }
-  ];
+  const { currentState } = useSelector(
+    (state) => ({ currentState: state.t_preapproval_travel_request }),
+    shallowEqual,
+  );
+
+  const { entities, totalCount, listLoading } = currentState;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(actions.fetchPreApprovalTravelRequests(FormUIProps.queryParams));
+  }, [FormUIProps.queryParams, dispatch]);
 
   const columns = [
     {
-      dataField: "purpose",
-      text: "Purpose",
+      dataField: "Employee",
+      text: "Employee",
       sort: true,
       sortCaret: sortCaret,
-      style: { minWidth: "160px" },
+      formatter: (cell) => {
+        return cell ? `${cell.firstName} ${cell.lastName}` : "-";
+      },
+      style: { minWidth: "180px" },
     },
     {
-      dataField: "project",
-      text: "Project",
+      dataField: "Subsidiary.name",
+      text: "Subsidiary",
+      sort: true,
+      sortCaret: sortCaret,
+      style: { minWidth: "150px" },
+    },
+    {
+      dataField: "purposeOfTravel",
+      text: "Purpose",
       sort: true,
       sortCaret: sortCaret,
       style: { minWidth: "160px" },
@@ -61,20 +76,34 @@ export function FormTable({ onEditClick }) {
       style: { minWidth: "130px" },
     },
     {
-      dataField: "date",
-      text: "Travel Date",
+      dataField: "projectName",
+      text: "Project",
+      sort: true,
+      sortCaret: sortCaret,
+      style: { minWidth: "160px" },
+    },
+    {
+      dataField: "request_status",
+      text: "Request Status",
+      formatter: (cell) => {
+        const statuses = {
+          P: "Pending",
+          A: "Approved",
+          R: "Rejected",
+        };
+        return statuses[cell] || "Unknown";
+      },
+      style: { minWidth: "100px" },
+    },
+    {
+      dataField: "advanceAmount",
+      text: "Advance Amount",
+      formatter: (cell, row) => {
+        return row.advanceRequired ? cell : "-";
+      },
       sort: true,
       sortCaret: sortCaret,
       style: { minWidth: "120px" },
-    },
-    {
-      dataField: "status",
-      text: "Approved Status",
-      formatter: (cell) => {
-        const statuses = ["Pending", "Approved", "Rejected"];
-        return statuses[cell] || "Unknown";
-      },
-      style: { minWidth: "130px" },
     },
     {
       dataField: "action",
@@ -86,45 +115,53 @@ export function FormTable({ onEditClick }) {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         openReadFormDialog: (row) => {
-          setUserForEdit(row);
-          setPanelMode(true);
+          if (onViewClick) {
+            onViewClick(row);
+          } else {
+            FormUIProps.setUserForEdit(row);
+            FormUIProps.setPanelMode(true);
+          }
         },
-        openEditFormDialog: onEditClick || ((row) => {
-          setUserForEdit(row);
-          setPanelMode(true);
-        }),
-        openDeleteFormDialog: (id) => {
-          console.log("Delete clicked for id:", id);
+        openEditFormDialog: (row) => {
+          if (onEditClick) {
+            onEditClick(row);
+          } else {
+            FormUIProps.setUserForEdit(row);
+            FormUIProps.setPanelMode(true);
+          }
         },
+        openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
       },
     },
   ];
 
   const paginationOptions = {
     custom: true,
-    totalSize: travelRequests.length,
-    sizePerPage: 10,
-    page: 1,
+    totalSize: totalCount,
+    sizePerPageList: uiHelpers.sizePerPageList,
+    sizePerPage: FormUIProps.queryParams.pageSize,
+    page: FormUIProps.queryParams.pageNumber,
   };
 
   return (
     <div className="mt-5 mb-8 font-sans">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => (
-          <Pagination paginationProps={paginationProps}>
+          <Pagination isLoading={listLoading} paginationProps={paginationProps}>
             <BootstrapTable
               wrapperClasses="table-responsive"
               bordered={false}
               classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
               bootstrap4
               remote
-              keyField="id"
-              data={travelRequests}
+              keyField="Id"
+              data={entities || []}
               columns={columns}
+              onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
               {...paginationTableProps}
             >
-              <PleaseWaitMessage entities={travelRequests} />
-              <NoRecordsFoundMessage entities={travelRequests} />
+              <PleaseWaitMessage entities={entities} />
+              <NoRecordsFoundMessage entities={entities} />
             </BootstrapTable>
           </Pagination>
         )}

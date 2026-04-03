@@ -82,5 +82,5 @@ export const updateTadaConfig = (user, disbaleLoading, onHide) => (dispatch) => 
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
       toast.error(error?.response?.data?.message || SERVER_MESSAGES.updatedFail);
-    });
+  });
 };

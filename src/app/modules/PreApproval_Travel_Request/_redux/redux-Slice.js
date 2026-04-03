@@ -8,6 +8,7 @@ const initialPreApprovalTravelRequestState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    employeeEntitlement: null,
 };
 
 
@@ -30,7 +31,7 @@ export const preapproval_travel_requestSlice = createSlice({
         },
 
         preapprovalTravelRequestFetched: (state, action) => {
-            const data = action.payload.data?.data;
+            const data = action.payload.data?.data || action.payload?.data;
             const entities = data?.rows || data || [];
             const totalResult = data?.totalResults || (Array.isArray(entities) ? entities.length : 0);
             
@@ -86,7 +87,9 @@ export const preapproval_travel_requestSlice = createSlice({
                 return entity;
             });
         },
-
-
+        employeeEntitlementFetched: (state, action) => {
+            state.employeeEntitlement = action.payload.employeeEntitlement;
+            state.actionsLoading = false;
+        },
     },
 });

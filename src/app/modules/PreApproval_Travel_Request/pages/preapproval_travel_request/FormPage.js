@@ -21,7 +21,7 @@ export function FormPage({ history }) {
         dispatch(fetchAllCountry());
       },
       openDeleteFormDialog: (id, status) => {
-        history.push(`/preapproval_travel_request/read-all/delete/${id}`);
+        history.push(`/preapproval_travel_request/read-all-preapproval-travel-request/delete/${id}`);
       },
       openReadFormDialog: (id) => {
         // No longer used with inline forms
@@ -34,13 +34,13 @@ export function FormPage({ history }) {
 
   return (
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <Route path="/preapproval_travel_request/read-all/delete/:id">
+      <Route path="/preapproval_travel_request/read-all-preapproval-travel-request/delete/:id">
         {({ history, match }) => (
           <FormDeleteDialog
             show={match != null}
             id={match && match.params.id}
             onHide={() => {
-              history.push("/preapproval_travel_request/read-all");
+              history.push("/preapproval_travel_request/read-all-preapproval-travel-request");
             }}
           />
         )}

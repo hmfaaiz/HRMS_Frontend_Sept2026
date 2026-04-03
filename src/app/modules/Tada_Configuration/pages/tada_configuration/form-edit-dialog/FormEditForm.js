@@ -15,6 +15,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 
 export function FormEditForm({
   saveForm,
@@ -27,11 +28,23 @@ export function FormEditForm({
   id,
 }) {
   const dispatch = useDispatch();
-  const { dashboard, entities } = useSelector(
-    (state) => ({
-      dashboard: state.dashboard,
-      entities: state.t_tada_config?.entities,
-    }),
+  const { dashboard, entities, roles } = useSelector(
+    (state) => {
+      const rawRoles = state.users?.roles;
+      const rolesArray = Array.isArray(rawRoles)
+        ? rawRoles
+        : Array.isArray(rawRoles?.allRoles)
+        ? rawRoles.allRoles
+        : [];
+      return {
+        dashboard: state.dashboard,
+        entities: state.t_tada_config?.entities,
+        roles: rolesArray.filter(Boolean).map((r) => ({
+          label: r.label || r.formName || r.name || "",
+          value: r.value || r.Id || r.id || "",
+        })),
+      };
+    },
     shallowEqual,
   );
 
@@ -41,6 +54,7 @@ export function FormEditForm({
     dispatch(fetchAllFormsMenu(551, "allTransportModeList")); // Transport Modes
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList")); // Hotel Entitlements
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList")); // Subsidiaries
+    dispatch(fetchRoles());
   }, [dispatch]);
 
   const transportOptions = dashboard?.allTransportModeList || [];
@@ -63,6 +77,10 @@ export function FormEditForm({
           then: Yup.string().required(VALIDATION_MESSAGES.required),
         }),
       subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
+      preApprover: Yup.array()
+        .of(Yup.string())
+        .min(1, VALIDATION_MESSAGES.atLeastOne)
+        .required(VALIDATION_MESSAGES.atLeastOne),
       modeOfTransportId: Yup.array()
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
@@ -71,7 +89,7 @@ export function FormEditForm({
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
-     
+
       dailyAllowanceAmount: Yup.number().min(
         0,
         VALIDATION_MESSAGES.amountCannotBeNegative,
@@ -89,9 +107,26 @@ export function FormEditForm({
       dailyAllowanceAmount: 0,
       taxiFareAmount: 0,
       ...user,
-      modeOfTransportId: user?.modeOfTransportId || [],
-      hotelEntitlementId: user?.hotelEntitlementId || [],
-      ishotelEntitlementSelfAmountWise: user?.ishotelEntitlementSelfAmountWise || false,
+      preApprover: Array.isArray(user?.preApprover)
+        ? user.preApprover.map(String)
+        : typeof user?.preApprover === "string"
+        ? user.preApprover.split(",").filter(Boolean).map((s) => s.trim())
+        : [],
+      modeOfTransportId: Array.isArray(user?.modeOfTransportId)
+        ? user.modeOfTransportId.map(String)
+        : typeof user?.modeOfTransportId === "string"
+        ? user.modeOfTransportId.split(",").filter(Boolean).map((s) => s.trim())
+        : [],
+      hotelEntitlementId: Array.isArray(user?.hotelEntitlementId)
+        ? user.hotelEntitlementId.map(String)
+        : typeof user?.hotelEntitlementId === "string"
+        ? user.hotelEntitlementId
+            .split(",")
+            .filter(Boolean)
+            .map((s) => s.trim())
+        : [],
+      ishotelEntitlementSelfAmountWise:
+        user?.ishotelEntitlementSelfAmountWise || false,
     };
   }, [user]);
 
@@ -296,7 +331,39 @@ export function FormEditForm({
                       />
                     </div>
 
-                    {/* Row 2: Mode of Transport, Hotel Entitlement, Hotel Self Amount */}
+                    {/* Row 2: PreApprover, Mode of Transport, Hotel Entitlement */}
+
+                    {/* PreApprover */}
+                    <div>
+                      <MultiSelect
+                        label={
+                          <span>
+                            PreApprover
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        options={roles || []}
+                        value={
+                          roles.filter((opt) =>
+                            Array.isArray(values.preApprover) &&
+                            values.preApprover.some(
+                              (val) => String(val) === String(opt.value),
+                            ),
+                          ) || []
+                        }
+                        onChange={(val) => {
+                          setFieldTouched("preApprover", true, false);
+                          setFieldValue(
+                            "preApprover",
+                            val?.map((opt) => String(opt.value)) || [],
+                          );
+                        }}
+                        disabled={isUserForRead || !values.subsidiaryId}
+                        error={errors.preApprover}
+                        touched={touched.preApprover}
+                        placeholder="Select PreApprover"
+                      />
+                    </div>
 
                     {/* Mode of Transport */}
                     <div>
@@ -310,7 +377,8 @@ export function FormEditForm({
                         options={transportOptions}
                         value={
                           transportOptions.filter((opt) =>
-                            values.modeOfTransportId?.some(
+                            Array.isArray(values.modeOfTransportId) &&
+                            values.modeOfTransportId.some(
                               (val) => String(val) === String(opt.value),
                             ),
                           ) || []
@@ -341,7 +409,8 @@ export function FormEditForm({
                         options={hotelOptions}
                         value={
                           hotelOptions.filter((opt) =>
-                            values.hotelEntitlementId?.some(
+                            Array.isArray(values.hotelEntitlementId) &&
+                            values.hotelEntitlementId.some(
                               (val) => String(val) === String(opt.value),
                             ),
                           ) || []
@@ -409,7 +478,7 @@ export function FormEditForm({
                       />
                     </div> */}
                     {/* Hotel Self Amount Section - Amount field permanently disabled */}
-                    <div className="tada-config-option">
+                    <div className="tada-config-option mt-5">
                       <div className="flex items-center space-x-2 mb-[4px] text-sm font-medium">
                         <Field
                           name="ishotelEntitlementSelfAmountWise"
@@ -418,12 +487,21 @@ export function FormEditForm({
                           disabled={isUserForRead || !values.subsidiaryId}
                           onChange={(e) => {
                             const checked = e.target.checked;
-                            setFieldValue("ishotelEntitlementSelfAmountWise", checked);
+                            setFieldValue(
+                              "ishotelEntitlementSelfAmountWise",
+                              checked,
+                            );
 
                             if (!checked) {
                               setFieldValue("hotelEntitlementSelfAmount", 0);
-                              setFieldTouched("hotelEntitlementSelfAmount", false);
-                              setFieldError("hotelEntitlementSelfAmount", undefined);
+                              setFieldTouched(
+                                "hotelEntitlementSelfAmount",
+                                false,
+                              );
+                              setFieldError(
+                                "hotelEntitlementSelfAmount",
+                                undefined,
+                              );
                             }
                           }}
                         />
@@ -434,22 +512,6 @@ export function FormEditForm({
                           )}
                         </span>
                       </div>
-
-                      {/* Amount field - Permanently disabled */}
-                      <AmountInput
-                        field={{
-                          name: "hotelEntitlementSelfAmount",
-                          value: values.hotelEntitlementSelfAmount || 0,
-                        }}
-                        form={{
-                          touched,
-                          errors,
-                          setFieldValue,
-                          setFieldTouched,
-                        }}
-                        disabled={true}
-                        placeholder="0"
-                      />
                     </div>
                     {/* Row 3: Daily Allowance, Taxi Fare */}
 

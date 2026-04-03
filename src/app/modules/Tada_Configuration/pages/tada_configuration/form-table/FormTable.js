@@ -8,6 +8,7 @@ import {
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 import * as actions from "../../../_redux/redux-Actions";
 import {
   getHandlerTableChange,
@@ -35,11 +36,23 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess, dashboard } = useSelector(
+  const { currentState, userAccess, dashboard, roles } = useSelector(
     (state) => ({
       currentState: state.t_tada_config,
-      userAccess: state?.auth?.userAccess["tada_config"],
+      userAccess: state?.auth?.userAccess?.tada_config,
       dashboard: state.dashboard,
+      roles: (() => {
+        const rawRoles = state.users?.roles;
+        const rolesArray = Array.isArray(rawRoles)
+          ? rawRoles
+          : Array.isArray(rawRoles?.allRoles)
+          ? rawRoles.allRoles
+          : [];
+        return rolesArray.map((r) => ({
+          label: r.label || r.formName || r.name || "",
+          value: r.value || r.Id || r.id || "",
+        }));
+      })(),
     }),
     shallowEqual,
   );
@@ -57,9 +70,10 @@ export function FormTable() {
     // Fetch dropdown lists to map IDs to Names in the table
     dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList"));
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    dispatch(fetchAllFormsMenu(552, "allTransportModeList"));
-    dispatch(fetchAllFormsMenu(551, "allHotelEntitlementList"));
+    dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
+    dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
     dispatch(fetchAllSubsidiaryData("allSubidiaryList"));
+    dispatch(fetchRoles());
   }, [formUIProps.queryParams, dispatch]);
 
   const isAccessForEdit = userAccess?.find(
@@ -71,94 +85,142 @@ export function FormTable() {
 
   // Helper function to map IDs (array or comma-separated string) to their names
   const getNamesFromIds = (inputIds, optionsList) => {
-    if (!inputIds || !optionsList) return "";
+    if (!inputIds || !optionsList || !Array.isArray(optionsList) || optionsList.length === 0) return "";
 
-    const ids = Array.isArray(inputIds)
-      ? inputIds.map(String)
-      : inputIds.toString().split(",").map((s) => s.trim());
+    // Normalize all IDs to trimmed strings
+    let idStrings = [];
+    if (Array.isArray(inputIds)) {
+      idStrings = inputIds.map(id => {
+        if (id === null || id === undefined) return "";
+        if (typeof id === 'object') return String(id.id || id.Id || id.value || "");
+        return String(id).trim();
+      });
+    } else {
+      idStrings = String(inputIds).split(",").map(s => s.trim());
+    }
+
+    // Remove empty/invalid entries
+    const cleanIds = idStrings.filter(id => id && id !== "null" && id !== "undefined" && id !== "0");
+
+    if (cleanIds.length === 0) return "";
 
     const names = optionsList
-      .filter((opt) => ids.includes(opt.value.toString()))
-      .map((opt) => opt.label);
+      .filter((opt) => {
+        // Handle both {value: 9} and {Id: 9} formats
+        const v = opt.value ?? opt.Id ?? opt.id;
+        if (v === null || v === undefined) return false;
+        return cleanIds.includes(String(v));
+      })
+      .map((opt) => opt.label || opt.name || opt.formName || "");
 
-    return names.length > 0 ? names.join(", ") : "";
+    return names.filter(n => n).join(", ");
   };
 
-  const columns = [
-    {
-      dataField: "subsidiaryId",
-      text: "Subsidiary",
-      formatter: (cell, row) =>
-        row.Subsidiary?.name ||
-        getNamesFromIds(cell, dashboard?.allSubidiaryList),
-    },
-    {
-      dataField: "gradeId",
-      text: "Grade",
-      formatter: (cell, row) =>
-        row.Grade?.formName ||
-        row.Grade?.name ||
-        getNamesFromIds(cell, dashboard?.allEmployeeGradeList),
-    },
+  const enrichedEntities = useMemo(() => {
+    if (!entities) return [];
+    return entities.map((entity) => ({
+      ...entity,
+      resolvedPreApproverNames:
+        getNamesFromIds(entity.preApprover, roles) ||
+        entity.preApproverNames ||
+        (entity.PreApprovers?.length > 0
+          ? entity.PreApprovers.map((a) => a.name || a.formName || a.label)
+              .filter(Boolean)
+              .join(", ")
+          : "-"),
+    }));
+  }, [entities, roles, dashboard]);
 
-    {
-      dataField: "designationId",
-      text: "Designation",
-      formatter: (cell, row) =>
-        row.Designation?.formName ||
-        row.Designation?.name ||
-        getNamesFromIds(cell, dashboard?.allDesignations),
-    },
-    {
-      dataField: "modeOfTransportId",
-      text: "Mode of Transport",
-      formatter: (cell, row) =>
-        row.ModeOfTransports?.map((m) => m.formName).join(", ") ||
-        getNamesFromIds(cell, dashboard?.allTransportModeList),
-    },
-    {
-      dataField: "hotelEntitlementId",
-      text: "Hotel Entitlement",
-      formatter: (cell, row) =>
-        row.HotelEntitlements?.map((h) => h.formName).join(", ") ||
-        getNamesFromIds(cell, dashboard?.allHotelEntitlementList),
-    },
-    {
-      dataField: "ishotelEntitlementSelfAmountWise",
-      text: "Allow Self entitlement for Hotel",
-      formatter: (cell) => (cell === true || cell === "true" ? "Yes" : "No"),
-      align: "center",
-      headerAlign: "center",
-      style: { width: "200px" },
-    },
-    {
-      dataField: "dailyAllowanceAmount",
-      text: "Entitled Daily Allowance",
-    },
-    {
-      dataField: "taxiFareAmount",
-      text: "Entitled Taxi Fare per KM",
-    },
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        openEditFormDialog: formUIProps.openEditFormDialog,
-        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-        openActiveFormDialog: formUIProps.openActiveFormDialog,
-        openReadFormDialog: formUIProps.openReadFormDialog,
-        isAccessForEdit: isAccessForEdit.isAccess,
-        isAccessForDelete: isAccessForDelete.isAccess,
+  const columns = useMemo(
+    () => [
+      {
+        dataField: "subsidiaryId",
+        text: "Subsidiary",
+        formatter: (cell, row) =>
+          row.Subsidiary?.name ||
+          getNamesFromIds(cell, dashboard?.allSubidiaryList),
       },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
-      style: {
-        minWidth: "130px",
+      {
+        dataField: "gradeId",
+        text: "Grade",
+        align: "center",
+        headerAlign: "center",
+        formatter: (cell, row) =>
+          row.Grade?.formName ||
+          row.Grade?.name ||
+          getNamesFromIds(cell, dashboard?.allEmployeeGradeList) ||
+          "-",
       },
-    },
-  ];
+      {
+        dataField: "designationId",
+        text: "Designation",
+        align: "center",
+        headerAlign: "center",
+        formatter: (cell, row) =>
+          row.Designation?.formName ||
+          row.Designation?.name ||
+          getNamesFromIds(cell, dashboard?.allDesignations) ||
+          "-",
+      },
+      {
+        dataField: "resolvedPreApproverNames",
+        text: "PreApprover",
+      },
+      {
+        dataField: "modeOfTransportId",
+        text: "Mode of Transport",
+        formatter: (cell, row) =>
+          row.ModeOfTransports?.map((m) => m.formName || m.name || m.label).join(
+            ", ",
+          ) || getNamesFromIds(cell, dashboard?.allTransportModeList),
+      },
+      {
+        dataField: "hotelEntitlementId",
+        text: "Hotel Entitlement",
+        formatter: (cell, row) =>
+          row.HotelEntitlements?.map(
+            (h) => h.formName || h.name || h.label,
+          ).join(", ") ||
+          getNamesFromIds(cell, dashboard?.allHotelEntitlementList),
+      },
+      {
+        dataField: "ishotelEntitlementSelfAmountWise",
+        text: "Allow Self entitlement for Hotel",
+        formatter: (cell) => (cell === true || cell === "true" ? "Yes" : "No"),
+        align: "center",
+        headerAlign: "center",
+        style: { width: "200px" },
+      },
+      {
+        dataField: "dailyAllowanceAmount",
+        text: "Entitled Daily Allowance",
+      },
+      {
+        dataField: "taxiFareAmount",
+        text: "Entitled Taxi Fare per KM",
+      },
+      {
+        dataField: "action",
+        text: "Actions",
+        isDummyField: true,
+        formatter: ActionsColumnFormatter,
+        formatExtraData: {
+          openEditFormDialog: formUIProps.openEditFormDialog,
+          openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+          openActiveFormDialog: formUIProps.openActiveFormDialog,
+          openReadFormDialog: formUIProps.openReadFormDialog,
+          isAccessForEdit: !!isAccessForEdit,
+          isAccessForDelete: !!isAccessForDelete,
+        },
+        classes: "text-right pr-0",
+        headerClasses: "text-right pr-3",
+        style: {
+          minWidth: "130px",
+        },
+      },
+    ],
+    [dashboard, roles, userAccess, formUIProps],
+  );
 
   const paginationOptions = {
     custom: true,
@@ -180,7 +242,7 @@ export function FormTable() {
               bootstrap4
               remote
               keyField="id"
-              data={entities === null ? [] : entities}
+              data={enrichedEntities}
               columns={columns}
               defaultSorted={uiHelpers.defaultSorted}
               onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}

@@ -49,6 +49,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       Subsidiary,
       ModeOfTransports,
       HotelEntitlements,
+      PreApprovers,
+      preApproverNames,
       ...rawValues
     } = values;
 
@@ -62,6 +64,12 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       subsidiaryId: rawValues.subsidiaryId
         ? Number(rawValues.subsidiaryId)
         : null,
+      hotelEntitlementSelfAmount: Number(rawValues.hotelEntitlementSelfAmount) || 0,
+      dailyAllowanceAmount: Number(rawValues.dailyAllowanceAmount) || 0,
+      taxiFareAmount: Number(rawValues.taxiFareAmount) || 0,
+      preApprover: Array.isArray(rawValues.preApprover)
+        ? rawValues.preApprover.map(Number)
+        : [],
       modeOfTransportId: Array.isArray(rawValues.modeOfTransportId)
         ? rawValues.modeOfTransportId.map(Number)
         : [],

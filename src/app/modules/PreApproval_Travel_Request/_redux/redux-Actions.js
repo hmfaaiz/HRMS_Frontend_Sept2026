@@ -25,7 +25,7 @@ export const fetchPreApprovalTravelRequest = (id) => (dispatch) => {
   return requestFromServer
     .getPreApprovalTravelRequestById(id)
     .then((response) => {
-      const entities = response.data?.data;
+      const entities = response.data?.data || response.data;
       dispatch(actions.preapprovalTravelRequestFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -43,7 +43,7 @@ export const deletePreApprovalTravelRequest = (id) => (dispatch) => {
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(SERVER_MESSAGES.deletedFail);
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.deletedFail);
     });
 };
 
@@ -54,7 +54,7 @@ export const createPreApprovalTravelRequest = (preApprovalTravelRequestForCreati
   return requestFromServer
     .createPreApprovalTravelRequest(preApprovalTravelRequestForCreation)
     .then((res) => {
-      const user = res.data?.data;
+      const user = res.data?.data || res.data;
       dispatch(actions.preapprovalTravelRequestCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess);
@@ -72,7 +72,7 @@ export const updatePreApprovalTravelRequest = (user, disbaleLoading, onHide) => 
   return requestFromServer
     .updatePreApprovalTravelRequest(user)
     .then((response) => {
-      const updatedPreApprovalTravelRequest = response.data?.data;
+      const updatedPreApprovalTravelRequest = response.data?.data || response.data;
       dispatch(actions.preapprovalTravelRequestUpdated({ updatedPreApprovalTravelRequest }));
       disbaleLoading();
       onHide();
@@ -82,5 +82,27 @@ export const updatePreApprovalTravelRequest = (user, disbaleLoading, onHide) => 
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
       toast.error(error?.response?.data?.message || SERVER_MESSAGES.updatedFail);
+    });
+};
+
+export const fetchTadaConfigByEmployeeId = (employeeId) => (dispatch) => {
+  dispatch(actions.employeeEntitlementFetched({ employeeEntitlement: null }));
+
+  if (!employeeId) {
+    return;
+  }
+
+  return requestFromServer
+    .getTadaConfigurationPolicies(employeeId)
+    .then((response) => {
+      const entities = response.data?.data || response.data;
+      dispatch(
+        actions.employeeEntitlementFetched({ employeeEntitlement: entities })
+      );
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      dispatch(actions.employeeEntitlementFetched({ employeeEntitlement: null }));
+      toast.error(error?.response?.data?.message || "TADA Policy not defined for this employee");
     });
 };
