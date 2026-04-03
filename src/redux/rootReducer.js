@@ -199,8 +199,8 @@ import { CustomerConfigurationSlice } from "../app/modules/Customer_Configuratio
 import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
 import { ReimbursementClaimSlice } from "../app/modules/Reimbursement_Claim_Request/_redux/redux-Slice";
 import { tada_configurationSlice } from "../app/modules/Tada_Configuration/_redux/redux-Slice";
-import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
 
+import { ReimbursementApprovalSlice } from "../app/modules/Reimbursement_Claim_Approval/_redux/redux-Slice"
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -397,6 +397,7 @@ export const rootReducer = combineReducers({
   temporary_shift_setup : employeeTempShiftSlice.reducer,
   reimbursement_claim_request : ReimbursementClaimSlice.reducer,
   t_tada_config: tada_configurationSlice.reducer,
+  reimbursement_claim_approval: ReimbursementApprovalSlice.reducer,
 });
 
 export function* rootSaga() {

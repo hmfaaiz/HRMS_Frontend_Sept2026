@@ -547,6 +547,9 @@ const employee_temporary_shift_setup = lazy(() =>
 const reimbursement_claim_request = lazy (() =>
 import ("./modules/Reimbursement_Claim_Request/pages/index"))
 
+const reimbursement_claim_approval = lazy (() =>
+ import("./modules/Reimbursement_Claim_Approval/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -736,6 +739,7 @@ const ROUTES = {
   reimbursement_claim_request : reimbursement_claim_request,
   tada_config: tada_configuration,
   temporary_shift_setup: employee_temporary_shift_setup,
+  reimbursement_claim_approval: reimbursement_claim_approval,
 };
 
 export default function BasePage() {

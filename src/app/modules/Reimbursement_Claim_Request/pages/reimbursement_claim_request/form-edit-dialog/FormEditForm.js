@@ -53,7 +53,6 @@ export function FormEditForm({
   const inputFileRef = useRef(null);
   const [employeeData, setEmployeeData] = useState({});
 
-  // ── FIX: Local state for authorities — no Redux race condition ────────────
   const [empAuthorityList, setEmpAuthorityList] = useState([]);
   const [isPolicyExists, setIsPolicyExists] = useState(false);
 
@@ -106,13 +105,13 @@ export function FormEditForm({
           : [];
         const policyExists = res.data?.data?.isPolicyExists || false;
         const normalized = data.map((e) => ({
-  Id: e.Id,
-  level: e.level,
-  isDeligation: e.isDeligation || false,
-  deligationId: e.deligationId || null,
-}));
+          Id: e.Id,
+          level: e.level,
+          isDeligation: e.isDeligation || false,
+          deligationId: e.deligationId || null,
+        }));
 
-setEmpAuthorityList(normalized);
+        setEmpAuthorityList(normalized);
         setIsPolicyExists(policyExists);
       })
       .catch(() => {
@@ -212,6 +211,13 @@ setEmpAuthorityList(normalized);
       enableReinitialize={true}
       initialValues={user}
       validationSchema={ReimbursementClaimSchema}
+      validate={(values) => {
+        const errors = {};
+        if (isFileReq && !values.file) {
+          errors.file = VALIDATION_MESSAGES.required;
+        }
+        return errors;
+      }}
       onSubmit={async (values, { resetForm }) => {
         enableLoading();
 
@@ -276,7 +282,7 @@ setEmpAuthorityList(normalized);
           date: values.date ? formatDates(values.date, "dd-MMM-yyyy") : null,
           employeeId: values.employeeId?.value || values.employeeId || null,
           subsidiaryId: employeeData?.subsidiaryId || null,
-          authortiesList: empAuthorityList, // ── always populated from local state
+          authortiesList: empAuthorityList,
         };
 
         console.log("Final payload:", payload);
@@ -485,9 +491,13 @@ setEmpAuthorityList(normalized);
                       onChange={(event) => {
                         const file = event.currentTarget.files[0];
                         setFieldValue("file", file || null);
+                        setFieldTouched("file", true);
                         if (file) setIsFileReq(false);
                       }}
                     />
+                    {errors.file && touched.file && (
+                      <div className="text-danger text-xs mt-1">{errors.file}</div>
+                    )}
                   </div>
 
                 </div>
@@ -510,7 +520,10 @@ setEmpAuthorityList(normalized);
               {!isEdit && (
                 <button
                   type="button"
-                  onClick={() => handleSubmit()}
+                  onClick={() => {
+                    setFieldTouched("file", true);
+                    handleSubmit();
+                  }}
                   className="btn btn-primary btn-elevate"
                   disabled={
                     loading ||
