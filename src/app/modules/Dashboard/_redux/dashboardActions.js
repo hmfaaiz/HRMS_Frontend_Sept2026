@@ -841,11 +841,11 @@ export const fetchAllTicketStatus = () => async (dispatch) => {
     });
 };
 
-export const fetchAllTicket = (employeeId = null, projectId = null) => async (
+export const fetchAllTicket = (employeeId = null, projectId = null , notCompleted = false) => async (
   dispatch,
 ) => {
   return await requestFromServer
-    .getAllTicket({ employeeId, projectId })
+    .getAllTicket({ employeeId, projectId , notCompleted })
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllTicketFetch(entities));

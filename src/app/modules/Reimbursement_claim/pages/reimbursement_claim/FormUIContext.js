@@ -41,6 +41,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     amount:"",
     file:"",
     pay_in_payroll_forId:"", 
+    request_status: "A",
     // pay_slip_refId: "", 
 
 
