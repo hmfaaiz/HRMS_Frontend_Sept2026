@@ -33,7 +33,9 @@ export function FormCard() {
       panelMode: FormUIContext.panelMode,
       setPanelMode: FormUIContext.setPanelMode,
       readMode: FormUIContext.readMode,
-      setReadMode: FormUIContext.setReadMode,
+      setReadMode: FormUIContext.setReadMode, 
+      editMode: FormUIContext.editMode,
+      setEditMode: FormUIContext.setEditMode,
       currentLevel: FormUIContext.currentLevel,
       setCurrentLevel: FormUIContext.setCurrentLevel,
     };
@@ -69,9 +71,9 @@ export function FormCard() {
   useEffect(() => {
     FormUIProps.setemployeeId(user?.employeeIdMapping);
     dispatch(requestRaisedBySenior());
-    if (allowRequestBySenior) {
+    // if (allowRequestBySenior) {
       FormUIProps.setCurrentLevel(1);
-    }
+    // }
   }, [user, allowRequestBySenior]);
 
   useEffect(() => {

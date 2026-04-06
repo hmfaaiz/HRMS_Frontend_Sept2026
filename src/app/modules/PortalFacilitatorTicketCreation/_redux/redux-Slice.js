@@ -26,6 +26,10 @@ const initialFacilitatorTicketCreationState = {
 export const callTypes = {
     list: "list",
     action: "action",
+    userForEdit: "userForEdit",
+    timelogsEntities: "timelogsEntities",
+    detailEntities: "detailEntities",
+    detailData: "detailData",
 };
 
 export const PortalFacilitatorTicketCreationSlice = createSlice({
@@ -33,15 +37,40 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
     initialState: initialFacilitatorTicketCreationState,
     reducers: {
         catchError: (state, action) => {
+
+
             state.error = `${action.type}: ${action.payload.error}`;
-          
+
+
+            if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
+            }
+            
+            else if (action.payload.callType === callTypes.userForEdit) {
                 state.userForEdit = null;
+            }
+            
+              
+            else if (action.payload.callType === callTypes.timelogsEntities) {
                 state.timelogsEntities = null;
+            }
+            
+                  
+            else if (action.payload.callType === callTypes.detailEntities) {
                 state.detailEntities = null;
+            }
+                  
+            else if (action.payload.callType === callTypes.detailData) {
+                state.detailData = null;
+            }
+            
+            
+            else {
                 state.actionsLoading = false;
-                state.detailData = false;
-          
+            }
+
+            
+
         },
 
         ticketCreationFetched: (state, action) => {
@@ -89,7 +118,7 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
 
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
                     ticketCode: parent.ticketCode,
-                    isPermanent:parent.ticketStatus==0   
+                    isPermanent: parent.ticketStatus == 0
                 })));
 
             state.listLoading = false;
@@ -177,8 +206,8 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
             // state.entities.unshift(action.payload);
             if (action.payload.receiver || action.payload.isSelf) {
                 state.receiveEntities.unshift(action.payload);
-            } 
- 
+            }
+
             else {
                 state.entities.unshift(action.payload);
             }

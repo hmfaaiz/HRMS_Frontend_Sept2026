@@ -207,7 +207,7 @@ export function FormEditForm({
   onHide,
   isUserForRead,
   enableLoading,
-  loading, setId, setReadMode, receiveMode, setReceiveMode
+  loading, setId, setReadMode, receiveMode, setReceiveMode,setEditMode,editMode,
 }) {
   const dispatch = useDispatch();
 
@@ -340,7 +340,7 @@ export function FormEditForm({
                           Ticket Type<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator || receiveMode}
+                      isDisabled={isUserForRead || editMode || !values.initiator || receiveMode}
                       onChange={(e) => {
                         setFieldValue("ticketTypeId", e.value || null);
                         dispatch(FetchAllFacilitatorEmployee(e.value));
@@ -371,7 +371,7 @@ export function FormEditForm({
                           Priority Level<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator}
+                      isDisabled={isUserForRead  || !values.initiator}
                       onChange={(e) => {
                         setFieldValue("priorityLevelId", e.value || null);
                       }}
@@ -398,7 +398,7 @@ export function FormEditForm({
                       }
                       // Disable if read mode, no initiator, or auto-assigned
                       isDisabled={
-                        isUserForRead || receiveMode ||
+                        isUserForRead || receiveMode || editMode ||
                         !values.initiator ||
                         facilitatorEmployeeList?.length === 1 || !values.ticketTypeId
                       }
@@ -434,7 +434,7 @@ export function FormEditForm({
                         }
                         // Disable if read mode, no initiator, or auto-assigned
                         isDisabled={
-                          isUserForRead || receiveMode ||
+                          isUserForRead || receiveMode || editMode ||
                           !values.initiator ||
                           facilitatorEmployeeList?.length === 1
                         }
@@ -651,7 +651,8 @@ export function FormEditForm({
                     <Field
                       name="ticketDescription"
                       component={TextArea}
-                      disabled={receiveMode || formData?.Master?.ticketDescription}
+                      // disabled={receiveMode || formData?.Master?.ticketDescription}
+                      disabled={  isUserForRead || receiveMode || !values.initiator}
                       placeholder="Enter ticket description"
                       className="form-control" // Force full height
                       // value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
@@ -678,7 +679,7 @@ export function FormEditForm({
                           Parent Task
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator || receiveMode}
+                      isDisabled={isUserForRead || editMode ||  !values.initiator || receiveMode}
                       onChange={(e) => {
                         setFieldValue("parentId", e.value || null);
 
@@ -966,8 +967,7 @@ export function FormEditForm({
                             <option
                               key={option.value}
                               value={String(option.value)}
-                              disabled={!values.initiator && (option.value === 1 || option.value === 3)}
-                            >
+                              disabled={(!values?.initiator && (option.value === 1 || option.value === 3)) }>
                               {option.label}
                             </option>
                           ))}
@@ -1203,6 +1203,7 @@ export function FormEditForm({
                 handleReset();
                 setReadMode(false)
                 setReceiveMode(false)
+                setEditMode(false)
 
                 if (inputFile?.current) {
                   inputFile.current.value = "";

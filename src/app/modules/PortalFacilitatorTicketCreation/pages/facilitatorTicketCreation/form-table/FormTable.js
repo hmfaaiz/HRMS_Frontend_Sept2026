@@ -36,6 +36,7 @@ export function FormTable() {
       openDetailGridData: formUIContext.openDetailGridData,
       setIsFileReq: formUIContext.setIsFileReq,
       setReadMode: formUIContext.setReadMode,
+      setEditMode: formUIContext.setEditMode,
       setReceiveMode: formUIContext.setReceiveMode,
       receiveMode: formUIContext.receiveMode,
       masterId: formUIContext.masterId,
@@ -418,6 +419,8 @@ export function FormTable() {
         // setIsFileReq : formUIProps.setIsFileReq,
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
+        setEditMode: formUIProps.setEditMode,
+        editMode: formUIProps.editMode,
         user,
 
 

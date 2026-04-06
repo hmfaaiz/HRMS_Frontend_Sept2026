@@ -58,7 +58,7 @@ export const fetchTicketCreation = (id) => (dispatch) => {
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
-      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      dispatch(actions.catchError({ error, callType: callTypes.userForEdit }));
     });
 };
 

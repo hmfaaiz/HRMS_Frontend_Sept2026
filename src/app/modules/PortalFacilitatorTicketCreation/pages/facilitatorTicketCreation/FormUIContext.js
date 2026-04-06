@@ -18,6 +18,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
    const [employeeId, setemployeeId] = useState('');
   const [isFileReq, setIsFileReq] = useState(false)
   const [readMode, setReadMode] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const [receiveMode, setReceiveMode] = useState(false)
   const [panelMode, setPanelMode] = useState(false);  
   const [currentLevel, setCurrentLevel] = useState(false);
@@ -76,7 +77,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setemployeeId,
     employeeId,
     panelMode,initTimeLog,setCurrentLevel,currentLevel,
-    setPanelMode, setReadMode, readMode,setReceiveMode,receiveMode,
+    setPanelMode,
+    setReadMode, readMode,
+    setEditMode, editMode,
+    setReceiveMode,receiveMode,
     masterId, setMasterId,setDetailId,detailId,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,

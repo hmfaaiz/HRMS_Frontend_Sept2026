@@ -34,8 +34,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       isFileReq: FormUIContext.isFileReq,
       setIsFileReq: FormUIContext.setIsFileReq,
       readMode: FormUIContext.readMode,
+      editMode: FormUIContext.editMode,
       setReceiveMode: FormUIContext.setReceiveMode,
       receiveMode: FormUIContext.receiveMode,
+      setEditMode: FormUIContext.setEditMode,
       setReadMode: FormUIContext.setReadMode,
       setId: FormUIContext.setId,
     };
@@ -148,6 +150,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         alertFromDate: formData.alertFromDate,
         alertEndDate: formData.alertEndDate,
         isSelf: formData.isSelf,
+        editMode:formUIProps.editMode,
 
 
 
@@ -197,6 +200,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         loading={loading}
         setId={formUIProps.setId}
         setReadMode={formUIProps.setReadMode}
+        editMode={formUIProps.editMode}
+        setEditMode={formUIProps.setEditMode}
         setReceiveMode={formUIProps.setReceiveMode}
         receiveMode={formUIProps.receiveMode}
 

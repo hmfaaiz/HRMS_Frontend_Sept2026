@@ -20,7 +20,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog, setDetailId,
-    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData,user,
+    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, user,setEditMode,
   }
 ) {
   const isUserRead = false;
@@ -35,7 +35,7 @@ export function ActionsColumnFormatter(
   return (
     <div className="space-x-2">
 
-      {isAccessForRead && ( user?.employeeIdMapping === row?.assignBy) &&  (
+      {/* {isAccessForRead && ( user?.employeeIdMapping === row?.assignBy) &&  (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
         >
@@ -47,8 +47,37 @@ export function ActionsColumnFormatter(
             <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
-      )}
+      )} */}
 
+      {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
+        row?.initiator ? (
+          <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+        >
+          <a onClick={() => {
+            setReceiveMode(false);
+            setReadMode(false);
+            setEditMode(true);
+            setId(row.Id);
+          }}>
+             <Pencil className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+        ) : (
+           <OverlayTrigger
+          overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
+        >
+          <a onClick={() => {
+            setReceiveMode(false);
+            setReadMode(true);
+            setEditMode(false);
+            setId(row.Id);
+          }}>
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+        )
+      ) : null}
 
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
@@ -58,6 +87,7 @@ export function ActionsColumnFormatter(
           onClick={() => {
             setReceiveMode(false);
             setReadMode(false);
+            setEditMode(false);
             setId("");
             setMasterId(row.masterId);
             openDetailGridData(row.masterId)
