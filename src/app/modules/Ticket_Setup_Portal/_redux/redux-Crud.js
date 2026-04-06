@@ -43,6 +43,10 @@ export function getTimeLogDetail(body) {
   return axios.post(`${API_URL}/ticket_setup_portal/get-ticket-time-log`, body);
 }
 
+export function ticketTimeLog(body) {
+  return axios.post(`${API_URL}/ticket_setup_portal/ticket-time-log`, body);
+}
+
 
 export function uploadImage(body) {
   return axios.post(`${API_URL}/file-upload`, body);

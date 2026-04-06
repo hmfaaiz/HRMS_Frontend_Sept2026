@@ -7,19 +7,19 @@ import { useFormUIContext } from "../FormUIContext";
 import { CommentSection } from "../comment-section/CommentSection";
 import { useHistory } from "react-router-dom";
 import { fetchAllTicket } from "../../../../Dashboard/_redux/dashboardActions";
-import { useDispatch, useSelector , shallowEqual } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 export function FormCard() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { auth } = useSelector((state) => state);
-   const { report, calendar } = useSelector((state) => {
-      return {
-        report: state?.auth?.userAccess["portal_ticket_time_report"],
-        calendar: state?.auth?.userAccess["portal_ticket_calendar"],
-      };
-    }, shallowEqual);
+  const { report, calendar } = useSelector((state) => {
+    return {
+      report: state?.auth?.userAccess["portal_ticket_time_report"],
+      calendar: state?.auth?.userAccess["portal_ticket_calendar"],
+    };
+  }, shallowEqual);
   const formUIContext = useFormUIContext();
   const formUIProps = useMemo(() => {
     return {
@@ -84,20 +84,20 @@ export function FormCard() {
                       el?.isAccess,
                   ),
                 },
-                              {
-                name: "Report",
-                link: "/portal_ticket_time_report/read-all-project-report",
-                isShow: report?.find(
-                  (el) => el?.componentName === "ReadAllAssignmentReport",
-                ),
-              },
-              {
-                name: "Calendar",
-                link: "/portal_ticket_calendar/read-ticket-calendar",
-                isShow: calendar?.find(
-                  (el) => el?.componentName === "ReadTicketCalendar",
-                ),
-              },
+                {
+                  name: "Report",
+                  link: "/portal_ticket_time_report/read-all-project-report",
+                  isShow: report?.find(
+                    (el) => el?.componentName === "ReadAllAssignmentReport",
+                  ),
+                },
+                {
+                  name: "Calendar",
+                  link: "/portal_ticket_calendar/read-ticket-calendar",
+                  isShow: calendar?.find(
+                    (el) => el?.componentName === "ReadTicketCalendar",
+                  ),
+                },
               ]}
               isDashboardIcon={true}
             />
@@ -134,20 +134,20 @@ export function FormCard() {
                       el?.isAccess,
                   ),
                 },
-                              {
-                name: "Report",
-                link: "/portal_ticket_time_report/read-all-project-report",
-                isShow: report?.find(
-                  (el) => el?.componentName === "ReadAllAssignmentReport",
-                ),
-              },
-              {
-                name: "Calendar",
-                link: "/portal_ticket_calendar/read-ticket-calendar",
-                isShow: calendar?.find(
-                  (el) => el?.componentName === "ReadTicketCalendar",
-                ),
-              },
+                {
+                  name: "Report",
+                  link: "/portal_ticket_time_report/read-all-project-report",
+                  isShow: report?.find(
+                    (el) => el?.componentName === "ReadAllAssignmentReport",
+                  ),
+                },
+                {
+                  name: "Calendar",
+                  link: "/portal_ticket_calendar/read-ticket-calendar",
+                  isShow: calendar?.find(
+                    (el) => el?.componentName === "ReadTicketCalendar",
+                  ),
+                },
               ]}
               isDashboardIcon={true}
             />

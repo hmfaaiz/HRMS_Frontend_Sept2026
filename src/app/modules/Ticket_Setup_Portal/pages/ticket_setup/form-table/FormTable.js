@@ -35,6 +35,7 @@ export function FormTable() {
       openDetailTimeLog: formUIContext.openDetailTimeLog,
       openTicketActivity: formUIContext.openTicketActivity,
       openTicketTimeLogging: formUIContext.openTicketTimeLogging,
+      openTimeLogForm : formUIContext.openTimeLogForm,
     };
   }, [formUIContext]);
 
@@ -170,6 +171,7 @@ export function FormTable() {
         openDeleteDialog: formUIProps.openDeleteDialog,
         openReadDialog: formUIProps.openReadDialog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
+        openTimeLogForm : formUIProps.openTimeLogForm,
         openTicketActivity: formUIProps.openTicketActivity,
         newButtonClick: formUIProps.newButtonClick,
         openTicketTimeLogging: formUIProps.openTicketTimeLogging,

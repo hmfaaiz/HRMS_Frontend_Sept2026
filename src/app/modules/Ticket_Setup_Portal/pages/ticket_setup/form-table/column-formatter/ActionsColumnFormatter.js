@@ -21,6 +21,7 @@ export function ActionsColumnFormatter(
     openReadDialog,
     isAccessForEdit,
     isAccessForDelete,
+    openTimeLogForm,
     isAccessForTicketActivity,
     newButtonClick,
     isAccessForAdd,
@@ -77,7 +78,7 @@ export function ActionsColumnFormatter(
           </button>
         </OverlayTrigger>
       )}
-      {isAccessForTimeLogging && employeeId && (
+      {employeeId && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">Ticket Time Logging</Tooltip>
@@ -86,9 +87,7 @@ export function ActionsColumnFormatter(
           <button
             type="button"
             onClick={() => {
-              openTicketTimeLogging(
-                `?projectId=${row?.projectId}&ticketId=${row?.Id}`,
-              );
+              openTimeLogForm(row?.Id);
             }}
             style={{ background: "none", border: "none", padding: 0 }}
           >

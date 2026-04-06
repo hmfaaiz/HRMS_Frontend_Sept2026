@@ -202,6 +202,19 @@ export const updateTicket = (ticketData, disableLoading, onHide) => async (
   }
 };
 
+export const ticketTimeLog = (data, onHide) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  try {
+    const res = await requestFromServer.ticketTimeLog(data);
+    dispatch(actions.ticketUpdated());
+    onHide();
+    toast.success(SERVER_MESSAGES.insertedSuccess);
+  } catch (error) {
+    dispatch(actions.catchError({ error, callType: callTypes.action }));
+    toast.error(error?.response?.data?.message || "Can't update ticket");
+  }
+};
+
 // Delete ticket
 export const deleteTicket = (id) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
