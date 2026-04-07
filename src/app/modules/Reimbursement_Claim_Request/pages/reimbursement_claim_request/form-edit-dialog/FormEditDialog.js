@@ -24,7 +24,7 @@ export function FormEditDialog({ id, employeeId }) {
   const dispatch = useDispatch();
 
   const { userForEdit } = useSelector((state) => ({
-    userForEdit: state.reimbursement_claim.userForEdit,
+    userForEdit: state.reimbursement_claim_request.userForEdit,
   }));
 
   useEffect(() => {

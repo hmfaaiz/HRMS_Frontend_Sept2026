@@ -1,7 +1,7 @@
 import React from "react";
 const StatsCard = ({ icon, name, value, handleCardClick }) => {
   return (
-    <div className="bg-tsecondary p-2 rounded-lg space-y-1">
+    <div className="bg-tsecondary p-2 rounded-lg space-y-1 flex flex-col">
       <span className="bg-tprimary p-2 rounded-full flex items-center justify-center w-8 h-8">
         {icon}
       </span>
@@ -10,14 +10,14 @@ const StatsCard = ({ icon, name, value, handleCardClick }) => {
 
       {value > 0 ? (
         <div
-          className={`text-black cursor-pointer w-fit font-medium underline text-xs hover:text-tprimary`}
+          className={`text-black cursor-pointer w-fit font-medium underline mt-auto text-xs hover:text-tprimary`}
           onClick={handleCardClick}
         >
           View All
         </div>
       ) : (
         <div
-          className={`text-gray-500 cursor-not-allowed w-fit font-medium text-xs`}
+          className={`text-gray-500 cursor-not-allowed w-fit mt-auto font-medium text-xs`}
         >
           View All
         </div>

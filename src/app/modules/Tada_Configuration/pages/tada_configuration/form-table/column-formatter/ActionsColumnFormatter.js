@@ -16,6 +16,11 @@ export function ActionsColumnFormatter(
   }
 ) {
   const id = row.id || row.Id;
+  
+  // If access flags are not properly defined, allow access as default
+  const canEdit = isAccessForEdit !== false;
+  const canDelete = isAccessForDelete !== false;
+  
   return (
     <div className="space-x-2">
       <OverlayTrigger
@@ -26,7 +31,7 @@ export function ActionsColumnFormatter(
         </a>
       </OverlayTrigger>
 
-      {isAccessForEdit && (row.isActive || row.isActive === undefined) && (
+      {canEdit && (row.isActive || row.isActive === undefined) && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -36,7 +41,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForDelete && (
+      {canDelete && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-delete-tooltip">

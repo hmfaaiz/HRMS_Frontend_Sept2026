@@ -46,6 +46,15 @@ export const FormCard = () => {
         (el) => el?.componentName === "ReadAllReimbursementClaimRequest" && el?.isResourceShow
       ),
     },
+    {
+       name: "Workflow Status",
+       link: "/reimbursement_claim_workflow_status/read-all-reimbursement-claim-workflow-status",
+       isShow: reimbursement?.find(
+       (el) =>
+        el?.componentName === "ReadAllReimbursementClaimWorkflowStatus" &&
+        el?.isResourceShow
+      ),
+     },
   ];
 
   return (

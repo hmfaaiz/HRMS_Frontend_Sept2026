@@ -8,6 +8,7 @@ export const initialValues = {
   isDesignationWise: false,
   modeOfTransportId: [],
   hotelEntitlementId: [],
+  preApprover: [],
   hotelEntitlementSelfAmount: 0,
   ishotelEntitlementSelfAmountWise: false,
   dailyAllowanceAmount: 0,

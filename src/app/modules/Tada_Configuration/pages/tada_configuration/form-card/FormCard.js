@@ -5,7 +5,7 @@ import { useSelector, shallowEqual } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus } from "lucide-react";
-import { FormFilter } from "../form-filter/FormFIlter";
+import { FormFilter } from "../form-filter/FormFilter";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();

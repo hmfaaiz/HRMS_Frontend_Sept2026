@@ -44,37 +44,14 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
 
 
             state.error = `${action.type}: ${action.payload.error}`;
-            state.userForEdit = null;
-
-            if (action.payload.callType === callTypes.list) {
+          
                 state.listLoading = false;
-            }
-            
-            else if (action.payload.callType === callTypes.userForEdit) {
                 state.userForEdit = null;
-            }
-            
-              
-            else if (action.payload.callType === callTypes.timelogsEntities) {
                 state.timelogsEntities = null;
-            }
-            
-                  
-            else if (action.payload.callType === callTypes.detailEntities) {
                 state.detailEntities = null;
-            }
-                  
-            else if (action.payload.callType === callTypes.detailData) {
-                state.detailData = null;
-            }
-            
-            
-            else {
                 state.actionsLoading = false;
-            }
-
-            
-
+                state.detailData = false;
+          
         },
 
 
