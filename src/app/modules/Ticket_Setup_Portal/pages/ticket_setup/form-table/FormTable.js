@@ -35,6 +35,7 @@ export function FormTable() {
       openDetailTimeLog: formUIContext.openDetailTimeLog,
       openTicketActivity: formUIContext.openTicketActivity,
       openTicketTimeLogging: formUIContext.openTicketTimeLogging,
+      openTimeLogForm : formUIContext.openTimeLogForm,
     };
   }, [formUIContext]);
 
@@ -84,14 +85,31 @@ export function FormTable() {
   );
   // Table columns
   const columns = [
-    {
-      dataField: "Project.projectName",
-      text: "Project",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "100px" },
-    },
+     {
+          dataField: "priority",
+          text: "",
+          sort: false,
+          sortCaret,
+          headerSortingClasses,
+          style: { minWidth: "5px" },
+          formatter: (cell) => {
+            const color = PriorityType?.find((e) => e.value == cell)?.color;
+    
+            return (
+              <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span
+                  style={{
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: color,
+                    display: "inline-block",
+                  }}
+                ></span>
+              </span>
+            );
+          },
+        },
     {
       dataField: "ticketCode",
       text: "Ticket Number",
@@ -117,16 +135,6 @@ export function FormTable() {
       style: { minWidth: "60px" },
       formatter: (cell) =>
         cell ? TicketType?.find((e) => e.value == cell)?.label : "",
-    },
-    {
-      dataField: "priority",
-      text: "Priority",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "60px" },
-      formatter: (cell) =>
-        cell ? PriorityType?.find((e) => e.value == cell)?.label : "",
     },
 
     {
@@ -163,6 +171,7 @@ export function FormTable() {
         openDeleteDialog: formUIProps.openDeleteDialog,
         openReadDialog: formUIProps.openReadDialog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
+        openTimeLogForm : formUIProps.openTimeLogForm,
         openTicketActivity: formUIProps.openTicketActivity,
         newButtonClick: formUIProps.newButtonClick,
         openTicketTimeLogging: formUIProps.openTicketTimeLogging,

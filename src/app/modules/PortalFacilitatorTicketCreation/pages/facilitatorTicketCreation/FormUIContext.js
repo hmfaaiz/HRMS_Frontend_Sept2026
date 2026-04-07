@@ -19,7 +19,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [isFileReq, setIsFileReq] = useState(false)
   const [readMode, setReadMode] = useState(false)
   const [receiveMode, setReceiveMode] = useState(false)
-  const [panelMode, setPanelMode] = useState(false);
+  const [panelMode, setPanelMode] = useState(false);  
+  const [currentLevel, setCurrentLevel] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -74,7 +75,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     initUser,
     setemployeeId,
     employeeId,
-    panelMode,initTimeLog,
+    panelMode,initTimeLog,setCurrentLevel,currentLevel,
     setPanelMode, setReadMode, readMode,setReceiveMode,receiveMode,
     masterId, setMasterId,setDetailId,detailId,
     newFormButtonClick: FormUIEvents.newFormButtonClick,

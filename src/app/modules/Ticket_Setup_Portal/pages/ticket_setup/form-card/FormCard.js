@@ -238,6 +238,46 @@ export function FormCard() {
               }
             />
           </div>
+          <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  backgroundColor: "red",
+                  display: "inline-block",
+                }}
+              ></span>
+              <span className="text-xs">High</span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  backgroundColor: "orange",
+                  display: "inline-block",
+                }}
+              ></span>
+              <span className="text-xs">Medium</span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  backgroundColor: "green",
+                  display: "inline-block",
+                }}
+              ></span>
+              <span className="text-xs">Low</span>
+            </div>
+          </div>
           <FormTable />
         </div>
       </div>

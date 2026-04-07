@@ -1,21 +1,26 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Formik, Form, Field } from "formik";
 import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
-import { FileText, FileSpreadsheet, Sheet } from "lucide-react"; // Export icons
-
+import { FileText, FileSpreadsheet, Sheet, CirclePlus } from "lucide-react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { fetchAllEmployeesWithNoPermissionData } from "../../../../../../_metronic/redux/dashboardActions";
+import { useDispatch, useSelector } from "react-redux";
 export function FormFilter({
   employees = [],
   ticketTypes = [],
   ticketStatuses = [],
   priorityLevels = [],
   loading,
-  onPrint, 
+  onPrint,
+  showTicketDetails,
+  onTicketDetailsChange,
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
+  const dispatch = useDispatch();
   const uiProps = useMemo(
     () => ({
       queryParams: uiContext.queryParams || {},
@@ -33,7 +38,6 @@ export function FormFilter({
 
   const applyFilter = (values) => {
     const cleanFilter = { ...values };
-
     Object.keys(cleanFilter).forEach((k) => {
       if (
         cleanFilter[k] === null ||
@@ -43,7 +47,6 @@ export function FormFilter({
         delete cleanFilter[k];
       }
     });
-
     uiProps.setQueryParams({
       ...uiProps.queryParams,
       filter: {
@@ -57,39 +60,49 @@ export function FormFilter({
       csv: false,
       excel: false,
     });
-
     uiContext.setShowFilter(true);
   };
-
-  
 
   const handleExport = (type) => {
     if (!queryParams.isFiltered) {
       alert("Please apply filter before downloading.");
       return;
     }
-
     if (!hasRecords) {
       alert("No records available to download.");
       return;
     }
-
     onPrint(type);
   };
 
-
+    const {
+      allEmployeesWithNoPermissionList,
+    
+    } = useSelector((state) => state.dashboard);
+  useEffect(() => {
+    dispatch(
+      fetchAllEmployeesWithNoPermissionData("allEmployeesWithNoPermissionList"),
+    );
+  }, [dispatch]);
+  const allEmployeesMap = useMemo(() => {
+    return new Map(allEmployeesWithNoPermissionList?.map((item) => [item.value, item]));
+  }, [allEmployeesWithNoPermissionList]);
   return (
     <Formik
       enableReinitialize
       initialValues={{
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
-        ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
+        // ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
+        ticketStatus: 1,
         priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
         ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
         ticketDateFrom: uiProps.queryParams?.filter?.ticketDateFrom || null,
         ticketDateTo: uiProps.queryParams?.filter?.ticketDateTo || null,
         dueDateFrom: uiProps.queryParams?.filter?.dueDateFrom || null,
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
+
+        priorityLevelIds: priorityLevels.map(pl => pl.value) || [],
+        ticketTypeIds: ticketTypes.map(pl => pl.value) || []
       }}
       onSubmit={applyFilter}
     >
@@ -98,14 +111,15 @@ export function FormFilter({
           <Form className="form form-label-right">
             <fieldset>
               <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
+              <div className="grid grid-cols-12 gap-4 mb-2 ">
+ 
 
-              <div className="grid grid-cols-12 gap-4">
-                {/* Ticket Type */}
-                <div className="col-span-6 sm:col-span-3">
+
+             <div className="col-span-6 sm:col-span-2">
                   <MultiSelect
                     name="ticketTypeIds"
                     label="Ticket Type"
-                    value={ticketTypes.filter((tt) =>
+                    value={ticketTypes?.filter((tt) =>
                       values.ticketTypeIds.includes(tt.value),
                     )}
                     options={ticketTypes}
@@ -117,9 +131,7 @@ export function FormFilter({
                     }
                   />
                 </div>
-
-                {/* Priority Level */}
-                <div className="col-span-6 sm:col-span-3">
+               <div className="col-span-6 sm:col-span-2">
                   <MultiSelect
                     name="priorityLevelIds"
                     label="Priority Level"
@@ -135,15 +147,13 @@ export function FormFilter({
                     }
                   />
                 </div>
-
-                {/* Ticket Status */}
-                <div className="col-span-6 sm:col-span-3">
+              <div className="col-span-6 sm:col-span-2">
                   <SearchSelect
                     name="ticketStatus"
                     label="Ticket Status"
                     value={
                       ticketStatusOptions.find(
-                        (option) => option.value === values.ticketStatus,
+                        (o) => o.value === values.ticketStatus,
                       ) || { label: "All", value: null }
                     }
                     options={[
@@ -158,9 +168,7 @@ export function FormFilter({
                     }
                   />
                 </div>
-
-                {/* Ticket Description */}
-                <div className="col-span-6 sm:col-span-3">
+              <div className="col-span-6 sm:col-span-2">
                   <label className="form-label">Ticket Description</label>
                   <Field
                     name="ticketDescription"
@@ -169,8 +177,36 @@ export function FormFilter({
                     placeholder="Ticket Description"
                   />
                 </div>
-
-                {/* Ticket Date */}
+                      <div className="col-span-6 sm:col-span-2">
+                         <Field
+                           name="employeeId"
+                           component={SearchSelect}
+                          
+                           onChange={(e) => {
+                             const value = e.value == "All" ? "" : e.value;
+                             setFieldValue("employeeId", value);
+                           }}
+                           label={<span>Employee</span>}
+                           // value={
+                           //   allEmployeesMap?.get(values?.reportTo || "") || ""
+                           // }
+                           value={
+                             values.employeeId === ""
+                               ? { label: "All", value: "" }
+                               : allEmployeesMap?.get(values.employeeId) || ""
+                           }
+                           autoComplete="off"
+                           // options={allEmployees}
+                           options={[
+                             { label: "All", value: "" },
+                             ...(Array.isArray(allEmployeesWithNoPermissionList)
+                               ? allEmployeesWithNoPermissionList
+                               : []),
+                           ]}
+                         />
+                       </div>
+                </div>
+                  <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-12 sm:col-span-6">
                   <p className="text-sm mb-0 text-black font-semibold">
                     Start Date falling between
@@ -194,8 +230,6 @@ export function FormFilter({
                     />
                   </div>
                 </div>
-
-                {/* Due Date */}
                 <div className="col-span-12 sm:col-span-6">
                   <p className="text-sm mb-0 text-black font-semibold">
                     Due Date falling between
@@ -217,72 +251,161 @@ export function FormFilter({
                     />
                   </div>
                 </div>
-              </div>
+       </div>
             </fieldset>
           </Form>
 
-          {/* Buttons & Export Icons */}
-          <div className="flex justify-end gap-2 mt-2">
-            <button
-              type="button"
-              onClick={() => {
-                handleReset();
-                uiProps.setQueryParams({
-                  ...uiProps.queryParams,
-                  filter: {},
-                  pageNumber: 1,
-                  isFiltered: false,
-                });
-                uiContext.setShowFilter(false);
-              }}
-              className="btn btn-light"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="btn btn-primary"
-            >
-              Filter
-              {loading && (
-                <span className="ml-3 mr-3 spinner spinner-white"></span>
-              )}
-            </button>
-
-            {/* Export Buttons */}
-            {onPrint && (
-              <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  onClick={() => handleExport("pdf")}
-                  disabled={loading || !queryParams.isFiltered || !hasRecords}
-                >
-                  <FileText className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  onClick={() => handleExport("csv")}
-                  disabled={loading || !queryParams.isFiltered || !hasRecords}
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  onClick={() => handleExport("excel")}
-                  disabled={loading || !queryParams.isFiltered || !hasRecords}
-                >
-                  <Sheet className="w-4 h-4" />
-                </button>
+          {/* ── Legend row + buttons ── */}
+          <div className="flex justify-between items-center mt-2 flex-wrap gap-2">
+            {/* LEFT: Priority legend + Ticket Details checkbox */}
+            <div className="flex items-center gap-4 flex-wrap">
+              {/* High */}
+              <div className="flex items-center gap-2">
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    backgroundColor: "red",
+                    display: "inline-block",
+                  }}
+                />
+                <span className="text-md">High</span>
               </div>
-            )}
+              {/* Medium */}
+              <div className="flex items-center gap-2">
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    backgroundColor: "orange",
+                    display: "inline-block",
+                  }}
+                />
+                <span className="text-md">Medium</span>
+              </div>
+              {/* Low */}
+              <div className="flex items-center gap-2">
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    backgroundColor: "green",
+                    display: "inline-block",
+                  }}
+                />
+                <span className="text-md">Low</span>
+              </div>
+
+              {/* Divider */}
+              <span style={{ borderLeft: "1px solid #ccc", height: 18 }} />
+
+              {/* Ticket Details checkbox */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="ticketDetailsToggle"
+                  checked={showTicketDetails}
+                  onChange={(e) => onTicketDetailsChange(e.target.checked)}
+                  style={{ cursor: "pointer", width: 15, height: 15 }}
+                />
+                <label
+                  htmlFor="ticketDetailsToggle"
+                  className="text-md mb-0"
+                  style={{ cursor: "pointer", userSelect: "none" }}
+                >
+                  Show Ticket Detail
+                </label>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex justify-end gap-2 flex-wrap">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={uiContext.addNewTicket}
+              >
+                <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" /> Add
+              </button>
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                disabled={loading}
+                className="btn btn-primary"
+              >
+                Filter
+                {loading && (
+                  <span className="ml-3 mr-3 spinner spinner-white" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleReset();
+                  uiProps.setQueryParams({
+                    ...uiProps.queryParams,
+                    filter: {},
+                    pageNumber: 1,
+                    isFiltered: false,
+                  });
+                  uiContext.setShowFilter(false);
+                }}
+                className="btn btn-light"
+              >
+                Cancel
+              </button>
+              {onPrint && (
+                <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
+                  {/* PDF */}
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="export-pdf-tooltip">Export PDF</Tooltip>
+                    }
+                  >
+                    <button
+                      type="button"
+                      className="border-none bg-transparent"
+                      onClick={() => handleExport("pdf")}
+                    >
+                      <FileText className="w-4 h-4 cursor-pointer" />
+                    </button>
+                  </OverlayTrigger>
+
+                  {/* CSV */}
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="export-csv-tooltip">Export CSV</Tooltip>
+                    }
+                  >
+                    <button
+                      type="button"
+                      className="border-none bg-transparent"
+                      onClick={() => handleExport("csv")}
+                    >
+                      <FileSpreadsheet className="w-4 h-4 cursor-pointer" />
+                    </button>
+                  </OverlayTrigger>
+
+                  {/* Excel */}
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="export-excel-tooltip">Export Excel</Tooltip>
+                    }
+                  >
+                    <button
+                      type="button"
+                      className="border-none bg-transparent"
+                      onClick={() => handleExport("excel")}
+                    >
+                      <Sheet className="w-4 h-4 cursor-pointer" />
+                    </button>
+                  </OverlayTrigger>
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}

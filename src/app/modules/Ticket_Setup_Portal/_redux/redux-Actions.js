@@ -9,6 +9,7 @@ const { actions } = ticketSetupPortalSlice;
 export const fetchTickets = (queryParams) => async (dispatch) => {
   // PDF Export
   // PDF Export
+  if (!queryParams?.filter?.projectId) return;
   if (queryParams.pdf) {
     dispatch(actions.startCall({ callType: callTypes.pdf }));
     return requestFromServer
@@ -197,6 +198,19 @@ export const updateTicket = (ticketData, disableLoading, onHide) => async (
   } catch (error) {
     dispatch(actions.catchError({ error, callType: callTypes.action }));
     disableLoading();
+    toast.error(error?.response?.data?.message || "Can't update ticket");
+  }
+};
+
+export const ticketTimeLog = (data, onHide) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  try {
+    const res = await requestFromServer.ticketTimeLog(data);
+    dispatch(actions.ticketUpdated());
+    onHide();
+    toast.success(SERVER_MESSAGES.insertedSuccess);
+  } catch (error) {
+    dispatch(actions.catchError({ error, callType: callTypes.action }));
     toast.error(error?.response?.data?.message || "Can't update ticket");
   }
 };

@@ -1,3 +1,5 @@
+import { formatDates } from "../../../../utils/common";
+
 export const CustomerStatusCssClasses = ["danger", "success", "info", ""];
 export const CustomerStatusTitles = ["Suspended", "Active", "Pending", ""];
 export const CustomerTypeCssClasses = ["success", "primary", ""];
@@ -23,4 +25,14 @@ export const initialFilter = {
   pdf: false,
   csv: false,
   excel: false,
+};
+
+export const timeLoggingVal = {
+  loggedDate: formatDates(new Date().toDateString()),
+  workDescription: "",
+  timeRangeFrom: "",
+  timeRangeTo: "",
+  noOfHours: "",
+  isBillable: false,
+  isFromTimeLogging: true,
 };

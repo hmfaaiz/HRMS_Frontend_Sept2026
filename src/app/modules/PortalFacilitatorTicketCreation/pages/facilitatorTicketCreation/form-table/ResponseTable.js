@@ -42,13 +42,15 @@ export function ResponseTable() {
       openTicketTimeLog: formUIContext.openTicketTimeLog,
       
       openDetailTimeLog: formUIContext.openDetailTimeLog,
+      employeeId: formUIContext.employeeId,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess,user } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       userAccess: state?.auth?.userAccess["portal_ticket_creation"],
+       user: state?.auth?.user,
     };
   }, shallowEqual);
 
@@ -59,10 +61,16 @@ export function ResponseTable() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    formUIProps.setId([]);
 
-    dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
-  }, [formUIProps.queryParams, dispatch, receiveTotalCount]);
+
+    formUIProps.setId([]);
+dispatch(
+  actions.fetchReceiveTickets({
+    ...formUIProps.queryParams,
+    employeeId: formUIProps.employeeId,
+  })
+);
+  }, [formUIProps.queryParams,formUIProps.employeeId, dispatch, receiveTotalCount]);
 
 
 
@@ -122,7 +130,7 @@ export function ResponseTable() {
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -138,7 +146,7 @@ export function ResponseTable() {
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -153,7 +161,7 @@ export function ResponseTable() {
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -168,7 +176,7 @@ export function ResponseTable() {
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
 
 
@@ -186,27 +194,27 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "70px",
       },
-      formatter: (cell) => {
+       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
-    {
-      dataField: "AssignByProfile.department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
+    // {
+    //   dataField: "AssignByProfile.department.deptName",
+    //   text: "Department",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "100px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+    //   },
+    // },
 
     {
       dataField: "AssignByProfile.designation.formName",
@@ -215,11 +223,11 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "40px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
     },
 
@@ -248,7 +256,7 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "50px",
       },
       formatter: (cell,row) => {
         if (!cell) return "";
@@ -261,7 +269,7 @@ export function ResponseTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.ticketDate);
+         const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
        
@@ -283,13 +291,12 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "50px",
       },
-      formatter: (cell) => {
+       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
-
 
 
 
@@ -302,11 +309,11 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "50px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
 
 
@@ -322,13 +329,12 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "20px",
       },
-      formatter: (cell) => {
+       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
-
 
 
 
@@ -342,7 +348,7 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "20px",
       },
       formatter: (cell) => {
         if (cell === null || cell === undefined) return "";
@@ -365,7 +371,7 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "50px",
       },
       formatter: (cell,row) => {
         if (!cell) return "";
@@ -378,7 +384,7 @@ export function ResponseTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.ticketDate);
+         const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
        
@@ -412,6 +418,7 @@ export function ResponseTable() {
         openTicketTimeLog: formUIProps.openTicketTimeLog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
         setReadMode: formUIProps.setReadMode,
+        user,
 
       },
       classes: "text-right pr-0",

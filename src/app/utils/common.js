@@ -266,14 +266,17 @@ export const PriorityType = [
   {
     label: "Low",
     value: 1,
+    color : "green",
   },
   {
     label: "Medium",
     value: 2,
+    color : "orange",
   },
   {
     label: "High",
     value: 3,
+    color : "red",
   },
 ];
 

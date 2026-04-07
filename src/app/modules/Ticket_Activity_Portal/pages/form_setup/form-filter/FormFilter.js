@@ -10,7 +10,7 @@ import { TicketType } from "../../../../../utils/common";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import * as Yup from "yup";
-import { Edit, Eye, XCircle } from "lucide-react";
+import { CalendarClockIcon, Edit, Eye, XCircle } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import * as actions from "../../../_redux/redux-Actions";
 
@@ -50,6 +50,7 @@ export function FormFilter() {
       panelMode: formUIContext.panelMode,
       setPanelMode: formUIContext.setPanelMode,
       openTicketEditDialog: formUIContext.openTicketEditDialog,
+      ticketTimeLogDialog: formUIContext.ticketTimeLogDialog,
     };
   }, [formUIContext]);
 
@@ -175,6 +176,21 @@ export function FormFilter() {
                       </button>
                     </OverlayTrigger>
                   )}
+                {values?.ticketId && formUIProps?.commentsFilter?.ticketId && (
+                  <OverlayTrigger
+                    overlay={<Tooltip id={`edit`}>Ticket Time Log</Tooltip>}
+                  >
+                    <button
+                      type="button"
+                      className="btn btn-primary d-flex align-items-center gap-2"
+                      onClick={() => {
+                        formUIProps.ticketTimeLogDialog(values?.ticketId);
+                      }}
+                    >
+                      <CalendarClockIcon className="w-4 h-4 text-white" />
+                    </button>
+                  </OverlayTrigger>
+                )}
                 {formUIProps?.panelMode ? (
                   <button
                     type="button"

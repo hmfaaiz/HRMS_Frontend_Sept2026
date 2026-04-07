@@ -58,6 +58,12 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .nullable()
         .required(VALIDATION_MESSAGES.required),
 
+      ticketDate: Yup.date()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+
       dueDate: Yup.date()
 
         .nullable()
@@ -119,8 +125,8 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
 
       ticketDescription: Yup.string()
         .trim()
-        .nullable(),
-      // .required(VALIDATION_MESSAGES.required),
+        .nullable()
+      .required(VALIDATION_MESSAGES.required),
 
 
       // alertFromDate: Yup.string().nullable().when("isForAlert", {
@@ -266,9 +272,10 @@ export function FormEditForm({
         ...formData,
         remarks: !isUserForRead ? "" : formData.remarks || "",
         file: !isUserForRead ? "" : formData.file || "",
-        ticketStatus: !formData?.ticketStatus
+         ticketDescription:formData?.Master?.ticketDescription ?? "",
+        ticketStatus: formData?.ticketStatus == null
           ? 1
-          : formData?.isUserForRead
+          : isUserForRead
             ? formData.ticketStatus
             : formData?.initiator
               ? formData.ticketStatus
@@ -634,13 +641,13 @@ export function FormEditForm({
                       disabled={receiveMode || formData?.Master?.ticketDescription}
                       placeholder="Enter ticket description"
                       className="form-control" // Force full height
-                      value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
+                      // value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
 
                       label={
                         <span>
                           {" "}
                           Ticket Description
-                          {/* <span style={{ color: "red" }}>*</span> */}
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       autoComplete="off"
@@ -1039,7 +1046,7 @@ export function FormEditForm({
                 )}
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
-
+  {(!formData.isSelf) && (
                   <div className="col-span-3">
                     <Field
                       name="remarks"
@@ -1060,7 +1067,7 @@ export function FormEditForm({
 
                     </div>
                   </div>
-
+  )}
 
 
                   <div className="">

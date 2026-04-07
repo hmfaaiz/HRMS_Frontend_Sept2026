@@ -296,4 +296,8 @@ export const getAllCompanyEmployeesData = async () => {
 };
 export const getAllCurrentParentTask = async () => {
   return await axios.get(`${USERS_URL}/settings/read-all-current-parent-ticket`);
+
+
+};export const getAllAlertTasks = async () => {
+  return await axios.get(`${USERS_URL}/portal_ticket_creation/read-alert-facilitator-ticket-creation`);
 };
