@@ -397,19 +397,7 @@ export function FormEditForm({
             );
           }, [hotelOptions, employeeEntitlement]);
 
-          const filteredTravelClassOptions = useMemo(() => {
-            if (
-              !employeeEntitlement ||
-              !employeeEntitlement.classOfTravelId ||
-              !Array.isArray(employeeEntitlement.classOfTravelId) ||
-              employeeEntitlement.classOfTravelId.length === 0
-            ) {
-              return travelClassOptions;
-            }
-            return travelClassOptions.filter((opt) =>
-              employeeEntitlement.classOfTravelId.includes(String(opt.value)),
-            );
-          }, [travelClassOptions, employeeEntitlement]);
+
 
           const isPolicyDefined = !!employeeEntitlement && !isReadOnly;
           const hasEntitlement = !!employeeEntitlement;
@@ -823,7 +811,7 @@ export function FormEditForm({
                                     disabled={!isPolicyDefined}
                                   >
                                     <option value="">Select</option>
-                                    {filteredTravelClassOptions.map((opt) => (
+                                    {travelClassOptions.map((opt) => (
                                       <option key={opt.value} value={opt.value}>
                                         {opt.label}
                                       </option>

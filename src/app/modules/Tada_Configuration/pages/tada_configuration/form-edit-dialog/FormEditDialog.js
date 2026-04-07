@@ -48,7 +48,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       Company,
       Subsidiary,
       ModeOfTransports,
-      ClassOfTravels,
       HotelEntitlements,
       PreApprovers,
       preApproverNames,
@@ -73,9 +72,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         : [],
       modeOfTransportId: Array.isArray(rawValues.modeOfTransportId)
         ? rawValues.modeOfTransportId.map(Number)
-        : [],
-      classOfTravelId: Array.isArray(rawValues.classOfTravelId)
-        ? rawValues.classOfTravelId.map(Number)
         : [],
       hotelEntitlementId: Array.isArray(rawValues.hotelEntitlementId)
         ? rawValues.hotelEntitlementId.map(Number)
