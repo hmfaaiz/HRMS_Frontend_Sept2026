@@ -551,7 +551,15 @@ const project_sprint = lazy(() =>
 );
 
 const reimbursement_claim_approval = lazy (() =>
- import("./modules/Reimbursement_Claim_Approval/pages/index"))
+ import("./modules/Reimbursement_Claim_Approval/pages/index"),
+);
+
+const reimbursement_claim_workflow_status_approval = lazy (() =>
+import ("./modules/Reimbursement_Workflow_Status/pages/index"),
+);
+
+const reimbursement_claim_workflow_status = lazy (() =>
+import ("./modules/Reimbursement_Workflow_Portal/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -744,6 +752,8 @@ const ROUTES = {
   temporary_shift_setup: employee_temporary_shift_setup,
   reimbursement_claim_approval: reimbursement_claim_approval,
   project_sprint : project_sprint,
+  reimbursement_claim_workflow_status_approval : reimbursement_claim_workflow_status_approval,
+  reimbursement_claim_workflow_status : reimbursement_claim_workflow_status,
 };
 
 export default function BasePage() {

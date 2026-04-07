@@ -58,13 +58,13 @@ export function FormEditForm({
 
   const { dashboard } = useSelector((state) => state);
   const { currentState } = useSelector(
-    (state) => ({ currentState: state.reimbursement_claim }),
+    (state) => ({ currentState: state.reimbursement_claim_request }),
     shallowEqual
   );
 
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
   const entities = useSelector(
-    (state) => state.reimbursement_claim.entities || [],
+    (state) => state.reimbursement_claim_request.entities || [],
     shallowEqual
   );
   const [policies, setPolicies] = useState([]);
@@ -83,7 +83,6 @@ export function FormEditForm({
     }
   }, [employeeId, formUIProps?.employeeId?.value]);
 
-  // ── Load policies for this employee ──────────────────────────────────────
   useEffect(() => {
     const empId = employeeId || formUIProps?.employeeId?.value;
     if (!empId) return;
@@ -192,7 +191,7 @@ export function FormEditForm({
     return finalMaxAmount;
   };
 
-  // ── Min date for date picker ──────────────────────────────────────────────
+  // ── Min date for date picker 
   const getMinDate = () => {
     const payrollStart = activeFiscalYear?.payrollMonth?.startDate
       ? new Date(activeFiscalYear.payrollMonth.startDate)
