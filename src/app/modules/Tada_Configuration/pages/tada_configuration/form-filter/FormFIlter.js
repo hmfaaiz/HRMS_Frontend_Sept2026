@@ -1,43 +1,51 @@
-import React, { useMemo, useCallback } from "react"
-import { Formik } from "formik"
-import { isEqual, debounce } from "lodash"
-import { useFormUIContext } from "../FormUIContext"
-import { InputSearch } from "../../../../../utils/common-modules/InputSearch"
+import React, { useMemo, useCallback } from "react";
+import { Formik } from "formik";
+import { isEqual, debounce } from "lodash";
+import { useFormUIContext } from "../FormUIContext";
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values
-  const newQueryParams = { ...queryParams }
-  const filter = {}
-
+  const { searchText } = values;
+  const newQueryParams = { ...queryParams };
+  
+  const filter = { ...queryParams.filter };
   if (searchText) {
-    filter.searchQuery = searchText
+    filter.searchQuery = searchText;
+    newQueryParams.searchQuery = searchText; 
+  } else {
+    delete filter.searchQuery;
+    delete newQueryParams.searchQuery;
   }
-  newQueryParams.filter = filter
-  return newQueryParams
-}
+  
+  newQueryParams.filter = filter;
+  return newQueryParams;
+};
 
 export function FormFilter() {
-
-  const FormUIContext = useFormUIContext()
+  const FormUIContext = useFormUIContext();
 
   const formUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
       setQueryParams: FormUIContext.setQueryParams,
-    }
-  }, [FormUIContext])
+    };
+  }, [FormUIContext]);
 
-  const applyFilter = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values)
-    if (!isEqual(newQueryParams, formUIProps.queryParams)) {
-      newQueryParams.pageNumber = 1
-      formUIProps.setQueryParams(newQueryParams)
-    }
-  }
-
-  const debouncedApplyFilter = useCallback(
-    debounce((values) => applyFilter(values), 500), 
-    []
+  const debouncedApplyFilter = useMemo(
+    () =>
+      debounce((values) => {
+        formUIProps.setQueryParams((prev) => {
+          const newQueryParams = prepareFilter(prev, values);
+          if (!isEqual(newQueryParams, prev)) {
+            return {
+              ...newQueryParams,
+              pageNumber: 1,
+            };
+          }
+          return prev;
+        });
+      }, 500),
+    [formUIProps.setQueryParams],
   );
 
   return (
@@ -45,29 +53,27 @@ export function FormFilter() {
       <Formik
         enableReinitialize={true}
         initialValues={{
-          searchText: ""
+          searchText: "",
         }}
         onSubmit={(values) => {
-          debouncedApplyFilter(values)
+          debouncedApplyFilter(values);
         }}
       >
-        {({
-          values,
-          handleSubmit,
-          handleBlur,
-          setFieldValue,
-        }) => (
-          <form className="form form-label-right" style={{margin: '0.8rem 0'}}>
-              <InputSearch
-                values={values}
-                fieldName="searchText"
-                setFieldValue={setFieldValue}
-                handleBlur={handleBlur}
-                handleSubmit={handleSubmit}
-              />
+        {({ values, handleSubmit, handleBlur, setFieldValue }) => (
+          <form
+            className="form form-label-right"
+            style={{ margin: "0.8rem 0" }}
+          >
+            <InputSearch
+              values={values}
+              fieldName="searchText"
+              setFieldValue={setFieldValue}
+              handleBlur={handleBlur}
+              handleSubmit={handleSubmit}
+            />
           </form>
         )}
       </Formik>
     </>
-  )
+  );
 }
