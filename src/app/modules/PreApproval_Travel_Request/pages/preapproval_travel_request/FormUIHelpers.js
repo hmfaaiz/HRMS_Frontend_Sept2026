@@ -5,7 +5,7 @@ export const initialValues = {
   employeeName: "",
   employeeDesignation: "",
   purposeOfTravel: "",
-  travelType: "Official", // Official, Training, Client Visit, Conference
+  travelType: "", // Dynamic values fetched from form ID 553
   accommodationRequired: false,
   hotelEntitlementAmount: 0,
   selfEntitlementAmount: 0,

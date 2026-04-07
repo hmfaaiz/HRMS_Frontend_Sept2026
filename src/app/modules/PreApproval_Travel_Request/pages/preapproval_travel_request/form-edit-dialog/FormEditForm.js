@@ -38,11 +38,15 @@ export function FormEditForm({
   const transportOptions = dashboard?.allTransportModeList || [];
   const hotelOptions = dashboard?.allHotelEntitlementList || [];
   const locationOptions = dashboard?.allLocationChildMenus || [];
+  const travelTypeOptions = dashboard?.allTravelTypeList || [];
+  const travelClassOptions = dashboard?.allClassOfTravelList || [];
 
   React.useEffect(() => {
     dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(553, "allTravelTypeList"));
+    dispatch(fetchAllFormsMenu(554, "allClassOfTravelList"));
   }, [dispatch]);
 
   const isRoleTravelApprover = useMemo(() => {
@@ -238,19 +242,26 @@ export function FormEditForm({
             travelRemarks: values.travelRemarks,
             taxiFareRate: values.taxiFareRate,
             request_status: values.request_status || "P",
-            Master: values.travelSegments.map((segment) => ({
-              fromLocationId: segment.fromLocation,
-              toLocationId: segment.toLocation,
-              fromDate: segment.fromDate,
-              toDate: segment.toDate,
-              modeOfTravelId: segment.modeOfTravel,
-              classOfTravelId: segment.classOfTravel,
-              accommodationRequired: segment.accommodationRequired,
-              isSelf: segment.selfEntitlement,
-              hotelEntitlementId: segment.hotelEntitlement,
-              hotelAmount: segment.hotelEntitlementAmount,
-              selfAmount: segment.selfAmount,
-            })),
+            Master: values.travelSegments.map((segment) => {
+              const formatLocalDate = (dateObj) => {
+                if (!dateObj) return null;
+                const d = new Date(dateObj);
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+              };
+              return {
+                fromLocationId: segment.fromLocation,
+                toLocationId: segment.toLocation,
+                fromDate: formatLocalDate(segment.fromDate),
+                toDate: formatLocalDate(segment.toDate),
+                modeOfTravelId: segment.modeOfTravel,
+                classOfTravelId: segment.classOfTravel,
+                accommodationRequired: segment.accommodationRequired,
+                isSelf: segment.selfEntitlement,
+                hotelEntitlementId: segment.hotelEntitlement,
+                hotelAmount: segment.hotelEntitlementAmount,
+                selfAmount: segment.selfAmount,
+              };
+            }),
           };
 
           if (saveForm) {
@@ -268,12 +279,27 @@ export function FormEditForm({
           touched,
           submitForm,
         }) => {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const prevSegmentsRef = React.useRef(values.travelSegments);
+
           // Auto-calculation logic for Daily Allowance (Days and Amount)
           // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useEffect(() => {
+            const firstOld = prevSegmentsRef.current?.[0];
+            const lastOld = prevSegmentsRef.current?.[prevSegmentsRef.current.length - 1];
+
             const firstSegment = values.travelSegments[0];
             const lastSegment =
               values.travelSegments[values.travelSegments.length - 1];
+
+            const datesChanged = 
+              firstOld?.fromDate !== firstSegment?.fromDate ||
+              lastOld?.toDate !== lastSegment?.toDate;
+              
+            prevSegmentsRef.current = values.travelSegments;
+            
+            // Only overwrite if the user actively changed the boundary dates in the calendar
+            if (!datesChanged) return;
 
             if (firstSegment?.fromDate && lastSegment?.toDate) {
               const start = new Date(firstSegment.fromDate);
@@ -297,7 +323,7 @@ export function FormEditForm({
                 setFieldValue("dailyAllowanceDays", 0);
               }
             }
-          }, [values.travelSegments, values.dailyAllowanceDays, setFieldValue]);
+          }, [values.travelSegments, setFieldValue]);
 
           // Round-Trip Synchronizer: Ensures last row destination = first row origin
           // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -371,6 +397,20 @@ export function FormEditForm({
             );
           }, [hotelOptions, employeeEntitlement]);
 
+          const filteredTravelClassOptions = useMemo(() => {
+            if (
+              !employeeEntitlement ||
+              !employeeEntitlement.classOfTravelId ||
+              !Array.isArray(employeeEntitlement.classOfTravelId) ||
+              employeeEntitlement.classOfTravelId.length === 0
+            ) {
+              return travelClassOptions;
+            }
+            return travelClassOptions.filter((opt) =>
+              employeeEntitlement.classOfTravelId.includes(String(opt.value)),
+            );
+          }, [travelClassOptions, employeeEntitlement]);
+
           const isPolicyDefined = !!employeeEntitlement && !isReadOnly;
           const hasEntitlement = !!employeeEntitlement;
           const isFormDisabled = !isPolicyDefined || !!isReadOnly;
@@ -425,9 +465,11 @@ export function FormEditForm({
                       disabled={!isPolicyDefined}
                     >
                       <option value="">Select</option>
-                      <option value="Official">Official</option>
-                      <option value="Training">Training</option>
-                      <option value="Personal">Personal</option>
+                      {travelTypeOptions.map((opt) => (
+                        <option key={opt.value} value={opt.label}>
+                          {opt.label}
+                        </option>
+                      ))}
                     </Field>
                     {errors.travelType && touched.travelType && (
                       <div className="form-feedBack">{errors.travelType}</div>
@@ -474,7 +516,7 @@ export function FormEditForm({
                                 toLocation: originLocation,
                                 fromDate: segments[lastIndex]?.toDate || null,
                                 toDate: null,
-                                modeOfTravel: "",
+                                modeOfTravel: segments[0]?.modeOfTravel || "",
                                 classOfTravel: "",
                                 accommodationRequired: false,
                                 hotelEntitlement: "",
@@ -738,6 +780,21 @@ export function FormEditForm({
                                     name={`travelSegments.${index}.modeOfTravel`}
                                     className="form-control"
                                     disabled={!isPolicyDefined}
+                                    onChange={(e) => {
+                                      const val = e.target.value;
+                                      setFieldValue(
+                                        `travelSegments.${index}.modeOfTravel`,
+                                        val,
+                                      );
+                                      if (index === 0 && values.travelSegments.length > 1) {
+                                        for (let i = 1; i < values.travelSegments.length; i++) {
+                                          setFieldValue(
+                                            `travelSegments.${i}.modeOfTravel`,
+                                            val,
+                                          );
+                                        }
+                                      }
+                                    }}
                                   >
                                     <option value="">Select</option>
                                     {filteredTransportOptions.map((opt) => (
@@ -766,7 +823,7 @@ export function FormEditForm({
                                     disabled={!isPolicyDefined}
                                   >
                                     <option value="">Select</option>
-                                    {filteredTransportOptions.map((opt) => (
+                                    {filteredTravelClassOptions.map((opt) => (
                                       <option key={opt.value} value={opt.value}>
                                         {opt.label}
                                       </option>
@@ -1063,11 +1120,11 @@ export function FormEditForm({
                         <Field
                           type="number"
                           name="dailyAllowanceDays"
-                          className="form-control text-sm bg-light"
+                          className="form-control text-sm"
                           style={{ backgroundColor: "#eefbff" }}
                           placeholder="0"
                           min="0"
-                          disabled={true}
+                          disabled={!isPolicyDefined || !!isReadOnly}
                         />
                         {errors.dailyAllowanceDays &&
                           touched.dailyAllowanceDays && (

@@ -72,6 +72,7 @@ export function FormTable() {
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
+    dispatch(fetchAllFormsMenu(554, "allClassOfTravelList"));
     dispatch(fetchAllSubsidiaryData("allSubidiaryList"));
     dispatch(fetchRoles());
   }, [formUIProps.queryParams, dispatch]);
@@ -173,6 +174,14 @@ export function FormTable() {
           row.ModeOfTransports?.map((m) => m.formName || m.name || m.label).join(
             ", ",
           ) || getNamesFromIds(cell, dashboard?.allTransportModeList),
+      },
+      {
+        dataField: "classOfTravelId",
+        text: "Class of Travel",
+        formatter: (cell, row) =>
+          row.ClassOfTravels?.map((c) => c.formName || c.name || c.label).join(
+            ", ",
+          ) || getNamesFromIds(cell, dashboard?.allClassOfTravelList),
       },
       {
         dataField: "hotelEntitlementId",

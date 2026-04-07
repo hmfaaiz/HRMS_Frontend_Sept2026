@@ -53,12 +53,14 @@ export function FormEditForm({
     dispatch(fetchAllFormsMenu(158, "allDesignations")); // Designations
     dispatch(fetchAllFormsMenu(551, "allTransportModeList")); // Transport Modes
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList")); // Hotel Entitlements
+    dispatch(fetchAllFormsMenu(554, "allClassOfTravelList")); // Class of Travel
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList")); // Subsidiaries
     dispatch(fetchRoles());
   }, [dispatch]);
 
   const transportOptions = dashboard?.allTransportModeList || [];
   const hotelOptions = dashboard?.allHotelEntitlementList || [];
+  const travelClassOptions = dashboard?.allClassOfTravelList || [];
 
   const validationSchema = useMemo(() => {
     return Yup.object().shape({
@@ -82,6 +84,10 @@ export function FormEditForm({
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
       modeOfTransportId: Yup.array()
+        .of(Yup.string())
+        .min(1, VALIDATION_MESSAGES.atLeastOne)
+        .required(VALIDATION_MESSAGES.atLeastOne),
+      classOfTravelId: Yup.array()
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
@@ -116,6 +122,11 @@ export function FormEditForm({
         ? user.modeOfTransportId.map(String)
         : typeof user?.modeOfTransportId === "string"
         ? user.modeOfTransportId.split(",").filter(Boolean).map((s) => s.trim())
+        : [],
+      classOfTravelId: Array.isArray(user?.classOfTravelId)
+        ? user.classOfTravelId.map(String)
+        : typeof user?.classOfTravelId === "string"
+        ? user.classOfTravelId.split(",").filter(Boolean).map((s) => s.trim())
         : [],
       hotelEntitlementId: Array.isArray(user?.hotelEntitlementId)
         ? user.hotelEntitlementId.map(String)
@@ -394,6 +405,38 @@ export function FormEditForm({
                         error={errors.modeOfTransportId}
                         touched={touched.modeOfTransportId}
                         placeholder="Select Mode"
+                      />
+                    </div>
+
+                    {/* Class of Travel */}
+                    <div>
+                      <MultiSelect
+                        label={
+                          <span>
+                            Class of Travel
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        options={travelClassOptions}
+                        value={
+                          travelClassOptions.filter((opt) =>
+                            Array.isArray(values.classOfTravelId) &&
+                            values.classOfTravelId.some(
+                              (val) => String(val) === String(opt.value),
+                            ),
+                          ) || []
+                        }
+                        onChange={(val) => {
+                          setFieldTouched("classOfTravelId", true, false);
+                          setFieldValue(
+                            "classOfTravelId",
+                            val?.map((opt) => String(opt.value)) || [],
+                          );
+                        }}
+                        disabled={isUserForRead || !values.subsidiaryId}
+                        error={errors.classOfTravelId}
+                        touched={touched.classOfTravelId}
+                        placeholder="Select Class of Travel"
                       />
                     </div>
 
