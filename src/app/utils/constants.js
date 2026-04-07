@@ -170,7 +170,7 @@ export class RedirectURLs {
 export const DateTimeFormats = {
   General1: "MMMM Do YYYY - h:mm a",
   General: "d MMM H:m a",
-  ActiveLabel: 'dd-MM-yyyy'
+  ActiveLabel: "dd-MM-yyyy",
 };
 
 export const REGEX = {
@@ -316,183 +316,182 @@ export const SURVEY = {
 export const WEEK_DAYS = [
   {
     label: "Monday",
-    value: 1
+    value: 1,
   },
   {
     label: "Tuesday",
-    value: 2
+    value: 2,
   },
   {
     label: "Wednesday",
-    value: 3
+    value: 3,
   },
   {
     label: "Thursday",
-    value: 4
+    value: 4,
   },
   {
     label: "Friday",
-    value: 5
+    value: 5,
   },
   {
     label: "Saturday",
-    value: 6
+    value: 6,
   },
   {
     label: "Sunday",
-    value: 7
-  }
-]
+    value: 7,
+  },
+];
 
 export const ATTENDANCE_TYPE = [
   {
     label: "All",
-    value: -1
+    value: -1,
   },
   {
     label: "Regular Attendance",
-    value: 1
+    value: 1,
   },
   {
     label: "Auto Present Attendance",
-    value: 2
+    value: 2,
   },
-]
+];
 
 export const ATTENDANCE_TYPE_FOR_ATTENDANCE_CORRECTION = [
-
   {
     label: "Regular Attendance",
-    value: 1
+    value: 1,
   },
   {
     label: "Auto Present Attendance",
-    value: 2
+    value: 2,
   },
-]
+];
 
 export const ATTENDANCE_STATUS = [
   {
     label: "All",
-    value: ""
+    value: "",
   },
   {
     label: "Present",
-    value: "Present"
+    value: "Present",
   },
   {
     label: "Absent",
-    value: "Absent"
-  }, 
-  
+    value: "Absent",
+  },
+
   {
     label: "On Leave",
-    value: "On_Leave"
-  },  
+    value: "On_Leave",
+  },
   {
     label: "Day Off",
-    value: "Day_Off"
-  }, 
-    {
+    value: "Day_Off",
+  },
+  {
     label: "Holiday",
-    value: "Holiday"
-  }, 
-   {
+    value: "Holiday",
+  },
+  {
     label: "Half Day",
-    value: "Half_Day"
-  },  
-   {
+    value: "Half_Day",
+  },
+  {
     label: "Late Arrival",
-    value: "Late"
+    value: "Late",
   },
-     {
+  {
     label: "Early Out",
-    value: "Early_Out"
+    value: "Early_Out",
   },
-]
+];
 //Validation Messages for form
 export const VALIDATION_MESSAGES = {
-  required: 'Required',
-  validNumber: 'Must be a valid number',
-  maxTwoDigits: 'Maximum two digit number allowed',
-  maxThreeDigit: 'Maximum three digit number allowed',
-  minZeroValue: 'Should not be less than 0',
-  maxTenValue: 'Should not be greater than 10',
-  minOneValue: 'Should not be less than 1',
-  maxHundredValue: 'Should not be greater than 100',
-  maxNineHundredNinetyNineValue: 'Should not be greater than 999',
-  invalidUrl : 'Invalid URL',
-  invalidEmail : 'Invalid Email',
-  minAgeEighteenValue: 'Should not be less than 18',
-  maxAgeNinetyNineValue: 'Should not be greater than 99',
+  required: "Required",
+  validNumber: "Must be a valid number",
+  maxTwoDigits: "Maximum two digit number allowed",
+  maxThreeDigit: "Maximum three digit number allowed",
+  minZeroValue: "Should not be less than 0",
+  maxTenValue: "Should not be greater than 10",
+  minOneValue: "Should not be less than 1",
+  maxHundredValue: "Should not be greater than 100",
+  maxNineHundredNinetyNineValue: "Should not be greater than 999",
+  invalidUrl: "Invalid URL",
+  invalidEmail: "Invalid Email",
+  minAgeEighteenValue: "Should not be less than 18",
+  maxAgeNinetyNineValue: "Should not be greater than 99",
   endDateMustBeAfterStartDate: "End date must be after start date",
-  minAgeFifteenValue:'Must be at least 15 years old',
-  atLeastOne: 'Select at least one',
-  amountCannotBeNegative: 'Amount cannot be negative',
-  amountGreaterThanZero: 'Must be greater than 0',
-}
+  minAgeFifteenValue: "Must be at least 15 years old",
+  atLeastOne: "Select at least one",
+  amountCannotBeNegative: "Amount cannot be negative",
+  amountGreaterThanZero: "Must be greater than 0",
+  endDateError: "End date cannot be earlier than start date",
+};
 
 //Server Response Messages
 export const SERVER_MESSAGES = {
-  insertedSuccess: 'Record created Successfully!',
-  insertedFail: 'Unable to Insert',
-  updatedSuccess: 'Record updated Successfully!',
-  updatedFail: 'Unable to Update',
-  deletedSuccess: 'Record deleted Successfully!',
-  deletedFail: 'Unable to Delete: This record is already used in Transaction forms',
-  processSuccessful: 'Process executed Successfully!',
-  pdfFail:"No data found!",
-  csvFail:"No data found!",
-  excelFail:"No data found!",
-  correctDateRange:"Please select correct date range",
-  postedSuccess: 'Record posted Successfully!',
-  holdSuccess: 'Record holded Successfully!',
-  closedSuccess: 'Record closed Successfully!',
-  fileFail: 'File not Uploaded!',
+  insertedSuccess: "Record created Successfully!",
+  insertedFail: "Unable to Insert",
+  updatedSuccess: "Record updated Successfully!",
+  updatedFail: "Unable to Update",
+  deletedSuccess: "Record deleted Successfully!",
+  deletedFail:
+    "Unable to Delete: This record is already used in Transaction forms",
+  processSuccessful: "Process executed Successfully!",
+  pdfFail: "No data found!",
+  csvFail: "No data found!",
+  excelFail: "No data found!",
+  correctDateRange: "Please select correct date range",
+  postedSuccess: "Record posted Successfully!",
+  holdSuccess: "Record holded Successfully!",
+  closedSuccess: "Record closed Successfully!",
+  fileFail: "File not Uploaded!",
   emailFail: "Email has failed!",
   emailSuccess: "Email sent Successfully!",
-
-}
-
+};
 
 export const WEEK_DAY_STRING = {
-  SUNDAY: 'Sunday',
-  MONDAY: 'Monday',
-  TUESDAY: 'Tuesday',
-  WEDNESDAY: 'Wednesday',
-  THURSDAY: 'Thursday',
-  FRIDAY: 'Friday',
-  SATURDAY: 'Saturday',
-}
+  SUNDAY: "Sunday",
+  MONDAY: "Monday",
+  TUESDAY: "Tuesday",
+  WEDNESDAY: "Wednesday",
+  THURSDAY: "Thursday",
+  FRIDAY: "Friday",
+  SATURDAY: "Saturday",
+};
 
 export const GROSS_TO_BASIC_CALCULATION_TYPE_DROPDOWN = [
-  { label: 'Select', value: '-1' },
-  { label: '% Of Gross', value: '% Of Gross' },
-  { label: 'Fixed Amount', value: 'Fixed Amount' },
-]
+  { label: "Select", value: "-1" },
+  { label: "% Of Gross", value: "% Of Gross" },
+  { label: "Fixed Amount", value: "Fixed Amount" },
+];
 
 export const BASIC_TO_GROSS_CALCULATION_TYPE_DROPDOWN = [
-  { label: 'Select', value: '-1' },
-  { label: '% Of Basic', value: '% Of Basic' },
-  { label: 'Fixed Amount', value: 'Fixed Amount' },
-]
+  { label: "Select", value: "-1" },
+  { label: "% Of Basic", value: "% Of Basic" },
+  { label: "Fixed Amount", value: "Fixed Amount" },
+];
 
 export const DEFAULT_CALCULATION_TYPE_DROPDOWN = [
-  { label: 'Select', value: '-1' },
-  { label: 'Fixed Amount', value: 'Fixed Amount' },
-]
+  { label: "Select", value: "-1" },
+  { label: "Fixed Amount", value: "Fixed Amount" },
+];
 
 export const DROPDOWN = {
   "Basic to Gross": BASIC_TO_GROSS_CALCULATION_TYPE_DROPDOWN,
   "Gross to Basic": GROSS_TO_BASIC_CALCULATION_TYPE_DROPDOWN,
-}
+};
 
 export const accountType = {
-   Assets : 1,
-   Liabilities : 2,
-   Equity : 3,
-   Income : 4,
-   Expenses: 5,
+  Assets: 1,
+  Liabilities: 2,
+  Equity: 3,
+  Income: 4,
+  Expenses: 5,
 };
 
 export const themeColor = [

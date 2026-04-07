@@ -20,6 +20,8 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
     shallowEqual,
   );
 
+
+
   const enableLoading = () => {
     setLoading(true);
   };

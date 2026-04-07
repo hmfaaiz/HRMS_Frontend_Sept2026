@@ -223,9 +223,9 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
         <div className="flex flex-col md:flex-row gap-4">
           {moduleRights?.find((e) => e?.value == "separation")?.allow ? (
             <ResignationRequest
-            isDisabled={
-              portalInfo?.allowResignationRequest === 0 ||
-              portalInfo?.allowResignationRequest === false
+              isDisabled={
+                portalInfo?.allowResignationRequest === 0 ||
+                portalInfo?.allowResignationRequest === false
               }
             />
           ) : null}
@@ -500,7 +500,7 @@ const isReimbursementApproval = reimbursement_claim_approval?.find(
       {moduleRights?.find((e) => e?.value == 7)?.allow && isHelpDesk ? (
         <CompactViewCard
           Icon={HeartHandshake}
-          name={"Help Desk"}
+          name={"Task Assignment"}
           count={portalInfo?.helpDeskPendingTask}
           link={"/portal_ticket_creation/read-all-facilitator-ticket-creation"}
         />
