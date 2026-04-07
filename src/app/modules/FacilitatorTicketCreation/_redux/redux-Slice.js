@@ -34,11 +34,17 @@ export const FacilitatorTicketCreationSlice = createSlice({
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
-            if (action.payload.callType === callTypes.list) {
-                state.listLoading = false;
-            } else {
+            // if (action.payload.callType === callTypes.list) {
+            //     state.listLoading = false;
+            // } else {
+            //     state.actionsLoading = false;
+            // }
+               state.listLoading = false;
+                state.userForEdit = null;
+                state.timelogsEntities = null;
+                state.detailEntities = null;
                 state.actionsLoading = false;
-            }
+                state.detailData = false;
         },
 
         ticketCreationFetched: (state, action) => {

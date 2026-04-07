@@ -386,6 +386,7 @@ export default function HRRecomendation() {
                                   <Field
                                     name="dateOfJoining"
                                     component={DatePickerField}
+                                    dateFormat="dd-MMM-yyyy"
                                     value={values?.dateOfJoining || ""}
                                     placeholder="Date of Joining"
                                     type="date"

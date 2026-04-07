@@ -6,6 +6,7 @@ import { FormCard } from "./form-card/FormCard";
 import { Route } from "react-router-dom";
 import { FormEditDialog } from "../../../Ticket_Setup_Portal/pages/ticket_setup/form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
+import { MasterTimeLogForm } from "../../../Ticket_Setup_Portal/pages/ticket_setup/form-timelog/MasterTimeLogForm";
 
 export function FormPage({ history }) {
   const formUIEvents = {
@@ -16,6 +17,11 @@ export function FormPage({ history }) {
     },
     openTicketEditDialog: (id) => {
       history.push(`/ticket_activity_portal/read-ticket-activity/${id}/edit`);
+    },
+    ticketTimeLogDialog: (id) => {
+      history.push(
+        `/ticket_activity_portal/read-ticket-activity/${id}/timelog`,
+      );
     },
   };
   return (
@@ -63,6 +69,20 @@ function FormPageRoutes() {
           />
         )}
       </Route>
+
+      {/* /// time log modal  */}
+      <Route path="/ticket_activity_portal/read-ticket-activity/:id/timelog">
+        {({ history, match }) => (
+          <MasterTimeLogForm
+            show={match != null}
+            id={match && match.params.id}
+            onHide={() =>
+              history.push("/ticket_activity_portal/read-ticket-activity")
+            }
+          />
+        )}
+      </Route>
+
       {deleteModal ? (
         <FormDeleteDialog
           id={deleteModal}

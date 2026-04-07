@@ -51,6 +51,7 @@ export function FormUIProvider({ children, formUIEvents }) {
     setPanelMode,
     openTicketEditDialog: formUIEvents?.openTicketEditDialog,
     addTicketButtonClick: formUIEvents?.addTicketButtonClick,
+    ticketTimeLogDialog : formUIEvents?.ticketTimeLogDialog,
     refreshSubTickets,
     setRefreshSubTickets,
     commentForm,
