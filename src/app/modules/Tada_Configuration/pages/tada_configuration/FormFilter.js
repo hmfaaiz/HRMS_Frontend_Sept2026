@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback } from "react";
 import { Formik } from "formik";
 import { isEqual, debounce } from "lodash";
-import { useFormUIContext } from "../FormUIContext";
-import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
+import { useFormUIContext } from "./FormUIContext";
+import { InputSearch } from "../../../../utils/common-modules/InputSearch";
 
 const prepareFilter = (queryParams, values) => {
   const { searchText } = values;
