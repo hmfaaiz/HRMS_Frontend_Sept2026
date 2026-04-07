@@ -32,14 +32,51 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
     name: "FacilitatorTicketCreation",
     initialState: initialFacilitatorTicketCreationState,
     reducers: {
-        catchError: (state, action) => {
+        // catchError: (state, action) => {
+        //     state.error = `${action.type}: ${action.payload.error}`;
+        //     if (action.payload.callType === callTypes.list) {
+        //         state.listLoading = false;
+        //     } else {
+        //         state.actionsLoading = false;
+        //     }
+        // },
+          catchError: (state, action) => {
+
+
             state.error = `${action.type}: ${action.payload.error}`;
+            state.userForEdit = null;
+
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } else {
+            }
+            
+            else if (action.payload.callType === callTypes.userForEdit) {
+                state.userForEdit = null;
+            }
+            
+              
+            else if (action.payload.callType === callTypes.timelogsEntities) {
+                state.timelogsEntities = null;
+            }
+            
+                  
+            else if (action.payload.callType === callTypes.detailEntities) {
+                state.detailEntities = null;
+            }
+                  
+            else if (action.payload.callType === callTypes.detailData) {
+                state.detailData = null;
+            }
+            
+            
+            else {
                 state.actionsLoading = false;
             }
+
+            
+
         },
+
 
         ticketCreationFetched: (state, action) => {
 
