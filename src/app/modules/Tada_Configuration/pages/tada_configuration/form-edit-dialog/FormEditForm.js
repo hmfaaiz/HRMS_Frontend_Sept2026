@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -48,12 +48,14 @@ export function FormEditForm({
     shallowEqual,
   );
 
+  const [liveSubsidiaryId, setLiveSubsidiaryId] = useState(user?.subsidiaryId ?? null);
+
   useEffect(() => {
-    dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList")); // Grades
-    dispatch(fetchAllFormsMenu(158, "allDesignations")); // Designations
-    dispatch(fetchAllFormsMenu(551, "allTransportModeList")); // Transport Modes
-    dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList")); // Hotel Entitlements
-    dispatch(fetchAllSubsidiaryData("allSubsidiaryList")); // Subsidiaries
+    dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList"));
+    dispatch(fetchAllFormsMenu(158, "allDesignations"));
+    dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
+    dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchRoles());
   }, [dispatch]);
 
@@ -89,7 +91,6 @@ export function FormEditForm({
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
-
       dailyAllowanceAmount: Yup.number().min(
         0,
         VALIDATION_MESSAGES.amountCannotBeNegative,
@@ -100,6 +101,25 @@ export function FormEditForm({
       ),
     });
   }, [hotelOptions]);
+
+  // ✅ Moved out of Formik render prop — now proper component-level memos
+  const subConfigs = useMemo(
+    () =>
+      entities?.filter(
+        (ent) => String(ent.subsidiaryId) === String(liveSubsidiaryId),
+      ) || [],
+    [entities, liveSubsidiaryId],
+  );
+
+  const hasGradeRecords = useMemo(
+    () => subConfigs.some((ent) => ent.isGradeWise),
+    [subConfigs],
+  );
+
+  const hasDesignationRecords = useMemo(
+    () => subConfigs.some((ent) => ent.isDesignationWise),
+    [subConfigs],
+  );
 
   const formInitValues = useMemo(() => {
     return {
@@ -150,14 +170,7 @@ export function FormEditForm({
           setFieldError,
         } = formikProps;
 
-        const subConfigs =
-          entities?.filter(
-            (ent) => String(ent.subsidiaryId) === String(values.subsidiaryId),
-          ) || [];
-        const hasGradeRecords = subConfigs.some((ent) => ent.isGradeWise);
-        const hasDesignationRecords = subConfigs.some(
-          (ent) => ent.isDesignationWise,
-        );
+        // ✅ OLD 3 variables removed from here
 
         return (
           <>
@@ -170,7 +183,6 @@ export function FormEditForm({
               <Form className="form form-label-right" onSubmit={handleSubmit}>
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-4 pt-4">
-                    {/* Row 1: Subsidiary, Grade, Designation */}
 
                     {/* Subsidiary */}
                     <div>
@@ -185,8 +197,8 @@ export function FormEditForm({
                         onChange={(e) => {
                           const subId = e.value || null;
                           setFieldValue("subsidiaryId", subId);
+                          setLiveSubsidiaryId(subId); // ✅ keeps memo in sync
 
-                          // Auto-select type for new records if subsidiary already has data
                           if (subId && !id) {
                             const existingSubConfigs = entities?.filter(
                               (ent) =>
@@ -220,7 +232,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    {/* Grade Select (with Checkbox in Label) */}
+                    {/* Grade */}
                     <div className="tada-config-option">
                       <SearchSelect
                         name="gradeId"
@@ -275,7 +287,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    {/* Designation Select (with Checkbox in Label) */}
+                    {/* Designation */}
                     <div className="tada-config-option">
                       <SearchSelect
                         name="designationId"
@@ -330,8 +342,6 @@ export function FormEditForm({
                         placeholder="Select Designation"
                       />
                     </div>
-
-                    {/* Row 2: PreApprover, Mode of Transport, Hotel Entitlement */}
 
                     {/* PreApprover */}
                     <div>
@@ -420,8 +430,6 @@ export function FormEditForm({
                           const selectedIds = selectedItems.map((opt) =>
                             String(opt.value),
                           );
-
-                          // Set the main selection
                           setFieldValue("hotelEntitlementId", selectedIds);
                           setFieldTouched("hotelEntitlementId", true, false);
                         }}
@@ -432,52 +440,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    {/* Hotel Self Amount */}
-                    {/* <div className="tada-config-option">
-                      <div className="flex items-center space-x-2 mb-[4px] text-sm font-medium">
-                        <Field
-                          name="ishotelEntitlementSelfAmountWise"
-                          component={Checkbox}
-                          isSelected={values.ishotelEntitlementSelfAmountWise}
-                          disabled={isUserForRead || !values.subsidiaryId}
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setFieldValue("ishotelEntitlementSelfAmountWise", checked);
-                            if (!checked) {
-                              setFieldValue("hotelEntitlementSelfAmount", 0);
-                              setFieldTouched("hotelEntitlementSelfAmount", false);
-                              setFieldError("hotelEntitlementSelfAmount", undefined);
-                            }
-                          }}
-                        />
-                        <span>
-                          Hotel Self Amount (Daily)
-                          {values.ishotelEntitlementSelfAmountWise && (
-                            <span style={{ color: "red" }}>*</span>
-                          )}
-                        </span>
-                      </div>
-                      <AmountInput
-                        field={{
-                          name: "hotelEntitlementSelfAmount",
-                          value: values.hotelEntitlementSelfAmount,
-                        }}
-                        form={{
-                          touched,
-                          errors,
-                          setFieldValue,
-                          setFieldTouched,
-                        }}
-                        disabled={
-                          isUserForRead ||
-                          !values.subsidiaryId ||
-                          !values.ishotelEntitlementSelfAmountWise
-                        }
-                        disabled={true}                 
-                        placeholder="0"
-                      />
-                    </div> */}
-                    {/* Hotel Self Amount Section - Amount field permanently disabled */}
+                    {/* Allow Self Entitlement for Hotel */}
                     <div className="tada-config-option mt-5">
                       <div className="flex items-center space-x-2 mb-[4px] text-sm font-medium">
                         <Field
@@ -491,7 +454,6 @@ export function FormEditForm({
                               "ishotelEntitlementSelfAmountWise",
                               checked,
                             );
-
                             if (!checked) {
                               setFieldValue("hotelEntitlementSelfAmount", 0);
                               setFieldTouched(
@@ -513,7 +475,6 @@ export function FormEditForm({
                         </span>
                       </div>
                     </div>
-                    {/* Row 3: Daily Allowance, Taxi Fare */}
 
                     {/* Daily Allowance */}
                     <div>
