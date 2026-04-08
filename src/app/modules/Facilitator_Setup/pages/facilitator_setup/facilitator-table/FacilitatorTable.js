@@ -71,70 +71,47 @@ export function FacilitatorTable() {
 const mappedEntities = useMemo(() => {
   if (!Array.isArray(entities)) return [];
 
-  const grouped = {};
-
-  entities.forEach((item) => {
-    if (!item.employeeId || !item.ticketTypeId) return;
-
-    const key = `${item.employeeId}_${item.ticketTypeId}_${item.subsidiaryId || 0}`;
-
-    if (!grouped[key]) {
-      grouped[key] = {
-        id: key,
-        employeeId: item.employeeId,
-        ticketTypeId: item.ticketTypeId,
-        subsidiaryId: item.subsidiaryId,
-        departmentLocationPairs: [],
-      };
-    }
-
-    grouped[key].departmentLocationPairs.push({
-      departmentId: item.departmentId,
-      locationId: item.locationId,
-    });
-  });
-
-  return Object.values(grouped).map((group) => {
-    const deptPairs = group.departmentLocationPairs;
+  return entities.map((group) => {
+    const deptPairs = group.departmentLocations || [];
 
     const hasAllDept = deptPairs.some((d) => d.departmentId === null);
-    const hasAllLoc = deptPairs.some((d) => d.locationId === null);
+    const hasAllLoc  = deptPairs.some((d) => d.locationId === null);
 
-    const totalDepartments = hasAllDept
-      ? "All"
-      : deptPairs.filter((d) => d.departmentId != null).length;
+    const uniqueDeptIds = [
+      ...new Set(deptPairs.map((d) => d.departmentId).filter((id) => id !== null)),
+    ];
 
-    const totalLocations = hasAllLoc
-      ? "All"
-      : deptPairs.filter((d) => d.locationId != null).length;
+    const uniqueLocIds = [
+      ...new Set(deptPairs.map((d) => d.locationId).filter((id) => id !== null)),
+    ];
 
-    const ticketType =
-      dashboard?.allTicketTypes?.find((t) => t.value === group.ticketTypeId);
+    const totalDepartments = hasAllDept ? "All" : uniqueDeptIds.length;
+    const totalLocations   = hasAllLoc  ? "All" : uniqueLocIds.length;
 
-    const employee =
-      dashboard?.allEmployees?.find((e) => e.value === group.employeeId);
+    const ticketTypeName  = group.ticketType?.formName  || "-";
+    const employeeName    = group.EmployeeProfile
+      ? `${group.EmployeeProfile.firstName || ""} ${group.EmployeeProfile.lastName || ""}`.trim()
+      : "-";
+    const subsidiaryName  = group.Subsidiary?.name || "-";
 
-    const subsidiary =
-      dashboard?.allSubsidiaryData?.find((s) => s.value === group.subsidiaryId
-      );
+    const compositeId = `${group.employeeId}_${group.ticketTypeId}_${group.subsidiaryId || 0}`;
 
     return {
-      id: group.id,
-      ticketTypeName: ticketType?.label || "-",
-      employeeName: employee?.label || "-",
-      subsidiaryName: subsidiary?.label ||  "-",
+      id: compositeId,
+      ticketTypeName,
+      employeeName,
+      subsidiaryName,
       departmentCount: totalDepartments,
-      locationCount: totalLocations,
+      locationCount:   totalLocations,
       raw: {
-        employeeId: group.employeeId,
-        ticketTypeId: group.ticketTypeId,
-        subsidiaryId: group.subsidiaryId,
-        departmentLocations: group.departmentLocationPairs,
+        employeeId:          group.employeeId,
+        ticketTypeId:        group.ticketTypeId,
+        subsidiaryId:        group.subsidiaryId,
+        departmentLocations: deptPairs,
       },
     };
   });
-}, [
-  entities,
+}, [entities,
   dashboard?.allTicketTypes,
   dashboard?.allEmployees,
   dashboard?.allSubsidiaryData,
@@ -219,13 +196,13 @@ const mappedEntities = useMemo(() => {
 ];
 
 
-  const paginationOptions = {
-    custom: true,
-    totalSize: totalCount,
-    sizePerPageList: uiHelpers.sizePerPageList,
-    sizePerPage: facilitatorUIProps.queryParams.pageSize,
-    page: facilitatorUIProps.queryParams.pageNumber,
-  };
+const paginationOptions = {
+  custom: true,
+  totalSize: totalCount, 
+  sizePerPageList: uiHelpers.sizePerPageList,
+  sizePerPage: facilitatorUIProps.queryParams.pageSize,
+  page: facilitatorUIProps.queryParams.pageNumber,
+};
 
   return (
     <div className="w-full overflow-x-auto">

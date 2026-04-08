@@ -144,52 +144,55 @@ export function FormEditForm({
 
   // ── Calculate remaining amount limit ───────
   const calculateRemainingAmount = (
-    reimbursementTypeId,
-    payrollForId,
-    policies,
-    values
-  ) => {
-    const maxAmount =
-      policies?.find(
-        (item) => item.reimbursement_typeId === reimbursementTypeId
-      )?.max_amount || 0;
+  reimbursementTypeId,
+  payrollForId,
+  policies,
+  values
+) => {
+  const matchingPolicy = policies?.find(
+    (item) => item.reimbursement_typeId === reimbursementTypeId
+  );
+  const maxAmount = matchingPolicy?.max_amount || 0;
+  const limit_type = matchingPolicy?.limit_type || 1;
 
-    const limit_type =
-      policies?.find(
-        (item) => item.reimbursement_typeId === reimbursementTypeId
-      )?.limit_type || 1;
+  let claimedAmount = 0;
 
-    let claimedAmount = 0;
+  if (limit_type == 1) {
+    claimedAmount = entities
+      ?.filter(
+        (entity) =>
+          entity.reimbursement_typeId === reimbursementTypeId &&
+          entity.pay_in_payroll_forId === payrollForId
+      )
+      ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
+  } else if (limit_type == 2) {
+    const fiscalStart = activeFiscalYear?.fiscallyear?.startDate
+      ? new Date(activeFiscalYear.fiscallyear.startDate)
+      : null;
+    const fiscalEnd = activeFiscalYear?.fiscallyear?.endDate
+      ? new Date(activeFiscalYear.fiscallyear.endDate)
+      : null;
+    claimedAmount = entities
+      ?.filter((entity) => {
+        if (!entity?.PayInPayrollForId?.startDate) return false;
+        if (!fiscalStart || !fiscalEnd) return false;
 
-    if (limit_type == 1) {
-      claimedAmount = entities
-        ?.filter(
-          (entity) =>
-            entity.reimbursement_typeId === reimbursementTypeId &&
-            entity.pay_in_payroll_forId === payrollForId
-        )
-        ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
-    } else if (limit_type == 2) {
-      claimedAmount = entities
-        ?.filter((entity) => {
-          const entityStartDate = new Date(entity.PayInPayrollForId.startDate);
-          const startDate = new Date(activeFiscalYear?.fiscallyear?.startDate);
-          const endDate = new Date(activeFiscalYear?.fiscallyear?.endDate);
-          return (
-            entity.reimbursement_typeId === reimbursementTypeId &&
-            entityStartDate >= startDate &&
-            entityStartDate <= endDate
-          );
-        })
-        ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
-    }
+        const entityStartDate = new Date(entity.PayInPayrollForId.startDate);
+        return (
+          entity.reimbursement_typeId === reimbursementTypeId &&
+          entityStartDate >= fiscalStart &&
+          entityStartDate <= fiscalEnd
+        );
+      })
+      ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
+  }
 
-    let finalMaxAmount = (maxAmount || 0) - (claimedAmount || 0);
-    if (isEdit && values?.approved_status === 1) {
-      finalMaxAmount += values.amount;
-    }
-    return finalMaxAmount;
-  };
+  let finalMaxAmount = (maxAmount || 0) - (claimedAmount || 0);
+  if (isEdit && values?.approved_status === 1) {
+    finalMaxAmount += values.amount;
+  }
+  return finalMaxAmount;
+};
 
   // ── Min date for date picker 
   const getMinDate = () => {
