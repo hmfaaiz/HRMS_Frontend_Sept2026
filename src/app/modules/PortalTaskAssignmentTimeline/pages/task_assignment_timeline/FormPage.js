@@ -38,7 +38,7 @@ export function FormPage({ history }) {
     },
     addNewTicket: () => {
       window.open(
-        "/facilitator_ticket_creation/read-all-facilitator-ticket-creation",
+        "/portal_ticket_creation/read-all-facilitator-ticket-creation",
         "_blank"
       );
     },

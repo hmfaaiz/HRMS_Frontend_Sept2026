@@ -177,7 +177,7 @@ const isReimbursementWorkflowStatus = reimbursement_claim_approval?.find(
                 </div>
               </div>
             ) : null}
-            {moduleRights?.find((e) => e?.value == 4)?.allow ? (
+            {/* {moduleRights?.find((e) => e?.value == 4)?.allow ? (
               <div className="bg-tsecondary font-weight-bolder w-full px-4 py-3 rounded-lg d-flex gap-2 sm:gap-5 lg:gap-11 flex-column justify-content-between">
                 <div className="text-primary d-flex justify-content-between">
                   <h6 className="m-0 text-lg font-bold">Reimbursement</h6>
@@ -210,7 +210,7 @@ const isReimbursementWorkflowStatus = reimbursement_claim_approval?.find(
                   </p>
                 </div>
               </div>
-            ) : null}
+            ) : null} */}
             {moduleRights?.find((e) => e?.value == "separation")?.allow ? (
               <div className="bg-tsecondary font-weight-bolder w-full px-4 py-3 rounded-lg d-flex gap-2 sm:gap-5 lg:gap-11 flex-column justify-content-between">
                 <div className="text-primary d-flex justify-content-between">
