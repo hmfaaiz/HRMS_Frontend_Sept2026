@@ -35,7 +35,6 @@ export function FacilitatorFilter() {
     <Formik enableReinitialize initialValues={initialValues} onSubmit={applyFilter}>
       {({ values, handleSubmit, handleBlur, setFieldValue }) => (
         <form onSubmit={handleSubmit} className="form form-label-right">
-          {/* Make the search input fixed width like BanksFilter */}
           <div className="flex justify-end w-full">
             <div className="max-w-xs">
               <InputSearch

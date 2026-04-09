@@ -278,7 +278,7 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                       setModalData({
                         name: "Overdue Task",
                         data:
-                          data?.totalOverDue?.rows?.map((el) => ({
+                          data?.overDueTask?.rows?.map((el) => ({
                             ticket_Code: el?.ticketCode,
                             ticket_Description: el?.ticketDescription,
                             Employee: el?.EmployeeProfile?.name,
@@ -351,7 +351,7 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                   }
                 />
                 <TableData
-                  data={data?.overdueTickets?.map((el) => ({
+                  data={data?.overDueTask?.map((el) => ({
                     ...el,
                   }))}
                   name={"Overdue Task"}

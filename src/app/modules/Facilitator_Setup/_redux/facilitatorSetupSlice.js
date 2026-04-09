@@ -41,13 +41,14 @@ export const facilitatorSetupSlice = createSlice({
 
     /** READ ALL */
     facilitator_setup_Fetched: (state, action) => {
-      const entities = action.payload?.data?.data?.rows || [];
-      const totalResult = action.payload?.data?.data?.total || 0;
+      const responseData = action.payload?.data?.data;
+      const entities    = responseData?.rows || [];
+      const totalResult = responseData?.totalResults || 0;
 
       state.listLoading = false;
-      state.entities = entities;
-      state.totalCount = totalResult;
-      state.lastError = null;
+      state.entities    = entities;
+      state.totalCount  = totalResult; 
+      state.lastError   = null;
     },
 
     /** READ BY ID (VIEW / EDIT) */

@@ -91,6 +91,15 @@ export function FormCard() {
           el?.isResourceShow
       ),
     },
+    {
+      name: "Workflow Status",
+      link: "/reimbursement_claim_workflow_status/read-all-reimbursement-claim-workflow-status",
+      isShow: loan?.find(
+      (el) =>
+        el?.componentName === "ReadAllReimbursementClaimWorkflowStatus" &&
+        el?.isResourceShow
+       ),
+    },
   ];
 
   return (
