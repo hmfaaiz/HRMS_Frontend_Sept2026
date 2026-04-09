@@ -43,6 +43,7 @@ const prepareFilter = (queryParams, values) => {
   if (projectId) {
     filter.projectId = projectId;
   }
+  filter.isPortal = true;
   newQueryParams.filter = filter;
   return newQueryParams;
 };
