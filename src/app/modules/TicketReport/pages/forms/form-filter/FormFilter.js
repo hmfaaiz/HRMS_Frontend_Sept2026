@@ -838,8 +838,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                   setFieldValue("isDays", !values?.isDays)
                                   setFieldValue("isWeekDays", false)
                                   setFieldValue("isMonthDays", false)
-                                  setFieldValue("to_date", null)
-                                  setFieldValue("from_date", null)
+                                  // setFieldValue("to_date", null)
+                                  // setFieldValue("from_date", null)
 
                                 }
                                 }
@@ -863,8 +863,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                   setFieldValue("isWeekDays", !values?.isWeekDays)
                                   setFieldValue("isMonthDays", false)
                                   setFieldValue("isDays", false)
-                                  setFieldValue("to_date", null)
-                                  setFieldValue("from_date", null)
+                                  // setFieldValue("to_date", null)
+                                  // setFieldValue("from_date", null)
 
                                 }
                                 }
@@ -889,8 +889,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                   setFieldValue("isMonthDays", !values?.isMonthDays)
                                   setFieldValue("isWeekDays", false)
                                   setFieldValue("isDays", false)
-                                  setFieldValue("to_date", null)
-                                  setFieldValue("from_date", null)
+                                  // setFieldValue("to_date", null)
+                                  // setFieldValue("from_date", null)
 
                                 }
                                 }
