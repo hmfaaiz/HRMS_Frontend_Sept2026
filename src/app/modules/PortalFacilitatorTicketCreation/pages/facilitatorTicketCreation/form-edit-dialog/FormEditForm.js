@@ -652,7 +652,7 @@ export function FormEditForm({
                       name="ticketDescription"
                       component={TextArea}
                       // disabled={receiveMode || formData?.Master?.ticketDescription}
-                      disabled={  isUserForRead || receiveMode || !values.initiator}
+                      disabled={  isUserForRead || !values.initiator}
                       placeholder="Enter ticket description"
                       className="form-control" // Force full height
                       // value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
