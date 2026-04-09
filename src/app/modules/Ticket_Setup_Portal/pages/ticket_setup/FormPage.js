@@ -8,6 +8,7 @@ import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormCard } from "./form-card/FormCard";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 import { FormTimeLogDialog } from "./form-time-log-dialog/FormTimeLogDialog";
+import { MasterTimeLogForm } from "./form-timelog/MasterTimeLogForm";
 
 export function FormPage({ history }) {
   const formUIEvents = {
@@ -27,6 +28,9 @@ export function FormPage({ history }) {
     },
     openDetailTimeLog: (id) => {
       history.push(`/ticket_setup_portal/read-all-ticket-setup/${id}/time-log`);
+    },
+    openTimeLogForm: (id) => {
+      history.push(`/ticket_setup_portal/read-all-ticket-setup/${id}/log-time`);
     },
     openTicketActivity: (query = null) => {
       window.open(
@@ -121,6 +125,21 @@ export function FormPage({ history }) {
             <>
               <FormCard />
               <FormTimeLogDialog
+                show={match != null}
+                id={match && match.params.id}
+                onHide={() =>
+                  history.push("/ticket_setup_portal/read-all-ticket-setup")
+                }
+              />
+            </>
+          )}
+        </Route>
+        {/* /// time log modal  */}
+        <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/log-time">
+          {({ history, match }) => (
+            <>
+              <FormCard />
+              <MasterTimeLogForm
                 show={match != null}
                 id={match && match.params.id}
                 onHide={() =>

@@ -15,6 +15,7 @@ import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLab
 import { CirclePlus, Trash2 } from "lucide-react";
 import { formatDates } from "../../../../../utils/common";
 import * as actions from "../../../_redux/redux-Actions";
+import { fetchAllTicketStatus } from "../../../../Dashboard/_redux/dashboardActions";
 /* ---------------- VALIDATION ---------------- */
 
 const formSchema = Yup.object().shape({
@@ -61,6 +62,7 @@ export function FormEditForm({
 
   useEffect(() => {
     dispatch(fetchAllActiveEmployees());
+    dispatch(fetchAllTicketStatus());
   }, [dispatch]);
 
   useEffect(() => {
@@ -201,6 +203,8 @@ export function FormEditForm({
                   setFieldValue={setFieldValue}
                   values={values}
                   ticketList={project_sprint?.allTicket || []}
+                  ticketStatus={dashboard?.allTicketStatus || []}
+                  Id={id}
                 />
                 <hr />
                 {!id && project_sprint?.previousTicket?.length ? (
@@ -255,6 +259,8 @@ const LinkedTicketTable = ({
   touched,
   setFieldValue,
   ticketList,
+  ticketStatus,
+  Id,
 }) => {
   return (
     <FieldArray name="SprintDetail">
@@ -284,9 +290,9 @@ const LinkedTicketTable = ({
               <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                 <thead>
                   <tr className="custom-table-header">
-                    <td className="min-w-60">Ticket</td>
+                    <td className="min-w-52">Ticket</td>
                     <td>Ticket Description</td>
-                    <td>Ticket Status</td>
+                    <td className="min-w-36">Ticket Status</td>
                     <td>Assign To</td>
                     <td className="text-right">Action</td>
                   </tr>
@@ -367,7 +373,57 @@ const LinkedTicketTable = ({
 
                           <td>{selectedTicket?.ticketDescription || ""}</td>
                           <td>
-                            {selectedTicket?.TicketStatus?.statusName || ""}
+                            {Id && !isEdit ? (
+                              <>
+                                {" "}
+                                <Field
+                                  name={`SprintDetail[${index}].Ticket.ticketStatusId`}
+                                  component={SearchSelect}
+                                  className={
+                                    errors.SprintDetail?.[index]?.Ticket
+                                      .ticketStatusId &&
+                                    touched.SprintDetail?.[index]?.Ticket
+                                      .ticketStatusId
+                                      ? "form-control is-invalid"
+                                      : "form-control"
+                                  }
+                                  onChange={(e) => {
+                                    setFieldValue(
+                                      `SprintDetail[${index}].Ticket.ticketStatusId`,
+                                      e?.value ? Number(e.value) : "",
+                                    );
+                                  }}
+                                  error={
+                                    errors.SprintDetail?.[index]?.Ticket
+                                      .ticketStatusId
+                                  }
+                                  touched={
+                                    touched.SprintDetail?.[index]?.Ticket
+                                      .ticketStatusId
+                                  }
+                                  isDisabled={isEdit}
+                                  value={ticketStatus?.find(
+                                    (el) =>
+                                      el.value == row?.Ticket.ticketStatusId,
+                                  )}
+                                  options={ticketStatus}
+                                />
+                                {errors.SprintDetail?.[index]?.Ticket
+                                  .ticketStatusId &&
+                                  touched.SprintDetail?.[index]?.Ticket
+                                    .ticketStatusId && (
+                                    <CustomErrorLabel
+                                      touched={true}
+                                      error={
+                                        errors.SprintDetail?.[index]?.Ticket
+                                          .ticketStatusId
+                                      }
+                                    />
+                                  )}{" "}
+                              </>
+                            ) : (
+                              selectedTicket?.TicketStatus?.statusName || ""
+                            )}
                           </td>
                           <td>{selectedTicket?.AssignToEmp?.name || ""}</td>
 

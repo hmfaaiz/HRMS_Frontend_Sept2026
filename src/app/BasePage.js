@@ -539,7 +539,9 @@ const customer_config = lazy(() =>
 const tada_configuration = lazy(() =>
   import("./modules/Tada_Configuration/pages/index"),
 );
-
+const preapprovaltravelrequest = lazy(() =>
+  import("./modules/PreApproval_Travel_Request/pages/index"),
+);
 const employee_temporary_shift_setup = lazy(() =>
   import("./modules/Temporary_Shift_Setup/pages/index"),
 );
@@ -549,6 +551,17 @@ import ("./modules/Reimbursement_Claim_Request/pages/index"))
 const project_sprint = lazy(() =>
   import("./modules/Project_Sprint/pages/index"),
 );
+
+const reimbursement_claim_approval = lazy (() =>
+ import("./modules/Reimbursement_Claim_Approval/pages/index"),
+);
+
+const reimbursement_claim_workflow_status_approval = lazy (() =>
+import ("./modules/Reimbursement_Workflow_Status/pages/index"),
+);
+
+const reimbursement_claim_workflow_status = lazy (() =>
+import ("./modules/Reimbursement_Workflow_Portal/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -738,8 +751,12 @@ const ROUTES = {
   temporary_shift_setup : employee_temporary_shift_setup,
   reimbursement_claim_request : reimbursement_claim_request,
   tada_config: tada_configuration,
+  preapproval_travel_request : preapprovaltravelrequest,
   temporary_shift_setup: employee_temporary_shift_setup,
+  reimbursement_claim_approval: reimbursement_claim_approval,
   project_sprint : project_sprint,
+  reimbursement_claim_workflow_status_approval : reimbursement_claim_workflow_status_approval,
+  reimbursement_claim_workflow_status : reimbursement_claim_workflow_status,
 };
 
 export default function BasePage() {

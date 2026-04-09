@@ -56,6 +56,7 @@ export function FormUIProvider({ formUIEvents, children }) {
     openDetailTimeLog: formUIEvents.openDetailTimeLog,
     openTicketActivity: formUIEvents.openTicketActivity,
     openTicketTimeLogging: formUIEvents.openTicketTimeLogging,
+    openTimeLogForm : formUIEvents.openTimeLogForm,
   };
 
   return (

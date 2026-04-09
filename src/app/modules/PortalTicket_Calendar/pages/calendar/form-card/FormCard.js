@@ -3,8 +3,8 @@ import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Accordion, Button, Card, Form, Modal } from "react-bootstrap";
-import { CirclePlus  } from "lucide-react";
-import { CircleMinus  } from "lucide-react";
+import { CirclePlus } from "lucide-react";
+import { CircleMinus } from "lucide-react";
 
 import {
   CardBody,
@@ -73,15 +73,15 @@ export function FormCard() {
     dispatch(fetchAllProjects());
     dispatch(fetchAllTicketStatus());
     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
-     dispatch(fetchMasterTicketType());
+    dispatch(fetchMasterTicketType());
   }, [dispatch]);
 
   const { ticketCalendar } = currentState;
 
   const setInitialValues = (firstSubsidiary) => {
     setBodyValues({
-      from_date: firstSubsidiary?.payrollMonth?.startDate || "",
-      to_date: firstSubsidiary?.payrollMonth?.endDate || "",
+      from_date: getFirstDayOfCurrentMonth() || "",
+      to_date: getLastDayOfCurrentMonth() || "",
       subsidiaryId: firstSubsidiary?.value || "",
     });
     setIsDataLoaded(true); // Mark data as loaded
@@ -120,18 +120,18 @@ export function FormCard() {
     { value: 2, label: "Send for Review" },
   ];
 
- const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState(null);
   return (
     <>
-      <TCard name={CurrentModuleName()}>
+      <TCard>
         <div className="">
           <Formik
             enableReinitialize={true}
             initialValues={{
               // from_date: bodyValues?.from_date || null,
               // to_date: bodyValues?.to_date || null,
-               from_date: getFirstDayOfCurrentMonth(),
-                          to_date: getLastDayOfCurrentMonth(),
+              from_date: getFirstDayOfCurrentMonth(),
+              to_date: getLastDayOfCurrentMonth(),
               employeeId: "",
 
 
@@ -450,7 +450,7 @@ export function FormCard() {
                                   }
                                   onChange={(date) => {
                                     setFieldValue("from_date", date);
-                                    setFieldValue("to_date", date); // Sync from_date and to_date
+                                    // setFieldValue("to_date", date); // Sync from_date and to_date
                                   }}
                                   timeInputLabel="Time:"
                                   dateFormat="dd-MMM-yyyy"

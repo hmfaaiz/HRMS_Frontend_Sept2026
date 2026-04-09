@@ -53,9 +53,10 @@ export const deleteReimbursementClaim = (id) => (dispatch) => {
     });
 };
 
-export const createReimbursementClaim = (body, disbaleLoading, onHide) => (
+export const createReimbursementClaim = (body, disbaleLoading, clearForm) => (
   dispatch
-) => {
+
+  ) => {
   return requestFromServer
     .createReimbursementClaim(body)
     .then((res) => {
@@ -66,23 +67,20 @@ export const createReimbursementClaim = (body, disbaleLoading, onHide) => (
         position: "top-right",
         autoClose: 2000,
       });
-      onHide();
+      clearForm();
     })
     .catch((error) => {
       error.clientMessage = "Can't create record";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
-      onHide();
-      toast.error(error?.response?.data?.message, {
+      toast.error(error?.response?.data?.message || "Failed to create record", {
         position: "top-right",
         autoClose: 5000,
       });
     });
 };
 
-export const updateReimbursementClaim = (body, disbaleLoading, onHide) => (
-  dispatch
-) => {
+export const updateReimbursementClaim = (body, disbaleLoading, clearForm) => (dispatch) => {
   return requestFromServer
     .updateReimbursementClaim(body)
     .then(() => {
@@ -92,18 +90,17 @@ export const updateReimbursementClaim = (body, disbaleLoading, onHide) => (
         position: "top-right",
         autoClose: 5000,
       });
-      onHide();
+      clearForm();
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
-      toast.error(error?.response?.data?.message, {
+      toast.error(error?.response?.data?.message || "Failed to update record", {
         position: "top-right",
         autoClose: 5000,
       });
     });
 };
-
 export const getEmployeeAuthorities = (empId) => (dispatch) => {
   return requestFromServer
     .getEmployeeAuthorties(empId, "629")

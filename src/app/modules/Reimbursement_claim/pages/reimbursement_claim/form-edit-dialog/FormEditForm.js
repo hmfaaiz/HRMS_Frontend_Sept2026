@@ -232,7 +232,7 @@ export function FormEditForm({
           values?.reimbursement_typeId,
           values?.pay_in_payroll_forId,
           currentState?.reimbursement_config_policies_permission?.policies,
-          values
+          values,
         );
 
         const clearForm = () => {
@@ -244,12 +244,8 @@ export function FormEditForm({
 
         const payload = {
           ...values,
-          date: values.date
-            ? formatDates(values.date, "dd-MMM-yyyy")
-            : null,
-
-
-        }
+          date: values.date ? formatDates(values.date, "dd-MMM-yyyy") : null,
+        };
 
         saveForm(payload, finalAmountLimit, isFileReq, clearForm);
       }}
@@ -287,16 +283,16 @@ export function FormEditForm({
                         setFieldValue("reimbursement_typeId", e.value || null);
 
                         const policy = currentState?.reimbursement_config_policies_permission?.policies?.find(
-                          (item) => item.reimbursement_typeId == e.value
+                          (item) => item.reimbursement_typeId == e.value,
                         );
                         setIsFileReq(
-                          policy?.attachment_required && !values.file
+                          policy?.attachment_required && !values.file,
                         );
                       }}
                       value={
                         dashboard.allReimbursementTypeList.find(
                           (option) =>
-                            option.value === values.reimbursement_typeId
+                            option.value === values.reimbursement_typeId,
                         ) || null
                       }
                       options={filteredOptions}
@@ -341,21 +337,23 @@ export function FormEditForm({
                       // minDate={
                       //   data.dateOfJoining ? new Date(data.dateOfJoining) : null
                       // }
-                      minDate={
-                        (() => {
-                          const payrollStart = activeFiscalYear?.payrollMonth?.startDate
-                            ? new Date(activeFiscalYear.payrollMonth.startDate)
-                            : null;
+                      minDate={(() => {
+                        const payrollStart = activeFiscalYear?.payrollMonth
+                          ?.startDate
+                          ? new Date(activeFiscalYear.payrollMonth.startDate)
+                          : null;
 
-                          const joiningDate = data?.dateOfJoining ? new Date(data.dateOfJoining) : null;
+                        const joiningDate = data?.dateOfJoining
+                          ? new Date(data.dateOfJoining)
+                          : null;
 
-                          if (payrollStart && joiningDate) {
-                            return payrollStart > joiningDate ? payrollStart : joiningDate;
-                          }
-                          return payrollStart || joiningDate || null;
-                        })()
-                      }
-
+                        if (payrollStart && joiningDate) {
+                          return payrollStart > joiningDate
+                            ? payrollStart
+                            : joiningDate;
+                        }
+                        return payrollStart || joiningDate || null;
+                      })()}
                       // disabled={!isActiveMonth}
                       // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
                       //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
@@ -378,12 +376,12 @@ export function FormEditForm({
                       value={
                         dashboard?.allPayrollMonthYearList.find(
                           (option) =>
-                            option.value === values.pay_in_payroll_forId
+                            option.value === values.pay_in_payroll_forId,
                         ) || null
                       }
                       options={
                         dashboard?.allPayrollMonthYearList.filter(
-                          (option) => option.isActive
+                          (option) => option.isActive,
                         ) || []
                       }
                       // options={dashboard.allPayrollMonthYearList}
@@ -466,7 +464,7 @@ export function FormEditForm({
                         values?.pay_in_payroll_forId,
                         currentState?.reimbursement_config_policies_permission
                           ?.policies,
-                        values
+                        values,
                       )}
                       onChange={(e) => {
                         const finalAmountLimit = calculateRemainingAmount(
@@ -474,7 +472,7 @@ export function FormEditForm({
                           values?.pay_in_payroll_forId,
                           currentState?.reimbursement_config_policies_permission
                             ?.policies,
-                          values
+                          values,
                         );
                         const value = Number(e);
 
@@ -495,7 +493,7 @@ export function FormEditForm({
                           values?.pay_in_payroll_forId,
                           currentState?.reimbursement_config_policies_permission
                             ?.policies,
-                          values
+                          values,
                         );
                         return (
                           <div className="d-flex">
@@ -549,7 +547,6 @@ export function FormEditForm({
                   ) : null} */}
                 </div>
                 <div className="grid  gap-x-3 mt-2">
-
                   <div className="">
                     <Field
                       name="details"
@@ -615,7 +612,6 @@ export function FormEditForm({
 
                       {/* Hidden input */}
 
-
                       {/* Styled label as upload box */}
                       {/* <label
                         htmlFor="file_input"
@@ -627,36 +623,42 @@ export function FormEditForm({
                       >
                         {user.file ? user.file : "Upload"} */}
                       <FileUpload
-                        label={"Attachment"}
+                        label={
+                          <>
+                            Attachment{" "}
+                            {isFileReq && (
+                              <span style={{ color: "red" }}>*</span>
+                            )}
+                          </>
+                        }
                         id="file"
                         name="file"
                         type="file"
                         accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
                         ref={inputFile}
-                        className="hidden"
+                        isEdit={isEdit}
+                        fileName={
+                          values?.file
+                            ? values.file instanceof File
+                              ? values.file.name
+                              : String(values.file)
+                                  .split("/")
+                                  .pop()
+                            : ""
+                        }
                         onChange={(event) => {
                           const file = event.currentTarget.files[0];
-                          setFieldValue("file", file);
+                          setFieldValue("file", file || null);
+                          setFieldTouched("file", true);
+                          if (file) setIsFileReq(false);
                         }}
                       />
-                      {/* </label> */}
-
-                      {/* Show existing file if any */}
-                      {user.file && user.file === user.file && (
-                        <div className="mt-2">
-                          <label>Existing File: </label>
-                          <a
-                            href={getUploadUrl(user.file)}
-                            target="_blank"
-                            className="text-blue-600 underline  text-primary text-sm"
-                          >
-                            {getFileName(user.file)}
-                          </a>
+                      {errors.file && touched.file && (
+                        <div className="text-danger text-xs mt-1">
+                          {errors.file}
                         </div>
                       )}
                     </div>
-
-
                   </div>
                 </div>
               </fieldset>

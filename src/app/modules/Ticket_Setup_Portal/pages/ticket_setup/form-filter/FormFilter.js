@@ -43,6 +43,7 @@ const prepareFilter = (queryParams, values) => {
   if (projectId) {
     filter.projectId = projectId;
   }
+  filter.isPortal = true;
   newQueryParams.filter = filter;
   return newQueryParams;
 };
@@ -50,7 +51,7 @@ const prepareFilter = (queryParams, values) => {
 export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
   const dispatch = useDispatch();
   const formUIContext = useFormUIContext();
-  const { dashboard } = useSelector((state) => state);
+  const { dashboard, auth } = useSelector((state) => state);
 
   const formUIProps = useMemo(() => {
     return {
@@ -69,9 +70,14 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
   };
 
   useEffect(() => {
-    dispatch(fetchAllProjects());
     dispatch(fetchAllTicketStatus());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!auth?.user?.employeeIdMapping) return;
+
+    dispatch(fetchAllProjects(auth?.user?.employeeIdMapping));
+  }, [auth?.user?.employeeIdMapping]);
 
   return (
     <>
