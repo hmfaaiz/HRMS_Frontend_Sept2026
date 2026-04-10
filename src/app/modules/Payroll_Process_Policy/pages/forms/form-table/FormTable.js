@@ -415,7 +415,7 @@ export function FormTable(user) {
           otherwise: Yup.number().notRequired(),
         }),
       leaveEnchashment_EarningId: Yup.number()
-        .when('isEnableAttandanceIntegration', {
+        .when('isEnableOverTimeCalc', {
           is: true, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.minOneValue).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
@@ -427,7 +427,7 @@ export function FormTable(user) {
           otherwise: Yup.number().notRequired(),
         }),
       overTimeEarningId: Yup.number()
-        .when('isEnableAttandanceIntegration', {
+        .when('isEnableOverTimeCalc', {
           is: true, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
@@ -486,9 +486,19 @@ export function FormTable(user) {
         .notRequired(),
 
 
-      OvertimeBasis: Yup.number()
+      // OvertimeBasis: Yup.number()
+      //   .nullable()
+      //   .required(VALIDATION_MESSAGES.required),
+
+    OvertimeBasis: Yup.number()
+    .nullable()
+    .when('isEnableOverTimeCalc', {
+      is: true,
+      then: Yup.number()
         .nullable()
         .required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().nullable().notRequired(),
+    }),
 
       SalaryPolicy: Yup.number()
         .nullable()
@@ -503,6 +513,71 @@ export function FormTable(user) {
           otherwise: Yup.number().notRequired(),
         }),
 
+  //// new
+  // Overtime Policy validations
+  OvertimePolicy: Yup.number()
+    .nullable()
+    .when('isEnableOverTimeCalc', {
+      is: true,
+      then: Yup.number()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().nullable().notRequired(),
+    }),
+
+  OvertimePolicy_Days: Yup.number()
+    .nullable()
+    .when(['isEnableOverTimeCalc', 'OvertimePolicy'], {
+      is: (isEnable, OvertimePolicy) => isEnable == true && OvertimePolicy == 1,
+      then: Yup.number()
+        .min(1, VALIDATION_MESSAGES.minZeroValue)
+        .max(99, "Max 99 days")
+        .required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().nullable().notRequired(),
+    }),
+
+  hoursPolicy: Yup.number()
+    .nullable()
+    .when('isEnableOverTimeCalc', {
+      is: true,
+      then: Yup.number()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().nullable().notRequired(),
+    }),
+
+  fixedHours: Yup.number()
+    .nullable()
+    .when(['isEnableOverTimeCalc', 'hoursPolicy'], {
+      is: (isEnable, hoursPolicy) => isEnable == true && hoursPolicy == 1,
+      then: Yup.number()
+        .min(1, VALIDATION_MESSAGES.minZeroValue)
+        .max(99, "Max 99 days")
+        .required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().nullable().notRequired(),
+    }),
+
+  // Final Settlement validations
+  finalSettlementPolicy: Yup.number()
+    .nullable()
+    .when('isEnableFinalSettlement', {
+      is: true,
+      then: Yup.number()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().nullable().notRequired(),
+    }),
+
+  finalSettlement_Days: Yup.number()
+    .nullable()
+    .when(['isEnableFinalSettlement', 'finalSettlementPolicy'], {
+      is: (isEnable, finalPolicy) => isEnable == true && finalPolicy == 1,
+      then: Yup.number()
+        .min(1, VALIDATION_MESSAGES.minZeroValue)
+        .max(99, "Max 99 days")
+        .required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().nullable().notRequired(),
+    }),
 
 
       // Provident Fund 
@@ -630,6 +705,17 @@ export function FormTable(user) {
     lateDeductionId: "",
     overTimeEarningId: "",
     isEnableSandwichLeavePolicy: "",
+
+    /// new 
+    isEnableOverTimeCalc: "",
+    OvertimePolicy : 0,
+    OvertimePolicy_Days :"",
+    hoursPolicy : 0,
+    fixedHours : "",
+
+    isEnableFinalSettlement : "",
+    finalSettlementPolicy : 0,
+    finalSettlement_Days :"",
 
     //-- Loan Integration	
     isEnableLoan: "",
@@ -796,6 +882,15 @@ console.log("pensionAllowances11111",pensionAllowances)
 
         pa_employer_percent: user.pa_employer_percent,
         pa_employee_percent: user.pa_employee_percent,
+
+        // new 
+        OvertimePolicy: user.OvertimePolicy,
+        OvertimePolicy_Days: user.OvertimePolicy_Days,
+        hoursPolicy: user.hoursPolicy,
+        fixedHours: user.fixedHours,
+        isEnableFinalSettlement: user.isEnableFinalSettlement,
+        finalSettlementPolicy: user.finalSettlementPolicy,
+        finalSettlement_Days: user.finalSettlement_Days,
        
 
       };
@@ -894,6 +989,11 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
   const salaryPolicyOptions = [
     { value: 0, label: "Month Days" },
     { value: 1, label: "Fixed Days " },
+  ];
+
+  const overtimeHoursOptions = [
+    { value: 0, label: "Employee Shift" },
+    { value: 1, label: "Fixed Hours" },
   ];
 
   const overtimeBasisOptions = [
@@ -1039,7 +1139,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                   <div className="">
                     <SearchSelect
                       name="SalaryPolicy"
-                      label={<span>Salary Policy<span style={{ color: 'red' }}>*</span></span>}
+                      label={<span>Policy for per Day Calculation<span style={{ color: 'red' }}>*</span></span>}
                       onChange={(e) => {
                         setFieldValue("SalaryPolicy", Number(e?.value));
                         setFieldValue("SalaryPolicy_Days", 0);
@@ -1064,9 +1164,9 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                       name="SalaryPolicy_Days"
                        component={Input}
                       type="number"
-                      placeholder="Salary Policy Days"
+                      placeholder="Fixed Days"
 
-                       label={<span>Salary Policy Days{Boolean(values.SalaryPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+                       label={<span>Fixed Days{Boolean(values.SalaryPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
                       
                       autoComplete="off"
                     />
@@ -1294,30 +1394,12 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
 
                 {/* <br></br> */}
 
+
                 <hr></hr>
 
-
-
-
-                <h6 className="font-bold mb-0 text-primary my-1">
+                <h6 className="font-bold mb-0 text-primary my-2">
                   Accounting Impact
                 </h6>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3 ">
-                  {/* <div className="flex justify-start items-center">
-                  <input className="mr-1"
-                    name="isEnableAccounting"
-                    type="checkbox"
-                    onChange={(e) => {
-                      setFieldValue('isEnableAccounting', e.target.checked)
-                    }}
-                    checked={values.isEnableAccounting}
-
-                  />
-                  <label> Enable Accounting Impact</label>
-
-                </div> */}
-
                   <div className="col-span-1">
                     <label className="flex items-center mt-1">
                       <input
@@ -1332,6 +1414,22 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                       <span>Enable Accounting Impact</span>
                     </label>
                   </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-3 ">
+                  {/* <div className="flex justify-start items-center">
+                  <input className="mr-1"
+                    name="isEnableAccounting"
+                    type="checkbox"
+                    onChange={(e) => {
+                      setFieldValue('isEnableAccounting', e.target.checked)
+                    }}
+                    checked={values.isEnableAccounting}
+
+                  />
+                  <label> Enable Accounting Impact</label>
+
+                </div> */}
+
 
                   <div className="">
                     <SearchSelect
@@ -1374,33 +1472,14 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                 </div>
 
 
-                <hr></hr>
 
                 {dashboard.allSubidiaryList?.find(
                   (option) => option.value === values.subsidiaryId
                 )?.localizationId == 1 && (<>
-                  <h6 className="font-bold mb-0 text-primary my-1">
+                  <hr></hr>
+                <h6 className="font-bold mb-0 text-primary my-2">
                     Tax Integration
                   </h6>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3  ">
-                    {/* <div className="flex justify-start items-center">
-                  <input className="mr-1"
-                    name="isEnableTax"
-                    type="checkbox"
-                    onChange={(e) => {
-                      setFieldValue('isEnableTax', e.target.checked)
-                    }}
-                    checked={values.isEnableTax}
-
-                  />
-                  <label>
-                    Enable Tax Integration
-                  </label>
-
-                  <br></br>
-                </div> */}
-
                     <div className="flex items-start">
                       <label className="flex items-center mt-1">
                         <input className="mr-1"
@@ -1419,6 +1498,25 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
 
                     </div>
 
+                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-3  ">
+                    {/* <div className="flex justify-start items-center">
+                  <input className="mr-1"
+                    name="isEnableTax"
+                    type="checkbox"
+                    onChange={(e) => {
+                      setFieldValue('isEnableTax', e.target.checked)
+                    }}
+                    checked={values.isEnableTax}
+
+                  />
+                  <label>
+                    Enable Tax Integration
+                  </label>
+
+                  <br></br>
+                </div> */}
+
+
 
 
                     <div className="col-apnan2">
@@ -1436,7 +1534,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.payrollTax_DeductionTypeId && touched.payrollTax_DeductionTypeId && <ErrorMessage className="form-feedBack" name="payrollTax_DeductionTypeId" component="div" />}
+                      {errors.payrollTax_DeductionTypeId && touched.payrollTax_DeductionTypeId && <ErrorMessage className="invalid-feedback" name="payrollTax_DeductionTypeId" component="div" />}
                     </div>
                     <div className="col-apnan2">
                       {<span><label>Arrears Tax Deduction</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}></span>}</span>}
@@ -1453,7 +1551,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.arrearTaxDeductionId && touched.arrearTaxDeductionId && <ErrorMessage className="form-feedBack" name="arrearTaxDeductionId" component="div" />}
+                      {errors.arrearTaxDeductionId && touched.arrearTaxDeductionId && <ErrorMessage className="invalid-feedback" name="arrearTaxDeductionId" component="div" />}
                     </div>
 
                   </div>
@@ -1491,7 +1589,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                   <h6 className="font-semibold mb-0 text-primary mt-2 text-sm">
                     Late Deduction
                   </h6>
-                  <div className="grid lg:grid-cols-3 gap-x-3">
+                  <div className="grid lg:grid-cols-5 gap-x-3">
 
                     <div className="">
                       <Field
@@ -1539,7 +1637,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                       </select>
 
                       {errors.leaveDeductionId && touched.leaveDeductionId && (
-                        <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />
+                        <ErrorMessage className="invalid-feedback" name="leaveDeductionId" component="div" />
                       )}
                     </div>
 
@@ -1563,7 +1661,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.lateDeductionId && touched.lateDeductionId && <ErrorMessage className="form-feedBack" name="lateDeductionId" component="div" />}
+                      {errors.lateDeductionId && touched.lateDeductionId && <ErrorMessage className="invalid-feedback" name="lateDeductionId" component="div" />}
                     </div>
 
                   </div>
@@ -1573,15 +1671,15 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
 
                 <div >
 
+                <hr></hr>
 
-                  <h6 className="font-semibold mb-0 text-primary text-sm my-2">
+                <h6 className="font-bold mb-0 text-primary my-2">
                     Overtime / Leave Encashment
                   </h6>
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3">
                     <div className="flex items-start">
                       <label className="flex items-center space-x-1">
                         <input className="mr-1"
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                          // disabled={!Boolean(values.isEnableAttandanceIntegration)}
                           type="checkbox"
                           name="isEnableOverTimeCalc"
                           onChange={(e) => {
@@ -1589,17 +1687,18 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                           }}
                           checked={values.isEnableOverTimeCalc}
                         />
-                        Enable Overtime Calculation
+                        Enable Overtime / Leave Encashment
                       </label>
                     </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-3">
                     <div className="">
-                      {<label>Overtime Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      {<label>Overtime Allowance{Boolean(values.isEnableOverTimeCalc) && <span style={{ color: 'red' }}>*</span>}</label>}
                       <select className="form-control"
                         onChange={(e) => {
                           setFieldValue('overTimeEarningId', e.target.value)
                         }}
                         value={values.overTimeEarningId}
-                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        disabled={!Boolean(values.isEnableOverTimeCalc)}
                         name="overTimeEarningId">
                         <option value="-1"> Select</option>
                         {
@@ -1607,15 +1706,116 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.overTimeEarningId && touched.overTimeEarningId && <ErrorMessage className="form-feedBack" name="overTimeEarningId" component="div" />}
+                      {errors.overTimeEarningId && touched.overTimeEarningId && <ErrorMessage className="invalid-feedback" name="overTimeEarningId" component="div" />}
                     </div>
+
+
                     <div className="">
-                      {<label>Encashment Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <SearchSelect
+                        name="OvertimeBasis"
+                        label={<span>Overtime Basis{Boolean(values.isEnableOverTimeCalc) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        onChange={(e) => {
+                          setFieldValue("OvertimeBasis", Number(e?.value));
+
+                        }}
+
+                        value={
+                          overtimeBasisOptions.find(
+                            (option) => option.value == Number(values?.OvertimeBasis)
+                          ) || null
+                        }
+
+                        error={errors.OvertimeBasis}
+                        touched={touched.OvertimeBasis}
+                        options={overtimeBasisOptions}
+                        isDisabled={Boolean(user?.readOnly) || !Boolean(values.isEnableOverTimeCalc)}
+                      />
+                      
+                    </div>
+
+                  {/* new  */}
+               
+                  <div className="">
+                    <SearchSelect
+                      name="OvertimePolicy"
+                      label={<span>Policy for per Day Calculation<span style={{ color: 'red' }}>*</span></span>}
+                      onChange={(e) => {
+                        setFieldValue("OvertimePolicy", Number(e?.value));
+                        setFieldValue("OvertimePolicy_Days", 0);
+                      }}
+
+                      value={
+                        salaryPolicyOptions.find(
+                          (option) => option.value == Number(values?.OvertimePolicy)
+                        ) || null
+                      }
+
+                      error={errors.OvertimePolicy}
+                      touched={touched.OvertimePolicy}
+                      options={salaryPolicyOptions}
+                      isDisabled={!Boolean(values.isEnableOverTimeCalc)}
+                    />
+                  </div>
+
+                  <div className="">
+                    <Field
+                      disabled={!Boolean(values.OvertimePolicy) || !Boolean(values.isEnableOverTimeCalc)}
+                      name="OvertimePolicy_Days"
+                       component={Input}
+                      type="number"
+                      placeholder="Fixed Days"
+
+                       label={<span>Fixed Days{Boolean(values.OvertimePolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      
+                      autoComplete="off"
+                    />
+                  </div>
+
+                  <div className="">
+                    <SearchSelect
+                      name="hoursPolicy"
+                      label={<span>Policy for per Hour Calculation<span style={{ color: 'red' }}>*</span></span>}
+                      onChange={(e) => {
+                        setFieldValue("hoursPolicy", Number(e?.value));
+                        setFieldValue("fixedHours", 0);
+                      }}
+
+                      value={
+                        overtimeHoursOptions.find(
+                          (option) => option.value == Number(values?.hoursPolicy)
+                        ) || null
+                      }
+
+                      error={errors.hoursPolicy}
+                      touched={touched.hoursPolicy}
+                      options={overtimeHoursOptions}
+                      isDisabled={!Boolean(values.isEnableOverTimeCalc)}
+                    />
+                  </div>
+
+                  <div className="">
+                    <Field
+                      disabled={!Boolean(values.hoursPolicy) || !Boolean(values.isEnableOverTimeCalc)}
+                      name="fixedHours"
+                       component={Input}
+                      type="number"
+                      placeholder="Fixed Hours"
+
+                       label={<span>Fixed Hours{Boolean(values.hoursPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      
+                      autoComplete="off"
+                    />
+                  </div>
+
+                  </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-3">
+                                      <div className="">
+                      {<label>Encashment Allowance{Boolean(values.isEnableOverTimeCalc) && <span style={{ color: 'red' }}>*</span>}</label>}
                       <select className="form-control"
                         onChange={(e) => {
                           setFieldValue('leaveEnchashment_EarningId', e.target.value)
                         }}
-                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        disabled={!Boolean(values.isEnableOverTimeCalc)}
                         value={values.leaveEnchashment_EarningId}
                         name="leaveEnchashment_EarningId">
                         <option value="-1"> Select</option>
@@ -1624,33 +1824,9 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.leaveEnchashment_EarningId && touched.leaveEnchashment_EarningId && <ErrorMessage className="form-feedBack" name="leaveEnchashment_EarningId" component="div" />}
+                      {errors.leaveEnchashment_EarningId && touched.leaveEnchashment_EarningId && <ErrorMessage className="invalid-feedback" name="leaveEnchashment_EarningId" component="div" />}
                     </div>
-
-                    <div className="">
-                      <SearchSelect
-                        name="OvertimeBasis"
-                        label={<span>Overtime Basis<span style={{ color: 'red' }}>*</span></span>}
-                        onChange={(e) => {
-                          setFieldValue("OvertimeBasis", Number(e?.value));
-
-                        }}
-
-                        value={
-                          overtimeBasisOptions.find(
-                            (option) => option.value === Number(values?.OvertimeBasis)
-                          ) || null
-                        }
-
-                        error={errors.OvertimeBasis}
-                        touched={touched.OvertimeBasis}
-                        options={overtimeBasisOptions}
-                        isDisabled={Boolean(user?.readOnly)}
-                      />
-                      
                     </div>
-
-                  </div>
                 </div>
 
 
@@ -1658,12 +1834,11 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                 <div >
 
 
-                  <h6 className="font-semibold mb-0 text-primary  text-sm my-2">
+                <hr></hr>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
                     Leave Management
                   </h6>
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-
-
                     <div className="flex items-start">
                       <label className="flex items-center space-x-1">
                         <input className="mr-1"
@@ -1673,11 +1848,14 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             setFieldValue('isEnableLeaveManagemenent', e.target.checked)
                           }}
                           checked={values.isEnableLeaveManagemenent}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                          // disabled={!Boolean(values.isEnableAttandanceIntegration)}
                         />
                         Enable Leave Management
                       </label>
                     </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-3">
+
+
                     <div className="">
                       <Select
                         className="form-control"
@@ -1688,7 +1866,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                           setFieldValue("isEnableSandwichLeavePolicy", e.target.value);
 
                         }}
-                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        disabled={!Boolean(values.isEnableLeaveManagemenent)}
                         onBlur={handleBlur}
                       >
                         <option value="-1">Select</option>
@@ -1702,14 +1880,82 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                   </div>
                 </div>
 
+
+                {/* final settlement  */}
+                
+                <div >
+
+
+                <hr></hr>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
+                    Final Settlement Policy
+                  </h6>
+                    <div className="flex items-start">
+                      <label className="flex items-center space-x-1">
+                        <input className="mr-1"
+                          type="checkbox"
+                          name="isEnableFinalSettlement"
+                          onChange={(e) => {
+                            setFieldValue('isEnableFinalSettlement', e.target.checked)
+                          }}
+                          checked={values.isEnableFinalSettlement}
+                          // disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        />
+                        Enable Final Settlement
+                      </label>
+                    </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-3">
+
+                  <div className="">
+                    <SearchSelect
+                      name="finalSettlementPolicy"
+                      label={<span>Policy for per Day Calculation<span style={{ color: 'red' }}>*</span></span>}
+                      onChange={(e) => {
+                        setFieldValue("finalSettlementPolicy", Number(e?.value));
+                        setFieldValue("finalSettlement_Days", 0);
+                      }}
+
+                      value={
+                        salaryPolicyOptions.find(
+                          (option) => option.value == Number(values?.finalSettlementPolicy)
+                        ) || null
+                      }
+
+                      error={errors.finalSettlementPolicy}
+                      touched={touched.finalSettlementPolicy}
+                      options={salaryPolicyOptions}
+                      isDisabled={!Boolean(values.isEnableFinalSettlement)}
+                    />
+                  </div>
+
+                  <div className="">
+                    <Field
+                      disabled={!Boolean(values.finalSettlementPolicy) || !Boolean(values.isEnableFinalSettlement)}
+                      name="finalSettlement_Days"
+                       component={Input}
+                      type="number"
+                      placeholder="Fixed Days"
+
+                       label={<span>Fixed Days{Boolean(values.finalSettlementPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      
+                      autoComplete="off"
+                    />
+                  </div>
+
+
+                  </div>
+                </div>
+
                 <hr></hr>
 
      <div>
-                  <h6 className="font-bold mb-0 text-primary my-2">
+                <hr></hr>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
                     Provident Fund Policy
                   </h6>
 
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="flex  items-start">
                       <label className="flex items-center space-x-1">
 
@@ -1725,6 +1971,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         Enable Provident Fund
                       </label>
                     </div>
+                  <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
                     <div className="">
@@ -1742,7 +1989,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.providentFundId && touched.providentFundId && <ErrorMessage className="form-feedBack" name="providentFundId" component="div" />}
+                      {errors.providentFundId && touched.providentFundId && <ErrorMessage className="invalid-feedback" name="providentFundId" component="div" />}
                     </div>
 
                      <div className="">
@@ -1759,8 +2006,6 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                     </div>
 
 
-                  </div>
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="">
                       <Field
                         disabled={!Boolean(values.isProvidentFund)}
@@ -1822,11 +2067,12 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                 </div>
 
                      <div>
-                  <h6 className="font-bold mb-0 text-primary my-2">
+                <hr></hr>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
                  Pension Allowance
                   </h6>
 
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="flex  items-start">
                       <label className="flex items-center space-x-1">
 
@@ -1842,6 +2088,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         Enable Pension Allowance
                       </label>
                     </div>
+                  <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
                     <div className="">
@@ -1859,14 +2106,12 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.pensionAllowanceId && touched.pensionAllowanceId && <ErrorMessage className="form-feedBack" name="pensionAllowanceId" component="div" />}
+                      {errors.pensionAllowanceId && touched.pensionAllowanceId && <ErrorMessage className="invalid-feedback" name="pensionAllowanceId" component="div" />}
                     </div>
 
                     
 
 
-                  </div>
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="">
                       <Field
                         disabled={!Boolean(values.isPensionAllowance)}
@@ -1939,7 +2184,6 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                     EOBI Configuration
                   </h6>
 
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="flex  items-start">
                       <label className="flex items-center space-x-1">
 
@@ -1955,6 +2199,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         Enable EOBI
                       </label>
                     </div>
+                  <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
                     <div className="">
@@ -1972,7 +2217,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.eobi_deductionId && touched.eobi_deductionId && <ErrorMessage className="form-feedBack" name="eobi_deductionId" component="div" />}
+                      {errors.eobi_deductionId && touched.eobi_deductionId && <ErrorMessage className="invalid-feedback" name="eobi_deductionId" component="div" />}
                     </div>
 
                     <div className="">
@@ -1992,8 +2237,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         disabled={!Boolean(values.isEnableEOBI)}
                       />
                     </div>
-                  </div>
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+
                     <div className="">
                       <Field
                         disabled={!Boolean(values.isEnableEOBI)}
@@ -2070,7 +2314,6 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                   </h6>
 
 
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="flex items-start">
                       <label className="flex items-center space-x-1">
 
@@ -2085,6 +2328,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         Enable Social Security
                       </label>
                     </div>
+                  <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
 
@@ -2104,7 +2348,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             return <option value={x.value}> {x.label} </option>
                           })}
                       </select>
-                      {errors.sessi_deductionId && touched.sessi_deductionId && <ErrorMessage className="form-feedBack" name="sessi_deductionId" component="div" />}
+                      {errors.sessi_deductionId && touched.sessi_deductionId && <ErrorMessage className="invalid-feedback" name="sessi_deductionId" component="div" />}
                     </div>
 
                     <div className="">
@@ -2124,8 +2368,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                         label={<span>Minimum Wage{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
                       />
                     </div>
-                  </div>
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+
                     <div className="">
                       <Field
                         name="sessi_employeer_value_in_percent"
@@ -2184,7 +2427,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                     <h6 className="font-bold mb-0 text-primary">
                       Journal Cash & Cheque Information{"  "}
                     </h6>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-x-3">
                       <div>
                         <label> Cash Account </label>
                         <select className="form-control"
@@ -2200,7 +2443,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                               return <option value={x.value}> {x.label} </option>
                             })}
                         </select>
-                        {errors.journalCashAccountId && touched.journalCashAccountId && <ErrorMessage className="form-feedBack" name="journalCashAccountId" component="div" />}
+                        {errors.journalCashAccountId && touched.journalCashAccountId && <ErrorMessage className="invalid-feedback" name="journalCashAccountId" component="div" />}
                       </div>
                       <div>
                         <label> Cheque Account </label>
@@ -2217,7 +2460,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                               return <option value={x.value}> {x.label} </option>
                             })}
                         </select>
-                        {errors.journalChequeAccountId && touched.journalChequeAccountId && <ErrorMessage className="form-feedBack" name="journalChequeAccountId" component="div" />}
+                        {errors.journalChequeAccountId && touched.journalChequeAccountId && <ErrorMessage className="invalid-feedback" name="journalChequeAccountId" component="div" />}
                       </div>
 
                        <div className="">
@@ -2281,7 +2524,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                                   })}
                               </select>
 
-                              {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
+                              {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="invalid-feedback">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
 
 
 
@@ -2297,7 +2540,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                               }}
                                 placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
 
-                              {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
+                              {otherErrors[`bankCode-${rightindex}`] && <div className="invalid-feedback">{otherErrors[`bankCode-${rightindex}`]}</div>}
                             </td>
 
                             <td>
@@ -2307,7 +2550,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                               }}
                                 id={"bankAccountNo-" + rightindex}></input>
 
-                              {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
+                              {otherErrors[`bankAccountNo-${rightindex}`] && <div className="invalid-feedback">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
                             </td>
                             <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
 
@@ -2329,7 +2572,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                             {/* <td>
                           <input type="text" className="form-control" placeholder="Enter Bank Name" onChange={handleFieldChanged} value={obj.bankName} id={'bankName-' + rightindex}></input>
 
-                          {otherErrors[`bankName-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankName-${rightindex}`]}</div>}
+                          {otherErrors[`bankName-${rightindex}`] && <div className="invalid-feedback">{otherErrors[`bankName-${rightindex}`]}</div>}
                         </td> */}
 
 
@@ -2366,7 +2609,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                                   })}
                               </select>
 
-                              {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
+                              {otherErrors[`bankId-${rightindex}`] && <div className="invalid-feedback">{otherErrors[`bankId-${rightindex}`]}</div>}
 
                             </td>
                             <td>
@@ -2390,7 +2633,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                               </select>
 
                               {otherErrors[`branchId-${rightindex}`] && (
-                                <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
+                                <div className="invalid-feedback">{otherErrors[`branchId-${rightindex}`]}</div>
                               )}
                             </td>
 
@@ -2415,7 +2658,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
                     {otherErrors["isDefault"] && (
                       <tr>
                         <td colSpan={6}>
-                          <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
+                          <div className="invalid-feedback text-danger">{otherErrors["isDefault"]}</div>
                         </td>
                       </tr>
                     )}

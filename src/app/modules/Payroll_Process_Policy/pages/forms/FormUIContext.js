@@ -64,6 +64,14 @@ export function FormUIProvider({ FormUIEvents, children }) {
     lateDeductionId :"",
     overTimeEarningId :"",
     isEnableSandwichLeavePolicy :"",
+    /// new 
+    OvertimePolicy : 0,
+    OvertimePolicy_Days :"",
+    hoursPolicy : 0,
+    fixedHours : "",
+    isEnableFinalSettlement : "",
+    finalSettlementPolicy : 0,
+    finalSettlement_Days :"",
 
     //-- Loan Integration	
     isEnableLoan :"",
