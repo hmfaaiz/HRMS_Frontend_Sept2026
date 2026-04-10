@@ -306,7 +306,7 @@ export const sendFollowUpMessage = (data, onHide) => (dispatch) => {
     .sendFollowUpMessage(data)
     .then((response) => {
       onHide();
-      toast.success(response.data.message, {
+      toast.success(response.data?.data?.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
