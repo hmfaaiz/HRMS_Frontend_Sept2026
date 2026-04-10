@@ -44,6 +44,7 @@ export function FormTable() {
       setDetailId: formUIContext.setDetailId,
       detailId: formUIContext.detailId,
       employeeId: formUIContext.employeeId,
+      openTicketFollowUp: formUIContext.openTicketFollowUp,
 
     };
   }, [formUIContext]);
@@ -405,6 +406,7 @@ export function FormTable() {
         setId: formUIProps.setId,
         setMasterId: formUIProps.setMasterId,
         setDetailId: formUIProps.setDetailId,
+        openTicketFollowUp: formUIProps.openTicketFollowUp,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,

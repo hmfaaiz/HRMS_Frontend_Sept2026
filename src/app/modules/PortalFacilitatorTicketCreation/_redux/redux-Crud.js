@@ -60,3 +60,7 @@ export function getTimeLog(Id) {
 
   return axios.get(`${USERS_URL}/portal_ticket_creation/read-ticket-creation-time-log/${Id}`);
 }
+export function sendFollowUpMessage(body) {
+
+  return axios.post(`${USERS_URL}/portal_ticket_creation/send-followUpMessage/`,body);
+}

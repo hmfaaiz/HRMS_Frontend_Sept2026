@@ -3,7 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CalendarClock, Eye, FolderClock, LayoutList, Pencil, Reply, Trash2 } from "lucide-react";
+import { CalendarClock, Eye, FolderClock, LayoutList, MessageSquareText, Pencil, Reply, Trash2 } from "lucide-react";
 import { fetchAllFacilitatorDetail } from "../../../../_redux/redux-Actions";
 import { FormDeleteDialog } from "../../form-delete-dialog/FormDeleteDialog";
 
@@ -20,7 +20,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog, setDetailId,
-    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, user,setEditMode,
+    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, user,setEditMode,openTicketFollowUp,
   }
 ) {
   const isUserRead = false;
@@ -78,6 +78,27 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
         )
       ) : null}
+
+
+      {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
+        row?.initiator ? (
+          <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Follow Up</Tooltip>}
+        >
+          <a onClick={() => {
+            // setReceiveMode(false);
+            // setReadMode(false);
+            // setEditMode(false);
+            // setId("");
+            openTicketFollowUp(row.Id,"followup")
+          }}>
+              <MessageSquareText className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+    
+      ) : null
+    
+    ):null}
 
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}

@@ -299,3 +299,39 @@ export const fetchTimeLog= (id) => (dispatch) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };
+
+
+export const sendFollowUpMessage = (data, onHide) => (dispatch) => {
+  return requestFromServer
+    .sendFollowUpMessage(data)
+    .then((response) => {
+      onHide();
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+
+    })
+    .catch((error) => {
+
+      //error.clientMessage = "Can't update User"
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+
+      onHide()
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

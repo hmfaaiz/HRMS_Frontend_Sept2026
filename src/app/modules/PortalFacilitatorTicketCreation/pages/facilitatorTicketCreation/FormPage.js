@@ -12,6 +12,7 @@ import { } from "../../_redux/redux-Actions";
 import { DetailData } from "./modal/DetailData";
 import { TimeLog } from "./modal/TimeLog";
 import { DetailTimeLog } from "./modal/DetailTimeLog";
+import { FollowUp } from "./modal/FollowUp";
 
 
 
@@ -27,7 +28,7 @@ export function FormPage({ history }) {
       history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
-  
+
       history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${id}/${status}/delete`);
     },
     openActiveFormDialog: (id) => {
@@ -45,6 +46,9 @@ export function FormPage({ history }) {
     openTicketTimeLog: (detailId, isUserRead) => {
       history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/timelog`);
     },
+    openTicketFollowUp: (detailId, status) => {
+      history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/${status}/msg`);
+    },
     openDetailTimeLog: (detailId, isUserRead) => {
       history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/detailtimelog`);
     },
@@ -61,6 +65,20 @@ export function FormPage({ history }) {
           <FormDeleteDialog
             show={match != null}
             id={match && match.params.id}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/portal_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
+
+
+      <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:detailId/:status/msg">
+        {({ history, match }) => (
+          <FollowUp
+            show={match != null}
+            detailId={match && match.params.detailId}
             status={match && match.params.status}
             onHide={() => {
               history.push("/portal_ticket_creation/read-all-facilitator-ticket-creation");
@@ -97,7 +115,7 @@ export function FormPage({ history }) {
       </Route>
 
 
-       <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:detailId/detailtimelog">
+      <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:detailId/detailtimelog">
         {({ history, match }) => (
           <DetailTimeLog
             show={match != null}
