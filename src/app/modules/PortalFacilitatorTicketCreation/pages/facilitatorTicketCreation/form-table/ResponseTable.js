@@ -40,17 +40,17 @@ export function ResponseTable() {
       setReadMode: formUIContext.setReadMode,
       openDetailGridData: formUIContext.openDetailGridData,
       openTicketTimeLog: formUIContext.openTicketTimeLog,
-      
+
       openDetailTimeLog: formUIContext.openDetailTimeLog,
       employeeId: formUIContext.employeeId,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess,user } = useSelector((state) => {
+  const { currentState, userAccess, user } = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
       userAccess: state?.auth?.userAccess["portal_ticket_creation"],
-       user: state?.auth?.user,
+      user: state?.auth?.user,
     };
   }, shallowEqual);
 
@@ -64,13 +64,13 @@ export function ResponseTable() {
 
 
     formUIProps.setId([]);
-dispatch(
-  actions.fetchReceiveTickets({
-    ...formUIProps.queryParams,
-    employeeId: formUIProps.employeeId,
-  })
-);
-  }, [formUIProps.queryParams,formUIProps.employeeId, dispatch, receiveTotalCount]);
+    dispatch(
+      actions.fetchReceiveTickets({
+        ...formUIProps.queryParams,
+        employeeId: formUIProps.employeeId,
+      })
+    );
+  }, [formUIProps.queryParams, formUIProps.employeeId, dispatch, receiveTotalCount]);
 
 
 
@@ -196,7 +196,7 @@ dispatch(
       style: {
         minWidth: "70px",
       },
-       formatter: (cell) => {
+      formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
@@ -258,7 +258,7 @@ dispatch(
       style: {
         minWidth: "50px",
       },
-      formatter: (cell,row) => {
+      formatter: (cell, row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -269,10 +269,10 @@ dispatch(
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.createdAt);
+        const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
-       
+
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
@@ -284,54 +284,54 @@ dispatch(
     },
 
 
-    {
-      dataField: "timeRangeFrom",
-      text: "Time From",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-       formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
+    // {
+    //   dataField: "timeRangeFrom",
+    //   text: "Time From",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "50px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
 
 
 
-    },
+    // },
 
-    {
-      dataField: "timeRangeTo",
-      text: "Time To",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
-
-
+    // {
+    //   dataField: "timeRangeTo",
+    //   text: "Time To",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "50px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
 
 
-    },
+
+
+    // },
 
 
     {
       dataField: "noOfHours",
-      text: "No Of Hours",
+      text: "Estimated Hours",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "20px",
       },
-       formatter: (cell) => {
+      formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
@@ -373,7 +373,7 @@ dispatch(
       style: {
         minWidth: "50px",
       },
-      formatter: (cell,row) => {
+      formatter: (cell, row) => {
         if (!cell) return "";
 
         const dueDate = new Date(cell);
@@ -384,10 +384,10 @@ dispatch(
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-         const createdDate = new Date(row.createdAt);
+        const createdDate = new Date(row.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
-       
+
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
         return (
@@ -439,7 +439,7 @@ dispatch(
 
   return (
     <div className="w-full overflow-x-auto">
-      {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
             <Pagination
@@ -447,33 +447,35 @@ dispatch(
               paginationProps={paginationProps}
             >
 
+              <BootstrapTable
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={receiveEntities === null ? [] : receiveEntities}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(
+                  formUIProps.setQueryParams
+                )}
+              // selectRow={getSelectRow({
+              //   receiveEntities,
+
+              // })}
+              {...paginationTableProps}
+              >
+                <PleaseWaitMessage receiveEntities={receiveEntities} />
+                <NoRecordsFoundMessage receiveEntities={receiveEntities} />
+              </BootstrapTable>
+
             </Pagination>
           );
         }}
-      </PaginationProvider> */}
+      </PaginationProvider>
 
-      <BootstrapTable
-        wrapperClasses="table-responsive"
-        bordered={false}
-        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-        bootstrap4
-        remote
-        keyField="Id"
-        data={receiveEntities === null ? [] : receiveEntities}
-        columns={columns}
-        defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(
-          formUIProps.setQueryParams
-        )}
-      // selectRow={getSelectRow({
-      //   receiveEntities,
 
-      // })}
-      // {...paginationTableProps}
-      >
-        <PleaseWaitMessage receiveEntities={receiveEntities} />
-        <NoRecordsFoundMessage receiveEntities={receiveEntities} />
-      </BootstrapTable>
     </div>
   );
 }

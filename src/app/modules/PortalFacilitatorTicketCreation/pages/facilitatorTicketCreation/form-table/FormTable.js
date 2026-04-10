@@ -143,7 +143,7 @@ export function FormTable() {
       style: {
         minWidth: "30px",
       },
-       formatter: (cell) => {
+      formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
@@ -188,7 +188,7 @@ export function FormTable() {
       style: {
         minWidth: "70px",
       },
-        formatter: (cell) => {
+      formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
       },
@@ -280,47 +280,47 @@ export function FormTable() {
       },
     },
 
-    {
-      dataField: "timeRangeFrom",
-      text: "From Time",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-       formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
+    // {
+    //   dataField: "timeRangeFrom",
+    //   text: "From Time",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "50px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
 
 
 
 
-    },
+    // },
 
-    {
-      dataField: "timeRangeTo",
-      text: "To Time",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
+    // {
+    //   dataField: "timeRangeTo",
+    //   text: "To Time",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "50px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
 
 
 
-    },
+    // },
 
 
     {
       dataField: "noOfHours",
-      text: "No Of Hours",
+      text: "Estimated Hours",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -447,13 +447,17 @@ export function FormTable() {
 
   return (
     <div className="w-full overflow-x-auto">
-      {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+    
+
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
             <Pagination
               isLoading={listLoading}
               paginationProps={paginationProps}
             >
+
+
               <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
@@ -467,11 +471,8 @@ export function FormTable() {
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams
                 )}
-                // selectRow={getSelectRow({
-                //   entities,
-
-                // })}
-                {...paginationTableProps}
+        
+              {...paginationTableProps}
               >
                 <PleaseWaitMessage entities={entities} />
                 <NoRecordsFoundMessage entities={entities} />
@@ -479,30 +480,7 @@ export function FormTable() {
             </Pagination>
           );
         }}
-      </PaginationProvider> */}
-
-      <BootstrapTable
-        wrapperClasses="table-responsive"
-        bordered={false}
-        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-        bootstrap4
-        remote
-        keyField="Id"
-        data={entities === null ? [] : entities}
-        columns={columns}
-        defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(
-          formUIProps.setQueryParams
-        )}
-      // selectRow={getSelectRow({
-      //   entities,
-
-      // })}
-      // {...paginationTableProps}
-      >
-        <PleaseWaitMessage entities={entities} />
-        <NoRecordsFoundMessage entities={entities} />
-      </BootstrapTable>
+      </PaginationProvider>
     </div>
   );
 }
