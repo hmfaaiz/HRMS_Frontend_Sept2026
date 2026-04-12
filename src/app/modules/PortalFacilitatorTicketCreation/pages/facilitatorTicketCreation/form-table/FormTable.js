@@ -437,6 +437,7 @@ export function FormTable() {
   ];
 
   //Table pagination properties
+  console.log("currentState111111111",totalCount,uiHelpers.sizePerPageList,formUIProps.queryParams.pageSize,formUIProps.queryParams.pageNumber)
   const paginationOptions = {
     custom: true,
     totalSize: totalCount,

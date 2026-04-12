@@ -125,7 +125,7 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
             state.listLoading = false;
             state.error = null;
             state.entities = allDetails;
-            state.totalCount = allDetails.length; // total number of details
+            state.totalCount = totalResult; // total number of details
 
         },
 
@@ -147,7 +147,7 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
             state.listLoading = false;
             state.error = null;
             state.receiveEntities = allDetails;
-            state.receiveTotalCount = allDetails.length; // total number of details
+            state.receiveTotalCount = totalResult; // total number of details
 
 
         },

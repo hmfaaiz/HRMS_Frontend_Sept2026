@@ -32,21 +32,52 @@ export const initialFilter = {
   filterSender: {
 
     searchQuery: "",
-    ticketStatus:1,
-    timeRangeFrom:null,
-    timeRangeTo:null,
-    ticketDescription:null,
-    assignTo:null,
+    ticketStatus: 1,
+    timeRangeFrom: null,
+    timeRangeTo: null,
+    ticketDescription: null,
+    assignTo: null,
 
   },
-   filterReceiver: {
+  //  filterReceiver: {
+
+  //   searchQuery: "",
+  //   ticketStatus:1,
+  //   timeRangeFrom:null,
+  //   timeRangeTo:null,
+  //   ticketDescription:null,
+  //   assignBy:null,
+
+  // },
+
+
+
+  sortOrder: "asc",
+  pageSize: 10,
+  pageNumber: 1
+}
+
+
+
+export const initialReceiveFilter = {
+  // filterSender: {
+
+  //   searchQuery: "",
+  //   ticketStatus:1,
+  //   timeRangeFrom:null,
+  //   timeRangeTo:null,
+  //   ticketDescription:null,
+  //   assignTo:null,
+
+  // },
+  filterReceiver: {
 
     searchQuery: "",
-    ticketStatus:1,
-    timeRangeFrom:null,
-    timeRangeTo:null,
-    ticketDescription:null,
-    assignBy:null,
+    ticketStatus: 1,
+    timeRangeFrom: null,
+    timeRangeTo: null,
+    ticketDescription: null,
+    assignBy: null,
 
   },
 

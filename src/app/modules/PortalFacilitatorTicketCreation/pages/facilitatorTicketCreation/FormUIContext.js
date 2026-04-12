@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { isEqual, isFunction } from "lodash";
-import { initialFilter } from "./FormUIHelpers";
+import { initialFilter,initialReceiveFilter } from "./FormUIHelpers";
 
 const FormUIContext = createContext();
 
@@ -12,6 +12,7 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
+  const [queryReceiveParams, setQueryReceiveParamsBase] = useState(initialReceiveFilter);
   const [ids, setId] = useState([]);
   const [masterId, setMasterId] = useState();
   const [detailId, setDetailId] = useState();
@@ -24,6 +25,20 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [currentLevel, setCurrentLevel] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
+      if (isFunction(nextQueryParams)) {
+        nextQueryParams = nextQueryParams(prevQueryParams);
+      }
+
+      if (isEqual(prevQueryParams, nextQueryParams)) {
+        return prevQueryParams;
+      }
+
+      return nextQueryParams;
+    });
+  }, []); 
+  
+  const setQueryReceiveParams = useCallback((nextQueryParams) => {
+    setQueryReceiveParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
         nextQueryParams = nextQueryParams(prevQueryParams);
       }
@@ -70,7 +85,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const value = {
     queryParams,
     setQueryParamsBase,
-    setQueryParams,
+    setQueryParams,  
+    queryReceiveParams,
+    setQueryReceiveParamsBase,
+    setQueryReceiveParams,
     ids,
     setId,
     initUser,

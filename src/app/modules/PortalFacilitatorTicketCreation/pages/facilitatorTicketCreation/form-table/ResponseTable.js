@@ -27,8 +27,8 @@ export function ResponseTable() {
     return {
       ids: formUIContext.ids,
       setId: formUIContext.setId,
-      queryParams: formUIContext.queryParams,
-      setQueryParams: formUIContext.setQueryParams,
+      queryParams: formUIContext.queryReceiveParams,
+      setQueryParams: formUIContext.setQueryReceiveParams,
       openReceiveFormDialog: formUIContext.openReceiveFormDialog,
       setIsFileReq: formUIContext.setIsFileReq,
       setReceiveMode: formUIContext.setReceiveMode,
