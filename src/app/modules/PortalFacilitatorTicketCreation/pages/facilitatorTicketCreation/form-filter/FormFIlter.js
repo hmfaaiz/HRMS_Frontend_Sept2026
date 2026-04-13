@@ -113,8 +113,8 @@ export function FormFIlter({ listLoading, user }) {
 
     { value: 1, label: "Open" },
     { value: 0, label: "Completed by owner" },
-    // { value: 3, label: "Re-opened" },
-    // { value: 2, label: "Send for Review" },
+    { value: 3, label: "Re-opened by owner" },
+    { value: 2, label: "Send for review by owner" },
   ];
   return (
     <>
@@ -182,7 +182,7 @@ export function FormFIlter({ listLoading, user }) {
                     onChange={(date) => {
                       let selectedDate = formatDates(date, 'yyyy-MM-dd')
                       setFieldValue("timeRangeFrom", selectedDate);
-                      setFieldValue("timeRangeTo", selectedDate);
+                      // setFieldValue("timeRangeTo", selectedDate);
                       handleSubmit();
                     }}
                     dateFormat="dd-MMM-yyyy"
