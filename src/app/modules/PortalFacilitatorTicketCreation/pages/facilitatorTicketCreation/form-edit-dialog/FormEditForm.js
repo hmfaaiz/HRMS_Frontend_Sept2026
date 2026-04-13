@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -17,6 +17,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
 import { FetchAllFacilitatorEmployee, fetchCompanyEmployeesData, fetchCurrentParentTask, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { CircleMinus, CirclePlus } from "lucide-react";
 
 // percentage: Yup.string().required("Required*"),
 const facilitator_ticket_creationEditSchema = (value, currentUser) => {
@@ -213,6 +214,7 @@ export function FormEditForm({
 
   const { dashboard } = useSelector((state) => state);
   const inputFile = useRef(null);
+  const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
     if (!formData.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
@@ -313,7 +315,7 @@ export function FormEditForm({
           }
         };
 
-        saveForm(values, clearForm);
+        saveForm(values, clearForm,onHide);
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
@@ -330,7 +332,11 @@ export function FormEditForm({
 
                 {console.log("errors111", errors, values)}
 
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+
+
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
 
                   <div className="">
                     <SearchSelect
@@ -362,99 +368,6 @@ export function FormEditForm({
                     />
                   </div>
 
-
-
-                  {/* // AlertWork26326 } */}
-                  <div className="">
-                    <label className="flex items-center gap-2 mt-3">
-                      <Field
-                        type="checkbox"
-                        name="isForAlert"
-                        disabled={!values.initiator || isUserForRead}
-                        checked={values.isForAlert}
-                        onChange={(e) => {
-                          setFieldValue("isForAlert", e.target.checked)
-
-                          setFieldValue("alertFromDate", "")
-                          setFieldValue("alertEndDate", "")
-                        }}
-                      />
-                      <span>
-                        For Dashboard Reminder
-                      </span>
-                    </label>
-                    {errors.isForAlert && touched.isForAlert && (
-                      <div className="invalid-feedback">{errors.isForAlert}</div>
-                    )}
-                  </div>
-
-                  {/*  AlertWork26326 { */}
-                  <div className="">
-                    <label>
-                      {" "}
-                      Reminder Start Date<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="Alert Start Date"
-
-                      selected={
-                        values?.alertFromDate ? new Date(values.alertFromDate) : null
-                      }
-                      onChange={(date) => setFieldValue("alertFromDate", date)}
-                      disabled={isUserForRead || !values.initiator || !values.isForAlert}
-                      dateFormat="dd-MMM-yyyy"
-                      name="alertFromDate"
-                      autoComplete="off"
-                      minDate={new Date()}
-                      maxDate={values?.alertEndDate}
-
-                    />
-
-                    {touched.alertFromDate && errors.alertFromDate && (
-                      <div className="invalid-feedback d-block">
-                        {errors.alertFromDate}
-                      </div>
-                    )}
-                  </div>
-                  {/* // AlertWork26326 } */}
-
-                  <div className="">
-                    <label>
-                      {" "}
-                      Reminder End Date<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="Due Date"
-                      selected={
-                        values?.alertEndDate ? new Date(values.alertEndDate) : null
-                      }
-                      onChange={(date) => setFieldValue("alertEndDate", date)}
-                      disabled={isUserForRead || !values.initiator || !values.isForAlert}
-                      dateFormat="dd-MMM-yyyy"
-                      name="alertEndDate"
-                      autoComplete="off"
-                      minDate={new Date(values?.alertFromDate)}
-                      maxDate={new Date(values?.dueDate)}
-                    />
-
-                    {touched.alertEndDate && errors.alertEndDate && (
-                      <div className="invalid-feedback d-block">
-                        {errors.alertEndDate}
-                      </div>
-                    )}
-                  </div>
-
-
-
-
-                </div>
-
-
-
-
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
 
 
@@ -560,6 +473,17 @@ export function FormEditForm({
 
 
 
+
+
+
+                </div>
+
+
+
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+
                   {/*  AlertWork26326 { */}
                   <div className="">
                     <label>
@@ -636,54 +560,6 @@ export function FormEditForm({
 
 
 
-
-                  {/* <div>
-                      <label>
-                        <span>From Time</span>
-                      </label>
-
-                      <input
-                        type="time"
-                        className="form-control"
-                        disabled={isUserForRead || !values.initiator}
-                        name="timeRangeFrom"
-                        step="60"   //  minutes only (no seconds)
-                        value={values.timeRangeFrom || ""}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setFieldValue("timeRangeFrom", val);
-
-                          const hours = calculateHours(val, values.timeRangeTo);
-                          setFieldValue("noOfHours", hours.toFixed(2));
-                        }}
-                      />
-                    </div>
-
-
-
-                    <div>
-                      <label>
-                        <span>To Time</span>
-                      </label>
-
-                      <input
-                        type="time"
-                        className="form-control"
-                        disabled={isUserForRead || !values.initiator}
-                        name="timeRangeTo"
-                        step="60"
-                        value={values.timeRangeTo || ""}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setFieldValue("timeRangeTo", val);
-
-                          const hours = calculateHours(values.timeRangeFrom, val);
-                          setFieldValue("noOfHours", hours.toFixed(2));
-                        }}
-                      />
-                    </div> */}
-
-
                   <div className="">
                     <label>
                       <span>
@@ -708,10 +584,119 @@ export function FormEditForm({
                     />
 
                   </div>
+
+
+
+                  {!showAlert ? (
+                    <span className="flex items-center gap-2 mt-6">
+                      <CirclePlus
+                        className="w-4 h-4 text-primary cursor-pointer "
+                        onClick={() => setShowAlert(true)}
+                      /> {" "}
+                      Add Reminder
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2 mt-6">
+                      <CircleMinus
+                        className="w-4 h-4 text-primary cursor-pointer "
+                        onClick={() => setShowAlert(false)}
+                      />
+                      Hide Reminder
+                    </span>
+                  )}
+
+                  {showAlert && (
+                    <>
+
+                      <div className="">
+                        <label className="flex items-center gap-2 mt-3">
+                          <Field
+                            type="checkbox"
+                            name="isForAlert"
+                            disabled={!values.initiator || isUserForRead}
+                            checked={values.isForAlert}
+                            onChange={(e) => {
+                              setFieldValue("isForAlert", e.target.checked)
+
+                              setFieldValue("alertFromDate", "")
+                              setFieldValue("alertEndDate", "")
+                            }}
+                          />
+                          <span>
+                            For Dashboard Reminder
+                          </span>
+                        </label>
+                        {errors.isForAlert && touched.isForAlert && (
+                          <div className="invalid-feedback">{errors.isForAlert}</div>
+                        )}
+                      </div>
+
+
+                      <div className="">
+                        <label>
+                          {" "}
+                          Reminder Start Date<span style={{ color: "red" }}>*</span>
+                        </label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="Alert Start Date"
+
+                          selected={
+                            values?.alertFromDate ? new Date(values.alertFromDate) : null
+                          }
+                          onChange={(date) => setFieldValue("alertFromDate", date)}
+                          disabled={isUserForRead || !values.initiator || !values.isForAlert}
+                          dateFormat="dd-MMM-yyyy"
+                          name="alertFromDate"
+                          autoComplete="off"
+                          minDate={new Date()}
+                          maxDate={values?.alertEndDate}
+
+                        />
+
+                        {touched.alertFromDate && errors.alertFromDate && (
+                          <div className="invalid-feedback d-block">
+                            {errors.alertFromDate}
+                          </div>
+                        )}
+                      </div>
+
+
+                      <div className="">
+                        <label>
+                          {" "}
+                          Reminder End Date<span style={{ color: "red" }}>*</span>
+                        </label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="Due Date"
+                          selected={
+                            values?.alertEndDate ? new Date(values.alertEndDate) : null
+                          }
+                          onChange={(date) => setFieldValue("alertEndDate", date)}
+                          disabled={isUserForRead || !values.initiator || !values.isForAlert}
+                          dateFormat="dd-MMM-yyyy"
+                          name="alertEndDate"
+                          autoComplete="off"
+                          minDate={new Date(values?.alertFromDate)}
+                          maxDate={new Date(values?.dueDate)}
+                        />
+
+                        {touched.alertEndDate && errors.alertEndDate && (
+                          <div className="invalid-feedback d-block">
+                            {errors.alertEndDate}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+
+
                 </div>
 
 
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
 
 
@@ -869,7 +854,7 @@ export function FormEditForm({
                   </>)
                 }
 
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
                   {values.receiver && (
 
                     <>
@@ -1047,7 +1032,7 @@ export function FormEditForm({
                 )}
 
 
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
                   {(!formData.isSelf) && (
 
@@ -1183,25 +1168,26 @@ export function FormEditForm({
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            {/* {!isUserForRead ? ( */}
-            <button
-              type="reset"
-              onClick={() => {
-                setId("");
-                handleReset();
-                setReadMode(false)
-                setReceiveMode(false)
-                setEditMode(false)
+            {!isUserForRead ? (
+              <button
+                type="reset"
+                onClick={() => {
+                  setId("");
+                  handleReset();
+                  setReadMode(false)
+                  setReceiveMode(false)
+                  setEditMode(false)
+                  onHide()
 
-                if (inputFile?.current) {
-                  inputFile.current.value = "";
-                }
-              }}
-              className="btn btn-light btn-elevate"
-            >
-              Cancel
-            </button>
-            {/* ) : (
+                  if (inputFile?.current) {
+                    inputFile.current.value = "";
+                  }
+                }}
+                className="btn btn-light btn-elevate"
+              >
+                Cancel
+              </button>
+            ) : (
               <button
                 type="button"
                 onClick={onHide}
@@ -1209,7 +1195,7 @@ export function FormEditForm({
               >
                 OK
               </button>
-            )} */}
+            )}
 
             {!isUserForRead && (
               <button

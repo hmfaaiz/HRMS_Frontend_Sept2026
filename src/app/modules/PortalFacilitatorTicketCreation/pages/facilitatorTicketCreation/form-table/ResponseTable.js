@@ -135,35 +135,35 @@ export function ResponseTable() {
     },
 
 
-    {
-      dataField: "ticketType.formName",
-      text: "Ticket Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "30px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
-    },
+    // {
+    //   dataField: "ticketType.formName",
+    //   text: "Ticket Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "30px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
+    // },
 
-    {
-      dataField: "priorityLevel.formName",
-      text: "Priority",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "30px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
-    },
+    // {
+    //   dataField: "priorityLevel.formName",
+    //   text: "Priority",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "30px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
+    // },
 
     {
       dataField: "desc",
@@ -172,11 +172,11 @@ export function ResponseTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "100px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+        return cell.length > 70 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
 
 
@@ -322,24 +322,68 @@ export function ResponseTable() {
     // },
 
 
+    // {
+    //   dataField: "noOfHours",
+    //   text: "Estimated Hours",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "5px",
+    //     textAlign: "right",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
+
+
+
+    // },
     {
       dataField: "noOfHours",
       text: "Estimated Hours",
       sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
+      headerFormatter: () => (
+        <span style={{ whiteSpace: "normal", textAlign: "center", display: "block" }}>
+          Estimated<br />Hours
+        </span>
+      ),
       style: {
-        minWidth: "20px",
+        textAlign: "right",
       },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
-
-
-
     },
+    // {
+    //   dataField: "totalTimeLogHours",
+    //   text: "Logged Hours",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "5px",
+    //     textAlign: "right",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
 
+
+
+    // },
+    {
+      dataField: "totalTimeLogHours",
+      text: "Logged Hours",
+      sort: false,
+      headerFormatter: () => (
+        <span style={{ whiteSpace: "normal", textAlign: "center", display: "block" }}>
+          Logged<br />Hours
+        </span>
+      ),
+      style: {
+        textAlign: "right",
+      },
+    },
 
     {
       dataField: "ticketStatus",
@@ -418,6 +462,7 @@ export function ResponseTable() {
         openTicketTimeLog: formUIProps.openTicketTimeLog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
         setReadMode: formUIProps.setReadMode,
+        openReceiveFormDialog: formUIProps.openReceiveFormDialog,
         user,
 
       },
@@ -460,11 +505,11 @@ export function ResponseTable() {
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams
                 )}
-              // selectRow={getSelectRow({
-              //   receiveEntities,
+                // selectRow={getSelectRow({
+                //   receiveEntities,
 
-              // })}
-              {...paginationTableProps}
+                // })}
+                {...paginationTableProps}
               >
                 <PleaseWaitMessage receiveEntities={receiveEntities} />
                 <NoRecordsFoundMessage receiveEntities={receiveEntities} />

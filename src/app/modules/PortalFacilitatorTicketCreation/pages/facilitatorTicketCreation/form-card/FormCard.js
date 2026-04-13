@@ -19,6 +19,7 @@ import { ReceiveFIlter } from "../form-filter/ReceiveFilter";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import { getEmployeeHierarchy, requestRaisedBySenior } from "../../../../Dashboard/_redux/dashboardActions";
+import { initialFilter, initialReceiveFilter } from "../FormUIHelpers";
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
@@ -39,6 +40,9 @@ export function FormCard() {
       setEditMode: FormUIContext.setEditMode,
       currentLevel: FormUIContext.currentLevel,
       setCurrentLevel: FormUIContext.setCurrentLevel,
+      queryParams: FormUIContext.queryParams,
+      setQueryParams: FormUIContext.setQueryParams,
+      setQueryReceiveParams: FormUIContext.setQueryReceiveParams,
     };
   }, [FormUIContext]);
 
@@ -51,7 +55,15 @@ export function FormCard() {
     shallowEqual
   );
 
+  // const applyFilter = (values) => {
 
+  //   const newQueryParams = prepareFilter(FormUIProps.queryParams, values)
+  //   if (!isEqual(newQueryParams, FormUIProps.queryParams)) {
+  //     newQueryParams.pageNumber = 1
+
+  //     formUIProps.setQueryParams(newQueryParams)
+  //   }
+  // }
 
   const { currentState, report, calendar, portal_task_assignment_timeline, user } = useSelector((state) => {
     return {
@@ -181,25 +193,34 @@ export function FormCard() {
           )}
 
 
-        <div className="d-flex justify-content-between align-items-center w-100">
+          <div className="d-flex justify-content-between align-items-center w-100">
             <div>
               {/* {FormUIProps.queryParams.moduleType == 2 ? ( */}
               <button
                 type="button"
                 className={`btn mr-2 rounded-xl ${activeTicketSection === 1 ? "bg-black text-white" : "btn-secondary"
                   }`}
-                onClick={() => setActiveTicketSection(1)}
+                onClick={() => {
+                  FormUIProps.setQueryParams(initialFilter);
+                  FormUIProps.setQueryReceiveParams(initialReceiveFilter);
+                  setActiveTicketSection(1)
+                }
+                }
               >
-                Ticket (Receive)
+                My Task
               </button>
               {/* ) : ( */}
               <button
                 type="button"
                 className={`btn mr-2 rounded-xl ${activeTicketSection === 2 ? "bg-black text-white" : "btn-secondary"
                   }`}
-                onClick={() => setActiveTicketSection(2)}
+                onClick={() => {
+                  FormUIProps.setQueryParams(initialFilter);
+                  FormUIProps.setQueryReceiveParams(initialReceiveFilter);
+                  setActiveTicketSection(2)
+                }}
               >
-                Ticket (Send)
+                Task (Send)
               </button>
               {/* )} */}
             </div>
@@ -208,7 +229,7 @@ export function FormCard() {
               <button
                 type="button"
                 className="btn btn-primary"
-              // onClick={BanksUIProps.newBankButtonClick}
+                onClick={FormUIProps.newFormButtonClick}
               >
 
                 <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
@@ -389,7 +410,7 @@ export function FormCard() {
             }
 
             <br />
-            {(FormUIProps?.employeeId == user?.employeeIdMapping) && (
+            {/* {(FormUIProps?.employeeId == user?.employeeIdMapping) && (
 
               <>
                 <h6 className="font-bold mb-0 text-primary my-2">
@@ -400,7 +421,7 @@ export function FormCard() {
 
               </>
 
-            )}
+            )} */}
 
           </div>
         </div>

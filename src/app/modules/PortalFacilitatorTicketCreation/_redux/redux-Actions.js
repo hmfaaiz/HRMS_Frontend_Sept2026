@@ -113,7 +113,7 @@ export const deleteTimeLog = (id) => (dispatch) => {
 
 
 
-export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, onHide) => (
+export const createTicketCreation = (ticketCreationForCreation, disbaleLoading,clear, onHide) => (
   dispatch
 ) => {
 
@@ -136,6 +136,7 @@ export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, 
         draggable: true,
         progress: undefined,
       });
+      clear();
       onHide();
     })
     .catch((error) => {
@@ -154,7 +155,7 @@ export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, 
     });
 };
 
-export const updateTicketCreation = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateTicketCreation = (user, disbaleLoading,clear, onHide) => (dispatch) => {
   return requestFromServer
     .updateTicketCreation(user)
     .then((response) => {
@@ -164,6 +165,7 @@ export const updateTicketCreation = (user, disbaleLoading, onHide) => (dispatch)
       dispatch(actions.ticketCreationUpdated({ updatedTicketCreation }));
 
       disbaleLoading();
+      clear();
       onHide();
       toast.success(response.data.message, {
         position: "top-right",

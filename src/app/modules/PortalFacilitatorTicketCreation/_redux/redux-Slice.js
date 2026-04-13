@@ -118,7 +118,8 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
                     ...detail,
 
 
-                    desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                    desc: parent.ticketDescription,
+                    totalTimeLogHours: parent.totalTimeLogHours,
                     ticketCode: parent.ticketCode,
                 }))
             );
@@ -139,7 +140,8 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
                     ...detail,
 
 
-                    desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                    desc: parent.ticketDescription,
+                    totalTimeLogHours: parent.totalTimeLogHours,
                     ticketCode: parent.ticketCode,
                     isPermanent: parent.ticketStatus == 0
                 })));

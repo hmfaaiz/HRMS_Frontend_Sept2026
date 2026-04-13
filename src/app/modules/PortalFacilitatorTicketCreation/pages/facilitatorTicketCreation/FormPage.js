@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FormUIProvider } from "./FormUIContext";
+import { FormUIProvider, useFormUIContext } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
@@ -17,6 +17,17 @@ import { FollowUp } from "./modal/FollowUp";
 
 
 export function FormPage({ history }) {
+
+  // const FormUIContext = useFormUIContext();
+  // const FormUIProps = useMemo(() => {
+  //   return {
+
+  //     id: FormUIContext.ids,
+  //     employeeId: FormUIContext.employeeId,
+
+  //   };
+  // }, [FormUIContext]);
+
 
 
   const dispatch = useDispatch();
@@ -38,7 +49,7 @@ export function FormPage({ history }) {
       history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${id}/read`);
     },
     openReceiveFormDialog: (id, isUserRead) => {
-      history.push(`/portal_ticket_creation/read-all-receive/${id}/receive`);
+      history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${id}/receive`);
     },
     openDetailGridData: (detailId, isUserRead) => {
       history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/detail`);
@@ -58,7 +69,57 @@ export function FormPage({ history }) {
 
     <FormUIProvider FormUIEvents={FormUIEvents}>
 
+      <Route exact path="/portal_ticket_creation/read-all-facilitator-ticket-creation/new">
+        {({ history, match }) => (
+          <FormEditDialog
+            show={match != null}
+            onHide={() => {
+              history.push("/portal_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
 
+          // id={FormUIProps.id} employeeId={FormUIProps.employeeId}
+          />
+        )}
+      </Route>
+
+
+      <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:id/edit">
+        {({ history, match }) => (
+          <FormEditDialog
+            show={match != null}
+            id={match && match.params.id}
+            onHide={() => {
+              history.push("/portal_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
+      <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:id/read">
+        {({ history, match }) => (
+          <FormEditDialog
+            show={match != null}
+            id={match && match.params.id}
+            userForRead={true}
+            onHide={() => {
+              history.push("/portal_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route> 
+      
+      
+       <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:id/receive">
+        {({ history, match }) => (
+          <FormEditDialog
+            show={match != null}
+            id={match && match.params.id}
+          
+            onHide={() => {
+              history.push("/portal_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
 
       <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:id/:status/delete">
         {({ history, match }) => (

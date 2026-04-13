@@ -79,8 +79,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   }, [id, dispatch, show]);
 
 
-  const saveForm = async (formData, clearForm) => {
-   
+  const saveForm = async (formData, clearForm,onHide) => {
+
     // AlertWork26326 {
     formData.noOfHours = parseFloat(formData.noOfHours)
     formData.dueDate = formatDates(formData?.dueDate, "yyyy-MM-dd");
@@ -88,7 +88,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     formData.alertFromDate = formatDates(formData?.alertFromDate, "yyyy-MM-dd");
     formData.alertEndDate = formatDates(formData?.alertEndDate, "yyyy-MM-dd");
     formData.isSelf = Number(formData.assignByToBeSelected) === Number(formData.assignTo);
-  
+
     // formData.ticketDate = formatDates(new Date(), "yyyy-MM-dd");
     // AlertWork26326 }
 
@@ -114,7 +114,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
 
-      dispatch(actions.createTicketCreation(formData, disbaleLoading, clearForm));
+      dispatch(actions.createTicketCreation(formData, disbaleLoading, clearForm,onHide));
       dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
       dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
 
@@ -150,7 +150,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         alertFromDate: formData.alertFromDate,
         alertEndDate: formData.alertEndDate,
         isSelf: formData.isSelf,
-        editMode:formUIProps.editMode,
+        editMode: formUIProps.editMode,
 
 
 
@@ -171,7 +171,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         formUpdatedFields.file = formData.file;
       }
 
-      await dispatch(actions.updateTicketCreation(formUpdatedFields, disbaleLoading, clearForm));
+      await dispatch(actions.updateTicketCreation(formUpdatedFields, disbaleLoading, clearForm,onHide));
 
       await dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
       await dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
@@ -187,36 +187,44 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   return (
 
     <>
-
-      <FormEditForm
-        saveForm={saveForm}
-        formData={userForEdit || formUIProps.initUser}
+      <Modal
+        size="lg"
+        show={show}
         onHide={onHide}
-        roles={roles}
-        centers={centers}
-        userStatusTypes={userStatusTypes}
-        isUserForRead={formUIProps.readMode}
-        enableLoading={enableLoading}
-        loading={loading}
-        setId={formUIProps.setId}
-        setReadMode={formUIProps.setReadMode}
-        editMode={formUIProps.editMode}
-        setEditMode={formUIProps.setEditMode}
-        setReceiveMode={formUIProps.setReceiveMode}
-        receiveMode={formUIProps.receiveMode}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+        <FormEditForm
+          saveForm={saveForm}
+          formData={userForEdit || formUIProps.initUser}
+          onHide={onHide}
+          roles={roles}
+          centers={centers}
+          userStatusTypes={userStatusTypes}
+          isUserForRead={formUIProps.readMode}
+          enableLoading={enableLoading}
+          loading={loading}
+          setId={formUIProps.setId}
+          setReadMode={formUIProps.setReadMode}
+          editMode={formUIProps.editMode}
+          setEditMode={formUIProps.setEditMode}
+          setReceiveMode={formUIProps.setReceiveMode}
+          receiveMode={formUIProps.receiveMode}
 
-      />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+        />
+
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </Modal>
     </>
 
   );

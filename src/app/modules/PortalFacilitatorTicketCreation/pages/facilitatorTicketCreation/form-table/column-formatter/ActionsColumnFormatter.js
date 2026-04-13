@@ -20,7 +20,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog, setDetailId,
-    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, user,setEditMode,openTicketFollowUp,
+    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, user, setEditMode, openTicketFollowUp,
   }
 ) {
   const isUserRead = false;
@@ -52,30 +52,32 @@ export function ActionsColumnFormatter(
       {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
         row?.initiator ? (
           <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
-        >
-          <a onClick={() => {
-            setReceiveMode(false);
-            setReadMode(false);
-            setEditMode(true);
-            setId(row.Id);
-          }}>
-             <Pencil className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
+            overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+          >
+            <a onClick={() => {
+              setReceiveMode(false);
+              setReadMode(false);
+              setEditMode(true);
+              setId(row.Id);
+              openEditFormDialog(row.Id)
+            }}>
+              <Pencil className="w-4 h-4 text-black cursor-pointer" />
+            </a>
+          </OverlayTrigger>
         ) : (
-           <OverlayTrigger
-          overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
-        >
-          <a onClick={() => {
-            setReceiveMode(false);
-            setReadMode(true);
-            setEditMode(false);
-            setId(row.Id);
-          }}>
-            <Eye className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
+          <OverlayTrigger
+            overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
+          >
+            <a onClick={() => {
+              setReceiveMode(false);
+              setReadMode(true);
+              setEditMode(false);
+              setId(row.Id);
+              openReadFormDialog(row.Id)
+            }}>
+              <Eye className="w-4 h-4 text-black cursor-pointer" />
+            </a>
+          </OverlayTrigger>
         )
       ) : null}
 
@@ -83,22 +85,22 @@ export function ActionsColumnFormatter(
       {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
         row?.initiator ? (
           <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Follow Up</Tooltip>}
-        >
-          <a onClick={() => {
-            // setReceiveMode(false);
-            // setReadMode(false);
-            // setEditMode(false);
-            // setId("");
-            openTicketFollowUp(row.Id,"followup")
-          }}>
+            overlay={<Tooltip id="products-edit-tooltip">Follow Up</Tooltip>}
+          >
+            <a onClick={() => {
+              // setReceiveMode(false);
+              // setReadMode(false);
+              // setEditMode(false);
+              // setId("");
+              openTicketFollowUp(row.Id, "followup")
+            }}>
               <MessageSquareText className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
-    
-      ) : null
-    
-    ):null}
+            </a>
+          </OverlayTrigger>
+
+        ) : null
+
+      ) : null}
 
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
@@ -131,6 +133,7 @@ export function ResponseColumnFormatter(
 
   { setId,
     isAccessForEdit,
+    openReceiveFormDialog,
     setReceiveMode, receiveMode, openDetailGridData, setMasterId, openTicketTimeLog, setReadMode, setDetailId, openDetailTimeLog, user
   }
 ) {
@@ -161,6 +164,7 @@ export function ResponseColumnFormatter(
             setReceiveMode(true);
             setReadMode(false)
             setId(row.Id);
+            openReceiveFormDialog(row.Id);
           }}>
             <Reply className="w-4 h-4 text-black cursor-pointer" />
           </a>

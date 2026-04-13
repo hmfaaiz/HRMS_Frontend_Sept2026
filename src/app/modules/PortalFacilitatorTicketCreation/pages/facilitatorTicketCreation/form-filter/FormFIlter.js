@@ -182,7 +182,7 @@ export function FormFIlter({ listLoading, user }) {
                     onChange={(date) => {
                       let selectedDate = formatDates(date, 'yyyy-MM-dd')
                       setFieldValue("timeRangeFrom", selectedDate);
-                      setFieldValue("timeRangeTo", selectedDate);
+                      // setFieldValue("timeRangeTo", selectedDate);
                       handleSubmit();
                     }}
                     dateFormat="dd-MMM-yyyy"

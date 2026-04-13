@@ -11,22 +11,7 @@ export const sizePerPageList = [
   { text: "50", value: 50 },
   { text: "100", value: 100 },
 ]
-// export const initialFilter = {
-//   //   filter: {
-//   //     lastName: "",
-//   //     firstName: "",
-//   //     email: "",
-//   //     ipAddress: "",
-//   //   },
-//   // sortBy: "asc",
-//   // page: 1,
-//   // limit: 10,
 
-//     sortOrder: "asc", // asc||desc
-//     // sortField: "id",
-//     pageNumber: 1,
-//     pageSize: 10
-// }
 
 export const initialFilter = {
   filterSender: {
@@ -39,37 +24,18 @@ export const initialFilter = {
     assignTo: null,
 
   },
-  //  filterReceiver: {
-
-  //   searchQuery: "",
-  //   ticketStatus:1,
-  //   timeRangeFrom:null,
-  //   timeRangeTo:null,
-  //   ticketDescription:null,
-  //   assignBy:null,
-
-  // },
 
 
 
   sortOrder: "asc",
-  pageSize: 10,
+  pageSize: 5,
   pageNumber: 1
 }
 
 
 
 export const initialReceiveFilter = {
-  // filterSender: {
 
-  //   searchQuery: "",
-  //   ticketStatus:1,
-  //   timeRangeFrom:null,
-  //   timeRangeTo:null,
-  //   ticketDescription:null,
-  //   assignTo:null,
-
-  // },
   filterReceiver: {
 
     searchQuery: "",
@@ -84,6 +50,6 @@ export const initialReceiveFilter = {
 
 
   sortOrder: "asc",
-  pageSize: 10,
+  pageSize: 5,
   pageNumber: 1
 }
