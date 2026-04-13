@@ -155,7 +155,7 @@ export function FormCard() {
         </div>
 
         {/* Table View - Always visible */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="px-3 py-2 rounded-lg bg-white">
           <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2 mb-6">
             <FormFilter />
             <div className="flex items-center gap-2">

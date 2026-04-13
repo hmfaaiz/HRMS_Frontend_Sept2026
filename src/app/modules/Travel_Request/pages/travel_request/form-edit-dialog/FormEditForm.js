@@ -36,6 +36,8 @@ export function FormEditForm({
   disableLoading,
   user,
   isReadOnly,
+  isViewMode = false,
+  isEditMode = false,
 }) {
   const dispatch = useDispatch();
   const {
@@ -56,6 +58,8 @@ export function FormEditForm({
     }),
     shallowEqual,
   );
+
+  const modeText = isEditMode ? "Edit" : isViewMode ? "View" : "Add";
 
   const transportOptions = dashboard?.allTransportModeList || [];
   const hotelOptions = dashboard?.allHotelEntitlementList || [];
@@ -430,42 +434,45 @@ export function FormEditForm({
 
           return (
             <Form className="form form-label-right">
-              {/* No Tada Policy Warning */}
-              {!hasEntitlement && actionsLoading === false && !isReadOnly && (
-                <div className=" border border-danger text-danger px-4 py-3 rounded relative mb-4 font-semibold text-center">
-                  <span className="block sm:inline ">
-                    Policy is not defined for selected employee
-                  </span>
-                </div>
-              )}
-
-              {/* Workflow policy warnings */}
-              {empAuthorityList &&
-              empAuthorityList?.length === 0 &&
-              !isPolicyExists ? (
-                <div className="border border-danger text-danger px-4 py-2 rounded relative mb-4 font-semibold text-center text-xs">
-                  <span>
-                    Designation workflow policy does not exist for this
-                    employee.
-                  </span>
-                </div>
-              ) : (
-                empAuthorityList &&
-                empAuthorityList?.length === 0 &&
-                isPolicyExists && (
-                  <div className="border border-warning text-warning px-4 py-2 rounded relative mb-4 font-semibold text-center text-xs">
-                    <span>
-                      Workflow Policy is defined but there are no Workflow
-                      Authorities as per the policy.
-                    </span>
-                  </div>
-                )
-              )}
-
               {/* Travel Details Heading and Header Fields */}
               <div className="mb-6">
+                <h6 className="text-primary font-bold mb-3">
+                  {modeText} Travel Request (PreApproval)
+                </h6>
+                {/* No Tada Policy Warning */}
+                {!hasEntitlement && actionsLoading === false && !isReadOnly && (
+                  <div className=" text-danger py-1 rounded relative text-xs font-normal">
+                    <span className="block sm:inline ">
+                      Policy is not defined for selected employee
+                    </span>
+                  </div>
+                )}
+
+                {/* Workflow policy warnings */}
+                {empAuthorityList &&
+                empAuthorityList?.length === 0 &&
+                !isPolicyExists ? (
+                  <div className=" text-danger py-1 rounded relative text-xs font-normal">
+                    <span>
+                      Designation workflow policy does not exist for this
+                      employee.
+                    </span>
+                  </div>
+                ) : (
+                  empAuthorityList &&
+                  empAuthorityList?.length === 0 &&
+                  isPolicyExists && (
+                    <div className=" text-danger py-1 rounded relative text-xs font-normal">
+                      <span>
+                        Workflow Policy is defined but there are no Workflow
+                        Authorities as per the policy.
+                      </span>
+                    </div>
+                  )
+                )}
                 <div className="flex items-center justify-between mb-3">
                   <h6 className="text-primary font-bold m-0">Travel Details</h6>
+
                   <div className="flex items-center gap-2">
                     <button
                       type="button"

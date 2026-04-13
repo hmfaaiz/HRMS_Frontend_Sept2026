@@ -215,7 +215,7 @@ export function FormTable({ onViewClick }) {
   };
 
   return (
-    <div className="mt-5 mb-8 font-sans">
+    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg overflow-y-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => (
           <Pagination isLoading={listLoading} paginationProps={paginationProps}>

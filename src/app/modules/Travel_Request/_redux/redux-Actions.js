@@ -5,9 +5,9 @@ import { toast } from "react-toastify";
 
 const { actions } = travel_requestSlice;
 
-
 export const fetchTravelRequests = (queryparm) => async (dispatch) => {
-  return requestFromServer.getAllTravelRequest(queryparm)
+  return requestFromServer
+    .getAllTravelRequest(queryparm)
     .then((response) => {
       dispatch(actions.travelRequestFetched(response));
     })
@@ -17,10 +17,11 @@ export const fetchTravelRequests = (queryparm) => async (dispatch) => {
     });
 };
 
-
-export const createTravelRequest = (travelRequestForCreation, disbaleLoading, onHide) => (
-  dispatch
-) => {
+export const createTravelRequest = (
+  travelRequestForCreation,
+  disbaleLoading,
+  onHide,
+) => (dispatch) => {
   return requestFromServer
     .createTravelRequest(travelRequestForCreation)
     .then((res) => {
@@ -34,11 +35,15 @@ export const createTravelRequest = (travelRequestForCreation, disbaleLoading, on
       error.clientMessage = "Can't create";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
-      toast.error(error?.response?.data?.message || SERVER_MESSAGES.insertedFail);
+      toast.error(
+        error?.response?.data?.message || SERVER_MESSAGES.insertedFail,
+      );
     });
 };
 
-export const fetchTadaConfigByEmployeeId = (employeeId, hideToast = false) => (dispatch) => {
+export const fetchTadaConfigByEmployeeId = (employeeId, hideToast = false) => (
+  dispatch,
+) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
 
   if (!employeeId) {
@@ -50,14 +55,16 @@ export const fetchTadaConfigByEmployeeId = (employeeId, hideToast = false) => (d
     .then((response) => {
       const entities = response.data?.data || response.data;
       dispatch(
-        actions.employeeEntitlementFetched({ employeeEntitlement: entities })
+        actions.employeeEntitlementFetched({ employeeEntitlement: entities }),
       );
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      dispatch(actions.employeeEntitlementFetched({ employeeEntitlement: null }));
+      dispatch(
+        actions.employeeEntitlementFetched({ employeeEntitlement: null }),
+      );
       if (!hideToast) {
-        toast.error(error?.response?.data?.message || "TADA Policy not defined for this employee");
+        // toast.error(error?.response?.data?.message || "TADA Policy not defined for this employee");
       }
     });
 };
