@@ -190,6 +190,8 @@ export function FormCard() {
               panelMode={FormUIProps.panelMode}
               setPanelMode={FormUIProps.setPanelMode}
               onCancel={handleCancel}
+              isEditMode={false}
+              isViewMode={false}
             />
           </div>
 
@@ -225,6 +227,7 @@ export function FormCard() {
               setPanelMode={FormUIProps.setPanelMode}
               onCancel={handleCancel}
               disabled={true}
+              isEditMode={true}
             />
           </div>
           <EmployeeProfile
@@ -254,6 +257,7 @@ export function FormCard() {
               setPanelMode={FormUIProps.setPanelMode}
               onCancel={handleCancel}
               disabled={true}
+              isViewMode={true}
             />
           </div>
           <EmployeeProfile

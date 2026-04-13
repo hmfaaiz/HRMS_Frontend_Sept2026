@@ -5,6 +5,7 @@ import paginationFactory, {
 } from "react-bootstrap-table2-paginator";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
+import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { useFormUIContext } from "../FormUIContext";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import {
@@ -31,8 +32,11 @@ export function FormTable({ onEditClick, onViewClick }) {
     };
   }, [FormUIContext]);
 
-  const { currentState } = useSelector(
-    (state) => ({ currentState: state.t_preapproval_travel_request }),
+  const { currentState, dashboard } = useSelector(
+    (state) => ({
+      currentState: state.t_preapproval_travel_request,
+      dashboard: state.dashboard,
+    }),
     shallowEqual,
   );
 
@@ -41,6 +45,7 @@ export function FormTable({ onEditClick, onViewClick }) {
 
   useEffect(() => {
     dispatch(actions.fetchPreApprovalTravelRequests(FormUIProps.queryParams));
+    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
   }, [FormUIProps.queryParams, dispatch]);
 
   const columns = [
@@ -55,63 +60,140 @@ export function FormTable({ onEditClick, onViewClick }) {
       style: { minWidth: "180px" },
     },
     {
-      dataField: "Subsidiary.name",
-      text: "Subsidiary",
-      sort: true,
-      sortCaret: sortCaret,
-      style: { minWidth: "150px" },
-    },
-    {
       dataField: "purposeOfTravel",
-      text: "Purpose",
+      text: "Purpose of Travel",
       sort: true,
       sortCaret: sortCaret,
-      style: { minWidth: "160px" },
+      style: { minWidth: "180px" },
     },
     {
       dataField: "travelType",
       text: "Travel Type",
       sort: true,
       sortCaret: sortCaret,
-      style: { minWidth: "130px" },
+      style: { minWidth: "140px" },
     },
     {
       dataField: "projectName",
-      text: "Project",
+      text: "Project Name",
       sort: true,
       sortCaret: sortCaret,
       style: { minWidth: "160px" },
     },
     {
-      dataField: "request_status",
-      text: "Request Status",
-      formatter: (cell) => {
-        const statuses = {
-          P: "Pending",
-          A: "Approved",
-          R: "Rejected",
-        };
-        return statuses[cell] || "Unknown";
+      dataField: "firstFromLocation",
+      text: "From Location",
+      isDummyField: true,
+      formatter: (cell, row) => {
+        const seg = row.Master?.[0];
+        if (!seg || !seg.fromLocationId) return "-";
+        const loc = dashboard?.allLocationChildMenus?.find(
+          (l) => String(l.value) === String(seg.fromLocationId),
+        );
+        return loc ? loc.label : seg.fromLocationId;
       },
-      style: { minWidth: "100px" },
+      style: { minWidth: "140px" },
+    },
+    {
+      dataField: "lastToLocation",
+      text: "To Location",
+      isDummyField: true,
+      formatter: (cell, row) => {
+        const segments = row.Master || [];
+        const seg = segments[segments.length - 1];
+        if (!seg || !seg.toLocationId) return "-";
+        const loc = dashboard?.allLocationChildMenus?.find(
+          (l) => String(l.value) === String(seg.toLocationId),
+        );
+        return loc ? loc.label : seg.toLocationId;
+      },
+      style: { minWidth: "140px" },
+    },
+    {
+      dataField: "firstFromDate",
+      text: "From Date",
+      isDummyField: true,
+      formatter: (cell, row) => {
+        const seg = row.Master?.[0];
+        if (!seg || !seg.fromDate) return "-";
+        const d = new Date(seg.fromDate);
+        return `${String(d.getDate()).padStart(2, "0")}-${d.toLocaleString(
+          "default",
+          {
+            month: "short",
+          },
+        )}-${d.getFullYear()}`;
+      },
+      style: { minWidth: "120px" },
+    },
+    {
+      dataField: "lastToDate",
+      text: "To Date",
+      isDummyField: true,
+      formatter: (cell, row) => {
+        const segments = row.Master || [];
+        const seg = segments[segments.length - 1];
+        if (!seg || !seg.toDate) return "-";
+        const d = new Date(seg.toDate);
+        return `${String(d.getDate()).padStart(2, "0")}-${d.toLocaleString(
+          "default",
+          {
+            month: "short",
+          },
+        )}-${d.getFullYear()}`;
+      },
+      style: { minWidth: "120px" },
+    },
+    {
+      dataField: "request_status",
+      text: "Status",
+      formatter: (cell, row) => {
+        let text = "";
+        let className = "";
+        if (cell === "P") {
+          text = "Pending (Portal)";
+          className = "text-pending font-bold";
+        } else if (cell === "A" && row?.approved_status === 0) {
+          text = "Pending (HRMS)";
+          className = "text-pending font-bold";
+        } else if (cell === "A") {
+          if (row?.isLoanContinuing) {
+            className = "text-approved font-bold";
+            text = "Active";
+          } else {
+            className = "text-primary font-bold";
+            text = "Completed";
+          }
+        } else if (cell === "R") {
+          text = "Rejected";
+          className = "text-rejected font-bold";
+        }
+        return <span className={className}>{text}</span>;
+      },
+      style: { minWidth: "120px" },
     },
     {
       dataField: "advanceAmount",
       text: "Advance Amount",
       formatter: (cell, row) => {
-        return row.advanceRequired ? cell : "-";
+        if (!row.advanceRequired) return "-";
+        if (cell === null || cell === undefined) return "-";
+        return Number(cell).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
       },
       sort: true,
       sortCaret: sortCaret,
-      style: { minWidth: "120px" },
+      style: { minWidth: "150px" },
     },
     {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
-      style: { minWidth: "120px" },
+      classes: "text-left pr-0",
+      headerClasses: "text-left pl-0",
+      style: { minWidth: "100px" },
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         openReadFormDialog: (row) => {

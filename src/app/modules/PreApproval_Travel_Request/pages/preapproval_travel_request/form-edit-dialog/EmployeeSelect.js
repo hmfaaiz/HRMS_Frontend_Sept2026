@@ -11,8 +11,12 @@ export function EmployeeSelect({
   setPanelMode,
   onCancel,
   disabled = false,
+  isEditMode = false,
+  isViewMode = false,
 }) {
   const dispatch = useDispatch();
+
+  const modeText = isEditMode ? "Edit" : isViewMode ? "View" : "Add";
 
   const { allEmployees } = useSelector(
     (state) => ({
@@ -33,6 +37,9 @@ export function EmployeeSelect({
             <div className="grid grid-cols-12 gap-x-3 items-end">
               {/* Employee Dropdown */}
               <div className="col-span-12 md:col-span-4 lg:col-span-3">
+                <h6 className="text-primary font-bold mb-3">
+                  {modeText} Travel Request (PreApproval)
+                </h6>
                 <SearchSelect
                   name="employeeId"
                   label={<span>Employee</span>}

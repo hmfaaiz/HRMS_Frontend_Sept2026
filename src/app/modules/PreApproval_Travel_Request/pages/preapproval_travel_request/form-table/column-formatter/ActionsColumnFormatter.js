@@ -10,7 +10,7 @@ export function ActionsColumnFormatter(
 ) {
   const id = row.id || row.Id;
   return (
-    <div className="space-x-2 flex justify-end">
+    <div className="space-x-2 flex justify-start">
       <OverlayTrigger
         overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
       >
