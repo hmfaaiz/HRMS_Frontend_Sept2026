@@ -50,7 +50,7 @@ export function TableData({ data, name, handleClick, columnColorRules = {} }) {
           // Determine custom style from columnColorRules if provided
           let customStyle = {};
           if (columnColorRules[key]) {
-            const ruleResult = columnColorRules[key](cell , row);
+            const ruleResult = columnColorRules[key](cell , row , data);
             if (typeof ruleResult === "string") {
               customStyle = { color: ruleResult };
             } else if (typeof ruleResult === "object") {

@@ -22,6 +22,52 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { formatDates } from "../../../../../utils/common";
 import FormData from "../form-data/FormData";
 
+const PROJECT_SECTION_OPTIONS = [
+  { key: "recent_activity_date_wise", label: "Recent Activity - Date Wise" },
+  {
+    key: "employee_wise_ticket_status_overview",
+    label: "Employee Wise Ticket Status Wise Overview",
+  },
+  { key: "overdue_tickets", label: "Overdue Tickets" },
+  { key: "ticket_wise_time_log", label: "Tickets Wise Time Log" },
+  { key: "employee_wise_time_log", label: "Employee Wise Time Log" },
+  {
+    key: "employee_ticket_wise_time_log",
+    label: "Employee Ticket Wise Time Log",
+  },
+  {
+    key: "pending_in_progress_ticket_time_log",
+    label: "Pending In Progress Ticket Time Log",
+  },
+  { key: "completed_ticket_time_log", label: "Completed Ticket Time Log" },
+  { key: "ticket_status_overview", label: "Ticket Status Overview" },
+  { key: "ticket_type_wise_overview", label: "Ticket Type Wise Overview" },
+  { key: "priority_status_overview", label: "Priority Status Overview" },
+  { key: "employee_wise_overview", label: "Employee Wise Overview" },
+];
+
+const TASK_SECTION_OPTIONS = [
+  { key: "recent_activity_date_wise", label: "Recent Activity - Date Wise" },
+  {
+    key: "employee_wise_task_status_overview",
+    label: "Employee Wise Task Status Overview",
+  },
+  { key: "overdue_task", label: "Overdue Task" },
+  { key: "task_wise_time_log", label: "Task Wise Time Log" },
+  { key: "employee_wise_time_log", label: "Employee Wise Time Log" },
+  { key: "employee_task_wise_time_log", label: "Employee Task Wise Time Log" },
+  {
+    key: "pending_in_progress_task_time_log",
+    label: "Pending In Progress Task Time Log",
+  },
+  { key: "completed_task_time_log", label: "Completed Task Time Log" },
+  { key: "task_status_overview", label: "Task Status Overview" },
+  { key: "priority_wise_overview", label: "Priority Wise Overview" },
+];
+
+const getDefaultVisibleSections = (options) =>
+  options.slice(0, 4).map((option) => option.key);
+
 const formValidation = Yup.object()
   .shape({
     projectId: Yup.string().when(
@@ -87,7 +133,11 @@ const formValidation = Yup.object()
 
 export function FormCard() {
   const dispatch = useDispatch();
-  const [activeKey, setActiveKey] = useState("0");
+  const [activeKey, setActiveKey] = useState("1");
+  const [visibleSections, setVisibleSections] = useState({
+    project: getDefaultVisibleSections(PROJECT_SECTION_OPTIONS),
+    task: getDefaultVisibleSections(TASK_SECTION_OPTIONS),
+  });
   const [payload, setPayload] = useState({
     isEnable_via_task_project: true,
     isEnable_via_task_assignment: false,
@@ -159,6 +209,15 @@ export function FormCard() {
             validationSchema={formValidation}
           >
             {({ setFieldValue, values, touched, errors, handleSubmit }) => {
+              const activeSectionType = values.isEnable_via_task_project
+                ? "project"
+                : "task";
+              const activeSectionOptions =
+                activeSectionType === "project"
+                  ? PROJECT_SECTION_OPTIONS
+                  : TASK_SECTION_OPTIONS;
+              const activeVisibleSections = visibleSections[activeSectionType];
+
               return (
                 <>
                   <Modal.Body className="overlay overlay-block cursor-default">
@@ -189,7 +248,7 @@ export function FormCard() {
                           </Card.Header>
                           <Accordion.Collapse eventKey="0">
                             <fieldset disabled={actionsLoading}>
-                              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
                                 <div className="mt-2">
                                   <Checkbox
                                     isSelected={
@@ -257,126 +316,166 @@ export function FormCard() {
                                   />
                                 </div>
                               </div>
-                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2">
-                                <div>
-                                  <SearchSelect
-                                    name="projectId"
-                                    isDisabled={
-                                      !values.isEnable_via_task_project
-                                    }
-                                    label={<label>Project</label>}
-                                    onChange={(e) => {
-                                      const value =
-                                        e.value == "Select"
-                                          ? ""
-                                          : Number(e.value);
-                                      setFieldValue("projectId", value);
-                                      setPayload({
-                                        ...payload,
-                                        projectId: value,
-                                      });
-                                      fetchData({
-                                        ...payload,
-                                        projectId: value,
-                                      });
-                                    }}
-                                    value={
-                                      dashboard?.allProjects?.find(
-                                        (option) =>
-                                          option?.value === values?.projectId,
-                                      ) || null
-                                    }
-                                    options={dashboard?.allProjects}
-                                    error={errors.projectId}
-                                    touched={touched.projectId}
-                                  />
-                                </div>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 gap-3">
+                                <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  <div>
+                                    <SearchSelect
+                                      name="projectId"
+                                      isDisabled={
+                                        !values.isEnable_via_task_project
+                                      }
+                                      label={<label>Project</label>}
+                                      onChange={(e) => {
+                                        const value =
+                                          e.value == "Select"
+                                            ? ""
+                                            : Number(e.value);
+                                        setFieldValue("projectId", value);
+                                        setPayload({
+                                          ...payload,
+                                          projectId: value,
+                                        });
+                                        fetchData({
+                                          ...payload,
+                                          projectId: value,
+                                        });
+                                      }}
+                                      value={
+                                        dashboard?.allProjects?.find(
+                                          (option) =>
+                                            option?.value === values?.projectId,
+                                        ) || null
+                                      }
+                                      options={dashboard?.allProjects}
+                                      error={errors.projectId}
+                                      touched={touched.projectId}
+                                    />
+                                  </div>
 
-                                <div>
-                                  <SearchSelect
-                                    name="taskId"
-                                    label="Task"
-                                    isDisabled={
-                                      !values.isEnable_via_task_assignment
-                                    }
-                                    options={dashboard.allMasterTicketType}
-                                    onChange={(e) => {
-                                      const value =
-                                        e.value == "Select"
-                                          ? ""
-                                          : Number(e.value);
-                                      setFieldValue("taskId", value);
-                                      setPayload({
-                                        ...payload,
-                                        taskId: value,
-                                      });
-                                      fetchData({
-                                        ...payload,
-                                        taskId: value,
-                                      });
-                                    }}
-                                    value={
-                                      dashboard?.allMasterTicketType?.find(
-                                        (option) =>
-                                          option?.value === values?.taskId,
-                                      ) || null
-                                    }
-                                    error={errors.taskId}
-                                    touched={touched.taskId}
-                                  />
-                                  {touched.taskId && errors.taskId && (
-                                    <div className="text-danger text-sm mt-1">
-                                      {errors.taskId}
-                                    </div>
-                                  )}
-                                </div>
+                                  <div>
+                                    <SearchSelect
+                                      name="taskId"
+                                      label="Task"
+                                      isDisabled={
+                                        !values.isEnable_via_task_assignment
+                                      }
+                                      options={dashboard.allMasterTicketType}
+                                      onChange={(e) => {
+                                        const value =
+                                          e.value == "Select"
+                                            ? ""
+                                            : Number(e.value);
+                                        setFieldValue("taskId", value);
+                                        setPayload({
+                                          ...payload,
+                                          taskId: value,
+                                        });
+                                        fetchData({
+                                          ...payload,
+                                          taskId: value,
+                                        });
+                                      }}
+                                      value={
+                                        dashboard?.allMasterTicketType?.find(
+                                          (option) =>
+                                            option?.value === values?.taskId,
+                                        ) || null
+                                      }
+                                      error={errors.taskId}
+                                      touched={touched.taskId}
+                                    />
+                                    {touched.taskId && errors.taskId && (
+                                      <div className="text-danger text-sm mt-1">
+                                        {errors.taskId}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div>
+                                    <Field
+                                      name="from_date"
+                                      component={DatePickerField}
+                                      dateFormat="dd-MMM-yyyy"
+                                      onChange={(date) => {
+                                        setFieldValue("from_date", date);
+                                        setFieldValue("to_date", date);
+                                        setPayload({
+                                          ...payload,
+                                          from_date: date,
+                                          to_date: date,
+                                        });
+                                        fetchData({
+                                          ...payload,
+                                          from_date: date,
+                                          to_date: date,
+                                        });
+                                      }}
+                                      label={<span>From</span>}
+                                    />
+                                  </div>
 
-                                <div>
-                                  <Field
-                                    name="from_date"
-                                    component={DatePickerField}
-                                    dateFormat="dd-MMM-yyyy"
-                                    onChange={(date) => {
-                                      setFieldValue("from_date", date);
-                                      setFieldValue("to_date", date);
-                                      setPayload({
-                                        ...payload,
-                                        from_date: date,
-                                        to_date: date,
-                                      });
-                                      fetchData({
-                                        ...payload,
-                                        from_date: date,
-                                        to_date: date,
-                                      });
-                                    }}
-                                    label={<span>From</span>}
-                                  />
+                                  <div>
+                                    <Field
+                                      name="to_date"
+                                      component={DatePickerField}
+                                      dateFormat="dd-MMM-yyyy"
+                                      onChange={(date) => {
+                                        setFieldValue("to_date", date);
+                                        setPayload({
+                                          ...payload,
+                                          to_date: date,
+                                        });
+                                        fetchData({
+                                          ...payload,
+                                          to_date: date,
+                                        });
+                                      }}
+                                      label={<span>To</span>}
+                                    />
+                                    {errors?.to_date ? (
+                                      <span className="invalid-feedback">
+                                        {errors?.to_date}
+                                      </span>
+                                    ) : null}
+                                  </div>
                                 </div>
+                                <div className="md:col-span-6">
+                                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1">
+                                    {activeSectionOptions.map((section) => (
+                                      <Checkbox
+                                        key={section.key}
+                                        isSelected={activeVisibleSections.includes(
+                                          section.key,
+                                        )}
+                                        onChange={(e) => {
+                                          const checked = e.target.checked;
+                                          setVisibleSections((prev) => {
+                                            const current =
+                                              prev[activeSectionType] || [];
+                                            if (checked) {
+                                              if (current.includes(section.key))
+                                                return prev;
+                                              return {
+                                                ...prev,
+                                                [activeSectionType]: [
+                                                  ...current,
+                                                  section.key,
+                                                ],
+                                              };
+                                            }
 
-                                <div>
-                                  <Field
-                                    name="to_date"
-                                    component={DatePickerField}
-                                    dateFormat="dd-MMM-yyyy"
-                                    onChange={(date) => {
-                                      setFieldValue("to_date", date);
-                                      setPayload({
-                                        ...payload,
-                                        to_date: date,
-                                      });
-                                      fetchData({
-                                        ...payload,
-                                        to_date: date,
-                                      });
-                                    }}
-                                    label={<span>To</span>}
-                                  />
-                                  {errors?.to_date ? (
-                                    <span className="invalid-feedback">
-                                      {errors?.to_date}
-                                    </span>
-                                  ) : null}
+                                            return {
+                                              ...prev,
+                                              [activeSectionType]: current.filter(
+                                                (key) => key !== section.key,
+                                              ),
+                                            };
+                                          });
+                                        }}
+                                      >
+                                        {section.label}
+                                      </Checkbox>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
                             </fieldset>
@@ -396,6 +495,8 @@ export function FormCard() {
         isProject={payload.isEnable_via_task_project && payload?.projectId}
         isTask={payload.isEnable_via_task_assignment && payload?.taskId}
         actionsLoading={actionsLoading}
+        projectVisibleSections={visibleSections.project}
+        taskVisibleSections={visibleSections.task}
       />
     </>
   );
