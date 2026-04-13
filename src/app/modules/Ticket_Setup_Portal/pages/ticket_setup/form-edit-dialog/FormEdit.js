@@ -465,7 +465,7 @@ export function FormEditForm({
                       name="reportToEmpId"
                       label={
                         <span>
-                          Report To <span style={{ color: "red" }}>*</span>
+                          Report To <span style={{ color: "red" }}>*</span> {values?.customerUserId ? "(Created By Customer)" : ""}
                         </span>
                       }
                       value={

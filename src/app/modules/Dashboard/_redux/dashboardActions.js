@@ -406,12 +406,10 @@ export const fetchExitReasonData = (Id) => async (dispatch) => {
     });
 };
 
-export const getAttendance = (setLoading) => (dispatch) => {
+export const getAttendance = (body , setLoading) => (dispatch) => {
+  
   return requestFromServer
-    .getAttendance({
-      date: formatDates(new Date(), "dd-MMM-yyyy"),
-      timeZone: new Date().getTimezoneOffset(),
-    })
+    .getAttendance(body)
     .then((res) => {
       dispatch(actions.CurrentAttFetch(res?.data?.data));
       setLoading(false);
@@ -841,11 +839,13 @@ export const fetchAllTicketStatus = () => async (dispatch) => {
     });
 };
 
-export const fetchAllTicket = (employeeId = null, projectId = null , notCompleted = false) => async (
-  dispatch,
-) => {
+export const fetchAllTicket = (
+  employeeId = null,
+  projectId = null,
+  notCompleted = false,
+) => async (dispatch) => {
   return await requestFromServer
-    .getAllTicket({ employeeId, projectId , notCompleted })
+    .getAllTicket({ employeeId, projectId, notCompleted })
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllTicketFetch(entities));
@@ -895,7 +895,6 @@ export const fetchCompanyEmployeesData = () => async (dispatch) => {
 };
 
 export const fetchCurrentParentTask = () => async (dispatch) => {
-  
   return await requestFromServer
     .getAllCurrentParentTask()
     .then((response) => {
@@ -909,7 +908,6 @@ export const fetchCurrentParentTask = () => async (dispatch) => {
 };
 
 export const fetchAllAlertTasks = () => async (dispatch) => {
-  
   return await requestFromServer
     .getAllAlertTasks()
     .then((response) => {
