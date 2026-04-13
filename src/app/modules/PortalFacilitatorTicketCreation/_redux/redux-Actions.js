@@ -58,7 +58,7 @@ export const fetchTicketCreation = (id) => (dispatch) => {
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
-      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      dispatch(actions.catchError({ error, callType: callTypes.userForEdit }));
     });
 };
 
@@ -113,7 +113,7 @@ export const deleteTimeLog = (id) => (dispatch) => {
 
 
 
-export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, onHide) => (
+export const createTicketCreation = (ticketCreationForCreation, disbaleLoading,clear, onHide) => (
   dispatch
 ) => {
 
@@ -136,6 +136,7 @@ export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, 
         draggable: true,
         progress: undefined,
       });
+      clear();
       onHide();
     })
     .catch((error) => {
@@ -154,7 +155,7 @@ export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, 
     });
 };
 
-export const updateTicketCreation = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateTicketCreation = (user, disbaleLoading,clear, onHide) => (dispatch) => {
   return requestFromServer
     .updateTicketCreation(user)
     .then((response) => {
@@ -164,6 +165,7 @@ export const updateTicketCreation = (user, disbaleLoading, onHide) => (dispatch)
       dispatch(actions.ticketCreationUpdated({ updatedTicketCreation }));
 
       disbaleLoading();
+      clear();
       onHide();
       toast.success(response.data.message, {
         position: "top-right",
@@ -297,5 +299,41 @@ export const fetchTimeLog= (id) => (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't find user";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+
+export const sendFollowUpMessage = (data, onHide) => (dispatch) => {
+  return requestFromServer
+    .sendFollowUpMessage(data)
+    .then((response) => {
+      onHide();
+      toast.success(response.data?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+
+    })
+    .catch((error) => {
+
+      //error.clientMessage = "Can't update User"
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+
+      onHide()
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
 };

@@ -26,6 +26,10 @@ const initialFacilitatorTicketCreationState = {
 export const callTypes = {
     list: "list",
     action: "action",
+    userForEdit: "userForEdit",
+    timelogsEntities: "timelogsEntities",
+    detailEntities: "detailEntities",
+    detailData: "detailData",
 };
 
 export const PortalFacilitatorTicketCreationSlice = createSlice({
@@ -114,14 +118,15 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
                     ...detail,
 
 
-                    desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                    desc: parent.ticketDescription,
+                    totalTimeLogHours: parent.totalTimeLogHours,
                     ticketCode: parent.ticketCode,
                 }))
             );
             state.listLoading = false;
             state.error = null;
             state.entities = allDetails;
-            state.totalCount = allDetails.length; // total number of details
+            state.totalCount = totalResult; // total number of details
 
         },
 
@@ -135,15 +140,16 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
                     ...detail,
 
 
-                    desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                    desc: parent.ticketDescription,
+                    totalTimeLogHours: parent.totalTimeLogHours,
                     ticketCode: parent.ticketCode,
-                    isPermanent:parent.ticketStatus==0   
+                    isPermanent: parent.ticketStatus == 0
                 })));
 
             state.listLoading = false;
             state.error = null;
             state.receiveEntities = allDetails;
-            state.receiveTotalCount = allDetails.length; // total number of details
+            state.receiveTotalCount = totalResult; // total number of details
 
 
         },
@@ -225,8 +231,8 @@ export const PortalFacilitatorTicketCreationSlice = createSlice({
             // state.entities.unshift(action.payload);
             if (action.payload.receiver || action.payload.isSelf) {
                 state.receiveEntities.unshift(action.payload);
-            } 
- 
+            }
+
             else {
                 state.entities.unshift(action.payload);
             }
