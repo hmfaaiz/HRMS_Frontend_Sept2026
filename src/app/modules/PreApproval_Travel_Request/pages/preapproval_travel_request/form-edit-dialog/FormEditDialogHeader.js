@@ -11,11 +11,13 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
       userForEdit: state.t_preapproval_travel_request.userForEdit,
       actionsLoading: state.t_preapproval_travel_request.actionsLoading,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   useEffect(() => {
-    let _title = id ? "Edit PreApproval Travel Request" : "Add PreApproval Travel Request";
+    let _title = id
+      ? "Edit PreApproval Travel Request"
+      : "Add PreApproval Travel Request";
     setTitle(_title);
   }, [id, userForEdit, actionsLoading]);
 
