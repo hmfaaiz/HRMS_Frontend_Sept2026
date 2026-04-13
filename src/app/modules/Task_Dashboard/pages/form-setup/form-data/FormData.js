@@ -278,7 +278,7 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                       setModalData({
                         name: "Overdue Task",
                         data:
-                          data?.overDueTask?.rows?.map((el) => ({
+                          data?.totalOverDue?.rows?.map((el) => ({
                             ticket_Code: el?.ticketCode,
                             ticket_Description: el?.ticketDescription,
                             Employee: el?.EmployeeProfile?.name,
@@ -310,14 +310,6 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 mt-2">
-                <DonutChart
-                  data={data?.taskStatusOverview}
-                  name={"Task Status Overview"}
-                />
-                <MultiRowProgressChart
-                  data={data?.priorityStatusOverview}
-                  heading="Priority Wise Overview"
-                />
                 <TableData
                   data={data?.recentActivity?.map((el) => ({
                     Date: new Date(el?.["updatedAt"])?.toDateString() || "-",
@@ -326,6 +318,18 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                     priority: el?.["priorityLevel.formName"] || "-",
                     Employee: el?.["EmployeeProfile.name"] || "-",
                   }))}
+                  columnColorRules={{
+                    priority: (value) => {
+                      if (value == "High") {
+                        return { color: "red", fontWeight: "bold" };
+                      } else if (value == "Medium") {
+                        return { color: "orange", fontWeight: "semibold" };
+                      } else if (value == "Low") {
+                        return { color: "green", fontWeight: "normal" };
+                      }
+                      return "black";
+                    },
+                  }}
                   name={"Recent Activity - Date Wise"}
                   handleClick={(e) =>
                     setModalData({
@@ -354,6 +358,18 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                   data={data?.overDueTask?.map((el) => ({
                     ...el,
                   }))}
+                  columnColorRules={{
+                    Priority: (value) => {
+                      if (value == "High") {
+                        return { color: "red", fontWeight: "bold" };
+                      } else if (value == "Medium") {
+                        return { color: "orange", fontWeight: "semibold" };
+                      } else if (value == "Low") {
+                        return { color: "green", fontWeight: "normal" };
+                      }
+                      return "black";
+                    },
+                  }}
                   name={"Overdue Task"}
                   handleClick={(e) =>
                     setModalData({
@@ -364,8 +380,17 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                 />
                 <TableData
                   data={data?.ticketWiseTimeLog?.map(
-                    ({ ticketTypeId, masterId, ...rest }) => ({
+                    ({
+                      ticketTypeId,
+                      masterId,
+                      Ticket_Status,
+                      Logging_Status,
+                      ...rest
+                    }) => ({
                       ...rest,
+                      Ticket_Status: `${Ticket_Status} ${
+                        Logging_Status ? `(${Logging_Status})` : ""
+                      }`,
                     }),
                   )}
                   name={"Task Wise Time Log"}
@@ -375,6 +400,19 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                       data: e,
                     })
                   }
+                  columnColorRules={{
+                    LoggedHours: (value, row) => {
+                      if (Number(value) > Number(row?.Estimated_Hours))
+                        return { color: "red", fontWeight: "bold" };
+                      return "black";
+                    },
+                    Ticket_Status: (value) => {
+                      if (value == "Open (Overdue)") {
+                        return { color: "red", fontWeight: "bold" };
+                      }
+                      return "black";
+                    },
+                  }}
                 />
                 <TableData
                   data={data?.employeeWiseTimeLog?.map(
@@ -397,6 +435,13 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                     }),
                   )}
                   name={"Employee Task Wise Time Log"}
+                  columnColorRules={{
+                    LoggedHours: (value, row) => {
+                      if (Number(value) > Number(row?.Estimated_Hours))
+                        return { color: "red", fontWeight: "bold" };
+                      return "black";
+                    },
+                  }}
                   handleClick={(e) =>
                     setModalData({
                       name: "Employee Task Wise Time Log",
@@ -406,11 +451,33 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                 />
                 <TableData
                   data={data?.pendingInPorgressTicketWiseTimeLog?.map(
-                    ({ ticketTypeId, masterId, ...rest }) => ({
+                    ({
+                      ticketTypeId,
+                      masterId,
+                      Ticket_Status,
+                      Logging_Status,
+                      ...rest
+                    }) => ({
                       ...rest,
+                      Ticket_Status: `${Ticket_Status} ${
+                        Logging_Status ? `(${Logging_Status})` : ""
+                      }`,
                     }),
                   )}
                   name={"Pending In Progress Task Time Log"}
+                  columnColorRules={{
+                    LoggedHours: (value, row) => {
+                      if (Number(value) > Number(row?.Estimated_Hours))
+                        return { color: "red", fontWeight: "bold" };
+                      return "black";
+                    },
+                    Ticket_Status: (value) => {
+                      if (value == "Open (Overdue)") {
+                        return { color: "red", fontWeight: "bold" };
+                      }
+                      return "black";
+                    },
+                  }}
                   handleClick={(e) =>
                     setModalData({
                       name: "Pending In Progress Task Time Log",
@@ -420,17 +487,47 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                 />
                 <TableData
                   data={data?.completedTicketWiseTimeLog?.map(
-                    ({ ticketTypeId, masterId, ...rest }) => ({
+                    ({
+                      ticketTypeId,
+                      masterId,
+                      Ticket_Status,
+                      Logging_Status,
+                      ...rest
+                    }) => ({
                       ...rest,
+                      Ticket_Status: `${Ticket_Status} ${
+                        Logging_Status ? `(${Logging_Status})` : ""
+                      }`,
                     }),
                   )}
                   name={"Completed Task Time Log"}
+                  columnColorRules={{
+                    LoggedHours: (value, row) => {
+                      if (Number(value) > Number(row?.Estimated_Hours))
+                        return { color: "red", fontWeight: "bold" };
+                      return "black";
+                    },
+                    Ticket_Status: (value) => {
+                      if (value == "Open (Overdue)") {
+                        return { color: "red", fontWeight: "bold" };
+                      }
+                      return "black";
+                    },
+                  }}
                   handleClick={(e) =>
                     setModalData({
                       name: "Completed Task Time Log",
                       data: e,
                     })
                   }
+                />
+                <DonutChart
+                  data={data?.taskStatusOverview}
+                  name={"Task Status Overview"}
+                />
+                <MultiRowProgressChart
+                  data={data?.priorityStatusOverview}
+                  heading="Priority Wise Overview"
                 />
               </div>
             </>
@@ -441,6 +538,30 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
               heading={modalData?.name || ""}
               show={!!modalData}
               onHide={() => setModalData(null)}
+              columnColorRules={{
+                LoggedHours: (value, row) => {
+                  if (Number(value) > Number(row?.Estimated_Hours)) {
+                    return { color: "red", fontWeight: "bold" };
+                  }
+                  return "black";
+                },
+                Ticket_Status: (value) => {
+                  if (value == "Open (Overdue)") {
+                    return { color: "red", fontWeight: "bold" };
+                  }
+                  return "black";
+                },
+                Priority: (value) => {
+                  if (value == "High") {
+                    return { color: "red", fontWeight: "bold" };
+                  } else if (value == "Medium") {
+                    return { color: "orange", fontWeight: "semibold" };
+                  } else if (value == "Low") {
+                    return { color: "green", fontWeight: "normal" };
+                  }
+                  return "black";
+                },
+              }}
             />
           ) : null}
         </>

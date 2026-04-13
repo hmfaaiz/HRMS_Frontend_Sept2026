@@ -189,7 +189,7 @@ export function FormCard() {
                           </Card.Header>
                           <Accordion.Collapse eventKey="0">
                             <fieldset disabled={actionsLoading}>
-                              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
                                 <div className="mt-2">
                                   <Checkbox
                                     isSelected={
@@ -257,7 +257,7 @@ export function FormCard() {
                                   />
                                 </div>
                               </div>
-                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2">
                                 <div>
                                   <SearchSelect
                                     name="projectId"
