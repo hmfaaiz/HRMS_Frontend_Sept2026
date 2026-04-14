@@ -564,7 +564,16 @@ import ("./modules/Reimbursement_Workflow_Status/pages/index"),
 );
 
 const reimbursement_claim_workflow_status = lazy (() =>
-import ("./modules/Reimbursement_Workflow_Portal/pages/index"))
+import ("./modules/Reimbursement_Workflow_Portal/pages/index"),
+)
+
+const attendance_roster_request = lazy (() =>
+import ("./modules/Attendance_Roster_Request/pages/index"),
+) 
+
+const attendance_roster_approval = lazy (() =>
+  import ("./modules/Attendance_Roster_Approval/pages/index"),
+)
 
 const ROUTES = {
   settings: SettingsPage,
@@ -761,6 +770,8 @@ const ROUTES = {
   project_sprint : project_sprint,
   reimbursement_claim_workflow_status_approval : reimbursement_claim_workflow_status_approval,
   reimbursement_claim_workflow_status : reimbursement_claim_workflow_status,
+  attendance_roster_request : attendance_roster_request,
+  attendance_roster_approval : attendance_roster_approval,
 };
 
 export default function BasePage() {

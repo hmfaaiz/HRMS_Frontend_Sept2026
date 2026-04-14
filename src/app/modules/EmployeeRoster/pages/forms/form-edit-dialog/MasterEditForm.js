@@ -210,7 +210,7 @@ export function MasterEditForm({
                   <div>
                     <SearchSelect
                       name="subsidiaryId"
-                       label={
+                      label={
                         <span>
                           {" "}
                           Subsidiary<span style={{ color: "red" }}>*</span>
@@ -309,9 +309,13 @@ export function MasterEditForm({
                       disabled={isEdit}
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
+                      minDate={
+                        payrollData?.startDate
+                          ? new Date(payrollData.startDate)
+                          : null
+                      }
                       label={
                         <span>
-                          {" "}
                           Date From<span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -330,9 +334,15 @@ export function MasterEditForm({
                       disabled={isEdit}
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
+                      minDate={
+                        values.from
+                          ? new Date(values.from)
+                          : payrollData?.startDate
+                          ? new Date(payrollData.startDate)
+                          : null
+                      } 
                       label={
                         <span>
-                          {" "}
                           Date To<span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -589,7 +599,9 @@ export function MasterEditForm({
                             : "form-control"
                         }
                         isDisabled={
-                          checkPayrolMonth(values, payrollData) || isEdit || !values?.isEnable_roster_via_pattern
+                          checkPayrolMonth(values, payrollData) ||
+                          isEdit ||
+                          !values?.isEnable_roster_via_pattern
                         }
                         placeholder=""
                         onBlur={handleBlur}
@@ -607,13 +619,13 @@ export function MasterEditForm({
                         // value={values.patternId}
                         value={
                           allRosterPatternList?.find(
-                            (option) => option.value === values.patternId
+                            (option) => option.value === values.patternId,
                           ) || null
                         }
                         autoComplete="off"
                         // children={CustomDropdown({ data: allRosterPatternList, firstElement: { label: 'Select', value: null } })}
                         options={allRosterPatternList.filter(
-                          (item) => item.subsidiaryId == values.subsidiaryId
+                          (item) => item.subsidiaryId == values.subsidiaryId,
                         )}
                       />
                       {errors.patternId && touched.patternId && (

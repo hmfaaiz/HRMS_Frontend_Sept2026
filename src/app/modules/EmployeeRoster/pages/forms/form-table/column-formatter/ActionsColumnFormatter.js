@@ -37,15 +37,15 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForEdit && checkPayrolMonth(row, payrollData) && (
-        <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
-        >
-          <a onClick={() => setId(row.Id)}>
-            <Pencil className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
-      )}
+     {isAccessForEdit && checkPayrolMonth(row, payrollData) && row.isFromPortal !== 1 && row.isFromPortal !== true && (
+          <OverlayTrigger
+            overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+          >
+            <a onClick={() => setId(row.Id)}>
+              <Pencil className="w-4 h-4 text-black cursor-pointer" />
+            </a>
+          </OverlayTrigger>
+        )}
 
       {isAccessForDelete && checkPayrolMonth(row, payrollData) && (
         <OverlayTrigger

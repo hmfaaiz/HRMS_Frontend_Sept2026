@@ -206,6 +206,9 @@ import { projectSprintSlice } from "../app/modules/Project_Sprint/_redux/redux-S
 import { ReimbursementApprovalSlice } from "../app/modules/Reimbursement_Claim_Approval/_redux/redux-Slice";
 import { ReimbursementWorkflowHrmsSlice } from "../app/modules/Reimbursement_Workflow_Status/_redux/redux-Slice";
 import { ReimbursementWorkflowStatusSlice } from "../app/modules/Reimbursement_Workflow_Portal/_redux/redux-Slice";
+import { RosterRequestSlice } from "../app/modules/Attendance_Roster_Request/_redux/redux-Slice";
+import { RosterApprovalSlice } from "../app/modules/Attendance_Roster_Approval/_redux/redux-Slice";
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -408,6 +411,8 @@ export const rootReducer = combineReducers({
   project_sprint : projectSprintSlice.reducer,
   reimbursement_claim_workflow_status_approval : ReimbursementWorkflowHrmsSlice.reducer,
   reimbursement_claim_workflow_status : ReimbursementWorkflowStatusSlice.reducer,
+  attendance_roster_request : RosterRequestSlice.reducer,
+  attendance_roster_approval : RosterApprovalSlice.reducer,
 });
 
 export function* rootSaga() {

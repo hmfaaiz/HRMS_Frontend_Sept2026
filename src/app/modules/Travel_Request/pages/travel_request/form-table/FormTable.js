@@ -47,34 +47,34 @@ export function FormTable({ onViewClick }) {
   }, [FormUIProps.queryParams, dispatch]);
 
   const columns = [
-    {
-      dataField: "Employee",
-      text: "Employee",
-      sort: true,
-      sortCaret: sortCaret,
-      formatter: (cell) => {
-        return cell ? `${cell.firstName} ${cell.lastName}` : "-";
-      },
-      style: { minWidth: "180px" },
-    },
+    // {
+    //   dataField: "Employee",
+    //   text: "Employee",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   formatter: (cell) => {
+    //     return cell ? `${cell.firstName} ${cell.lastName}` : "-";
+    //   },
+    //   style: { minWidth: "180px" },
+    // },
     {
       dataField: "purposeOfTravel",
       text: "Purpose of Travel",
-      sort: true,
+      sort: false,
       sortCaret: sortCaret,
       style: { minWidth: "180px" },
     },
     {
       dataField: "travelType",
       text: "Travel Type",
-      sort: true,
+      sort: false,
       sortCaret: sortCaret,
       style: { minWidth: "140px" },
     },
     {
       dataField: "projectName",
       text: "Project Name",
-      sort: true,
+      sort: false,
       sortCaret: sortCaret,
       style: { minWidth: "160px" },
     },
@@ -181,7 +181,7 @@ export function FormTable({ onViewClick }) {
           maximumFractionDigits: 2,
         });
       },
-      sort: true,
+      sort: false,
       sortCaret: sortCaret,
       style: { minWidth: "150px" },
     },
@@ -189,8 +189,8 @@ export function FormTable({ onViewClick }) {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
-      classes: "text-left pr-0",
-      headerClasses: "text-left pl-0",
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
       style: { minWidth: "100px" },
       formatter: ActionsColumnFormatter,
       formatExtraData: {
