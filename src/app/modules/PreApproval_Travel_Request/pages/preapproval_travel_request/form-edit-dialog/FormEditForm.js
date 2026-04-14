@@ -14,6 +14,7 @@ import DatePicker from "react-datepicker";
 import { Plus, Trash2, CirclePlus, Calendar } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
+import { Modal } from "react-bootstrap";
 
 export function FormEditForm({
   employeeId,
@@ -26,6 +27,7 @@ export function FormEditForm({
   isReadOnly,
 }) {
   const dispatch = useDispatch();
+  const isApprovingRef = React.useRef(false);
   const { dashboard, employeeEntitlement, auth } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
@@ -214,6 +216,7 @@ export function FormEditForm({
       taxiFareRate: 0,
       travelSegments: [{ ...segmentTemplate }, { ...segmentTemplate }],
       travelRemarks: "",
+      request_status: "A",
     };
   }, [user, employeeId]);
 
@@ -242,7 +245,8 @@ export function FormEditForm({
               : "",
             travelRemarks: values.travelRemarks,
             taxiFareRate: values.taxiFareRate,
-            request_status: values.request_status || "P",
+            request_status: values.request_status || "A",
+            ...(isApprovingRef.current ? { approved_status: 1 } : {}),
             Master: values.travelSegments.map((segment) => {
               const formatLocalDate = (dateObj) => {
                 if (!dateObj) return null;
@@ -268,6 +272,7 @@ export function FormEditForm({
             }),
           };
 
+          isApprovingRef.current = false; // reset after every submission
           if (saveForm) {
             saveForm(payload);
           } else {
@@ -1332,15 +1337,15 @@ export function FormEditForm({
                 )}
                 {!isReadOnly &&
                   isRoleTravelApprover &&
-                  user?.request_status === "P" && (
+                  user?.request_status === "A" &&
+                  user?.approved_status === 0 && (
                     <button
                       type="button"
                       className="btn btn-success btn-sm font-bold px-8"
                       disabled={isSubmitting || !hasEntitlement}
                       onClick={() => {
-                        setFieldValue("request_status", "A");
-                        // Use setTimeout to ensure Formik state updates before submitting
-                        setTimeout(() => submitForm(), 0);
+                        isApprovingRef.current = true;
+                        submitForm();
                       }}
                     >
                       Approve

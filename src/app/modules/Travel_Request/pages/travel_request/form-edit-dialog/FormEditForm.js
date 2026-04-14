@@ -22,10 +22,13 @@ import {
   FileText,
   History,
   X,
+  XCircle,
 } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
 import { Label } from "@material-ui/icons";
+// import { Toast } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 export function FormEditForm({
   employeeId,
@@ -301,6 +304,7 @@ export function FormEditForm({
           isSubmitting,
           values,
           setFieldValue,
+          setFieldTouched,
           errors,
           touched,
           submitForm,
@@ -474,7 +478,7 @@ export function FormEditForm({
                   <h6 className="text-primary font-bold m-0">Travel Details</h6>
 
                   <div className="flex items-center gap-2">
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-secondary btn-sm flex items-center gap-2"
                       onClick={() => console.log("Entitlement Detail Clicked")}
@@ -489,15 +493,15 @@ export function FormEditForm({
                     >
                       <History className="w-4 h-4" />
                       Last Travel Details
-                    </button>
+                    </button> */}
                     {/* Close (Cross) Button */}
                     <button
                       type="button"
-                      className="btn btn-secondary btn-sm flex items-center justify-center p-1"
+                      className="bg-transparent border-0 p-0 ml-2"
                       onClick={onCancel}
-                      title="Close Form"
+                      title="Close"
                     >
-                      <X className="w-4 h-4" />
+                      <XCircle className="w-5 h-5 text-black cursor-pointer" />
                     </button>
                   </div>
                 </div>

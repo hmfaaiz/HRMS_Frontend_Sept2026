@@ -9,7 +9,7 @@ export function ActionsColumnFormatter(
   { openReadFormDialog },
 ) {
   return (
-    <div className="space-x-2 flex justify-start">
+    <div className="space-x-2 flex justify-end">
       <OverlayTrigger
         overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
       >
