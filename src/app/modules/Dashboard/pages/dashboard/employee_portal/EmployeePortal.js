@@ -17,6 +17,7 @@ import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
 import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
 import { ReimbursementDetail } from "../EmpPortalComponent/ReimbursementDetail";
+import { AttendanceRosterDetail } from "../EmpPortalComponent/AttendanceRosterDetail"
 import {
   Banknote,
   Bell,
@@ -255,6 +256,9 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
       <div className="flex flex-col md:flex-row gap-4">
         {moduleRights?.find((e) => e?.value == 4)?.allow ? (
           <ReimbursementDetail />
+          ) : null}
+        {moduleRights?.find((e) => e?.value == 3)?.allow ? (
+          <AttendanceRosterDetail />
           ) : null}
         </div>
 
