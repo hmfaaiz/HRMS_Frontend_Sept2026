@@ -13,7 +13,7 @@ import DatePicker from "react-datepicker";
 import { } from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
-import { formatDates } from "../../../../../utils/common";
+import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth } from "../../../../../utils/common";
 import { Form, Modal } from "react-bootstrap";
 import { initialFilter } from "../FormUIHelpers";
 
@@ -125,12 +125,15 @@ export function FormFIlter({ listLoading, user }) {
           searchText: "",
 
           ticketStatus: 1,
-          timeRangeFrom: null,
-          timeRangeTo: null,
+          // timeRangeFrom: null,
+          // timeRangeTo: null,
           ticketDescription: null,
           assignTo: null,
+          timeRangeFrom: getFirstDayOfCurrentMonth() || "",
+          timeRangeTo: getLastDayOfCurrentMonth() || "",
 
         }}
+        
         onSubmit={(values) => {
 
 

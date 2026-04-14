@@ -8,7 +8,7 @@ import { FileText, FileSpreadsheet, Sheet, CirclePlus } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { fetchAllEmployeesWithNoPermissionData } from "../../../../../../_metronic/redux/dashboardActions";
 import { useDispatch, useSelector } from "react-redux";
-import { getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth } from "../../../../../utils/common";
+import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth } from "../../../../../utils/common";
 export function FormFilter({
   employees = [],
   ticketTypes = [],
@@ -99,8 +99,8 @@ export function FormFilter({
         priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
         ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
 
-        ticketDateFrom: getFirstDayOfCurrentMonth() || "",
-        ticketDateTo: getLastDayOfCurrentMonth() || "",
+         ticketDateFrom:formatDates(getFirstDayOfCurrentMonth(), "dd-MMM-yyyy")  || "",
+          ticketDateTo:formatDates( getLastDayOfCurrentMonth(), "dd-MMM-yyyy")  || "",
         // ticketDateFrom: uiProps.queryParams?.filter?.ticketDateFrom || null,
         // ticketDateTo: uiProps.queryParams?.filter?.ticketDateTo || null,
 

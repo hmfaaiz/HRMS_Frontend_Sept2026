@@ -739,7 +739,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               }
                               onChange={(date) => {
                                 setFieldValue("from_date", date);
-                                setFieldValue("to_date", date); // Sync from_date and to_date
+                                // setFieldValue("to_date", date); // Sync from_date and to_date
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
