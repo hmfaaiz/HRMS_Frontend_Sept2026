@@ -19,7 +19,7 @@ export function ActionsColumnFormatter(
         </a>
       </OverlayTrigger>
 
-      {row.request_status !== "A" && (
+      {row.request_status == "A" && row.approved_status === 0 && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -29,7 +29,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {row.request_status !== "A" && (
+      {row.request_status == "A" && row.approved_status === 0 && (
         <OverlayTrigger
           overlay={<Tooltip id="products-delete-tooltip">Delete</Tooltip>}
         >

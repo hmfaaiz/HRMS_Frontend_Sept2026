@@ -49,6 +49,15 @@ export function FormCard() {
 
   const moduleName = CurrentModuleName();
 
+  // In FormCard.jsx, add this to your useSelector
+  const { employeeEntitlement } = useSelector(
+    (state) => ({
+      employeeEntitlement:
+        state.t_preapproval_travel_request.employeeEntitlement,
+    }),
+    shallowEqual,
+  );
+
   const accessUser = userAccess?.find(
     (item) => item.componentName === "CreatePreapprovalTravelRequest",
   );
@@ -190,6 +199,9 @@ export function FormCard() {
               panelMode={FormUIProps.panelMode}
               setPanelMode={FormUIProps.setPanelMode}
               onCancel={handleCancel}
+              isEditMode={false}
+              isViewMode={false}
+              employeeEntitlement={employeeEntitlement}
             />
           </div>
 
@@ -225,6 +237,8 @@ export function FormCard() {
               setPanelMode={FormUIProps.setPanelMode}
               onCancel={handleCancel}
               disabled={true}
+              isEditMode={true}
+              employeeEntitlement={employeeEntitlement}
             />
           </div>
           <EmployeeProfile
@@ -254,6 +268,8 @@ export function FormCard() {
               setPanelMode={FormUIProps.setPanelMode}
               onCancel={handleCancel}
               disabled={true}
+              isViewMode={true}
+              employeeEntitlement={employeeEntitlement}
             />
           </div>
           <EmployeeProfile

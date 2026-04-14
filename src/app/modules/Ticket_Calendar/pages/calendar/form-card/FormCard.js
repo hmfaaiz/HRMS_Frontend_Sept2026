@@ -80,8 +80,8 @@ export function FormCard() {
 
   const setInitialValues = (firstSubsidiary) => {
     setBodyValues({
-      from_date: firstSubsidiary?.payrollMonth?.startDate || "",
-      to_date: firstSubsidiary?.payrollMonth?.endDate || "",
+      from_date: getFirstDayOfCurrentMonth() || "",
+      to_date: getLastDayOfCurrentMonth() || "",
       subsidiaryId: firstSubsidiary?.value || "",
     });
     setIsDataLoaded(true); // Mark data as loaded
@@ -450,7 +450,7 @@ export function FormCard() {
                                   }
                                   onChange={(date) => {
                                     setFieldValue("from_date", date);
-                                    setFieldValue("to_date", date); // Sync from_date and to_date
+                                    // setFieldValue("to_date", date); // Sync from_date and to_date
                                   }}
                                   timeInputLabel="Time:"
                                   dateFormat="dd-MMM-yyyy"

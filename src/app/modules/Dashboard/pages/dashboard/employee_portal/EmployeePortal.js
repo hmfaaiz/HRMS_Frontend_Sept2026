@@ -18,6 +18,7 @@ import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
 import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
 import { ReimbursementDetail } from "../EmpPortalComponent/ReimbursementDetail";
 import { AttendanceRosterDetail } from "../EmpPortalComponent/AttendanceRosterDetail"
+import { TravelRequestPortalDetail } from "../EmpPortalComponent/TravelRequestPortalDetail";
 import {
   Banknote,
   Bell,
@@ -25,7 +26,7 @@ import {
   ChevronRight,
   FileUser,
   FolderCheck,
-  Receipt, 
+  Receipt,
   TrendingUpDown,
   UserCheck,
   UserRoundX,
@@ -151,7 +152,9 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
                 attendanceApprovalCount={portalInfo?.attApproval || 0}
                 loanApprovalCount={portalInfo?.loanApproval || 0}
                 resignationApprovalCount={portalInfo?.resignApproval || 0}
-                reimbursementApprovalCount={portalInfo?.reimbursementPending || 0}
+                reimbursementApprovalCount={
+                  portalInfo?.reimbursementPending || 0
+                }
                 moduleRights={moduleRights}
               />
               <ReportingEmpTable
@@ -249,16 +252,17 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
           ) : null}
           {moduleRights?.find((e) => e?.value == 7)?.allow ? (
             <ProjectManagement />
-          ) : null} 
+          ) : null}
         </div>
       ) : null}
 
       <div className="flex flex-col md:flex-row gap-4">
         {moduleRights?.find((e) => e?.value == 4)?.allow ? (
+          <>
           <ReimbursementDetail />
-          ) : null}
-        {moduleRights?.find((e) => e?.value == 3)?.allow ? (
           <AttendanceRosterDetail />
+          <TravelRequestPortalDetail />
+          </>
           ) : null}
         </div>
 
@@ -305,8 +309,10 @@ const CompactView = ({
       company_doc_portal: state?.auth?.userAccess.company_doc_portal,
       portal_ticket_creation: state?.auth?.userAccess.portal_ticket_creation,
       ticket_setup_portal: state?.auth?.userAccess["ticket_setup_portal"],
-      reimbursement_claim_request: state?.auth?.userAccess["reimbursement_claim_request"],
-      reimbursement_claim_approval: state?.auth?.userAccess["reimbursement_claim_approval"],
+      reimbursement_claim_request:
+        state?.auth?.userAccess["reimbursement_claim_request"],
+      reimbursement_claim_approval:
+        state?.auth?.userAccess["reimbursement_claim_approval"],
     }),
     shallowEqual,
   );
@@ -402,17 +408,17 @@ const CompactView = ({
   );
 
   const isReimbursementRequest = reimbursement_claim_request?.find(
-  (el) =>
-    el?.componentName === "ReadAllReimbursementClaimRequest" &&
-    el?.portalType == 2 &&
-    el?.isResourceShow,
-);
-const isReimbursementApproval = reimbursement_claim_approval?.find(
-  (el) =>
-    el?.componentName === "ReadAllReimbursementClaimApproval" &&
-    el?.portalType == 2 &&
-    el?.isResourceShow,
-);
+    (el) =>
+      el?.componentName === "ReadAllReimbursementClaimRequest" &&
+      el?.portalType == 2 &&
+      el?.isResourceShow,
+  );
+  const isReimbursementApproval = reimbursement_claim_approval?.find(
+    (el) =>
+      el?.componentName === "ReadAllReimbursementClaimApproval" &&
+      el?.portalType == 2 &&
+      el?.isResourceShow,
+  );
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 ">
       {/* Attendance Request */}

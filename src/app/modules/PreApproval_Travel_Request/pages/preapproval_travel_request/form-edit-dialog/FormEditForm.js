@@ -13,6 +13,8 @@ import {
 import DatePicker from "react-datepicker";
 import { Plus, Trash2, CirclePlus, Calendar } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { NumericFormat } from "react-number-format";
+import { Modal } from "react-bootstrap";
 
 export function FormEditForm({
   employeeId,
@@ -25,6 +27,7 @@ export function FormEditForm({
   isReadOnly,
 }) {
   const dispatch = useDispatch();
+  const isApprovingRef = React.useRef(false);
   const { dashboard, employeeEntitlement, auth } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
@@ -92,7 +95,7 @@ export function FormEditForm({
             .test(
               "different-locations",
               "From and To locations cannot be the same",
-              function (value) {
+              function(value) {
                 const { fromLocation } = this.parent;
                 if (!value || !fromLocation) return true; // Skip if either is empty
                 return value !== fromLocation;
@@ -106,7 +109,7 @@ export function FormEditForm({
             .required(VALIDATION_MESSAGES.required)
             .min(Yup.ref("fromDate"), VALIDATION_MESSAGES.endDateError),
           modeOfTravel: Yup.string().required(VALIDATION_MESSAGES.required),
-          classOfTravel: Yup.string().required(VALIDATION_MESSAGES.required),
+          classOfTravel: Yup.string().nullable(),
           hotelEntitlement: Yup.string().when(
             ["accommodationRequired", "selfEntitlement"],
             (accommodationRequired, selfEntitlement, schema) => {
@@ -213,6 +216,7 @@ export function FormEditForm({
       taxiFareRate: 0,
       travelSegments: [{ ...segmentTemplate }, { ...segmentTemplate }],
       travelRemarks: "",
+      request_status: "A",
     };
   }, [user, employeeId]);
 
@@ -241,12 +245,16 @@ export function FormEditForm({
               : "",
             travelRemarks: values.travelRemarks,
             taxiFareRate: values.taxiFareRate,
-            request_status: values.request_status || "P",
+            request_status: values.request_status || "A",
+            ...(isApprovingRef.current ? { approved_status: 1 } : {}),
             Master: values.travelSegments.map((segment) => {
               const formatLocalDate = (dateObj) => {
                 if (!dateObj) return null;
                 const d = new Date(dateObj);
-                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+                  2,
+                  "0",
+                )}-${String(d.getDate()).padStart(2, "0")}`;
               };
               return {
                 fromLocationId: segment.fromLocation,
@@ -264,6 +272,7 @@ export function FormEditForm({
             }),
           };
 
+          isApprovingRef.current = false; // reset after every submission
           if (saveForm) {
             saveForm(payload);
           } else {
@@ -286,18 +295,19 @@ export function FormEditForm({
           // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useEffect(() => {
             const firstOld = prevSegmentsRef.current?.[0];
-            const lastOld = prevSegmentsRef.current?.[prevSegmentsRef.current.length - 1];
+            const lastOld =
+              prevSegmentsRef.current?.[prevSegmentsRef.current.length - 1];
 
             const firstSegment = values.travelSegments[0];
             const lastSegment =
               values.travelSegments[values.travelSegments.length - 1];
 
-            const datesChanged = 
+            const datesChanged =
               firstOld?.fromDate !== firstSegment?.fromDate ||
               lastOld?.toDate !== lastSegment?.toDate;
-              
+
             prevSegmentsRef.current = values.travelSegments;
-            
+
             // Only overwrite if the user actively changed the boundary dates in the calendar
             if (!datesChanged) return;
 
@@ -331,10 +341,14 @@ export function FormEditForm({
             const length = values.travelSegments.length;
             if (length > 1) {
               const origin = values.travelSegments[0]?.fromLocation;
-              const lastDestination = values.travelSegments[length - 1]?.toLocation;
+              const lastDestination =
+                values.travelSegments[length - 1]?.toLocation;
 
               if (origin && lastDestination !== origin) {
-                setFieldValue(`travelSegments.${length - 1}.toLocation`, origin);
+                setFieldValue(
+                  `travelSegments.${length - 1}.toLocation`,
+                  origin,
+                );
               }
             }
           }, [values.travelSegments, setFieldValue]);
@@ -397,8 +411,6 @@ export function FormEditForm({
             );
           }, [hotelOptions, employeeEntitlement]);
 
-
-
           const isPolicyDefined = !!employeeEntitlement && !isReadOnly;
           const hasEntitlement = !!employeeEntitlement;
           const isFormDisabled = !isPolicyDefined || !!isReadOnly;
@@ -407,10 +419,10 @@ export function FormEditForm({
             <Form className="form form-label-right">
               {/* Travel Details Heading and Header Fields */}
               <div className="mb-6">
-                <h4 className="text-primary font-bold mb-3">Travel details</h4>
+                <h6 className="text-primary font-bold mb-3">Travel Details</h6>
                 <div className="grid grid-cols-12 gap-x-3 mb-4">
                   <div className="col-span-2">
-                    <label className="text-xs font-semibold">
+                    <label>
                       Purpose of Travel <span className="text-danger">*</span>
                     </label>
                     <Field
@@ -427,7 +439,7 @@ export function FormEditForm({
                     )}
                   </div>
                   <div className="col-span-2">
-                    <label className="text-xs font-semibold">
+                    <label>
                       Project Name <span className="text-danger">*</span>
                     </label>
                     <Field
@@ -442,7 +454,7 @@ export function FormEditForm({
                     )}
                   </div>
                   <div className="col-span-2">
-                    <label className="text-xs font-semibold">
+                    <label>
                       Travel Type <span className="text-danger">*</span>
                     </label>
                     <Field
@@ -546,7 +558,6 @@ export function FormEditForm({
                               </td>
                               <td style={{ minWidth: "120px" }}>
                                 Class of Travel{" "}
-                                <span className="text-danger">*</span>
                               </td>
                               <td style={{ minWidth: "60px" }}>
                                 Accommodation Required
@@ -559,10 +570,16 @@ export function FormEditForm({
                               <td style={{ minWidth: "100px" }}>
                                 Hotel Entitlement Amount
                               </td>
-                              <td style={{ minWidth: "80px" }}>
-                                Self Entitlement
-                              </td>
-                              <td style={{ minWidth: "100px" }}>Self Amount</td>
+                              {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
+                                <>
+                                  <td style={{ minWidth: "80px" }}>
+                                    Self Entitlement
+                                  </td>
+                                  <td style={{ minWidth: "100px" }}>
+                                    Self Amount
+                                  </td>
+                                </>
+                              )}
                               <td style={{ minWidth: "40px" }}></td>
                             </tr>
                           </thead>
@@ -600,7 +617,9 @@ export function FormEditForm({
                                       <option
                                         key={opt.value}
                                         value={opt.value}
-                                        disabled={opt.value == segment.toLocation}
+                                        disabled={
+                                          opt.value == segment.toLocation
+                                        }
                                       >
                                         {opt.label}
                                       </option>
@@ -703,8 +722,9 @@ export function FormEditForm({
                                       index > 0 &&
                                       values.travelSegments[index - 1]?.toDate
                                         ? new Date(
-                                            values.travelSegments[index - 1]
-                                              .toDate,
+                                            values.travelSegments[
+                                              index - 1
+                                            ].toDate,
                                           )
                                         : null
                                     }
@@ -774,8 +794,15 @@ export function FormEditForm({
                                         `travelSegments.${index}.modeOfTravel`,
                                         val,
                                       );
-                                      if (index === 0 && values.travelSegments.length > 1) {
-                                        for (let i = 1; i < values.travelSegments.length; i++) {
+                                      if (
+                                        index === 0 &&
+                                        values.travelSegments.length > 1
+                                      ) {
+                                        for (
+                                          let i = 1;
+                                          i < values.travelSegments.length;
+                                          i++
+                                        ) {
                                           setFieldValue(
                                             `travelSegments.${i}.modeOfTravel`,
                                             val,
@@ -929,11 +956,13 @@ export function FormEditForm({
                                         : 1,
                                   }}
                                 >
-                                  <Field
+                                  <NumericFormat
                                     name={`travelSegments.${index}.hotelEntitlementAmount`}
                                     className="form-control"
-                                    type="number"
                                     placeholder="0"
+                                    thousandSeparator
+                                    allowNegative={false}
+                                    isAllowed={({ value }) => value.length <= 9}
                                     disabled={
                                       !segment.accommodationRequired ||
                                       !segment.hotelEntitlement ||
@@ -947,6 +976,12 @@ export function FormEditForm({
                                         ? ""
                                         : segment.hotelEntitlementAmount
                                     }
+                                    onValueChange={(valuesObj) => {
+                                      setFieldValue(
+                                        `travelSegments.${index}.hotelEntitlementAmount`,
+                                        valuesObj.value,
+                                      );
+                                    }}
                                   />
                                   {errors.travelSegments?.[index]
                                     ?.hotelEntitlementAmount &&
@@ -960,90 +995,105 @@ export function FormEditForm({
                                       </div>
                                     )}
                                 </td>
-                                <td className="text-center align-middle">
-                                  <div
-                                    className="flex justify-center items-center h-full"
+                                {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
+                                  <td className="text-center align-middle">
+                                    <div
+                                      className="flex justify-center items-center h-full"
+                                      style={{
+                                        opacity:
+                                          !segment.accommodationRequired ||
+                                          segment.hotelEntitlement
+                                            ? 0.4
+                                            : 1,
+                                      }}
+                                    >
+                                      <Checkbox
+                                        disabled={
+                                          !segment.accommodationRequired ||
+                                          !!segment.hotelEntitlement ||
+                                          !isPolicyDefined ||
+                                          !employeeEntitlement?.ishotelEntitlementSelfAmountWise
+                                        }
+                                        isSelected={segment.selfEntitlement}
+                                        onChange={(e) => {
+                                          const checked = e.target.checked;
+                                          setFieldValue(
+                                            `travelSegments.${index}.selfEntitlement`,
+                                            checked,
+                                          );
+                                          if (checked) {
+                                            setFieldValue(
+                                              `travelSegments.${index}.hotelEntitlement`,
+                                              "",
+                                            );
+                                            setFieldValue(
+                                              `travelSegments.${index}.hotelEntitlementAmount`,
+                                              0,
+                                            );
+                                          } else {
+                                            setFieldValue(
+                                              `travelSegments.${index}.selfAmount`,
+                                              0,
+                                            );
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                  </td>
+                                )}
+                                {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
+                                  <td
                                     style={{
                                       opacity:
                                         !segment.accommodationRequired ||
+                                        !segment.selfEntitlement ||
                                         segment.hotelEntitlement
                                           ? 0.4
                                           : 1,
                                     }}
                                   >
-                                    <Checkbox
+                                    <NumericFormat
+                                      name={`travelSegments.${index}.selfAmount`}
+                                      className="form-control"
+                                      placeholder="0"
+                                      thousandSeparator
+                                      allowNegative={false}
+                                      isAllowed={({ value }) =>
+                                        value.length <= 9
+                                      }
                                       disabled={
                                         !segment.accommodationRequired ||
+                                        !segment.selfEntitlement ||
                                         !!segment.hotelEntitlement ||
-                                        !isPolicyDefined ||
-                                        !employeeEntitlement?.ishotelEntitlementSelfAmountWise
+                                        !isPolicyDefined
                                       }
-                                      isSelected={segment.selfEntitlement}
-                                      onChange={(e) => {
-                                        const checked = e.target.checked;
+                                      value={
+                                        !segment.accommodationRequired ||
+                                        !segment.selfEntitlement ||
+                                        !!segment.hotelEntitlement
+                                          ? ""
+                                          : segment.selfAmount
+                                      }
+                                      onValueChange={(valuesObj) => {
                                         setFieldValue(
-                                          `travelSegments.${index}.selfEntitlement`,
-                                          checked,
+                                          `travelSegments.${index}.selfAmount`,
+                                          valuesObj.value,
                                         );
-                                        if (checked) {
-                                          setFieldValue(
-                                            `travelSegments.${index}.hotelEntitlement`,
-                                            "",
-                                          );
-                                          setFieldValue(
-                                            `travelSegments.${index}.hotelEntitlementAmount`,
-                                            0,
-                                          );
-                                        } else {
-                                          setFieldValue(
-                                            `travelSegments.${index}.selfAmount`,
-                                            0,
-                                          );
-                                        }
                                       }}
                                     />
-                                  </div>
-                                </td>
-                                <td
-                                  style={{
-                                    opacity:
-                                      !segment.accommodationRequired ||
-                                      !segment.selfEntitlement ||
-                                      segment.hotelEntitlement
-                                        ? 0.4
-                                        : 1,
-                                  }}
-                                >
-                                  <Field
-                                    name={`travelSegments.${index}.selfAmount`}
-                                    className="form-control"
-                                    type="number"
-                                    placeholder="0"
-                                    disabled={
-                                      !segment.accommodationRequired ||
-                                      !segment.selfEntitlement ||
-                                      !!segment.hotelEntitlement ||
-                                      !isPolicyDefined
-                                    }
-                                    value={
-                                      !segment.accommodationRequired ||
-                                      !segment.selfEntitlement ||
-                                      !!segment.hotelEntitlement
-                                        ? ""
-                                        : segment.selfAmount
-                                    }
-                                  />
-                                  {errors.travelSegments?.[index]?.selfAmount &&
-                                    touched.travelSegments?.[index]
-                                      ?.selfAmount && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {
-                                          errors.travelSegments[index]
-                                            .selfAmount
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                                    {errors.travelSegments?.[index]
+                                      ?.selfAmount &&
+                                      touched.travelSegments?.[index]
+                                        ?.selfAmount && (
+                                        <div className="form-feedBack text-xs mt-1">
+                                          {
+                                            errors.travelSegments[index]
+                                              .selfAmount
+                                          }
+                                        </div>
+                                      )}
+                                  </td>
+                                )}
                                 <td className="text-center align-middle">
                                   {!isReadOnly && index >= 2 && (
                                     <button
@@ -1071,12 +1121,12 @@ export function FormEditForm({
                 <div className="grid grid-cols-6 md:grid-cols-12 gap-x-3 gap-y-3">
                   {/* Daily Allowance */}
                   <div className="col-span-3">
-                    <h6 className="font-bold  text-primary text-sm">
+                    <h6 className="font-bold  text-primary ">
                       Daily Allowance
                     </h6>
                     <div className="grid grid-cols-3 gap-x-2">
                       <div>
-                        <label className="text-xs font-semibold mb-1 flex items-center gap-1">
+                        <label className=" mb-1 flex items-center gap-1">
                           Rate <span className="text-danger">*</span>
                           {employeeEntitlement?.dailyAllowanceAmount && (
                             <span className="text-muted font-normal ml-1">
@@ -1085,14 +1135,22 @@ export function FormEditForm({
                             </span>
                           )}
                         </label>
-                        <Field
-                          type="number"
+                        <NumericFormat
                           name="dailyAllowanceRate"
                           className="form-control text-sm"
                           style={{ backgroundColor: "#eefbff" }}
                           placeholder="0"
-                          min="0"
+                          thousandSeparator
+                          allowNegative={false}
+                          isAllowed={({ value }) => value.length <= 6}
                           disabled={!isPolicyDefined}
+                          value={values.dailyAllowanceRate}
+                          onValueChange={(valuesObj) => {
+                            setFieldValue(
+                              "dailyAllowanceRate",
+                              valuesObj.value,
+                            );
+                          }}
                         />
                         {errors.dailyAllowanceRate &&
                           touched.dailyAllowanceRate && (
@@ -1102,7 +1160,7 @@ export function FormEditForm({
                           )}
                       </div>
                       <div>
-                        <label className="text-xs font-semibold block mb-1">
+                        <label className=" block mb-1">
                           Day <span className="text-danger">*</span>
                         </label>
                         <Field
@@ -1113,6 +1171,9 @@ export function FormEditForm({
                           placeholder="0"
                           min="0"
                           disabled={!isPolicyDefined || !!isReadOnly}
+                          onInput={(e) => {
+                            e.target.value = e.target.value.slice(0, 3);
+                          }}
                         />
                         {errors.dailyAllowanceDays &&
                           touched.dailyAllowanceDays && (
@@ -1122,15 +1183,15 @@ export function FormEditForm({
                           )}
                       </div>
                       <div>
-                        <label className="text-xs font-semibold block mb-1">
-                          Amount
-                        </label>
-                        <Field
-                          type="number"
+                        <label className=" block mb-1">Amount</label>
+                        <NumericFormat
                           name="dailyAllowanceAmount"
                           className="form-control text-sm bg-light"
                           placeholder="0"
+                          thousandSeparator
+                          allowNegative={false}
                           disabled={true}
+                          value={values.dailyAllowanceAmount}
                         />
                       </div>
                     </div>
@@ -1138,103 +1199,102 @@ export function FormEditForm({
 
                   {/* Taxi Fare */}
                   <div className="col-span-2 md:col-span-1">
-                    <h6 className="font-bold text-primary text-sm">
-                      Taxi Fare per KM
-                    </h6>
+                    <h6 className="font-bold text-primary">Taxi Fare per KM</h6>
                     <div>
-                      <label className="text-xs font-semibold block mb-1">
-                        Rate
-                      </label>
-                      <Field
-                        type="number"
+                      <label className="=block mb-1">Rate</label>
+                      <NumericFormat
                         name="taxiFareRate"
                         className="form-control text-sm"
                         placeholder="0"
+                        thousandSeparator
+                        allowNegative={false}
+                        isAllowed={({ value }) => value.length <= 6}
                         disabled={true}
+                        value={values.taxiFareRate}
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Remarks (Full Width below) */}
-                <div className="grid grid-cols-6 md:grid-cols-12 gap-x-3 mt-4">
-                  {/* Advance Request */}
-                  <div className="col-span-2">
-                    <h6 className="font-bold mb-3 text-primary text-sm">
-                      Advance Request
-                    </h6>
-                    <div className="grid grid-cols-2 gap-x-2">
-                      <div className="flex items-center">
-                        <span className="text-xs font-semibold mr-2">
-                          Advance required
-                        </span>
-                        <Checkbox
-                          disabled={isFormDisabled}
-                          isSelected={values.advanceRequested}
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setFieldValue("advanceRequested", checked);
-                            if (!checked) {
-                              setFieldValue("advanceAmount", 0);
-                              setFieldValue("advanceRemarks", "");
-                            }
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold block mb-1">
-                          Amount{" "}
-                          {values.advanceRequested && (
-                            <span className="text-danger">*</span>
-                          )}
-                        </label>
-                        <Field
-                          type="number"
-                          name="advanceAmount"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
-                          placeholder="0"
-                          min="0"
-                          disabled={isFormDisabled || !values.advanceRequested}
-                        />
-                        {errors.advanceAmount && touched.advanceAmount && (
-                          <div className="form-feedBack text-xs mt-1">
-                            {errors.advanceAmount}
-                          </div>
+                {/* Advance Request - all in one row */}
+                <div className="mt-4">
+                  <h6 className="font-bold mb-3 text-primary">
+                    Advance Request
+                  </h6>
+                  <div className="grid grid-cols-10 gap-x-3 items-end">
+                    {/* Advance Required Checkbox */}
+                    <div className="col-span-1 flex items-center pb-2">
+                      <label className="mr-2">Advance Required</label>
+                      <Checkbox
+                        disabled={isFormDisabled}
+                        isSelected={values.advanceRequested}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setFieldValue("advanceRequested", checked);
+                          if (!checked) {
+                            setFieldValue("advanceAmount", 0);
+                            setFieldValue("advanceRemarks", "");
+                          }
+                        }}
+                      />
+                    </div>
+                    {/* Amount */}
+                    <div className="col-span-1">
+                      <label className=" block mb-1">
+                        Amount
+                        {values.advanceRequested && (
+                          <span className="text-danger">*</span>
                         )}
-                      </div>
+                      </label>
+                      <NumericFormat
+                        name="advanceAmount"
+                        className="form-control text-sm"
+                        style={{ backgroundColor: "#eefbff" }}
+                        placeholder="0"
+                        thousandSeparator
+                        allowNegative={false}
+                        isAllowed={({ value }) => value.length <= 9}
+                        disabled={isFormDisabled || !values.advanceRequested}
+                        value={values.advanceAmount}
+                        onValueChange={(valuesObj) => {
+                          setFieldValue("advanceAmount", valuesObj.value);
+                        }}
+                      />
+                      {errors.advanceAmount && touched.advanceAmount && (
+                        <div className="form-feedBack text-xs mt-1">
+                          {errors.advanceAmount}
+                        </div>
+                      )}
+                    </div>
+                    {/* Advance Remarks */}
+                    <div className="col-span-5">
+                      <label className=" block mb-1">
+                        Advance Request Remarks
+                        {values.advanceRequested && (
+                          <span className="text-danger">*</span>
+                        )}
+                      </label>
+                      <Field
+                        as="textarea"
+                        name="advanceRemarks"
+                        className="form-control"
+                        style={{ backgroundColor: "#eefbff", height: "38px" }}
+                        rows="1"
+                        placeholder="Enter advance remarks..."
+                        maxLength={500}
+                        disabled={isFormDisabled || !values.advanceRequested}
+                      />
+                      {errors.advanceRemarks && touched.advanceRemarks && (
+                        <div className="form-feedBack text-xs mt-1">
+                          {errors.advanceRemarks}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-
-                {/* Remarks (Full Width below) */}
                 <div className="grid grid-cols-12 gap-x-3 mt-4">
                   <div className="col-span-6">
-                    <label className="text-xs font-semibold">
-                      Advance Request Remarks{" "}
-                      {values.advanceRequested && (
-                        <span className="text-danger">*</span>
-                      )}
-                    </label>
-                    <Field
-                      as="textarea"
-                      name="advanceRemarks"
-                      className="form-control"
-                      style={{ backgroundColor: "#eefbff" }}
-                      rows="3"
-                      placeholder="Enter advance remarks..."
-                      disabled={isFormDisabled || !values.advanceRequested}
-                    />
-                    {errors.advanceRemarks && touched.advanceRemarks && (
-                      <div className="form-feedBack text-xs mt-1">
-                        {errors.advanceRemarks}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-12 gap-x-3 mt-4">
-                  <div className="col-span-6">
-                    <label className="text-xs font-semibold">
+                    <label>
                       Remarks
                       <span className="text-danger">*</span>
                     </label>
@@ -1245,6 +1305,7 @@ export function FormEditForm({
                       style={{ backgroundColor: "#eefbff" }}
                       rows="3"
                       placeholder="Enter travel remarks..."
+                      maxLength={500}
                       disabled={!isPolicyDefined}
                     />
                     {errors.travelRemarks && touched.travelRemarks && (
@@ -1276,20 +1337,20 @@ export function FormEditForm({
                 )}
                 {!isReadOnly &&
                   isRoleTravelApprover &&
-                  user?.request_status === "P" && (
-                  <button
-                    type="button"
-                    className="btn btn-success btn-sm font-bold px-8"
-                    disabled={isSubmitting || !hasEntitlement}
-                    onClick={() => {
-                      setFieldValue("request_status", "A");
-                      // Use setTimeout to ensure Formik state updates before submitting
-                      setTimeout(() => submitForm(), 0);
-                    }}
-                  >
-                    Approve
-                  </button>
-                )}
+                  user?.request_status === "A" &&
+                  user?.approved_status === 0 && (
+                    <button
+                      type="button"
+                      className="btn btn-success btn-sm font-bold px-8"
+                      disabled={isSubmitting || !hasEntitlement}
+                      onClick={() => {
+                        isApprovingRef.current = true;
+                        submitForm();
+                      }}
+                    >
+                      Approve
+                    </button>
+                  )}
               </div>
             </Form>
           );

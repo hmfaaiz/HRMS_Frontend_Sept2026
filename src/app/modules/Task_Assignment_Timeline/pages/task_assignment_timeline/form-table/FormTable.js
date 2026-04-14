@@ -175,8 +175,8 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
   useEffect(() => {
     uiContext.setHasRecords(
       uiProps.queryParams.isFiltered &&
-        Array.isArray(entities) &&
-        entities.length > 0
+      Array.isArray(entities) &&
+      entities.length > 0
     );
   }, [entities, uiProps.queryParams.isFiltered]);
 
@@ -185,7 +185,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     onExpandedRowsChange?.([]);
   }, [uiProps.queryParams]);
 
- 
+
   useEffect(() => {
     onExpandedRowsChange?.(expandedRows);
   }, [expandedRows]);
@@ -204,7 +204,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     priorityLevels.find((p) => p.value === row.priorityLevelId)?.color ||
     "#808080";
 
-  
+
   const columns = [
     { dataField: "Id", text: "ID", hidden: true },
     {
@@ -236,148 +236,209 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     //   style: { minWidth: "120px" },
     //   formatter: (_, row) => row.priorityLevel?.formName || "N/A",
     // },
-    { dataField: "ticketDescription", text: "Description", style: { minWidth: "240px" } },
-//     {
-//       dataField: "Details[0].AssignToProfile.fullName",
-//       text: "Current Owner",
-//       style: { minWidth: "160px" },
-//      formatter: (_, row) => {
-//       const lastDetail = row.Details?.[row.Details.length - 1];
-//       return lastDetail?.AssignToProfile?.fullName || "";
-// },
-//     },
-//there should be deligation fields
+    // { dataField: "ticketDescription", text: "Description", style: { minWidth: "240px" } },
+
+     {
+          dataField: "ticketDescription",
+          text: "Description",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "70px",
+          },
+          formatter: (cell) => {
+            if (!cell) return "";
+            return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+          },
+        },
+    //     {
+    //       dataField: "Details[0].AssignToProfile.fullName",
+    //       text: "Current Owner",
+    //       style: { minWidth: "160px" },
+    //      formatter: (_, row) => {
+    //       const lastDetail = row.Details?.[row.Details.length - 1];
+    //       return lastDetail?.AssignToProfile?.fullName || "";
+    // },
+    //     },
+    //there should be deligation fields
     {
       dataField: "Details[0].AssignByProfile.fullName",
       text: "Assign By",
       style: { minWidth: "100px" },
-     formatter: (_, row) => {
-      const lastDetail = row?.Details?.[row?.Details.length - 1];
-      return lastDetail?.AssignByProfile?.fullName || "";
-}
-}, 
+      formatter: (_, row) => {
+        const lastDetail = row?.Details?.[row?.Details.length - 1];
+        return lastDetail?.AssignByProfile?.fullName || "";
+      }
+    },
 
-{
+    {
       dataField: "Details[0].AssignToProfile.fullName",
       text: "Assign To",
       style: { minWidth: "100px" },
-     formatter: (_, row) => {
-      const lastDetail = row?.Details?.[row?.Details.length - 1];
-      return lastDetail?.AssignToProfile?.fullName || "";
-}
-},
+      formatter: (_, row) => {
+        const lastDetail = row?.Details?.[row?.Details.length - 1];
+        return lastDetail?.AssignToProfile?.fullName || "";
+      }
+    },
     {
       dataField: "ticketDate",
       text: "Ticket Date",
       style: { minWidth: "50px" },
       formatter: (c) => c && format(new Date(c), "dd-MMM-yyyy"),
     },
-//     {
-//       dataField: "Details[0].dueDate",
-//       text: "Due Date",
-//       style: { minWidth: "50px" },
-//       formatter: (_, row) => {
-//   const lastDetail = row?.Details?.[row?.Details.length - 1];
-//   const dueDate = lastDetail?.dueDate;
+    //     {
+    //       dataField: "Details[0].dueDate",
+    //       text: "Due Date",
+    //       style: { minWidth: "50px" },
+    //       formatter: (_, row) => {
+    //   const lastDetail = row?.Details?.[row?.Details.length - 1];
+    //   const dueDate = lastDetail?.dueDate;
 
-//   if (!dueDate) return "";
-//   const due = new Date(dueDate);
-//   const today = new Date();
-//   today.setHours(0, 0, 0, 0);
-//   due.setHours(0, 0, 0, 0);
-//   const isOverdue = due < today;
-//   return (
-//     <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
-//       {format(due, "dd-MMM-yyyy")}
-//     </span>
-//   );
-// },
-//     }, 
-    
+    //   if (!dueDate) return "";
+    //   const due = new Date(dueDate);
+    //   const today = new Date();
+    //   today.setHours(0, 0, 0, 0);
+    //   due.setHours(0, 0, 0, 0);
+    //   const isOverdue = due < today;
+    //   return (
+    //     <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
+    //       {format(due, "dd-MMM-yyyy")}
+    //     </span>
+    //   );
+    // },
+    //     }, 
+
     {
       dataField: "Details[0].dueDate",
       text: "Due Date",
       style: { minWidth: "50px" },
       formatter: (_, row) => {
-  const lastDetail = row?.Details[0];
+        const lastDetail = row?.Details[0];
 
- const dueDate = new Date (lastDetail?.dueDate);
-  if (!dueDate) return "";
-  const due = new Date(dueDate);
-  const today = new Date();
-         dueDate.setHours(0, 0, 0, 0);
+        const dueDate = new Date(lastDetail?.dueDate);
+        if (!dueDate) return "";
+        const due = new Date(dueDate);
+        const today = new Date();
+        dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
         const createdDate = new Date(lastDetail.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
-     
-       
+
+
         const isOverdue = dueDate < today && dueDate < createdDate || dueDate < today && lastDetail.ticketStatus != 0;
 
-  return (
-    <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
-      {format(due, "dd-MMM-yyyy")}
-    </span>
-  );
-},
-    },    
-  {
-  dataField: "completionDate",
-  text: "Completion Date",
-  style: { minWidth: "50px" },
-  formatter: (_, row) => {
-    const completionDate = row?.completionDate;
+        return (
+          <span style={{ color: isOverdue ? "red" : "inherit", fontWeight: isOverdue ? "600" : "normal" }}>
+            {format(due, "dd-MMM-yyyy")}
+          </span>
+        );
+      },
+    },
+    {
+      dataField: "completionDate",
+      text: "Completion Date",
+      style: { minWidth: "50px" },
+      formatter: (_, row) => {
+        const completionDate = row?.completionDate;
 
-    if (!completionDate) return "";
+        if (!completionDate) return "";
 
-    const date = new Date(completionDate);
-    date.setHours(0, 0, 0, 0);
+        const date = new Date(completionDate);
+        date.setHours(0, 0, 0, 0);
 
-    return (
-      <span>
-        {format(date, "dd-MMM-yyyy")}
-      </span>
-    );
-  },
-},
+        return (
+          <span>
+            {format(date, "dd-MMM-yyyy")}
+          </span>
+        );
+      },
+    },
     {
       dataField: "Details[0].noOfHours",
       text: "Hours",
       style: { minWidth: "50px" },
     },
+    //     {
+    //       dataField: "ticketStatus",
+    //       text: "Status",
+    //       style: { minWidth: "120px" },
+    //       formatter: (_, row) => {
+    //   // const lastDetail = row?.Details?.[row?.Details.length - 1];
+    //   return (
+    //     ticketStatusOptions.find(
+    //       (s) => s.value === row?.ticketStatus
+    //     )?.label || ""
+    //   );
+    // },
+    //     },
+
     {
       dataField: "ticketStatus",
       text: "Status",
-      style: { minWidth: "120px" },
+      style: { minWidth: "70px" },
+
       formatter: (_, row) => {
-  // const lastDetail = row?.Details?.[row?.Details.length - 1];
-  return (
-    ticketStatusOptions.find(
-      (s) => s.value === row?.ticketStatus
-    )?.label || ""
-  );
-},
+        const lastDetail = row?.Details?.[0];
+        if (!lastDetail) return "";
+
+        const dueDate = new Date(lastDetail.dueDate);
+        const today = new Date();
+        const createdDate = new Date(lastDetail.createdAt);
+
+        dueDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        createdDate.setHours(0, 0, 0, 0);
+
+        const isExpiredOrToday =
+          ((dueDate < today && dueDate < createdDate) ||
+            (dueDate < today && lastDetail.ticketStatus != 0));
+
+        const statusLabel =
+          ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
+
+        let color = "";
+
+        if (isExpiredOrToday) {
+          color = "red";
+        } else if (!isExpiredOrToday && lastDetail.ticketStatus === 0) {
+          color = "green";
+        }
+
+        return (
+          <span
+            style={{
+              color: color,
+
+            }}
+          >
+            {statusLabel}
+          </span>
+        );
+      },
     },
-//     {
-//       dataField: "overdue",
-//       text: "",
-//       isDummyField: true,
-//       style: { minWidth: "50px" },
-//       formatter: (_, row) => {
-//         const lastDetail = row?.Details?.[row?.Details.length - 1];
-// const dueDate = lastDetail?.dueDate;
-//         if (!dueDate) return "";
-//         const due = new Date(dueDate);
-//         const today = new Date();
-//         today.setHours(0, 0, 0, 0);
-//         due.setHours(0, 0, 0, 0);
-//       return due < today ? (
-//   <span style={{ color: "red", fontWeight: 600 }}>Over Due</span>
-// ) : null;
-//       },
-//     },
-   
-   {
+
+    //     {
+    //       dataField: "overdue",
+    //       text: "",
+    //       isDummyField: true,
+    //       style: { minWidth: "50px" },
+    //       formatter: (_, row) => {
+    //         const lastDetail = row?.Details?.[row?.Details.length - 1];
+    // const dueDate = lastDetail?.dueDate;
+    //         if (!dueDate) return "";
+    //         const due = new Date(dueDate);
+    //         const today = new Date();
+    //         today.setHours(0, 0, 0, 0);
+    //         due.setHours(0, 0, 0, 0);
+    //       return due < today ? (
+    //   <span style={{ color: "red", fontWeight: 600 }}>Over Due</span>
+    // ) : null;
+    //       },
+    //     },
+
+    {
       dataField: "overDue",
       text: "",
       sort: false,
@@ -387,10 +448,10 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         minWidth: "50px",
       },
       formatter: (cell, row) => {
-       
+
         if (!row) return "";
-       const lastDetail = row?.Details[0];
-        const dueDate = new Date (lastDetail.dueDate);
+        const lastDetail = row?.Details[0];
+        const dueDate = new Date(lastDetail.dueDate);
         const today = new Date();
 
         // Reset time (compare only the date)
@@ -399,8 +460,8 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         const createdDate = new Date(lastDetail.createdAt);
         createdDate.setHours(0, 0, 0, 0);
 
-     
-       
+
+
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && lastDetail.ticketStatus != 0;
 
         return (
@@ -415,7 +476,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       },
     },
 
-{
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -437,76 +498,76 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
 
   const expandRow = showTicketDetails
     ? {
-        renderer: (row) => <DetailSubTable masterId={row.Id} />,
-        expanded: expandedRows,
-        expandByColumnOnly: true,
-        onExpand: handleExpand,
-        showExpandColumn: true,
-        expandColumnPosition: "left",
-        expandHeaderColumnRenderer: () => null,
-        expandColumnRenderer: ({ expanded }) => (
-          <button
-            type="button"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: "0 2px",
-              fontSize: "11px",
-              display: "inline-block",
-              transition: "transform 0.15s",
-              transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
-            }}
-          >
-            ▶
-          </button>
-        ),
-      }
+      renderer: (row) => <DetailSubTable masterId={row.Id} />,
+      expanded: expandedRows,
+      expandByColumnOnly: true,
+      onExpand: handleExpand,
+      showExpandColumn: true,
+      expandColumnPosition: "left",
+      expandHeaderColumnRenderer: () => null,
+      expandColumnRenderer: ({ expanded }) => (
+        <button
+          type="button"
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "0 2px",
+            fontSize: "11px",
+            display: "inline-block",
+            transition: "transform 0.15s",
+            transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
+          }}
+        >
+          ▶
+        </button>
+      ),
+    }
     : {
-        renderer: () => null,
-        showExpandColumn: false,
-        expandByColumnOnly: true,
-      };
+      renderer: () => null,
+      showExpandColumn: false,
+      expandByColumnOnly: true,
+    };
 
- 
-        const paginationOptions = {
-          custom: true,
-          totalSize: totalCount,
-          sizePerPageList: uiHelpers.sizePerPageList,
-          sizePerPage: uiProps.queryParams.pageSize,
-          page: uiProps.queryParams.pageNumber,
-        };
-    console.log("tableData111111",tableData)
+
+  const paginationOptions = {
+    custom: true,
+    totalSize: totalCount,
+    sizePerPageList: uiHelpers.sizePerPageList,
+    sizePerPage: uiProps.queryParams.pageSize,
+    page: uiProps.queryParams.pageNumber,
+  };
+  console.log("tableData111111", tableData)
   return (
     <div className="timeline-scroll-wrapper">
-          <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-              {({ paginationProps, paginationTableProps }) => {
-                return (
-                  <Pagination
-                    isLoading={listLoading}
-                    paginationProps={paginationProps}
-                  >
-      <BootstrapTable
-        wrapperClasses=""
-        bordered={false}
-        classes="table table-head-custom table-vertical-center table-hover timeline-wide-table"
-        bootstrap4
-        remote
-        keyField="Id"
-        data={tableData}
-        columns={columns}
-        expandRow={expandRow}
-        onTableChange={getHandlerTableChange(uiProps.setQueryParams)}
-          {...paginationTableProps}
-      >
-        <PleaseWaitMessage entities={tableData} />
-        {!tableData.length && <NoRecordsFoundMessage entities={tableData} />}
-      </BootstrapTable>
-           </Pagination>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
+            >
+              <BootstrapTable
+                wrapperClasses=""
+                bordered={false}
+                classes="table table-head-custom table-vertical-center table-hover timeline-wide-table"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={tableData}
+                columns={columns}
+                expandRow={expandRow}
+                onTableChange={getHandlerTableChange(uiProps.setQueryParams)}
+                {...paginationTableProps}
+              >
+                <PleaseWaitMessage entities={tableData} />
+                {!tableData.length && <NoRecordsFoundMessage entities={tableData} />}
+              </BootstrapTable>
+            </Pagination>
 
-                    );
-                   }}
-                 </PaginationProvider>
+          );
+        }}
+      </PaginationProvider>
     </div>
   );
 }

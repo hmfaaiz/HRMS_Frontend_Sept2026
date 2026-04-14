@@ -5,7 +5,7 @@ export const initialValues = {
   employeeName: "",
   employeeDesignation: "",
   purposeOfTravel: "",
-  travelType: "", // Dynamic values fetched from form ID 553
+  travelType: "",
   accommodationRequired: false,
   hotelEntitlementAmount: 0,
   selfEntitlementAmount: 0,
@@ -22,9 +22,9 @@ export const initialValues = {
       hotelEntitlementAmount: 0,
       selfEntitlement: "",
       selfAmount: 0,
-    }
+    },
   ],
-  isActive: true,
+  request_status: "A",
 };
 
 export const initialFilter = {
