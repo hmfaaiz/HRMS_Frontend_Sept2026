@@ -275,11 +275,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                   </h6>
 
 
-                                  <div className="col-span-1 mt-4">
+                                  <div className="col-span-1 mt-3">
                                     <input
                                       name="isEnable_via_task_project"
                                       type="checkbox"
-                                      className="relative top-2"
+                                      className="relative top-1"
                                       // onChange={handleChange}
                                       onChange={(e) => {
                                         clearFields(["taskTicketDescription"], setFieldValue);
@@ -607,11 +607,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                 <h6 className="font-bold mb-0 text-primary my-2">
                                   Task Assignment
                                 </h6>
-                                <div className="col-span-2 mt-4">
+                                <div className="col-span-2 mt-3">
                                   <input
                                     name="isEnable_via_task_assignment"
                                     type="checkbox"
-                                    className="relative top-1=2"
+                                    className="relative top-1"
                                     // onChange={handleChange}
                                     onChange={(e) => {
                                       clearFields(["projectId", "projectTicketDescription",], setFieldValue);
