@@ -139,8 +139,8 @@ export function FormCard() {
     task: getDefaultVisibleSections(TASK_SECTION_OPTIONS),
   });
   const [payload, setPayload] = useState({
-    isEnable_via_task_project: true,
-    isEnable_via_task_assignment: false,
+    isEnable_via_task_project: false,
+    isEnable_via_task_assignment: true,
     projectId: "",
     taskId: "",
     from_date: "",
@@ -161,17 +161,17 @@ export function FormCard() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!dashboard?.allProjects?.length) return;
+    if (!dashboard?.allMasterTicketType?.length) return;
 
     setPayload({
       ...payload,
-      projectId: dashboard?.allProjects?.[0]?.value,
+      taskId: dashboard?.allMasterTicketType?.[0]?.value,
     });
     fetchData({
       ...payload,
-      projectId: dashboard?.allProjects?.[0]?.value,
+      taskId: dashboard?.allMasterTicketType?.[0]?.value,
     });
-  }, [dashboard?.allProjects]);
+  }, [dashboard?.allMasterTicketType]);
 
   const fetchData = (data) => {
     const isValidSelection =
@@ -252,6 +252,37 @@ export function FormCard() {
                                 <div className="mt-2">
                                   <Checkbox
                                     isSelected={
+                                      values.isEnable_via_task_assignment
+                                    }
+                                    children={"Search Via Task Assignment"}
+                                    key={"isEnable_via_task_assignment"}
+                                    name="isEnable_via_task_assignment"
+                                    type="checkbox"
+                                    onChange={(e) => {
+                                      setFieldValue(
+                                        "isEnable_via_task_project",
+                                        !e.target.checked,
+                                      );
+                                      setFieldValue("projectId", "");
+                                      setFieldValue(
+                                        "isEnable_via_task_assignment",
+                                        e.target.checked,
+                                      );
+                                      dispatch(actions.clearEvents());
+                                      setPayload({
+                                        ...payload,
+                                        isEnable_via_task_project: !e.target
+                                          .checked,
+                                        isEnable_via_task_assignment:
+                                          e.target.checked,
+                                        projectId: "",
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div className="mt-2">
+                                  <Checkbox
+                                    isSelected={
                                       values.isEnable_via_task_project
                                     }
                                     children={"Search Via Project"}
@@ -284,74 +315,9 @@ export function FormCard() {
                                       </div>
                                     )}
                                 </div>
-                                <div className="mt-2">
-                                  <Checkbox
-                                    isSelected={
-                                      values.isEnable_via_task_assignment
-                                    }
-                                    children={"Search Via Task Assignment"}
-                                    key={"isEnable_via_task_assignment"}
-                                    name="isEnable_via_task_assignment"
-                                    type="checkbox"
-                                    onChange={(e) => {
-                                      setFieldValue(
-                                        "isEnable_via_task_project",
-                                        !e.target.checked,
-                                      );
-                                      setFieldValue("projectId", "");
-                                      setFieldValue(
-                                        "isEnable_via_task_assignment",
-                                        e.target.checked,
-                                      );
-                                      dispatch(actions.clearEvents());
-                                      setPayload({
-                                        ...payload,
-                                        isEnable_via_task_project: !e.target
-                                          .checked,
-                                        isEnable_via_task_assignment:
-                                          e.target.checked,
-                                        projectId: "",
-                                      });
-                                    }}
-                                  />
-                                </div>
                               </div>
                               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 gap-3">
                                 <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                  <div>
-                                    <SearchSelect
-                                      name="projectId"
-                                      isDisabled={
-                                        !values.isEnable_via_task_project
-                                      }
-                                      label={<label>Project</label>}
-                                      onChange={(e) => {
-                                        const value =
-                                          e.value == "Select"
-                                            ? ""
-                                            : Number(e.value);
-                                        setFieldValue("projectId", value);
-                                        setPayload({
-                                          ...payload,
-                                          projectId: value,
-                                        });
-                                        fetchData({
-                                          ...payload,
-                                          projectId: value,
-                                        });
-                                      }}
-                                      value={
-                                        dashboard?.allProjects?.find(
-                                          (option) =>
-                                            option?.value === values?.projectId,
-                                        ) || null
-                                      }
-                                      options={dashboard?.allProjects}
-                                      error={errors.projectId}
-                                      touched={touched.projectId}
-                                    />
-                                  </div>
-
                                   <div>
                                     <SearchSelect
                                       name="taskId"
@@ -391,6 +357,39 @@ export function FormCard() {
                                     )}
                                   </div>
                                   <div>
+                                    <SearchSelect
+                                      name="projectId"
+                                      isDisabled={
+                                        !values.isEnable_via_task_project
+                                      }
+                                      label={<label>Project</label>}
+                                      onChange={(e) => {
+                                        const value =
+                                          e.value == "Select"
+                                            ? ""
+                                            : Number(e.value);
+                                        setFieldValue("projectId", value);
+                                        setPayload({
+                                          ...payload,
+                                          projectId: value,
+                                        });
+                                        fetchData({
+                                          ...payload,
+                                          projectId: value,
+                                        });
+                                      }}
+                                      value={
+                                        dashboard?.allProjects?.find(
+                                          (option) =>
+                                            option?.value === values?.projectId,
+                                        ) || null
+                                      }
+                                      options={dashboard?.allProjects}
+                                      error={errors.projectId}
+                                      touched={touched.projectId}
+                                    />
+                                  </div>
+                                  <div>
                                     <Field
                                       name="from_date"
                                       component={DatePickerField}
@@ -412,7 +411,6 @@ export function FormCard() {
                                       label={<span>From</span>}
                                     />
                                   </div>
-
                                   <div>
                                     <Field
                                       name="to_date"
