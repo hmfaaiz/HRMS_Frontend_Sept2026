@@ -12,26 +12,41 @@ import {
 
 const DEFAULT_IMAGE = toAbsoluteUrl("/media/users/profileImage.png");
 
-const formatCell = (cell, key, sampleValue) => {
+const formatCell = (cell, key, sampleValue, columnColorRules = {}, row) => {
+  // Apply custom style from rules
+  let customStyle = {};
+  if (columnColorRules[key]) {
+    const ruleResult = columnColorRules[key](cell, row);
+    if (typeof ruleResult === "string") {
+      customStyle = { color: ruleResult };
+    } else if (typeof ruleResult === "object") {
+      customStyle = ruleResult;
+    }
+  }
+
   // Date check
   const isDate =
     typeof sampleValue === "string" && /^\d{4}-\d{2}-\d{2}$/.test(sampleValue);
   if (isDate && typeof cell === "string") {
-    return <div>{cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}</div>;
+    return (
+      <div style={customStyle}>
+        {cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}
+      </div>
+    );
   }
 
   // Number check
   const isNumeric =
     typeof sampleValue === "number" || !isNaN(Number(sampleValue));
   if (isNumeric) {
-    return <div>{cell || ""}</div>;
+    return <div style={customStyle}>{cell || ""}</div>;
   }
 
   // Fallback: plain text
-  return <div>{cell || ""}</div>;
+  return <div style={customStyle}>{cell || ""}</div>;
 };
 
-const generateColumns = (sampleRow, action, onHide) => {
+const generateColumns = (sampleRow, action, onHide, columnColorRules = {}) => {
   if (!sampleRow) return [];
 
   let columns = Object.keys(sampleRow)
@@ -62,7 +77,8 @@ const generateColumns = (sampleRow, action, onHide) => {
         dataField: key,
         sort: true,
         text: key.replace(/_/g, " "),
-        formatter: (cell) => formatCell(cell, key, sampleRow[key]),
+        formatter: (cell, row) =>
+          formatCell(cell, key, sampleRow[key], columnColorRules, row),
       };
     });
 
@@ -90,11 +106,11 @@ const generateColumns = (sampleRow, action, onHide) => {
   return columns;
 };
 
-const TableModel = ({ onHide, show, data, heading }) => {
+const TableModel = ({ onHide, show, data, heading, columnColorRules = {} }) => {
   const sampleRow = data?.result?.[0];
   const columns = useMemo(
-    () => generateColumns(sampleRow, data?.action, onHide),
-    [sampleRow, data?.action],
+    () => generateColumns(sampleRow, data?.action, onHide, columnColorRules),
+    [sampleRow, data?.action, onHide, columnColorRules],
   );
 
   return (

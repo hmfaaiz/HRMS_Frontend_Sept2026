@@ -11,8 +11,9 @@ export function Checkbox({ isSelected, onChange, children, disabled = false }) {
         className="flex justify-start items-center text-black gap-2"
       >
         <input
-          className="p-0 m-0 mr-1 "
+          className="p-0 m-0 mr-1 line-clamp-1"
           type="checkbox"
+          title={children}
           checked={isSelected}
           onChange={onChange}
           disabled={disabled}

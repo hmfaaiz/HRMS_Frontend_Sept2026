@@ -8,7 +8,7 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import { format } from "date-fns";
 
-export function TableData({ data, name, handleClick }) {
+export function TableData({ data, name, handleClick, columnColorRules = {} }) {
   const columnData = data?.length > 0 ? data[0] : {};
 
   let columns = Object.keys(columnData).map((key) => {
@@ -16,7 +16,6 @@ export function TableData({ data, name, handleClick }) {
       return {
         dataField: "profile_image",
         text: "Picture",
-
         formatter: (cell) => {
           return (
             <img
@@ -25,14 +24,14 @@ export function TableData({ data, name, handleClick }) {
                 cell
                   ? `${cell}`
                   : toAbsoluteUrl("/media/users/profileImage.png")
-              } // Fallback if no image
+              }
               alt="Profile"
               width={16}
               height={16}
               className="object-cover rounded-sm"
               onError={(e) => {
-                e.target.onerror = null; // Error loop rokne ke liye
-                e.target.src = toAbsoluteUrl("/media/users/profileImage.png"); // Agar image load na ho toh fallback image set karo
+                e.target.onerror = null;
+                e.target.src = toAbsoluteUrl("/media/users/profileImage.png");
               }}
             />
           );
@@ -40,44 +39,52 @@ export function TableData({ data, name, handleClick }) {
       };
     } else {
       let value = columnData[key];
-
       let isDate =
         typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
-      let employee_code = key === "Employee_Code";
       let isAmount = typeof value === "number" || !isNaN(Number(value));
+
       return {
         dataField: key,
         text: key.split("_").join(" "),
+        formatter: (cell , row) => {
+          // Determine custom style from columnColorRules if provided
+          let customStyle = {};
+          if (columnColorRules[key]) {
+            const ruleResult = columnColorRules[key](cell , row , data);
+            if (typeof ruleResult === "string") {
+              customStyle = { color: ruleResult };
+            } else if (typeof ruleResult === "object") {
+              customStyle = ruleResult;
+            }
+          }
 
-        formatter: (cell) => {
-          // For date formatting
+          // Date formatting
           if (isDate && typeof cell === "string") {
             const dateObj = new Date(cell);
-            const isValidDate = !isNaN(dateObj.getTime()); // check if valid
-
+            const isValidDate = !isNaN(dateObj.getTime());
             return (
-              <div title={isValidDate ? format(dateObj, "dd-MMM-yyyy") : ""}>
+              <div
+                style={customStyle}
+                title={isValidDate ? format(dateObj, "dd-MMM-yyyy") : ""}
+              >
                 {isValidDate ? format(dateObj, "dd-MMM-yyyy") : "-"}
               </div>
             );
           }
 
-          // For amount formatting
+          // Amount / number formatting
           if (isAmount) {
             return (
-              <div title={cell}>
+              <div style={customStyle} title={cell}>
                 {cell || ""}
-                {/* {Number(cell).toLocaleString("en-US", {
-                  minimumFractionDigits: 1,
-                  maximumFractionDigits: 1,
-                })} */}
               </div>
             );
           }
 
-          // For all other text fields
+          // Default text field
           return (
             <div
+              style={customStyle}
               className={cell?.length > 25 ? "truncate w-36" : "truncate"}
               title={cell}
             >
@@ -93,18 +100,15 @@ export function TableData({ data, name, handleClick }) {
     <div className="bg-white rounded-lg px-3 py-2">
       <div className="flex justify-between">
         <h6 className="font-bold mb-0 text-primary">{name}</h6>
-
         {data?.length > 0 ? (
           <label
-            className={`text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`}
+            className="text-black cursor-pointer font-medium underline text-xs hover:text-tprimary"
             onClick={() => handleClick(data)}
           >
             View All
           </label>
         ) : (
-          <label
-            className={`text-gray-500 cursor-not-allowed font-medium text-xs`}
-          >
+          <label className="text-gray-500 cursor-not-allowed font-medium text-xs">
             View All
           </label>
         )}
@@ -113,7 +117,7 @@ export function TableData({ data, name, handleClick }) {
         className={
           data?.length > 0
             ? "max-h-64 overflow-auto scrollbar-fancy"
-            : `max-h-6 overflow-auto scrollbar-fancy`
+            : "max-h-6 overflow-auto scrollbar-fancy"
         }
       >
         {data?.length > 0 ? (
@@ -123,7 +127,7 @@ export function TableData({ data, name, handleClick }) {
             classes="big-table table-head-custom table-vertical-center overflow-hidden table-hover"
             bootstrap4
             keyField="id"
-            data={data?.length > 0 ? data : []}
+            data={data}
             columns={columns}
             pagination={
               data?.length > 5
