@@ -392,17 +392,47 @@ export function FormTable() {
       style: {
         minWidth: "20px",
       },
-      formatter: (cell) => {
+      formatter: (cell, row) => {
         if (cell === null || cell === undefined) return "";
 
         // Agar aapko cell value ko label me convert karna hai
         const status = ticketStatusOptions.find(opt => opt.value === cell);
         const displayText = status ? status.label : cell;
 
-        // Agar text lamba ho, truncate karo
-        return displayText.length > 30
-          ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span>
-          : displayText;
+        const dueDate = new Date(row?.dueDate);
+        const today = new Date();
+
+        // Reset time (compare only the date)
+        dueDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        const createdDate = new Date(row.createdAt);
+        createdDate.setHours(0, 0, 0, 0);
+
+
+        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
+
+        const text =
+          displayText.length > 30
+            ? displayText.substring(0, 30) + "..."
+            : displayText;
+
+        let color = "";
+
+        if (isExpiredOrToday) {
+          color = "red";
+        } else if (!isExpiredOrToday && row.ticketStatus === 0) {
+          color = "green";
+        }
+
+
+        return (
+          <span
+            title={displayText}
+            style={{ color: color}}
+          >
+            {text}
+          </span>
+        );
       },
     },
 
