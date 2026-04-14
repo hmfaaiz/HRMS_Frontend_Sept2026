@@ -17,6 +17,7 @@ import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
 import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
 import { ReimbursementDetail } from "../EmpPortalComponent/ReimbursementDetail";
+import { AttendanceRosterDetail } from "../EmpPortalComponent/AttendanceRosterDetail"
 import { TravelRequestPortalDetail } from "../EmpPortalComponent/TravelRequestPortalDetail";
 import {
   Banknote,
@@ -258,11 +259,12 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
       <div className="flex flex-col md:flex-row gap-4">
         {moduleRights?.find((e) => e?.value == 4)?.allow ? (
           <>
-            <ReimbursementDetail />
-            <TravelRequestPortalDetail />
+          <ReimbursementDetail />
+          <AttendanceRosterDetail />
+          <TravelRequestPortalDetail />
           </>
-        ) : null}
-      </div>
+          ) : null}
+        </div>
 
       {moduleRights?.find((e) => e?.value == 3)?.allow ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
