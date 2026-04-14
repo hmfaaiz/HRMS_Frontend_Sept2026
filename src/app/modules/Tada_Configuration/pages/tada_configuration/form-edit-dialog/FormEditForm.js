@@ -28,27 +28,26 @@ export function FormEditForm({
   id,
 }) {
   const dispatch = useDispatch();
-  const { dashboard, entities, roles } = useSelector(
-    (state) => {
-      const rawRoles = state.users?.roles;
-      const rolesArray = Array.isArray(rawRoles)
-        ? rawRoles
-        : Array.isArray(rawRoles?.allRoles)
-        ? rawRoles.allRoles
-        : [];
-      return {
-        dashboard: state.dashboard,
-        entities: state.t_tada_config?.entities,
-        roles: rolesArray.filter(Boolean).map((r) => ({
-          label: r.label || r.formName || r.name || "",
-          value: r.value || r.Id || r.id || "",
-        })),
-      };
-    },
-    shallowEqual,
-  );
+  const { dashboard, entities, roles } = useSelector((state) => {
+    const rawRoles = state.users?.roles;
+    const rolesArray = Array.isArray(rawRoles)
+      ? rawRoles
+      : Array.isArray(rawRoles?.allRoles)
+      ? rawRoles.allRoles
+      : [];
+    return {
+      dashboard: state.dashboard,
+      entities: state.t_tada_config?.entities,
+      roles: rolesArray.filter(Boolean).map((r) => ({
+        label: r.label || r.formName || r.name || "",
+        value: r.value || r.Id || r.id || "",
+      })),
+    };
+  }, shallowEqual);
 
-  const [liveSubsidiaryId, setLiveSubsidiaryId] = useState(user?.subsidiaryId ?? null);
+  const [liveSubsidiaryId, setLiveSubsidiaryId] = useState(
+    user?.subsidiaryId ?? null,
+  );
 
   useEffect(() => {
     dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList"));
@@ -130,12 +129,18 @@ export function FormEditForm({
       preApprover: Array.isArray(user?.preApprover)
         ? user.preApprover.map(String)
         : typeof user?.preApprover === "string"
-        ? user.preApprover.split(",").filter(Boolean).map((s) => s.trim())
+        ? user.preApprover
+            .split(",")
+            .filter(Boolean)
+            .map((s) => s.trim())
         : [],
       modeOfTransportId: Array.isArray(user?.modeOfTransportId)
         ? user.modeOfTransportId.map(String)
         : typeof user?.modeOfTransportId === "string"
-        ? user.modeOfTransportId.split(",").filter(Boolean).map((s) => s.trim())
+        ? user.modeOfTransportId
+            .split(",")
+            .filter(Boolean)
+            .map((s) => s.trim())
         : [],
       hotelEntitlementId: Array.isArray(user?.hotelEntitlementId)
         ? user.hotelEntitlementId.map(String)
@@ -183,7 +188,6 @@ export function FormEditForm({
               <Form className="form form-label-right" onSubmit={handleSubmit}>
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-4 pt-4">
-
                     {/* Subsidiary */}
                     <div>
                       <SearchSelect
@@ -348,17 +352,18 @@ export function FormEditForm({
                       <MultiSelect
                         label={
                           <span>
-                            PreApprover
+                            TA DA Request Approver
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         options={roles || []}
                         value={
-                          roles.filter((opt) =>
-                            Array.isArray(values.preApprover) &&
-                            values.preApprover.some(
-                              (val) => String(val) === String(opt.value),
-                            ),
+                          roles.filter(
+                            (opt) =>
+                              Array.isArray(values.preApprover) &&
+                              values.preApprover.some(
+                                (val) => String(val) === String(opt.value),
+                              ),
                           ) || []
                         }
                         onChange={(val) => {
@@ -371,7 +376,7 @@ export function FormEditForm({
                         disabled={isUserForRead || !values.subsidiaryId}
                         error={errors.preApprover}
                         touched={touched.preApprover}
-                        placeholder="Select PreApprover"
+                        placeholder="Select TA DA Request Approver"
                       />
                     </div>
 
@@ -386,11 +391,12 @@ export function FormEditForm({
                         }
                         options={transportOptions}
                         value={
-                          transportOptions.filter((opt) =>
-                            Array.isArray(values.modeOfTransportId) &&
-                            values.modeOfTransportId.some(
-                              (val) => String(val) === String(opt.value),
-                            ),
+                          transportOptions.filter(
+                            (opt) =>
+                              Array.isArray(values.modeOfTransportId) &&
+                              values.modeOfTransportId.some(
+                                (val) => String(val) === String(opt.value),
+                              ),
                           ) || []
                         }
                         onChange={(val) => {
@@ -418,11 +424,12 @@ export function FormEditForm({
                         }
                         options={hotelOptions}
                         value={
-                          hotelOptions.filter((opt) =>
-                            Array.isArray(values.hotelEntitlementId) &&
-                            values.hotelEntitlementId.some(
-                              (val) => String(val) === String(opt.value),
-                            ),
+                          hotelOptions.filter(
+                            (opt) =>
+                              Array.isArray(values.hotelEntitlementId) &&
+                              values.hotelEntitlementId.some(
+                                (val) => String(val) === String(opt.value),
+                              ),
                           ) || []
                         }
                         onChange={(val) => {

@@ -44,7 +44,10 @@ export function deletePreApprovalTravelRequest(Id) {
 
 // Fetch TADA configurations by employeeId
 export function getTadaConfigurationPolicies(employeeId) {
-  return axios.post(`${BASE_URL}/t_preapproval_travel_request/read-tada-configuration-policies`, {
-    employeeId,
-  });
+  return axios.post(
+    `${BASE_URL}/t_preapproval_travel_request/read-tada-configuration-policies`,
+    {
+      employeeId,
+    },
+  );
 }

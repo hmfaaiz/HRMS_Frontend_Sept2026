@@ -85,22 +85,33 @@ export function FormTable() {
 
   // Helper function to map IDs (array or comma-separated string) to their names
   const getNamesFromIds = (inputIds, optionsList) => {
-    if (!inputIds || !optionsList || !Array.isArray(optionsList) || optionsList.length === 0) return "";
+    if (
+      !inputIds ||
+      !optionsList ||
+      !Array.isArray(optionsList) ||
+      optionsList.length === 0
+    )
+      return "";
 
     // Normalize all IDs to trimmed strings
     let idStrings = [];
     if (Array.isArray(inputIds)) {
-      idStrings = inputIds.map(id => {
+      idStrings = inputIds.map((id) => {
         if (id === null || id === undefined) return "";
-        if (typeof id === 'object') return String(id.id || id.Id || id.value || "");
+        if (typeof id === "object")
+          return String(id.id || id.Id || id.value || "");
         return String(id).trim();
       });
     } else {
-      idStrings = String(inputIds).split(",").map(s => s.trim());
+      idStrings = String(inputIds)
+        .split(",")
+        .map((s) => s.trim());
     }
 
     // Remove empty/invalid entries
-    const cleanIds = idStrings.filter(id => id && id !== "null" && id !== "undefined" && id !== "0");
+    const cleanIds = idStrings.filter(
+      (id) => id && id !== "null" && id !== "undefined" && id !== "0",
+    );
 
     if (cleanIds.length === 0) return "";
 
@@ -113,7 +124,7 @@ export function FormTable() {
       })
       .map((opt) => opt.label || opt.name || opt.formName || "");
 
-    return names.filter(n => n).join(", ");
+    return names.filter((n) => n).join(", ");
   };
 
   const enrichedEntities = useMemo(() => {
@@ -164,15 +175,16 @@ export function FormTable() {
       },
       {
         dataField: "resolvedPreApproverNames",
-        text: "PreApprover",
+        text: "TA DA Request Approver",
       },
       {
         dataField: "modeOfTransportId",
         text: "Mode of Transport",
         formatter: (cell, row) =>
-          row.ModeOfTransports?.map((m) => m.formName || m.name || m.label).join(
-            ", ",
-          ) || getNamesFromIds(cell, dashboard?.allTransportModeList),
+          row.ModeOfTransports?.map(
+            (m) => m.formName || m.name || m.label,
+          ).join(", ") ||
+          getNamesFromIds(cell, dashboard?.allTransportModeList),
       },
       {
         dataField: "hotelEntitlementId",

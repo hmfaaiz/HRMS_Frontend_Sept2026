@@ -10,7 +10,7 @@ export function ActionsColumnFormatter(
 ) {
   const id = row.id || row.Id;
   return (
-    <div className="space-x-2 flex justify-start">
+    <div className="space-x-2 flex justify-end">
       <OverlayTrigger
         overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
       >
@@ -19,7 +19,7 @@ export function ActionsColumnFormatter(
         </a>
       </OverlayTrigger>
 
-      {row.request_status !== "A" && (
+      {row.request_status == "A" && row.approved_status === 0 && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -29,7 +29,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {row.request_status !== "A" && (
+      {row.request_status == "A" && row.approved_status === 0 && (
         <OverlayTrigger
           overlay={<Tooltip id="products-delete-tooltip">Delete</Tooltip>}
         >
