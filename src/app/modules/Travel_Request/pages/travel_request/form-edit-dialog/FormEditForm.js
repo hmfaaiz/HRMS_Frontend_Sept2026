@@ -1,33 +1,18 @@
+/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 import React, { useMemo } from "react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import * as actions from "../../../_redux/redux-Actions";
 import {
   fetchTadaConfigByEmployeeId,
   getEmployeeAuthorities,
 } from "../../../_redux/redux-Actions";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import {
-  DatePickerField,
-  Checkbox,
-} from "../../../../../../_metronic/_partials/controls";
+import { Checkbox } from "../../../../../../_metronic/_partials/controls";
 import DatePicker from "react-datepicker";
-import {
-  Plus,
-  Trash2,
-  CirclePlus,
-  Calendar,
-  FileText,
-  History,
-  X,
-  XCircle,
-} from "lucide-react";
+import { Trash2, CirclePlus, XCircle } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
-import { Label } from "@material-ui/icons";
-// import { Toast } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 export function FormEditForm({
