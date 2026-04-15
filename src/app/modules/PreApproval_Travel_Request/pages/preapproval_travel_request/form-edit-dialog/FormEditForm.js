@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import { Trash2, CirclePlus } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
+import { Modal } from "react-bootstrap";
 
 export function FormEditForm({
   employeeId,

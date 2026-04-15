@@ -81,7 +81,19 @@ export function ResponseTable() {
     { value: 3, label: "Re-opened" },
     { value: 2, label: "In Review" },
   ];
+const rowClasses = (row) => {
+  const dueDate = new Date(row?.dueDate);
+  const today = new Date();
 
+  dueDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  const isBlue =
+    dueDate.getTime() === today.getTime() &&
+    row.ticketStatus !== 0;
+
+  return isBlue ? "row-blue" : "";
+};
 
   const columns = [
     {
@@ -453,7 +465,7 @@ export function ResponseTable() {
         return (
           <span
             title={displayText}
-            style={{ color: color }}
+              style={{ color: color, fontWeight: 600, marginLeft: "5px" }}
           >
             {text}
           </span>
@@ -553,6 +565,7 @@ export function ResponseTable() {
                 keyField="Id"
                 data={receiveEntities === null ? [] : receiveEntities}
                 columns={columns}
+                rowClasses={rowClasses} 
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams
