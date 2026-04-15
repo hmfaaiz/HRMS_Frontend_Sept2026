@@ -219,54 +219,6 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
 
 
-                                {/* <div className="col-span-3">
-                                  <input
-                                    name="isEnable_via_task_project"
-                                    type="checkbox"
-                                    // onChange={handleChange}
-                                    onChange={(e) => {
-                                      clearFields(["taskTicketDescription"], setFieldValue);
-                                      setFieldValue("taskTicketStatusIds", [])
-                                      setFieldValue("taskTicketTypeIds", [])
-                                      setFieldValue("isEnable_via_task_assignment", false);
-                                      clearFields(["projectId", "projectTicketDescription",], setFieldValue);
-
-                                      // setFieldValue('ticketStatusIds', [])
-                                      // setFieldValue('ticketTypeIds', [])
-                                      setFieldValue("istTcketTypeTicket", false)
-                                      setFieldValue("isTicketTypeEmp", false)
-                                      setFieldValue("isEmpTicketTypeTicket", false)
-
-
-                                      setFieldValue("isProjectWise", true)
-                                      setFieldValue("istTcketTypeTicket", false)
-                                      setFieldValue("isEmpTicketTypeTicket", false)
-                                      setFieldValue("isTicketTypeEmp", false)
-                                      setFieldValue("isEmployeeWise", false)
-                                      setFieldValue("isEmployeeProject", false)
-                                      setFieldValue("isEmployeeProjectTicket", false)
-                                      setFieldValue("isProjectEmployee", false)
-                                      setFieldValue("isProjectTicket", false)
-                                      setFieldValue('ticketStatusIds', dashboard?.allTicketStatus?.length
-                                        ? dashboard?.allTicketStatus?.map(t => t.value)
-                                        : [])
-                                      setFieldValue('ticketTypeIds', TicketType?.length
-                                        ? TicketType?.map(t => t.value)
-                                        : [])
-
-
-                                      handleChange(e); // Trigger the form change handler
-
-                                    }}
-                                    onBlur={handleBlur}
-                                    value={values.isEnable_via_task_project}
-                                    checked={values.isEnable_via_task_project}
-
-                                  />
-                                  <label>
-                                    &nbsp;<span>Search Via Project</span>
-                                  </label>
-                                </div> */}
 
                                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
