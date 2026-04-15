@@ -3,7 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CalendarClock, Eye, FolderClock, LayoutList, Pencil, Reply, Trash2 } from "lucide-react";
+import { CalendarClock, Eye, FolderClock, LayoutList, MessageSquareText, Pencil, Reply, Trash2 } from "lucide-react";
 import { fetchAllFacilitatorDetail } from "../../../../_redux/redux-Actions";
 import { FormDeleteDialog } from "../../form-delete-dialog/FormDeleteDialog";
 
@@ -20,7 +20,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog, setDetailId,
-    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData,
+    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, user, setEditMode, openTicketFollowUp,
   }
 ) {
   const isUserRead = false;
@@ -35,7 +35,7 @@ export function ActionsColumnFormatter(
   return (
     <div className="space-x-2">
 
-      {isAccessForRead && (
+      {/* {isAccessForRead && ( user?.employeeIdMapping === row?.assignBy) &&  (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
         >
@@ -47,8 +47,60 @@ export function ActionsColumnFormatter(
             <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
-      )}
+      )} */}
 
+      {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
+        row?.initiator ? (
+          <OverlayTrigger
+            overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+          >
+            <a onClick={() => {
+              setReceiveMode(false);
+              setReadMode(false);
+              setEditMode(true);
+              setId(row.Id);
+              openEditFormDialog(row.Id)
+            }}>
+              <Pencil className="w-4 h-4 text-black cursor-pointer" />
+            </a>
+          </OverlayTrigger>
+        ) : (
+          <OverlayTrigger
+            overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
+          >
+            <a onClick={() => {
+              setReceiveMode(false);
+              setReadMode(true);
+              setEditMode(false);
+              setId(row.Id);
+              openReadFormDialog(row.Id)
+            }}>
+              <Eye className="w-4 h-4 text-black cursor-pointer" />
+            </a>
+          </OverlayTrigger>
+        )
+      ) : null}
+
+
+      {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
+        row?.initiator ? (
+          <OverlayTrigger
+            overlay={<Tooltip id="products-edit-tooltip">Follow Up</Tooltip>}
+          >
+            <a onClick={() => {
+              // setReceiveMode(false);
+              // setReadMode(false);
+              // setEditMode(false);
+              // setId("");
+              openTicketFollowUp(row.Id, "followup")
+            }}>
+              <MessageSquareText className="w-4 h-4 text-black cursor-pointer" />
+            </a>
+          </OverlayTrigger>
+
+        ) : null
+
+      ) : null}
 
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
@@ -58,6 +110,7 @@ export function ActionsColumnFormatter(
           onClick={() => {
             setReceiveMode(false);
             setReadMode(false);
+            setEditMode(false);
             setId("");
             setMasterId(row.masterId);
             openDetailGridData(row.masterId)
@@ -80,7 +133,8 @@ export function ResponseColumnFormatter(
 
   { setId,
     isAccessForEdit,
-    setReceiveMode, receiveMode, openDetailGridData, setMasterId, openTicketTimeLog, setReadMode, setDetailId, openDetailTimeLog,
+    openReceiveFormDialog,
+    setReceiveMode, receiveMode, openDetailGridData, setMasterId, openTicketTimeLog, setReadMode, setDetailId, openDetailTimeLog, user
   }
 ) {
   const isUserRead = false;
@@ -91,7 +145,9 @@ export function ResponseColumnFormatter(
 
   let isOverdue = false;
   isOverdue = dueDate < today;
-  console.log("row111111111",row)
+
+
+
   return (
     <div className="space-x-2">
       {/* {isOverdue && (
@@ -100,21 +156,22 @@ export function ResponseColumnFormatter(
         </span>
       )} */}
 
-{(!row?.isPermanent) && (
-     <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">Response</Tooltip>}
-      >
-        <a onClick={() => {
-          setReceiveMode(true);
-          setReadMode(false)
-          setId(row.Id);
-        }}>
-          <Reply className="w-4 h-4 text-black cursor-pointer" />
-        </a>
-      </OverlayTrigger>
+      {(!row?.isPermanent && user?.employeeIdMapping === row?.assignTo) && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Response</Tooltip>}
+        >
+          <a onClick={() => {
+            setReceiveMode(true);
+            setReadMode(false)
+            setId(row.Id);
+            openReceiveFormDialog(row?.Id);
+          }}>
+            <Reply className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
 
-)}
-   
+      )}
+
 
 
       <OverlayTrigger
@@ -151,30 +208,31 @@ export function ResponseColumnFormatter(
           }}
           style={{ background: 'none', border: 'none', padding: 0 }}
         >
-          <FolderClock  className="w-4 h-4 text-black cursor-pointer" />
+          <FolderClock className="w-4 h-4 text-black cursor-pointer" />
         </button>
       </OverlayTrigger>
 
-    {(!row?.isPermanent) && (
+      {/* {(row?.ticketStatus !=0) && ( */}
+      {(!row?.isPermanent && user?.employeeIdMapping === row?.assignTo) && (
 
-      <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
-      >
-        <button
-          type="button"
-          onClick={() => {
-            setReceiveMode(false);
-            setReadMode(false);
-            setId("");
-            setDetailId("");
-            setDetailId(row.Id)
-            openTicketTimeLog(row.Id)
-          }}
-          style={{ background: 'none', border: 'none', padding: 0 }}
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
         >
-          <CalendarClock  className="w-4 h-4 text-black cursor-pointer" />
-        </button>
-      </OverlayTrigger>
+          <button
+            type="button"
+            onClick={() => {
+              setReceiveMode(false);
+              setReadMode(false);
+              setId("");
+              setDetailId("");
+              setDetailId(row.Id)
+              openTicketTimeLog(row.Id)
+            }}
+            style={{ background: 'none', border: 'none', padding: 0 }}
+          >
+            <CalendarClock className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
       )}
 
 
@@ -192,38 +250,38 @@ export function TimeLogsColumnFormatter(
   return (
     <div className="space-x-2">
 
-{row?.MasterDetailTimeLog?.ticketStatus != 0 && (
-  <>
+      {row?.MasterDetailTimeLog?.ticketStatus != 0 && (
+        <>
 
-   <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
-      >
-        <button
-          type="button"
-          onClick={() => {
-            openEditHandler(row.Id, row.detailId);
-          }}
+          <OverlayTrigger
+            overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                openEditHandler(row.Id, row.detailId);
+              }}
 
-          style={{ background: 'none', border: 'none', padding: 0 }}
-        >
-          <Pencil className="w-4 h-4 text-black cursor-pointer" />
-        </button>
-      </OverlayTrigger>
-
-
+              style={{ background: 'none', border: 'none', padding: 0 }}
+            >
+              <Pencil className="w-4 h-4 text-black cursor-pointer" />
+            </button>
+          </OverlayTrigger>
 
 
 
-      <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
-        <a onClick={() => openDeleteHandler(row.Id, row.detailId)}>
-          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-        </a>
-      </OverlayTrigger>
-  </>
 
-        )
-}
-     
+
+          <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
+            <a onClick={() => openDeleteHandler(row.Id, row.detailId)}>
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+            </a>
+          </OverlayTrigger>
+        </>
+
+      )
+      }
+
     </div>
   );
 }
