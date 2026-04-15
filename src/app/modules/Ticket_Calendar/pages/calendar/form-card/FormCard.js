@@ -83,6 +83,15 @@ export function FormCard() {
       from_date: getFirstDayOfCurrentMonth() || "",
       to_date: getLastDayOfCurrentMonth() || "",
       subsidiaryId: firstSubsidiary?.value || "",
+
+      isEnable_via_task_assignment: true || false,
+      taskTicketTypeIds: dashboard?.allMasterTicketType?.length
+        ? dashboard.allMasterTicketType.map(t => t.value)
+        : [],
+
+      taskTicketStatusIds: ticketStatusOptions?.length
+        ? ticketStatusOptions?.map(t => t.value)
+        : [],
     });
     setIsDataLoaded(true); // Mark data as loaded
     dispatch(fetchAllActiveEmployeesBySubsidiary(firstSubsidiary?.value));
@@ -132,23 +141,30 @@ export function FormCard() {
               // to_date: bodyValues?.to_date || null,
               from_date: getFirstDayOfCurrentMonth(),
               to_date: getLastDayOfCurrentMonth(),
-              employeeId: "",
+              employeeId: null,
+
+
+
+              ticketTypeIds: [],
+              ticketStatusIds: [],
+
+
+              projectTicketDescription: "",
+              taskTicketDescription: "",
 
 
               isEnable_via_task_project: false,
-              isEnable_via_task_assignment: false,
-              ticketTypeIds: [],
-              ticketStatusIds: [],
-              taskTicketTypeIds: [],
-              taskTicketStatusIds: [],
-              projectTicketDescription: "",
-              taskTicketDescription: "",
+              isEnable_via_task_assignment: true,
+
+              taskTicketTypeIds: dashboard?.allMasterTicketType?.length
+                ? dashboard.allMasterTicketType.map(t => t.value)
+                : [],
+              taskTicketStatusIds: ticketStatusOptions?.length
+                ? ticketStatusOptions?.map(t => t.value)
+                : [],
             }}
             validationSchema={formValidation}
-          // onSubmit={(values) => {
 
-          //   customSubmit(values);
-          // }}
           >
             {({
               handleSubmit,
@@ -221,15 +237,16 @@ export function FormCard() {
                                             setFieldValue("isEnable_via_task_assignment", false);
                                             clearFields(["projectId", "projectTicketDescription",], setFieldValue);
 
-                                            setFieldValue('ticketStatusIds', [])
-                                            setFieldValue('ticketTypeIds', [])
-                                            handleChange(e); // Trigger the form change handler
-                                            // if (!e.target.checked) {
-                                            //   clearFields(
-                                            //     ["shiftId", "offDay_1", "offDay_2"],
-                                            //     setFieldValue
-                                            //   );
-                                            // }
+
+
+                                            setFieldValue('ticketTypeIds', TicketType?.length
+                                              ? TicketType.map(t => t.value)
+                                              : [],)
+                                            setFieldValue('ticketStatusIds', dashboard?.allTicketStatus?.length
+                                              ? dashboard?.allTicketStatus?.map(t => t.value)
+                                              : [],)
+                                            handleChange(e);
+
                                           }}
                                           onBlur={handleBlur}
                                           value={values.isEnable_via_task_project}
@@ -350,9 +367,17 @@ export function FormCard() {
                                             setFieldValue('ticketStatusIds', [])
                                             setFieldValue('ticketTypeIds', [])
 
+                                            setFieldValue('taskTicketTypeIds', dashboard?.allMasterTicketType?.length
+                                              ? dashboard.allMasterTicketType.map(t => t.value)
+                                              : [],)
+
+
                                             clearFields(["taskTicketDescription"], setFieldValue);
-                                            setFieldValue("taskTicketStatusIds", [])
-                                            setFieldValue("taskTicketTypeIds", [])
+                                            // setFieldValue("taskTicketStatusIds", [])
+                                            setFieldValue("taskTicketStatusIds", ticketStatusOptions?.length
+                                              ? ticketStatusOptions?.map(t => t.value)
+                                              : [],)
+                                            // setFieldValue("taskTicketTypeIds", [])
 
                                             handleChange(e); // Trigger the form change handler
                                             // if (!e.target.checked) {
@@ -506,16 +531,24 @@ export function FormCard() {
                                   onChange={(e) => {
                                     setFieldValue("employeeId", e.value || null);
                                   }}
+                                  // value={
+                                  //   dashboard?.allEmployees?.find(
+                                  //     (option) =>
+                                  //       option?.value === values?.employeeId
+                                  //   ) || null
+                                  // }
+
                                   value={
-                                    dashboard?.allEmployees?.find(
-                                      (option) =>
-                                        option?.value === values?.employeeId
-                                    ) || null
+                                    values.employeeId === null
+                                      ? { label: "All", value: null }
+                                      : dashboard?.allEmployees?.find(
+                                        option => option?.value === values?.employeeId
+                                      ) || null
                                   }
 
 
                                   options={[
-                                    { label: "Select", value: "" },
+                                    { label: "All", value: "" },
                                     ...(Array.isArray(
                                       values?.departmentId
                                         ? dashboard?.allEmployees?.filter(
