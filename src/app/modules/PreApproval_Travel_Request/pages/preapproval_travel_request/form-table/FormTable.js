@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useRef } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
@@ -43,10 +43,46 @@ export function FormTable({ onEditClick, onViewClick }) {
   const { entities, totalCount, listLoading } = currentState;
   const dispatch = useDispatch();
 
+  const isRefreshing = useRef(false);
+  const lastEntityCount = useRef(0);
+
   useEffect(() => {
     dispatch(actions.fetchPreApprovalTravelRequests(FormUIProps.queryParams));
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
   }, [FormUIProps.queryParams, dispatch]);
+
+  // NEW: Auto-refresh when entities have incomplete data
+  useEffect(() => {
+    // Only run if we have entities and not already refreshing
+    if (entities && entities.length > 0 && !isRefreshing.current) {
+      // Check if any employee record is missing employeeCode
+      const hasMissingEmployeeCode = entities.some(
+        (entity) =>
+          entity.Employee &&
+          entity.Employee.firstName &&
+          !entity.Employee.employeeCode,
+      );
+
+      // Also check if entity count changed (new record added)
+      const entityCountChanged = lastEntityCount.current !== entities.length;
+
+      if (hasMissingEmployeeCode || entityCountChanged) {
+        isRefreshing.current = true;
+        lastEntityCount.current = entities.length;
+
+        // Small delay to let backend fully process
+        setTimeout(() => {
+          dispatch(
+            actions.fetchPreApprovalTravelRequests(FormUIProps.queryParams),
+          );
+          // Reset refresh flag after next render
+          setTimeout(() => {
+            isRefreshing.current = false;
+          }, 500);
+        }, 1000);
+      }
+    }
+  }, [entities, dispatch, FormUIProps.queryParams]);
 
   const columns = [
     {
