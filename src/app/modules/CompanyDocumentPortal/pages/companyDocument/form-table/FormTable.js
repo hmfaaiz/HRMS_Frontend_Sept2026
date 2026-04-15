@@ -18,6 +18,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
 import { getUploadUrl } from "../../../../../utils/common";
+import { View } from "lucide-react";
 
 export function FormTable() {
   //Users UI Context
@@ -115,7 +116,8 @@ export function FormTable() {
  
          return (
            <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-             View Document
+             {/* View Document */}
+             <View className="w-4 h-4 text-black cursor-pointer" />
            </a>
          );
        }

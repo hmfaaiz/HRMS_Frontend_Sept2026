@@ -120,33 +120,33 @@ export function FormTable() {
 },
 
  
-  {
-       dataField: "compAttachment",
-       text: "File",
-       sort: false,
-       sortCaret: sortCaret,
-       headerSortingClasses,
-       style: {
-         minWidth: "100px",
-       },
-       // formatter: (cell, row) => (
+  // {
+  //      dataField: "compAttachment",
+  //      text: "File",
+  //      sort: false,
+  //      sortCaret: sortCaret,
+  //      headerSortingClasses,
+  //      style: {
+  //        minWidth: "100px",
+  //      },
+  //      // formatter: (cell, row) => (
  
-       //   <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-       //     <span>{getFileName(cell)}</span>
-       //   </a>
-       // )
-       formatter: (cell) => {
-         if (!cell) return "";
+  //      //   <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+  //      //     <span>{getFileName(cell)}</span>
+  //      //   </a>
+  //      // )
+  //      formatter: (cell) => {
+  //        if (!cell) return "";
  
-         return (
-           <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-             View Document
-           </a>
-         );
-       }
+  //        return (
+  //          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+  //            View Document
+  //          </a>
+  //        );
+  //      }
  
  
-     },
+  //    },
  
 
     {
