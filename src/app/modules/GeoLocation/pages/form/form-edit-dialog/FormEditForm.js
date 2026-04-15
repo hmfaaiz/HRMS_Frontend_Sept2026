@@ -45,7 +45,7 @@ const validationSchema = Yup.object().shape({
           .nullable()
           .required("Geo fencing is required")
           .min(0, "Geo fencing must be ≥ 0"),
-      })
+      }),
     )
     .min(1, "Add at least one geo location")
     .required("Geo Locations list is required"),
@@ -125,26 +125,26 @@ export function FormEditForm({
                         setFieldValue("subsidiaryId", selectedSubsidiaryId);
 
                         const existingRecord = entities?.find(
-                          (ent) => ent.subsidiaryId === selectedSubsidiaryId
+                          (ent) => ent.subsidiaryId === selectedSubsidiaryId,
                         );
 
                         if (existingRecord) {
                           setFieldValue(
                             "geoLocations",
-                            existingRecord.geoLocations
+                            existingRecord.geoLocations,
                           );
                           setFieldValue(
                             "autoAttendance",
-                            existingRecord.autoAttendance ?? false
+                            existingRecord.autoAttendance ?? false,
                           );
                           setFieldValue(
                             "autoTracking",
-                            existingRecord.autoTracking ?? false
-                          );  
-                          
+                            existingRecord.autoTracking ?? false,
+                          );
+
                           setFieldValue(
                             "isLateReasonAllow",
-                            existingRecord.isLateReasonAllow ?? false
+                            existingRecord.isLateReasonAllow ?? false,
                           );
                         } else {
                           setFieldValue("geoLocations", []);
@@ -155,7 +155,7 @@ export function FormEditForm({
                       }}
                       value={
                         dashboard?.allSubsidiaryList?.find(
-                          (option) => option.value === values?.subsidiaryId
+                          (option) => option.value === values?.subsidiaryId,
                         ) || null
                       }
                       options={dashboard?.allSubsidiaryList}
@@ -177,7 +177,20 @@ export function FormEditForm({
                       }
                     />
                   </div>
-                  <div>
+                  <div >
+                    <Checkbox
+                      isSelected={values?.isLateReasonAllow}
+                      children={"Allow submitting late reason "}
+                      disabled={isUserForRead || actionsLoading}
+                      onChange={() =>
+                        setFieldValue(
+                          "isLateReasonAllow",
+                          !values?.isLateReasonAllow,
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="col-span-1 sm:col-span-2">
                     <Checkbox
                       isSelected={values?.autoTracking}
                       children={
@@ -186,18 +199,6 @@ export function FormEditForm({
                       disabled={isUserForRead || actionsLoading}
                       onChange={() =>
                         setFieldValue("autoTracking", !values?.autoTracking)
-                      }
-                    />
-                  </div> 
-                   <div>
-                    <Checkbox
-                      isSelected={values?.isLateReasonAllow}
-                      children={
-                        "Allow submitting late reason "
-                      }
-                      disabled={isUserForRead || actionsLoading}
-                      onChange={() =>
-                        setFieldValue("isLateReasonAllow", !values?.isLateReasonAllow)
                       }
                     />
                   </div>
@@ -259,7 +260,7 @@ export function FormEditForm({
                                         onChange={(e) =>
                                           setFieldValue(
                                             `geoLocations.[${i}].geoLocationId`,
-                                            e.value || null
+                                            e.value || null,
                                           )
                                         }
                                         value={
@@ -267,7 +268,7 @@ export function FormEditForm({
                                             (option) =>
                                               option.value ===
                                               values.geoLocations?.[i]
-                                                ?.geoLocationId
+                                                ?.geoLocationId,
                                           ) || null
                                         }
                                         options={dashboard?.allGeoLocations?.map(
@@ -275,9 +276,9 @@ export function FormEditForm({
                                             ...el,
                                             isDisabled: values?.geoLocations.find(
                                               (e) =>
-                                                e?.geoLocationId === el?.value
+                                                e?.geoLocationId === el?.value,
                                             ),
-                                          })
+                                          }),
                                         )}
                                         error={
                                           errors?.geoLocations?.[i]

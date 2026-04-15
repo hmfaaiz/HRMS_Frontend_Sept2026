@@ -111,6 +111,7 @@ export default FormData = ({
               <div className="grid grid-cols-2 gap-2 mt-2">
                 {showProjectSection("recent_activity_date_wise") ? (
                   <TableData
+                    completeData={data?.recentActivity}
                     data={data?.recentActivity?.map((el) => ({
                       Date: new Date(el?.["updatedAt"])?.toDateString() || "-",
                       ticket_Code: el?.ticketCode,
@@ -121,23 +122,24 @@ export default FormData = ({
                       Assign_To: el?.["AssignToEmp.name"] || "-",
                     }))}
                     name={"Recent Activity - Date Wise"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Recent Activity - Date Wise",
                         data: e,
+                        completeData,
                       })
                     }
                     columnColorRules={{
-                      Ticket_Status: (value, row) => {
-                        let statusId = data?.recentActivity?.find(
+                      Ticket_Status: (value, row, data) => {
+                        let statusId = data?.find(
                           (el) => el?.ticketCode == row?.ticket_Code,
                         )?.["TicketStatus.statusId"];
                         if (statusId == 614) {
-                          return { color: "#000000" };
+                          return { color: "#000000", fontWeight: "bold" };
                         } else if (statusId == 615) {
-                          return { color: "#dd8941" };
+                          return { color: "#0093DD", fontWeight: "bold" };
                         } else if (statusId == 616) {
-                          return { color: "#34b9a3" };
+                          return { color: "#34b9a3", fontWeight: "bold" };
                         }
                         return "black";
                       },
@@ -146,6 +148,7 @@ export default FormData = ({
                 ) : null}
                 {showProjectSection("employee_wise_ticket_status_overview") ? (
                   <TableData
+                    completeData={data?.employeeWiseTicketStatus}
                     data={data?.employeeWiseTicketStatus?.map((el) => ({
                       Assign_To: el?.Assign_To || "-",
                       Total: el?.Total || "-",
@@ -154,24 +157,27 @@ export default FormData = ({
                       Done: el?.Done || "-",
                     }))}
                     name={"Employee Wise Ticket Status Wise Overview"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Ticket Status Wise Overview",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showProjectSection("overdue_tickets") ? (
                   <TableData
+                    completeData={data?.overdueTickets}
                     data={data?.overdueTickets?.map((el) => ({
                       ...el,
                     }))}
                     name={"Overdue Tickets"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Overdue Tickets",
                         data: e,
+                        completeData,
                       })
                     }
                     columnColorRules={{
@@ -190,16 +196,18 @@ export default FormData = ({
                 ) : null}
                 {showProjectSection("ticket_wise_time_log") ? (
                   <TableData
+                    completeData={data?.ticketWiseTimeLog}
                     data={data?.ticketWiseTimeLog?.map(
                       ({ ticketId, statusId, ...rest }) => ({
                         ...rest,
                       }),
                     )}
                     name={"Tickets Wise Time Log"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Tickets Wise Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                     columnColorRules={{
@@ -208,16 +216,16 @@ export default FormData = ({
                           return { color: "#e23f35", fontWeight: "bold" };
                         return "black";
                       },
-                      Ticket_Status: (value, row) => {
-                        let statusId = data?.ticketWiseTimeLog?.find(
+                      Ticket_Status: (value, row, data) => {
+                        let statusId = data?.find(
                           (el) => el?.Ticket_Code == row?.Ticket_Code,
                         )?.statusId;
                         if (statusId == 614) {
-                          return { color: "#000000" };
+                          return { color: "#000000", fontWeight: "bold" };
                         } else if (statusId == 615) {
-                          return { color: "#dd8941" };
+                          return { color: "#0093DD", fontWeight: "bold" };
                         } else if (statusId == 616) {
-                          return { color: "#34b9a3" };
+                          return { color: "#34b9a3", fontWeight: "bold" };
                         }
                         return "black";
                       },
@@ -226,32 +234,36 @@ export default FormData = ({
                 ) : null}
                 {showProjectSection("employee_wise_time_log") ? (
                   <TableData
+                    completeData={data?.employeeWiseTimeLog}
                     data={data?.employeeWiseTimeLog?.map(
                       ({ employeeId, ...rest }) => ({
                         ...rest,
                       }),
                     )}
                     name={"Employee Wise Time Log"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showProjectSection("employee_ticket_wise_time_log") ? (
                   <TableData
+                    completeData={data?.ticketEmployeeWiseTimeLog}
                     data={data?.ticketEmployeeWiseTimeLog?.map(
                       ({ employeeId, ticketId, statusId, ...rest }) => ({
                         ...rest,
                       }),
                     )}
                     name={"Employee Ticket Wise Time Log"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Ticket Wise Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                     columnColorRules={{
@@ -260,16 +272,16 @@ export default FormData = ({
                           return { color: "#e23f35", fontWeight: "bold" };
                         return "black";
                       },
-                      Ticket_Status: (value, row) => {
-                        let statusId = data?.ticketEmployeeWiseTimeLog?.find(
+                      Ticket_Status: (value, row, data) => {
+                        let statusId = data?.find(
                           (el) => el?.Ticket_Code == row?.Ticket_Code,
                         )?.statusId;
                         if (statusId == 614) {
-                          return { color: "#000000" };
+                          return { color: "#000000", fontWeight: "bold" };
                         } else if (statusId == 615) {
-                          return { color: "#dd8941" };
+                          return { color: "#0093DD", fontWeight: "bold" };
                         } else if (statusId == 616) {
-                          return { color: "#34b9a3" };
+                          return { color: "#34b9a3", fontWeight: "bold" };
                         }
                         return "black";
                       },
@@ -278,16 +290,18 @@ export default FormData = ({
                 ) : null}
                 {showProjectSection("pending_in_progress_ticket_time_log") ? (
                   <TableData
+                    completeData={data?.pendingInPorgressTicketWiseTimeLog}
                     data={data?.pendingInPorgressTicketWiseTimeLog?.map(
                       ({ ticketId, statusId, ...rest }) => ({
                         ...rest,
                       }),
                     )}
                     name={"Pending In Progress Ticket Time Log"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Pending In Progress Ticket Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                     columnColorRules={{
@@ -296,16 +310,16 @@ export default FormData = ({
                           return { color: "#e23f35", fontWeight: "bold" };
                         return "black";
                       },
-                      Ticket_Status: (value, row) => {
-                        let statusId = data?.pendingInPorgressTicketWiseTimeLog?.find(
+                      Ticket_Status: (value, row, data) => {
+                        let statusId = data?.find(
                           (el) => el?.Ticket_Code == row?.Ticket_Code,
                         )?.statusId;
                         if (statusId == 614) {
-                          return { color: "#000000" };
+                          return { color: "#000000", fontWeight: "bold" };
                         } else if (statusId == 615) {
-                          return { color: "#dd8941" };
+                          return { color: "#0093DD", fontWeight: "bold" };
                         } else if (statusId == 616) {
-                          return { color: "#34b9a3" };
+                          return { color: "#34b9a3", fontWeight: "bold" };
                         }
                         return "black";
                       },
@@ -314,16 +328,18 @@ export default FormData = ({
                 ) : null}
                 {showProjectSection("completed_ticket_time_log") ? (
                   <TableData
+                    completeData={data?.completedTicketWiseTimeLog}
                     data={data?.completedTicketWiseTimeLog?.map(
                       ({ ticketId, statusId, ...rest }) => ({
                         ...rest,
                       }),
                     )}
                     name={"Completed Ticket Time Log"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Completed Ticket Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                     columnColorRules={{
@@ -445,15 +461,16 @@ export default FormData = ({
               <div className="grid grid-cols-2 gap-2 mt-2">
                 {showTaskSection("recent_activity_date_wise") ? (
                   <TableData
+                    completeData={data?.recentActivity}
                     data={data?.recentActivity?.map((el) => ({
                       Date: new Date(el?.["updatedAt"])?.toDateString() || "-",
                       ticket_Code: el?.ticketCode,
                       ticket_Description: el?.ticketDescription,
-                      priority: el?.["priorityLevel.formName"] || "-",
+                      Priority: el?.["priorityLevel.formName"] || "-",
                       Employee: el?.["EmployeeProfile.name"] || "-",
                     }))}
                     columnColorRules={{
-                      priority: (value) => {
+                      Priority: (value) => {
                         if (value == "High") {
                           return { color: "#e23f35", fontWeight: "bold" };
                         } else if (value == "Medium") {
@@ -465,16 +482,18 @@ export default FormData = ({
                       },
                     }}
                     name={"Recent Activity - Date Wise"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Recent Activity - Date Wise",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showTaskSection("employee_wise_task_status_overview") ? (
                   <TableData
+                    completeData={data?.employeeWiseTicketStatus}
                     data={data?.employeeWiseTicketStatus?.map((el) => ({
                       ticket_Code: el?.ticketCode,
                       ticket_Description: el?.ticketDescription,
@@ -483,16 +502,18 @@ export default FormData = ({
                       No_of_Tasks: el?.No_of_Tasks || "-",
                     }))}
                     name={"Employee Wise Task Status Overview"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Task Status Overview",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showTaskSection("overdue_task") ? (
                   <TableData
+                    completeData={data?.overDueTask}
                     data={data?.overDueTask?.map((el) => ({
                       ...el,
                     }))}
@@ -509,16 +530,18 @@ export default FormData = ({
                       },
                     }}
                     name={"Overdue Task"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Overdue Task",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showTaskSection("task_wise_time_log") ? (
                   <TableData
+                    completeData={data?.ticketWiseTimeLog}
                     data={data?.ticketWiseTimeLog?.map(
                       ({
                         ticketTypeId,
@@ -534,10 +557,11 @@ export default FormData = ({
                       }),
                     )}
                     name={"Task Wise Time Log"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Task Wise Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                     columnColorRules={{
@@ -557,22 +581,25 @@ export default FormData = ({
                 ) : null}
                 {showTaskSection("employee_wise_time_log") ? (
                   <TableData
+                    completeData={data?.employeeWiseTimeLog}
                     data={data?.employeeWiseTimeLog?.map(
                       ({ ticketTypeId, loggedByEmpId, ...rest }) => ({
                         ...rest,
                       }),
                     )}
                     name={"Employee Wise Time Log"}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showTaskSection("employee_task_wise_time_log") ? (
                   <TableData
+                    completeData={data?.ticketEmployeeWiseTimeLog}
                     data={data?.ticketEmployeeWiseTimeLog?.map(
                       ({ ticketTypeId, masterId, LoggedByEmpId, ...rest }) => ({
                         ...rest,
@@ -586,16 +613,18 @@ export default FormData = ({
                         return "black";
                       },
                     }}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Task Wise Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showTaskSection("pending_in_progress_task_time_log") ? (
                   <TableData
+                    completeData={data?.pendingInPorgressTicketWiseTimeLog}
                     data={data?.pendingInPorgressTicketWiseTimeLog?.map(
                       ({
                         ticketTypeId,
@@ -624,16 +653,18 @@ export default FormData = ({
                         return "black";
                       },
                     }}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Pending In Progress Task Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                   />
                 ) : null}
                 {showTaskSection("completed_task_time_log") ? (
                   <TableData
+                    completeData={data?.completedTicketWiseTimeLog}
                     data={data?.completedTicketWiseTimeLog?.map(
                       ({
                         ticketTypeId,
@@ -662,10 +693,11 @@ export default FormData = ({
                         return "black";
                       },
                     }}
-                    handleClick={(e) =>
+                    handleClick={(e, completeData) =>
                       setModalData({
                         name: "Completed Task Time Log",
                         data: e,
+                        completeData,
                       })
                     }
                   />
@@ -698,9 +730,25 @@ export default FormData = ({
                   }
                   return "black";
                 },
-                Ticket_Status: (value) => {
+                Ticket_Status: (value, row) => {
+                  /// for task model
                   if (value == "Open (Overdue)") {
                     return { color: "#e23f35", fontWeight: "bold" };
+                  }
+                  //  for project model
+                  let statusId =
+                    modalData?.completeData?.find(
+                      (el) => el?.ticketCode == row?.ticket_Code,
+                    )?.["TicketStatus.statusId"] ||
+                    modalData?.completeData?.find(
+                      (el) => el?.Ticket_Code == row?.Ticket_Code,
+                    )?.statusId;
+                  if (statusId == 614) {
+                    return { color: "#000000", fontWeight: "bold" };
+                  } else if (statusId == 615) {
+                    return { color: "#0093DD", fontWeight: "bold" };
+                  } else if (statusId == 616) {
+                    return { color: "#34b9a3", fontWeight: "bold" };
                   }
                   return "black";
                 },
