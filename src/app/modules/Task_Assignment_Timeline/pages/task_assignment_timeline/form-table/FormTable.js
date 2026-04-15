@@ -410,7 +410,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
           <span
             style={{
               color: color,
-
+ fontWeight: 600,
             }}
           >
             {statusLabel}
