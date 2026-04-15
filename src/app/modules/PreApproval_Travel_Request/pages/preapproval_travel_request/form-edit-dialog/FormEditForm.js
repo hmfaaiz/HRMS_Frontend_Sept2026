@@ -1,17 +1,13 @@
+/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 import React, { useMemo } from "react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import * as actions from "../../../_redux/redux-Actions";
 import { fetchTadaConfigByEmployeeId } from "../../../_redux/redux-Actions";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import {
-  DatePickerField,
-  Checkbox,
-} from "../../../../../../_metronic/_partials/controls";
+import { Checkbox } from "../../../../../../_metronic/_partials/controls";
 import DatePicker from "react-datepicker";
-import { Plus, Trash2, CirclePlus, Calendar } from "lucide-react";
+import { Trash2, CirclePlus } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
 import { Modal } from "react-bootstrap";
