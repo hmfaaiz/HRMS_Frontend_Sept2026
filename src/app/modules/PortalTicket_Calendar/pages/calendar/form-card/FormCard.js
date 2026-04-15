@@ -625,8 +625,9 @@ export function FormCard() {
             }}
           </Formik>
         </div>
-        {ticketCalendar && ticketCalendar.length > 0 && <FormTable />}
+        
       </TCard >
+      {ticketCalendar && ticketCalendar.length > 0 && <FormTable />}
     </>
   );
 }
