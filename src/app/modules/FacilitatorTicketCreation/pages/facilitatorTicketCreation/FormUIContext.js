@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { isEqual, isFunction } from "lodash";
-import { initialFilter } from "./FormUIHelpers";
+import { initialFilter, initialReceiveFilter } from "./FormUIHelpers";
 
 const FormUIContext = createContext();
 
@@ -12,16 +12,33 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
+  const [queryReceiveParams, setQueryReceiveParamsBase] = useState(initialReceiveFilter);
   const [ids, setId] = useState([]);
   const [masterId, setMasterId] = useState();
   const [detailId, setDetailId] = useState();
-   const [employeeId, setemployeeId] = useState('');
+  const [employeeId, setemployeeId] = useState('');
   const [isFileReq, setIsFileReq] = useState(false)
   const [readMode, setReadMode] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const [receiveMode, setReceiveMode] = useState(false)
   const [panelMode, setPanelMode] = useState(false);
+  const [currentLevel, setCurrentLevel] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
+      if (isFunction(nextQueryParams)) {
+        nextQueryParams = nextQueryParams(prevQueryParams);
+      }
+
+      if (isEqual(prevQueryParams, nextQueryParams)) {
+        return prevQueryParams;
+      }
+
+      return nextQueryParams;
+    });
+  }, []);
+
+  const setQueryReceiveParams = useCallback((nextQueryParams) => {
+    setQueryReceiveParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
         nextQueryParams = nextQueryParams(prevQueryParams);
       }
@@ -45,23 +62,23 @@ export function FormUIProvider({ FormUIEvents, children }) {
     timeRangeFrom: "",
     timeRangeTo: "",
     noOfHours: "",
-    ticketStatus:null,
+    ticketStatus: null,
     file: "",
-  
+
 
   };
 
   const initTimeLog = {
     Id: "",
-    loggedByEmpId:"",
+    loggedByEmpId: "",
     workDescription: "",
     loggedDate: "",
     timeRangeFrom: "",
     timeRangeTo: "",
     noOfHours: "",
-    isBillable:false,
-  
-  
+    isBillable: false,
+
+
 
   };
 
@@ -69,14 +86,20 @@ export function FormUIProvider({ FormUIEvents, children }) {
     queryParams,
     setQueryParamsBase,
     setQueryParams,
+    queryReceiveParams,
+    setQueryReceiveParamsBase,
+    setQueryReceiveParams,
     ids,
     setId,
     initUser,
     setemployeeId,
     employeeId,
-    panelMode,initTimeLog,
-    setPanelMode, setReadMode, readMode,setReceiveMode,receiveMode,
-    masterId, setMasterId,setDetailId,detailId,
+    panelMode, initTimeLog, setCurrentLevel, currentLevel,
+    setPanelMode,
+    setReadMode, readMode,
+    setEditMode, editMode,
+    setReceiveMode, receiveMode,
+    masterId, setMasterId, setDetailId, detailId,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
@@ -86,6 +109,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openDetailGridData: FormUIEvents.openDetailGridData,
     openTicketTimeLog: FormUIEvents.openTicketTimeLog,
     openDetailTimeLog: FormUIEvents.openDetailTimeLog,
+    openTicketFollowUp: FormUIEvents.openTicketFollowUp,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>
