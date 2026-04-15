@@ -428,7 +428,7 @@ export function FormTable() {
         return (
           <span
             title={displayText}
-            style={{ color: color}}
+               style={{ color: color, fontWeight: 600, marginLeft: "5px" }}
           >
             {text}
           </span>
