@@ -85,7 +85,7 @@ export function ActionsColumnFormatter(
       {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
         row?.initiator ? (
           <OverlayTrigger
-            overlay={<Tooltip id="products-edit-tooltip">Follow Up</Tooltip>}
+            overlay={<Tooltip id="products-edit-tooltip">Follow Up Message</Tooltip>}
           >
             <a onClick={() => {
               // setReceiveMode(false);

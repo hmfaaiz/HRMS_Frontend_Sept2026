@@ -236,8 +236,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                         setFieldValue("isEnable_via_task_assignment", false);
                                         clearFields(["projectId", "projectTicketDescription",], setFieldValue);
 
-                                     
-                                    
+
+
                                         setFieldValue("istTcketTypeTicket", false)
                                         setFieldValue("isTicketTypeEmp", false)
                                         setFieldValue("isEmpTicketTypeTicket", false)
@@ -276,8 +276,9 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                       &nbsp;<span>Search Via Project</span>
                                     </label>
                                   </div>
+                                </div>
 
-
+                                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
                                   <div className="col-span-2">
                                     <SearchSelect
                                       name="projectId"
@@ -600,10 +601,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     &nbsp;<span>Search Via Task Assignment</span>
                                   </label>
                                 </div>
+                                </div>
 
 
 
-
+    <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
 
                                 <div className="col-span-2">

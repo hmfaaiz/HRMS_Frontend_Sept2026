@@ -43,7 +43,7 @@ export function FollowUp({ detailId, show, onHide }) {
         {({ handleSubmit }) => (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Follow Up</Modal.Title>
+              <Modal.Title>Follow Up Message</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
