@@ -68,3 +68,8 @@ export async function generatePayslip(body) {
     responseType:'arraybuffer'
   });
 }
+
+export function getPayrollCheckList(body) {
+ 
+  return axios.post(`${USERS_URL}/payroll_process/get-payroll-checklist`, body);
+}
