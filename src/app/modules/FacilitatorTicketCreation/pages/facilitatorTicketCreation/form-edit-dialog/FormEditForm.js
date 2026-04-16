@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -17,6 +17,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
 import { FetchAllFacilitatorEmployee, fetchCompanyEmployeesData, fetchCurrentParentTask, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { CircleMinus, CirclePlus } from "lucide-react";
 
 // percentage: Yup.string().required("Required*"),
 const facilitator_ticket_creationEditSchema = (value, currentUser) => {
@@ -29,6 +30,28 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
 
         .nullable()
         .required(VALIDATION_MESSAGES.required),
+
+      // ticketDescription: Yup.string()
+      //   .nullable()
+      //   .required(VALIDATION_MESSAGES.required),
+
+      // assignByToBeSelected: Yup.number()
+      //   .nullable()
+      //   .when("assignTo", (assignTo, schema) => {
+      //     if (Number(assignTo) === Number(currentUser) && !value.Id) {
+      //       return schema
+      //         .required("Assign By is required")
+      //         .notOneOf(
+      //           [Yup.ref("assignTo")],
+      //           "Assign By cannot be the same as Assign To"
+      //         );
+      //     }
+
+      //     return schema.notOneOf(
+      //       [Yup.ref("assignTo")],
+      //       "Assign By cannot be the same as Assign To"
+      //     );
+      //   }),
 
       assignByToBeSelected: Yup.number()
         .nullable()
@@ -58,13 +81,13 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .nullable()
         .required(VALIDATION_MESSAGES.required),
 
-      ticketDate: Yup.date()
+      dueDate: Yup.date()
 
         .nullable()
         .required(VALIDATION_MESSAGES.required),
 
 
-      dueDate: Yup.date()
+      ticketDate: Yup.date()
 
         .nullable()
         .required(VALIDATION_MESSAGES.required),
@@ -126,7 +149,7 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
       ticketDescription: Yup.string()
         .trim()
         .nullable()
-      .required(VALIDATION_MESSAGES.required),
+        .required(VALIDATION_MESSAGES.required),
 
 
       // alertFromDate: Yup.string().nullable().when("isForAlert", {
@@ -145,42 +168,42 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
       // }),
 
       alertFromDate: Yup.date()
-  .nullable()
-  .when("isForAlert", {
-    is: true,
-    then: (schema) =>
-      schema
-        .required(VALIDATION_MESSAGES.required)
-        .test(
-          "from-date-check",
-          "Start Date must be earlier than End Date",
-          function (value) {
-            const { alertEndDate } = this.parent;
-            if (!value || !alertEndDate) return true;
-            return new Date(value) <= new Date(alertEndDate);
-          }
-        ),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+        .nullable()
+        .when("isForAlert", {
+          is: true,
+          then: (schema) =>
+            schema
+              .required(VALIDATION_MESSAGES.required)
+              .test(
+                "from-date-check",
+                "Start Date must be earlier than End Date",
+                function (value) {
+                  const { alertEndDate } = this.parent;
+                  if (!value || !alertEndDate) return true;
+                  return new Date(value) <= new Date(alertEndDate);
+                }
+              ),
+          otherwise: (schema) => schema.notRequired(),
+        }),
 
-alertEndDate: Yup.date()
-  .nullable()
-  .when("isForAlert", {
-    is: true,
-    then: (schema) =>
-      schema
-        .required(VALIDATION_MESSAGES.required)
-        .test(
-          "end-date-check",
-          "End Date must be later than Start Date",
-          function (value) {
-            const { alertFromDate } = this.parent;
-            if (!value || !alertFromDate) return true;
-            return new Date(value) >= new Date(alertFromDate);
-          }
-        ),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+      alertEndDate: Yup.date()
+        .nullable()
+        .when("isForAlert", {
+          is: true,
+          then: (schema) =>
+            schema
+              .required(VALIDATION_MESSAGES.required)
+              .test(
+                "end-date-check",
+                "End Date must be later than Start Date",
+                function (value) {
+                  const { alertFromDate } = this.parent;
+                  if (!value || !alertFromDate) return true;
+                  return new Date(value) >= new Date(alertFromDate);
+                }
+              ),
+          otherwise: (schema) => schema.notRequired(),
+        }),
     }
 
 
@@ -194,12 +217,13 @@ export function FormEditForm({
   onHide,
   isUserForRead,
   enableLoading,
-  loading, setId, setReadMode, receiveMode, setReceiveMode
+  loading, setId, setReadMode, receiveMode, setReceiveMode, setEditMode, editMode,
 }) {
   const dispatch = useDispatch();
 
   const { dashboard } = useSelector((state) => state);
   const inputFile = useRef(null);
+  const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
     if (!formData.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
@@ -264,7 +288,7 @@ export function FormEditForm({
   //   }
 
   // },[facilitatorEmployeeList])
-  console.log("formData111111", formData)
+
   return (
     <Formik
       enableReinitialize={true}
@@ -272,7 +296,7 @@ export function FormEditForm({
         ...formData,
         remarks: !isUserForRead ? "" : formData.remarks || "",
         file: !isUserForRead ? "" : formData.file || "",
-         ticketDescription:formData?.Master?.ticketDescription ?? "",
+        ticketDescription: formData?.Master?.ticketDescription ?? "",
         ticketStatus: formData?.ticketStatus == null
           ? 1
           : isUserForRead
@@ -300,7 +324,7 @@ export function FormEditForm({
           }
         };
 
-        saveForm(values, clearForm);
+        saveForm(values, clearForm,onHide);
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
@@ -317,7 +341,11 @@ export function FormEditForm({
 
                 {console.log("errors111", errors, values)}
 
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+
+
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
 
                   <div className="">
                     <SearchSelect
@@ -327,7 +355,7 @@ export function FormEditForm({
                           Ticket Type<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator || receiveMode}
+                      isDisabled={isUserForRead || editMode || !values.initiator || receiveMode}
                       onChange={(e) => {
                         setFieldValue("ticketTypeId", e.value || null);
                         dispatch(FetchAllFacilitatorEmployee(e.value));
@@ -348,6 +376,8 @@ export function FormEditForm({
                       touched={touched.ticketTypeId}
                     />
                   </div>
+
+
 
 
                   <div className="">
@@ -385,7 +415,7 @@ export function FormEditForm({
                       }
                       // Disable if read mode, no initiator, or auto-assigned
                       isDisabled={
-                        isUserForRead || receiveMode ||
+                        isUserForRead || receiveMode || editMode ||
                         !values.initiator ||
                         facilitatorEmployeeList?.length === 1 || !values.ticketTypeId
                       }
@@ -421,7 +451,7 @@ export function FormEditForm({
                         }
                         // Disable if read mode, no initiator, or auto-assigned
                         isDisabled={
-                          isUserForRead || receiveMode ||
+                          isUserForRead || receiveMode || editMode ||
                           !values.initiator ||
                           facilitatorEmployeeList?.length === 1
                         }
@@ -450,31 +480,18 @@ export function FormEditForm({
 
 
 
-                  {/* <div className="">
-                    <label>
-                      {" "}
-                      Ticket Date<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="Ticket Date"
-                      selected={
-                        values?.ticketDate ? new Date(values.ticketDate) : new Date()
-                      }
-                      disabled={true}
-                      dateFormat="dd-MMM-yyyy"
-                      name="ticketDate"
-                      autoComplete="off"
-                      minDate={new Date()}
-                      maxDate={new Date()}
-                    />
 
-                    {touched.ticketDate && errors.ticketDate && (
-                      <div className="invalid-feedback d-block">
-                        {errors.ticketDate}
-                      </div>
-                    )}
-                  </div> */}
+
+
+
+
+                </div>
+
+
+
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
 
                   {/*  AlertWork26326 { */}
                   <div className="">
@@ -538,7 +555,7 @@ export function FormEditForm({
                       name="dueDate"
                       autoComplete="off"
                       minDate={new Date(values.ticketDate)}
-                      // maxDate={new Date().setDate(new Date().getDate() + 365)}
+                    // maxDate={new Date().setDate(new Date().getDate() + 365)}
                     />
 
                     {touched.dueDate && errors.dueDate && (
@@ -552,58 +569,10 @@ export function FormEditForm({
 
 
 
-
-                  <div>
-                    <label>
-                      <span>From Time</span>
-                    </label>
-
-                    <input
-                      type="time"
-                      className="form-control"
-                      disabled={isUserForRead || !values.initiator}
-                      name="timeRangeFrom"
-                      step="60"   //  minutes only (no seconds)
-                      value={values.timeRangeFrom || ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setFieldValue("timeRangeFrom", val);
-
-                        const hours = calculateHours(val, values.timeRangeTo);
-                        setFieldValue("noOfHours", hours.toFixed(2));
-                      }}
-                    />
-                  </div>
-
-
-
-                  <div>
-                    <label>
-                      <span>To Time</span>
-                    </label>
-
-                    <input
-                      type="time"
-                      className="form-control"
-                      disabled={isUserForRead || !values.initiator}
-                      name="timeRangeTo"
-                      step="60"
-                      value={values.timeRangeTo || ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setFieldValue("timeRangeTo", val);
-
-                        const hours = calculateHours(values.timeRangeFrom, val);
-                        setFieldValue("noOfHours", hours.toFixed(2));
-                      }}
-                    />
-                  </div>
-
-
                   <div className="">
                     <label>
                       <span>
-                        No.of Hours
+                        Estimated Hours
                         <span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
@@ -624,12 +593,119 @@ export function FormEditForm({
                     />
 
                   </div>
+
+
+
+                  {!showAlert ? (
+                    <span className="flex items-center gap-2 mt-6">
+                      <CirclePlus
+                        className="w-4 h-4 text-primary cursor-pointer "
+                        onClick={() => setShowAlert(true)}
+                      /> {" "}
+                      Add Reminder
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2 mt-6">
+                      <CircleMinus
+                        className="w-4 h-4 text-primary cursor-pointer "
+                        onClick={() => setShowAlert(false)}
+                      />
+                      Hide Reminder
+                    </span>
+                  )}
+
+                  {showAlert && (
+                    <>
+
+                      <div className="">
+                        <label className="flex items-center gap-2 mt-3">
+                          <Field
+                            type="checkbox"
+                            name="isForAlert"
+                            disabled={!values.initiator || isUserForRead}
+                            checked={values.isForAlert}
+                            onChange={(e) => {
+                              setFieldValue("isForAlert", e.target.checked)
+
+                              setFieldValue("alertFromDate", "")
+                              setFieldValue("alertEndDate", "")
+                            }}
+                          />
+                          <span>
+                            For Dashboard Reminder
+                          </span>
+                        </label>
+                        {errors.isForAlert && touched.isForAlert && (
+                          <div className="invalid-feedback">{errors.isForAlert}</div>
+                        )}
+                      </div>
+
+
+                      <div className="">
+                        <label>
+                          {" "}
+                          Reminder Start Date<span style={{ color: "red" }}>*</span>
+                        </label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="Alert Start Date"
+
+                          selected={
+                            values?.alertFromDate ? new Date(values.alertFromDate) : null
+                          }
+                          onChange={(date) => setFieldValue("alertFromDate", date)}
+                          disabled={isUserForRead || !values.initiator || !values.isForAlert}
+                          dateFormat="dd-MMM-yyyy"
+                          name="alertFromDate"
+                          autoComplete="off"
+                          minDate={new Date()}
+                          maxDate={values?.alertEndDate}
+
+                        />
+
+                        {touched.alertFromDate && errors.alertFromDate && (
+                          <div className="invalid-feedback d-block">
+                            {errors.alertFromDate}
+                          </div>
+                        )}
+                      </div>
+
+
+                      <div className="">
+                        <label>
+                          {" "}
+                          Reminder End Date<span style={{ color: "red" }}>*</span>
+                        </label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="Due Date"
+                          selected={
+                            values?.alertEndDate ? new Date(values.alertEndDate) : null
+                          }
+                          onChange={(date) => setFieldValue("alertEndDate", date)}
+                          disabled={isUserForRead || !values.initiator || !values.isForAlert}
+                          dateFormat="dd-MMM-yyyy"
+                          name="alertEndDate"
+                          autoComplete="off"
+                          minDate={new Date(values?.alertFromDate)}
+                          maxDate={new Date(values?.dueDate)}
+                        />
+
+                        {touched.alertEndDate && errors.alertEndDate && (
+                          <div className="invalid-feedback d-block">
+                            {errors.alertEndDate}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+
+
                 </div>
 
 
 
-
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
 
 
@@ -638,7 +714,8 @@ export function FormEditForm({
                     <Field
                       name="ticketDescription"
                       component={TextArea}
-                      disabled={receiveMode || formData?.Master?.ticketDescription}
+                      // disabled={receiveMode || formData?.Master?.ticketDescription}
+                      disabled={isUserForRead || !values.initiator}
                       placeholder="Enter ticket description"
                       className="form-control" // Force full height
                       // value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
@@ -665,7 +742,7 @@ export function FormEditForm({
                           Parent Task
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator || receiveMode}
+                      isDisabled={isUserForRead || editMode || !values.initiator || receiveMode}
                       onChange={(e) => {
                         setFieldValue("parentId", e.value || null);
 
@@ -681,87 +758,6 @@ export function FormEditForm({
                     />
                   </div>
 
-                  {/* // AlertWork26326 } */}
-                  <div className="">
-                    <label className="flex items-center gap-2 mt-3">
-                      <Field
-                        type="checkbox"
-                        name="isForAlert"
-                        disabled={!values.initiator || isUserForRead}
-                        checked={values.isForAlert}
-                        onChange={(e) => {
-                          setFieldValue("isForAlert", e.target.checked)
-
-                          setFieldValue("alertFromDate", "")
-                          setFieldValue("alertEndDate", "")
-                        }}
-                      />
-                      <span>
-                        For Dashboard Reminder
-                      </span>
-                    </label>
-                    {errors.isForAlert && touched.isForAlert && (
-                      <div className="invalid-feedback">{errors.isForAlert}</div>
-                    )}
-                  </div>
-
-                  {/*  AlertWork26326 { */}
-                  <div className="">
-                    <label>
-                      {" "}
-                      Reminder Start Date<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="Alert Start Date"
-
-                      selected={
-                        values?.alertFromDate ? new Date(values.alertFromDate) : null
-                      }
-                      onChange={(date) => setFieldValue("alertFromDate", date)}
-                      disabled={isUserForRead || !values.initiator || !values.isForAlert}
-                      dateFormat="dd-MMM-yyyy"
-                      name="alertFromDate"
-                      autoComplete="off"
-                      minDate={new Date()}
-                      maxDate={values?.alertEndDate}
-
-                    />
-
-                    {touched.alertFromDate && errors.alertFromDate && (
-                      <div className="invalid-feedback d-block">
-                        {errors.alertFromDate}
-                      </div>
-                    )}
-                  </div>
-                  {/* // AlertWork26326 } */}
-
-                  <div className="">
-                    <label>
-                      {" "}
-                      Reminder End Date<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="Due Date"
-                      selected={
-                        values?.alertEndDate ? new Date(values.alertEndDate) : null
-                      }
-                      onChange={(date) => setFieldValue("alertEndDate", date)}
-                      disabled={isUserForRead || !values.initiator || !values.isForAlert}
-                      dateFormat="dd-MMM-yyyy"
-                      name="alertEndDate"
-                      autoComplete="off"
-                      minDate={new Date(values?.alertFromDate)}
-                      maxDate={new Date(values?.dueDate)}
-                    />
-
-                    {touched.alertEndDate && errors.alertEndDate && (
-                      <div className="invalid-feedback d-block">
-                        {errors.alertEndDate}
-                      </div>
-                    )}
-                  </div>
 
 
                   {formData?.file && (
@@ -867,7 +863,7 @@ export function FormEditForm({
                   </>)
                 }
 
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
                   {values.receiver && (
 
                     <>
@@ -953,8 +949,7 @@ export function FormEditForm({
                             <option
                               key={option.value}
                               value={String(option.value)}
-                              disabled={!values.initiator && (option.value === 1 || option.value === 3)}
-                            >
+                              disabled={(!values?.initiator && (option.value === 1 || option.value === 3))}>
                               {option.label}
                             </option>
                           ))}
@@ -1045,30 +1040,32 @@ export function FormEditForm({
                   </>
                 )}
 
-                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
-  {(!formData.isSelf) && (
-                  <div className="col-span-3">
-                    <Field
-                      name="remarks"
-                      component={TextArea}
-                      placeholder="Enter remarks"
-                      className="form-control" // Force full height
 
-                      label={
-                        <span>
-                          {" "}
-                          Remarks
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
-                    <div>
+                  {(!formData.isSelf) && (
+
+                    <div className="col-span-3">
+                      <Field
+                        name="remarks"
+                        component={TextArea}
+                        placeholder="Enter remarks"
+                        className="form-control" // Force full height
+
+                        label={
+                          <span>
+                            {" "}
+                            Remarks
+
+                          </span>
+                        }
+                        autoComplete="off"
+                      />
+
 
                     </div>
-                  </div>
-  )}
 
+                  )}
 
                   <div className="">
                     <label htmlFor="ticketStatus">
@@ -1174,28 +1171,32 @@ export function FormEditForm({
 
 
 
+
+
               </fieldset>
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            {/* {!isUserForRead ? ( */}
-            <button
-              type="reset"
-              onClick={() => {
-                setId("");
-                handleReset();
-                setReadMode(false)
-                setReceiveMode(false)
+            {!isUserForRead ? (
+              <button
+                type="reset"
+                onClick={() => {
+                  setId("");
+                  handleReset();
+                  setReadMode(false)
+                  setReceiveMode(false)
+                  setEditMode(false)
+                  onHide()
 
-                if (inputFile?.current) {
-                  inputFile.current.value = "";
-                }
-              }}
-              className="btn btn-light btn-elevate"
-            >
-              Cancel
-            </button>
-            {/* ) : (
+                  if (inputFile?.current) {
+                    inputFile.current.value = "";
+                  }
+                }}
+                className="btn btn-light btn-elevate"
+              >
+                Cancel
+              </button>
+            ) : (
               <button
                 type="button"
                 onClick={onHide}
@@ -1203,11 +1204,12 @@ export function FormEditForm({
               >
                 OK
               </button>
-            )} */}
+            )}
 
             {!isUserForRead && (
               <button
                 type="button"
+
                 onClick={() => {
 
                   if (facilitatorEmployeeList?.length === 1) {

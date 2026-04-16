@@ -149,8 +149,7 @@ export function FormTable() {
 
 
   return (
-    <div style={{ height: '1000px' }}>
-
+    <div style={{ height: '500px' }}>
       {/* Render the calendar */}
       {defaultCalendarDate && (
         <Calendar
