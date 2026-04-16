@@ -173,7 +173,7 @@ function SubsidiaryPatternListForm({
                           <FileUpload
                             id={`file_input_${index}`} 
                             name={`list[${index}].attachment`}  
-                            label="Upload"
+                            label=""
                             type="file"
                             disabled={isDataForRead}
                             onChange={(e) => handleFileChange(e, index)}

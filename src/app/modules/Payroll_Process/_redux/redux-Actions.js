@@ -324,3 +324,14 @@ export const clearReduxData = () => async (dispatch) => {
   dispatch(actions.payrollGroupDetailsFetched(null));
   dispatch(actions.resultAfterPayrollProcessFetched(null));
 }
+
+export const fetchPayrollChecklistData = (data) => async (dispatch) => {
+  return requestFromServer.getPayrollCheckList(data)
+    .then((response) => {
+      return response?.data?.data
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find ";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};
