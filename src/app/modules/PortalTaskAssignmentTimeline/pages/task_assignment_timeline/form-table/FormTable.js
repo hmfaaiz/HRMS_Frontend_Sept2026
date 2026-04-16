@@ -380,7 +380,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       text: "Status",
       style: { minWidth: "70px" },
 
-      formatter: (_, row) => {
+      formatter: (cell, row) => {
         const lastDetail = row?.Details?.[0];
         if (!lastDetail) return "";
 
@@ -394,16 +394,17 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
 
         const isExpiredOrToday =
           ((dueDate < today && dueDate < createdDate) ||
-            (dueDate < today && lastDetail.ticketStatus != 0));
+            (dueDate < today && row.ticketStatus != 0));
 
-        const statusLabel =
-          ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
+        // const statusLabel =
+        //   ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
+           const statusLabel = ticketStatusOptions.find(opt => opt.value === cell)?.label || "";
 
-             let color = "";
+        let color = "";
 
         if (isExpiredOrToday) {
           color = "red";
-        } else if (!isExpiredOrToday && lastDetail.ticketStatus === 0) {
+        } else if (!isExpiredOrToday && row.ticketStatus === 0) {
           color = "green";
         }
 
@@ -411,7 +412,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
           <span
             style={{
               color: color,
-            fontWeight: 600,
+              fontWeight: 600,
             }}
           >
             {statusLabel}
