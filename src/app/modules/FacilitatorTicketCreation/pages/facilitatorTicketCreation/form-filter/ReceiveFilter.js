@@ -15,13 +15,13 @@ import { debounce } from "redux-saga/effects";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 import { formatDates } from "../../../../../utils/common";
 import { Form, Modal } from "react-bootstrap";
-import { initialFilter } from "../FormUIHelpers";
+import { initialFilter,initialReceiveFilter } from "../FormUIHelpers";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 
 const prepareFilter = (queryParams, values) => {
-  const { searchText,
+  const { 
 
     ticketStatus,
     timeRangeFrom,
@@ -31,10 +31,10 @@ const prepareFilter = (queryParams, values) => {
   const newQueryParams = { ...queryParams }
   const filterReceiver = {}
 
-  if (searchText) {
-    filterReceiver.searchQuery = searchText
-    // filter.email = searchText
-  }
+  // if (searchText) {
+  //   filterReceiver.searchQuery = searchText
+  //   // filter.email = searchText
+  // }
 
   if (ticketStatus !== undefined && ticketStatus !== null) {
     filterReceiver.ticketStatus = ticketStatus;
@@ -68,8 +68,8 @@ export function ReceiveFIlter({ listLoading, user }) {
 
   const formUIProps = useMemo(() => {
     return {
-      queryParams: FormUIContext.queryParams,
-      setQueryParams: FormUIContext.setQueryParams,
+      queryParams: FormUIContext.queryReceiveParams,
+      setQueryParams: FormUIContext.setQueryReceiveParams,
     }
   }, [FormUIContext])
 
@@ -113,8 +113,8 @@ export function ReceiveFIlter({ listLoading, user }) {
 
     { value: 1, label: "Open" },
     { value: 0, label: "Completed by owner" },
-    // { value: 3, label: "Re-opened" },
-    // { value: 2, label: "Send for Review" },
+    { value: 3, label: "Re-opened by owner" },
+    { value: 2, label: "Send for review by owner" },
   ];
   return (
     <>
@@ -122,7 +122,7 @@ export function ReceiveFIlter({ listLoading, user }) {
         enableReinitialize={true}
         initialValues={{
 
-          searchText: "",
+   
 
           ticketStatus: 1,
           timeRangeFrom: null,
@@ -182,7 +182,7 @@ export function ReceiveFIlter({ listLoading, user }) {
                     onChange={(date) => {
                       let selectedDate = formatDates(date, 'yyyy-MM-dd')
                       setFieldValue("timeRangeFrom", selectedDate);
-                      setFieldValue("timeRangeTo", selectedDate);
+                      // setFieldValue("timeRangeTo", selectedDate);
                       handleSubmit();
                     }}
                     dateFormat="dd-MMM-yyyy"
@@ -254,7 +254,7 @@ export function ReceiveFIlter({ listLoading, user }) {
                 <button
                   type="button"
                   onClick={() => {
-                    applyFilter(initialFilter.filterReceiver);
+                    applyFilter(initialReceiveFilter.filterReceiver);
                     handleReset();
                   }}
                   className="btn btn-light"

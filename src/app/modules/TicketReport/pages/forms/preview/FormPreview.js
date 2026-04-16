@@ -127,10 +127,10 @@ function FormPreview({ data }) {
       >
         <thead>
           <tr style={{ backgroundColor: "#4F81BD", color: "white" }}>
-            <th style={{ padding: "8px", textAlign: "left" }}>Name</th>
-            <th style={{ padding: "8px", textAlign: "center" }}>Logged</th>
+            <th style={{ padding: "4px", textAlign: "left" }}>Name</th>
+            <th style={{ padding: "4px", textAlign: "center" }}>Logged</th>
             {dateColumns.map((d) => (
-              <th key={d.key} style={{ padding: "8px", textAlign: "center" }}>
+              <th key={d.key} style={{ padding: "4px", textAlign: "center" }}>
                 {d.header}
               </th>
             ))}

@@ -276,6 +276,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                       &nbsp;<span>Search Via Project</span>
                                     </label>
                                   </div>
+                                </div>
+
+
+                                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
                                   <div className="col-span-2">
                                     <SearchSelect
                                       name="projectId"
@@ -608,9 +612,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     &nbsp;<span>Search Via Task Assignment</span>
                                   </label>
                                 </div>
+                              </div>
 
 
-
+                              <div className="grid grid-cols-8 gap-x-3 gap-y-1">
                                 <div className="col-span-2">
                                   <MultiSelect
                                     name="taskTicketTypeIds"
@@ -783,7 +788,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               }
                               onChange={(date) => {
                                 setFieldValue("from_date", date);
-                                setFieldValue("to_date", date); // Sync from_date and to_date
+                                // setFieldValue("to_date", date); // Sync from_date and to_date
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
