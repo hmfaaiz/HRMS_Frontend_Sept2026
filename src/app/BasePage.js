@@ -575,6 +575,13 @@ const attendance_roster_approval = lazy (() =>
   import ("./modules/Attendance_Roster_Approval/pages/index"),
 )
 
+const attendance_roster_workflow_status = lazy (() =>
+  import ("./modules/Attendance_Roster_Workflow/pages/index"),
+)
+
+const attendance_roster_workflow_status_portal = lazy (() =>
+  import ("./modules/Attendance_Roster_Workflow_Portal/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -772,6 +779,8 @@ const ROUTES = {
   reimbursement_claim_workflow_status : reimbursement_claim_workflow_status,
   attendance_roster_request : attendance_roster_request,
   attendance_roster_approval : attendance_roster_approval,
+  attendance_roster_workflow_status : attendance_roster_workflow_status,
+  attendance_roster_workflow_status_portal : attendance_roster_workflow_status_portal,
 };
 
 export default function BasePage() {

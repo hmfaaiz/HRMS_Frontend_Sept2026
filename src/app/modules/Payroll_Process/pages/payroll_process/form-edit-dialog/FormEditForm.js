@@ -17,7 +17,7 @@ import {
   getAllPayrollAccount,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { getDateDiffInDays } from "../../../../../utils/common";
+import { getDateDiffInDays, getUploadUrl } from "../../../../../utils/common";
 import * as actions from "../../../_redux/redux-Actions";
 import {
   checkPayroll_EmployeesByIds,
@@ -27,6 +27,7 @@ import { payroll_processSlice, callTypes } from "../../../_redux/redux-Slice";
 import { toast } from "react-toastify";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { NegativeSalaryEmpTable } from "../form-table/NegativeSalaryEmpTable";
+import { View } from "lucide-react";
 // const { actions } = payroll_processSlice;
 // percentage: Yup.string().required("Required*"),
 const payroll_processEditSchema = Yup.object().shape({
@@ -491,6 +492,8 @@ export function FormEditForm({
                 </Modal>
               </>
             )}
+
+            <PayrollCheckListModel data={formUIProps.payrollCheckListData} formUIProps={formUIProps} />
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end ">
@@ -756,6 +759,20 @@ export function FormEditForm({
                       </button>
                     </>
                   )}
+                     {values.subsidiaryId &&
+                        values.payroll_groupId && values.payroll_monthId ? <button
+                        onClick={async () => {
+                         let res = await dispatch(actions.fetchPayrollChecklistData({subsidiaryId : values.subsidiaryId , payrollGroupId : values.payroll_groupId}))
+                         formUIProps.setPayrollCheckListData(res)
+                        }}
+                        type="button"
+                        className="m-3 btn btn-primary"
+                      >
+                        View Payroll Checklist
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button> : null}
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
@@ -1012,3 +1029,98 @@ export function FormEditForm({
     </>
   );
 }
+
+
+
+const PayrollCheckListModel = ({ data, formUIProps }) => {
+
+  const handleClose = () => {
+    formUIProps.setPayrollCheckListData(null);
+  };
+
+  // Check if data is empty
+  const isEmpty = !data || data.length === 0;
+
+  // Get unique subsidiary and payroll group from first item (assuming same for all)
+  const subsidiaryName = data?.[0]?.SubsidiaryDetail?.name || "";
+  const payrollGroupName = data?.[0]?.PayrollGroup?.formName || "";
+
+  return (
+    <Modal
+      show={!!data && data.length > 0}
+      onHide={handleClose}
+      style={{ zIndex: "99999" }}
+      size="xl"
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Payroll Checklist</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {isEmpty ? (
+          <div className="text-center py-5">
+            <h5 className="text-muted">No checklist found</h5>
+          </div>
+        ) : (
+          <>
+            {/* Subsidiary and Payroll Group Info */}
+            <div className="mb-2 ">
+              <div className="row">
+                <div className="col-md-6">
+                  <strong>Subsidiary:</strong> {subsidiaryName}
+                </div>
+                <div className="col-md-6">
+                  <strong>Payroll Group:</strong> {payrollGroupName}
+                </div>
+              </div>
+            </div>
+
+            {/* Table Design */}
+            <div className="w-full overflow-x-auto">
+              <div className="react-bootstrap-table table-responsive">
+                <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                  <thead>
+                    <tr className="custom-table-header">
+                      <th>#</th>
+                      <th>Checklist Category</th>
+                      <th>Task Name</th>
+                      <th>Task Description</th>
+                      <th>Attachment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((row, index) => (
+                      <tr key={row.Id || index}>
+                        <td>{index + 1}</td>
+                        <td>{row?.ChecklistCategory?.formName || "-"}</td>
+                        <td>{row?.taskName || "-"}</td>
+                        <td>{row?.taskDescription || "-"}</td>
+                        <td>
+                          {row?.attachmentPath ? (
+                            <a
+                              href={getUploadUrl(row?.attachmentPath)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <View className="w-4 h-4 text-black cursor-pointer" />
+                            </a>
+                          ) : (
+                            <span className="text-muted">-</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};

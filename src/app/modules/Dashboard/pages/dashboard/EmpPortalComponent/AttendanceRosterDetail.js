@@ -29,7 +29,7 @@ export function AttendanceRosterDetail({ entities }) {
 
   return (
     <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
-      <h6 className="font-bold mb-0 text-primary my-2">Attendance Roster</h6>
+      <h6 className="font-bold mb-0 text-primary my-2">Roster</h6>
       {isAttendanceRosterRequest ? (
         <div className="font-size-xs text-black font-bold">
           <p className="m-0 underline">

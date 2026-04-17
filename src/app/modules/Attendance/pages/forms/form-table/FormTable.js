@@ -89,6 +89,17 @@ export function FormTable() {
       
     },
     {
+      dataField: "shiftCode",
+      text: "Shift",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+    },
+    {
       dataField: "formattedDateIn",
       text: "Date In",
       sort: false,

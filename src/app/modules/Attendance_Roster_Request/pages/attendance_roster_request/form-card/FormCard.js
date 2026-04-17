@@ -77,6 +77,16 @@ export function FormCard() {
       ),
     },
    
+    {
+      name: "Workflow Status",
+      link: "/attendance_roster_workflow_status_portal/read-all-attendance-roster-workflow-status-portal",
+      isShow: roster?.find(
+        (el) =>
+          el?.componentName === "ReadAllAttendanceRosterWorkflowStatus" &&
+          el?.isResourceShow
+      ),
+    },
+   
   ];
 
 
