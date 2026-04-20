@@ -88,7 +88,7 @@ export function getHandlerTableChange(setQueryParams) {
     setQueryParams((prev) =>
       type === "sort"
         ? // ? { ...prev, sortOrder, sortField }
-          { ...prev, sortOrder }
+          { ...prev, sortOrder , sortField }
         : type === "pagination"
         ? { ...prev, pageNumber, pageSize: sizePerPage }
         : prev

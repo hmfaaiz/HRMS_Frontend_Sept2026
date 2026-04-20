@@ -11,14 +11,13 @@ export const AttendanceMarking = () => {
       attRecord: state?.dashboard?.currentAtt,
       currentDateTime: state?.dashboard?.currentDateTime,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   const attendanceDetail = attRecord?.attendanceDetail;
   const currentShift = attRecord?.currentShift;
   const localDate = currentDateTime;
   const allowedAnywhere = attRecord?.allowedAnywhere;
-
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
@@ -42,21 +41,8 @@ export const AttendanceMarking = () => {
     return () => clearInterval(timer);
   }, [date]);
 
-  // user ke local time ke mutabiq attendance payload banana
-  const getAttendancePayload = () => {
-    const now = new Date();
-
-    return {
-      date: format(now, "yyyy-MM-dd"), // safe backend date
-      timeZone: now.getTimezoneOffset(), // 
-      clientNow: now.toISOString(), // exact current client datetime
-    };
-  };
-
   useEffect(() => {
-    const payload = getAttendancePayload();
-    dispatch(action.getAttendance(payload, setLoading));
-    dispatch(action.getCurrentTime(setLoading));
+    dispatch(action.getCurrentTimeAndAttendance(setLoading));
   }, [dispatch]);
 
   const handleToggle = () => {
@@ -71,10 +57,8 @@ export const AttendanceMarking = () => {
       Status: attendanceDetail?.Status === "01" ? "02" : "01",
     };
 
-    const refreshPayload = getAttendancePayload();
-
     const onSuccess = () => {
-      dispatch(action.getAttendance(refreshPayload, setLoading));
+      dispatch(action.getCurrentTimeAndAttendance(setLoading));
     };
 
     if (!allowedAnywhere) {
@@ -97,7 +81,7 @@ export const AttendanceMarking = () => {
         (error) => {
           if (error.code === error.PERMISSION_DENIED) {
             toast.error(
-              "Location is not enabled. Please enable location services."
+              "Location is not enabled. Please enable location services.",
             );
           } else if (error.code === error.POSITION_UNAVAILABLE) {
             toast.error("Location information is unavailable.");
@@ -108,11 +92,11 @@ export const AttendanceMarking = () => {
           }
 
           setLoading(false);
-        }
+        },
       );
     } else {
       dispatch(action.createAttendance(attendanceBody, setLoading)).then(
-        onSuccess
+        onSuccess,
       );
     }
   };
@@ -213,8 +197,8 @@ export const AttendanceMarking = () => {
               <strong>
                 {" "}
                 {shiftInfo.fromDate} {formatTime(shiftInfo.visibleStartTime)}
-              </strong>
-              {" "}to
+              </strong>{" "}
+              to
               <strong>
                 {" "}
                 {shiftInfo.toDate} {formatTime(shiftInfo.visibleEndTime)}
