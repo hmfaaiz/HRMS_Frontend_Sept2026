@@ -336,14 +336,30 @@ const profileValidation = (localizationId) =>
       .nullable()
       .oneOf([true, false], "Required*"), // Ensures the value is either true or false
 
-      geoLocationIds: Yup.array()
-   .nullable()
-   .when("allowedAnywhere", {
-    is: false, // when not allowed anywhere
+
+ isForMachineAtt: Yup.boolean()
+  .nullable()
+  .oneOf([true, false], "Required*"),
+
+empMachineAttId: Yup.number()
+  .nullable()
+  .when("isForMachineAtt", {
+    is: true,
     then: (schema) =>
-      schema.min(1, "At least one location selection is required"),
-    otherwise: (schema) => schema.notRequired().nullable(),
-   }),
+      schema
+        .typeError("Must be a number")
+        .required("Required*"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+    geoLocationIds: Yup.array()
+      .nullable()
+      .when("allowedAnywhere", {
+        is: false, // when not allowed anywhere
+        then: (schema) =>
+          schema.min(1, "At least one location selection is required"),
+        otherwise: (schema) => schema.notRequired().nullable(),
+      }),
 
     additional_summary: Yup.string()
       .nullable()
@@ -1171,7 +1187,7 @@ export function DesignationEditForm({
     fetchWorkExperienceData();
     fetchContactData();
     fetchDeviceId();
-   
+
 
   }, [id]);
 
@@ -1971,7 +1987,7 @@ export function DesignationEditForm({
 
   useEffect(() => {
     fetchDepartment(user?.subsidiaryId);
-    if(user?.subsidiaryId){
+    if (user?.subsidiaryId) {
       dispatch(fetchGeoLocationBySubsidiary(user?.subsidiaryId));
     }
   }, [user?.subsidiaryId]);
@@ -2098,7 +2114,7 @@ export function DesignationEditForm({
           professional_summary: user?.professional_summary || "",
           email_official: user?.email_official || "",
           email_personal: user?.email_personal || "",
-          geoLocationIds : user?.geoLocationIds == null ? [] : user?.geoLocationIds,
+          geoLocationIds: user?.geoLocationIds == null ? [] : user?.geoLocationIds,
           allowResignationRequest: user?.allowResignationRequest ? true : false,
 
         }}
@@ -3522,14 +3538,14 @@ export function DesignationEditForm({
                   Geo Location Configuration (for Attendance App)
                 </h6>
                 <div className="grid grid-cols-7 gap-x-3">
-                <div className="col-span-5">
-                <span className="text-black">
-                  Location
-                  {!values?.allowedAnywhere ? (
-                    <span style={{ color: "red" }}>*</span>
-                  ) : null}
-                </span>
-                {/* <div className="grid grid-cols-6 gap-x-2">
+                  <div className="col-span-5">
+                    <span className="text-black">
+                      Location
+                      {!values?.allowedAnywhere ? (
+                        <span style={{ color: "red" }}>*</span>
+                      ) : null}
+                    </span>
+                    {/* <div className="grid grid-cols-6 gap-x-2">
                   {dashboard?.geoLocation?.map((el, ind) => {
                     // Always normalize to array
                     const selectedIds =
@@ -3582,88 +3598,138 @@ export function DesignationEditForm({
                   })}
                 </div> */}
 
-                <div className="grid grid-cols-6 gap-x-2">
-  {dashboard?.geoLocation?.map((el, ind) => {
+                    <div className="grid grid-cols-6 gap-x-2">
+                      {dashboard?.geoLocation?.map((el, ind) => {
 
-    const selectedIds =
-      typeof values?.geoLocationIds === "string"
-        ? JSON.parse(values.geoLocationIds)
-        : values?.geoLocationIds || [];
+                        const selectedIds =
+                          typeof values?.geoLocationIds === "string"
+                            ? JSON.parse(values.geoLocationIds)
+                            : values?.geoLocationIds || [];
 
-    const isChecked = selectedIds.includes(String(el?.value));
+                        const isChecked = selectedIds.includes(String(el?.value));
 
-    return (
-      <Checkbox
-        key={ind}
-        children={el?.label}
-        isSelected={isChecked}
-        onChange={(payload) => {
-          const checked =
-            typeof payload === "boolean"
-              ? payload
-              : payload?.target?.checked ?? false;
+                        return (
+                          <Checkbox
+                            key={ind}
+                            children={el?.label}
+                            isSelected={isChecked}
+                            onChange={(payload) => {
+                              const checked =
+                                typeof payload === "boolean"
+                                  ? payload
+                                  : payload?.target?.checked ?? false;
 
-          const current =
-            typeof values?.geoLocationIds === "string"
-              ? JSON.parse(values.geoLocationIds || "[]")
-              : values?.geoLocationIds || [];
+                              const current =
+                                typeof values?.geoLocationIds === "string"
+                                  ? JSON.parse(values.geoLocationIds || "[]")
+                                  : values?.geoLocationIds || [];
 
-          const val = String(el?.value);
+                              const val = String(el?.value);
 
-          let updated;
-          if (checked) {
-            updated = current.includes(val) ? [...current] : [...current, val];
-          } else {
-            updated = current.filter((id) => id !== val);
-          }
+                              let updated;
+                              if (checked) {
+                                updated = current.includes(val) ? [...current] : [...current, val];
+                              } else {
+                                updated = current.filter((id) => id !== val);
+                              }
 
-          setFieldValue("geoLocationIds", updated);
-        }}
-        disabled={!values?.subsidiaryId || isUserForRead || values?.allowedAnywhere}
-      />
-    );
-  })}
-</div>
-
-                  {errors?.geoLocationIds && (
-                  <div className="invalid-feedback">{errors.geoLocationIds}</div>
-                )}
-              </div>
-
-              <div>
-                <div title="Attendance can be marked from the app irrespective of the employee’s current GPS coordinates." className="flex items-center gap-1">
-                  <input
-                    name="allowedAnywhere"
-                    type="checkbox"
-                    onChange={() => {
-                      const newValue = !values?.allowedAnywhere;
-
-                      setFieldValue("allowedAnywhere", newValue);
-
-                      // If checked, clear geolocation
-                      if (newValue) {
-                        setFieldValue("geoLocationIds", []);
-                      }
-                    }}
-                    onBlur={handleBlur}
-                    checked={values.allowedAnywhere}
-                  />
-                  <label>Mark Attendance from anywhere</label>
-                  <ErrorMessage
-                    className="form-feedBack"
-                    name="allowedAnywhere"
-                    component="div"
-                  />
-                </div>
-              </div>
-
-                       <div>
-                      <span className="text-black">
-                              
-                              Device Id : <span className="font-bold" >{deviceId}</span>
-                               
-                            </span>
+                              setFieldValue("geoLocationIds", updated);
+                            }}
+                            disabled={!values?.subsidiaryId || isUserForRead || values?.allowedAnywhere}
+                          />
+                        );
+                      })}
                     </div>
+
+                    {errors?.geoLocationIds && (
+                      <div className="invalid-feedback">{errors.geoLocationIds}</div>
+                    )}
+                  </div>
+
+                  <div>
+                    <div title="Attendance can be marked from the app irrespective of the employee’s current GPS coordinates." className="flex items-center gap-1">
+                      <input
+                        name="allowedAnywhere"
+                        type="checkbox"
+                        onChange={() => {
+                          const newValue = !values?.allowedAnywhere;
+
+                          setFieldValue("allowedAnywhere", newValue);
+
+                          // If checked, clear geolocation
+                          if (newValue) {
+                            setFieldValue("geoLocationIds", []);
+                          }
+                        }}
+                        onBlur={handleBlur}
+                        checked={values.allowedAnywhere}
+                      />
+                      <label>Mark Attendance from anywhere</label>
+                      <ErrorMessage
+                        className="form-feedBack"
+                        name="allowedAnywhere"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-black">
+
+                      Device Id : <span className="font-bold" >{deviceId}</span>
+
+                    </span>
+                  </div>
+                </div>
+                <hr />
+                <h6 className="font-bold mb-0 text-primary mt-2">
+                  Employee Machine Attendance Configuration
+                </h6>
+                <div className="grid grid-cols-7 gap-x-3">
+
+
+                  <div>
+                    <div title="">
+                      <input
+                        name="isForMachineAtt"
+                        type="checkbox"
+                        onChange={() => {
+                          const newValue = !values?.isForMachineAtt;
+
+                          setFieldValue("isForMachineAtt", newValue);
+
+                       
+                        }}
+                        onBlur={handleBlur}
+                        checked={values.isForMachineAtt}
+                      />
+                      <label>Enable for machine attendance</label>
+                      <ErrorMessage
+                        className="form-feedBack"
+                        name="isForMachineAtt"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+
+
+                    <div>
+                      <Field
+                        name="empMachineAttId"
+                        component={Input}
+                        placeholder="Employee machine attendance Id : 1"
+                        label="Employee machine attendance Id"
+                        autoComplete="off"
+                        maxLength="5"
+
+                      />
+                       
+                    </div>
+
+
+                  <div>
+                   
+                  </div>
                 </div>
                 <hr />
                 <div>
@@ -4109,25 +4175,25 @@ export function DesignationEditForm({
                       </div>
                       <div className="flex items-center gap-2 mt-4">
                         <input
-                        name="allowResignationRequest"
-                        type="checkbox"
-                        onChange={() =>
-                          setFieldValue(
-                          "allowResignationRequest",
-                           !values?.allowResignationRequest
-                        )
-                      }
-                      onBlur={handleBlur}
-                      value={values.allowResignationRequest}
-                      checked={!!values.allowResignationRequest}
-                      />
-                      <label>Allow Employee to Submit Resignation Request</label>
-                      <ErrorMessage
-                      className="form-feedBack"
-                      name="allowResignationRequest"
-                      component="div"
-                    />
-                    </div>
+                          name="allowResignationRequest"
+                          type="checkbox"
+                          onChange={() =>
+                            setFieldValue(
+                              "allowResignationRequest",
+                              !values?.allowResignationRequest
+                            )
+                          }
+                          onBlur={handleBlur}
+                          value={values.allowResignationRequest}
+                          checked={!!values.allowResignationRequest}
+                        />
+                        <label>Allow Employee to Submit Resignation Request</label>
+                        <ErrorMessage
+                          className="form-feedBack"
+                          name="allowResignationRequest"
+                          component="div"
+                        />
+                      </div>
                       {localizationId == 2 && <div>
                         <Field
                           name="sourceOfHire"
