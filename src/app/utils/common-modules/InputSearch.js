@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { CircleX } from "lucide-react";
 
 export const InputSearch = ({
@@ -7,7 +7,23 @@ export const InputSearch = ({
     setFieldValue,
     handleBlur,
     handleSubmit,
+    debounceDelay = 500,
 }) => {
+     const firstRenderRef = useRef(true);
+
+  useEffect(() => {
+    // initial render par submit na chale
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      handleSubmit();
+    }, debounceDelay);
+
+    return () => clearTimeout(timer);
+  }, [values[fieldName]]);
     return (
         <div className="position-relative">
             <input
@@ -19,7 +35,7 @@ export const InputSearch = ({
                 value={values[fieldName]}
                 onChange={(e) => {
                     setFieldValue(fieldName, e.target.value);
-                    handleSubmit();
+                    // handleSubmit();
                 }}
             />
 

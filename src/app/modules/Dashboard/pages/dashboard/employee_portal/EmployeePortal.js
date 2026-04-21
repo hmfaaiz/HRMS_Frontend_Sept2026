@@ -17,7 +17,7 @@ import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
 import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
 import { ReimbursementDetail } from "../EmpPortalComponent/ReimbursementDetail";
-import { AttendanceRosterDetail } from "../EmpPortalComponent/AttendanceRosterDetail"
+import { AttendanceRosterDetail } from "../EmpPortalComponent/AttendanceRosterDetail";
 import { TravelRequestPortalDetail } from "../EmpPortalComponent/TravelRequestPortalDetail";
 import {
   Banknote,
@@ -32,6 +32,9 @@ import {
   UserRoundX,
   PanelsTopLeft,
   HeartHandshake,
+  NotebookTabs,
+  Luggage,
+  HandCoins,
 } from "lucide-react";
 import TableModel from "../../../../Task_Dashboard/pages/form-setup/form-data/TableModel";
 import { LoanDetailMgt } from "../EmpPortalComponent/LoanDetailMgt";
@@ -152,9 +155,9 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
                 attendanceApprovalCount={portalInfo?.attApproval || 0}
                 loanApprovalCount={portalInfo?.loanApproval || 0}
                 resignationApprovalCount={portalInfo?.resignApproval || 0}
-                reimbursementApprovalCount={
-                  portalInfo?.reimbursementPending || 0
-                }
+                rosterApproval={portalInfo?.rosterApproval || 0}
+                tadaApproval={portalInfo?.tadaApproval || 0}
+                reimbApproval={portalInfo?.reimbApproval || 0}
                 moduleRights={moduleRights}
               />
               <ReportingEmpTable
@@ -221,10 +224,25 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
           ) : null}
         </div>
       ) : null}
+      <div className="flex flex-col md:flex-row gap-4">
+        {moduleRights?.find((e) => e?.value == 4)?.allow ? (
+          <>
+            <AttendanceRosterDetail />
+            <TravelRequestPortalDetail />
+            <ReimbursementDetail />
+          </>
+        ) : null}
+      </div>
       {moduleRights?.find((e) => e?.value == "separation")?.allow ||
       moduleRights?.find((e) => e?.value == 6)?.allow ||
       moduleRights?.find((e) => e?.value == 5)?.allow ? (
         <div className="flex flex-col md:flex-row gap-4">
+          {moduleRights?.find((e) => e?.value == 5)?.allow ? (
+            <JobRequestion />
+          ) : null}
+          {moduleRights?.find((e) => e?.value == 6)?.allow ? (
+            <AppraisalEvaluation />
+          ) : null}
           {moduleRights?.find((e) => e?.value == "separation")?.allow ? (
             <ResignationRequest
               isDisabled={
@@ -233,38 +251,22 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
               }
             />
           ) : null}
-          {moduleRights?.find((e) => e?.value == 6)?.allow ? (
-            <AppraisalEvaluation />
-          ) : null}
-          {moduleRights?.find((e) => e?.value == 5)?.allow ? (
-            <JobRequestion />
-          ) : null}
         </div>
       ) : null}
       {moduleRights?.find((e) => e?.value == 1)?.allow ||
       moduleRights?.find((e) => e?.value == 7)?.allow ? (
         <div className="flex flex-col md:flex-row gap-4">
-          {moduleRights?.find((e) => e?.value == 1)?.allow ? (
-            <CompanyDocument />
-          ) : null}
           {moduleRights?.find((e) => e?.value == 7)?.allow ? (
             <HelpDesk />
           ) : null}
           {moduleRights?.find((e) => e?.value == 7)?.allow ? (
             <ProjectManagement />
           ) : null}
-        </div>
-      ) : null}
-
-      <div className="flex flex-col md:flex-row gap-4">
-        {moduleRights?.find((e) => e?.value == 4)?.allow ? (
-          <>
-          <ReimbursementDetail />
-          <AttendanceRosterDetail />
-          <TravelRequestPortalDetail />
-          </>
+          {moduleRights?.find((e) => e?.value == 1)?.allow ? (
+            <CompanyDocument />
           ) : null}
         </div>
+      ) : null}
 
       {moduleRights?.find((e) => e?.value == 3)?.allow ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -296,12 +298,13 @@ const CompactView = ({
     company_doc_portal,
     portal_ticket_creation,
     ticket_setup_portal,
-    reimbursement_claim_request,
-    reimbursement_claim_approval,
+    reimbursement_claim,
+    roster,
   } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
       attendance: state?.auth?.userAccess["Attendance"],
+      roster: state?.auth?.userAccess["Attendance Management"],
       loan: state?.auth?.userAccess["Payroll"],
       resignation: state?.auth?.userAccess["Resignation"],
       requisition_job_vacancy: state?.auth?.userAccess.requisition_job_vacancy,
@@ -309,83 +312,130 @@ const CompactView = ({
       company_doc_portal: state?.auth?.userAccess.company_doc_portal,
       portal_ticket_creation: state?.auth?.userAccess.portal_ticket_creation,
       ticket_setup_portal: state?.auth?.userAccess["ticket_setup_portal"],
-      reimbursement_claim_request:
-        state?.auth?.userAccess["reimbursement_claim_request"],
-      reimbursement_claim_approval:
-        state?.auth?.userAccess["reimbursement_claim_approval"],
+      reimbursement_claim: state?.auth?.userAccess["Payroll"],
     }),
     shallowEqual,
   );
+  /// leave
   const isLeaveRequest = leave?.find(
     (el) =>
       el?.componentName === "ReadAllLeaveRequest" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
   const isLeaveApproval = leave?.find(
     (el) =>
       el?.componentName === "ReadAllLeaveApproval" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
+  /// attendance
   const isAttRequest = attendance?.find(
     (el) =>
       el?.componentName === "ReadAllAttendanceRequest" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
   const isAttApproval = attendance?.find(
     (el) =>
       el?.componentName === "ReadAllAttendanceApproval" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
+  /// loan
   const isLoanRequest = loan?.find(
     (el) =>
       el?.componentName === "ReadAllLoanRequest" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
   const isLoanApproval = loan?.find(
     (el) =>
       el?.componentName === "ReadAllLoanApproval" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
-  const isAccessForResignationRequest = resignation?.find(
+  /// roster
+  const isRostRequest = roster?.find(
     (el) =>
-      el?.componentName === "ReadAllResignation" &&
+      el?.componentName === "ReadAllAttendanceRosterRequest" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
-  const isAccessForResignationApproval = resignation?.find(
+  const isRostApproval = roster?.find(
     (el) =>
-      el?.componentName === "ReadAllResignationApproval" &&
+      el?.componentName === "ReadAllAttendanceRosterApproval" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
+  /// tada
+  const istadaRequest = roster?.find(
+    (el) =>
+      el?.componentName === "ReadAllAttendanceRosterRequest" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+  const istadaApproval = roster?.find(
+    (el) =>
+      el?.componentName === "ReadAllAttendanceRosterApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+  /// reimbursement_claim
+  const isreimbRequest = reimbursement_claim?.find(
+    (el) =>
+      el?.componentName === "ReadAllReimbursementClaimRequest" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+  const isreimbApproval = reimbursement_claim?.find(
+    (el) =>
+      el?.componentName === "ReadAllReimbursementClaimApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+  /// job
   const isAccessForJobReq = requisition_job_vacancy?.find(
     (el) =>
       el?.componentName === "ReadRequisitionJobVacancy" &&
       el?.isAccess &&
       el?.portalType == 2,
   );
-
+  /// appriasl
   const isAppraisalEvaluation = appraisalEval?.find(
     (el) =>
       el?.componentName === "ReadAllAppraisalEvaluation" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-
+  /// resignation
+  const isAccessForResignationRequest = resignation?.find(
+    (el) =>
+      el?.componentName === "ReadAllResignation" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+  const isAccessForResignationApproval = resignation?.find(
+    (el) =>
+      el?.componentName === "ReadAllResignationApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+  /// task
+  const isHelpDesk = portal_ticket_creation?.find(
+    (el) =>
+      el?.componentName === "ReadFacilitatorTicketCreation" &&
+      el?.isAccess &&
+      el?.portalType == 2,
+  );
+  /// prject
+  const isProjectManagement = ticket_setup_portal?.find(
+    (el) =>
+      el?.componentName === "ReadTicketSetup" &&
+      el?.isAccess &&
+      el?.portalType == 2,
+  );
+  /// doc
   const isCompanyDocPortal = company_doc_portal?.find(
     (el) =>
       el?.componentName === "ReadAllCompanyDocPortal" &&
@@ -393,32 +443,6 @@ const CompactView = ({
       el?.portalType == 2,
   );
 
-  const isHelpDesk = portal_ticket_creation?.find(
-    (el) =>
-      el?.componentName === "ReadFacilitatorTicketCreation" &&
-      el?.isAccess &&
-      el?.portalType == 2,
-  );
-
-  const isProjectManagement = ticket_setup_portal?.find(
-    (el) =>
-      el?.componentName === "ReadTicketSetup" &&
-      el?.isAccess &&
-      el?.portalType == 2,
-  );
-
-  const isReimbursementRequest = reimbursement_claim_request?.find(
-    (el) =>
-      el?.componentName === "ReadAllReimbursementClaimRequest" &&
-      el?.portalType == 2 &&
-      el?.isResourceShow,
-  );
-  const isReimbursementApproval = reimbursement_claim_approval?.find(
-    (el) =>
-      el?.componentName === "ReadAllReimbursementClaimApproval" &&
-      el?.portalType == 2 &&
-      el?.isResourceShow,
-  );
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 ">
       {/* Attendance Request */}
@@ -459,21 +483,62 @@ const CompactView = ({
           link={"/loan_request/read-all-loan-request"}
         />
       ) : null}
+      {/* Roster Claim */}
+      {moduleRights?.find((e) => e?.value == 4)?.allow && isRostRequest ? (
+        <CompactViewCard
+          Icon={NotebookTabs}
+          name={"Roster"}
+          count={portalInfo?.rosterApproval}
+          countLink={
+            isRostApproval
+              ? "/attendance_roster_approval/read-all-attendance-roster-approval"
+              : false
+          }
+          link={"/attendance_roster_request/read-all-attendance-roster-request"}
+        />
+      ) : null}
+      {/* tada */}
+      {moduleRights?.find((e) => e?.value == 4)?.allow && istadaRequest ? (
+        <CompactViewCard
+          Icon={Luggage}
+          name={"Travel"}
+          count={portalInfo?.tadaApproval}
+          countLink={
+            istadaApproval
+              ? // ? "/reimbursement_claim_approval/read-all-reimbursement-claim-approval"
+                "/"
+              : false
+          }
+          link={
+            // "/reimbursement_claim_request/read-all-reimbursement-claim-request"
+            "/"
+          }
+        />
+      ) : null}
       {/* Reimbursement Claim */}
-      {moduleRights?.find((e) => e?.value == 4)?.allow &&
-      isReimbursementRequest ? (
+      {moduleRights?.find((e) => e?.value == 4)?.allow && isreimbRequest ? (
         <CompactViewCard
           Icon={Receipt}
           name={"Reimbursement"}
-          count={portalInfo?.reimbursementPending}
+          count={portalInfo?.reimbApproval}
           countLink={
-            isReimbursementApproval
+            isreimbApproval
               ? "/reimbursement_claim_approval/read-all-reimbursement-claim-approval"
               : false
           }
           link={
             "/reimbursement_claim_request/read-all-reimbursement-claim-request"
           }
+        />
+      ) : null}
+      {/* Appraisal Evaluation */}
+      {moduleRights?.find((e) => e?.value == 6)?.allow &&
+      isAppraisalEvaluation ? (
+        <CompactViewCard
+          Icon={TrendingUpDown}
+          name={"Appraisal"}
+          count={portalInfo?.appraisalEvaluationPending}
+          link={"/appraisal_evaluation/read-all-appraisal-evaluation"}
         />
       ) : null}
       {/* Seperation Request  */}
@@ -496,14 +561,14 @@ const CompactView = ({
           }
         />
       ) : null}
-      {/* Appraisal Evaluation */}
-      {moduleRights?.find((e) => e?.value == 6)?.allow &&
-      isAppraisalEvaluation ? (
+      {/* /// Job Requisition */}
+      {moduleRights?.find((e) => e?.value == 5)?.allow && isAccessForJobReq ? (
         <CompactViewCard
-          Icon={TrendingUpDown}
-          name={"Appraisal"}
-          count={portalInfo?.appraisalEvaluationPending}
-          link={"/appraisal_evaluation/read-all-appraisal-evaluation"}
+          Icon={BriefcaseBusiness}
+          name={"Job Requestion"}
+          showCount={false}
+          count={0}
+          link={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}
         />
       ) : null}
       {/* Help Desk  */}
@@ -523,16 +588,6 @@ const CompactView = ({
           name={"Project Management"}
           count={portalInfo?.projectManagementPendingTask}
           link={"/ticket_setup_portal/read-all-ticket-setup"}
-        />
-      ) : null}
-      {/* /// Job Requisition */}
-      {moduleRights?.find((e) => e?.value == 5)?.allow && isAccessForJobReq ? (
-        <CompactViewCard
-          Icon={BriefcaseBusiness}
-          name={"Job Requestion"}
-          showCount={false}
-          count={0}
-          link={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}
         />
       ) : null}
       {/* Document Portal */}
@@ -576,7 +631,7 @@ const CompactViewCard = ({
   countLink,
 }) => {
   return (
-    <div className="bg-white/60 rounded-lg px-3 py-7 flex items-center space-x-3 justify-between h-fit relative w-full hover:bg-white/100">
+    <div className="bg-white/60 rounded-lg px-3 py-5 flex items-center space-x-3 justify-between h-fit relative w-full hover:bg-white/100">
       {/* Left section: Icon and label */}
       <div className="p-3">
         <Icon strokeWidth={1} className="w-12 h-12 text-tprimary" />

@@ -25,5 +25,5 @@ export const sortCaret = (order, column) => {
 };
 
 export const headerSortingClasses = (column, sortOrder, isLastSorting, colIndex) => (
-  (sortOrder === 'asc' || sortOrder === "desc") ? 'sortable-active' : ''
+  (sortOrder === 'asc' || sortOrder === "desc") ? '' : ''
 );

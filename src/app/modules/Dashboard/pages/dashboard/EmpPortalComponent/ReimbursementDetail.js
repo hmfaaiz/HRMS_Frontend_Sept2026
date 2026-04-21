@@ -38,14 +38,14 @@ export function ReimbursementDetail({ entities }) {
                 "/reimbursement_claim_request/read-all-reimbursement-claim-request"
               }
             >
-              Reimbursement Request
+              Reimbursement Claim
             </a>
           </p>
         </div>
       ) : (
-        <p className="text-sm mb-0">Reimbursement Request</p>
+        <p className="text-sm mb-0">Reimbursement Claim</p>
       )}
-      {isReimbursementApproval ? (
+      {/* {isReimbursementApproval ? (
         <div className="font-size-xs text-black font-bold">
           <p className="m-0 underline">
             <a
@@ -59,7 +59,7 @@ export function ReimbursementDetail({ entities }) {
         </div>
       ) : (
         <p className="text-sm mb-0">Reimbursement Approval</p>
-      )}
+      )} */}
     </div>
   );
 }

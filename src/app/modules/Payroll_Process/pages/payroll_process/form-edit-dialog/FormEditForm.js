@@ -1047,7 +1047,7 @@ const PayrollCheckListModel = ({ data, formUIProps }) => {
 
   return (
     <Modal
-      show={!!data && data.length > 0}
+      show={data !== null}
       onHide={handleClose}
       style={{ zIndex: "99999" }}
       size="xl"
