@@ -3697,6 +3697,7 @@ export function DesignationEditForm({
                           const newValue = !values?.isForMachineAtt;
 
                           setFieldValue("isForMachineAtt", newValue);
+                          setFieldValue("empMachineAttId", "");
 
                        
                         }}
@@ -3716,6 +3717,7 @@ export function DesignationEditForm({
                     <div>
                       <Field
                         name="empMachineAttId"
+                        disabled={!values.isForMachineAtt}
                         component={Input}
                         placeholder="Employee machine attendance Id : 1"
                         label="Employee machine attendance Id"

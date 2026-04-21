@@ -360,6 +360,20 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       text: "Hours",
       style: { minWidth: "50px" },
     },
+
+        {
+      dataField: "totalTimeLogHours",
+      text: "Logged Hours",
+      sort: false,
+      headerFormatter: () => (
+        <span style={{ whiteSpace: "normal", textAlign: "center", display: "block" }}>
+          Logged<br />Hours
+        </span>
+      ),
+      style: {
+        textAlign: "right",
+      },
+    },
     //     {
     //       dataField: "ticketStatus",
     //       text: "Status",
