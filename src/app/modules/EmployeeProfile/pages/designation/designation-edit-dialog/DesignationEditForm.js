@@ -337,9 +337,7 @@ const profileValidation = (localizationId) =>
       .oneOf([true, false], "Required*"), // Ensures the value is either true or false
 
 
- isForMachineAtt: Yup.boolean()
-  .nullable()
-  .oneOf([true, false], "Required*"),
+isForMachineAtt: Yup.boolean().nullable(),
 
 empMachineAttId: Yup.number()
   .nullable()
