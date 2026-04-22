@@ -33,7 +33,7 @@ export const AttendanceSummaryMgt = ({ attendanceSummary }) => {
     <div className="w-full bg-white rounded-lg">
       <div className="w-full text-xs px-3 py-2  flex flex-col h-full justify-between">
         <div className="w-full">
-          <h6 className="font-bold mb-0 text-primary my-2">Attendance</h6>
+          <h6 className="font-bold mb-0 text-primary my-2">Today's Attendance</h6>
           <DonutChart
             data={
               attendanceSummary && Object.keys(attendanceSummary).length > 0
