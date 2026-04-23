@@ -80,7 +80,15 @@ export function FormTable() {
     const found = deviceTypeist.find(item => item.value === value);
     return found ? found.label : "-";
   };
+  const activeOptions = [
+    { value: false, label: "Inactive" },
+    { value: true, label: "Active" },
+  ];
 
+    const getDeviceStatusLabel = (value) => {
+    const found = activeOptions.find(item => item.value === value);
+    return found ? found.label : "-";
+  };
   // Table columns
   const columns = [
     {
@@ -146,7 +154,17 @@ export function FormTable() {
       },
     },
 
-
+ {
+      dataField: "isActive",
+      text: "Device Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      formatter: (cell) => getDeviceStatusLabel(cell),
+      style: {
+        minWidth: "160px",
+      },
+    },
 
     {
       dataField: "action",

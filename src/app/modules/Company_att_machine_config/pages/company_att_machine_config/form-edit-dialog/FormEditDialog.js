@@ -94,6 +94,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         type: formData?.type,
         machineNo: formData?.machineNo,
         deviceName: formData?.deviceName,
+        isActive: formData?.isActive,
 
       };
 

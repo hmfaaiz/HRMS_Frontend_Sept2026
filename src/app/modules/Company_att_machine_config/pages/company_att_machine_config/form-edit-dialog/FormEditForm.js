@@ -46,6 +46,9 @@ const attMachineConfigEditSchema = Yup.object().shape({
   type: Yup.number()
     .nullable().required(VALIDATION_MESSAGES.required),
 
+  isActive: Yup.boolean()
+    .nullable().required(VALIDATION_MESSAGES.required),
+
 
   machineNo: Yup.number()
     .nullable()
@@ -85,7 +88,10 @@ export function FormEditForm({
 
   const { userForEdit } = currentState;
 
-
+  const activeOptions = [
+    { value: false, label: "Inactive" },
+    { value: true, label: "Active" },
+  ];
 
   const deviceTypeist = [
     { value: 1, label: "ZKTeco" },
@@ -102,7 +108,14 @@ export function FormEditForm({
       onSubmit={(values) => {
         enableLoading();
 
-        saveForm(values);
+        const trimmedValues = Object.keys(values).reduce((acc, key) => {
+          acc[key] = typeof values[key] === "string"
+            ? values[key].trim()
+            : values[key];
+          return acc;
+        }, {});
+
+        saveForm(trimmedValues);
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
@@ -227,6 +240,28 @@ export function FormEditForm({
 
 
                     />
+                  </div>
+
+                  <div>
+                    <label>
+                      Device Status<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <Field
+                      name="isActive"
+                      as="select"
+                      className="form-control"
+                      disabled={isUserForRead}
+                    >
+                      <option value="">Select</option>
+                      {activeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field>
+                    {errors.isActive && touched.isActive && (
+                      <span className="invalid-feedback">{errors.isActive}</span>
+                    )}
                   </div>
 
 

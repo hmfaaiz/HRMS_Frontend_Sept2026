@@ -34,7 +34,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     port: "",
     type: "",
     machineNo: "",
-
+    isActive: true
 
   };
 
