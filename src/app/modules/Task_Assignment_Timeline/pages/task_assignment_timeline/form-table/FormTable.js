@@ -360,6 +360,20 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       text: "Hours",
       style: { minWidth: "50px" },
     },
+
+        {
+      dataField: "totalTimeLogHours",
+      text: "Logged Hours",
+      sort: false,
+      headerFormatter: () => (
+        <span style={{ whiteSpace: "normal", textAlign: "center", display: "block" }}>
+          Logged<br />Hours
+        </span>
+      ),
+      style: {
+        textAlign: "right",
+      },
+    },
     //     {
     //       dataField: "ticketStatus",
     //       text: "Status",
@@ -379,7 +393,8 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       text: "Status",
       style: { minWidth: "70px" },
 
-      formatter: (_, row) => {
+      formatter: (cell, row) => {
+        console.log("cellll11111",cell)
         const lastDetail = row?.Details?.[0];
         if (!lastDetail) return "";
 
@@ -393,16 +408,19 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
 
         const isExpiredOrToday =
           ((dueDate < today && dueDate < createdDate) ||
-            (dueDate < today && lastDetail.ticketStatus != 0));
+            (dueDate < today && row.ticketStatus != 0));
 
-        const statusLabel =
-          ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
+        // const statusLabel =
+        //   ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
+
+
+           const statusLabel = ticketStatusOptions.find(opt => opt.value === cell)?.label || "";
 
         let color = "";
 
         if (isExpiredOrToday) {
           color = "red";
-        } else if (!isExpiredOrToday && lastDetail.ticketStatus === 0) {
+        } else if (!isExpiredOrToday && row.ticketStatus === 0) {
           color = "green";
         }
 

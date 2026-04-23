@@ -48,7 +48,7 @@ export const fetchRole = (id) => (dispatch) => {
     });
 };
 
-export const createRole = (roleForCreation,disableLoading) => (dispatch) => {
+export const createRole = (roleForCreation, disableLoading) => (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .createRole(roleForCreation)
@@ -144,9 +144,8 @@ export const accessRights = (queryParams) => (dispatch) => {
     .getAllAccessRights(queryParams)
     .then((response) => {
       // console.log("response", response)
-      const queryParams = response.data?.data;
-      // console.log("queryParams", queryParams)
-      dispatch(actions.accessRightsFetched(queryParams));
+      const data = response.data?.data;
+      dispatch(actions.accessRightsFetched(data));
     })
     .catch((error) => {
       error.clientMessage = "Can't find Roles";
@@ -155,33 +154,36 @@ export const accessRights = (queryParams) => (dispatch) => {
 };
 
 export const updateAccessRightByRoleAndResourceId = (role) => (dispatch) => {
-  // console.log("updatedUser data", role)
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .updateAccessRightByRoleAndResourceId(role)
     .then((response) => {
       const updatedRole = response.data?.data;
-      toast.success(response.data.message + " Updated", {
+      console.log("Updated data received:", updatedRole); // Debug log
+
+      dispatch(actions.accessRightsUpdated(updatedRole));
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined, // Fixed typo
       });
     })
     .catch((error) => {
-      // console.log("error User update", error)
-      //error.clientMessage = "Can't update User"
-      toast.error(error, {
+      console.log("error in update", error);
+      const errorMessage =
+        error.response?.data?.message || error.message || "Update failed";
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined, // Fixed typo
       });
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });

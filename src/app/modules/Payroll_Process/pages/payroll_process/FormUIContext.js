@@ -13,6 +13,7 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [employeeId, setemployeeId] = useState('');
+  const [payrollCheckListData, setPayrollCheckListData] = useState(null);
   const [ids, setIds] = useState("");
   const [isFileReq,setIsFileReq]=useState(false)
   const setQueryParams = useCallback((nextQueryParams) => {
@@ -51,6 +52,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     isFileReq,
     setIsFileReq,
     initUser,
+    payrollCheckListData,
+    setPayrollCheckListData,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,

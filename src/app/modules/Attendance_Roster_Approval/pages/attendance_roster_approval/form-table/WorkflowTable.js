@@ -183,7 +183,7 @@ export function WorkflowTable({ onHide, show }) {
         {/*Row 2: Employees in Request  */}
         {requestDetails.length > 0 && (
           <div className="w-full text-sm text-black mb-3">
-            <div className="bg-tsecondary p-2 rounded-lg">
+            <div className=" p-2 rounded-lg">
               <h6 className="font-bold mb-0 text-primary my-2">
                 Employees in Request
               </h6>
@@ -239,7 +239,7 @@ export function WorkflowTable({ onHide, show }) {
 
         {/*  Row 3: Approval Flow  */}
         <div className="w-full text-sm text-black">
-          <div className="bg-tsecondary p-2 rounded-lg">
+          <div className="p-2 rounded-lg">
             <h6 className="font-bold mb-0 text-primary my-2">Approval Flow</h6>
             <BootstrapTable
               noDataIndication={NoRecordsFoundMessage({ entities: workflowStatusList || [] })}

@@ -163,13 +163,29 @@ export function FormCard() {
   useEffect(() => {
     if (!dashboard?.allMasterTicketType?.length) return;
 
+    const now = new Date();
+
+    const from_date = formatDates(
+      new Date(now.getFullYear(), now.getMonth(), 1),
+      "yyyy-MM-dd",
+    );
+
+    const to_date = formatDates(
+      new Date(now.getFullYear(), now.getMonth() + 1, 0),
+      "yyyy-MM-dd",
+    );
+
     setPayload({
       ...payload,
       taskId: dashboard?.allMasterTicketType?.[0]?.value,
+      from_date,
+      to_date,
     });
     fetchData({
       ...payload,
       taskId: dashboard?.allMasterTicketType?.[0]?.value,
+      from_date,
+      to_date,
     });
   }, [dashboard?.allMasterTicketType]);
 

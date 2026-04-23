@@ -29,7 +29,7 @@ import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth, Ticke
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-import { fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { FetchAllFacilitatorEmployee, fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 
 const formValidation = Yup.object().shape({
@@ -74,6 +74,7 @@ export function FormCard() {
     dispatch(fetchAllTicketStatus());
     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
     dispatch(fetchMasterTicketType());
+     dispatch(FetchAllFacilitatorEmployee())
   }, [dispatch]);
 
   const { ticketCalendar } = currentState;
@@ -532,7 +533,7 @@ export function FormCard() {
                                     setFieldValue("employeeId", e.value || null);
                                   }}
                                   // value={
-                                  //   dashboard?.allEmployees?.find(
+                                  //   dashboard?.facilitatorEmployeeList?.find(
                                   //     (option) =>
                                   //       option?.value === values?.employeeId
                                   //   ) || null
@@ -541,7 +542,7 @@ export function FormCard() {
                                   value={
                                     values.employeeId === null
                                       ? { label: "All", value: null }
-                                      : dashboard?.allEmployees?.find(
+                                      : dashboard?.facilitatorEmployeeList?.find(
                                         option => option?.value === values?.employeeId
                                       ) || null
                                   }
@@ -551,12 +552,12 @@ export function FormCard() {
                                     { label: "All", value: "" },
                                     ...(Array.isArray(
                                       values?.departmentId
-                                        ? dashboard?.allEmployees?.filter(
+                                        ? dashboard?.facilitatorEmployeeList?.filter(
                                           (emp) =>
                                             emp?.departmentId ===
                                             values.departmentId
                                         )
-                                        : dashboard?.allEmployees
+                                        : dashboard?.facilitatorEmployeeList
                                     )
                                       ? values?.departmentId
                                         ? dashboard?.allEmployees?.filter(
@@ -564,7 +565,7 @@ export function FormCard() {
                                             emp?.departmentId ===
                                             values.departmentId
                                         )
-                                        : dashboard?.allEmployees
+                                        : dashboard?.facilitatorEmployeeList
                                       : []),
                                   ]}
                                   error={errors.employeeId}
@@ -620,8 +621,9 @@ export function FormCard() {
             }}
           </Formik>
         </div>
-        {ticketCalendar && ticketCalendar.length > 0 && <FormTable />}
+       
       </TCard >
+       {ticketCalendar && ticketCalendar.length > 0 && <FormTable />}
     </>
   );
 }

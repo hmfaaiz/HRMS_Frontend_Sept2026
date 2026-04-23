@@ -315,7 +315,7 @@ export function FormEditForm({
           }
         };
 
-        saveForm(values, clearForm,onHide);
+        saveForm(values, clearForm, onHide);
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
@@ -877,6 +877,14 @@ export function FormEditForm({
                           options={allCompanyEmployeesData}
 
                         />
+
+                        {!allCompanyEmployeesData?.find(
+                          (option) => option.value === values.assignBy
+                        ) && (
+                            <p style={{ color: "red" }}>
+                              This employee is inactive please contact HR.
+                            </p>
+                          )}
                       </div>
 
 
@@ -1200,7 +1208,7 @@ export function FormEditForm({
             {!isUserForRead && (
               <button
                 type="button"
-
+                disabled={receiveMode && !allCompanyEmployeesData?.find(option => option.value === values.assignBy)}
                 onClick={() => {
 
                   if (facilitatorEmployeeList?.length === 1) {

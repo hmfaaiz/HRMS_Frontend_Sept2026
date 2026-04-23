@@ -119,28 +119,28 @@ export function FormTable() {
       },
     },
 
-    {
-      dataField: "empAttachment",
-      text: "File",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
+    // {
+    //   dataField: "empAttachment",
+    //   text: "File",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "100px",
+    //   },
 
-      formatter: (cell) => {
-        if (!cell) return "";
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
 
-        return (
-          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-            View Document
-          </a>
-        );
-      }
+    //     return (
+    //       <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+    //         View Document
+    //       </a>
+    //     );
+    //   }
 
 
-    },
+    // },
 
 
     {

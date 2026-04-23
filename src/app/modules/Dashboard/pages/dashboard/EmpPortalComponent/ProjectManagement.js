@@ -78,7 +78,7 @@ export const ProjectManagement = () => {
         ) : (
           <p className="text-sm mb-0">Time Logging</p>
         )}
-        {isProjectTimeLine ? (
+        {/* {isProjectTimeLine ? (
           <div className="font-size-xs text-black font-bold">
             <p className="m-0 underline">
               <a href={"/project_timeline_portal/read-all-project-timeline"}>
@@ -88,7 +88,7 @@ export const ProjectManagement = () => {
           </div>
         ) : (
           <p className="text-sm mb-0">Project Timeline</p>
-        )}
+        )} */}
       </div>
     </>
   );

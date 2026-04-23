@@ -19,7 +19,14 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "60px",
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        return (
+          <span title={cell} className="text-xs line-clamp-1">
+            {cell}
+          </span>
+        );
       },
     },
     {
@@ -29,11 +36,19 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "80px",
+        minWidth: "100px",
       },
       formatter: (cell, row) => {
-        return `${row?.firstName || ""} ${row?.middleName ||
-          ""} ${row?.lastName || ""}`;
+        return (
+          <span
+            title={`${row?.firstName || ""} ${row?.middleName || ""}
+            ${row?.lastName || ""}`}
+            className="text-xs line-clamp-1"
+          >
+            {row?.firstName || ""} {row?.middleName || ""}
+            {row?.lastName || ""}
+          </span>
+        );
       },
     },
     {
@@ -43,7 +58,15 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "150px",
+        minWidth: "130px",
+        maxWidth: "130px",
+      },
+      formatter: (cell) => {
+        return (
+          <span title={cell} className="text-xs line-clamp-1">
+            {cell}
+          </span>
+        );
       },
     },
     {
@@ -53,8 +76,8 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "60px",
-        maxWidth: "60px",
+        minWidth: "70px",
+        maxWidth: "70px",
       },
       formatter: (cell) => {
         return cell?.length > 0
@@ -71,8 +94,8 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "60px",
-        maxWidth: "60px",
+        minWidth: "70px",
+        maxWidth: "70px",
       },
       formatter: (cell) => {
         return cell?.length > 0
@@ -89,8 +112,8 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "90px",
-        maxWidth: "90px",
+        minWidth: "100px",
+        maxWidth: "100px",
       },
       formatter: (cell) => {
         return cell?.length > 0 ? cell[0]?.status : "-";
@@ -99,7 +122,7 @@ export function ReportingEmpTable({ empAuthorityList }) {
   ];
 
   return (
-    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-56 overflow-auto scrollbar-fancy">
+    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-64 overflow-auto scrollbar-fancy">
       <h6 className="font-bold mb-0 text-primary my-2">
         Team Members ({empAuthorityList?.length || 0})
       </h6>

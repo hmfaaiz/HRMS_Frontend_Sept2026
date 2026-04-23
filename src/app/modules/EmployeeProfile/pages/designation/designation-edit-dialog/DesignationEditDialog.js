@@ -83,13 +83,13 @@ export function DesignationEditDialog({
     skillsList,
     incidentList,
     imagePolicy,
-    isImageReq,employeeStatusLabel,localizationId
+    isImageReq, employeeStatusLabel, localizationId
   ) => {
     delete user?.all_report_to;
     delete user?.all_deligationId;
 
-     if (localizationId==2 && user?.passportExpiry  &&  user?.passportExpiry < new Date()) {
-       disbaleLoading();
+    if (localizationId == 2 && user?.passportExpiry && user?.passportExpiry < new Date()) {
+      disbaleLoading();
       toast.error("Passport expiry must be a future date.", {
         position: "top-right",
         autoClose: 7000,
@@ -100,9 +100,9 @@ export function DesignationEditDialog({
         progress: undefined,
       });
       return
-     }
-      if (!user?.dateOfConfirmation && user?.employeeTypeId == 148 &&  employeeStatusLabel == "Confirmed") {
-       disbaleLoading();
+    }
+    if (!user?.dateOfConfirmation && user?.employeeTypeId == 148 && employeeStatusLabel == "Confirmed") {
+      disbaleLoading();
       toast.error("Date of confirmation is required.", {
         position: "top-right",
         autoClose: 7000,
@@ -113,9 +113,9 @@ export function DesignationEditDialog({
         progress: undefined,
       });
       return
-     }
-       if (!user?.dateOfContractExpiry &&  user?.employeeTypeId == 147) {
-       disbaleLoading();
+    }
+    if (!user?.dateOfContractExpiry && user?.employeeTypeId == 147) {
+      disbaleLoading();
       toast.error("Date of contract expiry is required.", {
         position: "top-right",
         autoClose: 7000,
@@ -126,7 +126,7 @@ export function DesignationEditDialog({
         progress: undefined,
       });
       return
-     }
+    }
 
 
     if (user?.requireDeligation && !user?.deligationId) {
@@ -241,9 +241,11 @@ export function DesignationEditDialog({
         deligationId: user?.deligationId,
         relation_name: user?.relation_name,
         hod: user?.hod,
-        geoLocationIds : user?.geoLocationIds,
-        allowedAnywhere : user?.allowedAnywhere,
+        geoLocationIds: user?.geoLocationIds,
+        allowedAnywhere: user?.allowedAnywhere,
         allowResignationRequest: user?.allowResignationRequest,
+        isForMachineAtt: user?.isForMachineAtt,
+        empMachineAttId: user?.empMachineAttId,
       };
 
       await dispatch(

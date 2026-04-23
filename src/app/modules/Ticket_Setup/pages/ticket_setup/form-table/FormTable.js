@@ -112,26 +112,26 @@ export function FormTable() {
     {
       dataField: "ticketCode",
       text: "Ticket Number",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "70px" },
+      style: { minWidth: "70px", maxWidth: "70px" },
     },
     {
       dataField: "ticketDescription",
       text: "Ticket Description",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "150px" },
+      style: { minWidth: "200px", maxWidth: "300px" },
     },
     {
       dataField: "ticketTypeId",
       text: "Ticket Type",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "60px" },
+      style: { minWidth: "60px", maxWidth: "60px" },
       formatter: (cell) =>
         cell ? TicketType?.find((e) => e.value == cell)?.label : "",
     },
@@ -139,26 +139,26 @@ export function FormTable() {
     {
       dataField: "TicketStatus.statusName",
       text: "Ticket Status",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "100px" },
+      style: { minWidth: "100px", maxWidth: "100px" },
     },
     {
       dataField: "AssignToEmp.name",
       text: "Assign To",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "130px" },
+      style: { minWidth: "150px", maxWidth: "150px" },
     },
     {
       dataField: "ReportToEmp.name",
       text: "Report To",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "130px" },
+      style: { minWidth: "150px", maxWidth: "150px" },
       formatter: (cell, row) =>
         row?.customerUserId ? `${row?.CustomerUser?.name} (Customer)` : cell,
     },
@@ -204,7 +204,7 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto scrollbar-fancy">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => (
           <Pagination isLoading={listLoading} paginationProps={paginationProps}>

@@ -12,6 +12,26 @@ export const sizePerPageList = [
   { text: "100", value: 100 },
 ]
 
+export const initialReceiveFilter = {
+
+  filterReceiver: {
+
+    searchQuery: "",
+    ticketStatus: 1,
+    timeRangeFrom: null,
+    timeRangeTo: null,
+    ticketDescription: null,
+    assignBy: null,
+
+  },
+
+
+
+  sortOrder: "asc",
+  pageSize: 5,
+  pageNumber: 1
+}
+
 
 export const initialFilter = {
   filterSender: {
@@ -32,24 +52,3 @@ export const initialFilter = {
   pageNumber: 1
 }
 
-
-
-export const initialReceiveFilter = {
-
-  filterReceiver: {
-
-    searchQuery: "",
-    ticketStatus: 1,
-    timeRangeFrom: null,
-    timeRangeTo: null,
-    ticketDescription: null,
-    assignBy: null,
-
-  },
-
-
-
-  sortOrder: "asc",
-  pageSize: 5,
-  pageNumber: 1
-}

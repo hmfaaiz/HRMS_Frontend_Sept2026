@@ -26,6 +26,7 @@ import {
   Input,
 } from "../../../../../../_metronic/_partials/controls";
 import FormPreview from "../preview/FormPreview";
+import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
 
 
 //Validation for date fields
@@ -49,6 +50,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   const FormUIContext = useFormUIContext();
   const [activeKey, setActiveKey] = useState("0");
   //Get All dropdown data from state
+  useEffect(() => {
+    dispatch(FetchAllFacilitatorEmployee());
+
+  }, [dispatch]);
+
 
   const { currentState, dashboard, previewData } = useSelector((state) => {
     return {
@@ -59,14 +65,14 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   });
   const {
     allEmployees,
-    allSubsidiaryList,
+    allSubsidiaryList,facilitatorEmployeeList
 
   } = useSelector((state) => state.dashboard);
 
 
   const allEmployeesMap = useMemo(() => {
-    return new Map(allEmployees?.map((item) => [item.value, item]));
-  }, [allEmployees]);
+    return new Map(facilitatorEmployeeList?.map((item) => [item.value, item]));
+  }, [facilitatorEmployeeList]);
 
 
   const allSubsidiaryMap = useMemo(() => {
@@ -166,8 +172,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
             ? ticketStatusOptions?.map(t => t.value)
             : [],
 
-          employeeId: dashboard?.allEmployees?.length
-            ? dashboard?.allEmployees?.map(t => t.value)
+          employeeId: dashboard?.facilitatorEmployeeList?.length
+            ? dashboard?.facilitatorEmployeeList?.map(t => t.value)
             : [],
           // subsidiaryId:
           //   initialFilter.filter?.subsidiaryId ||
@@ -219,54 +225,6 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
 
 
-                                {/* <div className="col-span-3">
-                                  <input
-                                    name="isEnable_via_task_project"
-                                    type="checkbox"
-                                    // onChange={handleChange}
-                                    onChange={(e) => {
-                                      clearFields(["taskTicketDescription"], setFieldValue);
-                                      setFieldValue("taskTicketStatusIds", [])
-                                      setFieldValue("taskTicketTypeIds", [])
-                                      setFieldValue("isEnable_via_task_assignment", false);
-                                      clearFields(["projectId", "projectTicketDescription",], setFieldValue);
-
-                                      // setFieldValue('ticketStatusIds', [])
-                                      // setFieldValue('ticketTypeIds', [])
-                                      setFieldValue("istTcketTypeTicket", false)
-                                      setFieldValue("isTicketTypeEmp", false)
-                                      setFieldValue("isEmpTicketTypeTicket", false)
-
-
-                                      setFieldValue("isProjectWise", true)
-                                      setFieldValue("istTcketTypeTicket", false)
-                                      setFieldValue("isEmpTicketTypeTicket", false)
-                                      setFieldValue("isTicketTypeEmp", false)
-                                      setFieldValue("isEmployeeWise", false)
-                                      setFieldValue("isEmployeeProject", false)
-                                      setFieldValue("isEmployeeProjectTicket", false)
-                                      setFieldValue("isProjectEmployee", false)
-                                      setFieldValue("isProjectTicket", false)
-                                      setFieldValue('ticketStatusIds', dashboard?.allTicketStatus?.length
-                                        ? dashboard?.allTicketStatus?.map(t => t.value)
-                                        : [])
-                                      setFieldValue('ticketTypeIds', TicketType?.length
-                                        ? TicketType?.map(t => t.value)
-                                        : [])
-
-
-                                      handleChange(e); // Trigger the form change handler
-
-                                    }}
-                                    onBlur={handleBlur}
-                                    value={values.isEnable_via_task_project}
-                                    checked={values.isEnable_via_task_project}
-
-                                  />
-                                  <label>
-                                    &nbsp;<span>Search Via Project</span>
-                                  </label>
-                                </div> */}
 
                                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
@@ -324,6 +282,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                       &nbsp;<span>Search Via Project</span>
                                     </label>
                                   </div>
+                                </div>
+
+
+                                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
                                   <div className="col-span-2">
                                     <SearchSelect
                                       name="projectId"
@@ -656,9 +618,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     &nbsp;<span>Search Via Task Assignment</span>
                                   </label>
                                 </div>
+                              </div>
 
 
-
+                              <div className="grid grid-cols-8 gap-x-3 gap-y-1">
                                 <div className="col-span-2">
                                   <MultiSelect
                                     name="taskTicketTypeIds"
@@ -831,7 +794,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               }
                               onChange={(date) => {
                                 setFieldValue("from_date", date);
-                                setFieldValue("to_date", date); // Sync from_date and to_date
+                                // setFieldValue("to_date", date); // Sync from_date and to_date
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
@@ -900,10 +863,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
                               name="employeeId"
                               label="Assignee"
-                              value={dashboard?.allEmployees.filter(t =>
+                              value={dashboard?.facilitatorEmployeeList.filter(t =>
                                 values.employeeId?.includes(t.value)
                               )}
-                              options={dashboard?.allEmployees}
+                              options={dashboard?.facilitatorEmployeeList}
                               onChange={(items = []) =>
                                 setFieldValue(
                                   "employeeId",

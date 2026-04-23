@@ -3,7 +3,8 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2, View } from "lucide-react";
+import { getUploadUrl } from "../../../../../../utils/common";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -24,6 +25,13 @@ export function ActionsColumnFormatter(
   const isUserRead = false;
   return (
     <div className="space-x-2">
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">View File</Tooltip>}
+        >
+          <a href={getUploadUrl(row?.compAttachment)} target="_blank" rel="noopener noreferrer">
+            <View className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
       {isAccessForRead && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}

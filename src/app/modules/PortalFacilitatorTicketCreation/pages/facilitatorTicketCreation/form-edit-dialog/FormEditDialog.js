@@ -25,12 +25,19 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     };
   }, [FormUIContext]);
 
+
+  const usersReceiveUIProps = useMemo(() => {
+    return {
+      queryReceiveParams: FormUIContext.queryReceiveParams,
+    };
+  }, [FormUIContext]);
+
   const formUIProps = useMemo(() => {
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
       employeeId: FormUIContext.employeeId,
-      queryParams: FormUIContext.queryParams,
+      queryReceiveParams: FormUIContext.queryReceiveParams,
       isFileReq: FormUIContext.isFileReq,
       setIsFileReq: FormUIContext.setIsFileReq,
       readMode: FormUIContext.readMode,
@@ -115,8 +122,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
       dispatch(actions.createTicketCreation(formData, disbaleLoading, clearForm,onHide));
-      dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
-      dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
+      dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
+      dispatch(actions.fetchReceiveTickets(usersReceiveUIProps.queryReceiveParams));
 
 
 
@@ -174,7 +181,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       await dispatch(actions.updateTicketCreation(formUpdatedFields, disbaleLoading, clearForm,onHide));
 
       await dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
-      await dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
+      await dispatch(actions.fetchReceiveTickets(formUIProps.queryReceiveParams));
     }
 
 
