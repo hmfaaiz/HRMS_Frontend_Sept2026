@@ -31,7 +31,6 @@ export function FormEditForm({
   const {
     dashboard,
     employeeEntitlement,
-    auth,
     actionsLoading,
     empAuthorityList,
     isPolicyExists,
@@ -370,11 +369,12 @@ export function FormEditForm({
             setFieldValue,
           ]);
 
-          // Auto-populate from TADA Configuration
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useEffect(() => {
-            if (employeeEntitlement && !(user?.Id || user?.id)) {
-              if (employeeEntitlement.dailyAllowanceAmount) {
+            if (employeeEntitlement) {
+              if (
+                employeeEntitlement.dailyAllowanceAmount &&
+                !(user?.Id || user?.id)
+              ) {
                 setFieldValue(
                   "dailyAllowanceRate",
                   employeeEntitlement.dailyAllowanceAmount,
@@ -426,7 +426,7 @@ export function FormEditForm({
               {/* Travel Details Heading and Header Fields */}
               <div className="mb-6">
                 <h6 className="text-primary font-bold mb-3">
-                  {modeText} Travel Request (PreApproval)
+                  {modeText} Travel Request
                 </h6>
                 {/* No Tada Policy Warning */}
                 {!hasEntitlement && actionsLoading === false && !isReadOnly && (

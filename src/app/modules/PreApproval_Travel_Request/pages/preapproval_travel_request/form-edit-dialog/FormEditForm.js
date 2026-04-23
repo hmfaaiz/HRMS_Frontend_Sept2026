@@ -62,7 +62,7 @@ export function FormEditForm({
     return preApproverIds.includes(roleId);
   }, [auth?.user?.roleId, employeeEntitlement?.preApprover]);
 
-  const effectiveEmployeeId = employeeId || user?.employeeId || user?.Id;
+  const effectiveEmployeeId = employeeId || user?.employeeId;
 
   React.useEffect(() => {
     if (effectiveEmployeeId) {
@@ -180,6 +180,7 @@ export function FormEditForm({
             selfAmount: m.selfAmount,
           })) || [],
         travelRemarks: user.travelRequestRemarks || "",
+        taxiFareRate: user.taxiFareRate || user.taxiFareAmount || 0,
       };
     }
 
@@ -359,11 +360,9 @@ export function FormEditForm({
             setFieldValue,
           ]);
 
-          // Auto-populate from TADA Configuration
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useEffect(() => {
-            if (employeeEntitlement && !(user?.Id || user?.id)) {
-              if (employeeEntitlement.dailyAllowanceAmount) {
+            if (employeeEntitlement) {
+              if (employeeEntitlement.dailyAllowanceAmount && !(user?.Id || user?.id)) {
                 setFieldValue(
                   "dailyAllowanceRate",
                   employeeEntitlement.dailyAllowanceAmount,

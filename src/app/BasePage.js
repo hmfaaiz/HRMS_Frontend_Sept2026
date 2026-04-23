@@ -545,26 +545,31 @@ const preapprovaltravelrequest = lazy(() =>
 const travel_request = lazy(() =>
   import("./modules/Travel_Request/pages/index"),
 );
+const travel_request_approval = lazy(() =>
+  import("./modules/Travel_Request_Approval/page/index"),
+);
 const employee_temporary_shift_setup = lazy(() =>
   import("./modules/Temporary_Shift_Setup/pages/index"),
 );
 
-const reimbursement_claim_request = lazy (() =>
-import ("./modules/Reimbursement_Claim_Request/pages/index"))
+const reimbursement_claim_request = lazy(() =>
+  import("./modules/Reimbursement_Claim_Request/pages/index"),
+);
 const project_sprint = lazy(() =>
   import("./modules/Project_Sprint/pages/index"),
 );
 
-const reimbursement_claim_approval = lazy (() =>
- import("./modules/Reimbursement_Claim_Approval/pages/index"),
+const reimbursement_claim_approval = lazy(() =>
+  import("./modules/Reimbursement_Claim_Approval/pages/index"),
 );
 
-const reimbursement_claim_workflow_status_approval = lazy (() =>
-import ("./modules/Reimbursement_Workflow_Status/pages/index"),
+const reimbursement_claim_workflow_status_approval = lazy(() =>
+  import("./modules/Reimbursement_Workflow_Status/pages/index"),
 );
 
-const reimbursement_claim_workflow_status = lazy (() =>
-import ("./modules/Reimbursement_Workflow_Portal/pages/index"))
+const reimbursement_claim_workflow_status = lazy(() =>
+  import("./modules/Reimbursement_Workflow_Portal/pages/index"),
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -723,44 +728,45 @@ const ROUTES = {
 
   facilitator_setup: Facilitator_Setup,
 
-  facilitator_ownership : Failitator_Ownership,
-  
-  customer_setup : Customer_Setup,
-  onboarding_checklist : Onboarding_Checklist,
-  project_setup : project_setup,
-  ticket_status : ticket_status,
-  ticket_setup : ticket_setup,
-  project_timeline : project_timeline,
-  task_assignment_timeline : task_assignment_timeline,
-  ticket_calendar : ticket_calendar,
-  time_logging : time_logging,
-  employee_onboarding_checklist : employee_onboarding_checklist,
-  ticket_time_report : ticket_time_report,
-  ticket_activity : ticket_activity,
-  task_dashboard : task_dashboard,
-  subsidiary_wise_payroll_checklist : subsidiary_wise_payroll_checklist,
-  portal_ticket_creation : PortalTicketCreation,
-  portal_ticket_time_report : portal_ticket_time_report,
-  portal_ticket_calendar : portal_ticket_calendar,
-  portal_task_assignment_timeline : portal_task_assignment_timeline,
-  ticket_setup_portal : ticket_setup_portal,
-  time_logging_portal : time_logging_portal,
-  ticket_activity_portal : ticket_activity_portal,
-  project_timeline_portal : project_timeline_portal,
-  task_configuration : task_configuration,
-  customer_user : customer_user,
-  cash_payment_against_loan : cash_payment_against_loan,
-  customer_config : customer_config,
-  temporary_shift_setup : employee_temporary_shift_setup,
-  reimbursement_claim_request : reimbursement_claim_request,
+  facilitator_ownership: Failitator_Ownership,
+
+  customer_setup: Customer_Setup,
+  onboarding_checklist: Onboarding_Checklist,
+  project_setup: project_setup,
+  ticket_status: ticket_status,
+  ticket_setup: ticket_setup,
+  project_timeline: project_timeline,
+  task_assignment_timeline: task_assignment_timeline,
+  ticket_calendar: ticket_calendar,
+  time_logging: time_logging,
+  employee_onboarding_checklist: employee_onboarding_checklist,
+  ticket_time_report: ticket_time_report,
+  ticket_activity: ticket_activity,
+  task_dashboard: task_dashboard,
+  subsidiary_wise_payroll_checklist: subsidiary_wise_payroll_checklist,
+  portal_ticket_creation: PortalTicketCreation,
+  portal_ticket_time_report: portal_ticket_time_report,
+  portal_ticket_calendar: portal_ticket_calendar,
+  portal_task_assignment_timeline: portal_task_assignment_timeline,
+  ticket_setup_portal: ticket_setup_portal,
+  time_logging_portal: time_logging_portal,
+  ticket_activity_portal: ticket_activity_portal,
+  project_timeline_portal: project_timeline_portal,
+  task_configuration: task_configuration,
+  customer_user: customer_user,
+  cash_payment_against_loan: cash_payment_against_loan,
+  customer_config: customer_config,
+  temporary_shift_setup: employee_temporary_shift_setup,
+  reimbursement_claim_request: reimbursement_claim_request,
   tada_config: tada_configuration,
-  preapproval_travel_request : preapprovaltravelrequest,
-  travel_request : travel_request,
+  preapproval_travel_request: preapprovaltravelrequest,
+  travel_request: travel_request,
+  travel_request_approval: travel_request_approval,
   temporary_shift_setup: employee_temporary_shift_setup,
   reimbursement_claim_approval: reimbursement_claim_approval,
-  project_sprint : project_sprint,
-  reimbursement_claim_workflow_status_approval : reimbursement_claim_workflow_status_approval,
-  reimbursement_claim_workflow_status : reimbursement_claim_workflow_status,
+  project_sprint: project_sprint,
+  reimbursement_claim_workflow_status_approval: reimbursement_claim_workflow_status_approval,
+  reimbursement_claim_workflow_status: reimbursement_claim_workflow_status,
 };
 
 export default function BasePage() {

@@ -97,6 +97,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         loading={loading}
         disableLoading={disableLoading}
         id={id}
+        employeeId={userForEdit?.employeeId}
       />
       <ToastContainer
         position="top-right"
