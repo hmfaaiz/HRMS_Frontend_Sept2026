@@ -1,0 +1,239 @@
+import React, { useEffect, useMemo } from "react";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory, {
+  PaginationProvider,
+} from "react-bootstrap-table2-paginator";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import * as actions from "../../../_redux/redux-Actions";
+import {
+  getHandlerTableChange,
+  NoRecordsFoundMessage,
+  PleaseWaitMessage,
+  sortCaret,
+  headerSortingClasses,
+} from "../../../../../../_metronic/_helpers";
+import * as uiHelpers from "../FormUIHelpers";
+import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
+import { Pagination } from "../../../../../../_metronic/_partials/controls";
+import { useFormUIContext } from "../FormUIContext";
+import { format } from "date-fns";
+
+export function FormTable() {
+  //Users UI Context
+  const formUIContext = useFormUIContext();
+
+  const formUIProps = useMemo(() => {
+    return {
+      ids: formUIContext.ids,
+      setIds: formUIContext.setIds,
+      queryParams: formUIContext.queryParams,
+      setQueryParams: formUIContext.setQueryParams,
+      openEditFormDialog: formUIContext.openEditFormDialog,
+      openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      openActiveFormDialog: formUIContext.openActiveFormDialog,
+      openReadFormDialog: formUIContext.openReadFormDialog,
+      openSendEmailFormDialog: formUIContext.openSendEmailFormDialog
+    };
+  }, [formUIContext]);
+
+
+  const { currentState, userAccess } = useSelector(
+    (state) => {
+      return {
+
+
+        currentState: state.company_att_machine_config,
+        userAccess: state?.auth?.userAccess["company_att_machine_config"],
+      }
+    },
+    shallowEqual
+  );
+
+  console.log('userAccess1111111111111', userAccess)
+  const { totalCount, entities, listLoading } = currentState;
+
+  //totalCount = 10
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    formUIProps.setIds([]);
+
+
+    dispatch(actions.fetchAttMachineConfigs(formUIProps.queryParams));
+  }, [formUIProps.queryParams, dispatch, totalCount]);
+
+  const isAccessForEdit = userAccess?.find(
+    (item) => item.componentName === "UpdateAttMachineConfig"
+  );
+
+  const isAccessForDelete = userAccess?.find(
+    (item) => item.componentName === "DeleteAttMachineConfig"
+  );
+
+
+  const deviceTypeist = [
+    { value: 1, label: "ZKTeco" },
+
+  ]
+  const getDeviceTypeLabel = (value) => {
+    const found = deviceTypeist.find(item => item.value === value);
+    return found ? found.label : "-";
+  };
+  const activeOptions = [
+    { value: false, label: "Inactive" },
+    { value: true, label: "Active" },
+  ];
+
+    const getDeviceStatusLabel = (value) => {
+    const found = activeOptions.find(item => item.value === value);
+    return found ? found.label : "-";
+  };
+  // Table columns
+  const columns = [
+    {
+      dataField: "Company.name",
+      text: "Company",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "Subsidiary.name",
+      text: "Subsidiary",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "deviceIP",
+      text: "device IP",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+
+    {
+      dataField: "deviceName",
+      text: "device name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "type",
+      text: "type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      formatter: (cell) => getDeviceTypeLabel(cell),
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "machineNo",
+      text: "Machine No.",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+
+ {
+      dataField: "isActive",
+      text: "Device Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      formatter: (cell) => getDeviceStatusLabel(cell),
+      style: {
+        minWidth: "160px",
+      },
+    },
+
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        openEditFormDialog: formUIProps.openEditFormDialog,
+        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        openActiveFormDialog: formUIProps.openActiveFormDialog,
+        openReadFormDialog: formUIProps.openReadFormDialog,
+        openSendEmailFormDialog: formUIProps.openSendEmailFormDialog,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForDelete: isAccessForDelete
+          ? isAccessForDelete.isAccess
+          : false,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "10px",
+      },
+    },
+  ];
+
+  //Table pagination properties
+  const paginationOptions = {
+    custom: true,
+    totalSize: totalCount,
+    sizePerPageList: uiHelpers.sizePerPageList,
+    sizePerPage: formUIProps.queryParams.pageSize,
+    page: formUIProps.queryParams.pageNumber,
+  };
+
+  return (
+    <div className="w-full overflow-x-auto">
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
+            >
+              <BootstrapTable
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={entities === null ? [] : entities}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(
+                  formUIProps.setQueryParams
+                )}
+                // selectRow={getSelectRow({
+                //   entities,
+
+                // })}
+                {...paginationTableProps}
+              >
+                <PleaseWaitMessage entities={entities} />
+                <NoRecordsFoundMessage entities={entities} />
+              </BootstrapTable>
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
+    </div>
+  );
+}
