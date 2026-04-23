@@ -10,9 +10,20 @@ import {
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { Checkbox } from "../../../../../../_metronic/_partials/controls";
 import DatePicker from "react-datepicker";
-import { Trash2, CirclePlus, XCircle } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  CirclePlus,
+  Calendar,
+  FileText,
+  History,
+  X,
+  XCircle,
+} from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
+import { Label } from "@material-ui/icons";
+// import { Toast } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 export function FormEditForm({

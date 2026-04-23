@@ -3,8 +3,8 @@ import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Accordion, Button, Card, Form, Modal } from "react-bootstrap";
-import { CirclePlus  } from "lucide-react";
-import { CircleMinus  } from "lucide-react";
+import { CirclePlus } from "lucide-react";
+import { CircleMinus } from "lucide-react";
 
 import {
   CardBody,
@@ -73,7 +73,7 @@ export function FormCard() {
     dispatch(fetchAllProjects());
     dispatch(fetchAllTicketStatus());
     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
-     dispatch(fetchMasterTicketType());
+    dispatch(fetchMasterTicketType());
   }, [dispatch]);
 
   const { ticketCalendar } = currentState;
@@ -83,6 +83,15 @@ export function FormCard() {
       from_date: getFirstDayOfCurrentMonth() || "",
       to_date: getLastDayOfCurrentMonth() || "",
       subsidiaryId: firstSubsidiary?.value || "",
+
+      isEnable_via_task_assignment: true || false,
+      taskTicketTypeIds: dashboard?.allMasterTicketType?.length
+        ? dashboard.allMasterTicketType.map(t => t.value)
+        : [],
+
+      taskTicketStatusIds: ticketStatusOptions?.length
+        ? ticketStatusOptions?.map(t => t.value)
+        : [],
     });
     setIsDataLoaded(true); // Mark data as loaded
     dispatch(fetchAllActiveEmployeesBySubsidiary(firstSubsidiary?.value));
@@ -120,7 +129,7 @@ export function FormCard() {
     { value: 2, label: "Send for Review" },
   ];
 
- const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState(null);
   return (
     <>
       <TCard name={CurrentModuleName()}>
@@ -130,25 +139,32 @@ export function FormCard() {
             initialValues={{
               // from_date: bodyValues?.from_date || null,
               // to_date: bodyValues?.to_date || null,
-               from_date: getFirstDayOfCurrentMonth(),
-                          to_date: getLastDayOfCurrentMonth(),
-              employeeId: "",
+              from_date: getFirstDayOfCurrentMonth(),
+              to_date: getLastDayOfCurrentMonth(),
+              employeeId: null,
+
+
+
+              ticketTypeIds: [],
+              ticketStatusIds: [],
+
+
+              projectTicketDescription: "",
+              taskTicketDescription: "",
 
 
               isEnable_via_task_project: false,
-              isEnable_via_task_assignment: false,
-              ticketTypeIds: [],
-              ticketStatusIds: [],
-              taskTicketTypeIds: [],
-              taskTicketStatusIds: [],
-              projectTicketDescription: "",
-              taskTicketDescription: "",
+              isEnable_via_task_assignment: true,
+
+              taskTicketTypeIds: dashboard?.allMasterTicketType?.length
+                ? dashboard.allMasterTicketType.map(t => t.value)
+                : [],
+              taskTicketStatusIds: ticketStatusOptions?.length
+                ? ticketStatusOptions?.map(t => t.value)
+                : [],
             }}
             validationSchema={formValidation}
-          // onSubmit={(values) => {
 
-          //   customSubmit(values);
-          // }}
           >
             {({
               handleSubmit,
@@ -202,221 +218,245 @@ export function FormCard() {
 
                               <>
                                 <div>
-                                  <h6 className="font-bold mb-0 text-primary my-2">
-                                    Project
-                                  </h6>
-                                  <div className="col-span-3">
-                                    <input
-                                      name="isEnable_via_task_project"
-                                      type="checkbox"
-                                      // onChange={handleChange}
-                                      onChange={(e) => {
-                                        clearFields(["taskTicketDescription"], setFieldValue);
-                                        setFieldValue("taskTicketStatusIds", [])
-                                        setFieldValue("taskTicketTypeIds", [])
-                                        setFieldValue("isEnable_via_task_assignment", false);
-                                        clearFields(["projectId", "projectTicketDescription",], setFieldValue);
 
-                                        setFieldValue('ticketStatusIds', [])
-                                        setFieldValue('ticketTypeIds', [])
-                                        handleChange(e); // Trigger the form change handler
-                                        // if (!e.target.checked) {
-                                        //   clearFields(
-                                        //     ["shiftId", "offDay_1", "offDay_2"],
-                                        //     setFieldValue
-                                        //   );
-                                        // }
-                                      }}
-                                      onBlur={handleBlur}
-                                      value={values.isEnable_via_task_project}
-                                      checked={values.isEnable_via_task_project}
-
-                                    />
-                                    <label>
-                                      &nbsp;<span>Search Via Project</span>
-                                    </label>
-                                  </div>
-                                  <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                                  <div className="grid grid-cols-2 gap-2">
 
                                     <div>
-                                      <SearchSelect
-                                        name="projectId"
-                                        isDisabled={!values.isEnable_via_task_project}
-                                        label={
-                                          <label>
-                                            Project
-
-                                          </label>
-                                        }
-                                        onChange={(e) => {
-                                          const value =
-                                            e.value == "Select" ? "" : Number(e.value);
-                                          setFieldValue("projectId", value);
-
-                                        }}
-                                        value={
-                                          dashboard?.allProjects?.find(
-                                            (option) =>
-                                              option?.value === values?.projectId
-                                          ) || null
-                                        }
-
-                                        options={dashboard?.allProjects}
-                                        error={errors.projectId}
-                                        touched={touched.projectId}
-                                      />
-
-                                    </div>
+                                      <h6 className="font-bold mb-0 text-primary my-2">
+                                        Project
+                                      </h6>
+                                      <div className="col-span-3">
+                                        <input
+                                          name="isEnable_via_task_project"
+                                          type="checkbox"
+                                          // onChange={handleChange}
+                                          onChange={(e) => {
+                                            clearFields(["taskTicketDescription"], setFieldValue);
+                                            setFieldValue("taskTicketStatusIds", [])
+                                            setFieldValue("taskTicketTypeIds", [])
+                                            setFieldValue("isEnable_via_task_assignment", false);
+                                            clearFields(["projectId", "projectTicketDescription",], setFieldValue);
 
 
 
-                                    <div className="">
-                                      <MultiSelect
-                                        disabled={!values.isEnable_via_task_project}
-                                        name="ticketTypeIds"
-                                        label="Ticket Type"
-                                        value={TicketType.filter(t =>
-                                          values.ticketTypeIds?.includes(t.value)
-                                        )}
-                                        options={TicketType}
-                                        onChange={(items = []) =>
-                                          setFieldValue(
-                                            "ticketTypeIds",
-                                            items.map((i) => i.value)
-                                          )
-                                        }
-                                      />
-                                    </div>
+                                            setFieldValue('ticketTypeIds', TicketType?.length
+                                              ? TicketType.map(t => t.value)
+                                              : [],)
+                                            setFieldValue('ticketStatusIds', dashboard?.allTicketStatus?.length
+                                              ? dashboard?.allTicketStatus?.map(t => t.value)
+                                              : [],)
+                                            handleChange(e);
 
-                                    <div>
-                                      <Field
-                                        name="projectTicketDescription"
-                                        component={Input}
-                                        maxLength={200}
-                                        disabled={!values.isEnable_via_task_project}
-                                        label={
-                                          <span>
-                                            Ticket Description{" "}
+                                          }}
+                                          onBlur={handleBlur}
+                                          value={values.isEnable_via_task_project}
+                                          checked={values.isEnable_via_task_project}
 
-                                          </span>
-                                        }
-                                      />
-                                    </div>
-
-                                    <div className="">
-                                      <MultiSelect
-                                        disabled={!values.isEnable_via_task_project}
-                                        name="ticketStatusIds"
-                                        label="Ticket Status"
-                                        value={dashboard.allTicketStatus.filter(t =>
-                                          values.ticketStatusIds?.includes(t.value)
-                                        )}
-                                        options={dashboard.allTicketStatus}
-                                        onChange={(items = []) =>
-                                          setFieldValue(
-                                            "ticketStatusIds",
-                                            items.map((i) => i.value)
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <h6 className="font-bold mb-0 text-primary my-2">
-                                    Task Assignment
-                                  </h6>
-                                  <div className="col-span-3 mt-3">
-                                    <input
-                                      name="isEnable_via_task_assignment"
-                                      type="checkbox"
-                                      // onChange={handleChange}
-                                      onChange={(e) => {
-                                        clearFields(["projectId", "projectTicketDescription",], setFieldValue);
-                                        setFieldValue("isEnable_via_task_project", false);
-                                        setFieldValue('ticketStatusIds', [])
-                                        setFieldValue('ticketTypeIds', [])
-
-                                        clearFields(["taskTicketDescription"], setFieldValue);
-                                        setFieldValue("taskTicketStatusIds", [])
-                                        setFieldValue("taskTicketTypeIds", [])
-
-                                        handleChange(e); // Trigger the form change handler
-                                        // if (!e.target.checked) {
-                                        //   clearFields(
-                                        //     ["shiftId", "offDay_1", "offDay_2"],
-                                        //     setFieldValue
-                                        //   );
-                                        // }
-                                      }}
-                                      onBlur={handleBlur}
-                                      value={values.isEnable_via_task_assignment}
-                                      checked={values.isEnable_via_task_assignment}
-
-                                    />
-                                    <label>
-                                      &nbsp;<span>Search Via Task Assignment</span>
-                                    </label>
-                                  </div>
+                                        />
+                                        <label>
+                                          &nbsp;<span>Search Via Project</span>
+                                        </label>
+                                      </div>
 
 
-                                  <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                                      <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+                                        <div>
+                                          <SearchSelect
+                                            name="projectId"
+                                            isDisabled={!values.isEnable_via_task_project}
+                                            label={
+                                              <label>
+                                                Project
+
+                                              </label>
+                                            }
+                                            onChange={(e) => {
+                                              const value =
+                                                e.value == "Select" ? "" : Number(e.value);
+                                              setFieldValue("projectId", value);
+
+                                            }}
+                                            value={
+                                              dashboard?.allProjects?.find(
+                                                (option) =>
+                                                  option?.value === values?.projectId
+                                              ) || null
+                                            }
+
+                                            options={dashboard?.allProjects}
+                                            error={errors.projectId}
+                                            touched={touched.projectId}
+                                          />
+
+                                        </div>
 
 
 
+                                        <div className="">
+                                          <MultiSelect
+                                            disabled={!values.isEnable_via_task_project}
+                                            name="ticketTypeIds"
+                                            label="Ticket Type"
+                                            value={TicketType.filter(t =>
+                                              values.ticketTypeIds?.includes(t.value)
+                                            )}
+                                            options={TicketType}
+                                            onChange={(items = []) =>
+                                              setFieldValue(
+                                                "ticketTypeIds",
+                                                items.map((i) => i.value)
+                                              )
+                                            }
+                                          />
+                                        </div>
 
-                                    <div className="">
-                                      <MultiSelect
-                                        name="taskTicketTypeIds"
-                                        label="Ticket Type"
-                                        disabled={!values.isEnable_via_task_assignment}
-                                        value={dashboard.allMasterTicketType.filter(t =>
-                                          values.taskTicketTypeIds?.includes(t.value)
-                                        )}
-                                        options={dashboard.allMasterTicketType}
-                                        onChange={(items = []) =>
-                                          setFieldValue(
-                                            "taskTicketTypeIds",
-                                            items.map((i) => i.value)
-                                          )
-                                        }
-                                      />
+                                        <div>
+                                          <Field
+                                            name="projectTicketDescription"
+                                            component={Input}
+                                            maxLength={200}
+                                            disabled={!values.isEnable_via_task_project}
+                                            label={
+                                              <span>
+                                                Ticket Description{" "}
+
+                                              </span>
+                                            }
+                                          />
+                                        </div>
+
+                                        <div className="">
+                                          <MultiSelect
+                                            disabled={!values.isEnable_via_task_project}
+                                            name="ticketStatusIds"
+                                            label="Ticket Status"
+                                            value={dashboard.allTicketStatus.filter(t =>
+                                              values.ticketStatusIds?.includes(t.value)
+                                            )}
+                                            options={dashboard.allTicketStatus}
+                                            onChange={(items = []) =>
+                                              setFieldValue(
+                                                "ticketStatusIds",
+                                                items.map((i) => i.value)
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      </div>
+
+
+
                                     </div>
 
                                     <div>
-                                      <Field
-                                        name="taskTicketDescription"
-                                        disabled={!values.isEnable_via_task_assignment}
-                                        component={Input}
-                                        maxLength={200}
-                                        label={
-                                          <span>
-                                            Ticket Description{" "}
 
-                                          </span>
-                                        }
-                                      />
+
+
+                                      <h6 className="font-bold mb-0 text-primary my-2">
+                                        Task Assignment
+                                      </h6>
+                                      <div className="col-span-3">
+                                        <input
+                                          name="isEnable_via_task_assignment"
+                                          type="checkbox"
+                                          // onChange={handleChange}
+                                          onChange={(e) => {
+                                            clearFields(["projectId", "projectTicketDescription",], setFieldValue);
+                                            setFieldValue("isEnable_via_task_project", false);
+                                            setFieldValue('ticketStatusIds', [])
+                                            setFieldValue('ticketTypeIds', [])
+
+                                            setFieldValue('taskTicketTypeIds', dashboard?.allMasterTicketType?.length
+                                              ? dashboard.allMasterTicketType.map(t => t.value)
+                                              : [],)
+
+
+                                            clearFields(["taskTicketDescription"], setFieldValue);
+                                            // setFieldValue("taskTicketStatusIds", [])
+                                            setFieldValue("taskTicketStatusIds", ticketStatusOptions?.length
+                                              ? ticketStatusOptions?.map(t => t.value)
+                                              : [],)
+                                            // setFieldValue("taskTicketTypeIds", [])
+
+                                            handleChange(e); // Trigger the form change handler
+                                            // if (!e.target.checked) {
+                                            //   clearFields(
+                                            //     ["shiftId", "offDay_1", "offDay_2"],
+                                            //     setFieldValue
+                                            //   );
+                                            // }
+                                          }}
+                                          onBlur={handleBlur}
+                                          value={values.isEnable_via_task_assignment}
+                                          checked={values.isEnable_via_task_assignment}
+
+                                        />
+                                        <label>
+                                          &nbsp;<span>Search Via Task Assignment</span>
+                                        </label>
+                                      </div>
+
+
+                                      <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+
+                                        <div className="">
+                                          <MultiSelect
+                                            name="taskTicketTypeIds"
+                                            label="Ticket Type"
+                                            disabled={!values.isEnable_via_task_assignment}
+                                            value={dashboard.allMasterTicketType.filter(t =>
+                                              values.taskTicketTypeIds?.includes(t.value)
+                                            )}
+                                            options={dashboard.allMasterTicketType}
+                                            onChange={(items = []) =>
+                                              setFieldValue(
+                                                "taskTicketTypeIds",
+                                                items.map((i) => i.value)
+                                              )
+                                            }
+                                          />
+                                        </div>
+
+                                        <div>
+                                          <Field
+                                            name="taskTicketDescription"
+                                            disabled={!values.isEnable_via_task_assignment}
+                                            component={Input}
+                                            maxLength={200}
+                                            label={
+                                              <span>
+                                                Ticket Description{" "}
+
+                                              </span>
+                                            }
+                                          />
+                                        </div>
+
+                                        <div className="">
+                                          <MultiSelect
+                                            name="taskTicketStatusIds"
+                                            label="Ticket Status"
+                                            disabled={!values.isEnable_via_task_assignment}
+                                            value={ticketStatusOptions.filter(t =>
+                                              values.taskTicketStatusIds?.includes(t.value)
+                                            )}
+                                            options={ticketStatusOptions}
+                                            onChange={(items = []) =>
+                                              setFieldValue(
+                                                "taskTicketStatusIds",
+                                                items.map((i) => i.value)
+                                              )
+                                            }
+                                          />
+                                        </div>
+
+                                      </div>
                                     </div>
-
-                                    <div className="">
-                                      <MultiSelect
-                                        name="taskTicketStatusIds"
-                                        label="Ticket Status"
-                                        disabled={!values.isEnable_via_task_assignment}
-                                        value={ticketStatusOptions.filter(t =>
-                                          values.taskTicketStatusIds?.includes(t.value)
-                                        )}
-                                        options={ticketStatusOptions}
-                                        onChange={(items = []) =>
-                                          setFieldValue(
-                                            "taskTicketStatusIds",
-                                            items.map((i) => i.value)
-                                          )
-                                        }
-                                      />
-                                    </div>
-
                                   </div>
-
                                 </div>
                               </>
 
@@ -433,7 +473,7 @@ export function FormCard() {
                               Date
                             </h6>
 
-                            <div className="grid grid-cols-4 gap-x-3 gap-y-1 ">
+                            <div className="grid grid-cols-8 gap-x-3 gap-y-1 ">
 
 
                               <div>
@@ -491,16 +531,24 @@ export function FormCard() {
                                   onChange={(e) => {
                                     setFieldValue("employeeId", e.value || null);
                                   }}
+                                  // value={
+                                  //   dashboard?.allEmployees?.find(
+                                  //     (option) =>
+                                  //       option?.value === values?.employeeId
+                                  //   ) || null
+                                  // }
+
                                   value={
-                                    dashboard?.allEmployees?.find(
-                                      (option) =>
-                                        option?.value === values?.employeeId
-                                    ) || null
+                                    values.employeeId === null
+                                      ? { label: "All", value: null }
+                                      : dashboard?.allEmployees?.find(
+                                        option => option?.value === values?.employeeId
+                                      ) || null
                                   }
 
 
                                   options={[
-                                    { label: "Select", value: "" },
+                                    { label: "All", value: "" },
                                     ...(Array.isArray(
                                       values?.departmentId
                                         ? dashboard?.allEmployees?.filter(
