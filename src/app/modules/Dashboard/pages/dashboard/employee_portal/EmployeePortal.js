@@ -394,7 +394,7 @@ const CompactView = ({
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-  /// job
+  /// jobP
   const isAccessForJobReq = requisition_job_vacancy?.find(
     (el) =>
       el?.componentName === "ReadRequisitionJobVacancy" &&

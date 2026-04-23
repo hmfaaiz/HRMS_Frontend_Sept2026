@@ -84,7 +84,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "80px",
       },
       formatter: (cell) => {
         return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
@@ -97,7 +97,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "80px",
       },
     },
     {
@@ -115,7 +115,8 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "350px",
+        maxWidth: "350px",
       },
     },
     {
@@ -125,7 +126,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "130px",
       },
     },
     {
@@ -135,7 +136,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "90px",
       },
     },
     {
