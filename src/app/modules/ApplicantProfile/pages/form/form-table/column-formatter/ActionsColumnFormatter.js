@@ -49,11 +49,11 @@ export function ActionsColumnFormatter(
           <span
             style={{ display: "inline-block", cursor: "pointer" }}
             onClick={(e) => {
-              // if (isFutureJoiningDate) {
-              //   e.preventDefault();
-              //   e.stopPropagation();
-              //   return;
-              // }
+              if (isFutureJoiningDate) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+              }
               openConvertFormDialog(row.Id);
             }}
           >
