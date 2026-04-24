@@ -586,6 +586,10 @@ const attendance_roster_workflow_status = lazy (() =>
 const attendance_roster_workflow_status_portal = lazy (() =>
   import ("./modules/Attendance_Roster_Workflow_Portal/pages/index"))
 
+
+const company_att_machine_config = lazy (() =>
+  import ("./modules/Company_att_machine_config/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -786,6 +790,7 @@ const ROUTES = {
   attendance_roster_approval : attendance_roster_approval,
   attendance_roster_workflow_status : attendance_roster_workflow_status,
   attendance_roster_workflow_status_portal : attendance_roster_workflow_status_portal,
+  company_att_machine_config : company_att_machine_config,
 };
 
 export default function BasePage() {

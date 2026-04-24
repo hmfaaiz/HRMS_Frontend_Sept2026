@@ -48,7 +48,7 @@ const BigTableModal = ({ onHide, show, data }) => {
       return {
         dataField: key,
         text: key.split("_").join(" "),
-
+        sort: true,
         formatter: (cell) => {
           // For date formatting
           if (isDate && typeof cell === "string") {

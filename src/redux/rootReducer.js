@@ -211,6 +211,7 @@ import { RosterRequestSlice } from "../app/modules/Attendance_Roster_Request/_re
 import { RosterApprovalSlice } from "../app/modules/Attendance_Roster_Approval/_redux/redux-Slice";
 import { RosterWorkflowHrmsSlice } from "../app/modules/Attendance_Roster_Workflow/_redux/redux-Slice";
 import { RosterWorkflowStatusSlice } from "../app/modules/Attendance_Roster_Workflow_Portal/_redux/redux-Slice";
+import { CompanyAttMachineConfigSlice } from "../app/modules/Company_att_machine_config/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -420,6 +421,7 @@ export const rootReducer = combineReducers({
   attendance_roster_approval : RosterApprovalSlice.reducer,
   attendance_roster_workflow_status : RosterWorkflowHrmsSlice.reducer,
   attendance_roster_workflow_status_portal : RosterWorkflowStatusSlice.reducer,
+  company_att_machine_config : CompanyAttMachineConfigSlice.reducer,
 });
 
 export function* rootSaga() {
