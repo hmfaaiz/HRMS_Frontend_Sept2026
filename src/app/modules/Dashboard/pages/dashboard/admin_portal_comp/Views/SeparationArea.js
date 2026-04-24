@@ -1,7 +1,12 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import { User, Briefcase, IdCardLanyardIcon, IdCardLanyard } from "lucide-react";
+import {
+  User,
+  Briefcase,
+  IdCardLanyardIcon,
+  IdCardLanyard,
+} from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -40,7 +45,7 @@ const SeparationArea = ({
                 summaryFilter?.gradeId == ""
                   ? { value: "", label: "All" }
                   : allEmployeegradeList?.find(
-                      (option) => option.value === summaryFilter.gradeId
+                      (option) => option.value === summaryFilter.gradeId,
                     ) || null
               }
               options={[
@@ -66,7 +71,7 @@ const SeparationArea = ({
                 summaryFilter?.departmentId == ""
                   ? { value: "", label: "All" }
                   : allParentDept?.find(
-                      (option) => option.value === summaryFilter?.departmentId
+                      (option) => option.value === summaryFilter?.departmentId,
                     ) || null
               }
               options={[
@@ -90,7 +95,7 @@ const SeparationArea = ({
                 summaryFilter?.locationId == ""
                   ? { value: "", label: "All" }
                   : allLocationChildMenus?.find(
-                      (option) => option.value === summaryFilter?.locationId
+                      (option) => option.value === summaryFilter?.locationId,
                     ) || null
               }
               options={[
@@ -131,23 +136,17 @@ const SeparationArea = ({
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
-          {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.tab_key === "separation") {
-                return <ChartData key={`chart-${alertIdx}`} data={e} />;
-              }
-              return null;
-            })}
-        </div>
         {/* chart area  */}
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (
-                e?.tab_key === "separation" &&
-                e?.dashlet_type === "big_table"
-              ) {
+            allDashboardAlerts
+              ?.filter(
+                (e) =>
+                  e?.dashlet_type === "big_table" &&
+                  e?.tab_key === "separation",
+              )
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
+              ?.map((e, alertIdx) => {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -155,9 +154,19 @@ const SeparationArea = ({
                     data={e}
                   />
                 );
-              }
-              return null;
-            })}
+              })}
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
+          {allDashboardAlerts?.length > 0 &&
+            allDashboardAlerts
+              ?.filter(
+                (e) =>
+                  e?.dashlet_type === "chart" && e?.tab_key === "separation",
+              )
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
+              ?.map((e, alertIdx) => {
+                return <ChartData key={`chart-${alertIdx}`} data={e} />;
+              })}
         </div>
       </div>
       <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">

@@ -40,7 +40,7 @@ const AttendanceArea = ({
                 summaryFilter?.gradeId == ""
                   ? { value: "", label: "All" }
                   : allEmployeegradeList?.find(
-                      (option) => option.value === summaryFilter.gradeId
+                      (option) => option.value === summaryFilter.gradeId,
                     ) || null
               }
               options={[
@@ -66,7 +66,7 @@ const AttendanceArea = ({
                 summaryFilter?.departmentId == ""
                   ? { value: "", label: "All" }
                   : allParentDept?.find(
-                      (option) => option.value === summaryFilter?.departmentId
+                      (option) => option.value === summaryFilter?.departmentId,
                     ) || null
               }
               options={[
@@ -90,7 +90,7 @@ const AttendanceArea = ({
                 summaryFilter?.locationId == ""
                   ? { value: "", label: "All" }
                   : allLocationChildMenus?.find(
-                      (option) => option.value === summaryFilter?.locationId
+                      (option) => option.value === summaryFilter?.locationId,
                     ) || null
               }
               options={[
@@ -142,23 +142,14 @@ const AttendanceArea = ({
           </div>
         </div>
         {/* chart area  */}
-        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
-          {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.tab_key == "3") {
-                return <ChartData key={`chart-${alertIdx}`} data={e} />;
-              }
-              return null;
-            })}
-        </div>
-        {/* chart area  */}
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (
-                e?.tab_key == "3" &&
-                e?.dashlet_type === "big_table"
-              ) {
+            allDashboardAlerts
+              ?.filter(
+                (el) => el?.tab_key == "3" && el?.dashlet_type == "big_table",
+              )
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
+              ?.map((e, alertIdx) => {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -166,18 +157,25 @@ const AttendanceArea = ({
                     data={e}
                   />
                 );
-              }
-              return null;
-            })}
+              })}
+        </div>
+        {/* chart area  */}
+        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
+          {allDashboardAlerts?.length > 0 &&
+            allDashboardAlerts
+              ?.filter(
+                (el) => el?.tab_key == "3" && el?.dashlet_type == "chart",
+              )
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
+              ?.map((e, alertIdx) => {
+                return <ChartData key={`chart-${alertIdx}`} data={e} />;
+              })}
         </div>
       </div>
       <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
-            if (
-              e?.dashlet_type === "small_table" &&
-              e?.tab_key == "3"
-            ) {
+            if (e?.dashlet_type === "small_table" && e?.tab_key == "3") {
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}

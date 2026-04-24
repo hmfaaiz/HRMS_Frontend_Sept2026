@@ -78,6 +78,7 @@ export const EmployeePortal = () => {
               />
             </div>
             <EmployeeProfile
+              isTeamExists={portalInfo?.reportingEmployee?.length}
               team={portalInfo?.reportingEmployee}
               setAttModalData={setAttModalData}
               updateCompactView={() => {
@@ -109,6 +110,7 @@ export const EmployeePortal = () => {
                   />
                 </div>
                 <CompactView
+                  isTeamExists={portalInfo?.reportingEmployee?.length}
                   moduleRights={moduleRights}
                   portalInfo={portalInfo}
                   attModalData={attModalData}
@@ -287,6 +289,7 @@ const CompactView = ({
   moduleRights,
   attModalData,
   setAttModalData,
+  isTeamExists,
 }) => {
   const {
     leave,
@@ -455,6 +458,7 @@ const CompactView = ({
               ? "/attendance_approval/read-all-attendance-approval"
               : false
           }
+          isTeamExists={isTeamExists}
           count={portalInfo?.attApproval}
           link={"/attendance_request/read-all-attendance-request"}
         />
@@ -464,6 +468,7 @@ const CompactView = ({
         <CompactViewCard
           Icon={UserRoundX}
           name={"Leave"}
+          isTeamExists={isTeamExists}
           countLink={
             isLeaveApproval ? "/leave-approval/read-all-leave-approval" : false
           }
@@ -475,6 +480,7 @@ const CompactView = ({
       {moduleRights?.find((e) => e?.value == 4)?.allow && isLoanRequest ? (
         <CompactViewCard
           Icon={Banknote}
+          isTeamExists={isTeamExists}
           name={"Loan"}
           countLink={
             isLoanApproval ? "/loan_approval/read-all-loan-approval" : false
@@ -487,6 +493,7 @@ const CompactView = ({
       {moduleRights?.find((e) => e?.value == 4)?.allow && isRostRequest ? (
         <CompactViewCard
           Icon={NotebookTabs}
+          isTeamExists={isTeamExists}
           name={"Roster"}
           count={portalInfo?.rosterApproval}
           countLink={
@@ -501,6 +508,7 @@ const CompactView = ({
       {moduleRights?.find((e) => e?.value == 4)?.allow && istadaRequest ? (
         <CompactViewCard
           Icon={Luggage}
+          isTeamExists={isTeamExists}
           name={"Travel"}
           count={portalInfo?.tadaApproval}
           countLink={
@@ -519,6 +527,7 @@ const CompactView = ({
       {moduleRights?.find((e) => e?.value == 4)?.allow && isreimbRequest ? (
         <CompactViewCard
           Icon={Receipt}
+          isTeamExists={isTeamExists}
           name={"Reimbursement"}
           count={portalInfo?.reimbApproval}
           countLink={
@@ -536,6 +545,7 @@ const CompactView = ({
       isAppraisalEvaluation ? (
         <CompactViewCard
           Icon={TrendingUpDown}
+          isTeamExists={isTeamExists}
           name={"Appraisal"}
           count={portalInfo?.appraisalEvaluationPending}
           link={"/appraisal_evaluation/read-all-appraisal-evaluation"}
@@ -546,6 +556,7 @@ const CompactView = ({
       isAccessForResignationRequest ? (
         <CompactViewCard
           Icon={FileUser}
+          isTeamExists={isTeamExists}
           name={"Resignation"}
           count={portalInfo?.resignApproval}
           countLink={
@@ -565,6 +576,7 @@ const CompactView = ({
       {moduleRights?.find((e) => e?.value == 5)?.allow && isAccessForJobReq ? (
         <CompactViewCard
           Icon={BriefcaseBusiness}
+          isTeamExists={isTeamExists}
           name={"Job Requestion"}
           showCount={false}
           count={0}
@@ -575,6 +587,7 @@ const CompactView = ({
       {moduleRights?.find((e) => e?.value == 7)?.allow && isHelpDesk ? (
         <CompactViewCard
           Icon={HeartHandshake}
+          isTeamExists={isTeamExists}
           name={"Task Assignment"}
           count={portalInfo?.helpDeskPendingTask}
           link={"/portal_ticket_creation/read-all-facilitator-ticket-creation"}
@@ -585,6 +598,7 @@ const CompactView = ({
       isProjectManagement ? (
         <CompactViewCard
           Icon={PanelsTopLeft}
+          isTeamExists={isTeamExists}
           name={"Project Management"}
           count={portalInfo?.projectManagementPendingTask}
           link={"/ticket_setup_portal/read-all-ticket-setup"}
@@ -594,6 +608,7 @@ const CompactView = ({
       {moduleRights?.find((e) => e?.value == 1)?.allow && isCompanyDocPortal ? (
         <CompactViewCard
           Icon={FolderCheck}
+          isTeamExists={isTeamExists}
           name={"Documents"}
           showCount={false}
           count={0}
@@ -629,6 +644,7 @@ const CompactViewCard = ({
   count,
   showCount = true,
   countLink,
+  isTeamExists,
 }) => {
   return (
     <div className="bg-white/60 rounded-lg px-3 py-5 flex items-center space-x-3 justify-between h-fit relative w-full hover:bg-white/100">
@@ -646,7 +662,7 @@ const CompactViewCard = ({
       </div>
 
       {/* Right section: value box with Bell icon */}
-      {showCount ? (
+      {showCount && isTeamExists ? (
         <a
           href={countLink || link}
           className="relative bg-tprimary w-20 h-20 p-3 rounded-lg flex items-center justify-center"
