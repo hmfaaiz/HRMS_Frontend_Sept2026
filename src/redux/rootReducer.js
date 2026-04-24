@@ -200,6 +200,7 @@ import { ReimbursementClaimSlice } from "../app/modules/Reimbursement_Claim_Requ
 import { tada_configurationSlice } from "../app/modules/Tada_Configuration/_redux/redux-Slice";
 import { preapproval_travel_requestSlice } from "../app/modules/PreApproval_Travel_Request/_redux/redux-Slice";
 import { travel_requestSlice } from "../app/modules/Travel_Request/_redux/redux-Slice";
+import { travelrequestApprovalSlice } from "../app/modules/Travel_Request_Approval/redux/redux-Slice";
 import { employeeTempShiftSlice } from "../app/modules/Temporary_Shift_Setup/_redux/redux-Slice";
 import { projectSprintSlice } from "../app/modules/Project_Sprint/_redux/redux-Slice";
 
@@ -392,23 +393,25 @@ export const rootReducer = combineReducers({
   ticket_activity: ticketActivitySlice.reducer,
   task_dashboard: TaskDashboardSlice.reducer,
 
-  subsidiary_wise_payroll_checklist : SubsidiaryWisePayrollChecklistSlice.reducer,
-  portal_ticket_creation : PortalFacilitatorTicketCreationSlice.reducer,
-  portal_ticket_time_report : PortalTicketTimeReportSlice.reducer,
-  portal_ticket_calendar : PortalTicketCalendarSlice.reducer,
-  portal_task_assignment_timeline : portalTaskAssignmentTimelineSlice.reducer,
-  ticket_setup_portal : ticketSetupPortalSlice.reducer,
-  project_timelog_portal : projectTimeLogPortalSlice.reducer,
-  project_timeline_portal : projectTimelinePortalSlice.reducer,
-  ticket_activity_portal : ticketActivityPortalSlice.reducer,
-  task_configuration : TaskConfigurationSlice.reducer,
-  customer_user_management : CustomerUserManagementSlice.reducer,
-  cash_payment_against_loan : loanCashPaymentSlice.reducer,
-  customer_config : CustomerConfigurationSlice.reducer,
-  reimbursement_claim_request : ReimbursementClaimSlice.reducer,
+  subsidiary_wise_payroll_checklist:
+    SubsidiaryWisePayrollChecklistSlice.reducer,
+  portal_ticket_creation: PortalFacilitatorTicketCreationSlice.reducer,
+  portal_ticket_time_report: PortalTicketTimeReportSlice.reducer,
+  portal_ticket_calendar: PortalTicketCalendarSlice.reducer,
+  portal_task_assignment_timeline: portalTaskAssignmentTimelineSlice.reducer,
+  ticket_setup_portal: ticketSetupPortalSlice.reducer,
+  project_timelog_portal: projectTimeLogPortalSlice.reducer,
+  project_timeline_portal: projectTimelinePortalSlice.reducer,
+  ticket_activity_portal: ticketActivityPortalSlice.reducer,
+  task_configuration: TaskConfigurationSlice.reducer,
+  customer_user_management: CustomerUserManagementSlice.reducer,
+  cash_payment_against_loan: loanCashPaymentSlice.reducer,
+  customer_config: CustomerConfigurationSlice.reducer,
+  reimbursement_claim_request: ReimbursementClaimSlice.reducer,
   t_tada_config: tada_configurationSlice.reducer,
   t_preapproval_travel_request: preapproval_travel_requestSlice.reducer,
   travel_request: travel_requestSlice.reducer,
+  travel_approval: travelrequestApprovalSlice.reducer,
   reimbursement_claim_approval: ReimbursementApprovalSlice.reducer,
   temporary_shift_setup: employeeTempShiftSlice.reducer,
   project_sprint : projectSprintSlice.reducer,

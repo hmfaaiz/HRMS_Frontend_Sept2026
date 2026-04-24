@@ -26,7 +26,7 @@ export function EmployeeSelect({
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     dispatch(fetchAllFormsMenu(554, "allClassOfTravelList"));
   }, [dispatch]);
-  const { dashboard, employeeEntitlement, auth } = useSelector(
+  const { dashboard, employeeEntitlement } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
       employeeEntitlement:
@@ -120,7 +120,7 @@ export function EmployeeSelect({
               {/* Employee Dropdown */}
               <div className="col-span-12 md:col-span-4 lg:col-span-3">
                 <h6 className="text-primary font-bold mb-3">
-                  {modeText} Travel Request (PreApproval)
+                  {modeText} Travel Request
                 </h6>
                 <SearchSelect
                   name="employeeId"
@@ -181,7 +181,9 @@ export function EmployeeSelect({
                 {/* Entitlement Detail Button */}
                 <button
                   type="button"
-                  className="btn btn-secondary d-flex align-items-center gap-2"
+                  className={`btn ${
+                    panelMode ? "btn-light" : "btn-primary"
+                  } d-flex align-items-center gap-2`}
                   onClick={handleEntitlementClick}
                   disabled={!values.employeeId}
                 >
@@ -192,7 +194,9 @@ export function EmployeeSelect({
                 {/* Last Travel Details Button - FIXED: changed to correct handler */}
                 <button
                   type="button"
-                  className="btn btn-secondary d-flex align-items-center gap-2"
+                  className={`btn ${
+                    panelMode ? "btn-light" : "btn-primary"
+                  } d-flex align-items-center gap-2`}
                   onClick={handleLastTravelDetailsClick}
                   disabled={!values.employeeId}
                 >
