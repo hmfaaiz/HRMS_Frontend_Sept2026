@@ -3,7 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CirclePower, Eye, Pencil, Trash2 } from "lucide-react";
+import { CirclePower, Copy, Eye, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -17,12 +17,22 @@ export function ActionsColumnFormatter(
     openReadUserDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadFormDialog,
+    openReadFormDialog,openDuplicateDialog
   }
 ) {
   const isUserRead = false;
   return (
     <div className="space-x-2">
+      {/* {isAccessForEdit && ( */}
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Copy</Tooltip>}
+        >
+          <a title="" onClick={() => openDuplicateDialog(row.Id)}>
+               <Copy className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      {/* )} */}
+      
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
       >

@@ -165,3 +165,57 @@ export const update_Payroll_Policy = (user, emailRecipentList, eobiAllowancesLis
       });
     });
 };
+
+
+export const fetchPayrollPolicySubsidiaryIds = (queryparm) => async (dispatch) => {
+  return requestFromServer.getPayrollPolicySubsidiaryIds(queryparm)
+    .then((response) => {
+      dispatch(actions.Payroll_SubsidiaryList_Fetched(response));
+    })
+    .catch((error) => {
+
+      error.clientMessage = "Can't find records";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};
+
+
+
+export const copyPayrollPolicyById = (body,disableLoading) => (
+  dispatch
+) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+
+  return requestFromServer
+    .copyPayrollPolicyById(body)
+    .then((res) => {
+      const data = res.data?.data;
+
+
+disableLoading()
+      toast.success(SERVER_MESSAGES.insertedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      //  onHide();
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't create user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
