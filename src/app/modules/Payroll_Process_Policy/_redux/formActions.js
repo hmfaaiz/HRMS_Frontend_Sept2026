@@ -167,8 +167,8 @@ export const update_Payroll_Policy = (user, emailRecipentList, eobiAllowancesLis
 };
 
 
-export const fetchPayrollPolicySubsidiaryIds = (queryparm) => async (dispatch) => {
-  return requestFromServer.getPayrollPolicySubsidiaryIds(queryparm)
+export const fetchPayrollPolicySubsidiaryIds = () => async (dispatch) => {
+  return requestFromServer.getPayrollPolicySubsidiaryIds()
     .then((response) => {
       dispatch(actions.Payroll_SubsidiaryList_Fetched(response));
     })
@@ -193,7 +193,7 @@ export const copyPayrollPolicyById = (body,disableLoading) => (
 
 
 disableLoading()
-      toast.success(SERVER_MESSAGES.insertedSuccess, {
+      toast.success(data?.message || SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

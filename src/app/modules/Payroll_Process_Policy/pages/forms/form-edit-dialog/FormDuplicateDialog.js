@@ -24,6 +24,13 @@ export function DuplicateDialog({ show,onHide }) {
     };
   }, [formUIContext]);
 
+    useEffect(() => {
+  
+   
+        dispatch(actions.fetchPayrollPolicySubsidiaryIds());
+
+    }, []);
+
   // Customers Redux state
   const dispatch = useDispatch();
   const { isLoading, currentState } = useSelector(
@@ -48,7 +55,7 @@ export function DuplicateDialog({ show,onHide }) {
 
   const handleClick = () => {
     enableLoading();
-    console.log("selectedSubsidiaryList1111",id,selectedSubsidiaryList)
+   
     dispatch(
       actions.copyPayrollPolicyById(
         {
@@ -61,6 +68,8 @@ export function DuplicateDialog({ show,onHide }) {
     ).then(() => {
       onHide();
       dispatch(actions.fetchUsers(formUIProps.queryParams));
+      dispatch(actions.fetchPayrollPolicySubsidiaryIds());
+      setSelectedSubsidiaryList([])
       disableLoading();
     });
   };

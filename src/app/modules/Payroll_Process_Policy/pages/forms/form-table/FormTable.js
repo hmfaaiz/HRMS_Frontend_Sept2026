@@ -83,6 +83,7 @@ export function FormTable(user) {
   useEffect(() => {
     FormUIProps.setIds([]);
     dispatch(actions.fetchUsers(FormUIProps.queryParams));
+    dispatch(actions.fetchPayrollPolicySubsidiaryIds());
   }, [FormUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
