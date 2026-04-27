@@ -38,3 +38,18 @@ export const initialFilter = {
   pageSize: 10,
   pageNumber: 1
 }
+
+export const initialLogsFilter = {
+
+
+
+  sortOrder: "asc",
+  pageSize: 5,
+  pageNumber: 1
+}
+
+export const sizeLogsPerPageList = [
+  { text: "3", value: 3 },
+  { text: "5", value: 5 },
+  { text: "10", value: 10 },
+]

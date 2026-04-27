@@ -95,17 +95,17 @@ export const clearTaskAssignmentTimeline = () => (dispatch) => {
 };
 
 
-export const fetchAllFacilitatorTimeLogDetail = (Id) => (dispatch) => {
+export const fetchAllFacilitatorTimeLogDetail = (body) => (dispatch) => {
 
 
-  if (!Id) {
+  if (!body) {
     return dispatch(actions.FacilitatorTimeLogDetailFetched({ detailData: undefined }));
   }
 
   return requestFromServer
-    .getAllFacilitatorTimeLogDetail(Id)
+    .getAllFacilitatorTimeLogDetail(body)
     .then((response) => {
-      const entities = response.data.data.rows;
+      const entities = response.data.data;
     
       dispatch(actions.FacilitatorTimeLogDetailFetched(entities));
     })
