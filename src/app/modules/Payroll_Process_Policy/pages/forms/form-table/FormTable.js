@@ -97,6 +97,9 @@ export function FormTable(user) {
 
   const isAccessForRead = userAccess?.find(
     (item) => item.componentName === "ReadPayrollProcessPolicy"
+
+  );  const isAccessForCopy = userAccess?.find(
+    (item) => item.componentName === "CopyPayrollProcessPolicy"
   );
 
   const mutliSelectStyle = {
@@ -344,6 +347,7 @@ export function FormTable(user) {
         openReadFormDialog: FormUIProps.openReadFormDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
+        isAccessForCopy: isAccessForCopy ? isAccessForCopy.isAccess : false,
         openDuplicateDialog:FormUIProps.openDuplicateDialog,
       },
       classes: "text-right pr-0",

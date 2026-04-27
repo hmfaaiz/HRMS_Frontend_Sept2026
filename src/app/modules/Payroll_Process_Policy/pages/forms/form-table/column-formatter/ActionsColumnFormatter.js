@@ -17,13 +17,13 @@ export function ActionsColumnFormatter(
     openReadUserDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadFormDialog,openDuplicateDialog
+    openReadFormDialog,openDuplicateDialog,isAccessForCopy,
   }
 ) {
   const isUserRead = false;
   return (
     <div className="space-x-2">
-      {/* {isAccessForEdit && ( */}
+      {isAccessForCopy && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Copy</Tooltip>}
         >
@@ -31,7 +31,7 @@ export function ActionsColumnFormatter(
                <Copy className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
-      {/* )} */}
+      )}
       
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
