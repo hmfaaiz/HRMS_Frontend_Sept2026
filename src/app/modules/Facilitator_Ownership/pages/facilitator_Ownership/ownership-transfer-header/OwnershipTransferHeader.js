@@ -40,6 +40,11 @@ export default function OwnershipTransferHeader({ onFilter,setShowTables,reset }
   useEffect(() => {
     dispatch(dashboardActions.fetchAllSubsidiaryData("allSubsidiaryData"));
     dispatch(dashboardActions.fetchAllDept());
+     dispatch(
+            dashboardActions.fetchAllEmployeesWithNoPermissionData(
+              "allEmployeesWithNoPermissionList"
+            )
+          );
   }, [dispatch]);
 
   // ---------------- FETCH EMPLOYEES ----------------
@@ -90,6 +95,7 @@ export default function OwnershipTransferHeader({ onFilter,setShowTables,reset }
         value: emp.value,
         label: emp.label,
         departmentId: emp.departmentId,
+        deligationId: emp.deligationId,
       }));
 
       setEmployeesBySubsidiary((prev) => ({
@@ -163,16 +169,31 @@ export default function OwnershipTransferHeader({ onFilter,setShowTables,reset }
             options={fromEmployees}
             value={fromEmployees.find((e) => e.value === fromEmployee) || null}
             onChange={(e) => {
+              console.log("eeeeeeee666666666",e)
               setFromEmployee(e?.value || null)
               setShowTables(false);
+              setToEmployee(e?.deligationId || null)
             }}
             isDisabled={!fromDepartment}
+          />
+        </div>
+
+
+             <div className="ml-3">
+          <SearchSelect
+            label="To Employee"
+            options={dashboard?.allEmployeesWithNoPermissionList}
+            value={dashboard?.allEmployeesWithNoPermissionList.find((e) => e.value === toEmployee) || null}
+            onChange={(e) =>{ 
+              setShowTables(false);
+              setToEmployee(e?.value || null)}}
+            isDisabled={true}
           />
         </div>
       </div>
 
       {/* TO */}
-      <div className="grid grid-cols-3 lg:grid-cols-6 gap-x-3 col-span-12 items-end">
+      {/* <div className="grid grid-cols-3 lg:grid-cols-6 gap-x-3 col-span-12 items-end">
         <div className="ml-3">
           <SearchSelect
             label="Subsidiary"
@@ -214,7 +235,7 @@ export default function OwnershipTransferHeader({ onFilter,setShowTables,reset }
             isDisabled={!toDepartment}
           />
         </div>
-      </div>
+      </div> */}
 
       {/* BUTTON */}
       <div className="flex justify-end">
