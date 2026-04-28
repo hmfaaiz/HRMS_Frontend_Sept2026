@@ -51,6 +51,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       HotelEntitlements,
       PreApprovers,
       preApproverNames,
+      postApproverNames,
       ...rawValues
     } = values;
 

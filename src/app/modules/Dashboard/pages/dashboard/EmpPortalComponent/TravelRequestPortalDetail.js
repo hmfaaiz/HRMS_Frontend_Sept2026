@@ -21,6 +21,18 @@ export function TravelRequestPortalDetail() {
       );
   }, [UserAccess]);
 
+  const isTravelApproval = useMemo(() => {
+    if (!UserAccess) return null;
+    return Object.values(UserAccess)
+      .flat()
+      .find(
+        (el) =>
+          (el?.componentName === "ReadTravelRequestApproval" ||
+            el?.slug === "read-all-travel-request-approval" ||
+            el?.name === "Travel Request Approval") &&
+          (el?.portalType == 2 || el?.portalType == "2"),
+      );
+  }, [UserAccess]);
   return (
     <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
       <h6 className="font-bold mb-0 text-primary my-2">Travel</h6>
@@ -31,8 +43,19 @@ export function TravelRequestPortalDetail() {
           </p>
         </div>
       ) : (
-        <p className="text-sm mb-0">Travel Request</p>
+        <p className="text-sm mb-0"> Request</p>
       )}
+      {/* {isTravelApproval ? (
+        <div className="font-size-xs text-black font-bold">
+          <p className="m-0 underline">
+            <a href="/travel_request_approval/read-all-travel-request-approval">
+              Travel Approval
+            </a>
+          </p>
+        </div>
+      ) : (
+        <p className="text-sm mb-0">Travel Approval</p>
+      )} */}
     </div>
   );
 }

@@ -74,11 +74,12 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     if (!payload.id) {
       dispatch(actions.createTravelRequest(payload, disableLoading, onHide));
     } else {
-      await dispatch(actions.updateTravelRequest(payload, disableLoading, onHide));
+      await dispatch(
+        actions.updateTravelRequest(payload, disableLoading, onHide),
+      );
       await dispatch(actions.fetchTravelRequests(formUIProps.queryParams));
     }
   };
-
 
   return (
     <Modal

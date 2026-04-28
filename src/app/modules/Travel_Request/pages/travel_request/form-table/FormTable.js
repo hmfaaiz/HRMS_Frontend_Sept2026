@@ -30,10 +30,10 @@ export function FormTable({ onViewClick }) {
     };
   }, [FormUIContext]);
 
-  const { currentState, dashboard } = useSelector(
+  const { currentState } = useSelector(
     (state) => ({
       currentState: state.travel_request,
-      dashboard: state.dashboard,
+      // dashboard: state.dashboard,
     }),
     shallowEqual,
   );
@@ -71,42 +71,42 @@ export function FormTable({ onViewClick }) {
       sortCaret: sortCaret,
       style: { minWidth: "140px" },
     },
-    {
-      dataField: "projectName",
-      text: "Project Name",
-      sort: false,
-      sortCaret: sortCaret,
-      style: { minWidth: "160px" },
-    },
-    {
-      dataField: "firstFromLocation",
-      text: "From Location",
-      isDummyField: true,
-      formatter: (cell, row) => {
-        const seg = row.Master?.[0];
-        if (!seg || !seg.fromLocationId) return "-";
-        const loc = dashboard?.allLocationChildMenus?.find(
-          (l) => String(l.value) === String(seg.fromLocationId),
-        );
-        return loc ? loc.label : seg.fromLocationId;
-      },
-      style: { minWidth: "140px" },
-    },
-    {
-      dataField: "lastToLocation",
-      text: "To Location",
-      isDummyField: true,
-      formatter: (cell, row) => {
-        const segments = row.Master || [];
-        const seg = segments[segments.length - 1];
-        if (!seg || !seg.toLocationId) return "-";
-        const loc = dashboard?.allLocationChildMenus?.find(
-          (l) => String(l.value) === String(seg.toLocationId),
-        );
-        return loc ? loc.label : seg.toLocationId;
-      },
-      style: { minWidth: "140px" },
-    },
+    // {
+    //   dataField: "projectName",
+    //   text: "Project Name",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   style: { minWidth: "160px" },
+    // },
+    // {
+    //   dataField: "firstFromLocation",
+    //   text: "From Location",
+    //   isDummyField: true,
+    //   formatter: (cell, row) => {
+    //     const seg = row.Master?.[0];
+    //     if (!seg || !seg.fromLocationId) return "-";
+    //     const loc = dashboard?.allLocationChildMenus?.find(
+    //       (l) => String(l.value) === String(seg.fromLocationId),
+    //     );
+    //     return loc ? loc.label : seg.fromLocationId;
+    //   },
+    //   style: { minWidth: "140px" },
+    // },
+    // {
+    //   dataField: "lastToLocation",
+    //   text: "To Location",
+    //   isDummyField: true,
+    //   formatter: (cell, row) => {
+    //     const segments = row.Master || [];
+    //     const seg = segments[segments.length - 1];
+    //     if (!seg || !seg.toLocationId) return "-";
+    //     const loc = dashboard?.allLocationChildMenus?.find(
+    //       (l) => String(l.value) === String(seg.toLocationId),
+    //     );
+    //     return loc ? loc.label : seg.toLocationId;
+    //   },
+    //   style: { minWidth: "140px" },
+    // },
     {
       dataField: "firstFromDate",
       text: "From Date",
@@ -170,21 +170,21 @@ export function FormTable({ onViewClick }) {
       },
       style: { minWidth: "120px" },
     },
-    {
-      dataField: "advanceAmount",
-      text: "Advance Amount",
-      formatter: (cell, row) => {
-        if (!row.advanceRequired) return "-";
-        if (cell === null || cell === undefined) return "-";
-        return Number(cell).toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
-      },
-      sort: false,
-      sortCaret: sortCaret,
-      style: { minWidth: "150px" },
-    },
+    // {
+    //   dataField: "advanceAmount",
+    //   text: "Advance Amount",
+    //   formatter: (cell, row) => {
+    //     if (!row.advanceRequired) return "-";
+    //     if (cell === null || cell === undefined) return "-";
+    //     return Number(cell).toLocaleString("en-US", {
+    //       minimumFractionDigits: 2,
+    //       maximumFractionDigits: 2,
+    //     });
+    //   },
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   style: { minWidth: "150px" },
+    // },
     {
       dataField: "action",
       text: "Actions",

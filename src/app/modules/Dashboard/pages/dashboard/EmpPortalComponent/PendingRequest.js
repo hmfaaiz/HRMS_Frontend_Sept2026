@@ -25,7 +25,7 @@ export const PendingRequestSelf = ({
       roster: state?.auth?.userAccess["Attendance Management"],
       attendance: state?.auth?.userAccess["Attendance"],
       resignation: state?.auth?.userAccess["Resignation"],
-      // tada: state?.auth?.userAccess["tada"],
+      tada: state?.auth?.userAccess["Payroll"],
       reimbursement_claim_approval: state?.auth?.userAccess["Payroll"],
     }),
     shallowEqual,
@@ -69,17 +69,21 @@ export const PendingRequestSelf = ({
   );
 
   /// tada
-  // const istadaApproval = tada?.find(
-  //   (el) =>
-  //     el?.componentName === "ReadAllReimbursementClaimApproval" &&
-  //     el?.isResourceShow,
-  // );
+  const isTadaApproval = tada?.find(
+    (el) =>
+      (el?.componentName === "ReadAllTravelRequestApproval" ||
+        el?.slug === "read-all-travel-request-approval") &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
 
-  // const istadaWorkflowStatus = tada?.find(
-  //   (el) =>
-  //     el?.componentName === "ReadAllReimbursementClaimWorkflowStatus" &&
-  //     el?.isResourceShow,
-  // );
+  const isTadaWorkflowStatus = tada?.find(
+    (el) =>
+      (el?.componentName === "ReadAllTravelRequestWorkflowStatus" ||
+        el?.slug === "read-all-travel-request-workflow-status") &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
 
   /// reimbursment
   const isReimbursementApproval = reimbursement_claim_approval?.find(
@@ -262,8 +266,8 @@ export const PendingRequestSelf = ({
                 </div>
                 <div className="font-size-xs flex flex-col max-sm:flex-row max-sm:gap-4 text-black mt-2">
                   <p className="m-0 underline text-xs">
-                    {false ? (
-                      <a href="/loan_approval/read-all-loan-approval">
+                    {isTadaApproval ? (
+                      <a href="/travel_request_approval/read-all-travel-request-approval">
                         Request Approval{" "}
                       </a>
                     ) : (
@@ -273,8 +277,8 @@ export const PendingRequestSelf = ({
                     )}
                   </p>
                   <p className="m-0 underline text-xs">
-                    {false ? (
-                      <a href="/loan-workflow-status/read-all-loan-workflow-status">
+                    {isTadaWorkflowStatus ? (
+                      <a href="/travel_request_workflow_status/read-all-travel-request-workflow-status">
                         Workflow Status
                       </a>
                     ) : (

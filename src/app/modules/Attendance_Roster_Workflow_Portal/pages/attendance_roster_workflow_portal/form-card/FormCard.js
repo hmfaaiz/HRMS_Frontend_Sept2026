@@ -13,11 +13,12 @@ export const FormCard = () => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
 
-  const { listLoading, user, access } = useSelector(
+  const { listLoading, user, access, rosterCalendarAccess } = useSelector(
     (state) => ({
       listLoading: state?.attendance_roster_workflow_status_portal?.listLoading,
       user: state?.auth?.user,
       access: state?.auth?.userAccess?.["Attendance Management"],
+      rosterCalendarAccess: state?.auth?.userAccess["roster_calendar_team"],
     }),
     shallowEqual
   );
@@ -57,6 +58,18 @@ export const FormCard = () => {
           el?.isResourceShow
       ),
     },
+
+     {
+      name: "Roster Calendar",
+      link: "/roster_calendar_team/read-roster-calendar",
+      isShow: rosterCalendarAccess?.find(
+        (el) =>
+          el?.componentName === "ReadRosterCalendar" &&
+          el?.isResourceShow
+      ),
+    },
+    
+    
   ];
 
   return (

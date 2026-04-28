@@ -8,7 +8,13 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import { format } from "date-fns";
 
-export function TableData({ data, name, handleClick, columnColorRules = {} , completeData }) {
+export function TableData({
+  data,
+  name,
+  handleClick,
+  columnColorRules = {},
+  completeData,
+}) {
   const columnData = data?.length > 0 ? data[0] : {};
 
   let columns = Object.keys(columnData).map((key) => {
@@ -46,11 +52,12 @@ export function TableData({ data, name, handleClick, columnColorRules = {} , com
       return {
         dataField: key,
         text: key.split("_").join(" "),
-        formatter: (cell , row) => {
+        sort: true,
+        formatter: (cell, row) => {
           // Determine custom style from columnColorRules if provided
           let customStyle = {};
           if (columnColorRules[key]) {
-            const ruleResult = columnColorRules[key](cell , row , completeData);
+            const ruleResult = columnColorRules[key](cell, row, completeData);
             if (typeof ruleResult === "string") {
               customStyle = { color: ruleResult };
             } else if (typeof ruleResult === "object") {
@@ -103,7 +110,7 @@ export function TableData({ data, name, handleClick, columnColorRules = {} , com
         {data?.length > 0 ? (
           <label
             className="text-black cursor-pointer font-medium underline text-xs hover:text-tprimary"
-            onClick={() => handleClick(data , completeData)}
+            onClick={() => handleClick(data, completeData)}
           >
             View All
           </label>
