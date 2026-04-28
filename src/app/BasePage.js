@@ -586,6 +586,14 @@ const attendance_roster_workflow_status = lazy (() =>
 const attendance_roster_workflow_status_portal = lazy (() =>
   import ("./modules/Attendance_Roster_Workflow_Portal/pages/index"))
 
+const travel_request_workflow_status = lazy(() =>
+  import("./modules/Travel_Request_WorkflowStatus_Portal/page/index"),
+)
+
+// const travel_request_workflow_status_approval = lazy(() =>
+//   import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
+// )
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -786,6 +794,8 @@ const ROUTES = {
   attendance_roster_approval : attendance_roster_approval,
   attendance_roster_workflow_status : attendance_roster_workflow_status,
   attendance_roster_workflow_status_portal : attendance_roster_workflow_status_portal,
+  travel_request_workflow_status : travel_request_workflow_status,
+  // travel_request_workflow_status_approval : travel_request_workflow_status_approval,
 };
 
 export default function BasePage() {
