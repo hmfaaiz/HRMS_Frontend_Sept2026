@@ -31,7 +31,7 @@ const employeeChecklistSchema = Yup.object().shape({
       taskStatus: Yup.string().nullable(),
 
       // Completion date only required when status is "Completed"
-      completionDate: Yup.string().when(["taskStatus", "$isApproved"], {
+      completionDate: Yup.string().when(["taskStatus", "isApproved"], {
         is: (taskStatus, isApproved) => {
           // Required if task status is "Completed" OR if finalizing (isApproved = 1)
           return taskStatus === "Completed" || isApproved === 1;

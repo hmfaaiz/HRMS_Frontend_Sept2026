@@ -213,6 +213,8 @@ import { RosterRequestSlice } from "../app/modules/Attendance_Roster_Request/_re
 import { RosterApprovalSlice } from "../app/modules/Attendance_Roster_Approval/_redux/redux-Slice";
 import { RosterWorkflowHrmsSlice } from "../app/modules/Attendance_Roster_Workflow/_redux/redux-Slice";
 import { RosterWorkflowStatusSlice } from "../app/modules/Attendance_Roster_Workflow_Portal/_redux/redux-Slice";
+import { postApprovalTravelRequestSlice } from "../app/modules/Post_Approval_Travel_Request/_redux/redux-Slice";
+import { PortalRosterCalendarSlice } from "../app/modules/Roster_Calendar_Portal/_redux/redux-Slice";
 import { CompanyAttMachineConfigSlice } from "../app/modules/Company_att_machine_config/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
@@ -420,10 +422,13 @@ export const rootReducer = combineReducers({
   reimbursement_claim_workflow_status_approval:
   ReimbursementWorkflowHrmsSlice.reducer,
   reimbursement_claim_workflow_status: ReimbursementWorkflowStatusSlice.reducer,
+  TravelRequestWorkflowStatus: TravelRequestWorkflowStatusSlice.reducer,
   attendance_roster_request: RosterRequestSlice.reducer,
   attendance_roster_approval: RosterApprovalSlice.reducer,
   attendance_roster_workflow_status: RosterWorkflowHrmsSlice.reducer,
   attendance_roster_workflow_status_portal: RosterWorkflowStatusSlice.reducer,
+  post_approval_travel_request : postApprovalTravelRequestSlice.reducer,
+  roster_calendar_team : PortalRosterCalendarSlice.reducer,
   company_att_machine_config: CompanyAttMachineConfigSlice.reducer,
 });
 
