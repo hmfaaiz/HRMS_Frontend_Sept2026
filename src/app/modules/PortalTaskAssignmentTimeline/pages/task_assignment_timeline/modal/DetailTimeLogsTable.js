@@ -12,10 +12,15 @@ import {
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelpers";
-// import { TimeLogsColumnFormatter } from "../form-table/column-formatter/FormColumnFormatter";
+import { TimeLogsColumnFormatter } from "../form-table/column-formatter/FormColumnFormatter";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
 import { format } from "date-fns";
-
+import paginationFactory, {
+  PaginationProvider,
+} from "react-bootstrap-table2-paginator";
+import { Pagination } from "../../../../../../_metronic/_partials/controls";
+import { TimeLog } from "./TimeLog";
+import { fetchTimeLog } from "../../../../FacilitatorTicketCreation/_redux/redux-Actions";
 
 
 export function DetailTimeLogsTable() {
@@ -38,6 +43,9 @@ export function DetailTimeLogsTable() {
       receiveMode: formUIContext.receiveMode,
       openDetailGridData: formUIContext.openDetailGridData,
       setDetailId: formUIContext.setDetailId,
+       setlogsQueryParamsBase: formUIContext.setlogsQueryParamsBase,
+      setlogsQueryParams: formUIContext.setlogsQueryParams,
+      logsqueryParams: formUIContext.logsqueryParams,
     };
   }, [formUIContext]);
 
@@ -72,6 +80,10 @@ export function DetailTimeLogsTable() {
     setShowEdit(true);
   };
 
+  useEffect(() => {
+     
+      dispatch(fetchTimeLog(editTimeLogId));
+    }, [editTimeLogId, dispatch]);
 
   // Table columns
   const columns = [
@@ -143,59 +155,66 @@ export function DetailTimeLogsTable() {
         return ""; // fallback if null/undefined
       },
     },
-    // {
-    //   dataField: "action",
-    //   text: "Action",
-    //   isDummyField: true,
-    //   formatter: TimeLogsColumnFormatter,
-    //   formatExtraData: {
-    //     setId: formUIProps.setId,
+    {
+      dataField: "action",
+      text: "Action",
+      isDummyField: true,
+      formatter: TimeLogsColumnFormatter,
+      formatExtraData: {
+        setId: formUIProps.setId,
 
-    //     setDetailId: formUIProps.setDetailId,
-    //     setReadMode: formUIProps.setReadMode,
-    //     setReceiveMode: formUIProps.setReceiveMode,
-    //     openTicketTimeLog: formUIContext.openTicketTimeLog,
+        setDetailId: formUIProps.setDetailId,
+        setReadMode: formUIProps.setReadMode,
+        setReceiveMode: formUIProps.setReceiveMode,
+        openTicketTimeLog: formUIContext.openTicketTimeLog,
 
-    //     openDeleteHandler,
-    //     openEditHandler,
-    //   },
-    //   classes: "text-right pr-0",
-    //   headerClasses: "text-right pr-3",
-    //   style: { minWidth: "10px" },
-    // },
+        openDeleteHandler,
+        openEditHandler,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: { minWidth: "10px" },
+    },
   ];
 
   // Table pagination
   const paginationOptions = {
     custom: true,
     totalSize: timeLogsTotalCount,
-    sizePerPageList: uiHelpers.sizePerPageList,
-    sizePerPage: formUIProps.queryParams.pageSize,
-    page: formUIProps.queryParams.pageNumber,
+    sizePerPageList: uiHelpers.sizeLogsPerPageList,
+    sizePerPage: formUIProps.logsqueryParams.pageSize,
+    page: formUIProps.logsqueryParams.pageNumber,
   };
 
   return (
     <div className="w-full overflow-x-auto">
-      {/* Delete Modal */}
-      {/* <FormDeleteDialog
-        id={deleteId}
-        show={showDelete}
-        detailId={detailId}
+
+
+
+
+
+
+      <TimeLog
+        show={showEdit}
+        detailId={null}
         onHide={() => {
-          setShowDelete(false)
-          actions.fetchAllFacilitatorTimeLogDetail(detailId)
-        }
-
-
-
-        }
-      /> */}
-
-
-
-
-
+          setShowEdit(false);
+          setEditTimeLogId(null);
+        }}
+      
+      />
       {/* Table */}
+      
+            <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+              {({ paginationProps, paginationTableProps }) => {
+                return (
+                  <Pagination
+                    isLoading={listLoading}
+                    paginationProps={paginationProps}
+                  >
+      
+
+      
       <BootstrapTable
         wrapperClasses="table-responsive"
         bordered={false}
@@ -206,11 +225,17 @@ export function DetailTimeLogsTable() {
         data={timelogsEntities || []}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}
+         onTableChange={getHandlerTableChange(formUIProps.setlogsQueryParams)}
+           {...paginationTableProps}
       >
         <PleaseWaitMessage entities={timelogsEntities} />
         <NoRecordsFoundMessage entities={timelogsEntities} />
       </BootstrapTable>
-    </div>
-  );
-}
+    </Pagination>
+                   );
+                 }}
+               </PaginationProvider>
+       </div>
+     );
+   }
+   

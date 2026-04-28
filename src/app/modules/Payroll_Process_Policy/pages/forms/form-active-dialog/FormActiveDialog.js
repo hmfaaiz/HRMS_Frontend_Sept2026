@@ -48,6 +48,7 @@ export function FormActiveDialog({ id, status, show, onHide }) {
       onHide();
       // refresh list after deletion
       dispatch(actions.fetchUsers(formUIProps.queryParams));
+      dispatch(actions.fetchPayrollPolicySubsidiaryIds());
       // clear selections list
       // formUIProps.setIds([]);
       // closing delete modal

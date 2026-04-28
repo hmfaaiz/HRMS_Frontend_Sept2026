@@ -210,7 +210,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "priorityLevelId",
       text: "",
-      style: { minWidth: "30px" },
+      style: { minWidth: "20px" },
       formatter: (_, row) => (
         <span
           style={{
@@ -223,13 +223,13 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         />
       ),
     },
-    { dataField: "ticketCode", text: "Ticket Code", style: { minWidth: "130px" } },
-    {
-      dataField: "ticketType.formName",
-      text: "Ticket Type",
-      style: { minWidth: "100px" },
-      formatter: (_, row) => row.ticketType?.formName || "N/A",
-    },
+    { dataField: "ticketCode", text: "Ticket Code", style: { minWidth: "30px" } },
+    // {
+    //   dataField: "ticketType.formName",
+    //   text: "Ticket Type",
+    //   style: { minWidth: "100px" },
+    //   formatter: (_, row) => row.ticketType?.formName || "N/A",
+    // },
     // {
     //   dataField: "priorityLevel.formName",
     //   text: "Priority",
@@ -238,19 +238,59 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     // },
     // { dataField: "ticketDescription", text: "Description", style: { minWidth: "240px" } },
 
-     {
+    //  {
+    //       dataField: "ticketDescription",
+    //       text: "Description",
+    //       sort: false,
+    //       sortCaret: sortCaret,
+    //       headerSortingClasses,
+    //       style: {
+    //         minWidth: "70px",
+    //       },
+    //       formatter: (cell) => {
+    //         if (!cell) return "";
+    //         return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //       },
+    //     },
+
+       {
           dataField: "ticketDescription",
           text: "Description",
           sort: false,
           sortCaret: sortCaret,
           headerSortingClasses,
           style: {
-            minWidth: "70px",
+            minWidth: "40px",
           },
+          // formatter: (cell) => {
+          //   if (!cell) return "";
+          //   return cell.length > 160 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 160) + "..."}</span> : cell;
+          // },
+    
           formatter: (cell) => {
             if (!cell) return "";
-            return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-          },
+    
+            const maxLength = 370;
+            const wrapLength = 110;
+    
+            // truncate after 500
+            let text = cell.length > maxLength ? cell.substring(0, maxLength) + "..." : cell;
+    
+            // insert line breaks every 160 chars
+            const formattedText = text.match(new RegExp(`.{1,${wrapLength}}`, "g"))?.join("\n");
+    
+            return (
+              <span
+                data-bs-toggle="tooltip"
+                title={cell}
+                style={{ whiteSpace: "pre-wrap", cursor: "pointer" }}
+              >
+                {formattedText}
+              </span>
+            );
+          }
+    
+    
         },
     //     {
     //       dataField: "Details[0].AssignToProfile.fullName",
@@ -262,29 +302,78 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     // },
     //     },
     //there should be deligation fields
-    {
-      dataField: "Details[0].AssignByProfile.fullName",
-      text: "Assign By",
-      style: { minWidth: "100px" },
-      formatter: (_, row) => {
-        const lastDetail = row?.Details?.[row?.Details.length - 1];
-        return lastDetail?.AssignByProfile?.fullName || "";
-      }
-    },
+    // {
+    //   dataField: "Details[0].AssignByProfile.fullName",
+    //   text: "Assign By",
+    //   style: { minWidth: "100px" },
+    //   formatter: (_, row) => {
+    //     const lastDetail = row?.Details?.[row?.Details.length - 1];
+    //     return lastDetail?.AssignByProfile?.fullName || "";
+    //   }
+    // },
 
     {
-      dataField: "Details[0].AssignToProfile.fullName",
-      text: "Assign To",
-      style: { minWidth: "100px" },
-      formatter: (_, row) => {
-        const lastDetail = row?.Details?.[row?.Details.length - 1];
-        return lastDetail?.AssignToProfile?.fullName || "";
-      }
-    },
+  dataField: "Details[0].AssignByProfile.fullName",
+  text: "Assign By",
+  style: { width: "100px", maxWidth: "100px" },
+  formatter: (_, row) => {
+    const lastDetail = row?.Details?.[row?.Details.length - 1];
+    const name = lastDetail?.AssignByProfile?.fullName || "";
+
+    if (!name) return "";
+
+    return name.length > 30 ? (
+      <span
+        data-bs-toggle="tooltip"
+        title={name}
+        style={{ cursor: "pointer" }}
+      >
+        {name.substring(0, 30) + "..."}
+      </span>
+    ) : (
+      name
+    );
+  }
+},
+
+    // {
+    //   dataField: "Details[0].AssignToProfile.fullName",
+    //   text: "Assign To",
+    //   style: { minWidth: "100px" },
+    //   formatter: (_, row) => {
+    //     const lastDetail = row?.Details?.[row?.Details.length - 1];
+    //     return lastDetail?.AssignToProfile?.fullName || "";
+    //   }
+    // },
+
+    {
+  dataField: "Details[0].AssignToProfile.fullName",
+  text: "Assign To",
+  style: { width: "100px", maxWidth: "100px" },
+
+  formatter: (_, row) => {
+    const lastDetail = row?.Details?.[row?.Details.length - 1];
+    const name = lastDetail?.AssignToProfile?.fullName || "";
+
+    if (!name) return "";
+
+    return name.length > 30 ? (
+      <span
+        data-bs-toggle="tooltip"
+        title={name}
+        style={{ cursor: "pointer" }}
+      >
+        {name.substring(0, 30) + "..."}
+      </span>
+    ) : (
+      name
+    );
+  }
+},
     {
       dataField: "ticketDate",
       text: "Ticket Date",
-      style: { minWidth: "50px" },
+      style: { minWidth: "20px" },
       formatter: (c) => c && format(new Date(c), "dd-MMM-yyyy"),
     },
     //     {
@@ -312,7 +401,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "Details[0].dueDate",
       text: "Due Date",
-      style: { minWidth: "50px" },
+      style: { minWidth: "20px" },
       formatter: (_, row) => {
         const lastDetail = row?.Details[0];
 
@@ -339,7 +428,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "completionDate",
       text: "Completion Date",
-      style: { minWidth: "50px" },
+      style: { minWidth: "20px" },
       formatter: (_, row) => {
         const completionDate = row?.completionDate;
 
@@ -358,7 +447,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "Details[0].noOfHours",
       text: "Hours",
-      style: { minWidth: "50px" },
+      style: { minWidth: "10px" },
     },
 
         {
@@ -391,7 +480,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     {
       dataField: "ticketStatus",
       text: "Status",
-      style: { minWidth: "70px" },
+      style: { minWidth: "20px" },
 
       formatter: (cell, row) => {
         console.log("cellll11111",cell)
@@ -463,7 +552,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "50px",
+        minWidth: "40px",
       },
       formatter: (cell, row) => {
 
@@ -506,7 +595,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
-      style: { minWidth: "80px" },
+      style: { minWidth: "20px" },
     },
   ];
 

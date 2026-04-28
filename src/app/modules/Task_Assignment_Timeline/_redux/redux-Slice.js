@@ -73,8 +73,8 @@ export const taskAssignmentTimelineSlice = createSlice({
 
             state.listLoading = false;
             state.error = null;
-            state.timelogsEntities = data || [];
-            state.timeLogsTotalCount = data.length; // total number of details
+            state.timelogsEntities = data.rows || [];
+            state.timeLogsTotalCount = data.totalResults || 0; // total number of details
         },
     pdfFetched: (state) => { state.pdfLoading = false; },
     csvFetched: (state) => { state.csvLoading = false; },

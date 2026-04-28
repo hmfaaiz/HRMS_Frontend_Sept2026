@@ -29,3 +29,13 @@ export function delete_Payroll_Policy(body) {
 }
 
 
+export function getPayrollPolicySubsidiaryIds() {
+  return axios.patch(`${USERS_URL}/payroll_process_policy/read-payroll-process-policy-subsidiaryids`);
+}
+
+
+export function copyPayrollPolicyById(body) {
+  return axios.patch(`${USERS_URL}/payroll_process_policy/copy-payroll-process-policy`, body);
+}
+
+

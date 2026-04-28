@@ -105,7 +105,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "5px",
+        minWidth: "2px",
       },
       formatter: (cell, row) => {
         if (!cell) return "";
@@ -149,55 +149,67 @@ export function FormTable() {
       },
     },
 
+
+
+
+
     // {
-    //   dataField: "ticketType.formName",
-    //   text: "Ticket Type",
+    //   dataField: "desc",
+    //   text: "Ticket Description",
     //   sort: false,
     //   sortCaret: sortCaret,
     //   headerSortingClasses,
     //   style: {
-    //     minWidth: "30px",
+    //     minWidth: "100px",
     //   },
     //   formatter: (cell) => {
     //     if (!cell) return "";
-    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //     return cell.length > 70 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 70) + "..."}</span> : cell;
     //   },
-    // },
 
-    // {
-    //   dataField: "priorityLevel.formName",
-    //   text: "Priority",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "30px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-    //   },
-    // },
 
-    {
+
+
+    // },
+{
       dataField: "desc",
-      text: "Ticket Description",
+      text: "Description",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "100px",
       },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 70 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
+      // formatter: (cell) => {
+      //   if (!cell) return "";
+      //   return cell.length > 160 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 160) + "..."}</span> : cell;
+      // },
 
+formatter: (cell) => {
+  if (!cell) return "";
 
+  const maxLength = 470;
+  const wrapLength = 100;
+
+  // truncate after 500
+  let text = cell.length > maxLength ? cell.substring(0, maxLength) + "..." : cell;
+
+  // insert line breaks every 160 chars
+  const formattedText = text.match(new RegExp(`.{1,${wrapLength}}`, "g"))?.join("\n");
+
+  return (
+    <span
+      data-bs-toggle="tooltip"
+      title={cell}
+      style={{ whiteSpace: "pre-wrap", cursor: "pointer" }}
+    >
+      {formattedText}
+    </span>
+  );
+}
 
 
     },
-
 
 
     {
@@ -207,43 +219,30 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-      },
-    },
-
-    // {
-    //   dataField: "AssignToProfile.department.deptName",
-    //   text: "Department",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "100px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-    //   },
-    // },
-
-    {
-      dataField: "AssignToProfile.designation.formName",
-      text: "Designation",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
         minWidth: "40px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+        return cell.length > 30 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 30) + "..."}</span> : cell;
       },
     },
+
+
+
+    // {
+    //   dataField: "AssignToProfile.designation.formName",
+    //   text: "Designation",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "40px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
+    //   },
+    // },
 
 
     {
@@ -253,7 +252,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "50px",
+        minWidth: "10px",
       },
       formatter: (cell, row) => {
         if (!cell) return "";
@@ -390,7 +389,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "20px",
+        minWidth: "10px",
       },
       formatter: (cell, row) => {
         if (cell === null || cell === undefined) return "";
@@ -443,7 +442,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "50px",
+        minWidth: "10px",
       },
       formatter: (cell, row) => {
         if (!cell) return "";
