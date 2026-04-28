@@ -35,7 +35,7 @@ export const initialFilter = {
   },
   sortField: "statusCode",
   sortOrder: "asc",
-  pageSize: 10,
+  pageSize: 5,
   pageNumber: 1
 }
 
