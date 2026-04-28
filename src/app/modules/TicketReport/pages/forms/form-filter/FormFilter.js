@@ -26,6 +26,7 @@ import {
   Input,
 } from "../../../../../../_metronic/_partials/controls";
 import FormPreview from "../preview/FormPreview";
+import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
 
 
 //Validation for date fields
@@ -50,6 +51,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   const [activeKey, setActiveKey] = useState("0");
   //Get All dropdown data from state
 
+    useEffect(() => {
+      dispatch(FetchAllFacilitatorEmployee());
+  
+    }, [dispatch]);
+
   const { currentState, dashboard, previewData } = useSelector((state) => {
     return {
       currentState: state?.ticket_time_report,
@@ -59,14 +65,14 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   });
   const {
     allEmployees,
-    allSubsidiaryList,
+    allSubsidiaryList,facilitatorEmployeeList,
 
   } = useSelector((state) => state.dashboard);
 
 
   const allEmployeesMap = useMemo(() => {
-    return new Map(allEmployees?.map((item) => [item.value, item]));
-  }, [allEmployees]);
+    return new Map(facilitatorEmployeeList?.map((item) => [item.value, item]));
+  }, [facilitatorEmployeeList]);
 
 
   const allSubsidiaryMap = useMemo(() => {
@@ -166,8 +172,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
             ? ticketStatusOptions?.map(t => t.value)
             : [],
 
-          employeeId: dashboard?.allEmployees?.length
-            ? dashboard?.allEmployees?.map(t => t.value)
+          employeeId: dashboard?.facilitatorEmployeeList?.length
+            ? dashboard?.facilitatorEmployeeList?.map(t => t.value)
             : [],
           // subsidiaryId:
           //   initialFilter.filter?.subsidiaryId ||
@@ -847,10 +853,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
                               name="employeeId"
                               label="Assignee"
-                              value={dashboard?.allEmployees.filter(t =>
+                              value={dashboard?.facilitatorEmployeeList.filter(t =>
                                 values.employeeId?.includes(t.value)
                               )}
-                              options={dashboard?.allEmployees}
+                              options={dashboard?.facilitatorEmployeeList}
                               onChange={(items = []) =>
                                 setFieldValue(
                                   "employeeId",

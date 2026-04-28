@@ -100,7 +100,7 @@ export function BankEditForm({
     null
   );
   const [defEarningList = null, setDefaultEarningList] = useState([]);
-  const [defSubsidiary = null, setDefualtSubsidiaryList] = useState(null);
+  const [subsidiaryId , setSubsidiaryId] = useState(null);
   const [deferrors, setErrors] = useState({});
   const [defAllowanceLimit, setDefaultAllowanceLimit] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -167,18 +167,20 @@ export function BankEditForm({
   //======================= End
 
   useEffect(() => {
-    const subsidiaryId = defSubsidiary?.value
-      ? defSubsidiary.value
-      : user.subsidiaryId;
+
+    if(!user.subsidiaryId) return
+
+    const subsidiaryId = user.subsidiaryId;
     dispatch(fetchAllEarningList(1, subsidiaryId, "", true)); // For Earning
     dispatch(fetchAllDeductionList(2, subsidiaryId)); // For deduction
-    setDefualtSubsidiaryList(
-      dashboard.allSubsidiaryList &&
-        dashboard.allSubsidiaryList.filter((item) => {
-          return item.value === subsidiaryId;
-        })
-    );
-  }, [user?.subsidiaryId, dashboard.subsidiaryId]);
+    setSubsidiaryId(user.subsidiaryId)
+    // setSubsidiaryId(
+    //   dashboard.allSubsidiaryList &&
+    //     dashboard.allSubsidiaryList.filter((item) => {
+    //       return item.value === subsidiaryId;
+    //     })
+    // );
+  }, [user?.subsidiaryId]);
 
   useEffect(() => {
     const gradeId = defEmployeeGrade?.value
@@ -465,14 +467,14 @@ export function BankEditForm({
                         }}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-                          setDefualtSubsidiaryList(e);
+                          setSubsidiaryId(e.value);
                           dispatch(fetchAllEarningList(1, e.value, "", true)); // For Earning
                           dispatch(fetchAllDeductionList(2, e.value));
                           setDefaultEarningList([]);
                           getSalaryMethod(e.value, setFieldValue);
                           //handlePaymenModeChanged(e)
                         }}
-                        value={defSubsidiary || null}
+                        value={dashboard.allSubsidiaryList?.find((el)=> el.value == subsidiaryId) || null}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         options={dashboard.allSubsidiaryList}
@@ -492,7 +494,7 @@ export function BankEditForm({
                         }}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-                          setDefualtSubsidiaryList(e);
+                          setSubsidiaryId(e);
                           dispatch(fetchAllEarningList(1, e.value, "", true)); // For Earning
                           dispatch(fetchAllDeductionList(2, e.value));
                           setDefaultEarningList([]);
@@ -504,7 +506,7 @@ export function BankEditForm({
                         currentValue={values?.subsidiaryId}
                         initializeSubsidiary={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-                          setDefualtSubsidiaryList(e);
+                          setSubsidiaryId(e);
                           dispatch(fetchAllEarningList(1, e.value, "", true)); // For Earning
                           dispatch(fetchAllDeductionList(2, e.value));
                           setDefaultEarningList([]);

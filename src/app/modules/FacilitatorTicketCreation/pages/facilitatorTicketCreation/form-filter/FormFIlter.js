@@ -92,11 +92,16 @@ export function FormFIlter({ listLoading, user }) {
       formUIProps.setQueryParams(newQueryParams)
     }
   }
-  const { allEmployees, currentState } = useSelector((state) => {
+
+  useEffect(() => {
+    dispatch(actions.FetchAllFacilitatorEmployee());
+
+  }, [dispatch]);
+  const { allEmployees, currentState, facilitatorEmployeeList } = useSelector((state) => {
     return {
       currentState: state.facilitator_ticket_creation,
       allEmployees: state.dashboard.allEmployees,
-
+      facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList,
     };
   }, shallowEqual);
 
@@ -133,7 +138,7 @@ export function FormFIlter({ listLoading, user }) {
           timeRangeTo: getLastDayOfCurrentMonth() || "",
 
         }}
-        
+
         onSubmit={(values) => {
 
 
@@ -151,120 +156,120 @@ export function FormFIlter({ listLoading, user }) {
 
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-         
-              <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
-                <div className="">
-                  <SearchSelect
-                    name="ticketStatus"
-                    label="Ticket Status"
-                    onChange={(e) => {
+            <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
-                      setFieldValue("ticketStatus", e.value !== undefined ? e.value : null);
-                      handleSubmit();
-                    }}
-                    value={
-                      ticketStatusOptions?.find(
-                        (option) => option.value == values.ticketStatus
-                      ) || null
-                    }
-                    options={ticketStatusOptions}
-                  />
-                </div>
+              <div className="">
+                <SearchSelect
+                  name="ticketStatus"
+                  label="Ticket Status"
+                  onChange={(e) => {
 
-                <div className="">
-                  <label>Date(From)</label>
-                  <DatePicker
-                    className="form-control"
-                    placeholder="From"
-                    selected={
-                      values?.timeRangeFrom
-                        ? new Date(values.timeRangeFrom)
-                        : null
-                    }
-                    onChange={(date) => {
-                      let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                      setFieldValue("timeRangeFrom", selectedDate);
-                      // setFieldValue("timeRangeTo", selectedDate);
-                      handleSubmit();
-                    }}
-                    dateFormat="dd-MMM-yyyy"
-                    name="timeRangeFrom"
-                    autoComplete="off"
-                  />
-                </div>
-
-                {/* Date To */}
-                <div className="">
-                  <label>Date (To)</label>
-                  <DatePicker
-                    className="form-control"
-                    placeholder="To"
-                    selected={
-                      values?.timeRangeTo
-                        ? new Date(values.timeRangeTo)
-                        : null
-                    }
-                    onChange={(date) => {
-                      setFieldValue("timeRangeTo", date);
-                      handleSubmit();
-                    }}
-                    dateFormat="dd-MMM-yyyy"
-                    name="timeRangeTo"
-                    autoComplete="off"
-                    minDate={values?.timeRangeFrom ? new Date(values.timeRangeFrom) : new Date()}
-                  />
-                </div>
-
-                <div className="">
-                  <SearchSelect
-                    name="assignTo"
-                    label={
-                      <span>
-                        Employee
-                      </span>
-                    }
-
-                    onChange={(e) => {
-                      setFieldValue("assignTo", e.value || null);
-                      handleSubmit();
-                    }}
-                    value={
-                      allEmployees?.find(option => option.value === values.assignTo) || null
-                    }
-                    options={allEmployees?.filter(emp => assignToIds?.includes(emp.value))}
-
-                  />
-                </div>
-
-                <div>
-                  <label>Ticket Description</label>
-
-
-                  <InputSearch
-                    values={values}
-                    fieldName="ticketDescription"
-                    setFieldValue={setFieldValue}
-                    handleBlur={handleBlur}
-                    handleSubmit={handleSubmit}
-                  />
-                </div>
+                    setFieldValue("ticketStatus", e.value !== undefined ? e.value : null);
+                    handleSubmit();
+                  }}
+                  value={
+                    ticketStatusOptions?.find(
+                      (option) => option.value == values.ticketStatus
+                    ) || null
+                  }
+                  options={ticketStatusOptions}
+                />
               </div>
 
-   
-
-             <Modal.Footer>
-                <button
-                  type="button"
-                  onClick={() => {
-                    applyFilter(initialFilter.filterSender);
-                    handleReset();
+              <div className="">
+                <label>Date(From)</label>
+                <DatePicker
+                  className="form-control"
+                  placeholder="From"
+                  selected={
+                    values?.timeRangeFrom
+                      ? new Date(values.timeRangeFrom)
+                      : null
+                  }
+                  onChange={(date) => {
+                    let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                    setFieldValue("timeRangeFrom", selectedDate);
+                    // setFieldValue("timeRangeTo", selectedDate);
+                    handleSubmit();
                   }}
-                  className="btn btn-light"
-                >
-                  Cancel
-                </button>
-                 </Modal.Footer>
+                  dateFormat="dd-MMM-yyyy"
+                  name="timeRangeFrom"
+                  autoComplete="off"
+                />
+              </div>
+
+              {/* Date To */}
+              <div className="">
+                <label>Date (To)</label>
+                <DatePicker
+                  className="form-control"
+                  placeholder="To"
+                  selected={
+                    values?.timeRangeTo
+                      ? new Date(values.timeRangeTo)
+                      : null
+                  }
+                  onChange={(date) => {
+                    setFieldValue("timeRangeTo", date);
+                    handleSubmit();
+                  }}
+                  dateFormat="dd-MMM-yyyy"
+                  name="timeRangeTo"
+                  autoComplete="off"
+                  minDate={values?.timeRangeFrom ? new Date(values.timeRangeFrom) : new Date()}
+                />
+              </div>
+
+              <div className="">
+                <SearchSelect
+                  name="assignTo"
+                  label={
+                    <span>
+                      Employee
+                    </span>
+                  }
+
+                  onChange={(e) => {
+                    setFieldValue("assignTo", e.value || null);
+                    handleSubmit();
+                  }}
+                  value={
+                    facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
+                  }
+                  options={facilitatorEmployeeList?.filter(emp => assignToIds?.includes(emp.value))}
+
+                />
+              </div>
+
+              <div>
+                <label>Ticket Description</label>
+
+
+                <InputSearch
+                  values={values}
+                  fieldName="ticketDescription"
+                  setFieldValue={setFieldValue}
+                  handleBlur={handleBlur}
+                  handleSubmit={handleSubmit}
+                />
+              </div>
+            </div>
+
+
+
+            <Modal.Footer>
+              <button
+                type="button"
+                onClick={() => {
+                  applyFilter(initialFilter.filterSender);
+                  handleReset();
+                }}
+                className="btn btn-light"
+              >
+                Cancel
+              </button>
+            </Modal.Footer>
 
 
 

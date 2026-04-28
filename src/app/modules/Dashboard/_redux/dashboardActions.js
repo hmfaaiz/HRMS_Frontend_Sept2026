@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SERVER_MESSAGES } from "../../../utils/constants";
 import { formatDates } from "../../../utils/common";
+import { format } from "date-fns";
 
 const { actions } = dashboardSlice;
 
@@ -406,19 +407,6 @@ export const fetchExitReasonData = (Id) => async (dispatch) => {
     });
 };
 
-export const getAttendance = (body , setLoading) => (dispatch) => {
-  
-  return requestFromServer
-    .getAttendance(body)
-    .then((res) => {
-      dispatch(actions.CurrentAttFetch(res?.data?.data));
-      setLoading(false);
-    })
-    .catch((error) => {
-      setLoading(false);
-    });
-};
-
 export const getEmployeeProfileInfo = (setProfileInfo) => (dispatch) => {
   return requestFromServer
     .getEmpProfileInfo()
@@ -463,16 +451,45 @@ export const getEmployeePortalInfo = (setLoading, detailViewType) => (
     });
 };
 
-export const getCurrentTime = (setLoading) => (dispatch) => {
-  return requestFromServer
-    .getCurrentDateTime(Intl.DateTimeFormat().resolvedOptions().timeZone)
-    .then((res) => {
-      dispatch(actions.CurrentDateTimeFetch(res?.data));
-      setLoading(false);
-    })
-    .catch((error) => {
-      setLoading(false);
-    });
+export const getCurrentTimeAndAttendance = (setLoading) => async (dispatch) => {
+  try {
+    setLoading(true);
+
+    // timezone string (better for backend)
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // 1. Get server time
+    const timeRes = await requestFromServer.getCurrentDateTime(timeZone);
+    const localDate = timeRes?.data;
+
+    dispatch(actions.CurrentDateTimeFetch(localDate));
+
+    // fallback safety
+    const now = localDate?.dateTime ? new Date(localDate.dateTime) : new Date();
+
+    // 2. Prepare payload
+    const payload = {
+      date: format(now, "yyyy-MM-dd"),
+      // timeZone, //
+      timeZone: now.getTimezoneOffset(), //
+      clientNow: now.toISOString(),
+    };
+
+    // 3. Get attendance
+    const attendanceRes = await requestFromServer.getAttendance(payload);
+    const attendance = attendanceRes?.data?.data;
+
+    dispatch(actions.CurrentAttFetch(attendance));
+
+    return {
+      localDate,
+      attendance,
+    };
+  } catch (error) {
+    console.error("getCurrentTimeAndAttendance error:", error);
+  } finally {
+    setLoading(false); // 👈 always run
+  }
 };
 
 export const createAttendance = (body, setLoading) => (dispatch) => {

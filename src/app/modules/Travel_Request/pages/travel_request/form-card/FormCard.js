@@ -20,11 +20,19 @@ export function FormCard() {
   const [viewRowData, setViewRowData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { auth, employeeEntitlement, allEmployees } = useSelector(
+  const {
+    auth,
+    employeeEntitlement,
+    allEmployees,
+    employeeId,
+    travel,
+  } = useSelector(
     (state) => ({
       auth: state.auth,
+      employeeId: state?.auth?.user?.employeeIdMapping,
       employeeEntitlement: state.travel_request.employeeEntitlement,
       allEmployees: state.dashboard.allEmployees,
+      travel: state?.auth?.userAccess["Payroll"],
     }),
     shallowEqual,
   );
@@ -95,6 +103,10 @@ export function FormCard() {
     }
   }, [FormUIProps.employeeId]);
 
+  useEffect(() => {
+    dispatch(actions.getEmployeeAuthorities(employeeId));
+  }, [employeeId]);
+
   // Handle Add New button click
   const handleAddNew = () => {
     setIsViewMode(false);
@@ -124,7 +136,19 @@ export function FormCard() {
     dispatch(actions.createTravelRequest(values, disableLoading, handleCancel));
   };
 
-  const menuOptions = [];
+  const menuOptions = [
+    {
+      name: "Approval",
+      link: "/travel_request_approval/read-all-travel-request-approval",
+      isShow: travel?.find(
+        (el) =>
+          (el?.componentName === "TravelRequestApproval" ||
+            el?.componentName === "ReadAllTravelRequestApproval" ||
+            el?.slug === "read-all-travel-request-approval") &&
+          el?.isResourceShow
+      ),
+    },
+  ];
 
   const hasPolicy = !!employeeEntitlement;
 
@@ -175,7 +199,7 @@ export function FormCard() {
 
         {/* Form - Add Mode */}
         {FormUIProps.userForEdit && !isViewMode && (
-          <div className="px-3 py-2 rounded-lg bg-white mt-4 relative">
+          <div className="px-3 py-2 rounded-lg bg-white  relative">
             {FormUIProps.employeeId && (
               <FormEditForm
                 employeeId={FormUIProps.employeeId}
@@ -191,7 +215,7 @@ export function FormCard() {
 
         {/* Form - View Mode */}
         {isViewMode && viewRowData && (
-          <div className="px-3 py-2 rounded-lg bg-white mt-4 relative">
+          <div className="px-3 py-2 rounded-lg bg-white  relative">
             <FormEditForm
               employeeId={viewRowData.employeeId}
               employeeDetails={employeeDetails}
@@ -203,11 +227,7 @@ export function FormCard() {
         )}
 
         {/* Workflow Authorities Card */}
-        {(FormUIProps.userForEdit || isViewMode) && (
-          <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100">
-            <WorkflowAuthortiesTable />
-          </div>
-        )}
+        <WorkflowAuthortiesTable />
       </div>
     </div>
   );

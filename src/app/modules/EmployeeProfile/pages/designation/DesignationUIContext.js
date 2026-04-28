@@ -97,7 +97,9 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     by_pass_blacklist_check:"",
     geoLocationIds : [],
     allowedAnywhere : false,
-    allowResignationRequest: false,
+    allowResignationRequest: false, 
+    isForMachineAtt : false,
+    empMachineAttId: null,
   };
 
  

@@ -26,7 +26,7 @@ const LeaveArea = ({
       <div className="col-span-4 space-y-2">
         <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
           {/* dropdown area  */}
-         
+
           <div>
             <SearchSelect
               name="gradeId"
@@ -42,7 +42,7 @@ const LeaveArea = ({
                 summaryFilter?.gradeId == ""
                   ? { value: "", label: "All" }
                   : allEmployeegradeList?.find(
-                      (option) => option.value === summaryFilter.gradeId
+                      (option) => option.value === summaryFilter.gradeId,
                     ) || null
               }
               options={[
@@ -68,7 +68,7 @@ const LeaveArea = ({
                 summaryFilter?.departmentId == ""
                   ? { value: "", label: "All" }
                   : allParentDept?.find(
-                      (option) => option.value === summaryFilter?.departmentId
+                      (option) => option.value === summaryFilter?.departmentId,
                     ) || null
               }
               options={[
@@ -92,7 +92,7 @@ const LeaveArea = ({
                 summaryFilter?.locationId == ""
                   ? { value: "", label: "All" }
                   : allLocationChildMenus?.find(
-                      (option) => option.value === summaryFilter?.locationId
+                      (option) => option.value === summaryFilter?.locationId,
                     ) || null
               }
               options={[
@@ -124,20 +124,14 @@ const LeaveArea = ({
           </div>
         </div>
         {/* chart area  */}
-        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
-          {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.tab_key == "2") {
-                return <ChartData key={`chart-${alertIdx}`} data={e} />;
-              }
-              return null;
-            })}
-        </div>
-        {/* chart area  */}
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.tab_key == "2" && e?.dashlet_type === "big_table") {
+            allDashboardAlerts
+              ?.filter(
+                (el) => el?.tab_key == "2" && el?.dashlet_type == "big_table",
+              )
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
+              ?.map((e, alertIdx) => {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -145,9 +139,19 @@ const LeaveArea = ({
                     data={e}
                   />
                 );
-              }
-              return null;
-            })}
+              })}
+        </div>
+        {/* chart area  */}
+        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
+          {allDashboardAlerts?.length > 0 &&
+            allDashboardAlerts
+              ?.filter(
+                (el) => el?.tab_key == "2" && el?.dashlet_type == "chart",
+              )
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
+              ?.map((e, alertIdx) => {
+                return <ChartData key={`chart-${alertIdx}`} data={e} />;
+              })}
         </div>
       </div>
       <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">

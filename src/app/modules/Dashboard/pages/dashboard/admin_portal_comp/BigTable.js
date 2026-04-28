@@ -51,7 +51,7 @@ export function BigTable({ data, setBigTableModalData }) {
       return {
         dataField: key,
         text: key.split("_").join(" "),
-
+        sort : true,
         formatter: (cell) => {
           // For date formatting
           if (isDate && typeof cell === "string") {
@@ -59,7 +59,7 @@ export function BigTable({ data, setBigTableModalData }) {
             const isValidDate = !isNaN(dateObj.getTime()); // check if valid
 
             return (
-              <div title={isValidDate ? format(dateObj, "dd-MMM-yyyy") : ""}>
+              <div className="line-clamp-1" title={isValidDate ? format(dateObj, "dd-MMM-yyyy") : ""}>
                 {isValidDate ? format(dateObj, "dd-MMM-yyyy") : "-"}
               </div>
             );
@@ -68,7 +68,7 @@ export function BigTable({ data, setBigTableModalData }) {
           // For amount formatting
           if (isAmount) {
             return (
-              <div title={cell}>
+              <div className="line-clamp-1" title={cell}>
                 {cell || "0"}
                 {/* {Number(cell).toLocaleString("en-US", {
                   minimumFractionDigits: 1,
@@ -81,8 +81,9 @@ export function BigTable({ data, setBigTableModalData }) {
           // For all other text fields
           return (
             <div
-              className={cell?.length > 25 ? "truncate w-36" : "truncate"}
+              className={cell?.length > 25 ? "truncate w-36 line-clamp-1" : "truncate line-clamp-1"}
               title={cell}
+              
             >
               {cell || ""}
             </div>

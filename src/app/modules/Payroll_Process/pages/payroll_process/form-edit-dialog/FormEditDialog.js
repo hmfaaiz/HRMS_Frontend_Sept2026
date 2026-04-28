@@ -30,6 +30,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       setIds: FormUIContext.setIds,
       employeeId: FormUIContext.employeeId,
       queryParams: FormUIContext.queryParams,
+      payrollCheckListData: FormUIContext.payrollCheckListData,
+      setPayrollCheckListData: FormUIContext.setPayrollCheckListData,
    
     };
   }, [FormUIContext]);

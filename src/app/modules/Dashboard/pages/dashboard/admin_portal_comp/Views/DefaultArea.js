@@ -76,7 +76,7 @@ const DefaultArea = ({
                 summaryFilter?.gradeId == ""
                   ? { value: "", label: "All" }
                   : allEmployeegradeList?.find(
-                      (option) => option.value === summaryFilter.gradeId
+                      (option) => option.value === summaryFilter.gradeId,
                     ) || null
               }
               options={[
@@ -102,7 +102,7 @@ const DefaultArea = ({
                 summaryFilter?.departmentId == ""
                   ? { value: "", label: "All" }
                   : allParentDept?.find(
-                      (option) => option.value === summaryFilter?.departmentId
+                      (option) => option.value === summaryFilter?.departmentId,
                     ) || null
               }
               options={[
@@ -126,7 +126,7 @@ const DefaultArea = ({
                 summaryFilter?.locationId == ""
                   ? { value: "", label: "All" }
                   : allLocationChildMenus?.find(
-                      (option) => option.value === summaryFilter?.locationId
+                      (option) => option.value === summaryFilter?.locationId,
                     ) || null
               }
               options={[
@@ -220,21 +220,13 @@ const DefaultArea = ({
             />
           </div>
         </div>
-        {/* chart area  */}
-        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
-          {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.is_fav) {
-                return <ChartData key={`chart-${alertIdx}`} data={e} />;
-              }
-              return null;
-            })}
-        </div>
+
         {/* chart area  */}
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts
-              .filter((el) => el?.dashlet_type === "big_table" && el?.is_fav)
+              ?.filter((el) => el?.dashlet_type === "big_table" && el?.is_fav)
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
               ?.map((e, alertIdx) => {
                 return (
                   <BigTable
@@ -243,6 +235,16 @@ const DefaultArea = ({
                     data={e}
                   />
                 );
+              })}
+        </div>
+        {/* chart area  */}
+        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
+          {allDashboardAlerts?.length > 0 &&
+            allDashboardAlerts
+              ?.filter((el) => el?.dashlet_type === "chart" && el?.is_fav)
+              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
+              ?.map((e, alertIdx) => {
+                return <ChartData key={`chart-${alertIdx}`} data={e} />;
               })}
         </div>
       </div>

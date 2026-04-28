@@ -45,7 +45,7 @@ export function AttendanceRosterDetail({ entities }) {
       ) : (
         <p className="text-sm mb-0">Attendance Roster Request</p>
       )}
-      {isAttendanceRosterApproval ? (
+      {/* {isAttendanceRosterApproval ? (
         <div className="font-size-xs text-black font-bold">
           <p className="m-0 underline">
             <a
@@ -59,7 +59,7 @@ export function AttendanceRosterDetail({ entities }) {
         </div>
       ) : (
         <p className="text-sm mb-0">Attendance Roster Approval</p>
-      )}
+      )} */}
     </div>
   );
 }
