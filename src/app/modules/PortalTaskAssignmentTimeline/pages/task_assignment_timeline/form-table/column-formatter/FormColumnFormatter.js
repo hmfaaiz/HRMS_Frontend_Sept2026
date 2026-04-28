@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { FolderClock, LayoutList, Pencil, Trash2 } from "lucide-react";
+import { Eye, FolderClock, LayoutList, Pencil, Trash2 } from "lucide-react";
 export function FormColumnFormatter(
   cellContent,
   row,
@@ -23,6 +23,8 @@ export function FormColumnFormatter(
           </button>
         </OverlayTrigger>
       )} */}
+
+
 
       <OverlayTrigger
         overlay={<Tooltip id={`timelog-${row.Id}`}>Detail Time Log</Tooltip>}
@@ -54,11 +56,8 @@ export function TimeLogsColumnFormatter(
   return (
     <div className="space-x-2">
 
-{row?.MasterDetailTimeLog?.ticketStatus != 0 && (
-  <>
-
-   <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+            <OverlayTrigger
+        overlay={<Tooltip id="products-vieew-tooltip">View</Tooltip>}
       >
         <button
           type="button"
@@ -68,23 +67,10 @@ export function TimeLogsColumnFormatter(
 
           style={{ background: 'none', border: 'none', padding: 0 }}
         >
-          <Pencil className="w-4 h-4 text-black cursor-pointer" />
+          <Eye className="w-4 h-4 text-black cursor-pointer" />
         </button>
       </OverlayTrigger>
 
-
-
-
-
-      <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
-        <a onClick={() => openDeleteHandler(row.Id, row.detailId)}>
-          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-        </a>
-      </OverlayTrigger>
-  </>
-
-        )
-}
      
     </div>
   );

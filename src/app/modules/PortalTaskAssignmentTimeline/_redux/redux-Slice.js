@@ -63,7 +63,7 @@ export const portalTaskAssignmentTimelineSlice = createSlice({
         },
 
 
-          FacilitatorTimeLogDetailFetched: (state, action) => {
+            FacilitatorTimeLogDetailFetched: (state, action) => {
             state.listLoading = false;
             state.error = null;
 
@@ -73,8 +73,9 @@ export const portalTaskAssignmentTimelineSlice = createSlice({
 
             state.listLoading = false;
             state.error = null;
-            state.timelogsEntities = data || [];
-            state.timeLogsTotalCount = data.length; // total number of details
+            state.timelogsEntities = data.rows || [];
+            state.timeLogsTotalCount = data.totalResults || 0; // total number of details
+            console.log('data1111',data)
         },
     pdfFetched: (state) => { state.pdfLoading = false; },
     csvFetched: (state) => { state.csvLoading = false; },

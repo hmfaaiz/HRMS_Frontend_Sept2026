@@ -169,7 +169,7 @@ export default function OwnershipTransferHeader({ onFilter,setShowTables,reset }
             options={fromEmployees}
             value={fromEmployees.find((e) => e.value === fromEmployee) || null}
             onChange={(e) => {
-              console.log("eeeeeeee666666666",e)
+           
               setFromEmployee(e?.value || null)
               setShowTables(false);
               setToEmployee(e?.deligationId || null)
@@ -190,6 +190,13 @@ export default function OwnershipTransferHeader({ onFilter,setShowTables,reset }
             isDisabled={true}
           />
         </div>
+
+
+    {fromEmployee && !toEmployee && (
+  <span className="form-feedBack">
+    Please select delegation in profile.
+  </span>
+)}
       </div>
 
       {/* TO */}

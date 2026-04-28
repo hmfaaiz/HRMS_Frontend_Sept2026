@@ -11,7 +11,7 @@ export function getTaskAssignmentTimeline(body) {
 }
 
 
-export function getAllFacilitatorTimeLogDetail(Id) {
+export function getAllFacilitatorTimeLogDetail(body) {
 
-  return axios.get(`${API_URL}/portal_task_assignment_timeline/read-all-facilitator-timelog-detail/${Id}`);
+  return axios.post(`${API_URL}/portal_task_assignment_timeline/read-all-facilitator-timelog-detail`,body);
 }

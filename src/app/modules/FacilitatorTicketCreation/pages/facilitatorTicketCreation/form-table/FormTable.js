@@ -133,7 +133,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "35px",
       },
       formatter: (cell) => {
         if (!cell) return "";
