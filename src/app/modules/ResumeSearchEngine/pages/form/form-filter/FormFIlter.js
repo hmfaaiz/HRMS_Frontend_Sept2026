@@ -294,7 +294,7 @@ export function FormFIlter({ listLoading, user }) {
                   </div>
 
                   {/* Department */}
-                  <div className="">
+                  {/* <div className="">
                     <SearchSelect
                       name="departmentId"
                       label="Department"
@@ -310,10 +310,32 @@ export function FormFIlter({ listLoading, user }) {
                       // options={dashboard?.allDept}
                       options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                     />
+                  </div> */}
+
+
+
+                  <div>
+                    <SearchSelect
+                      name="departmentId"
+                      label="Department"
+                      onChange={(e) => {
+                        setFieldValue("departmentId", e?.value ?? null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allDept?.find(
+                          (option) => option.value === values.departmentId
+                        ) || { label: "All", value: null }
+                      }
+                      options={[
+                        { label: "All", value: null },
+                        ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),
+                      ]}
+                    />
                   </div>
 
                   {/* Designation */}
-                  <div className="">
+                  {/* <div className="">
                     <SearchSelect
                       name="designationId"
                       label="Designation"
@@ -329,11 +351,31 @@ export function FormFIlter({ listLoading, user }) {
                       // options={dashboard?.allDesignations}
                       options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
                     />
+                  </div> */}
+                  <div>
+                    <SearchSelect
+                      name="designationId"
+                      label="Designation"
+                      onChange={(e) => {
+                        setFieldValue("designationId", e?.value ?? null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allDesignations?.find(
+                          (option) => option.value === values.designationId
+                        ) || { label: "All", value: null }
+                      }
+                      options={[
+                        { label: "All", value: null },
+                        ...(Array.isArray(dashboard?.allDesignations)
+                          ? dashboard?.allDesignations
+                          : []),
+                      ]}
+                    />
                   </div>
 
-
                   {/* Grade */}
-                  <div className="">
+                  {/* <div className="">
                     <SearchSelect
                       name="gradeId"
                       label="Grade"
@@ -348,6 +390,28 @@ export function FormFIlter({ listLoading, user }) {
                       }
                       // options={dashboard?.allEmployeegradeList}
                       options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList : []),]}
+                    />
+                  </div> */}
+
+                  <div>
+                    <SearchSelect
+                      name="gradeId"
+                      label="Grade"
+                      onChange={(e) => {
+                        setFieldValue("gradeId", e?.value ?? null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allEmployeegradeList?.find(
+                          (option) => option.value === values.gradeId
+                        ) || { label: "All", value: null }
+                      }
+                      options={[
+                        { label: "All", value: null },
+                        ...(Array.isArray(dashboard?.allEmployeegradeList)
+                          ? dashboard?.allEmployeegradeList
+                          : []),
+                      ]}
                     />
                   </div>
                 </div>
@@ -473,7 +537,7 @@ export function FormFIlter({ listLoading, user }) {
 
 
                     {/* Applicant status */}
-                    <div className="">
+                    {/* <div className="">
 
 
                       <SearchSelect
@@ -505,11 +569,41 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
+                    </div> */}
+
+                    <div>
+                      <SearchSelect
+                        name="applicantStatusId"
+                        label={<span>Applicant Status</span>}
+                        className="form-control"
+                        style={{ width: "130px" }}
+
+                        value={
+                          dashboard?.allApplicationStatusList?.find(
+                            (x) => x.value === values.applicantStatusId
+                          ) || { label: "All", value: null }
+                        }
+
+                        onChange={(e) => {
+                          const selectedValue = e?.value ?? null;
+                          setFieldValue("applicantStatusId", selectedValue);
+                          handleSubmit();
+                        }}
+
+                        options={[
+                          { label: "All", value: null },
+                          ...(Array.isArray(dashboard?.allApplicationStatusList)
+                            ? dashboard?.allApplicationStatusList
+                            : []),
+                        ]}
+
+                        getOptionLabel={(x) => x.label}
+                        getOptionValue={(x) => x.value}
+                        placeholder="All"
+                      />
                     </div>
-
-
                     {/* Priority */}
-                    <div className="">
+                    {/* <div className="">
                       <SearchSelect
                         name="priorityTypeId"
                         label="Priority"
@@ -524,6 +618,28 @@ export function FormFIlter({ listLoading, user }) {
                         }
                         // options={dashboard?.allPriorityTypeList}
                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList : []),]}
+                      />
+                    </div> */}
+
+                    <div>
+                      <SearchSelect
+                        name="priorityTypeId"
+                        label="Priority"
+                        onChange={(e) => {
+                          setFieldValue("priorityTypeId", e?.value ?? null);
+                          handleSubmit();
+                        }}
+                        value={
+                          dashboard?.allPriorityTypeList?.find(
+                            (option) => option.value === values.priorityTypeId
+                          ) || { label: "All", value: null }
+                        }
+                        options={[
+                          { label: "All", value: null },
+                          ...(Array.isArray(dashboard?.allPriorityTypeList)
+                            ? dashboard?.allPriorityTypeList
+                            : []),
+                        ]}
                       />
                     </div>
                     {/* Job Status */}
@@ -661,13 +777,13 @@ export function FormFIlter({ listLoading, user }) {
                 <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
                   <div>
                     <h6 className="font-bold mb-0 text-primary ">
-                      Work Experience 
+                      Work Experience
                     </h6>
                     <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
                       <div className="">
                         <label>
                           <span>
-                         From
+                            From
                           </span>
                         </label>
                         <Field
@@ -696,7 +812,7 @@ export function FormFIlter({ listLoading, user }) {
                       <div className="">
                         <label>
                           <span>
-                           To
+                            To
                           </span>
                         </label>
                         <Field
@@ -775,11 +891,11 @@ export function FormFIlter({ listLoading, user }) {
                   </div>
                 </div>
 
-               
+
               </div>
               <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
 
-                <div className="">
+                {/* <div className="">
                   <SearchSelect
                     name="expectedSalaryCurrencyId"
                     label={<span> Currency</span>}
@@ -799,10 +915,34 @@ export function FormFIlter({ listLoading, user }) {
                     // options={dashboard.allCurrencyCodeList}
                     options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allCurrencyCodeList) ? dashboard.allCurrencyCodeList : []),]}
                   />
+                </div> */}
+                <div>
+                  <SearchSelect
+                    name="expectedSalaryCurrencyId"
+                    label={<span>Currency</span>}
+
+                    onChange={(e) => {
+                      setFieldValue("expectedSalaryCurrencyId", e?.value ?? null);
+                      handleSubmit();
+                    }}
+
+                    value={
+                      dashboard?.allCurrencyCodeList?.find(
+                        (option) =>
+                          option.value === values.expectedSalaryCurrencyId
+                      ) || { label: "All", value: null }
+                    }
+
+                    options={[
+                      { label: "All", value: null },
+                      ...(Array.isArray(dashboard?.allCurrencyCodeList)
+                        ? dashboard.allCurrencyCodeList
+                        : []),
+                    ]}
+                  />
                 </div>
 
-
-                <div className="">
+                {/* <div className="">
                   <SearchSelect
                     name="expectedSalaryPayTypeId"
                     label={<span> Per Month / Per Year</span>}
@@ -822,10 +962,35 @@ export function FormFIlter({ listLoading, user }) {
                     // options={salaryPayTypeIdOptions}
                     options={[{ label: 'Select', value: '' }, ...(Array.isArray(salaryPayTypeIdOptions) ? salaryPayTypeIdOptions : []),]}
                   />
-                </div>
+                </div> */}
 
 
+<div>
+  <SearchSelect
+    name="expectedSalaryPayTypeId"
+    label={<span>Per Month / Per Year</span>}
 
+    value={
+      salaryPayTypeIdOptions.find(
+        (option) =>
+          option.value === values.expectedSalaryPayTypeId
+      ) || { label: "All", value: null }
+    }
+
+    onChange={(e) => {
+      const selectedValue = e?.value ?? null;
+      setFieldValue("expectedSalaryPayTypeId", selectedValue);
+      handleSubmit();
+    }}
+
+    options={[
+      { label: "All", value: null },
+      ...(Array.isArray(salaryPayTypeIdOptions)
+        ? salaryPayTypeIdOptions
+        : []),
+    ]}
+  />
+</div>
 
 
 
@@ -846,7 +1011,7 @@ export function FormFIlter({ listLoading, user }) {
                 </div>
 
 
-                <div className="">
+                {/* <div className="">
                   <SearchSelect
                     name="preferredQualificationId"
                     label={
@@ -870,8 +1035,33 @@ export function FormFIlter({ listLoading, user }) {
 
 
                   />
-                </div>
+                </div> */}
+<div>
+  <SearchSelect
+    name="preferredQualificationId"
+    label={<span>Preferred Qualification</span>}
 
+    onChange={(e) => {
+      const selectedValue = e?.value ?? null;
+      setFieldValue("preferredQualificationId", selectedValue);
+      handleSubmit();
+    }}
+
+    value={
+      dashboard?.allQualificationList?.find(
+        (option) =>
+          option.value === values.preferredQualificationId
+      ) || { label: "All", value: null }
+    }
+
+    options={[
+      { label: "All", value: null },
+      ...(Array.isArray(dashboard?.allQualificationList)
+        ? dashboard.allQualificationList
+        : []),
+    ]}
+  />
+</div>
 
               </div>
 
