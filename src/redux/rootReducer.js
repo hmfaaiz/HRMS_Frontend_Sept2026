@@ -422,6 +422,7 @@ export const rootReducer = combineReducers({
   reimbursement_claim_workflow_status_approval:
   ReimbursementWorkflowHrmsSlice.reducer,
   reimbursement_claim_workflow_status: ReimbursementWorkflowStatusSlice.reducer,
+  TravelRequestWorkflowStatus: TravelRequestWorkflowStatusSlice.reducer,
   attendance_roster_request: RosterRequestSlice.reducer,
   attendance_roster_approval: RosterApprovalSlice.reducer,
   attendance_roster_workflow_status: RosterWorkflowHrmsSlice.reducer,
