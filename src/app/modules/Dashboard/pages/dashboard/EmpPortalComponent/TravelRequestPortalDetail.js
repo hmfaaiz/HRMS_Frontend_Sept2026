@@ -43,9 +43,9 @@ export function TravelRequestPortalDetail() {
           </p>
         </div>
       ) : (
-        <p className="text-sm mb-0">Travel Request</p>
+        <p className="text-sm mb-0"> Request</p>
       )}
-      {isTravelApproval ? (
+      {/* {isTravelApproval ? (
         <div className="font-size-xs text-black font-bold">
           <p className="m-0 underline">
             <a href="/travel_request_approval/read-all-travel-request-approval">
@@ -55,7 +55,7 @@ export function TravelRequestPortalDetail() {
         </div>
       ) : (
         <p className="text-sm mb-0">Travel Approval</p>
-      )}
+      )} */}
     </div>
   );
 }
