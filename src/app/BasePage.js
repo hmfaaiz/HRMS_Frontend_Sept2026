@@ -582,6 +582,13 @@ const attendance_roster_workflow_status = lazy (() =>
 const attendance_roster_workflow_status_portal = lazy (() =>
   import ("./modules/Attendance_Roster_Workflow_Portal/pages/index"))
 
+const post_approval_travel_request = lazy (() => 
+ import ("./modules/Post_Approval_Travel_Request/pages/index"),
+)
+const roster_calendar_team = lazy (() => 
+ import ("./modules/Roster_Calendar_Portal/pages/index"),
+)
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -781,6 +788,8 @@ const ROUTES = {
   attendance_roster_approval : attendance_roster_approval,
   attendance_roster_workflow_status : attendance_roster_workflow_status,
   attendance_roster_workflow_status_portal : attendance_roster_workflow_status_portal,
+  post_approval_travel_request : post_approval_travel_request,
+  roster_calendar_team : roster_calendar_team,
 };
 
 export default function BasePage() {
@@ -789,7 +798,6 @@ export default function BasePage() {
 
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
-  const SettingsAccess = auth?.userAccess?.Settings;
   // );
   return (
     <Suspense fallback={<LayoutSplashScreen />}>

@@ -82,6 +82,7 @@ export function FormTable() {
  
     {
       dataField: "isApproved", 
+      text: "Approved",
       sort: false,
       sortCaret,
       headerSortingClasses,

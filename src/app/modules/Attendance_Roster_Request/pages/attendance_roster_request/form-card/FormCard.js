@@ -18,14 +18,14 @@ export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
 
-  const { employeeList, roster} = useSelector(
+  const { employeeList, roster,rosterCalendarAccess } = useSelector(
     (state) => ({
        employeeList: state?.dashboard?.employeeList ,
        roster: state?.auth?.userAccess["Attendance Management"],
+       rosterCalendarAccess: state?.auth?.userAccess["roster_calendar_team"],
        }),
     shallowEqual
   );
-  
 
   const FormUIProps = useMemo(() => ({
     employeeId:    FormUIContext.employeeId,
@@ -73,20 +73,28 @@ export function FormCard() {
       isShow: roster?.find(
         (el) =>
           el?.componentName === "ReadAllAttendanceRosterApproval" &&
-          el?.isResourceShow
+          el?.isResourceShow,
       ),
     },
-   
+
     {
       name: "Workflow Status",
-      link: "/attendance_roster_workflow_status_portal/read-all-attendance-roster-workflow-status-portal",
+      link:
+        "/attendance_roster_workflow_status_portal/read-all-attendance-roster-workflow-status-portal",
       isShow: roster?.find(
         (el) =>
           el?.componentName === "ReadAllAttendanceRosterWorkflowStatus" &&
-          el?.isResourceShow
+          el?.isResourceShow,
       ),
     },
-   
+    {
+      name: "Roster Calendar",
+      link: "/roster_calendar_team/read-roster-calendar",
+      isShow: rosterCalendarAccess?.find(
+        (el) =>
+          el?.componentName === "ReadRosterCalendar" && el?.isResourceShow,
+      ),
+    },
   ];
 
 
