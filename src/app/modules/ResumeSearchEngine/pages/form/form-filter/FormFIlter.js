@@ -15,8 +15,10 @@ import { fetchAllCity, fetchAllCountry, fetchAllDept, fetchAllFormsMenu } from "
 import { debounce } from "redux-saga/effects";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { Form, Modal } from "react-bootstrap";
+import { Accordion, Button, Card } from "react-bootstrap";
+import { CircleMinus, CirclePlus } from "lucide-react";
 import {
-  Card,
+
   CardHeader,
   Input,
   Select,
@@ -119,7 +121,10 @@ const prepareFilter = (queryParams, values) => {
 
 export function FormFIlter({ listLoading, user }) {
 
-
+  const [activeKey1, setActiveKey1] = useState(null);
+  const [activeKey2, setActiveKey2] = useState(null);
+  const [activeKey3, setActiveKey3] = useState(null);
+  const [activeKey4, setActiveKey4] = useState(null);
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext()
   const [Loading, setLoading] = useState(false)
@@ -262,39 +267,54 @@ export function FormFIlter({ listLoading, user }) {
         }) => (
           <>
             <form onSubmit={handleSubmit}>
-              {/* <Card>
-                <CardHeader title={CurrentModuleName()} />
-              </Card> */}
-
-              <div
-
-              >
 
 
-                <h6 className="font-bold mb-0 text-primary">
-                  Job Filter
-                </h6>
-                <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
+
+              <Accordion activeKey={activeKey1} onSelect={(key) => setActiveKey1(key)} >
+                <Card>
+                  <Card.Header className="d-flex justify-content-center">
+                    <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                      <Accordion.Toggle
+                        as={Button}
+                        eventKey="0"
+                        className="flex justify-start text-bold"
+                      >
+
+                        {activeKey1 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Job Filter</span>
+
+                      </Accordion.Toggle>
+                    </div>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey="0">
+                    <div
+
+                    >
 
 
-                  <div className="">
-                    <label>Job Title</label>
-                    <Field
-                      component={Input}
-                      name="searchText"
-                      placeholder="Enter job title"
-                      type="text"
-                      onBlur={handleBlur}
-                      value={values.searchText}
-                      onChange={(e) => {
-                        setFieldValue("searchText", e.target.value);
-                        handleSubmit();
-                      }}
-                    />
-                  </div>
+                      {/* <h6 className="font-bold mb-0 text-primary">
+                        Job Filter
+                      </h6> */}
+                      <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
 
-                  {/* Department */}
-                  {/* <div className="">
+
+                        <div className="">
+                          <label>Job Title</label>
+                          <Field
+                            component={Input}
+                            name="searchText"
+                            placeholder="Enter job title"
+                            type="text"
+                            onBlur={handleBlur}
+                            value={values.searchText}
+                            onChange={(e) => {
+                              setFieldValue("searchText", e.target.value);
+                              handleSubmit();
+                            }}
+                          />
+                        </div>
+
+                        {/* Department */}
+                        {/* <div className="">
                     <SearchSelect
                       name="departmentId"
                       label="Department"
@@ -314,28 +334,28 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-                  <div>
-                    <SearchSelect
-                      name="departmentId"
-                      label="Department"
-                      onChange={(e) => {
-                        setFieldValue("departmentId", e?.value ?? null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allDept?.find(
-                          (option) => option.value === values.departmentId
-                        ) || { label: "All", value: null }
-                      }
-                      options={[
-                        { label: "All", value: null },
-                        ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),
-                      ]}
-                    />
-                  </div>
+                        <div>
+                          <SearchSelect
+                            name="departmentId"
+                            label="Department"
+                            onChange={(e) => {
+                              setFieldValue("departmentId", e?.value ?? null);
+                              handleSubmit();
+                            }}
+                            value={
+                              dashboard?.allDept?.find(
+                                (option) => option.value === values.departmentId
+                              ) || { label: "All", value: null }
+                            }
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),
+                            ]}
+                          />
+                        </div>
 
-                  {/* Designation */}
-                  {/* <div className="">
+                        {/* Designation */}
+                        {/* <div className="">
                     <SearchSelect
                       name="designationId"
                       label="Designation"
@@ -352,30 +372,30 @@ export function FormFIlter({ listLoading, user }) {
                       options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
                     />
                   </div> */}
-                  <div>
-                    <SearchSelect
-                      name="designationId"
-                      label="Designation"
-                      onChange={(e) => {
-                        setFieldValue("designationId", e?.value ?? null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allDesignations?.find(
-                          (option) => option.value === values.designationId
-                        ) || { label: "All", value: null }
-                      }
-                      options={[
-                        { label: "All", value: null },
-                        ...(Array.isArray(dashboard?.allDesignations)
-                          ? dashboard?.allDesignations
-                          : []),
-                      ]}
-                    />
-                  </div>
+                        <div>
+                          <SearchSelect
+                            name="designationId"
+                            label="Designation"
+                            onChange={(e) => {
+                              setFieldValue("designationId", e?.value ?? null);
+                              handleSubmit();
+                            }}
+                            value={
+                              dashboard?.allDesignations?.find(
+                                (option) => option.value === values.designationId
+                              ) || { label: "All", value: null }
+                            }
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allDesignations)
+                                ? dashboard?.allDesignations
+                                : []),
+                            ]}
+                          />
+                        </div>
 
-                  {/* Grade */}
-                  {/* <div className="">
+                        {/* Grade */}
+                        {/* <div className="">
                     <SearchSelect
                       name="gradeId"
                       label="Grade"
@@ -393,151 +413,169 @@ export function FormFIlter({ listLoading, user }) {
                     />
                   </div> */}
 
-                  <div>
-                    <SearchSelect
-                      name="gradeId"
-                      label="Grade"
-                      onChange={(e) => {
-                        setFieldValue("gradeId", e?.value ?? null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allEmployeegradeList?.find(
-                          (option) => option.value === values.gradeId
-                        ) || { label: "All", value: null }
-                      }
-                      options={[
-                        { label: "All", value: null },
-                        ...(Array.isArray(dashboard?.allEmployeegradeList)
-                          ? dashboard?.allEmployeegradeList
-                          : []),
-                      ]}
-                    />
-                  </div>
-                </div>
+                        <div>
+                          <SearchSelect
+                            name="gradeId"
+                            label="Grade"
+                            onChange={(e) => {
+                              setFieldValue("gradeId", e?.value ?? null);
+                              handleSubmit();
+                            }}
+                            value={
+                              dashboard?.allEmployeegradeList?.find(
+                                (option) => option.value === values.gradeId
+                              ) || { label: "All", value: null }
+                            }
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allEmployeegradeList)
+                                ? dashboard?.allEmployeegradeList
+                                : []),
+                            ]}
+                          />
+                        </div>
+                      </div>
 
 
 
-                <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
+                      <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
 
 
 
-                  {/* Location */}
-                  <div className="">
-                    <SearchSelect
-                      name="locationId"
-                      label="Location"
-                      onChange={(e) => {
-                        setFieldValue("locationId", e.value || null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard.allLocationChildMenus?.find(
-                          (option) => option.value === values.locationId
-                        ) || null
-                      }
-                      // options={dashboard.allLocationChildMenus}
-                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus : []),]}
-                    />
-                  </div>
+                        {/* Location */}
+                        <div className="">
+                          <SearchSelect
+                            name="locationId"
+                            label="Location"
+                            onChange={(e) => {
+                              setFieldValue("locationId", e.value || null);
+                              handleSubmit();
+                            }}
+                            value={
+                              dashboard.allLocationChildMenus?.find(
+                                (option) => option.value === values.locationId
+                              ) || null
+                            }
+                            // options={dashboard.allLocationChildMenus}
+                            options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus : []),]}
+                          />
+                        </div>
 
 
-                  {/* Country */}
-                  <div className="">
-                    <SearchSelect
-                      name="countryId"
-                      label="Country"
-                      onChange={(e) => {
-                        const selectedCountryId = e.value || null;
-                        setFieldValue("countryId", selectedCountryId);
-                        console.log("selectedCountryId1111", selectedCountryId)
-                        setFieldValue("cityId", null); // Reset city on country change
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allCountry?.find(
-                          (option) => option.value === values.countryId
-                        ) || null
-                      }
-                      // options={dashboard?.allCountry}
-                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry : []),]}
-                    />
-                  </div>
+                        {/* Country */}
+                        <div className="">
+                          <SearchSelect
+                            name="countryId"
+                            label="Country"
+                            onChange={(e) => {
+                              const selectedCountryId = e.value || null;
+                              setFieldValue("countryId", selectedCountryId);
+                              console.log("selectedCountryId1111", selectedCountryId)
+                              setFieldValue("cityId", null); // Reset city on country change
+                              handleSubmit();
+                            }}
+                            value={
+                              dashboard?.allCountry?.find(
+                                (option) => option.value === values.countryId
+                              ) || null
+                            }
+                            // options={dashboard?.allCountry}
+                            options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry : []),]}
+                          />
+                        </div>
 
-                  {/* City */}
-                  <div className="">
-                    <SearchSelect
-                      name="cityId"
-                      label={<span>City</span>}
-                      // isDisabled={!values.countryId}
-                      onChange={(e) => {
-                        setFieldValue("cityId", e.value || null);
-                        handleSubmit();
-                      }}
-                      value={
-                        filteredCities(values.countryId).find(
-                          (option) => option.value === values.cityId
-                        ) || null
-                      }
-                      // options={filteredCities(values.countryId)}
-                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId) : []),]}
+                        {/* City */}
+                        <div className="">
+                          <SearchSelect
+                            name="cityId"
+                            label={<span>City</span>}
+                            // isDisabled={!values.countryId}
+                            onChange={(e) => {
+                              setFieldValue("cityId", e.value || null);
+                              handleSubmit();
+                            }}
+                            value={
+                              filteredCities(values.countryId).find(
+                                (option) => option.value === values.cityId
+                              ) || null
+                            }
+                            // options={filteredCities(values.countryId)}
+                            options={[{ label: 'Select', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId) : []),]}
 
-                    />
-                  </div>
+                          />
+                        </div>
 
-                  {/* Appointment */}
-                  <div className="">
-                    <SearchSelect
-                      name="appointmentTypeId"
-                      label={
-                        <span>
-                          Appointment Type
-                        </span>
-                      }
+                        {/* Appointment */}
+                        <div className="">
+                          <SearchSelect
+                            name="appointmentTypeId"
+                            label={
+                              <span>
+                                Appointment Type
+                              </span>
+                            }
 
-                      onChange={(e) => {
-                        setFieldValue("appointmentTypeId", e.value || null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allAppointmentTypeList?.find(
-                          (option) => option.value === values.appointmentTypeId
-                        ) || null
-                      }
+                            onChange={(e) => {
+                              setFieldValue("appointmentTypeId", e.value || null);
+                              handleSubmit();
+                            }}
+                            value={
+                              dashboard?.allAppointmentTypeList?.find(
+                                (option) => option.value === values.appointmentTypeId
+                              ) || null
+                            }
 
-                      // options={dashboard?.allAppointmentTypeList}
-                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
+                            // options={dashboard?.allAppointmentTypeList}
+                            options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
 
-                    />
-                  </div>
-
-
-
-                </div>
+                          />
+                        </div>
 
 
 
+                      </div>
 
-              </div>
 
 
+
+                    </div>
+
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
 
               <hr></hr>
+              <Accordion activeKey={activeKey2} onSelect={(key) => setActiveKey2(key)} >
+                <Card>
+                  <Card.Header className="d-flex justify-content-center">
+                    <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                      <Accordion.Toggle
+                        as={Button}
+                        eventKey="0"
+                        className="flex justify-start text-bold"
+                      >
 
-              {/* Vacancy detail */}
-              <div className="grid lg:grid-cols-3 gap-x-3 ">
+                        {activeKey2 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">     Vacancy Detail</span>
 
-                <div>
-                  <h6 className="font-bold mb-0 text-primary mt-1">
-                    Vacancy Detail
-                  </h6>
+                      </Accordion.Toggle>
+                    </div>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey="0">
 
-                  <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
+                    {/* Vacancy detail */}
+                    <div className="grid lg:grid-cols-3 gap-x-3 ">
+
+                      <div>
+                        {/* <h6 className="font-bold mb-0 text-primary mt-1">
+                          Vacancy Detail
+                        </h6> */}
+
+                        <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
 
 
 
-                    {/* Applicant status */}
-                    {/* <div className="">
+                          {/* Applicant status */}
+                          {/* <div className="">
 
 
                       <SearchSelect
@@ -571,39 +609,39 @@ export function FormFIlter({ listLoading, user }) {
 
                     </div> */}
 
-                    <div>
-                      <SearchSelect
-                        name="applicantStatusId"
-                        label={<span>Applicant Status</span>}
-                        className="form-control"
-                        style={{ width: "130px" }}
+                          <div>
+                            <SearchSelect
+                              name="applicantStatusId"
+                              label={<span>Applicant Status</span>}
+                              className="form-control"
+                              style={{ width: "130px" }}
 
-                        value={
-                          dashboard?.allApplicationStatusList?.find(
-                            (x) => x.value === values.applicantStatusId
-                          ) || { label: "All", value: null }
-                        }
+                              value={
+                                dashboard?.allApplicationStatusList?.find(
+                                  (x) => x.value === values.applicantStatusId
+                                ) || { label: "All", value: null }
+                              }
 
-                        onChange={(e) => {
-                          const selectedValue = e?.value ?? null;
-                          setFieldValue("applicantStatusId", selectedValue);
-                          handleSubmit();
-                        }}
+                              onChange={(e) => {
+                                const selectedValue = e?.value ?? null;
+                                setFieldValue("applicantStatusId", selectedValue);
+                                handleSubmit();
+                              }}
 
-                        options={[
-                          { label: "All", value: null },
-                          ...(Array.isArray(dashboard?.allApplicationStatusList)
-                            ? dashboard?.allApplicationStatusList
-                            : []),
-                        ]}
+                              options={[
+                                { label: "All", value: null },
+                                ...(Array.isArray(dashboard?.allApplicationStatusList)
+                                  ? dashboard?.allApplicationStatusList
+                                  : []),
+                              ]}
 
-                        getOptionLabel={(x) => x.label}
-                        getOptionValue={(x) => x.value}
-                        placeholder="All"
-                      />
-                    </div>
-                    {/* Priority */}
-                    {/* <div className="">
+                              getOptionLabel={(x) => x.label}
+                              getOptionValue={(x) => x.value}
+                              placeholder="All"
+                            />
+                          </div>
+                          {/* Priority */}
+                          {/* <div className="">
                       <SearchSelect
                         name="priorityTypeId"
                         label="Priority"
@@ -621,281 +659,300 @@ export function FormFIlter({ listLoading, user }) {
                       />
                     </div> */}
 
-                    <div>
-                      <SearchSelect
-                        name="priorityTypeId"
-                        label="Priority"
-                        onChange={(e) => {
-                          setFieldValue("priorityTypeId", e?.value ?? null);
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard?.allPriorityTypeList?.find(
-                            (option) => option.value === values.priorityTypeId
-                          ) || { label: "All", value: null }
-                        }
-                        options={[
-                          { label: "All", value: null },
-                          ...(Array.isArray(dashboard?.allPriorityTypeList)
-                            ? dashboard?.allPriorityTypeList
-                            : []),
-                        ]}
-                      />
+                          <div>
+                            <SearchSelect
+                              name="priorityTypeId"
+                              label="Priority"
+                              onChange={(e) => {
+                                setFieldValue("priorityTypeId", e?.value ?? null);
+                                handleSubmit();
+                              }}
+                              value={
+                                dashboard?.allPriorityTypeList?.find(
+                                  (option) => option.value === values.priorityTypeId
+                                ) || { label: "All", value: null }
+                              }
+                              options={[
+                                { label: "All", value: null },
+                                ...(Array.isArray(dashboard?.allPriorityTypeList)
+                                  ? dashboard?.allPriorityTypeList
+                                  : []),
+                              ]}
+                            />
+                          </div>
+                          {/* Job Status */}
+                        </div>
+                      </div>
+
+
+                      <div className="">
+                        <h6 className="font-bold mb-0 text-primary ">
+                          Date of Appointment
+                        </h6>
+
+                        <div className="grid lg:grid-cols-2 gap-x-3 mt-1 ">
+
+                          {/* Date From */}
+                          <div className="">
+                            <label>From</label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="From"
+                              selected={
+                                values?.desireFromDateOfApp
+                                  ? new Date(values.desireFromDateOfApp)
+                                  : null
+                              }
+                              onChange={(date) => {
+                                let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                                setFieldValue("desireFromDateOfApp", selectedDate);
+                                setFieldValue("desireToDateOfApp", selectedDate);
+                                handleSubmit();
+                              }}
+                              dateFormat="dd-MMM-yyyy"
+                              name="desireFromDateOfApp"
+                              autoComplete="off"
+                            />
+                          </div>
+
+                          {/* Date To */}
+                          <div className="">
+                            <label> To</label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="To"
+                              selected={
+                                values?.desireToDateOfApp
+                                  ? new Date(values.desireToDateOfApp)
+                                  : null
+                              }
+                              onChange={(date) => {
+                                setFieldValue("desireToDateOfApp", date);
+                                handleSubmit();
+                              }}
+                              dateFormat="dd-MMM-yyyy"
+                              name="desireToDateOfApp"
+                              autoComplete="off"
+                              minDate={values?.desireFromDateOfApp ? new Date(values.desireFromDateOfApp) : new Date()}
+                            />
+                          </div>
+
+                        </div>
+                      </div>
+
+
+                      {/* row 4*/}
+
+                      <div>
+                        <h6 className="font-bold mb-0 text-primary mt-1">
+                          Applied Date
+                        </h6>
+
+                        <div className="grid lg:grid-cols-2 gap-x-3 mt-1">
+
+                          {/* Date From */}
+                          <div className="">
+                            <label>From</label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="From"
+                              selected={
+                                values?.applicationFromDate
+                                  ? new Date(values.applicationFromDate)
+                                  : null
+                              }
+                              onChange={(date) => {
+                                let selectedDate = formatDates(date, 'yyyy-MM-dd')
+
+                                setFieldValue("applicationFromDate", selectedDate);
+                                setFieldValue("applicationToDate", selectedDate);
+                                handleSubmit();
+                              }}
+                              dateFormat="dd-MMM-yyyy"
+                              name="applicationFromDate"
+                              autoComplete="off"
+                            />
+                          </div>
+
+                          {/* Date To */}
+                          <div className="">
+                            <label>To</label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="To"
+                              selected={
+                                values?.applicationToDate
+                                  ? new Date(values.applicationToDate)
+                                  : null
+                              }
+                              onChange={(date) => {
+                                setFieldValue("applicationToDate", date);
+                                handleSubmit();
+                              }}
+                              dateFormat="dd-MMM-yyyy"
+                              name="applicationToDate"
+                              autoComplete="off"
+                              minDate={values?.applicationFromDate ? new Date(values.applicationFromDate) : new Date()}
+                            />
+                          </div>
+
+                        </div>
+
+                      </div>
+
+
                     </div>
-                    {/* Job Status */}
-                  </div>
-                </div>
 
-
-                <div className="">
-                  <h6 className="font-bold mb-0 text-primary ">
-                    Date of Appointment
-                  </h6>
-
-                  <div className="grid lg:grid-cols-2 gap-x-3 mt-1 ">
-
-                    {/* Date From */}
-                    <div className="">
-                      <label>From</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="From"
-                        selected={
-                          values?.desireFromDateOfApp
-                            ? new Date(values.desireFromDateOfApp)
-                            : null
-                        }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                          setFieldValue("desireFromDateOfApp", selectedDate);
-                          setFieldValue("desireToDateOfApp", selectedDate);
-                          handleSubmit();
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="desireFromDateOfApp"
-                        autoComplete="off"
-                      />
-                    </div>
-
-                    {/* Date To */}
-                    <div className="">
-                      <label> To</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="To"
-                        selected={
-                          values?.desireToDateOfApp
-                            ? new Date(values.desireToDateOfApp)
-                            : null
-                        }
-                        onChange={(date) => {
-                          setFieldValue("desireToDateOfApp", date);
-                          handleSubmit();
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="desireToDateOfApp"
-                        autoComplete="off"
-                        minDate={values?.desireFromDateOfApp ? new Date(values.desireFromDateOfApp) : new Date()}
-                      />
-                    </div>
-
-                  </div>
-                </div>
-
-
-                {/* row 4*/}
-
-                <div>
-                  <h6 className="font-bold mb-0 text-primary mt-1">
-                    Applied Date
-                  </h6>
-
-                  <div className="grid lg:grid-cols-2 gap-x-3 mt-1">
-
-                    {/* Date From */}
-                    <div className="">
-                      <label>From</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="From"
-                        selected={
-                          values?.applicationFromDate
-                            ? new Date(values.applicationFromDate)
-                            : null
-                        }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
-
-                          setFieldValue("applicationFromDate", selectedDate);
-                          setFieldValue("applicationToDate", selectedDate);
-                          handleSubmit();
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="applicationFromDate"
-                        autoComplete="off"
-                      />
-                    </div>
-
-                    {/* Date To */}
-                    <div className="">
-                      <label>To</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="To"
-                        selected={
-                          values?.applicationToDate
-                            ? new Date(values.applicationToDate)
-                            : null
-                        }
-                        onChange={(date) => {
-                          setFieldValue("applicationToDate", date);
-                          handleSubmit();
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="applicationToDate"
-                        autoComplete="off"
-                        minDate={values?.applicationFromDate ? new Date(values.applicationFromDate) : new Date()}
-                      />
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-              </div>
-
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
 
               <hr></hr>
 
               {/*Professional Information */}
 
+              <Accordion activeKey={activeKey3} onSelect={(key) => setActiveKey3(key)} >
+                <Card>
+                  <Card.Header className="d-flex justify-content-center">
+                    <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                      <Accordion.Toggle
+                        as={Button}
+                        eventKey="0"
+                        className="flex justify-start text-bold"
+                      >
 
-              <div>
+                        {activeKey3 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Filters</span>
 
-
-                <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
-                  <div>
-                    <h6 className="font-bold mb-0 text-primary ">
-                      Work Experience
-                    </h6>
-                    <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
-                      <div className="">
-                        <label>
-                          <span>
-                            From
-                          </span>
-                        </label>
-                        <Field
-                          name="workExpFrom"
-                          component={Input}
-                          placeholder="Enter work experience (from)"
-
-                          onChange={(e) => {
-                            const selectedValue = e.target.value;
-                            setFieldValue("workExpFrom", selectedValue);
-                            handleSubmit();
-
-
-                          }}
-
-                          type="number"
-                          onInput={(e) => {
-                            e.target.value = amountLimitDynamic(
-                              e.target.value,
-                              2
-                            );
-                          }}
-                        />
-                      </div>
-
-                      <div className="">
-                        <label>
-                          <span>
-                            To
-                          </span>
-                        </label>
-                        <Field
-                          name="workExpTo"
-                          component={Input}
-                          placeholder="Enter work experience (to)"
-                          onChange={(e) => {
-                            const selectedValue = e.target.value;
-                            setFieldValue("workExpTo", selectedValue);
-                            handleSubmit();
-
-
-                          }}
-
-                          type="number"
-                          onInput={(e) => {
-                            e.target.value = amountLimitDynamic(
-                              e.target.value,
-                              2
-                            );
-                          }}
-                        />
-                      </div>
-
-
+                      </Accordion.Toggle>
                     </div>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey="0">
+                    <>
+                      <div>
 
 
-                  </div>
+                        <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
+                          <div>
+                            <h6 className="font-bold mb-0 text-primary ">
+                              Work Experience
+                            </h6>
+                            <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
+                              <div className="">
+                                <label>
+                                  <span>
+                                    From
+                                  </span>
+                                </label>
+                                <Field
+                                  name="workExpFrom"
+                                  component={Input}
+                                  placeholder="Enter work experience (from)"
 
-                  <div>
-                    <h6 className="font-bold mb-0 text-primary ">
-                      Expected Salary Range
-                    </h6>
-
-                    <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
-                      <div className="">
-                        <Field
-                          name="expectedSalaryRangeFrom"
-                          component={Input}
-                          placeholder="Enter expected salary range(from)"
-                          label={<span>From</span>}
-                          autoComplete="off"
-                          type="number"
-                          onChange={(e) => {
-                            const selectedValue = e.target.value;
-                            console.log("selectedValue111", e.target.value)
-                            setFieldValue("expectedSalaryRangeFrom", selectedValue);
-                            handleSubmit();
+                                  onChange={(e) => {
+                                    const selectedValue = e.target.value;
+                                    setFieldValue("workExpFrom", selectedValue);
+                                    handleSubmit();
 
 
-                          }}
-                        />
+                                  }}
+
+                                  type="number"
+                                  onInput={(e) => {
+                                    e.target.value = amountLimitDynamic(
+                                      e.target.value,
+                                      2
+                                    );
+                                  }}
+                                />
+                              </div>
+
+                              <div className="">
+                                <label>
+                                  <span>
+                                    To
+                                  </span>
+                                </label>
+                                <Field
+                                  name="workExpTo"
+                                  component={Input}
+                                  placeholder="Enter work experience (to)"
+                                  onChange={(e) => {
+                                    const selectedValue = e.target.value;
+                                    setFieldValue("workExpTo", selectedValue);
+                                    handleSubmit();
+
+
+                                  }}
+
+                                  type="number"
+                                  onInput={(e) => {
+                                    e.target.value = amountLimitDynamic(
+                                      e.target.value,
+                                      2
+                                    );
+                                  }}
+                                />
+                              </div>
+
+
+                            </div>
+
+
+                          </div>
+
+                          <div>
+                            <h6 className="font-bold mb-0 text-primary ">
+                              Expected Salary Range
+                            </h6>
+
+                            <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
+                              <div className="">
+                                <Field
+                                  name="expectedSalaryRangeFrom"
+                                  component={Input}
+                                  placeholder="Enter expected salary range(from)"
+                                  label={<span>From</span>}
+                                  autoComplete="off"
+                                  type="number"
+                                  onChange={(e) => {
+                                    const selectedValue = e.target.value;
+                                    console.log("selectedValue111", e.target.value)
+                                    setFieldValue("expectedSalaryRangeFrom", selectedValue);
+                                    handleSubmit();
+
+
+                                  }}
+                                />
+                              </div>
+
+
+                              <div className="">
+                                <Field
+                                  name="expectedSalaryRangeTo"
+                                  component={Input}
+                                  placeholder="Enter expected salary range(to)"
+                                  label={<span> To</span>}
+                                  autoComplete="off"
+                                  type="number"
+                                  onChange={(e) => {
+                                    const selectedValue = e.target.value;
+                                    setFieldValue("expectedSalaryRangeTo", selectedValue);
+                                    handleSubmit();
+
+
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+
                       </div>
+                      <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
 
-
-                      <div className="">
-                        <Field
-                          name="expectedSalaryRangeTo"
-                          component={Input}
-                          placeholder="Enter expected salary range(to)"
-                          label={<span> To</span>}
-                          autoComplete="off"
-                          type="number"
-                          onChange={(e) => {
-                            const selectedValue = e.target.value;
-                            setFieldValue("expectedSalaryRangeTo", selectedValue);
-                            handleSubmit();
-
-
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-
-
-              </div>
-              <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
-
-                {/* <div className="">
+                        {/* <div className="">
                   <SearchSelect
                     name="expectedSalaryCurrencyId"
                     label={<span> Currency</span>}
@@ -916,33 +973,33 @@ export function FormFIlter({ listLoading, user }) {
                     options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allCurrencyCodeList) ? dashboard.allCurrencyCodeList : []),]}
                   />
                 </div> */}
-                <div>
-                  <SearchSelect
-                    name="expectedSalaryCurrencyId"
-                    label={<span>Currency</span>}
+                        <div>
+                          <SearchSelect
+                            name="expectedSalaryCurrencyId"
+                            label={<span>Currency</span>}
 
-                    onChange={(e) => {
-                      setFieldValue("expectedSalaryCurrencyId", e?.value ?? null);
-                      handleSubmit();
-                    }}
+                            onChange={(e) => {
+                              setFieldValue("expectedSalaryCurrencyId", e?.value ?? null);
+                              handleSubmit();
+                            }}
 
-                    value={
-                      dashboard?.allCurrencyCodeList?.find(
-                        (option) =>
-                          option.value === values.expectedSalaryCurrencyId
-                      ) || { label: "All", value: null }
-                    }
+                            value={
+                              dashboard?.allCurrencyCodeList?.find(
+                                (option) =>
+                                  option.value === values.expectedSalaryCurrencyId
+                              ) || { label: "All", value: null }
+                            }
 
-                    options={[
-                      { label: "All", value: null },
-                      ...(Array.isArray(dashboard?.allCurrencyCodeList)
-                        ? dashboard.allCurrencyCodeList
-                        : []),
-                    ]}
-                  />
-                </div>
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allCurrencyCodeList)
+                                ? dashboard.allCurrencyCodeList
+                                : []),
+                            ]}
+                          />
+                        </div>
 
-                {/* <div className="">
+                        {/* <div className="">
                   <SearchSelect
                     name="expectedSalaryPayTypeId"
                     label={<span> Per Month / Per Year</span>}
@@ -965,53 +1022,53 @@ export function FormFIlter({ listLoading, user }) {
                 </div> */}
 
 
-<div>
-  <SearchSelect
-    name="expectedSalaryPayTypeId"
-    label={<span>Per Month / Per Year</span>}
+                        <div>
+                          <SearchSelect
+                            name="expectedSalaryPayTypeId"
+                            label={<span>Per Month / Per Year</span>}
 
-    value={
-      salaryPayTypeIdOptions.find(
-        (option) =>
-          option.value === values.expectedSalaryPayTypeId
-      ) || { label: "All", value: null }
-    }
+                            value={
+                              salaryPayTypeIdOptions.find(
+                                (option) =>
+                                  option.value === values.expectedSalaryPayTypeId
+                              ) || { label: "All", value: null }
+                            }
 
-    onChange={(e) => {
-      const selectedValue = e?.value ?? null;
-      setFieldValue("expectedSalaryPayTypeId", selectedValue);
-      handleSubmit();
-    }}
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("expectedSalaryPayTypeId", selectedValue);
+                              handleSubmit();
+                            }}
 
-    options={[
-      { label: "All", value: null },
-      ...(Array.isArray(salaryPayTypeIdOptions)
-        ? salaryPayTypeIdOptions
-        : []),
-    ]}
-  />
-</div>
-
-
-
-                <div className="">
-                  <Field
-                    name="companyName"
-                    component={Input}
-                    label="Organization Name"
-                    placeholder="Enter company"
-                    autoComplete="off"
-                    onChange={(e) => {
-                      setFieldValue("companyName", e.target.value)
-                      handleSubmit();
-                    }}
-
-                  />
-
-                </div>
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(salaryPayTypeIdOptions)
+                                ? salaryPayTypeIdOptions
+                                : []),
+                            ]}
+                          />
+                        </div>
 
 
-                {/* <div className="">
+
+                        <div className="">
+                          <Field
+                            name="companyName"
+                            component={Input}
+                            label="Organization Name"
+                            placeholder="Enter company"
+                            autoComplete="off"
+                            onChange={(e) => {
+                              setFieldValue("companyName", e.target.value)
+                              handleSubmit();
+                            }}
+
+                          />
+
+                        </div>
+
+
+                        {/* <div className="">
                   <SearchSelect
                     name="preferredQualificationId"
                     label={
@@ -1036,37 +1093,39 @@ export function FormFIlter({ listLoading, user }) {
 
                   />
                 </div> */}
-<div>
-  <SearchSelect
-    name="preferredQualificationId"
-    label={<span>Preferred Qualification</span>}
+                        <div>
+                          <SearchSelect
+                            name="preferredQualificationId"
+                            label={<span>Preferred Qualification</span>}
 
-    onChange={(e) => {
-      const selectedValue = e?.value ?? null;
-      setFieldValue("preferredQualificationId", selectedValue);
-      handleSubmit();
-    }}
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("preferredQualificationId", selectedValue);
+                              handleSubmit();
+                            }}
 
-    value={
-      dashboard?.allQualificationList?.find(
-        (option) =>
-          option.value === values.preferredQualificationId
-      ) || { label: "All", value: null }
-    }
+                            value={
+                              dashboard?.allQualificationList?.find(
+                                (option) =>
+                                  option.value === values.preferredQualificationId
+                              ) || { label: "All", value: null }
+                            }
 
-    options={[
-      { label: "All", value: null },
-      ...(Array.isArray(dashboard?.allQualificationList)
-        ? dashboard.allQualificationList
-        : []),
-    ]}
-  />
-</div>
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allQualificationList)
+                                ? dashboard.allQualificationList
+                                : []),
+                            ]}
+                          />
+                        </div>
 
-              </div>
+                      </div>
 
-
-
+                    </>
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
               <hr></hr>
 
               {/*Personal  Information */}
@@ -1074,184 +1133,205 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-              <h6 className="font-bold mb-0 text-primary ">
-                Personal Information
-              </h6>
+              <Accordion activeKey={activeKey4} onSelect={(key) => setActiveKey4(key)} >
+                <Card>
+                  <Card.Header className="d-flex justify-content-center">
+                    <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                      <Accordion.Toggle
+                        as={Button}
+                        eventKey="0"
+                        className="flex justify-start text-bold"
+                      >
 
-              <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
+                        {activeKey4 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Personal Information</span>
 
-                <div className="">
-                  <label>
-                    <span>
-                      Preferred Age From
-                    </span>
-                  </label>
-                  <Field
-                    name="preferredAgeFrom"
-                    component={Input}
-                    placeholder="Enter preferred age (from)"
-                    onChange={(e) => {
-                      setFieldValue("preferredAgeFrom", e.target.value || null);
-                      if (e.target.value && values.preferredAgeTo) {
-                        handleSubmit();
-                      }
+                      </Accordion.Toggle>
+                    </div>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey="0">
+                    <>
+                      {/* <h6 className="font-bold mb-0 text-primary ">
+                        Personal Information
+                      </h6> */}
 
-                    }}
-                    type="number"
-                    onInput={(e) => {
-                      e.target.value = amountLimitDynamic(
-                        e.target.value,
-                        2
-                      );
-                    }}
+                      <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
 
-                  />
+                        <div className="">
+                          <label>
+                            <span>
+                              Preferred Age From
+                            </span>
+                          </label>
+                          <Field
+                            name="preferredAgeFrom"
+                            component={Input}
+                            placeholder="Enter preferred age (from)"
+                            onChange={(e) => {
+                              setFieldValue("preferredAgeFrom", e.target.value || null);
+                              if (e.target.value && values.preferredAgeTo) {
+                                handleSubmit();
+                              }
 
-                </div>
+                            }}
+                            type="number"
+                            onInput={(e) => {
+                              e.target.value = amountLimitDynamic(
+                                e.target.value,
+                                2
+                              );
+                            }}
 
-                <div className="">
-                  <label>
-                    <span>
-                      Preferred Age To
-                    </span>
-                  </label>
-                  <Field
-                    name="preferredAgeTo"
-                    component={Input}
-                    placeholder="Enter preferred age (to)"
-                    onChange={(e) => {
+                          />
 
-                      setFieldValue("preferredAgeTo", e.target.value || null);
+                        </div>
 
-                      if (values.preferredAgeFrom && e.target.value) {
-                        handleSubmit();
-                      }
+                        <div className="">
+                          <label>
+                            <span>
+                              Preferred Age To
+                            </span>
+                          </label>
+                          <Field
+                            name="preferredAgeTo"
+                            component={Input}
+                            placeholder="Enter preferred age (to)"
+                            onChange={(e) => {
 
-                    }}
-                    type="number"
-                    onInput={(e) => {
-                      e.target.value = amountLimitDynamic(
-                        e.target.value,
-                        2
-                      );
-                    }}
+                              setFieldValue("preferredAgeTo", e.target.value || null);
 
-                  />
+                              if (values.preferredAgeFrom && e.target.value) {
+                                handleSubmit();
+                              }
 
-                </div>
+                            }}
+                            type="number"
+                            onInput={(e) => {
+                              e.target.value = amountLimitDynamic(
+                                e.target.value,
+                                2
+                              );
+                            }}
 
+                          />
 
-
-
-
-
-                <div className="">
-                  <SearchSelect
-                    label={
-                      <span>
-                        Marital Status
-                      </span>
-                    }
-
-                    name="maritalStatus"
-                    onChange={(e) => {
-                      setFieldValue("maritalStatus", e?.value ?? null);
-                      handleSubmit();
-                    }}
-
-                    value={
-                      dashboard.allMaritalStatus?.find(
-                        (option) => String(option.value) === String(values.maritalStatus)
-                      ) || null
-                    }
-
-                    // options={dashboard.allMaritalStatus}
-                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus : []),]}
-                  />
-                </div>
-                <div className="">
-                  <Select
-                    label={<span> Gender</span>}
-                    name="gender"
-                    value={values.gender}
-                    // onChange={handleChange}
-
-                    style={{ display: "block" }}
-                    autoComplete="off"
-                    onChange={(e) => {
-                      setFieldValue("gender", e.target.value)
-
-                      handleSubmit()
-                    }}
-
-                  >
-                    <option label="Select Gender" />
-                    <option value="Male" label="Male" />
-                    <option value="Female" label="Female" />
-
-                  </Select>
-                </div>
-              </div>
-
-              <div className="grid lg:grid-cols-4 gap-x-3 mt-1">
-
-                <div className="">
-                  <SearchSelect
-                    name="religionId"
-                    label={<span> Religion</span>}
-
-                    onChange={(e) => {
-                      setFieldValue("religionId", e.value || null);
-                      handleSubmit()
-                    }}
-                    value={
-                      dashboard.allReligionChildMenus?.find(
-                        (option) => option.value === values.religionId
-                      ) || null
-                    }
-
-                    // options={dashboard.allReligionChildMenus}
-                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus : []),]}
-                  />
-                </div>
-
-
-                <div className="">
-                  <SearchSelect
-                    label={<span> Nationality</span>}
-                    name="nationality"
-                    value={nationalityOptions.find(option => option.value === values.nationality) || null}
-                    onChange={(e) => {
-                      setFieldValue("nationality", e?.value ?? null);
-                      handleSubmit();
-                    }}
-                    // options={nationalityOptions}
-                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(nationalityOptions) ? nationalityOptions : []),]}
-                    placeholder="Select Nationality"
-                  />
-
-                </div>
-
-                <div className="">
-                  <Field
-                    name="applicantCanJoin"
-                    component={Input}
-                    placeholder="Enter applicant can join"
-                    label={<span> Applicants who can join within (Days)</span>}
-                    autoComplete="off"
-                    type="number"
-                    onChange={(selectedOption) => {
-                      setFieldValue("applicantCanJoin", selectedOption.target.value);
-                      console.log("applicantCanJoin1111", selectedOption.target.value)
-                      handleSubmit();
-                    }}
-                  />
-                </div>
-              </div>
+                        </div>
 
 
 
 
+
+
+                        <div className="">
+                          <SearchSelect
+                            label={
+                              <span>
+                                Marital Status
+                              </span>
+                            }
+
+                            name="maritalStatus"
+                            onChange={(e) => {
+                              setFieldValue("maritalStatus", e?.value ?? null);
+                              handleSubmit();
+                            }}
+
+                            value={
+                              dashboard.allMaritalStatus?.find(
+                                (option) => String(option.value) === String(values.maritalStatus)
+                              ) || null
+                            }
+
+                            // options={dashboard.allMaritalStatus}
+                            options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus : []),]}
+                          />
+                        </div>
+                        <div className="">
+                          <Select
+                            label={<span> Gender</span>}
+                            name="gender"
+                            value={values.gender}
+                            // onChange={handleChange}
+
+                            style={{ display: "block" }}
+                            autoComplete="off"
+                            onChange={(e) => {
+                              setFieldValue("gender", e.target.value)
+
+                              handleSubmit()
+                            }}
+
+                          >
+                            <option label="Select Gender" />
+                            <option value="Male" label="Male" />
+                            <option value="Female" label="Female" />
+
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid lg:grid-cols-4 gap-x-3 mt-1">
+
+                        <div className="">
+                          <SearchSelect
+                            name="religionId"
+                            label={<span> Religion</span>}
+
+                            onChange={(e) => {
+                              setFieldValue("religionId", e.value || null);
+                              handleSubmit()
+                            }}
+                            value={
+                              dashboard.allReligionChildMenus?.find(
+                                (option) => option.value === values.religionId
+                              ) || null
+                            }
+
+                            // options={dashboard.allReligionChildMenus}
+                            options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus : []),]}
+                          />
+                        </div>
+
+
+                        <div className="">
+                          <SearchSelect
+                            label={<span> Nationality</span>}
+                            name="nationality"
+                            value={nationalityOptions.find(option => option.value === values.nationality) || null}
+                            onChange={(e) => {
+                              setFieldValue("nationality", e?.value ?? null);
+                              handleSubmit();
+                            }}
+                            // options={nationalityOptions}
+                            options={[{ label: 'Select', value: '' }, ...(Array.isArray(nationalityOptions) ? nationalityOptions : []),]}
+                            placeholder="Select Nationality"
+                          />
+
+                        </div>
+
+                        <div className="">
+                          <Field
+                            name="applicantCanJoin"
+                            component={Input}
+                            placeholder="Enter applicant can join"
+                            label={<span> Applicants who can join within (Days)</span>}
+                            autoComplete="off"
+                            type="number"
+                            onChange={(selectedOption) => {
+                              setFieldValue("applicantCanJoin", selectedOption.target.value);
+                              console.log("applicantCanJoin1111", selectedOption.target.value)
+                              handleSubmit();
+                            }}
+                          />
+                        </div>
+                      </div>
+
+
+
+                    </>
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
+              <hr></hr>
 
 
 
