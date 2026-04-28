@@ -594,6 +594,9 @@ const travel_request_workflow_status = lazy(() =>
 //   import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
 // )
 
+const company_att_machine_config = lazy (() =>
+  import ("./modules/Company_att_machine_config/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -796,6 +799,7 @@ const ROUTES = {
   attendance_roster_workflow_status_portal : attendance_roster_workflow_status_portal,
   travel_request_workflow_status : travel_request_workflow_status,
   // travel_request_workflow_status_approval : travel_request_workflow_status_approval,
+  company_att_machine_config : company_att_machine_config,
 };
 
 export default function BasePage() {

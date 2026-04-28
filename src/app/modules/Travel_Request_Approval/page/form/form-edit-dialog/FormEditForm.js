@@ -1211,7 +1211,7 @@ export function FormEditForm({
                       disabled={isReadOnly || isSubmitting}
                       onClick={() => {
                         if (!values.authorityRemarks) {
-                          Toast.error("Remarks are required for rejection");
+                          toast.error("Remarks are required for rejection");
                           return;
                         }
                         setFieldValue("request_status", "R");
