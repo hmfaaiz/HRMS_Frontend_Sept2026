@@ -1,0 +1,255 @@
+import React, { useMemo } from "react";
+import BootstrapTable from "react-bootstrap-table-next";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import * as actions from "../../../_redux/formActions";
+import {
+  getHandlerTableChange,
+  NoRecordsFoundMessage,
+  PleaseWaitMessage,
+  sortCaret,
+  headerSortingClasses,
+} from "../../../../../../_metronic/_helpers";
+import * as uiHelpers from "../../FormUIHelper";
+import { useFormUIContext } from "../../FormUIContext";
+import { ActionsColumnFormatter } from "./column-formatter/ActionCloumnFormatter";
+import { format } from "date-fns";
+
+export function TravelApprovalFormTable() {
+  //Users UI Context
+  const formUIContext = useFormUIContext();
+
+  const FormUIProps = useMemo(() => {
+    return {
+      queryParams: formUIContext?.queryParams,
+      setQueryParams: formUIContext?.setQueryParams,
+      setTravelRequestId: formUIContext?.setTravelRequestId,
+      setWorkflowId: formUIContext?.setWorkflowId,
+      setTravelData: formUIContext?.setTravelData,
+    };
+  }, [formUIContext]);
+
+  const { currentState, user } = useSelector((state) => {
+    return {
+      currentState: state?.TravelRequestWorkflowAdmin,
+      user: state?.auth?.user,
+    };
+  }, shallowEqual);
+
+  const { entities } = currentState;
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(
+      actions.fetchTravelApprovalApplication(
+        FormUIProps.queryParams,
+        user?.employeeIdMapping,
+      ),
+    );
+  }, [FormUIProps.queryParams, dispatch, user?.employeeIdMapping]);
+
+  // Table columns
+  const columns = [
+    {
+      dataField: "authorityStatus",
+      text: "Self status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "60px",
+        maxWidth: "60px",
+      },
+      formatter: (cell) => {
+        let text = "";
+        let classname = "";
+
+        if (cell === "P") {
+          text = "Pending";
+          classname = "text-pending font-bold";
+        } else if (cell === "A") {
+          text = "Approved";
+          classname = "text-approved font-bold";
+        } else if (cell === "R") {
+          text = "Rejected";
+          classname = "text-rejected font-bold";
+        }
+
+        return <span className={classname}>{text}</span>;
+      },
+    },
+    {
+      dataField: "parentData.request_status",
+      text: "Request status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "60px",
+        maxWidth: "60px",
+      },
+      formatter: (cell) => {
+        let text = "";
+        let classname = "";
+
+        if (cell === "P") {
+          text = "Pending";
+          classname = "text-pending font-bold";
+        } else if (cell === "A") {
+          text = "Approved";
+          classname = "text-approved font-bold";
+        } else if (cell === "R") {
+          text = "Rejected";
+          classname = "text-rejected font-bold";
+        }
+
+        return <span className={classname}>{text}</span>;
+      },
+    },
+    {
+      dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
+      text: "Code", // Column heading
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+        maxWidth: "70px",
+      },
+    },
+    {
+      dataField: "requestBelongToEmp",
+      text: "Name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "190px",
+        maxWidth: "190px",
+      },
+      formatter: (cell) => {
+        return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+      },
+    },
+    {
+      dataField: "requestBelongToEmp.department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+    },
+    {
+      dataField: "requestBelongToEmp.designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+    },
+    {
+      dataField: "parentData.travelType",
+      text: "Travel Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "110px",
+        maxWidth: "110px",
+      },
+    },
+    {
+      dataField: "fromDate",
+      text: "From Date",
+      isDummyField: true,
+      formatter: (cell, row) => {
+        const seg = row.parentData?.Master?.[0];
+        if (!seg || !seg.fromDate) return "-";
+        return format(new Date(seg.fromDate), "dd-MMM-yyyy");
+      },
+      style: { minWidth: "110px", maxWidth: "110px" },
+    },
+    {
+      dataField: "toDate",
+      text: "To Date",
+      isDummyField: true,
+      formatter: (cell, row) => {
+        const segments = row.parentData?.Master || [];
+        const seg = segments[segments.length - 1];
+        if (!seg || !seg.toDate) return "-";
+        return format(new Date(seg.toDate), "dd-MMM-yyyy");
+      },
+      style: { minWidth: "110px", maxWidth: "110px" },
+    },
+    {
+      dataField: "parentData.dailyAllowanceDay",
+      text: "Travel Days",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "approvalAuthorityEmp",
+      text: "Request Pending At",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "190px",
+        maxWidth: "190px",
+      },
+      formatter: (cell, row) => {
+        return `${
+          row?.authorityStatus === "P"
+            ? `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`
+            : ""
+        }`;
+      },
+    },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        setTravelRequestId: FormUIProps.setTravelRequestId,
+        setWorkflowId: FormUIProps.setWorkflowId,
+        setTravelData: FormUIProps?.setTravelData,
+      },
+
+      style: {
+        minWidth: "100px",
+      },
+    },
+  ];
+
+  return (
+    <div className="overflow-x-auto w-full">
+      <BootstrapTable
+        noDataIndication={NoRecordsFoundMessage({ entities })}
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        remote
+        keyField="Id"
+        data={entities === null ? [] : entities}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+      >
+        <PleaseWaitMessage entities={entities} />
+        <NoRecordsFoundMessage entities={entities} />
+      </BootstrapTable>
+    </div>
+  );
+}
