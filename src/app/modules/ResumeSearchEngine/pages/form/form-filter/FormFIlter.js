@@ -24,6 +24,9 @@ import {
   Select,
 } from "../../../../../../_metronic/_partials/controls"
 import { amountLimitDynamic, formatDates } from "../../../../../utils/common";
+import { fetchResumeSearchEngine } from "../../../_redux/redux-Actions";
+import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
+import { Dashboard } from "../../../../Dashboard/pages";
 
 
 
@@ -37,7 +40,7 @@ const prepareFilter = (queryParams, values) => {
     // General
     searchText,
     departmentId,
-    designationId,
+    designationIds,
     gradeId,
     locationId,
     countryId,
@@ -45,7 +48,7 @@ const prepareFilter = (queryParams, values) => {
     appointmentTypeId,
 
     // Vacancy detail
-    applicantStatusId,
+    applicantStatusIds,
     priorityTypeId,
     desireFromDateOfApp,
     desireToDateOfApp,
@@ -60,7 +63,7 @@ const prepareFilter = (queryParams, values) => {
     expectedSalaryCurrencyId,
     expectedSalaryPayTypeId,
     companyName,
-    preferredQualificationId,
+    preferredQualificationIds,
 
     // Personal Information
     preferredAgeFrom,
@@ -80,7 +83,7 @@ const prepareFilter = (queryParams, values) => {
   }
 
   if (departmentId) filter.departmentId = departmentId;
-  if (designationId) filter.designationId = designationId;
+  if (designationIds) filter.designationIds = designationIds;
   if (gradeId) filter.gradeId = gradeId;
   if (locationId) filter.locationId = locationId;
   if (countryId) filter.countryId = countryId;
@@ -88,7 +91,7 @@ const prepareFilter = (queryParams, values) => {
   if (appointmentTypeId) filter.appointmentTypeId = appointmentTypeId;
 
   // Vacancy detail
-  if (applicantStatusId) filter.applicantStatusId = applicantStatusId;
+  if (applicantStatusIds) filter.applicantStatusIds = applicantStatusIds;
   if (priorityTypeId) filter.priorityTypeId = priorityTypeId;
   if (desireFromDateOfApp) filter.desireFromDateOfApp = desireFromDateOfApp;
   if (desireToDateOfApp) filter.desireToDateOfApp = desireToDateOfApp;
@@ -103,7 +106,7 @@ const prepareFilter = (queryParams, values) => {
   if (expectedSalaryCurrencyId) filter.expectedSalaryCurrencyId = expectedSalaryCurrencyId;
   if (expectedSalaryPayTypeId || expectedSalaryPayTypeId == 0) filter.expectedSalaryPayTypeId = expectedSalaryPayTypeId;
   if (companyName?.trim()) filter.companyName = companyName.trim();
-  if (preferredQualificationId) filter.preferredQualificationId = preferredQualificationId;
+  if (preferredQualificationIds) filter.preferredQualificationIds = preferredQualificationIds;
 
   // Personal Information
   if (preferredAgeFrom) filter.preferredAgeFrom = preferredAgeFrom;
@@ -182,6 +185,7 @@ export function FormFIlter({ listLoading, user }) {
     dispatch(fetchAllFormsMenu(190, "allMaritalStatus"));
     dispatch(fetchAllFormsMenu(87, "allReligionChildMenus"));
     dispatch(fetchAllFormsMenu(126, "allCurrencyCodeList")); // For All currecy Codes
+    dispatch(fetchAllFormsMenu(128, "allNationalities"));
   }, []);
 
 
@@ -205,7 +209,11 @@ export function FormFIlter({ listLoading, user }) {
     //job filter
     searchText: "",
     departmentId: null,
-    designationId: null,
+    // designationId: null,
+    designationIds: dashboard?.allDesignations?.length
+      ? dashboard.allDesignations.map(t => t.value)
+      : [],
+
     gradeId: null,
     locationId: null,
     countryId: null,
@@ -214,7 +222,11 @@ export function FormFIlter({ listLoading, user }) {
 
 
     //vacancy detail
-    applicantStatusId: null,
+    // applicantStatusId: null,
+    applicantStatusIds: dashboard?.allApplicationStatusList?.length
+      ? dashboard.allApplicationStatusList.map(t => t.value)
+      : [],
+
     priorityTypeId: null,
     desireFromDateOfApp: null,
     desireToDateOfApp: null,
@@ -228,8 +240,10 @@ export function FormFIlter({ listLoading, user }) {
     expectedSalaryCurrencyId: null,
     expectedSalaryPayTypeId: null,
     companyName: '',
-    preferredQualificationId: null,
-
+    // preferredQualificationId: null,
+    preferredQualificationIds: dashboard?.allQualificationList?.length
+      ? dashboard.allQualificationList.map(t => t.value)
+      : [],
 
     // Personal Information
     preferredAgeFrom: "",
@@ -237,8 +251,12 @@ export function FormFIlter({ listLoading, user }) {
     maritalStatus: null,
     gender: "",
     religionId: null,
-    nationality: null,
+    // nationality: null,
+    nationality:dashboard?.allNationalities?.length
+      ? dashboard?.allNationalities.map(t => t.value)
+      : [],
     applicantCanJoin: "",
+
 
   };
 
@@ -249,6 +267,7 @@ export function FormFIlter({ listLoading, user }) {
   ];
 
 
+  //  dispatch(actions.fetchResumeSearchEngine(formUIProps.queryParams));
   return (
     <>
       <Formik
@@ -256,6 +275,7 @@ export function FormFIlter({ listLoading, user }) {
         initialValues={initialFilterValues}
         onSubmit={(values) => {
           applyFilter(values);
+          //  dispatch(fetchResumeSearchEngine(values));
         }}
       >
         {({
@@ -280,7 +300,7 @@ export function FormFIlter({ listLoading, user }) {
                         className="flex justify-start text-bold"
                       >
 
-                        {activeKey1 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Job Filter</span>
+                        {activeKey1 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Job Filters</span>
 
                       </Accordion.Toggle>
                     </div>
@@ -291,9 +311,9 @@ export function FormFIlter({ listLoading, user }) {
                     >
 
 
-                      {/* <h6 className="font-bold mb-0 text-primary">
+                      <h6 className="font-bold mb-0 text-primary">
                         Job Filter
-                      </h6> */}
+                      </h6>
                       <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
 
 
@@ -308,7 +328,7 @@ export function FormFIlter({ listLoading, user }) {
                             value={values.searchText}
                             onChange={(e) => {
                               setFieldValue("searchText", e.target.value);
-                              handleSubmit();
+                              // handleSubmit();
                             }}
                           />
                         </div>
@@ -340,7 +360,7 @@ export function FormFIlter({ listLoading, user }) {
                             label="Department"
                             onChange={(e) => {
                               setFieldValue("departmentId", e?.value ?? null);
-                              handleSubmit();
+                              // handleSubmit();
                             }}
                             value={
                               dashboard?.allDept?.find(
@@ -373,24 +393,32 @@ export function FormFIlter({ listLoading, user }) {
                     />
                   </div> */}
                         <div>
-                          <SearchSelect
-                            name="designationId"
+                          <MultiSelect
+                            name="designationIds"
                             label="Designation"
-                            onChange={(e) => {
-                              setFieldValue("designationId", e?.value ?? null);
-                              handleSubmit();
-                            }}
-                            value={
-                              dashboard?.allDesignations?.find(
-                                (option) => option.value === values.designationId
-                              ) || { label: "All", value: null }
+                            // onChange={(e) => {
+                            //   setFieldValue("designationId", e?.value ?? null);
+                            //   //handleSubmit();
+                            // }}
+                            // 
+
+                            value={dashboard?.allDesignations.filter(t =>
+                              values.designationIds?.includes(t.value)
+                            )}
+
+                            options={dashboard?.allDesignations}
+                            onChange={(items = []) =>
+                              setFieldValue(
+                                "designationIds",
+                                items.map((i) => i.value)
+                              )
                             }
-                            options={[
-                              { label: "All", value: null },
-                              ...(Array.isArray(dashboard?.allDesignations)
-                                ? dashboard?.allDesignations
-                                : []),
-                            ]}
+                          // options={[
+                          //   { label: "All", value: null },
+                          //   ...(Array.isArray(dashboard?.allDesignations)
+                          //     ? dashboard?.allDesignations
+                          //     : []),
+                          // ]}
                           />
                         </div>
 
@@ -419,7 +447,7 @@ export function FormFIlter({ listLoading, user }) {
                             label="Grade"
                             onChange={(e) => {
                               setFieldValue("gradeId", e?.value ?? null);
-                              handleSubmit();
+                              //handleSubmit();
                             }}
                             value={
                               dashboard?.allEmployeegradeList?.find(
@@ -443,13 +471,13 @@ export function FormFIlter({ listLoading, user }) {
 
 
                         {/* Location */}
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             name="locationId"
                             label="Location"
                             onChange={(e) => {
                               setFieldValue("locationId", e.value || null);
-                              handleSubmit();
+                              //handleSubmit();
                             }}
                             value={
                               dashboard.allLocationChildMenus?.find(
@@ -459,11 +487,38 @@ export function FormFIlter({ listLoading, user }) {
                             // options={dashboard.allLocationChildMenus}
                             options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus : []),]}
                           />
+                        </div> */}
+
+
+
+                        <div>
+                          <SearchSelect
+                            name="locationId"
+                            label="Location"
+
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("locationId", selectedValue);
+                              // handleSubmit();
+                            }}
+
+                            value={
+                              dashboard?.allLocationChildMenus?.find(
+                                (option) => option.value === values.locationId
+                              ) || { label: "All", value: null }
+                            }
+
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard.allLocationChildMenus)
+                                ? dashboard.allLocationChildMenus
+                                : []),
+                            ]}
+                          />
                         </div>
 
-
                         {/* Country */}
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             name="countryId"
                             label="Country"
@@ -472,7 +527,7 @@ export function FormFIlter({ listLoading, user }) {
                               setFieldValue("countryId", selectedCountryId);
                               console.log("selectedCountryId1111", selectedCountryId)
                               setFieldValue("cityId", null); // Reset city on country change
-                              handleSubmit();
+                              //handleSubmit();
                             }}
                             value={
                               dashboard?.allCountry?.find(
@@ -482,17 +537,49 @@ export function FormFIlter({ listLoading, user }) {
                             // options={dashboard?.allCountry}
                             options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry : []),]}
                           />
+                        </div> */}
+
+                        <div>
+                          <SearchSelect
+                            name="countryId"
+                            label="Country"
+
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("countryId", selectedValue);
+
+                              console.log("selectedCountryId1111", selectedValue);
+
+                              // Reset city on country change
+                              setFieldValue("cityId", null);
+
+                              // handleSubmit();
+                            }}
+
+                            value={
+                              dashboard?.allCountry?.find(
+                                (option) => option.value === values.countryId
+                              ) || { label: "All", value: null }
+                            }
+
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allCountry)
+                                ? dashboard?.allCountry
+                                : []),
+                            ]}
+                          />
                         </div>
 
                         {/* City */}
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             name="cityId"
                             label={<span>City</span>}
                             // isDisabled={!values.countryId}
                             onChange={(e) => {
                               setFieldValue("cityId", e.value || null);
-                              handleSubmit();
+                              //handleSubmit();
                             }}
                             value={
                               filteredCities(values.countryId).find(
@@ -503,10 +590,37 @@ export function FormFIlter({ listLoading, user }) {
                             options={[{ label: 'Select', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId) : []),]}
 
                           />
+                        </div> */}
+
+
+                        <div>
+                          <SearchSelect
+                            name="cityId"
+                            label={<span>City</span>}
+
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("cityId", selectedValue);
+                              // handleSubmit();
+                            }}
+
+                            value={
+                              filteredCities(values.countryId).find(
+                                (option) => option.value === values.cityId
+                              ) || { label: "All", value: null }
+                            }
+
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(filteredCities(values.countryId))
+                                ? filteredCities(values.countryId)
+                                : []),
+                            ]}
+                          />
                         </div>
 
                         {/* Appointment */}
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             name="appointmentTypeId"
                             label={
@@ -517,7 +631,7 @@ export function FormFIlter({ listLoading, user }) {
 
                             onChange={(e) => {
                               setFieldValue("appointmentTypeId", e.value || null);
-                              handleSubmit();
+                              // handleSubmit();
                             }}
                             value={
                               dashboard?.allAppointmentTypeList?.find(
@@ -529,9 +643,33 @@ export function FormFIlter({ listLoading, user }) {
                             options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
 
                           />
+                        </div> */}
+
+                        <div>
+                          <SearchSelect
+                            name="appointmentTypeId"
+                            label={<span>Appointment Type</span>}
+
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("appointmentTypeId", selectedValue);
+                              // handleSubmit();
+                            }}
+
+                            value={
+                              dashboard?.allAppointmentTypeList?.find(
+                                (option) => option.value === values.appointmentTypeId
+                              ) || { label: "All", value: null }
+                            }
+
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allAppointmentTypeList)
+                                ? dashboard?.allAppointmentTypeList
+                                : []),
+                            ]}
+                          />
                         </div>
-
-
 
                       </div>
 
@@ -555,7 +693,7 @@ export function FormFIlter({ listLoading, user }) {
                         className="flex justify-start text-bold"
                       >
 
-                        {activeKey2 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">     Vacancy Detail</span>
+                        {activeKey2 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">     Vacancy Filters</span>
 
                       </Accordion.Toggle>
                     </div>
@@ -566,9 +704,9 @@ export function FormFIlter({ listLoading, user }) {
                     <div className="grid lg:grid-cols-3 gap-x-3 ">
 
                       <div>
-                        {/* <h6 className="font-bold mb-0 text-primary mt-1">
+                        <h6 className="font-bold mb-0 text-primary mt-1">
                           Vacancy Detail
-                        </h6> */}
+                        </h6>
 
                         <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
 
@@ -609,7 +747,30 @@ export function FormFIlter({ listLoading, user }) {
 
                     </div> */}
 
+
                           <div>
+                            <MultiSelect
+                              name="applicantStatusIds"
+                              label="Applicant Status"
+
+                              value={
+                                (dashboard?.allApplicationStatusList ?? []).filter(t =>
+                                  (values?.applicantStatusIds ?? []).includes(t.value)
+                                )
+                              }
+
+                              options={dashboard?.allApplicationStatusList ?? []}
+
+                              onChange={(items = []) =>
+                                setFieldValue(
+                                  "applicantStatusIds",
+                                  items.map((i) => i.value)
+                                )
+                              }
+                            />
+                          </div>
+
+                          {/* <div>
                             <SearchSelect
                               name="applicantStatusId"
                               label={<span>Applicant Status</span>}
@@ -625,7 +786,7 @@ export function FormFIlter({ listLoading, user }) {
                               onChange={(e) => {
                                 const selectedValue = e?.value ?? null;
                                 setFieldValue("applicantStatusId", selectedValue);
-                                handleSubmit();
+                                // handleSubmit();
                               }}
 
                               options={[
@@ -639,7 +800,7 @@ export function FormFIlter({ listLoading, user }) {
                               getOptionValue={(x) => x.value}
                               placeholder="All"
                             />
-                          </div>
+                          </div> */}
                           {/* Priority */}
                           {/* <div className="">
                       <SearchSelect
@@ -665,7 +826,7 @@ export function FormFIlter({ listLoading, user }) {
                               label="Priority"
                               onChange={(e) => {
                                 setFieldValue("priorityTypeId", e?.value ?? null);
-                                handleSubmit();
+                                //handleSubmit();
                               }}
                               value={
                                 dashboard?.allPriorityTypeList?.find(
@@ -707,7 +868,7 @@ export function FormFIlter({ listLoading, user }) {
                                 let selectedDate = formatDates(date, 'yyyy-MM-dd')
                                 setFieldValue("desireFromDateOfApp", selectedDate);
                                 setFieldValue("desireToDateOfApp", selectedDate);
-                                handleSubmit();
+                                //handleSubmit();
                               }}
                               dateFormat="dd-MMM-yyyy"
                               name="desireFromDateOfApp"
@@ -728,7 +889,7 @@ export function FormFIlter({ listLoading, user }) {
                               }
                               onChange={(date) => {
                                 setFieldValue("desireToDateOfApp", date);
-                                handleSubmit();
+                                //handleSubmit();
                               }}
                               dateFormat="dd-MMM-yyyy"
                               name="desireToDateOfApp"
@@ -766,7 +927,7 @@ export function FormFIlter({ listLoading, user }) {
 
                                 setFieldValue("applicationFromDate", selectedDate);
                                 setFieldValue("applicationToDate", selectedDate);
-                                handleSubmit();
+                                // handleSubmit();
                               }}
                               dateFormat="dd-MMM-yyyy"
                               name="applicationFromDate"
@@ -787,7 +948,7 @@ export function FormFIlter({ listLoading, user }) {
                               }
                               onChange={(date) => {
                                 setFieldValue("applicationToDate", date);
-                                handleSubmit();
+                                //  handleSubmit();
                               }}
                               dateFormat="dd-MMM-yyyy"
                               name="applicationToDate"
@@ -821,7 +982,7 @@ export function FormFIlter({ listLoading, user }) {
                         className="flex justify-start text-bold"
                       >
 
-                        {activeKey3 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Filters</span>
+                        {activeKey3 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Work & Salary Filters</span>
 
                       </Accordion.Toggle>
                     </div>
@@ -851,7 +1012,7 @@ export function FormFIlter({ listLoading, user }) {
                                   onChange={(e) => {
                                     const selectedValue = e.target.value;
                                     setFieldValue("workExpFrom", selectedValue);
-                                    handleSubmit();
+                                    //handleSubmit();
 
 
                                   }}
@@ -879,7 +1040,7 @@ export function FormFIlter({ listLoading, user }) {
                                   onChange={(e) => {
                                     const selectedValue = e.target.value;
                                     setFieldValue("workExpTo", selectedValue);
-                                    handleSubmit();
+                                    // handleSubmit();
 
 
                                   }}
@@ -918,7 +1079,7 @@ export function FormFIlter({ listLoading, user }) {
                                     const selectedValue = e.target.value;
                                     console.log("selectedValue111", e.target.value)
                                     setFieldValue("expectedSalaryRangeFrom", selectedValue);
-                                    handleSubmit();
+                                    //  handleSubmit();
 
 
                                   }}
@@ -937,7 +1098,7 @@ export function FormFIlter({ listLoading, user }) {
                                   onChange={(e) => {
                                     const selectedValue = e.target.value;
                                     setFieldValue("expectedSalaryRangeTo", selectedValue);
-                                    handleSubmit();
+                                    //  handleSubmit();
 
 
                                   }}
@@ -980,7 +1141,7 @@ export function FormFIlter({ listLoading, user }) {
 
                             onChange={(e) => {
                               setFieldValue("expectedSalaryCurrencyId", e?.value ?? null);
-                              handleSubmit();
+                              // handleSubmit();
                             }}
 
                             value={
@@ -1037,7 +1198,7 @@ export function FormFIlter({ listLoading, user }) {
                             onChange={(e) => {
                               const selectedValue = e?.value ?? null;
                               setFieldValue("expectedSalaryPayTypeId", selectedValue);
-                              handleSubmit();
+                              // handleSubmit();
                             }}
 
                             options={[
@@ -1060,7 +1221,7 @@ export function FormFIlter({ listLoading, user }) {
                             autoComplete="off"
                             onChange={(e) => {
                               setFieldValue("companyName", e.target.value)
-                              handleSubmit();
+                              // handleSubmit();
                             }}
 
                           />
@@ -1093,7 +1254,7 @@ export function FormFIlter({ listLoading, user }) {
 
                   />
                 </div> */}
-                        <div>
+                        {/* <div>
                           <SearchSelect
                             name="preferredQualificationId"
                             label={<span>Preferred Qualification</span>}
@@ -1101,7 +1262,7 @@ export function FormFIlter({ listLoading, user }) {
                             onChange={(e) => {
                               const selectedValue = e?.value ?? null;
                               setFieldValue("preferredQualificationId", selectedValue);
-                              handleSubmit();
+                              // handleSubmit();
                             }}
 
                             value={
@@ -1117,6 +1278,29 @@ export function FormFIlter({ listLoading, user }) {
                                 ? dashboard.allQualificationList
                                 : []),
                             ]}
+                          />
+                        </div> */}
+
+
+                        <div>
+                          <MultiSelect
+                            name="preferredQualificationIds"
+                            label="Preferred Qualification"
+
+                            value={
+                              (dashboard?.allQualificationList ?? []).filter(t =>
+                                (values?.preferredQualificationIds ?? []).includes(t.value)
+                              )
+                            }
+
+                            options={dashboard?.allQualificationList ?? []}
+
+                            onChange={(items = []) =>
+                              setFieldValue(
+                                "preferredQualificationIds",
+                                items.map((i) => i.value)
+                              )
+                            }
                           />
                         </div>
 
@@ -1143,16 +1327,16 @@ export function FormFIlter({ listLoading, user }) {
                         className="flex justify-start text-bold"
                       >
 
-                        {activeKey4 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Personal Information</span>
+                        {activeKey4 === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Personal Information Filters</span>
 
                       </Accordion.Toggle>
                     </div>
                   </Card.Header>
                   <Accordion.Collapse eventKey="0">
                     <>
-                      {/* <h6 className="font-bold mb-0 text-primary ">
+                      <h6 className="font-bold mb-0 text-primary ">
                         Personal Information
-                      </h6> */}
+                      </h6>
 
                       <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
 
@@ -1169,7 +1353,7 @@ export function FormFIlter({ listLoading, user }) {
                             onChange={(e) => {
                               setFieldValue("preferredAgeFrom", e.target.value || null);
                               if (e.target.value && values.preferredAgeTo) {
-                                handleSubmit();
+                                // handleSubmit();
                               }
 
                             }}
@@ -1200,7 +1384,7 @@ export function FormFIlter({ listLoading, user }) {
                               setFieldValue("preferredAgeTo", e.target.value || null);
 
                               if (values.preferredAgeFrom && e.target.value) {
-                                handleSubmit();
+                                //  handleSubmit();
                               }
 
                             }}
@@ -1221,7 +1405,7 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             label={
                               <span>
@@ -1244,8 +1428,35 @@ export function FormFIlter({ listLoading, user }) {
                             // options={dashboard.allMaritalStatus}
                             options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus : []),]}
                           />
+                        </div> */}
+
+                        <div>
+                          <SearchSelect
+                            label={<span>Marital Status</span>}
+                            name="maritalStatus"
+
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("maritalStatus", selectedValue);
+                              // handleSubmit();
+                            }}
+
+                            value={
+                              dashboard?.allMaritalStatus?.find(
+                                (option) =>
+                                  String(option.value) === String(values.maritalStatus)
+                              ) || { label: "All", value: null }
+                            }
+
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allMaritalStatus)
+                                ? dashboard.allMaritalStatus
+                                : []),
+                            ]}
+                          />
                         </div>
-                        <div className="">
+                        {/* <div className="">
                           <Select
                             label={<span> Gender</span>}
                             name="gender"
@@ -1266,12 +1477,32 @@ export function FormFIlter({ listLoading, user }) {
                             <option value="Female" label="Female" />
 
                           </Select>
+                        </div> */}
+                        <div>
+                          <Select
+                            label={<span>Gender</span>}
+                            name="gender"
+                            value={values.gender || ""}
+
+                            onChange={(e) => {
+                              const selectedValue = e.target.value || null;
+                              setFieldValue("gender", selectedValue);
+                              // handleSubmit();
+                            }}
+
+                            style={{ display: "block" }}
+                            autoComplete="off"
+                          >
+                            <option value="">All</option>
+                            <option value="Male" label="Male" />
+                            <option value="Female" label="Female" />
+                          </Select>
                         </div>
                       </div>
 
                       <div className="grid lg:grid-cols-4 gap-x-3 mt-1">
 
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             name="religionId"
                             label={<span> Religion</span>}
@@ -1289,10 +1520,36 @@ export function FormFIlter({ listLoading, user }) {
                             // options={dashboard.allReligionChildMenus}
                             options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus : []),]}
                           />
+                        </div> */}
+
+                        <div>
+                          <SearchSelect
+                            name="religionId"
+                            label={<span>Religion</span>}
+
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("religionId", selectedValue);
+                              // handleSubmit();
+                            }}
+
+                            value={
+                              dashboard?.allReligionChildMenus?.find(
+                                (option) => option.value === values.religionId
+                              ) || { label: "All", value: null }
+                            }
+
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(dashboard?.allReligionChildMenus)
+                                ? dashboard.allReligionChildMenus
+                                : []),
+                            ]}
+                          />
                         </div>
 
 
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             label={<span> Nationality</span>}
                             name="nationality"
@@ -1306,7 +1563,59 @@ export function FormFIlter({ listLoading, user }) {
                             placeholder="Select Nationality"
                           />
 
-                        </div>
+                        </div> */}
+
+                        {/* <div>
+                          <SearchSelect
+                            label={<span>Nationality</span>}
+                            name="nationality"
+
+                            value={
+                              nationalityOptions.find(
+                                (option) => option.value === values.nationality
+                              ) || { label: "All", value: null }
+                            }
+
+                            onChange={(e) => {
+                              const selectedValue = e?.value ?? null;
+                              setFieldValue("nationality", selectedValue);
+                              // handleSubmit();
+                            }}
+
+                            options={[
+                              { label: "All", value: null },
+                              ...(Array.isArray(nationalityOptions)
+                                ? nationalityOptions
+                                : []),
+                            ]}
+
+                            placeholder="All"
+                          />
+                        </div> */}
+
+                        <div>
+  <MultiSelect
+    name="nationality"
+    label="Nationality"
+
+    value={
+      (dashboard?.allNationalities ?? []).filter(t =>
+        (values?.nationality ?? []).includes(t.value)
+      )
+    }
+
+    options={[
+      ...(Array.isArray(dashboard?.allNationalities) ? dashboard?.allNationalities : []),
+    ]}
+
+    onChange={(items = []) =>
+      setFieldValue(
+        "nationality",
+        items.map((i) => i.value)
+      )
+    }
+  />
+</div>
 
                         <div className="">
                           <Field
@@ -1319,7 +1628,7 @@ export function FormFIlter({ listLoading, user }) {
                             onChange={(selectedOption) => {
                               setFieldValue("applicantCanJoin", selectedOption.target.value);
                               console.log("applicantCanJoin1111", selectedOption.target.value)
-                              handleSubmit();
+                              // handleSubmit();
                             }}
                           />
                         </div>
@@ -1346,6 +1655,17 @@ export function FormFIlter({ listLoading, user }) {
                 className="btn btn-light btn-elevate"
               >
                 Cancel
+              </button>
+
+              <button
+                type="submit"
+                onClick={() => handleSubmit()}
+                className="btn btn-primary btn-elevate"
+              >
+                Filter
+                {/* {loading && ( */}
+                {/* <span className="ml-3 mr-3 spinner spinner-white"></span> */}
+                {/* )} */}
               </button>
 
 
