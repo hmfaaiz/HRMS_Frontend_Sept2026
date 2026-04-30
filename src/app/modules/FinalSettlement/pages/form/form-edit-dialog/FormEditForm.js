@@ -1566,6 +1566,78 @@ export function FormEditForm({
 
                 <hr></hr>
 
+                      <div >
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    Provident Fund Detail
+                  </h6>
+
+                  <div className="flex justify-between items-center gap-4 mt-1 mb-2 w-full">
+                    <div className="min-w-[260px]">
+                      <Field
+                        name="totalPFAmount"
+                        component={Input}
+                        value={Number(values.totalPFAmount || 0).toFixed(2)}
+                        placeholder="Enter provident fund contribution"
+                        disabled
+                        label={
+                          <span>
+                            Total Provident Fund Contribution
+                          </span>
+                        }
+
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+
+                    <div className="min-w-[260px]">
+                      <Field
+                        name="pf_employer_amount"
+                        component={Input}
+                        placeholder="Enter employer contribution"
+                        disabled
+                        value={Number(values.pf_employer_amount || 0).toFixed(2)}
+                        label={
+                          <span>
+                            Employer Contribution
+                          </span>
+                        }
+
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+
+                    <div className="min-w-[260px]">
+                      <Field
+                        name="pf_employee_amount"
+                        component={Input}
+                        placeholder="Enter employee contribution"
+                        value={Number(values.pf_employee_amount || 0).toFixed(2)}
+                        disabled
+                        label={
+                          <span>
+                            Employee Contribution
+                          </span>
+                        }
+
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+
+                  </div>
+
+                </div>
+                <hr></hr>
+
 
                 <div >
 
