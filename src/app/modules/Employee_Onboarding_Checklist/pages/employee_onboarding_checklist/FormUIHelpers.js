@@ -25,6 +25,7 @@ export const initialFilter = {
   },
 
   sortOrder: "asc",
+  sortField: "", 
   pageSize: 10,
   pageNumber: 1,
 

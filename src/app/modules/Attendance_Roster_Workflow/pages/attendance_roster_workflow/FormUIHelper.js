@@ -16,6 +16,7 @@ export const initialFilter = {
     requestDate: { from: "", to: "" },
   },
   sortOrder: "asc",
+  sortField: "",
   pageSize: 5,
   pageNumber: 1,
 };

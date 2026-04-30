@@ -66,7 +66,7 @@ export function FormTable() {
     {
       dataField: "employeeName",
       text: "Employee",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "150px" },
@@ -74,7 +74,7 @@ export function FormTable() {
     {
       dataField: "department",
       text: "department",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px" },

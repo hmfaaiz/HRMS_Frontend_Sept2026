@@ -13,13 +13,13 @@ import * as actions from "../../../_redux/redux-Actions";
 import TravelProfile from "../form-edit-dialog/TravelProfile";
 import { getEmployeeProfileById } from "../../../../../../_metronic/redux/dashboardCrud";
 
-export function FormCard() {
+export function FormCard({ onRegisterReset }) {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
   const moduleName = CurrentModuleName();
 
   const [showForm, setShowForm] = useState(false);
-  const [panelMode, setPanelMode] = useState(false);      
+  const [panelMode, setPanelMode] = useState(false);
   const [travelPanelMode, setTravelPanelMode] = useState(false);
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [loading, setLoading] = useState(false);
@@ -74,7 +74,7 @@ export function FormCard() {
   const resetAllState = () => {
     FormUIProps.setEmployeeId(null);
     FormUIProps.setTravelRequestId(null);
-    setPanelMode(false);         
+    setPanelMode(false);
     setTravelPanelMode(false);
     setShowForm(false);
     setIsEditMode(false);
@@ -84,6 +84,11 @@ export function FormCard() {
     setEmployeeDetails({});
     dispatch(actions.clearSelectedTravelRequest());
   };
+
+  useEffect(() => {
+    if (onRegisterReset) onRegisterReset(resetAllState);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAddNew = () => {
     resetAllState();
@@ -177,11 +182,11 @@ export function FormCard() {
               travelRequestId={activeTravelRequestId}
               setTravelRequestId={FormUIProps.setTravelRequestId}
               panelMode={panelMode}
-              setPanelMode={setPanelMode}          
+              setPanelMode={setPanelMode}
               travelPanelMode={travelPanelMode}
               setTravelPanelMode={setTravelPanelMode}
               onCancel={handleCancel}
-              disabled={isEditMode || isViewMode}  
+              disabled={isEditMode || isViewMode}
               isEditMode={isEditMode}
               isViewMode={isViewMode}
             />

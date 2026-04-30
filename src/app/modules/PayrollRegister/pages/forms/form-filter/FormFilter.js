@@ -34,7 +34,7 @@ const prepareFilter = (queryParams, values) => {
   newQueryParams.filter = { ...values };
   return newQueryParams;
 };
-
+const ALL_OPTION = { label: "All", value: "" };
 export function FormFilter({
   loading,
   dispatch,
@@ -285,12 +285,13 @@ export function FormFilter({
         // initialValues={initialFilter.filter}
         initialValues={{
           ...initialFilter.filter,
-         subsidiaryId:
+          subsidiaryId:
             initialFilter.filter?.subsidiaryId ||
-              allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
             "", // Set default subsidiaryId if it's not provided
-            monthId :allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
-            ?.Id || ""
+          monthId:
+            allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth?.Id ||
+            "",
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -353,18 +354,21 @@ export function FormFilter({
                         name="subsidiaryId"
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          console.log("obeeeeject" , e)
+                          console.log("obeeeeject", e);
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
-                           if(e?.payrollMonth){
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
+                          if (e?.payrollMonth) {
+                            setFieldValue(
+                              "monthId",
+                              Number(e?.payrollMonth?.Id),
+                            );
+                          }
                           dispatch(
                             fetchAllPayrollMonthYearList(
                               { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
+                              "allPayrollMonthYearList",
+                            ),
                           );
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                           setFieldValue("employeeId", "");
@@ -380,11 +384,11 @@ export function FormFilter({
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         value={
-                            allSubsidiaryList?.find(
-                              (el) => el?.value === values?.subsidiaryId
-                            ) || null
-                          }
-                      options={allSubsidiaryList}
+                          allSubsidiaryList?.find(
+                            (el) => el?.value === values?.subsidiaryId,
+                          ) || null
+                        }
+                        options={allSubsidiaryList}
                       />
                     </div>
 
@@ -420,15 +424,24 @@ export function FormFilter({
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
+                            e.value === "--Select--" ? "" : Number(e.value);
                           setFieldValue("departmentId", value);
+                          setFieldValue("employeeId", "");
                         }}
-                        label={<span> Department</span>}
+                        label={<span>Department</span>}
                         value={
-                          allDeptMap?.get(values?.departmentId || "") || ""
+                          [
+                            ALL_OPTION,
+                            ...(Array.isArray(allDept) ? allDept : []),
+                          ]?.find(
+                            (opt) => opt.value === values?.departmentId,
+                          ) || ALL_OPTION
                         }
                         autoComplete="off"
-                        options={allDept}
+                        options={[
+                          ALL_OPTION,
+                          ...(Array.isArray(allDept) ? allDept : []),
+                        ]}
                       />
                     </div>
                     {/* Deparment Field End */}
@@ -493,7 +506,7 @@ export function FormFilter({
                           previewRegisterPdf(values);
 
                           window.open(
-                            "/payroll_register/preview-registered-payroll-pdf"
+                            "/payroll_register/preview-registered-payroll-pdf",
                           );
                         }}
                         disabled={
@@ -634,11 +647,24 @@ export function FormFilter({
                           label={<span> Employee</span>}
                           error={errors.employeeId}
                           touched={touched.employeeId}
-                          value={
-                            allEmployeesMap?.get(values?.employeeId || "") || ""
-                          }
-                          autoComplete="off"
-                          options={allEmployees}
+                          // value={
+                          //   allEmployeesMap?.get(values?.employeeId || "") || ""
+                          // }
+                          // autoComplete="off"
+                          // options={allEmployees}
+                           value={
+                          [
+                            ALL_OPTION,
+                            ...(Array.isArray(allEmployeesMap) ? allEmployeesMap : []),
+                          ]?.find(
+                            (opt) => opt.value === values?.employeeId,
+                          ) || ALL_OPTION
+                        }
+                        autoComplete="off"
+                        options={[
+                          ALL_OPTION,
+                          ...(Array.isArray(allEmployees) ? allEmployees : []),
+                        ]}
                         />
                       </div>
                       {/* Employee Field End */}
@@ -649,7 +675,7 @@ export function FormFilter({
                             previewPayslipPdf(values);
 
                             window.open(
-                              "/payroll_register/preview-payslip-pdf"
+                              "/payroll_register/preview-payslip-pdf",
                             );
                           }}
                           disabled={
@@ -705,8 +731,6 @@ export function FormFilter({
                         Payroll Expense Report
                       </h6>
                       <div className="grid md:grid-cols-5 gap-x-3 mb-2">
-               
-
                         <div className="col-span-1 flex items-start">
                           <label className="flex items-center space-x-1">
                             <input
@@ -716,7 +740,7 @@ export function FormFilter({
                               onChange={() => {
                                 setFieldValue(
                                   "groupByEmployee",
-                                  !values?.groupByEmployee
+                                  !values?.groupByEmployee,
                                 );
                                 setFieldValue("groupByDepartment", null);
                                 setFieldValue("groupByLocation", null);
@@ -729,8 +753,6 @@ export function FormFilter({
                           </label>
                         </div>
 
-            
-
                         <div className="col-span-1">
                           <label className="flex items-center">
                             <input
@@ -741,7 +763,7 @@ export function FormFilter({
                               onChange={() =>
                                 setFieldValue(
                                   "groupByDepartment",
-                                  !values?.groupByDepartment
+                                  !values?.groupByDepartment,
                                 )
                               }
                               onBlur={handleBlur}
@@ -751,7 +773,6 @@ export function FormFilter({
                             <span>Group By Department</span>
                           </label>
                         </div>
-
 
                         <div className="col-span-1">
                           <label className="flex items-center">
@@ -763,7 +784,7 @@ export function FormFilter({
                               onChange={() =>
                                 setFieldValue(
                                   "groupByLocation",
-                                  !values?.groupByLocation
+                                  !values?.groupByLocation,
                                 )
                               }
                               onBlur={handleBlur}
@@ -772,100 +793,93 @@ export function FormFilter({
                             <span>Group By Location</span>
                           </label>
                         </div>
-
-                        
                       </div>
 
                       <div className="col-span-3 flex justify-end">
-                          <button
-                            onClick={() => {
-                              getJVExcel(values);
-                            }}
-                            disabled={
-                              registerExcelLoading ||
-                              !values.subsidiaryId ||
-                              !values.monthId
-                            }
-                            type="button"
-                            className="btn btn-primary btn-elevate mt-3 h-9 mr-1"
-                          >
-                            Payroll Expense Report
-                            {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                            {/* <SVG
+                        <button
+                          onClick={() => {
+                            getJVExcel(values);
+                          }}
+                          disabled={
+                            registerExcelLoading ||
+                            !values.subsidiaryId ||
+                            !values.monthId
+                          }
+                          type="button"
+                          className="btn btn-primary btn-elevate mt-3 h-9 mr-1"
+                        >
+                          Payroll Expense Report
+                          {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
+                          {/* <SVG
                                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                                 /> */}
-                            <Download className="w-4 h-4 ml-2" />
-                            {/* </span> */}
-                            {registerExcelLoading && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
+                          <Download className="w-4 h-4 ml-2" />
+                          {/* </span> */}
+                          {registerExcelLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
 
-                          <button
-                            onClick={() => {
-                              getJVCreditExcel(values);
-                            }}
-                            disabled={
-                              registerExcelLoading ||
-                              !values.subsidiaryId ||
-                              !values.monthId
-                            }
-                            type="button"
-                            className="btn btn-primary btn-elevate mt-3 h-9"
-                          >
-                            Payroll Disbursement Report
-                       
-                            <Download className="w-4 h-4 ml-2" />
-                            {/* </span> */}
-                            {registerExcelLoading && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
+                        <button
+                          onClick={() => {
+                            getJVCreditExcel(values);
+                          }}
+                          disabled={
+                            registerExcelLoading ||
+                            !values.subsidiaryId ||
+                            !values.monthId
+                          }
+                          type="button"
+                          className="btn btn-primary btn-elevate mt-3 h-9"
+                        >
+                          Payroll Disbursement Report
+                          <Download className="w-4 h-4 ml-2" />
+                          {/* </span> */}
+                          {registerExcelLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
 
+                        <button
+                          onClick={() => {
+                            getLoanExcel(values);
+                          }}
+                          disabled={
+                            registerExcelLoading ||
+                            !values.subsidiaryId ||
+                            !values.monthId
+                          }
+                          type="button"
+                          className="btn btn-primary btn-elevate mt-3 h-9 ml-1"
+                        >
+                          Payroll Loan Report
+                          <Download className="w-4 h-4 ml-2" />
+                          {/* </span> */}
+                          {registerExcelLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
 
-
-                             <button
-                            onClick={() => {
-                              getLoanExcel(values);
-                            }}
-                            disabled={
-                              registerExcelLoading ||
-                              !values.subsidiaryId ||
-                              !values.monthId
-                            }
-                            type="button"
-                            className="btn btn-primary btn-elevate mt-3 h-9 ml-1"
-                          >
-                            Payroll Loan Report
-                     
-                            <Download className="w-4 h-4 ml-2" />
-                            {/* </span> */}
-                            {registerExcelLoading && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
-
-                             <button
-                            onClick={() => {
-                              getGratuityExcel(values);
-                            }}
-                            disabled={
-                              registerExcelLoading ||
-                              !values.subsidiaryId ||
-                              !values.monthId
-                            }
-                            type="button"
-                            className="btn btn-primary btn-elevate mt-3 h-9 ml-1"
-                          >
-                            Payroll Gratuity Report
-                     
-                            <Download className="w-4 h-4 ml-2" />
-                            {/* </span> */}
-                            {registerExcelLoading && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => {
+                            getGratuityExcel(values);
+                          }}
+                          disabled={
+                            registerExcelLoading ||
+                            !values.subsidiaryId ||
+                            !values.monthId
+                          }
+                          type="button"
+                          className="btn btn-primary btn-elevate mt-3 h-9 ml-1"
+                        >
+                          Payroll Gratuity Report
+                          <Download className="w-4 h-4 ml-2" />
+                          {/* </span> */}
+                          {registerExcelLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   )}
                 </fieldset>

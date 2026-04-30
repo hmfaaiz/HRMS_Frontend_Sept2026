@@ -74,7 +74,7 @@ export function FormTable() {
     {
       dataField: "employeeCode",
       text: "Employee Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -85,7 +85,7 @@ export function FormTable() {
     {
       dataField: "employeeName",
       text: "Employee",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -95,7 +95,7 @@ export function FormTable() {
     }, {
       dataField: "department",
       text: "department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -105,7 +105,7 @@ export function FormTable() {
     }, {
       dataField: "designation",
       text: "designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -116,7 +116,7 @@ export function FormTable() {
     {
       dataField: "dateOfJoining",
       text: "date Of Joining",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -128,7 +128,7 @@ export function FormTable() {
     {
       dataField: "isApproved",
       text: "Approved",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       formatter: (cell) => {
