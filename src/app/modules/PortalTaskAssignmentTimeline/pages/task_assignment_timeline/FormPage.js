@@ -13,6 +13,8 @@ import { DetailData } from "./modal/DetailData";
 import { DetailTimeLog } from "./modal/DetailTimeLog";
 import { FormUIProvider } from "../../../FacilitatorTicketCreation/pages/facilitatorTicketCreation/FormUIContext";
 
+
+import { TimeLog } from "./modal/TimeLog";
 export function FormPage({ history }) {
 
     const { report,calendar,portal_ticket_creation} = useSelector((state) => {
@@ -35,6 +37,9 @@ export function FormPage({ history }) {
       history.push(
         `/portal_task_assignment_timeline/read-all-task-assignment-timeline/${detailId}/detailtimelog`
       );
+    },
+            openTicketTimeLog: (detailId, isUserRead) => {
+      history.push(`/task_assignment_timeline/read-all-task-assignment-timeline/${detailId}/timelog`);
     },
     addNewTicket: () => {
       window.open(
@@ -168,6 +173,19 @@ export function FormPage({ history }) {
             </FormUIProvider>
           )}
         </Route> */}
+
+           <Route path="/portal_task_assignment_timeline/read-all-task-assignment-timeline/:detailId/timelog">
+                {({ history, match }) => (
+                  <TimeLog
+                    show={match != null}
+                    detailId={match && match.params.detailId}
+                    status={match && match.params.status}
+                    onHide={() => {
+                      history.push("/task_assignment_timeline/read-all-task-assignment-timeline");
+                    }}
+                  />
+                )}
+              </Route>
   
   <Route path="/portal_task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
     {({ history, match }) => {

@@ -64,16 +64,29 @@ export function FormTable() {
 
   // Table columns
   const columns = [
+    // {
+    //   dataField: "subs.name",
+    //   text: "Subsidiary",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "120px",
+    //   },
+    // },
     {
-      dataField: "subs.name",
-      text: "Subsidiary",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "120px",
-      },
-    },
+  dataField: "subs",
+  text: "Subsidiary",
+  sort: false,
+  sortCaret: sortCaret,
+  headerSortingClasses,
+  style: {
+    minWidth: "120px",
+  },
+  formatter: (cell) => {
+    return cell?.name || cell?.subsName || "-";
+  }
+},
     {
       dataField: "name",
       text: "Shift Name",

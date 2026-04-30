@@ -1287,6 +1287,10 @@ console.log("grossSalary111111",data)
                     />
                     <label htmlFor="showChanged" className="text-sm font-medium">Show Highlighted fields only.</label>
                   </div>
+                   <div className="mb-4 flex items-center gap-2">
+                    
+                    <label htmlFor="showChanged" className="text-sm font-medium">{values.isPulse? "Salary Perks Updated : Yes": "Salary Perks Updated : No"}.</label>
+                  </div>
 
                   {/* Fields comparison */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -1494,8 +1498,9 @@ console.log("grossSalary111111",data)
                             0,
                             setFieldValue,
                             values?.Employee?.gradeId,
-                            values?.Employee?.employeeTypeId
+                            values?.Employee?.employeeTypeId,
                           );
+                           setFieldValue("isPulse",1),
                           setConfirmationModal(false);
                         }}
                         className="btn btn-primary btn-elevate"

@@ -18,6 +18,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
 import { getUploadUrl } from "../../../../../utils/common";
+import { Download } from "lucide-react";
 
 export function DetailTable() {
   //Users UI Context
@@ -61,7 +62,7 @@ export function DetailTable() {
   }, [formUIProps.queryParams, dispatch, detailTotalCount]);
 
 
- 
+
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -77,7 +78,7 @@ export function DetailTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "5px",
+        minWidth: "2px",
       },
       formatter: (cell, row) => {
         if (!cell) return "";
@@ -107,20 +108,20 @@ export function DetailTable() {
     },
 
 
-    {
-      dataField: "ticketType.formName",
-      text: "Ticket Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "30px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
+    // {
+    //   dataField: "ticketType.formName",
+    //   text: "Ticket Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "30px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+    //   },
+    // },
 
     {
       dataField: "AssignByProfile.fullName",
@@ -129,14 +130,34 @@ export function DetailTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "50px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 30) + "..."}</span> : cell;
       },
     },
 
+
+
+    // {
+    //   dataField: "remarks",
+    //   text: "Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+    //   },
+
+
+
+
+    // },
 
 
     {
@@ -150,45 +171,37 @@ export function DetailTable() {
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
 
+        const maxLength = 300;
+        const wrapLength = 120;
 
+        let text =
+          cell.length > maxLength ? cell.substring(0, maxLength) + "..." : cell;
 
-
-    },
-
-    {
-      dataField: "file",
-      text: "File",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
-
-      formatter: (cell) => {
-        if (!cell) return "";
+        const formattedText = text
+          .match(new RegExp(`.{1,${wrapLength}}`, "g"))
+          ?.join("\n");
 
         return (
-          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-            Attachment
-          </a>
+          <span
+            title={cell}
+            style={{ whiteSpace: "pre-wrap", cursor: "pointer" }}
+          >
+            {formattedText}
+          </span>
         );
-      }
-
-
+      },
     },
-// AlertWork26326 {
-{
+
+    // AlertWork26326 {
+    {
       dataField: "ticketDate",
       text: "Start Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "30px",
       },
       formatter: (cell) => {
         // Only format if cell has a valid date
@@ -205,7 +218,7 @@ export function DetailTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "30px",
       },
       formatter: (cell) => {
         // Only format if cell has a valid date
@@ -214,43 +227,43 @@ export function DetailTable() {
       },
     },
 
-    {
-      dataField: "timeRangeFrom",
-      text: "From Time",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
+    // {
+    //   dataField: "timeRangeFrom",
+    //   text: "From Time",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+    //   },
 
 
 
 
-    },
+    // },
 
-    {
-      dataField: "timeRangeTo",
-      text: "To Time",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-
-
+    // {
+    //   dataField: "timeRangeTo",
+    //   text: "To Time",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+    //   },
 
 
-    },
+
+
+    // },
 
 
     {
@@ -260,11 +273,11 @@ export function DetailTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
+        minWidth: "50px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+        return cell.length > 10 ? <span title={cell}>{cell.substring(0, 10) + "..."}</span> : cell;
       },
 
 
@@ -280,7 +293,7 @@ export function DetailTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "10px",
       },
       formatter: (cell) => {
         if (cell === null || cell === undefined) return "";
@@ -297,7 +310,28 @@ export function DetailTable() {
     },
 
 
+    {
+      dataField: "file",
+      text: "File",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "20px",
+      },
 
+      formatter: (cell) => {
+        if (!cell) return "";
+
+        return (
+          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+            <Download className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        );
+      }
+
+
+    },
 
 
 

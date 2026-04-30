@@ -95,17 +95,38 @@ export const clearTaskAssignmentTimeline = () => (dispatch) => {
 };
 
 
-export const fetchAllFacilitatorTimeLogDetail = (Id) => (dispatch) => {
+// export const fetchAllFacilitatorTimeLogDetail = (body) => (dispatch) => {
 
 
-  if (!Id) {
+//   if (body) {
+//     return dispatch(actions.FacilitatorTimeLogDetailFetched({ detailData: undefined }));
+//   }
+
+//   return requestFromServer
+//     .getAllFacilitatorTimeLogDetail(body)
+//     .then((response) => {
+//       const entities = response.data.data;
+    
+//       dispatch(actions.FacilitatorTimeLogDetailFetched(entities));
+//     })
+//     .catch((error) => {
+//       error.clientMessage = "Can't find user";
+//       dispatch(actions.catchError({ error, callType: callTypes.action }));
+//     });
+// };
+
+
+export const fetchAllFacilitatorTimeLogDetail = (body) => (dispatch) => {
+
+
+  if (!body) {
     return dispatch(actions.FacilitatorTimeLogDetailFetched({ detailData: undefined }));
   }
 
   return requestFromServer
-    .getAllFacilitatorTimeLogDetail(Id)
+    .getAllFacilitatorTimeLogDetail(body)
     .then((response) => {
-      const entities = response.data.data.rows;
+      const entities = response.data.data;
     
       dispatch(actions.FacilitatorTimeLogDetailFetched(entities));
     })
@@ -114,4 +135,3 @@ export const fetchAllFacilitatorTimeLogDetail = (Id) => (dispatch) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };
-

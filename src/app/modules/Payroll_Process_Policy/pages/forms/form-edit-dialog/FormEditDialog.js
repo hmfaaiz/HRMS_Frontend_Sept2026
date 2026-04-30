@@ -77,6 +77,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       await dispatch(actions.create_Payroll_Policy(user, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
+      await dispatch(actions.fetchPayrollPolicySubsidiaryIds());
 
 
     } else {
@@ -97,6 +98,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       await dispatch(actions.update_Payroll_Policy(payrollMonthSetupUpdatedFields, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
+      await dispatch(actions.fetchPayrollPolicySubsidiaryIds());
     }
   };
 
