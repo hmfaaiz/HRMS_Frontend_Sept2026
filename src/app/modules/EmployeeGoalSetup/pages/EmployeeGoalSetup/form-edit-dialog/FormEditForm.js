@@ -58,6 +58,20 @@ const employeeEditSchema = Yup.object().shape({
         targetDate: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
       })
     )
+       .test(
+      "weightage",
+      "Total weightage must be exactly 100%",
+      function (list) {
+        if (!Array.isArray(list)) return false;
+
+        const total = list.reduce(
+          (sum, item) => sum + (Number(item?.weightage) || 0),
+          0
+        );
+
+        return total === 100;
+      }
+    ),
 
 
 });
