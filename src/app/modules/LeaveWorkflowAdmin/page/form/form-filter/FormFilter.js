@@ -239,7 +239,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                       setPayrollMonthDatesBaseOnSubsidiary(
                         setValues,
                         values,
-                        e
+                        e,
                       );
                       dispatch(fetchAllDept(e?.value));
                     }}
@@ -247,7 +247,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                     touched={touched?.subsidiaryId}
                     value={
                       dashboard?.allSubsidiaryList?.find(
-                        (opt) => opt.value === values?.subsidiaryId
+                        (opt) => opt.value === values?.subsidiaryId,
                       ) || null
                     }
                     options={dashboard?.allSubsidiaryList}
@@ -263,13 +263,20 @@ export const FormFilter = ({ loading, queryParams }) => {
                       setFieldValue("departmentId", e?.value || null);
                     }}
                     value={
-                      dashboard?.allDept?.find(
-                        (opt) => opt.value === values?.departmentId
-                      ) || null
+                      [
+                        { label: "All", value: "" },
+                        ...(dashboard?.allDept || []),
+                      ]?.find((opt) => opt.value === values?.departmentId) || {
+                        label: "All",
+                        value: "",
+                      }
                     }
                     error={errors?.departmentId}
                     touched={touched?.departmentId}
-                    options={dashboard?.allDept}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(dashboard?.allDept || []),
+                    ]}
                   />
                 </div>
                 {/* Employee those request for leave  */}
@@ -282,13 +289,19 @@ export const FormFilter = ({ loading, queryParams }) => {
                       dispatch(fetchAllLeaveType("allLeaveTypes", e?.value));
                     }}
                     value={
-                      dashboard?.allEmployees?.find(
-                        (opt) => opt.value === values?.requestBelongTo
-                      ) || null
+                      [
+                        { label: "All", value: "" },
+                        ...(dashboard?.allEmployees || []),
+                      ]?.find(
+                        (opt) => opt.value === values?.requestBelongTo,
+                      ) || { label: "All", value: "" }
                     }
                     error={errors?.requestBelongTo}
                     touched={touched?.requestBelongTo}
-                    options={dashboard?.allEmployees}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(dashboard?.allEmployees || []),
+                    ]}
                   />
                 </div>
                 {/* Employee those are apporval authority  */}
@@ -300,32 +313,41 @@ export const FormFilter = ({ loading, queryParams }) => {
                       setFieldValue("approvalBelongTo", e?.value || null);
                     }}
                     value={
-                      dashboard?.allEmployees?.find(
-                        (opt) => opt.value === values?.approvalBelongTo
-                      ) || null
+                      [
+                        { label: "All", value: "" },
+                        ...(dashboard?.allEmployees || []),
+                      ]?.find(
+                        (opt) => opt.value === values?.approvalBelongTo,
+                      ) || { label: "All", value: "" }
                     }
                     error={errors?.approvalBelongTo}
                     touched={touched?.approvalBelongTo}
-                    options={dashboard?.allEmployees}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(dashboard?.allEmployees || []),
+                    ]}
                   />
                 </div>
                 {/* Request Status */}
                 <div className="col-span-4 sm:col-span-2">
                   {/* Status Field  */}
-                  <SearchSelect
-                    name="requestStatus"
-                    label={<span>Status</span>}
-                    onChange={({ value }) => {
-                      setFieldValue("requestStatus", value);
-                    }}
-                    value={
-                      requestFilter?.find(
-                        (opt) => opt.value === values?.requestStatus
-                      ) || ""
-                    }
-                    autoComplete="off"
-                    options={requestFilter}
-                  />
+                  {/* Request Status */}
+                  <div className="col-span-4 sm:col-span-2">
+                    <SearchSelect
+                      name="requestStatus"
+                      label={<span>Status</span>}
+                      onChange={({ value }) => {
+                        setFieldValue("requestStatus", value);
+                      }}
+                      value={
+                        [{ label: "All", value: "" }, ...requestFilter]?.find(
+                          (opt) => opt.value === values?.requestStatus,
+                        ) || { label: "All", value: "" }
+                      }
+                      autoComplete="off"
+                      options={[{ label: "All", value: "" }, ...requestFilter]}
+                    />
+                  </div>
                 </div>
                 {/* Leave Type */}
                 <div className="col-span-4 sm:col-span-2">

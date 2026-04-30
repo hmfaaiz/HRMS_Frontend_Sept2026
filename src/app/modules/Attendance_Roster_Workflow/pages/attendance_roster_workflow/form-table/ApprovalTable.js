@@ -1,18 +1,22 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import {
   NoRecordsFoundMessage,
   PleaseWaitMessage,
+  headerSortingClasses,
+  sortCaret,
+  getHandlerTableChange
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelper";
 import { useFormUIContext } from "../FormUIContext";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { format } from "date-fns";
+import * as actions from "../../../_redux/redux-Actions"
 
 export function ApprovalFormTable() {
   const formUIContext = useFormUIContext();
-
+  const dispatch = useDispatch();
   const FormUIProps = useMemo(() => ({
     queryParams: formUIContext?.queryParams,
     setQueryParams: formUIContext?.setQueryParams,
@@ -21,7 +25,9 @@ export function ApprovalFormTable() {
     setWorkflowId: formUIContext?.setWorkflowId,
     Ids: formUIContext?.Ids,
   }), [formUIContext]);
-
+ useEffect(() => {
+    dispatch(actions.fetchRosterWorkflow(FormUIProps.queryParams));
+  }, [FormUIProps.queryParams, dispatch]);
   const { currentState } = useSelector(
     // HRMS slice name
     (state) => ({ currentState: state.attendance_roster_workflow_status }),
@@ -62,11 +68,15 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.employeeCode",
       text: "Code",
+      sort: true,                                               
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "70px", maxWidth: "70px" },
     },
     {
       dataField: "requestBelongToEmp",
       text: "Name",
+      sort: true,                                               
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "150px", maxWidth: "150px" },
       formatter: (cell) =>
         `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
@@ -74,34 +84,46 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.department.deptName",
       text: "Department",
+      sort: true,                                                
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "160px", maxWidth: "160px" },
     },
     {
       dataField: "requestBelongToEmp.designation.formName",
       text: "Designation",
+      sort: true,                                                
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "160px", maxWidth: "160px" },
     },
     {
       dataField: "parentData.from",
       text: "From Date",
+      sort: true,                                               
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "120px", maxWidth: "120px" },
       formatter: (cell) => (cell ? format(new Date(cell), "dd-MMM-yyyy") : ""),
     },
     {
       dataField: "parentData.to",
       text: "To Date",
+      sort: true,                                               
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "120px", maxWidth: "120px" },
       formatter: (cell) => (cell ? format(new Date(cell), "dd-MMM-yyyy") : ""),
     },
     {
       dataField: "parentData.isEnable_roster_via_shift",
       text: "Roster Via",
+      sort: true,                                               
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "100px", maxWidth: "100px" },
       formatter: (cell) => (cell ? "Shift" : "Pattern"),
     },
     {
       dataField: "parentData.Shift.name",
       text: "Shift",
+      sort: true,                                               
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "120px", maxWidth: "120px" },
       formatter: (cell, row) =>
         row?.parentData?.isEnable_roster_via_shift ? cell || "N/A" : "-",
@@ -109,6 +131,8 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.Pattern.patternName",
       text: "Pattern",
+      sort: true,                                               
+      sortCaret, headerSortingClasses,  
       style: { minWidth: "120px", maxWidth: "120px" },
       formatter: (cell, row) =>
         !row?.parentData?.isEnable_roster_via_shift ? cell || "N/A" : "-",
@@ -142,6 +166,7 @@ export function ApprovalFormTable() {
         wrapperClasses="table-responsive"
         bordered={false}
         classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}  
         bootstrap4
         selectRow={{
           mode: "checkbox",

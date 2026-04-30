@@ -315,7 +315,11 @@ useEffect(() => {
 
                   dispatch(actions.fetchUsers(usersUIProps.queryParams));
                 }}
-
+                 value={
+                  (dashboard?.allEmpTypeDynamicChildMenus || []).find(
+                    (item) => item.value === usersUIProps?.queryParams?.employeeTypeId
+                  ) || { label: "All", value: "" }
+                }
                 options={[
                   { label: "All", value: "" },
                   ...(dashboard?.allEmpTypeDynamicChildMenus || []),

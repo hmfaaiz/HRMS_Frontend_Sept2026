@@ -16,12 +16,9 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
-import { Accordion, Button, Card } from "react-bootstrap";
-import { KeyboardArrowDown } from "@material-ui/icons";
 import { format } from "date-fns";
 
 export function FormTable() {
-  //Users UI Context
   const formUIContext = useFormUIContext();
 
   const FormUIProps = useMemo(() => {
@@ -57,55 +54,43 @@ export function FormTable() {
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteEmployeeRoster"
   );
+
   // Table columns
   const columns = [
     {
       dataField: "firstName",
       text: "Employee",
-      sort: false,
+      sort: true,             // ✅ enabled
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
+      style: { minWidth: "160px" },
     },
     {
       dataField: "name",
       text: "Shift",
-      sort: false,
+      sort: true,             // ✅ enabled
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-
+      style: { minWidth: "160px" },
       formatter: (cell) => (cell ? cell : "Roster Via Roster Pattern"),
     },
     {
       dataField: "from",
       text: "From",
-      sort: false,
+      sort: true,             // ✅ enabled
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
-      },
+      style: { minWidth: "160px" },
+      formatter: (cell) => (cell ? format(new Date(cell), "dd-MMM-yyyy") : ""),
     },
     {
       dataField: "to",
       text: "To",
-      sort: false,
+      sort: true,             // ✅ enabled
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
-      },
+      style: { minWidth: "160px" },
+      formatter: (cell) => (cell ? format(new Date(cell), "dd-MMM-yyyy") : ""),
     },
     {
       dataField: "action",
@@ -117,19 +102,15 @@ export function FormTable() {
         payrollData: payrollData,
         setId: FormUIProps.setId,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
+        isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
-      style: {
-        minWidth: "170px",
-      },
+      style: { minWidth: "170px" },
     },
   ];
 
-  //Table pagination properties
+  // Table pagination properties
   const paginationOptions = {
     custom: true,
     totalSize: totalCount,
@@ -139,15 +120,12 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full font-size-xs  bg-white rounded-lg overflow-y-auto">
+    <div className="w-full font-size-xs bg-white rounded-lg overflow-y-auto">
       <h6 className="font-bold mb-0 text-primary my-2">Employee Rosters</h6>
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            >
+            <Pagination isLoading={listLoading} paginationProps={paginationProps}>
               <BootstrapTable
                 noDataIndication={NoRecordsFoundMessage({ entities })}
                 wrapperClasses="table-responsive"
@@ -159,13 +137,7 @@ export function FormTable() {
                 data={entities === null ? [] : entities}
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  FormUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
-
-                // })}
+                onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)} // ✅ pushes sortField+sortOrder into queryParams
                 {...paginationTableProps}
               >
                 <PleaseWaitMessage entities={entities} />

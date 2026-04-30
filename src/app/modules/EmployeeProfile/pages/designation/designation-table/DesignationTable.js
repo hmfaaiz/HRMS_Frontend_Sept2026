@@ -87,7 +87,7 @@ export function DesignationTable({onHide}) {
     {
       dataField: "employeeCode",
       text: "Employee Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -97,7 +97,7 @@ export function DesignationTable({onHide}) {
     {
       dataField: "fullName",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -108,7 +108,7 @@ export function DesignationTable({onHide}) {
     {
       dataField: "department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -119,7 +119,7 @@ export function DesignationTable({onHide}) {
     {
       dataField: "designation.formName",
       text: "Designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -130,7 +130,7 @@ export function DesignationTable({onHide}) {
     {
       dataField: "employeeType.formName",
       text: "employee Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -140,7 +140,7 @@ export function DesignationTable({onHide}) {
     {
       dataField: "dateOfJoining",
       text: "date Of Joining",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

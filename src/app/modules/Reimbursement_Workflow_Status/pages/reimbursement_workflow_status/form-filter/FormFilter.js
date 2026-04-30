@@ -41,7 +41,7 @@ const validationSchema = Yup.object().shape({
       }),
   }),
 });
-
+const ALL_OPTION = { label: "All", value: "" };
 export const FormFilter = ({ loading, queryParams }) => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
@@ -133,31 +133,45 @@ export const FormFilter = ({ loading, queryParams }) => {
         dispatch(actions.fetchReimbursementWorkflow(payload));
       }}
     >
-      {({ values, handleSubmit, handleBlur, setFieldValue, handleReset, errors, touched, setValues }) => (
+      {({
+        values,
+        handleSubmit,
+        handleBlur,
+        setFieldValue,
+        handleReset,
+        errors,
+        touched,
+        setValues,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             <Form className="form form-label-right">
               <fieldset>
                 <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
                 <div className="grid grid-cols-10 gap-4">
-
                   {/* Subsidiary */}
                   <div className="col-span-5 sm:col-span-2">
                     <SearchSelect
                       name="subsidiaryId"
                       label={
-                        <span>Subsidiary<span style={{ color: "red" }}>*</span></span>
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
                       }
                       onChange={(e) => {
                         setFieldValue("subsidiaryId", e?.value || null);
-                        setPayrollMonthDatesBaseOnSubsidiary(setValues, values, e);
+                        setPayrollMonthDatesBaseOnSubsidiary(
+                          setValues,
+                          values,
+                          e,
+                        );
                         dispatch(fetchAllDept(e?.value));
                       }}
                       error={errors?.subsidiaryId}
                       touched={touched?.subsidiaryId}
                       value={
                         dashboard?.allSubsidiaryList?.find(
-                          (opt) => opt.value === values?.subsidiaryId
+                          (opt) => opt.value === values?.subsidiaryId,
                         ) || null
                       }
                       options={dashboard?.allSubsidiaryList}
@@ -170,13 +184,15 @@ export const FormFilter = ({ loading, queryParams }) => {
                       name="departmentId"
                       label={<span>Department</span>}
                       disabled={!values?.subsidiaryId}
-                      onChange={(e) => setFieldValue("departmentId", e?.value || null)}
-                      value={
-                        dashboard?.allDept?.find(
-                          (opt) => opt.value === values?.departmentId
-                        ) || null
+                      onChange={(e) =>
+                        setFieldValue("departmentId", e?.value || null)
                       }
-                      options={dashboard?.allDept}
+                      options={[ALL_OPTION, ...(dashboard?.allDept || [])]}
+                      value={
+                        [ALL_OPTION, ...(dashboard?.allDept || [])]?.find(
+                          (opt) => opt?.value == values?.departmentId,
+                        ) || ALL_OPTION
+                      }
                     />
                   </div>
 
@@ -185,13 +201,15 @@ export const FormFilter = ({ loading, queryParams }) => {
                     <SearchSelect
                       name="requestBelongTo"
                       label={<span>Request Employee</span>}
-                      onChange={(e) => setFieldValue("requestBelongTo", e?.value || null)}
-                      value={
-                        dashboard?.allEmployees?.find(
-                          (opt) => opt.value === values?.requestBelongTo
-                        ) || null
+                      onChange={(e) =>
+                        setFieldValue("requestBelongTo", e?.value || null)
                       }
-                      options={dashboard?.allEmployees}
+                      options={[ALL_OPTION, ...(dashboard?.allEmployees || [])]}
+                      value={
+                        [ALL_OPTION, ...(dashboard?.allEmployees || [])]?.find(
+                          (opt) => opt?.value == values?.requestBelongTo,
+                        ) || ALL_OPTION
+                      }
                     />
                   </div>
 
@@ -200,13 +218,15 @@ export const FormFilter = ({ loading, queryParams }) => {
                     <SearchSelect
                       name="approvalBelongTo"
                       label={<span>Approval Employee</span>}
-                      onChange={(e) => setFieldValue("approvalBelongTo", e?.value || null)}
-                      value={
-                        dashboard?.allEmployees?.find(
-                          (opt) => opt.value === values?.approvalBelongTo
-                        ) || null
+                      onChange={(e) =>
+                        setFieldValue("approvalBelongTo", e?.value || null)
                       }
-                      options={dashboard?.allEmployees}
+                      options={[ALL_OPTION, ...(dashboard?.allEmployees || [])]}
+                      value={
+                        [ALL_OPTION, ...(dashboard?.allEmployees || [])]?.find(
+                          (opt) => opt?.value == values?.approvalBelongTo,
+                        ) || ALL_OPTION
+                      }
                     />
                   </div>
 
@@ -215,11 +235,15 @@ export const FormFilter = ({ loading, queryParams }) => {
                     <SearchSelect
                       name="requestStatus"
                       label={<span>Status</span>}
-                      onChange={({ value }) => setFieldValue("requestStatus", value)}
-                      value={
-                        requestFilter?.find((opt) => opt.value === values?.requestStatus) || ""
+                      onChange={({ value }) =>
+                        setFieldValue("requestStatus", value)
                       }
-                      options={requestFilter}
+                      options={[ALL_OPTION, ...requestFilter]}
+                      value={
+                        [ALL_OPTION, ...requestFilter]?.find(
+                          (opt) => opt.value === values?.requestStatus,
+                        ) || ALL_OPTION
+                      }
                     />
                   </div>
 
@@ -263,7 +287,6 @@ export const FormFilter = ({ loading, queryParams }) => {
                       </div>
                     </div>
                   </div>
-
                 </div>
               </fieldset>
             </Form>
@@ -272,7 +295,10 @@ export const FormFilter = ({ loading, queryParams }) => {
           <div className="flex justify-end gap-2 mt-2">
             <button
               type="button"
-              onClick={() => { applyFilter(initialFilter.filter); handleReset(); }}
+              onClick={() => {
+                applyFilter(initialFilter.filter);
+                handleReset();
+              }}
               className="btn btn-danger btn-elevate"
             >
               Cancel
@@ -284,7 +310,9 @@ export const FormFilter = ({ loading, queryParams }) => {
               className="btn btn-success btn-elevate"
             >
               Filter
-              {loading && <span className="ml-3 mr-3 spinner spinner-white"></span>}
+              {loading && (
+                <span className="ml-3 mr-3 spinner spinner-white"></span>
+              )}
             </button>
           </div>
         </>

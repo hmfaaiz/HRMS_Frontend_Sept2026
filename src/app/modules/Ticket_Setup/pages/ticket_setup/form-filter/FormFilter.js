@@ -47,6 +47,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams;
 };
 
+const ALL_OPTION = { label: "All", value: "" };
 export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
   const dispatch = useDispatch();
   const formUIContext = useFormUIContext();
@@ -97,17 +98,11 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                   <SearchSelect
                     name="projectId"
                     label={<span>Project</span>}
+                    options={[ALL_OPTION, ...(dashboard?.allProjects || [])]}
                     value={
-                      [
-                        { label: "Select", value: "" },
-                        ...dashboard?.allProjects,
-                      ]?.find((el) => el?.value == values?.projectId) || ""
-                    }
-                    options={
-                      [
-                        { label: "Select", value: "" },
-                        ...dashboard?.allProjects,
-                      ] || []
+                      [ALL_OPTION, ...(dashboard?.allProjects || [])]?.find(
+                        (el) => el?.value == values?.projectId,
+                      ) || ALL_OPTION
                     }
                     onChange={(e) => {
                       setFieldValue("projectId", e?.value);
@@ -127,13 +122,11 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                   <SearchSelect
                     name="ticketTypeId"
                     label={<span>Ticket Type</span>}
+                    options={[ALL_OPTION, ...TicketType]}
                     value={
-                      [{ label: "Select", value: "" }, ...TicketType]?.find(
+                      [ALL_OPTION, ...TicketType]?.find(
                         (el) => el?.value == values?.ticketTypeId,
-                      ) || ""
-                    }
-                    options={
-                      [{ label: "Select", value: "" }, ...TicketType] || []
+                      ) || ALL_OPTION
                     }
                     onChange={(e) => {
                       setFieldValue("ticketTypeId", e?.value);
@@ -153,13 +146,11 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                   <SearchSelect
                     name="priority"
                     label={<span>Priority</span>}
+                    options={[ALL_OPTION, ...PriorityType]}
                     value={
-                      [{ label: "Select", value: "" }, ...PriorityType]?.find(
+                      [ALL_OPTION, ...PriorityType]?.find(
                         (el) => el?.value == values?.priority,
-                      ) || ""
-                    }
-                    options={
-                      [{ label: "Select", value: "" }, ...PriorityType] || []
+                      ) || ALL_OPTION
                     }
                     onChange={(e) => {
                       setFieldValue("priority", e?.value);
@@ -179,17 +170,14 @@ export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
                   <SearchSelect
                     name="ticketStatusId"
                     label={<span>Ticket Status</span>}
+                    options={[
+                      ALL_OPTION,
+                      ...(dashboard?.allTicketStatus || []),
+                    ]}
                     value={
-                      [
-                        { label: "Select", value: "" },
-                        ...dashboard?.allTicketStatus,
-                      ]?.find((el) => el?.value == values?.ticketStatusId) || ""
-                    }
-                    options={
-                      [
-                        { label: "Select", value: "" },
-                        ...dashboard?.allTicketStatus,
-                      ] || []
+                      [ALL_OPTION, ...(dashboard?.allTicketStatus || [])]?.find(
+                        (el) => el?.value == values?.ticketStatusId,
+                      ) || ALL_OPTION
                     }
                     onChange={(e) => {
                       setFieldValue("ticketStatusId", e?.value);
