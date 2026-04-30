@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo , useEffect} from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import * as actions from "../../../redux/formAction";
 import {
   getHandlerTableChange,
@@ -18,17 +18,20 @@ import { formatTime } from "../../../../../utils/common";
 export function ApprovalFormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
-
+  const dispatch = useDispatch();
   const FormUIProps = useMemo(() => {
-    return {
-      setQueryParams: formUIContext?.setQueryParams,
-      setIds: formUIContext?.setIds,
-      setCurrentData: formUIContext?.setCurrentData,
-      setWorkflowId: formUIContext?.setWorkflowId,
-      Ids: formUIContext?.Ids,
-    };
-  }, [formUIContext]);
-
+  return {
+    queryParams: formUIContext?.queryParams,       
+    setQueryParams: formUIContext?.setQueryParams,
+    setIds: formUIContext?.setIds,
+    setCurrentData: formUIContext?.setCurrentData,
+    setWorkflowId: formUIContext?.setWorkflowId,
+    Ids: formUIContext?.Ids,
+  };
+}, [formUIContext]);
+  useEffect(() => {
+    dispatch(actions.fetchAttendanceApprovalApplication(FormUIProps.queryParams));
+  }, [FormUIProps.queryParams, dispatch]);
   const { currentState } = useSelector((state) => {
     return {
       currentState: state.attendance_workflow_admin,
@@ -99,7 +102,7 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -110,7 +113,7 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -124,7 +127,7 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -135,7 +138,7 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.designation.formName",
       text: "Designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -146,7 +149,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.attDate",
       text: "Att Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -160,7 +163,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.timeIn",
       text: "Time In",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -172,7 +175,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.timeOut",
       text: "Time Out",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
