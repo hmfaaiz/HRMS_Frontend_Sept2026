@@ -18,6 +18,7 @@ export const initialFilter = {
   },
 
   sortOrder: "asc",
+  sortField: "",
   pageSize: 5,
   pageNumber: 1,
 };

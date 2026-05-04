@@ -13,10 +13,11 @@ export const FormCard = () => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
 
-  const { user, attendanceAccess } = useSelector(
+  const { user, attendanceAccess, rosterCalendarAccess } = useSelector(
     (state) => ({
       user: state?.auth?.user,
       attendanceAccess: state?.auth?.userAccess["Attendance Management"],
+      rosterCalendarAccess: state?.auth?.userAccess["roster_calendar_team"],
     }),
     shallowEqual
   );
@@ -53,6 +54,15 @@ export const FormCard = () => {
       isShow: attendanceAccess?.find(
         (el) =>
           el?.componentName === "ReadAllAttendanceRosterWorkflowStatus" &&
+          el?.isResourceShow
+      ),
+    },
+      {
+      name: "Roster Calendar",
+      link: "/roster_calendar_team/read-roster-calendar",
+      isShow: rosterCalendarAccess?.find(
+        (el) =>
+          el?.componentName === "ReadRosterCalendar" &&
           el?.isResourceShow
       ),
     },

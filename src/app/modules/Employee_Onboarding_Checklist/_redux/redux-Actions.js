@@ -26,13 +26,17 @@ export const fetchEmployeeOnboardingChecklist = (query) => async (dispatch) => {
       responsibleEmployeeName: item.ResponsibleEmployeeDetail
         ? `${item.ResponsibleEmployeeDetail.firstName} ${item.EmployeeDetail.middleName || ""} ${item.ResponsibleEmployeeDetail.lastName}`
         : item.responsibleEmployeeName || "-",
-      completionDate: item.completionDate ? new Date(item.completionDate) : null, // keep as Date
+      completionDate: item.completionDate ? new Date(item.completionDate) : null,
     }));
+
+    const uniqueEmployeeIds = new Set(mappedResults.map((item) => item.employeeId));
+    const uniqueEmployeeCount = uniqueEmployeeIds.size;
 
     dispatch(
       actions.checklistFetched({
         ...data,
         results: mappedResults,
+        totalResults: uniqueEmployeeCount, 
       })
     );
   } catch (error) {

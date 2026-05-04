@@ -103,7 +103,7 @@ export function FormTable() {
     {
       dataField: "applicantCode",
       text: "Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -114,7 +114,7 @@ export function FormTable() {
     {
       dataField: "FullName",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -126,7 +126,7 @@ export function FormTable() {
     {
       dataField: "JobTitle",
       text: "Job Title",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -167,7 +167,7 @@ export function FormTable() {
 
         return `${day}-${month}-${year}`;
       },
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -221,7 +221,7 @@ export function FormTable() {
     {
       dataField: "ApplicantStatus.formName",
       text: "Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -274,14 +274,11 @@ export function FormTable() {
   };
 
   return (
-    <div>
+    <div className="w-full overflow-auto scrollbar-fancy">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            >
+            <Pagination isLoading={listLoading} paginationProps={paginationProps}>
               <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}

@@ -74,7 +74,7 @@ export function FormCard() {
     dispatch(fetchAllTicketStatus());
     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
     dispatch(fetchMasterTicketType());
-     dispatch(FetchAllFacilitatorEmployee())
+    dispatch(FetchAllFacilitatorEmployee())
   }, [dispatch]);
 
   const { ticketCalendar } = currentState;
@@ -581,19 +581,45 @@ export function FormCard() {
                         </div>
                       </fieldset>
                     </Form>
+
+                     <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1  align-items-start">
+                      <div className="d-flex align-items-center m-3 col-span-1">
+
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_1 me-2"></span>{" "}
+                          Assigned
+                        </div>
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_16 me-2"></span>{" "}
+                          Log Time
+                        </div>
+                      </div>
+
+                      <div className="d-flex align-items-center m-3 col-span-2">
+
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="me-2"></span>{" "}
+                          Assigned task status
+                        </div>
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_19 me-2"></span>{" "}
+                          Progress
+                        </div>
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_25 me-2"></span>{" "}
+                          Completed
+                        </div>
+
+                      </div>
+                    </div>
                   </Modal.Body >
 
                   <Modal.Footer className="relative">
-                    <div className="text-xs absolute left-0 d-flex justify-content-center ">
-                      <div className="d-flex align-items-center m-3">
-                        <span className="dot bg_custom_color_1 me-2"></span>{" "}
-                        Assigned
-                      </div>
-                      <div className="d-flex align-items-center m-3">
-                        <span className="dot bg_custom_color_16 me-2"></span>{" "}
-                        Log Time
-                      </div>
-                    </div>
+                   
                     <button
                       type="button"
                       onClick={() => {
@@ -621,9 +647,9 @@ export function FormCard() {
             }}
           </Formik>
         </div>
-       
+
       </TCard >
-       {ticketCalendar && ticketCalendar.length > 0 && <FormTable />}
+      {ticketCalendar && ticketCalendar.length > 0 && <FormTable />}
     </>
   );
 }

@@ -82,6 +82,10 @@ export function FormEditForm({
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
+      postApprover: Yup.array()
+        .of(Yup.string())
+        .min(1, VALIDATION_MESSAGES.atLeastOne)
+        .required(VALIDATION_MESSAGES.atLeastOne),
       modeOfTransportId: Yup.array()
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
@@ -144,6 +148,11 @@ export function FormEditForm({
             .filter(Boolean)
             .map((s) => s.trim())
         : [],
+      postApprover: Array.isArray(user?.postApprover)
+  ? user.postApprover.map(String)
+  : typeof user?.postApprover === "string"
+  ? user.postApprover.split(",").filter(Boolean).map((s) => s.trim())
+  : [],
       modeOfTransportId: Array.isArray(user?.modeOfTransportId)
         ? user.modeOfTransportId.map(String)
         : typeof user?.modeOfTransportId === "string"
@@ -362,7 +371,7 @@ export function FormEditForm({
                       <MultiSelect
                         label={
                           <span>
-                            TA DA Request Approver
+                            TA DA Pre Travel Approver
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -389,7 +398,38 @@ export function FormEditForm({
                         placeholder="Select TA DA Request Approver"
                       />
                     </div>
-
+                    {/* Post Approver */}
+                    <div>
+                      <MultiSelect
+                        label={
+                          <span>
+                            TA DA Post Travel Approver
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        options={roles || []}
+                        value={
+                          roles.filter(
+                            (opt) =>
+                              Array.isArray(values.postApprover) &&
+                              values.postApprover.some(
+                                (val) => String(val) === String(opt.value),
+                              ),
+                          ) || []
+                        }
+                        onChange={(val) => {
+                          setFieldTouched("postApprover", true, false);
+                          setFieldValue(
+                            "postApprover",
+                            val?.map((opt) => String(opt.value)) || [],
+                          );
+                        }}
+                        disabled={isUserForRead || !values.subsidiaryId}
+                        error={errors.postApprover}
+                        touched={touched.postApprover}
+                        placeholder="Select TA DA Post Travel Approver"
+                      />
+                    </div>
                     {/* Mode of Transport */}
                     <div>
                       <MultiSelect

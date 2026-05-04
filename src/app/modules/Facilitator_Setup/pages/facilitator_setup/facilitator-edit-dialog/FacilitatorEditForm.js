@@ -80,7 +80,7 @@ export function FacilitatorEditForm({
       const mappedEmployees = dashboard.allEmployees.map((emp) => ({
         value: emp.id ?? emp.value,
         label: emp.name ?? emp.label ?? emp.employeeName,
-        departmentId: emp.departmentId ?? emp.subsidiaryId,
+        departmentId: emp.departmentId,
       }));
 
       setAllEmployees(mappedEmployees);
@@ -177,13 +177,27 @@ export function FacilitatorEditForm({
     );
   };
   
+// useEffect(() => {
+//   if (!data?.departmentId && data?.employeeId) {
+//     const emp = dashboard?.allEmployees?.find(
+//       (el) => el.value === data.employeeId
+//     );
 
+
+//     if (emp?.departmentId) {
+//       setFieldValue("departmentId", emp.departmentId);
+//     }
+//   }
+// }, [data?.employeeId]);
   
   // ------------------ FORM ------------------
   return (
     <Formik
       enableReinitialize
-      initialValues={initialValues}
+      initialValues={{
+      ...initialValues,
+      departmentId: data?.EmployeeProfile?.departmentId || null
+}}
       validationSchema={facilitatorValidation}
       onSubmit={async (values) => {
         if (isSaving) return;
@@ -323,7 +337,7 @@ export function FacilitatorEditForm({
                   value={defEmp || null}
                   options={
                     dashboard?.allEmployees?.filter(
-                      (el) => el?.departmentId == values?.departmentId
+                      (el) => el?.departmentId === values?.departmentId
                     ) || []
                   }
                   isDisabled={
@@ -452,21 +466,21 @@ export function FacilitatorEditForm({
                             }
                             options={locations.map((loc) => {
                               const isUsedInSameDept = values.departmentLocations.some(
-                                (row, rowIndex) =>
-                                  rowIndex !== index &&
-                                  row.departmentId === obj.departmentId &&
-                                  row.locationId === loc.value
-                              );
-  
+                                  (row, rowIndex) =>
+                                    rowIndex !== index &&
+                                    row.departmentId === obj.departmentId &&
+                                    row.locationId === loc.value
+                                );
+
 
                               const isUsedInAllDept = values.departmentLocations.some(
-                                (row, rowIndex) =>
-                                  rowIndex !== index &&
-                                  row.departmentId === -1 &&
-                                  row.locationId === loc.value
-                              );
+                                  (row, rowIndex) =>
+                                    rowIndex !== index &&
+                                    row.departmentId === -1 &&
+                                    row.locationId === loc.value
+                                );
 
-                      
+
                               const disableAllLocationBecauseAllDeptSelected =
                                 loc.value === -1 &&
                                 obj.departmentId !== -1 &&

@@ -216,9 +216,9 @@ export function FormTable() {
               remote
               keyField="Id"
               data={entities || []}
-              rowClasses={(row) => {
-                return row?.isNew ? "bg-tsecondary" : "";
-              }}
+              // rowClasses={(row) => {
+              //   return row?.isNew ? "bg-tsecondary" : "";
+              // }}
               columns={columns}
               defaultSorted={uiHelpers.defaultSorted}
               onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}

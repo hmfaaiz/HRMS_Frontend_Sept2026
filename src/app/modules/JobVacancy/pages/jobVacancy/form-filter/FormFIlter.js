@@ -39,7 +39,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 //   return newQueryParams
 // }
 
-
+const ALL_OPTION = { label: "All", value: "" };
 const prepareFilter = (queryParams, values) => {
   const {
     searchText,
@@ -223,13 +223,12 @@ export function FormFIlter({ listLoading, user }) {
                       setFieldValue("departmentId", e.value || null);
                       handleSubmit();
                     }}
+                    options={[ALL_OPTION, ...(dashboard?.allDept || [])]}
                     value={
-                      dashboard?.allDept?.find(
-                        (option) => option.value === values.departmentId
-                      ) || null
+                      [ALL_OPTION, ...(dashboard?.allDept || [])]?.find(
+                        (opt) => opt?.value == values?.departmentId,
+                      ) || ALL_OPTION
                     }
-                    // options={dashboard?.allDept}
-                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                   />
                 </div>
 
@@ -242,13 +241,12 @@ export function FormFIlter({ listLoading, user }) {
                       setFieldValue("designationId", e.value || null);
                       handleSubmit();
                     }}
+                    options={[ALL_OPTION, ...(dashboard?.allDesignations || [])]}
                     value={
-                      dashboard?.allDesignations?.find(
-                        (option) => option.value === values.designationId
-                      ) || null
+                      [ALL_OPTION, ...(dashboard?.allDesignations || [])]?.find(
+                        (opt) => opt?.value == values?.designationId,
+                      ) || ALL_OPTION
                     }
-                    // options={dashboard?.allDesignations}
-                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
                   />
                 </div>
 
@@ -261,13 +259,12 @@ export function FormFIlter({ listLoading, user }) {
                       setFieldValue("priorityTypeId", e.value || null);
                       handleSubmit();
                     }}
+                    options={[ALL_OPTION, ...(dashboard?.allPriorityTypeList || [])]}
                     value={
-                      dashboard?.allPriorityTypeList?.find(
-                        (option) => option.value === values.priorityTypeId
-                      ) || null
+                      [ALL_OPTION, ...(dashboard?.allPriorityTypeList || [])]?.find(
+                        (opt) => opt?.value == values?.priorityTypeId,
+                      ) || ALL_OPTION
                     }
-                    // options={dashboard?.allPriorityTypeList}
-                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList : []),]}
                   />
                 </div>
 

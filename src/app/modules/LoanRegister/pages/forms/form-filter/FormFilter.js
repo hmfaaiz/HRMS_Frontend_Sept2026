@@ -41,7 +41,7 @@ const prepareFilter = (queryParams, values) => {
   newQueryParams.filter = { ...values };
   return newQueryParams;
 };
-
+const ALL_OPTION = { label: "All", value: "" };
 export function FormFilter({
   loading,
   dispatch,
@@ -61,11 +61,6 @@ export function FormFilter({
     allLoanTypeList,
   } = useSelector((state) => state.dashboard);
 
-  //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
-  const allEmployeesMap = useMemo(() => {
-    return new Map(allEmployees?.map((item) => [item.value, item]));
-  }, [allEmployees]);
-
   const allSubsidiaryMap = useMemo(() => {
     return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
   }, [allSubsidiaryList]);
@@ -78,7 +73,7 @@ export function FormFilter({
     return new Map(allPayrollMonthYearList?.map((item) => [item.value, item]));
   }, [allPayrollMonthYearList]);
 
-  const allLoanTypeListhMap = useMemo(() => {
+  const allLoanTypeListMap = useMemo(() => {
     return new Map(allLoanTypeList?.map((item) => [item.value, item]));
   }, [allLoanTypeList]);
 
@@ -104,10 +99,12 @@ export function FormFilter({
   const getLabels = (values) => {
     return {
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
-      employeeLabel: allEmployeesMap?.get(values.employeeId || "")?.label,
+      employeeLabel: (allEmployees || []).find(
+        (e) => e.value === values.employeeId
+      )?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || "")?.label,
       payrollMonthLabel: allPayrollMonthMap?.get(values.monthId || "")?.label,
-      loanTypeLabel: allLoanTypeListhMap?.get(values.loan_typeId || "")?.label,
+      loanTypeLabel: allLoanTypeListMap?.get(values.loan_typeId || "")?.label,
     };
   };
 
@@ -118,37 +115,26 @@ export function FormFilter({
     dispatch(actions.fetchLoanReqReport(newQueryParams, document, labels));
   };
 
-  useEffect(() => {
-    // Extract subsidiaryId logic
-    if (!allSubsidiaryList?.length) return;
-
-    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
-
-    if (!findDefaultSubs) return;
-
-    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
-    dispatch(
-      fetchAllPayrollMonthYearList({ subsidiaryId : findDefaultSubs?.value }, "allPayrollMonthYearList")
-    );
-    dispatch(fetchAllDept(findDefaultSubs?.value));
-    dispatch(
-      fetchAllPayrollMonthYearList({ subsidiaryId : findDefaultSubs?.value }, "allPayrollMonthYearList")
-    );
-    dispatch(getAllLoanType({ subsidiaryId : findDefaultSubs?.value }));
-  }, [allSubsidiaryList]);
-
-  const loan_status = [
-    { value: 1, label: "Active" },
-    { value: 0, label: "In-Active" },
-    { value: "", label: "All" },
-  ];
-
-  //Trugger request to download PDF of data according to filters
   const getPositionReportPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
     dispatch(actions.fetchLoanPositionReport(newQueryParams, document, labels));
   };
+
+  useEffect(() => {
+    if (!allSubsidiaryList?.length) return;
+    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
+    if (!findDefaultSubs) return;
+    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
+    dispatch(
+      fetchAllPayrollMonthYearList(
+        { subsidiaryId: findDefaultSubs?.value },
+        "allPayrollMonthYearList"
+      )
+    );
+    dispatch(fetchAllDept(findDefaultSubs?.value));
+    dispatch(getAllLoanType({ subsidiaryId: findDefaultSubs?.value }));
+  }, [allSubsidiaryList]);
 
   useEffect(() => {
     if (allPayrollMonthYearList?.length > 0) {
@@ -164,53 +150,63 @@ export function FormFilter({
     }
   }, [allPayrollMonthYearList]);
 
+  const loan_status = [
+    { value: 1, label: "Active" },
+    { value: 0, label: "In-Active" },
+    { value: "", label: "All" },
+  ];
+
   return (
-    <>
-      <Formik
-        enableReinitialize={true}
-        // initialValues={initialFilter.filter}
-        initialValues={{
-          ...initialFilter.filter,
-         subsidiaryId:
-            initialFilter.filter?.subsidiaryId ||
-            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+    <Formik
+      enableReinitialize={true}
+      initialValues={{
+        ...initialFilter.filter,
+        subsidiaryId:
+          initialFilter.filter?.subsidiaryId ||
+          allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
             "", // Set default subsidiaryId if it's not provided
-          from: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
-            ?.startDate
-            ? new Date(
+        from: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
+          ?.startDate
+          ? new Date(
                 allSubsidiaryList?.find(
                   (el) => el?.isDefault
                 )?.payrollMonth?.startDate
-              )
-            : "",
-          to: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
-            ?.endDate
-            ? new Date(
+            )
+          : "",
+        to: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
+          ?.endDate
+          ? new Date(
                 allSubsidiaryList?.find(
                   (el) => el?.isDefault
                 )?.payrollMonth?.endDate
-              )
-            : "",
-          monthId:
-            allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth?.Id ||
-            "",
-        }}
-        validationSchema={formValidation}
-        onSubmit={(values) => {
-          applyFilter(values);
-        }}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleSubmit,
-          handleBlur,
-          setFieldValue,
-          handleReset,
-          isValid, // Destructure isValid
-          dirty, // Destructure dirty
-        }) => (
+            )
+          : "",
+        monthId:
+          allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth?.Id ||
+          "",
+      }}
+      validationSchema={formValidation}
+      onSubmit={(values) => {
+        applyFilter(values);
+      }}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleBlur,
+        setFieldValue,
+        handleReset,
+      }) => {
+
+        const filteredEmployees = !values.departmentId
+          ? allEmployees || []
+          : (allEmployees || []).filter(
+              (emp) =>
+                Number(emp.departmentId) === Number(values.departmentId)
+            );
+
+        return (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
               <Form className="form form-label-right">
@@ -263,43 +259,43 @@ export function FormFilter({
                         }
                         onChange={(e) => {
                           const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
+                            e.value === "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
-                          if(e?.payrollMonth){
-                            // setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            // setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
-                                let formattedFromDate = formatDates(
-                                                            e?.payrollMonth?.startDate,
-                                                            "yyyy-MM-dd"
-                                                          );
-                                                          let formattedToDate = formatDates(
-                                                            e?.payrollMonth?.endDate,
-                                                            "yyyy-MM-dd"
-                                                          );
-                                                          setFieldValue("from", formattedFromDate);
-                                                          setFieldValue("to", formattedToDate); 
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
+                          if (e?.payrollMonth) {
+                            setFieldValue(
+                              "from",
+                              formatDates(
+                                e.payrollMonth.startDate,
+                                "yyyy-MM-dd",
+                              ),
+                            );
+                            setFieldValue(
+                              "to",
+                              formatDates(e.payrollMonth.endDate, "yyyy-MM-dd"),
+                            );
+                            setFieldValue("monthId", Number(e.payrollMonth.Id));
+                          }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                           dispatch(fetchAllDept(value));
                           dispatch(
                             fetchAllPayrollMonthYearList(
                               { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
+                              "allPayrollMonthYearList",
+                            ),
                           );
                           dispatch(getAllLoanType({ subsidiaryId: value }));
+                          // Reset dependent fields
                           setFieldValue("employeeId", "");
                           setFieldValue("departmentId", "");
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         value={
-                            allSubsidiaryList?.find(
-                              (el) => el?.value === values?.subsidiaryId
-                            ) || null
-                          }
-                      options={allSubsidiaryList}
+                          allSubsidiaryList?.find(
+                            (el) => el?.value === values?.subsidiaryId,
+                          ) || null
+                        }
+                        options={allSubsidiaryList}
                       />
                     </div>
 
@@ -310,225 +306,191 @@ export function FormFilter({
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
+                            e.value === "--Select--" ? "" : Number(e.value);
                           setFieldValue("departmentId", value);
+                          setFieldValue("employeeId", "");
                         }}
-                        label={<span> Department</span>}
+                        label={<span>Department</span>}
                         value={
-                          allDeptMap?.get(values?.departmentId || "") || ""
+                          [
+                            ALL_OPTION,
+                            ...(Array.isArray(allDept) ? allDept : []),
+                          ]?.find(
+                            (opt) => opt.value === values?.departmentId,
+                          ) || ALL_OPTION
                         }
                         autoComplete="off"
-                        // options={allDept}
                         options={[
-                          { label: "--Select--", value: "" },
+                          ALL_OPTION,
                           ...(Array.isArray(allDept) ? allDept : []),
                         ]}
                       />
                     </div>
-                    {/* Deparment Field End */}
-                    <div className="">
+
+                    {/* Employee — filtered by department */}
+                    <div>
                       <Field
                         name="employeeId"
                         component={SearchSelect}
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
+                            e.value === "--Select--" ? "" : Number(e.value);
                           setFieldValue("employeeId", value);
                         }}
-                        label={<span> Employee</span>}
+                        label={<span>Employee</span>}
                         value={
-                          allEmployeesMap?.get(values?.employeeId || "") || ""
+                          [
+                            ALL_OPTION,
+                            ...(Array.isArray(filteredEmployees)
+                              ? filteredEmployees
+                              : []),
+                          ]?.find((opt) => opt.value === values?.employeeId) ||
+                          ALL_OPTION //
                         }
                         autoComplete="off"
-                        // options={allEmployees}
                         options={[
-                          { label: "--Select--", value: "" },
-                          ...(Array.isArray(allEmployees) ? allEmployees : []),
+                          ALL_OPTION,
+                          ...(Array.isArray(filteredEmployees)
+                            ? filteredEmployees
+                            : []),
                         ]}
                       />
                     </div>
 
-                    <div className="">
+                    {/* Loan Type */}
+                    <div>
                       <Field
                         name="loan_typeId"
                         component={SearchSelect}
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
+                            e.value === "--Select--" ? "" : Number(e.value);
                           setFieldValue("loan_typeId", value);
                         }}
-                        label={<span> Loan Type</span>}
+                        label={<span>Loan Type</span>}
                         value={
-                          allLoanTypeList?.find(
-                            (option) => option.value === values.loan_typeId
-                          ) || null
+                          [
+                            ALL_OPTION,
+                            ...(Array.isArray(allLoanTypeList)
+                              ? allLoanTypeList
+                              : []),
+                          ]?.find((opt) => opt.value === values?.loan_typeId) ||
+                          ALL_OPTION 
                         }
                         autoComplete="off"
-                        // options={allLoanTypeList}
                         options={[
-                          { label: "--Select--", value: "" },
+                          ALL_OPTION,
                           ...(Array.isArray(allLoanTypeList)
                             ? allLoanTypeList
                             : []),
-                        ]}
+                        ]} 
                       />
                     </div>
                   </div>
 
-                  {/* <div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
+                  <hr />
 
-                      {values?.subsidiaryId ? (() => {
-                        const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
-                        return (
-                          <>
-                            <div>
-                              <b>Active Fiscal Year -</b>{" "}
-                              {selectedSubsidiary?.fiscalYearLabel}
-                            </div>
-                            <div>
-                              <b>Active Payroll Month -</b>{" "}
-                              {selectedSubsidiary?.payrollMonthLabel}
-                            </div>
-                          </>
-                        );
-                      })() : null}
-                    </div> */}
-
-                  <hr></hr>
+                  {/* Loan Request Report */}
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-                    <div className="">
+                    <div>
                       <h6 className="font-bold mb-0 text-primary">
                         Loan Request Report
                       </h6>
-
-
-                      <div className="">
-                        <Field
-                          name="isLoanContinuing"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value =
-                              e.value == "--Select--" ? "" : Number(e.value);
-                            setFieldValue("isLoanContinuing", e.value);
-                          }}
-                          label={<span> Loan Status</span>}
-                          value={
-                            loan_status?.find(
-                              (option) => option.value === values.isLoanContinuing
-                            ) || null
-                          }
-                          autoComplete="off"
-                          options={loan_status}
-                        />
-                      </div>
-
-
+                      <Field
+                        name="isLoanContinuing"
+                        component={SearchSelect}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          setFieldValue("isLoanContinuing", e.value);
+                        }}
+                        label={<span>Loan Status</span>}
+                        value={
+                          loan_status?.find(
+                            (option) =>
+                              option.value === values.isLoanContinuing,
+                          ) || null
+                        }
+                        autoComplete="off"
+                        options={loan_status}
+                      />
                     </div>
-
-
                   </div>
 
                   <div className="mt-2">
-                    <div>
-
-
-                      <h6 className="font-bold mb-0 text-primary">
-                        Date
-                      </h6>
-
-                      <div className="grid md:grid-cols-4 gap-x-3">
-                        <div className="">
-
-
-                          <label>From</label>
-                          <Field
-                            className="form-control"
-                            component={DatePickerField}
-                            placeholder="From Date "
-                            selected={values?.from ? new Date(values.from) : null}
-                            maxDate={endDate}
-                            onChange={(date) => {
-                              let formattedFromDate = formatDates(
-                                date,
-                                "yyyy-MM-dd"
-                              );
-                              let formattedToDate = formatDates(date, "yyyy-MM-dd");
-                              setFieldValue("from", formattedFromDate);
-                              setFieldValue("to", formattedToDate); // Sync from_date and to_date
-                            }}
-                            timeInputLabel="Time:"
-                            dateFormat="dd-MMM-yyyy"
-                            // showTimeInput
-                            name="from"
-                            autoComplete="off"
-                          />
-                        </div>
-
-                        {/* Date To Selector */}
-                        <div className="">
-                          <label>To</label>
-                          <Field
-                            className="form-control"
-                            component={DatePickerField}
-                            placeholder="To Date "
-                            selected={values?.to ? new Date(values.to) : null}
-                            minDate={values.from ? new Date(values.from) : ""}
-                            maxDate={endDate}
-                            onChange={(date) => {
-                              let formattedToDate = formatDates(date, "yyyy-MM-dd");
-                              setFieldValue("to", formattedToDate);
-                            }}
-                            timeInputLabel="Time:"
-                            dateFormat="dd-MMM-yyyy"
-                            // showTimeInput
-                            name="to"
-                            autoComplete="off"
-                          />
-                        </div>
-
-                        <div className="col-start-4 col-end-5 flex justify-end ">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              getPdf(values);
-                            }}
-                            disabled={
-                              LoanPositionLoading ||
-                              loanReqLoading ||
-                              !values?.subsidiaryId 
-                              // ||
-                              // !isValid
-                            }
-                            className="btn btn-primary btn-elevate h-9 mt-4"
-                          >
-                            Loan Request Report
-                            {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                            {/* <SVG
-                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          /> */}
-                            <Download className="w-4 h-4 ml-2   cursor-pointer" />
-                            {/* </span> */}
-                            {loanReqLoading && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
-                        </div>
-
+                    <h6 className="font-bold mb-0 text-primary">Date</h6>
+                    <div className="grid md:grid-cols-4 gap-x-3">
+                      {/* From */}
+                      <div>
+                        <label>From</label>
+                        <Field
+                          className="form-control"
+                          component={DatePickerField}
+                          placeholder="From Date"
+                          selected={values?.from ? new Date(values.from) : null}
+                          maxDate={endDate}
+                          onChange={(date) => {
+                            const formatted = formatDates(date, "yyyy-MM-dd");
+                            setFieldValue("from", formatted);
+                            setFieldValue("to", formatted);
+                          }}
+                          dateFormat="dd-MMM-yyyy"
+                          name="from"
+                          autoComplete="off"
+                        />
                       </div>
 
-                    </div>
+                      {/* To */}
+                      <div>
+                        <label>To</label>
+                        <Field
+                          className="form-control"
+                          component={DatePickerField}
+                          placeholder="To Date"
+                          selected={values?.to ? new Date(values.to) : null}
+                          minDate={values.from ? new Date(values.from) : ""}
+                          maxDate={endDate}
+                          onChange={(date) => {
+                            setFieldValue(
+                              "to",
+                              formatDates(date, "yyyy-MM-dd"),
+                            );
+                          }}
+                          dateFormat="dd-MMM-yyyy"
+                          name="to"
+                          autoComplete="off"
+                        />
+                      </div>
 
+                      {/* Loan Request Report Button */}
+                      <div className="col-start-4 col-end-5 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => getPdf(values)}
+                          disabled={
+                            LoanPositionLoading ||
+                            loanReqLoading ||
+                            !values?.subsidiaryId
+                          }
+                          className="btn btn-primary btn-elevate h-9 mt-4"
+                        >
+                          Loan Request Report
+                          <Download className="w-4 h-4 ml-2 cursor-pointer" />
+                          {loanReqLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  <hr></hr>
+                  <hr />
 
-                  <h6 className="font-bold mb-0 text-primary ">
+                  {/* Loan Position Report */}
+                  <h6 className="font-bold mb-0 text-primary">
                     Loan Position Report
                   </h6>
-
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mb-2">
                     <div className="col-start-1 col-end-2">
                       <Field
@@ -537,13 +499,13 @@ export function FormFilter({
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
+                            e.value === "--Select--" ? "" : Number(e.value);
                           setFieldValue("monthId", value);
                         }}
                         label={
                           <span>
-                            {" "}
-                            Payroll Month<span style={{ color: "red" }}>*</span>
+                            Payroll Month
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         value={
@@ -554,12 +516,11 @@ export function FormFilter({
                       />
                     </div>
 
-                    <div className="col-start-4 col-end-5 flex justify-end ">
+                    {/* Loan Position Report Button */}
+                    <div className="col-start-4 col-end-5 flex justify-end">
                       <button
                         type="button"
-                        onClick={() => {
-                          getPositionReportPdf(values);
-                        }}
+                        onClick={() => getPositionReportPdf(values)}
                         disabled={
                           LoanPositionLoading ||
                           loanReqLoading ||
@@ -569,12 +530,7 @@ export function FormFilter({
                         className="btn btn-primary btn-elevate h-9 mt-4"
                       >
                         Loan Position Report
-                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                        {/* <SVG
-                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          /> */}
-                        <Download className="w-4 h-4 ml-2  cursor-pointer" />
-                        {/* </span> */}
+                        <Download className="w-4 h-4 ml-2 cursor-pointer" />
                         {LoanPositionLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -584,6 +540,7 @@ export function FormFilter({
                 </fieldset>
               </Form>
             </Modal.Body>
+
             <Modal.Footer>
               <button
                 type="button"
@@ -597,8 +554,8 @@ export function FormFilter({
               </button>
             </Modal.Footer>
           </>
-        )}
-      </Formik>
-    </>
+        );
+      }}
+    </Formik>
   );
 }

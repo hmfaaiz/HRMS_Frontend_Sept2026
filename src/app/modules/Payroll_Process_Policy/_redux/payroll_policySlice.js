@@ -11,6 +11,7 @@ const initialTaxState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    subsidiaryForPayrollList:[],
 };
 
 export const callTypes = {
@@ -126,5 +127,18 @@ export const payroll_policySlice = createSlice({
         MaxIdFetchForReceipt: (state, action) => {
             state.donationReportFetch = action.payload;
         },
+
+            Payroll_SubsidiaryList_Fetched: (state, action) => {
+          
+            
+            const subsidiaryForPayroll = action.payload.data?.data;
+            
+            
+            state.listLoading = false;
+            state.error = null;
+            state.subsidiaryForPayrollList = subsidiaryForPayroll;
+   
+        },
+
     },
 });

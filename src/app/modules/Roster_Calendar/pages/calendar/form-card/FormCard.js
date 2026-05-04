@@ -422,7 +422,8 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                           onChange={handleSubsidiaryChange} // Call the dynamic reset handler
                           value={
                             dashboard?.allSubsidiaryList?.find(
-                              (option) => option?.value === values?.subsidiaryId
+                              (option) =>
+                                option?.value === values?.subsidiaryId,
                             ) || null
                           }
                           options={dashboard?.allSubsidiaryList}
@@ -458,7 +459,8 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                           label={<span> Department</span>}
                           value={
                             dashboard?.allDept?.find(
-                              (option) => option?.value === values?.departmentId
+                              (option) =>
+                                option?.value === values?.departmentId,
                             ) || null
                           }
                           // options={dashboard?.allDept}
@@ -481,7 +483,7 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                           }}
                           value={
                             dashboard?.allEmployees?.find(
-                              (option) => option?.value === values?.employeeId
+                              (option) => option?.value === values?.employeeId,
                             ) || null
                           }
                           // options={dashboard?.allEmployees}
@@ -491,7 +493,7 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                             ...(values?.departmentId
                               ? dashboard?.allEmployees?.filter(
                                   (emp) =>
-                                    emp?.departmentId === values.departmentId
+                                    emp?.departmentId === values.departmentId,
                                 )
                               : dashboard?.allEmployees),
                           ]}
@@ -582,11 +584,40 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                 </Form>
 
                 <Modal.Footer>
+                  <div className="text-xs me-auto d-flex justify-content-start">
+                    <div className="d-flex align-items-center m-3">
+                      <span
+                        style={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: "50%",
+                          backgroundColor: "#3174ad",
+                          display: "inline-block",
+                          marginRight: 6,
+                        }}
+                      />
+                      Shift Assigned
+                    </div>
+                    <div className="d-flex align-items-center m-3">
+                      <span
+                        className="tooltip-absent"
+                        style={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: "50%",
+                          display: "inline-block",
+                          marginRight: 6,
+                        }}
+                      />
+                      Off Day
+                    </div>
+                  </div>
+
                   <button
                     type="button"
                     onClick={() => {
                       handleReset();
-                      dispatch(actions.clearEvents()); // Reset form and clear events
+                      dispatch(actions.clearEvents());
                     }}
                     className="btn btn-light"
                   >
@@ -595,7 +626,6 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
 
                   <button
                     onClick={() => {
-                      // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
                       customSubmit(values);
                     }}
                     disabled={!values.from_date || !values.to_date}

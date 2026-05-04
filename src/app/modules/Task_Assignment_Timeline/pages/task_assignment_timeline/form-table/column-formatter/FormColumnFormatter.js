@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { FolderClock, LayoutList, Pencil, Trash2 } from "lucide-react";
+import { Eye, FolderClock, LayoutList, Pencil, Trash2 } from "lucide-react";
 export function FormColumnFormatter(
   cellContent,
   row,
@@ -54,7 +54,23 @@ export function TimeLogsColumnFormatter(
   return (
     <div className="space-x-2">
 
-{row?.MasterDetailTimeLog?.ticketStatus != 0 && (
+         <OverlayTrigger
+        overlay={<Tooltip id="products-vieew-tooltip">View</Tooltip>}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            openEditHandler(row.Id, row.detailId);
+          }}
+
+          style={{ background: 'none', border: 'none', padding: 0 }}
+        >
+          <Eye className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+
+
+{/* {row?.MasterDetailTimeLog?.ticketStatus != 0 && (
   <>
 
    <OverlayTrigger
@@ -84,7 +100,7 @@ export function TimeLogsColumnFormatter(
   </>
 
         )
-}
+} */}
      
     </div>
   );

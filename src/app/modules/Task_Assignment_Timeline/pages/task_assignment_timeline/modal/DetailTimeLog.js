@@ -15,6 +15,7 @@ export function DetailTimeLog({ detailId, status, show, onHide }) {
     const usersUIProps = useMemo(() => {
         return {
             queryParams: usersUIContext.queryParams,
+            logsqueryParams: usersUIContext.logsqueryParams,
         };
     }, [usersUIContext]);
 
@@ -41,13 +42,17 @@ export function DetailTimeLog({ detailId, status, show, onHide }) {
             fetchDetailData()
         }
 
-    }, [detailId]);
+    }, [detailId,usersUIProps.logsqueryParams]);
 
     const fetchDetailData = () => {
         // server request for deleting customer by id
         enableLoading();
 
-        dispatch(actions.fetchAllFacilitatorTimeLogDetail(detailId)).then(() => {
+        dispatch(actions.fetchAllFacilitatorTimeLogDetail({
+    ...usersUIProps.logsqueryParams,
+    detailId: detailId
+  })
+).then(() => {
 
             disableLoading();
         });

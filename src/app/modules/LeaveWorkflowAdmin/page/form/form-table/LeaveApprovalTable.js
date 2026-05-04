@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -12,11 +12,12 @@ import * as uiHelpers from "../../FormUIHelper";
 import { useFormUIContext } from "../../FormUIContext";
 import { ActionsColumnFormatter } from "./column-formatter/ActionCloumnFormatter";
 import { format } from "date-fns";
+import * as actions from "../../../redux/formAction"
 
 export function LeaveApprovalFormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
-
+  const dispatch = useDispatch();
   const FormUIProps = useMemo(() => {
     return {
       queryParams: formUIContext?.queryParams,
@@ -28,6 +29,9 @@ export function LeaveApprovalFormTable() {
       Ids: formUIContext?.Ids,
     };
   }, [formUIContext]);
+   useEffect(() => {
+    dispatch(actions.fetchLeaveApprovalApplication(FormUIProps.queryParams));
+  }, [FormUIProps.queryParams, dispatch]);
 
   const { currentState } = useSelector((state) => {
     return {
@@ -98,7 +102,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -109,7 +113,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "requestBelongToEmp",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -123,7 +127,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -134,7 +138,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.designation.formName",
       text: "Designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -145,7 +149,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "parentData.t_leave_type.name",
       text: "Leave Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -156,7 +160,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "parentData.from",
       text: "Date From",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -170,7 +174,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "parentData.to",
       text: "Date To",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

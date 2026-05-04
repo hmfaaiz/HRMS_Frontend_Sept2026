@@ -108,7 +108,7 @@ export function FormFilter({
         dueDateFrom: uiProps.queryParams?.filter?.dueDateFrom || null,
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
 
-        priorityLevelIds: priorityLevels.map(pl => pl.value) || [],
+        priorityLevelIds: priorityLevels?.map(pl => pl.value) || [],
         ticketTypeIds: ticketTypes.map(pl => pl.value) || []
       }}
       onSubmit={applyFilter}

@@ -45,6 +45,61 @@ import PatternListForm from "./PatternListForm";
 //     })
 //   ),
 // });
+// const roster_patternEditSchema = Yup.object().shape({
+//   designationId: Yup.string().required(VALIDATION_MESSAGES.required),
+
+//   list: Yup.array()
+//     .of(
+//       Yup.object().shape({
+//         goalName: Yup.string()
+//           .trim()
+//           .max(50, "Maximum 50 characters allowed")
+//           .required(VALIDATION_MESSAGES.required),
+
+//         goalDescription: Yup.string()
+//           .trim()
+//           .max(100, "Maximum 100 characters allowed")
+//           .required(VALIDATION_MESSAGES.required),
+
+//         weightage: Yup.number()
+//           .typeError("Only numbers are allowed")
+//           .transform((value, originalValue) => {
+          
+//             return originalValue === "" ? null : value;
+//           })
+//           .min(1, "Minimum is 1%")
+//           .max(100, "Maximum is 100%")
+//           .nullable()
+//           .required(VALIDATION_MESSAGES.required),
+//         competencyId: Yup.number()
+//           .nullable()
+//           .required(VALIDATION_MESSAGES.required),
+
+
+//         isManadatory: Yup.boolean(),
+//         isActive: Yup.boolean(),
+
+//         sno: Yup.number().required(VALIDATION_MESSAGES.required),
+//       })
+//   .test(
+//   "total-weightage",
+//   "Total weightage must be exactly 100%",
+//   function (list) {
+//     if (!Array.isArray(list) || list.length === 0) return true;
+
+//     const total = list.reduce(
+//       (sum, item) => sum + (Number(item?.weightage) || 0),
+//       0
+//     );
+
+//     return total === 100;
+//   }
+// )
+//     )
+
+
+// });
+
 const roster_patternEditSchema = Yup.object().shape({
   designationId: Yup.string().required(VALIDATION_MESSAGES.required),
 
@@ -63,18 +118,17 @@ const roster_patternEditSchema = Yup.object().shape({
 
         weightage: Yup.number()
           .typeError("Only numbers are allowed")
-          .transform((value, originalValue) => {
-          
-            return originalValue === "" ? null : value;
-          })
+          .transform((value, originalValue) =>
+            originalValue === "" ? null : value
+          )
           .min(1, "Minimum is 1%")
           .max(100, "Maximum is 100%")
           .nullable()
           .required(VALIDATION_MESSAGES.required),
+
         competencyId: Yup.number()
           .nullable()
           .required(VALIDATION_MESSAGES.required),
-
 
         isManadatory: Yup.boolean(),
         isActive: Yup.boolean(),
@@ -82,8 +136,20 @@ const roster_patternEditSchema = Yup.object().shape({
         sno: Yup.number().required(VALIDATION_MESSAGES.required),
       })
     )
+    .test(
+      "weightage",
+      "Total weightage must be exactly 100%",
+      function (list) {
+        if (!Array.isArray(list)) return false;
 
+        const total = list.reduce(
+          (sum, item) => sum + (Number(item?.weightage) || 0),
+          0
+        );
 
+        return total === 100;
+      }
+    ),
 });
 
 export function FormEditForm({
@@ -137,7 +203,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
         <>
-
+    {console.log("errors1111", errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
