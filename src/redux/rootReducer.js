@@ -208,7 +208,7 @@ import { ReimbursementApprovalSlice } from "../app/modules/Reimbursement_Claim_A
 import { ReimbursementWorkflowHrmsSlice } from "../app/modules/Reimbursement_Workflow_Status/_redux/redux-Slice";
 import { ReimbursementWorkflowStatusSlice } from "../app/modules/Reimbursement_Workflow_Portal/_redux/redux-Slice";
 import { TravelRequestWorkflowStatusSlice } from "../app/modules/Travel_Request_WorkflowStatus_Portal/_redux/redux-Slice";
-// import { TravelRequestWorkflowAdminSlice } from "../app/modules/Travel_Request_WorkflowStatus_Hrms/_redux/formSlice";
+import { TravelRequestWorkflowAdminSlice } from "../app/modules/Travel_Request_WorkflowStatus_Hrms/_redux/formSlice";
 import { RosterRequestSlice } from "../app/modules/Attendance_Roster_Request/_redux/redux-Slice";
 import { RosterApprovalSlice } from "../app/modules/Attendance_Roster_Approval/_redux/redux-Slice";
 import { RosterWorkflowHrmsSlice } from "../app/modules/Attendance_Roster_Workflow/_redux/redux-Slice";
@@ -418,13 +418,15 @@ export const rootReducer = combineReducers({
   temporary_shift_setup: employeeTempShiftSlice.reducer,
   project_sprint: projectSprintSlice.reducer,
   reimbursement_claim_workflow_status_approval:
-  ReimbursementWorkflowHrmsSlice.reducer,
+    ReimbursementWorkflowHrmsSlice.reducer,
   reimbursement_claim_workflow_status: ReimbursementWorkflowStatusSlice.reducer,
   attendance_roster_request: RosterRequestSlice.reducer,
   attendance_roster_approval: RosterApprovalSlice.reducer,
   attendance_roster_workflow_status: RosterWorkflowHrmsSlice.reducer,
   attendance_roster_workflow_status_portal: RosterWorkflowStatusSlice.reducer,
   company_att_machine_config: CompanyAttMachineConfigSlice.reducer,
+  TravelRequestWorkflowStatus: TravelRequestWorkflowStatusSlice.reducer,
+  TravelRequestWorkflowAdmin: TravelRequestWorkflowAdminSlice.reducer,
 });
 
 export function* rootSaga() {

@@ -9,6 +9,8 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
 
+import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
+
 export const FormCard = () => {
   const FormUIContext = useFormUIContext();
   const [activeKey, setActiveKey] = useState("0");
@@ -25,8 +27,10 @@ export const FormCard = () => {
       setQueryParams: FormUIContext?.setQueryParams,
       travelRequestId: FormUIContext?.travelRequestId,
       WorkflowId: FormUIContext?.WorkflowId,
+      approvalId: FormUIContext?.approvalId,
       setTravelRequestId: FormUIContext?.setTravelRequestId,
       setWorkflowId: FormUIContext?.setWorkflowId,
+      setApprovalId: FormUIContext?.setApprovalId,
     };
   }, [FormUIContext]);
 
@@ -63,6 +67,17 @@ export const FormCard = () => {
         </Accordion>
         <TravelApprovalFormTable />
       </TCard>
+      
+      {formUIProps.approvalId && (
+        <FormEditDialog
+          id={formUIProps.approvalId}
+          onHide={() => {
+            formUIProps.setApprovalId(null);
+            formUIProps.setTravelRequestId(null);
+          }}
+        />
+      )}
+
       {formUIProps.WorkflowId && formUIProps.travelRequestId && (
         <TravelWorkflowTable
           onHide={() => {

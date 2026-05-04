@@ -19,7 +19,9 @@ import {
   History,
   X,
   XCircle,
+  Eye,
 } from "lucide-react";
+import { Modal, Button } from "react-bootstrap";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
 import { Label } from "@material-ui/icons";
@@ -57,18 +59,20 @@ export function FormEditForm({
     shallowEqual,
   );
 
+  const [showEntitlementModal, setShowEntitlementModal] = React.useState(false);
+
   const modeText = isEditMode ? "Edit" : isViewMode ? "View" : "Add";
 
   const transportOptions = dashboard?.allTransportModeList || [];
   const hotelOptions = dashboard?.allHotelEntitlementList || [];
-  const locationOptions = dashboard?.allLocationChildMenus || [];
+  const locationOptions = dashboard?.allTravelLocationList || [];
   const travelTypeOptions = dashboard?.allTravelTypeList || [];
   const travelClassOptions = dashboard?.allClassOfTravelList || [];
 
   React.useEffect(() => {
     dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
-    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(555, "allTravelLocationList"));
     dispatch(fetchAllFormsMenu(553, "allTravelTypeList"));
     dispatch(fetchAllFormsMenu(554, "allClassOfTravelList"));
   }, [dispatch]);
@@ -82,14 +86,31 @@ export function FormEditForm({
     }
   }, [effectiveEmployeeId, dispatch]);
 
+  const handleEntitlementClick = () => {
+    if (effectiveEmployeeId) {
+      setShowEntitlementModal(true);
+    }
+  };
+
   // Validation Schema
   const formValidation = Yup.object().shape({
     purposeOfTravel: Yup.string().required(VALIDATION_MESSAGES.required),
-    projectName: Yup.string().required(VALIDATION_MESSAGES.required),
-    travelType: Yup.string().required(VALIDATION_MESSAGES.required),
+    // projectName: Yup.string().required(VALIDATION_MESSAGES.required),
+    travelTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
     dailyAllowanceRate: Yup.number()
       .required(VALIDATION_MESSAGES.required)
-      .min(0, VALIDATION_MESSAGES.minOneValue),
+      .min(0, VALIDATION_MESSAGES.minOneValue)
+      .test(
+        "limit-check",
+        VALIDATION_MESSAGES.amountExceedLimit,
+        function(value) {
+          const limit = employeeEntitlement?.dailyAllowanceAmount || 0;
+          if (limit > 0 && value > limit) {
+            return false;
+          }
+          return true;
+        },
+      ),
     dailyAllowanceDays: Yup.number()
       .required(VALIDATION_MESSAGES.required)
       .min(1, VALIDATION_MESSAGES.minOneValue),
@@ -125,16 +146,16 @@ export function FormEditForm({
                 : schema.nullable();
             },
           ),
-          hotelEntitlementAmount: Yup.number().when(
-            ["accommodationRequired", "selfEntitlement"],
-            (accommodationRequired, selfEntitlement, schema) => {
-              return accommodationRequired && !selfEntitlement
-                ? schema
-                    .required(VALIDATION_MESSAGES.required)
-                    .min(0, VALIDATION_MESSAGES.minOneValue)
-                : schema.nullable();
-            },
-          ),
+          // hotelEntitlementAmount: Yup.number().when(
+          //   ["accommodationRequired", "selfEntitlement"],
+          //   (accommodationRequired, selfEntitlement, schema) => {
+          //     return accommodationRequired && !selfEntitlement
+          //       ? schema
+          //           .required(VALIDATION_MESSAGES.required)
+          //           .min(0, VALIDATION_MESSAGES.minOneValue)
+          //       : schema.nullable();
+          //   },
+          // ),
           selfAmount: Yup.number().when(
             ["accommodationRequired", "selfEntitlement"],
             (accommodationRequired, selfEntitlement, schema) => {
@@ -142,6 +163,18 @@ export function FormEditForm({
                 ? schema
                     .required(VALIDATION_MESSAGES.required)
                     .min(0, VALIDATION_MESSAGES.minOneValue)
+                    .test(
+                      "self-amount-limit",
+                      VALIDATION_MESSAGES.amountExceedLimit,
+                      function(value) {
+                        const limit =
+                          employeeEntitlement?.hotelEntitlementSelfAmount || 0;
+                        if (limit > 0 && value > limit) {
+                          return false;
+                        }
+                        return true;
+                      },
+                    )
                 : schema.nullable();
             },
           ),
@@ -175,6 +208,7 @@ export function FormEditForm({
     if (user && (user.Id || user.id)) {
       return {
         ...user,
+        projectName: user.projectName || "General",
         advanceRequested: user.advanceRequired,
         dailyAllowanceDays: Math.floor(user.dailyAllowanceDay || 0),
         travelSegments:
@@ -212,8 +246,8 @@ export function FormEditForm({
     return {
       employeeId: employeeId || "",
       purposeOfTravel: "",
-      projectName: "",
-      travelType: "",
+      projectName: "General",
+      travelTypeId: "",
       dailyAllowanceRate: 0,
       dailyAllowanceDays: 0,
       dailyAllowanceAmount: 0,
@@ -239,8 +273,8 @@ export function FormEditForm({
             subsidiaryId: employeeDetails?.subsidiaryId || user?.subsidiaryId,
             employeeId: employeeId || user?.employeeId,
             purposeOfTravel: values.purposeOfTravel,
-            projectName: values.projectName,
-            travelType: values.travelType,
+            projectName: values.projectName || "General",
+            travelTypeId: values.travelTypeId,
             dailyAllowanceRate: values.dailyAllowanceRate,
             dailyAllowanceDay: values.dailyAllowanceDays,
             dailyAllowanceAmount: values.dailyAllowanceAmount,
@@ -271,7 +305,7 @@ export function FormEditForm({
                 accommodationRequired: segment.accommodationRequired,
                 isSelf: segment.selfEntitlement,
                 hotelEntitlementId: segment.hotelEntitlement,
-                hotelAmount: segment.hotelEntitlementAmount,
+                hotelAmount: segment.hotelEntitlementAmount || 0,
                 selfAmount: segment.selfAmount,
               };
             }),
@@ -471,25 +505,23 @@ export function FormEditForm({
                   )
                 )}
                 <div className="flex items-center justify-between mb-3">
-                  <h6 className="text-primary font-bold m-0">Travel Details</h6>
+                  <div className="flex items-center justify-between">
+                    <h6 className="text-primary font-bold m-0 text-end">
+                      Travel Details
+                    </h6>
 
-                  <div className="flex items-center gap-2">
-                    {/* <button
+                    <button
                       type="button"
-                      className="btn btn-secondary btn-sm flex items-center gap-2"
-                      onClick={() => console.log("Entitlement Detail Clicked")}
+                      className="btn btn-primary btn-sm flex items-center gap-2 ml-4"
+                      onClick={handleEntitlementClick}
+                      disabled={!effectiveEmployeeId}
                     >
                       <FileText className="w-4 h-4" />
                       Entitlement Detail
                     </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary btn-sm flex items-center gap-2"
-                      onClick={() => console.log("Last Travel Details Clicked")}
-                    >
-                      <History className="w-4 h-4" />
-                      Last Travel Details
-                    </button> */}
+                  </div>
+
+                  <div className="flex items-center gap-2">
                     {/* Close (Cross) Button */}
                     <button
                       type="button"
@@ -503,6 +535,28 @@ export function FormEditForm({
                 </div>
                 <div className="grid grid-cols-12 gap-x-3 mb-4">
                   <div className="col-span-2">
+                    <label>
+                      Travel Type <span className="text-danger">*</span>
+                    </label>
+                    <Field
+                      as="select"
+                      name="travelTypeId"
+                      className="form-control"
+                      style={{ backgroundColor: "#eefbff" }}
+                      disabled={!isPolicyDefined}
+                    >
+                      <option value="">Select</option>
+                      {travelTypeOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </Field>
+                    {errors.travelTypeId && touched.travelTypeId && (
+                      <div className="form-feedBack">{errors.travelTypeId}</div>
+                    )}
+                  </div>
+                  <div className="col-span-6">
                     <label>
                       Purpose of Travel <span className="text-danger">*</span>
                     </label>
@@ -519,7 +573,7 @@ export function FormEditForm({
                       </div>
                     )}
                   </div>
-                  <div className="col-span-2">
+                  {/* <div className="col-span-2">
                     <label>
                       Project Name <span className="text-danger">*</span>
                     </label>
@@ -533,29 +587,7 @@ export function FormEditForm({
                     {errors.projectName && touched.projectName && (
                       <div className="form-feedBack">{errors.projectName}</div>
                     )}
-                  </div>
-                  <div className="col-span-2">
-                    <label>
-                      Travel Type <span className="text-danger">*</span>
-                    </label>
-                    <Field
-                      as="select"
-                      name="travelType"
-                      className="form-control"
-                      style={{ backgroundColor: "#eefbff" }}
-                      disabled={!isPolicyDefined}
-                    >
-                      <option value="">Select</option>
-                      {travelTypeOptions.map((opt) => (
-                        <option key={opt.value} value={opt.label}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </Field>
-                    {errors.travelType && touched.travelType && (
-                      <div className="form-feedBack">{errors.travelType}</div>
-                    )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -595,7 +627,7 @@ export function FormEditForm({
                               arrayHelpers.push({
                                 fromLocation: "",
                                 toLocation: originLocation,
-                                fromDate: segments[lastIndex]?.toDate || null,
+                                fromDate: null,
                                 toDate: null,
                                 modeOfTravel: segments[0]?.modeOfTravel || "",
                                 classOfTravel: "",
@@ -648,17 +680,28 @@ export function FormEditForm({
                               <td style={{ minWidth: "150px" }}>
                                 Hotel Entitlement
                               </td>
-                              <td style={{ minWidth: "120px" }}>
+                              {/* <td style={{ minWidth: "120px" }}>
                                 Hotel Entitlement Amount
-                              </td>
+                              </td> */}
                               {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
                                 <>
                                   <td style={{ minWidth: "120 px" }}>
                                     Self Entitlement
                                   </td>
                                   <td style={{ minWidth: "100px" }}>
-                                    Self Amount
-                                  </td>
+                                     Self Amount
+                                     {employeeEntitlement?.hotelEntitlementSelfAmount && (
+                                       <span
+                                         className="text-muted font-normal block"
+                                         style={{ fontSize: "10px" }}
+                                       >
+                                         (Limit=
+                                         {
+                                           employeeEntitlement.hotelEntitlementSelfAmount
+                                         })
+                                       </span>
+                                     )}
+                                   </td>
                                 </>
                               )}
                               <td style={{ minWidth: "40px" }}></td>
@@ -832,17 +875,6 @@ export function FormEditForm({
                                         `travelSegments.${index}.toDate`,
                                         val,
                                       );
-                                      // Scalable Logic: current toDate is the next row's fromDate
-                                      if (
-                                        index <
-                                        values.travelSegments.length - 1
-                                      ) {
-                                        setFieldValue(
-                                          `travelSegments.${index +
-                                            1}.fromDate`,
-                                          val,
-                                        );
-                                      }
                                     }}
                                     dateFormat="dd-MMM-yyyy"
                                     name={`travelSegments.${index}.toDate`}
@@ -940,7 +972,12 @@ export function FormEditForm({
                                 <td className="text-center align-middle">
                                   <div className="flex justify-center items-center h-full">
                                     <Checkbox
-                                      disabled={!isPolicyDefined}
+                                      disabled={
+                                        !isPolicyDefined ||
+                                        (values.travelSegments.length > 1 &&
+                                          index ===
+                                            values.travelSegments.length - 1)
+                                      }
                                       isSelected={segment.accommodationRequired}
                                       onChange={(e) => {
                                         const checked = e.target.checked;
@@ -976,7 +1013,10 @@ export function FormEditForm({
                                   style={{
                                     opacity:
                                       !segment.accommodationRequired ||
-                                      segment.selfEntitlement
+                                      segment.selfEntitlement ||
+                                      (values.travelSegments.length > 1 &&
+                                        index ===
+                                          values.travelSegments.length - 1)
                                         ? 0.4
                                         : 1,
                                   }}
@@ -988,7 +1028,10 @@ export function FormEditForm({
                                     disabled={
                                       !segment.accommodationRequired ||
                                       segment.selfEntitlement ||
-                                      !isPolicyDefined
+                                      !isPolicyDefined ||
+                                      (values.travelSegments.length > 1 &&
+                                        index ===
+                                          values.travelSegments.length - 1)
                                     }
                                     onChange={(e) => {
                                       const val = e.target.value;
@@ -1027,12 +1070,15 @@ export function FormEditForm({
                                       </div>
                                     )}
                                 </td>
-                                <td
+                                {/* <td
                                   style={{
                                     opacity:
                                       !segment.accommodationRequired ||
                                       !segment.hotelEntitlement ||
-                                      segment.selfEntitlement
+                                      segment.selfEntitlement ||
+                                      (values.travelSegments.length > 1 &&
+                                        index ===
+                                          values.travelSegments.length - 1)
                                         ? 0.4
                                         : 1,
                                   }}
@@ -1048,7 +1094,10 @@ export function FormEditForm({
                                       !segment.accommodationRequired ||
                                       !segment.hotelEntitlement ||
                                       segment.selfEntitlement ||
-                                      !isPolicyDefined
+                                      !isPolicyDefined ||
+                                      (values.travelSegments.length > 1 &&
+                                        index ===
+                                          values.travelSegments.length - 1)
                                     }
                                     value={
                                       !segment.accommodationRequired ||
@@ -1081,7 +1130,7 @@ export function FormEditForm({
                                         }
                                       </div>
                                     )}
-                                </td>
+                                </td> */}
                                 {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
                                   <>
                                     <td className="text-center align-middle">
@@ -1090,7 +1139,11 @@ export function FormEditForm({
                                         style={{
                                           opacity:
                                             !segment.accommodationRequired ||
-                                            segment.hotelEntitlement
+                                            segment.hotelEntitlement ||
+                                            (values.travelSegments.length > 1 &&
+                                              index ===
+                                                values.travelSegments.length -
+                                                  1)
                                               ? 0.4
                                               : 1,
                                         }}
@@ -1100,7 +1153,11 @@ export function FormEditForm({
                                             !segment.accommodationRequired ||
                                             !!segment.hotelEntitlement ||
                                             !isPolicyDefined ||
-                                            !employeeEntitlement?.ishotelEntitlementSelfAmountWise
+                                            !employeeEntitlement?.ishotelEntitlementSelfAmountWise ||
+                                            (values.travelSegments.length > 1 &&
+                                              index ===
+                                                values.travelSegments.length -
+                                                  1)
                                           }
                                           isSelected={segment.selfEntitlement}
                                           onChange={(e) => {
@@ -1133,7 +1190,10 @@ export function FormEditForm({
                                         opacity:
                                           !segment.accommodationRequired ||
                                           !segment.selfEntitlement ||
-                                          segment.hotelEntitlement
+                                          segment.hotelEntitlement ||
+                                          (values.travelSegments.length > 1 &&
+                                            index ===
+                                              values.travelSegments.length - 1)
                                             ? 0.4
                                             : 1,
                                       }}
@@ -1151,7 +1211,10 @@ export function FormEditForm({
                                           !segment.accommodationRequired ||
                                           !segment.selfEntitlement ||
                                           !!segment.hotelEntitlement ||
-                                          !isPolicyDefined
+                                          !isPolicyDefined ||
+                                          (values.travelSegments.length > 1 &&
+                                            index ===
+                                              values.travelSegments.length - 1)
                                         }
                                         value={
                                           !segment.accommodationRequired ||
@@ -1433,6 +1496,114 @@ export function FormEditForm({
           );
         }}
       </Formik>
+      {/* Entitlement Details Modal */}
+      <Modal
+        show={showEntitlementModal}
+        onHide={() => setShowEntitlementModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h6 className="text-primary font-bold m-0">Entitlements</h6>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {employeeEntitlement ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-3">
+              <div>
+                <label className="text-xs font-medium mb-1">
+                  Mode of Transport :{" "}
+                  <span className="text-xs">
+                    {employeeEntitlement.ModeOfTransports?.length > 0
+                      ? employeeEntitlement.ModeOfTransports.map(
+                          (m) => m.formName || m.name || m.label,
+                        ).join(", ")
+                      : transportOptions
+                          .filter((opt) =>
+                            employeeEntitlement.modeOfTransportId?.includes(
+                              String(opt.value),
+                            ),
+                          )
+                          .map((o) => o.label)
+                          .join(", ") || "N/A"}
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium mb-1">
+                  Hotel Entitlement :{" "}
+                  <span className="text-xs">
+                    {employeeEntitlement.HotelEntitlements?.length > 0
+                      ? employeeEntitlement.HotelEntitlements.map(
+                          (h) => h.formName || h.name || h.label,
+                        ).join(", ")
+                      : hotelOptions
+                          .filter((opt) =>
+                            employeeEntitlement.hotelEntitlementId?.includes(
+                              String(opt.value),
+                            ),
+                          )
+                          .map((o) => o.label)
+                          .join(", ") || "N/A"}
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium mb-1">
+                  Allow Self Entitlement :{" "}
+                  <span className="text-xs">
+                    {employeeEntitlement.ishotelEntitlementSelfAmountWise
+                      ? "Yes"
+                      : "No"}
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium mb-1">
+                  Daily Allowance Rate :{" "}
+                  <span className="text-xs">
+                    Rs.{" "}
+                    {(
+                      employeeEntitlement.dailyAllowanceAmount || 0
+                    ).toLocaleString("en-US")}
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium mb-1">
+                  Taxi Fare (per km) :{" "}
+                  <span className="text-xs">
+                    Rs.{" "}
+                    {(employeeEntitlement.taxiFareAmount || 0).toLocaleString(
+                      "en-US",
+                    )}
+                  </span>
+                </label>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center text-muted py-4">
+              <p>No policy details available for this employee.</p>
+              <small className="text-muted">
+                Please ensure the employee has a TADA policy configured.
+              </small>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setShowEntitlementModal(false)}
+          >
+            Close
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

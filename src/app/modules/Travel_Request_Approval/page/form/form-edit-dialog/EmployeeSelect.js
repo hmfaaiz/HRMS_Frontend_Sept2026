@@ -23,7 +23,7 @@ export function EmployeeSelect({
   React.useEffect(() => {
     dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
-    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(555, "allTravelLocationList"));
     dispatch(fetchAllFormsMenu(554, "allClassOfTravelList"));
   }, [dispatch]);
   const { dashboard, employeeEntitlement, auth } = useSelector(
@@ -367,9 +367,9 @@ export function EmployeeSelect({
                         Accommodation Required
                       </td>
                       <td style={{ minWidth: "130px" }}>Hotel Entitlement</td>
-                      <td style={{ minWidth: "170px" }}>
+                      {/* <td style={{ minWidth: "170px" }}>
                         Hotel Entitlement Amount
-                      </td>
+                      </td> */}
                       <td style={{ minWidth: "120px" }}>Self Entitlement</td>
                       <td style={{ minWidth: "80px" }}>Self Amount</td>
                     </tr>
@@ -381,7 +381,7 @@ export function EmployeeSelect({
                       lastTravelData.Master.map((seg, idx) => (
                         <tr key={idx}>
                           <td className="text-xs">
-                            {dashboard?.allLocationChildMenus?.find(
+                            {dashboard?.allTravelLocationList?.find(
                               (l) =>
                                 String(l.value) === String(seg.fromLocationId),
                             )?.label ||
@@ -389,7 +389,7 @@ export function EmployeeSelect({
                               "—"}
                           </td>
                           <td className="text-xs">
-                            {dashboard?.allLocationChildMenus?.find(
+                            {dashboard?.allTravelLocationList?.find(
                               (l) =>
                                 String(l.value) === String(seg.toLocationId),
                             )?.label ||

@@ -567,35 +567,37 @@ const reimbursement_claim_workflow_status_approval = lazy(() =>
   import("./modules/Reimbursement_Workflow_Status/pages/index"),
 );
 
-const reimbursement_claim_workflow_status = lazy (() =>
-import ("./modules/Reimbursement_Workflow_Portal/pages/index"),
-)
+const reimbursement_claim_workflow_status = lazy(() =>
+  import("./modules/Reimbursement_Workflow_Portal/pages/index"),
+);
 
-const attendance_roster_request = lazy (() =>
-import ("./modules/Attendance_Roster_Request/pages/index"),
-) 
+const attendance_roster_request = lazy(() =>
+  import("./modules/Attendance_Roster_Request/pages/index"),
+);
 
-const attendance_roster_approval = lazy (() =>
-  import ("./modules/Attendance_Roster_Approval/pages/index"),
-)
+const attendance_roster_approval = lazy(() =>
+  import("./modules/Attendance_Roster_Approval/pages/index"),
+);
 
-const attendance_roster_workflow_status = lazy (() =>
-  import ("./modules/Attendance_Roster_Workflow/pages/index"),
-)
+const attendance_roster_workflow_status = lazy(() =>
+  import("./modules/Attendance_Roster_Workflow/pages/index"),
+);
 
-const attendance_roster_workflow_status_portal = lazy (() =>
-  import ("./modules/Attendance_Roster_Workflow_Portal/pages/index"))
+const attendance_roster_workflow_status_portal = lazy(() =>
+  import("./modules/Attendance_Roster_Workflow_Portal/pages/index"),
+);
 
 const travel_request_workflow_status = lazy(() =>
   import("./modules/Travel_Request_WorkflowStatus_Portal/page/index"),
-)
+);
 
-// const travel_request_workflow_status_approval = lazy(() =>
-//   import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
-// )
+const travel_request_workflow_status_approval = lazy(() =>
+  import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
+);
 
-const company_att_machine_config = lazy (() =>
-  import ("./modules/Company_att_machine_config/pages/index"))
+const company_att_machine_config = lazy(() =>
+  import("./modules/Company_att_machine_config/pages/index"),
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -790,16 +792,16 @@ const ROUTES = {
   travel_request_approval: travel_request_approval,
   temporary_shift_setup: employee_temporary_shift_setup,
   reimbursement_claim_approval: reimbursement_claim_approval,
-  project_sprint : project_sprint,
-  reimbursement_claim_workflow_status_approval : reimbursement_claim_workflow_status_approval,
-  reimbursement_claim_workflow_status : reimbursement_claim_workflow_status,
-  attendance_roster_request : attendance_roster_request,
-  attendance_roster_approval : attendance_roster_approval,
-  attendance_roster_workflow_status : attendance_roster_workflow_status,
-  attendance_roster_workflow_status_portal : attendance_roster_workflow_status_portal,
-  travel_request_workflow_status : travel_request_workflow_status,
-  // travel_request_workflow_status_approval : travel_request_workflow_status_approval,
-  company_att_machine_config : company_att_machine_config,
+  project_sprint: project_sprint,
+  reimbursement_claim_workflow_status_approval: reimbursement_claim_workflow_status_approval,
+  reimbursement_claim_workflow_status: reimbursement_claim_workflow_status,
+  attendance_roster_request: attendance_roster_request,
+  attendance_roster_approval: attendance_roster_approval,
+  attendance_roster_workflow_status: attendance_roster_workflow_status,
+  attendance_roster_workflow_status_portal: attendance_roster_workflow_status_portal,
+  travel_request_workflow_status: travel_request_workflow_status,
+  travel_request_workflow_status_approval: travel_request_workflow_status_approval,
+  company_att_machine_config: company_att_machine_config,
 };
 
 export default function BasePage() {

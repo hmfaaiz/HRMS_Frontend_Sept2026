@@ -12,6 +12,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParams] = useState(initialFilter);
   const [travelRequestId, setTravelRequestId] = useState(null);
   const [WorkflowId, setWorkflowId] = useState(null);
+  const [approvalId, setApprovalId] = useState(null);
   const [travelData, setTravelData] = useState(null);
   const [Ids, setIds] = useState([]);
   const setQueryParamsTravelApproval = useCallback((nextQueryParams) => {
@@ -35,6 +36,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setTravelRequestId,
     WorkflowId,
     setWorkflowId,
+    approvalId,
+    setApprovalId,
     travelData,
     setTravelData,
     setQueryParams,
