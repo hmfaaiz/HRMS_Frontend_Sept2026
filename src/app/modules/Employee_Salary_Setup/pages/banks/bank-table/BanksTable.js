@@ -81,7 +81,7 @@ export function BanksTable() {
     {
       dataField: "employeeCode",
       text: "Employee Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -91,7 +91,7 @@ export function BanksTable() {
     {
       dataField: "employeeName",
       text: "Employee Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -101,7 +101,7 @@ export function BanksTable() {
     {
       dataField: "grade",
       text: "Grade",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -111,7 +111,7 @@ export function BanksTable() {
     {
       dataField: "employeeType",
       text: "Employee Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -121,7 +121,7 @@ export function BanksTable() {
     {
       dataField: "currency",
       text: "Currency",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

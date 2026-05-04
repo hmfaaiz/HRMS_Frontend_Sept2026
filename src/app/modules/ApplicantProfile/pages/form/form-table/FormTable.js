@@ -72,7 +72,7 @@ export function FormTable() {
     {
       dataField: "applicantCode",
       text: "Applicant Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "50px" },
@@ -80,7 +80,7 @@ export function FormTable() {
     {
       dataField: "FullName",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "150px" },
@@ -88,7 +88,7 @@ export function FormTable() {
     {
       dataField: "email_personal",
       text: "Personal Email",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -96,7 +96,7 @@ export function FormTable() {
     {
       dataField: "phone_cell",
       text: "Cell No.",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -120,7 +120,7 @@ export function FormTable() {
     {
       dataField: "detailsApplicantVacancy.JobVacancy.JobName",
       text: "Job Applied",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -128,7 +128,7 @@ export function FormTable() {
     {
       dataField: "detailsApplicantVacancy.applicationDate",
       text: "Application Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -136,7 +136,7 @@ export function FormTable() {
     {
       dataField: "detailsApplicantVacancy.ApplicationStatus.formName",
       text: "Applicant Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
