@@ -5,6 +5,7 @@ export const initialValues = {
   employeeName: "",
   employeeDesignation: "",
   purposeOfTravel: "",
+  projectName: "General",
   travelType: "",
   accommodationRequired: false,
   hotelEntitlementAmount: 0,

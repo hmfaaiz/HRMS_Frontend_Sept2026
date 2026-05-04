@@ -64,11 +64,13 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         values.authorityRemarks || (values.isApproving ? "Approved" : ""),
       updatedData: {
         ...values,
+        parentRecordId: values.Id,
         workflowId: workflowId, // Send lowercase too for safety
         dailyAllowanceDay: values.dailyAllowanceDays, // Map back to original name
         advanceAmount: values.advanceRequested ? values.advanceAmount : 0,
-        travelDetails:
+        travelSegments:
           values.travelSegments?.map((segment) => ({
+            childMasterId: segment.childMasterId,
             fromLocationId: segment.fromLocation,
             toLocationId: segment.toLocation,
             fromDate: formatLocalDate(segment.fromDate),

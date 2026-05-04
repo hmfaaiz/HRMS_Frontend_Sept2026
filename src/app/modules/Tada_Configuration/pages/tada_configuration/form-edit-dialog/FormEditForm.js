@@ -102,6 +102,16 @@ export function FormEditForm({
         0,
         VALIDATION_MESSAGES.amountCannotBeNegative,
       ),
+      hotelEntitlementSelfAmount: Yup.number().when(
+        "ishotelEntitlementSelfAmountWise",
+        {
+          is: true,
+          then: Yup.number()
+            .required(VALIDATION_MESSAGES.required)
+            .min(1, VALIDATION_MESSAGES.amountGreaterThanZero),
+          otherwise: Yup.number().min(0),
+        },
+      ),
     });
   }, [hotelOptions]);
 
@@ -521,6 +531,33 @@ export function FormEditForm({
                           )}
                         </span>
                       </div>
+                    </div>
+                    {/* Self Amount */}
+                    <div>
+                      <label className="text-sm font-medium">
+                        Self Amount
+                        {values.ishotelEntitlementSelfAmountWise && (
+                          <span style={{ color: "red" }}>*</span>
+                        )}
+                      </label>
+                      <AmountInput
+                        field={{
+                          name: "hotelEntitlementSelfAmount",
+                          value: values.hotelEntitlementSelfAmount,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={
+                          isUserForRead ||
+                          !values.subsidiaryId ||
+                          !values.ishotelEntitlementSelfAmountWise
+                        }
+                        placeholder="0"
+                      />
                     </div>
 
                     {/* Daily Allowance */}
