@@ -593,6 +593,14 @@ export function FormCard() {
                         <span className="dot bg_custom_color_16 me-2"></span>{" "}
                         Log Time
                       </div>
+
+                       {/* <div className="d-flex align-items-center m-3">
+                        <span className="dot bg_custom_color_19 me-2"></span>{" "}
+                        Progress
+                      </div> <div className="d-flex align-items-center m-3">
+                        <span className="dot bg_custom_color_25 me-2"></span>{" "}
+                        Completed
+                      </div> */}
                     </div>
                     <button
                       type="button"
