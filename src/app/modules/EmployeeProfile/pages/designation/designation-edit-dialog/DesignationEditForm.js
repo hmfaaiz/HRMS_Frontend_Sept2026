@@ -3681,7 +3681,7 @@ export function DesignationEditForm({
                 </div>
                 <hr />
                 <h6 className="font-bold mb-0 text-primary mt-2">
-                  Employee Attendance Machine  Configuration
+                  Employee Attendance Machine Configuration
                 </h6>
                 <div className="grid grid-cols-7 gap-x-3">
 
@@ -3702,7 +3702,7 @@ export function DesignationEditForm({
                         onBlur={handleBlur}
                         checked={values.isForMachineAtt}
                       />
-                      <label>Enable Attendance Machine</label>
+                      <label>Enable Machine Attendance</label>
                       <ErrorMessage
                         className="form-feedBack"
                         name="isForMachineAtt"
@@ -3717,8 +3717,8 @@ export function DesignationEditForm({
                         name="empMachineAttId"
                         disabled={!values.isForMachineAtt}
                         component={Input}
-                        placeholder="Employee Attendance Machine  1000000001"
-                        label="Employee Attendance Machine"
+                        placeholder="Employee Attendance Machine Id 1000000001"
+                        label="Employee Attendance Machine Id"
                         autoComplete="off"
                         maxLength="10"
 
