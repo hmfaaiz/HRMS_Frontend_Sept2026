@@ -177,13 +177,26 @@ export function FacilitatorEditForm({
     );
   };
   
+// useEffect(() => {
+//   if (!data?.departmentId && data?.employeeId) {
+//     const emp = dashboard?.allEmployees?.find(
+//       (el) => el.value === data.employeeId
+//     );
 
+//     if (emp?.departmentId) {
+//       setFieldValue("departmentId", emp.departmentId);
+//     }
+//   }
+// }, [data?.employeeId]);
   
   // ------------------ FORM ------------------
   return (
     <Formik
       enableReinitialize
-      initialValues={initialValues}
+      initialValues={{
+      ...initialValues,
+      departmentId: data?.EmployeeProfile?.departmentId || null
+}}
       validationSchema={facilitatorValidation}
       onSubmit={async (values) => {
         if (isSaving) return;

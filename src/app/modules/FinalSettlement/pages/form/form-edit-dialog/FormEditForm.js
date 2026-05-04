@@ -14,6 +14,7 @@ import {
   fetchAllDeductionList,
 
   fetchAllEarningList,
+  fetchAllSubsidiaryData,
   getAllLoanType
 
 
@@ -180,7 +181,7 @@ export function FormEditForm({
   const [toBeCalculated, setToBeCalculated] = useState(false);
   const [finalizeModal, setFinalizeModal] = useState(false);
   const [data, setData] = useState({});
-
+  const [localizationId, setLocalizationId] = useState(null);
   //drop down
   useEffect(() => {
     if (formData.employeeId) {
@@ -190,6 +191,7 @@ export function FormEditForm({
       dispatch(getAllLoanType({ subsidiaryId: formData?.subsidiaryId }));
       dispatch(fetchAllEarning());
       // dispatch(fetchSeparatedEmployeeById(formData?.employeeId));
+      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
 
 
     }
@@ -295,7 +297,7 @@ export function FormEditForm({
 
     // Calculate total PF Amount (ensure all numeric)
     const netFinalSettlementAmount =
-      netSalary + Number(values.gratuityAmount || 0) - Number(values.loanBalance || 0);
+      netSalary + Number(values.gratuityAmount || 0) + Number(values.totalPFAmount || 0)  + Number(values.totalPensionAmount || 0) - Number(values.loanBalance || 0);
 
     setFieldValue("netFinalSettlementAmount", netFinalSettlementAmount.toFixed(2));
     setToBeCalculated(false)
@@ -318,6 +320,14 @@ export function FormEditForm({
       setData({});
     }
   };
+  useEffect(() => {
+    const matchedSubsidiary = dashboard.allSubsidiaryList?.find(
+      (item) => item.value === formData.subsidiaryId
+    );
+    if (matchedSubsidiary) {
+      setLocalizationId(matchedSubsidiary?.localizationId);
+    }
+  }, [formData?.subsidiaryId]);
   console.log("attSumPanelMode222", data)
   return (
     <Formik
@@ -1566,79 +1576,84 @@ export function FormEditForm({
 
                 <hr></hr>
 
-                      <div >
+                {localizationId == 1 && (
+                  <>
 
-                  <h6 className="font-bold mb-0 text-primary">
-                    Provident Fund Detail
-                  </h6>
 
-                  <div className="flex justify-between items-center gap-4 mt-1 mb-2 w-full">
-                    <div className="min-w-[260px]">
-                      <Field
-                        name="totalPFAmount"
-                        component={Input}
-                        value={Number(values.totalPFAmount || 0).toFixed(2)}
-                        placeholder="Enter provident fund contribution"
-                        disabled
-                        label={
-                          <span>
-                            Total Provident Fund Contribution
-                          </span>
-                        }
+                    <div >
 
-                        autoComplete="off"
-                        type="text"
+                      <h6 className="font-bold mb-0 text-primary">
+                        Pension Detail
+                      </h6>
 
-                      />
+                      <div className="flex justify-between items-center gap-4 mt-1 mb-2 w-full">
+                        <div className="min-w-[260px]">
+                          <Field
+                            name="totalPensionAmount"
+                            component={Input}
+                            value={Number(values.totalPensionAmount || 0).toFixed(2)}
+                            placeholder="Enter pension  contribution"
+                            disabled
+                            label={
+                              <span>
+                                Total Pension Contribution
+                              </span>
+                            }
+
+                            autoComplete="off"
+                            type="text"
+
+                          />
+
+                        </div>
+
+                        <div className="min-w-[260px]">
+                          <Field
+                            name="pension_employer_amount"
+                            component={Input}
+                            placeholder="Enter employer contribution"
+                            disabled
+                            value={Number(values.pension_employer_amount || 0).toFixed(2)}
+                            label={
+                              <span>
+                                Employer Contribution
+                              </span>
+                            }
+
+                            autoComplete="off"
+                            type="text"
+
+                          />
+
+                        </div>
+
+                        <div className="min-w-[260px]">
+                          <Field
+                            name="pension_employee_amount"
+                            component={Input}
+                            placeholder="Enter employee contribution"
+                            value={Number(values.pension_employee_amount || 0).toFixed(2)}
+                            disabled
+                            label={
+                              <span>
+                                Employee Contribution
+                              </span>
+                            }
+
+                            autoComplete="off"
+                            type="text"
+
+                          />
+
+                        </div>
+
+                      </div>
 
                     </div>
-
-                    <div className="min-w-[260px]">
-                      <Field
-                        name="pf_employer_amount"
-                        component={Input}
-                        placeholder="Enter employer contribution"
-                        disabled
-                        value={Number(values.pf_employer_amount || 0).toFixed(2)}
-                        label={
-                          <span>
-                            Employer Contribution
-                          </span>
-                        }
-
-                        autoComplete="off"
-                        type="text"
-
-                      />
-
-                    </div>
-
-                    <div className="min-w-[260px]">
-                      <Field
-                        name="pf_employee_amount"
-                        component={Input}
-                        placeholder="Enter employee contribution"
-                        value={Number(values.pf_employee_amount || 0).toFixed(2)}
-                        disabled
-                        label={
-                          <span>
-                            Employee Contribution
-                          </span>
-                        }
-
-                        autoComplete="off"
-                        type="text"
-
-                      />
-
-                    </div>
-
-                  </div>
-
-                </div>
-                <hr></hr>
-
-
+                    <hr></hr>
+                  </>
+                )
+                }
                 <div >
 
                   <h6 className="font-bold mb-0 text-primary">
