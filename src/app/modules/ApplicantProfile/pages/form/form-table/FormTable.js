@@ -75,19 +75,37 @@ export function FormTable() {
     };
   }, [usersUIContext]);
 
+  const checkDoJ = (row) => {
+ const dateOfJoining = row?.details_applicant_vacancy?.[0]?.dateOfJoining;
+    const isFutureJoiningDate = dateOfJoining
+      ? new Date(dateOfJoining) > new Date()
+      : true;
+
+    return isFutureJoiningDate;
+
+  }
+
+
   const selectRow = {
     mode: "checkbox",
     clickToSelect: true,
 
     selected: dataIds,
 
+    // nonSelectable: entities
+    //   ?.filter((row) => !row.isToConvertToEmployee )
+    //   ?.map((row) => row.Id),
+
     nonSelectable: entities
-      ?.filter((row) => !row.isToConvertToEmployee)
+      ?.filter((row) => {
+        const isFutureJoiningDate = checkDoJ(row);
+        return !row.isToConvertToEmployee || isFutureJoiningDate;
+      })
       ?.map((row) => row.Id),
 
-    nonSelectableStyle: {
-      backgroundColor: "#f5f5f5",
-    },
+    // nonSelectableStyle: {
+    //   backgroundColor: "#f5f5f5",
+    // },
 
     onSelect: (row, isSelect) => {
       if (isSelect) {
