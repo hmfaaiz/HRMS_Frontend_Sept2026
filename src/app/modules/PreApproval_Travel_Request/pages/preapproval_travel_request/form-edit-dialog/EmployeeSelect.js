@@ -286,6 +286,18 @@ export function EmployeeSelect({
 
               <div>
                 <label className="text-xs font-medium mb-1">
+                  Self Amount :{" "}
+                  <span className="text-xs">
+                    Rs.{" "}
+                    {(
+                      displayEntitlement.hotelEntitlementSelfAmount || 0
+                    ).toLocaleString("en-US")}
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium mb-1">
                   Daily Allowance Rate :{" "}
                   <span className="text-xs">
                     Rs.{" "}

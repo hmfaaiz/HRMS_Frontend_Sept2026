@@ -100,17 +100,15 @@ export function FormEditForm({
     dailyAllowanceRate: Yup.number()
       .required(VALIDATION_MESSAGES.required)
       .min(0, VALIDATION_MESSAGES.minOneValue)
-      .test(
-        "limit-check",
-        VALIDATION_MESSAGES.amountExceedLimit,
-        function(value) {
-          const limit = employeeEntitlement?.dailyAllowanceAmount || 0;
-          if (limit > 0 && value > limit) {
-            return false;
-          }
-          return true;
-        },
-      ),
+      .test("limit-check", VALIDATION_MESSAGES.amountExceedLimit, function(
+        value,
+      ) {
+        const limit = employeeEntitlement?.dailyAllowanceAmount || 0;
+        if (limit > 0 && value > limit) {
+          return false;
+        }
+        return true;
+      }),
     dailyAllowanceDays: Yup.number()
       .required(VALIDATION_MESSAGES.required)
       .min(1, VALIDATION_MESSAGES.minOneValue),
@@ -689,19 +687,20 @@ export function FormEditForm({
                                     Self Entitlement
                                   </td>
                                   <td style={{ minWidth: "100px" }}>
-                                     Self Amount
-                                     {employeeEntitlement?.hotelEntitlementSelfAmount && (
-                                       <span
-                                         className="text-muted font-normal block"
-                                         style={{ fontSize: "10px" }}
-                                       >
-                                         (Limit=
-                                         {
-                                           employeeEntitlement.hotelEntitlementSelfAmount
-                                         })
-                                       </span>
-                                     )}
-                                   </td>
+                                    Self Amount
+                                    {employeeEntitlement?.hotelEntitlementSelfAmount && (
+                                      <span
+                                        className="text-muted font-normal block"
+                                        style={{ fontSize: "10px" }}
+                                      >
+                                        (Limit=
+                                        {
+                                          employeeEntitlement.hotelEntitlementSelfAmount
+                                        }
+                                        )
+                                      </span>
+                                    )}
+                                  </td>
                                 </>
                               )}
                               <td style={{ minWidth: "40px" }}></td>
@@ -1205,7 +1204,7 @@ export function FormEditForm({
                                         thousandSeparator
                                         allowNegative={false}
                                         isAllowed={({ value }) =>
-                                          value.length <= 9
+                                          value.length <= 8
                                         }
                                         disabled={
                                           !segment.accommodationRequired ||
@@ -1274,10 +1273,12 @@ export function FormEditForm({
 
               {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
               <div className="border-t pt-4">
-                <div className="grid grid-cols-6 md:grid-cols-9 gap-x-3 gap-y-3">
+                <div className="flex flex-col lg:flex-row gap-4 md:gap-20 items-start">
                   {/* Daily Allowance */}
-                  <div className="col-span-3">
-                    <h6 className="font-bold  text-primary">Daily Allowance</h6>
+                  <div className="max-w-[500px] w-full">
+                    <h6 className="font-bold text-primary mb-2">
+                      Daily Allowance
+                    </h6>
                     <div className="grid grid-cols-3 gap-x-2">
                       <div>
                         <label className=" mb-1 flex items-center gap-1">
@@ -1355,8 +1356,8 @@ export function FormEditForm({
                   </div>
 
                   {/* Taxi Fare */}
-                  <div className="col-span-2 md:col-span-1">
-                    <h6 className="font-bold text-primary ">
+                  <div className="max-w-36">
+                    <h6 className="font-bold text-primary mb-2">
                       Taxi Fare per KM
                     </h6>
                     <div>
@@ -1376,9 +1377,9 @@ export function FormEditForm({
 
                 {/* Advance Request Section */}
                 <div className="mt-4">
-                  <h6 className="font-bold text-primary ">Advance Request</h6>
-                  <div className="grid grid-cols-1 md:grid-cols-9 gap-x-3 items-end">
-                    <div className="col-span-1 md:col-span-2 flex items-center mb-2 md:mb-0 pb-2">
+                  <h6 className="font-bold text-primary mb-2">Advance Request</h6>
+                  <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    <div className="flex items-center lg:pt-8">
                       <Checkbox
                         disabled={isFormDisabled}
                         isSelected={values.advanceRequested}
@@ -1391,10 +1392,10 @@ export function FormEditForm({
                           }
                         }}
                       />
-                      <label className=" ml-2">Advance Required</label>
+                      <label className="ml-2 mb-0">Advance Required</label>
                     </div>
 
-                    <div className="col-span-1 md:col-span-1">
+                    <div className="max-w-32 w-full">
                       <label className="block mb-1">
                         Amount{" "}
                         {values.advanceRequested && (
@@ -1423,8 +1424,8 @@ export function FormEditForm({
                       )}
                     </div>
 
-                    <div className="col-span-1 md:col-span-5 ">
-                      <label className=" block mb-1 mt-4">
+                    <div className="max-w-[500px] w-full">
+                      <label className="block mb-1">
                         Advance Request Remarks{" "}
                         {values.advanceRequested && (
                           <span className="text-danger">*</span>
@@ -1557,6 +1558,18 @@ export function FormEditForm({
                     {employeeEntitlement.ishotelEntitlementSelfAmountWise
                       ? "Yes"
                       : "No"}
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium mb-1">
+                  Self Amount :{" "}
+                  <span className="text-xs">
+                    Rs.{" "}
+                    {(
+                      employeeEntitlement.hotelEntitlementSelfAmount || 0
+                    ).toLocaleString("en-US")}
                   </span>
                 </label>
               </div>

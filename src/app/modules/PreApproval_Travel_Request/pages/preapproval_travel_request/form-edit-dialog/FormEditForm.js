@@ -276,17 +276,21 @@ export function FormEditForm({
             (jd) =>
               String(jd.childMasterId) === String(seg.childMasterId || seg.Id),
           );
+          const parseStr = (v) =>
+            v !== null && v !== undefined && v !== "0" && v !== 0
+              ? String(v)
+              : "";
           return {
             childMasterId: seg.childMasterId || seg.Id,
-            fromLocation: t?.fromLocation || "",
-            toLocation: t?.toLocation || "",
-            flightName: t?.flightName || "",
-            description: t?.description || "",
-            ticketNumber: t?.ticketNumber || "",
-            ticketDetail: t?.ticketdetail || "",
+            fromLocation: parseStr(t?.fromLocation),
+            toLocation: parseStr(t?.toLocation),
+            flightName: parseStr(t?.flightName),
+            description: parseStr(t?.description),
+            ticketNumber: parseStr(t?.ticketNumber),
+            ticketDetail: parseStr(t?.ticketdetail),
             ticketAmount: t?.ticketamount ?? "",
             isTicketEnabled: t?.isticket || false,
-            noTicketReason: t?.noTicketReason || "",
+            noTicketReason: parseStr(t?.noTicketReason),
           };
         }),
         hotelDetails: (mappedSegments.length > 0
@@ -1259,15 +1263,15 @@ export function FormEditForm({
 
               {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
               <div className="border-t pt-4">
-                <div className="grid grid-cols-12 gap-x-3 gap-y-3 items-end">
+                <div className="flex flex-col lg:flex-row gap-8 justify-between">
                   {/* Daily Allowance */}
-                  <div className="col-span-3">
+                  <div className="max-w-[500px]">
                     <h6 className="font-bold text-primary mb-2">
                       Daily Allowance
                     </h6>
                     <div className="grid grid-cols-3 gap-x-2">
                       <div>
-                        <label className="mb-1  flex items-center gap-1">
+                        <label className="mb-1 flex items-center gap-1">
                           Rate <span className="text-danger">*</span>
                           {employeeEntitlement?.dailyAllowanceAmount && (
                             <span
@@ -1297,13 +1301,13 @@ export function FormEditForm({
                         />
                         {errors.dailyAllowanceRate &&
                           touched.dailyAllowanceRate && (
-                            <div className="form-feedBack text-xs mt-1">
+                            <div className="form-feedBack mt-1">
                               {errors.dailyAllowanceRate}
                             </div>
                           )}
                       </div>
                       <div>
-                        <label className="block mb-1 ">
+                        <label className="block mb-1">
                           Day <span className="text-danger">*</span>
                         </label>
                         <Field
@@ -1317,7 +1321,7 @@ export function FormEditForm({
                         />
                       </div>
                       <div>
-                        <label className="block mb-1 ">Amount</label>
+                        <label className="block mb-1">Amount</label>
                         <NumericFormat
                           name="dailyAllowanceAmount"
                           className="form-control text-sm bg-light"
@@ -1332,10 +1336,10 @@ export function FormEditForm({
                   </div>
 
                   {/* Taxi Fare */}
-                  <div className="col-span-1 ml-4">
+                  <div className="max-w-32">
                     <h6 className="font-bold text-primary mb-2">Taxi Fare</h6>
                     <div>
-                      <label className="block mb-1 ">Rate</label>
+                      <label className="block mb-1">Rate</label>
                       <NumericFormat
                         name="taxiFareRate"
                         className="form-control text-sm"
@@ -1348,8 +1352,8 @@ export function FormEditForm({
                     </div>
                   </div>
 
-                  {/* Advance Request Sub-Grid */}
-                  <div className="col-span-7 border-l pl-3">
+                  {/* Advance Request Section */}
+                  <div className="max-w-[500px] mr-8">
                     <div className="flex items-center mb-2">
                       <h6 className="font-bold text-primary mr-3 mb-0">
                         Advance Request
@@ -1373,8 +1377,8 @@ export function FormEditForm({
 
                     <div className="grid grid-cols-6 gap-x-3 items-end">
                       {/* Amount */}
-                      <div className="col-span-1">
-                        <label className="block mb-1 ">
+                      <div className="col-span-2">
+                        <label className="block mb-1">
                           Amount
                           {values.advanceRequested && (
                             <span className="text-danger">*</span>
@@ -1396,8 +1400,8 @@ export function FormEditForm({
                         />
                       </div>
                       {/* Advance Remarks */}
-                      <div className="col-span-5">
-                        <label className="block mb-1 ">
+                      <div className="col-span-4">
+                        <label className="block mb-1">
                           Advance Request Remarks
                           {values.advanceRequested && (
                             <span className="text-danger">*</span>
@@ -1573,6 +1577,7 @@ export function FormEditForm({
                                                 name={`ticketDetails.${index}.flightName`}
                                                 className="form-control"
                                                 placeholder="Name"
+                                                maxLength={50}
                                                 disabled={
                                                   isReadOnly || !isRowEnabled
                                                 }
@@ -1584,6 +1589,7 @@ export function FormEditForm({
                                                 name={`ticketDetails.${index}.description`}
                                                 className="form-control"
                                                 placeholder="Description"
+                                                maxLength={200}
                                                 disabled={
                                                   isReadOnly || !isRowEnabled
                                                 }
@@ -1595,6 +1601,7 @@ export function FormEditForm({
                                                 name={`ticketDetails.${index}.ticketNumber`}
                                                 className="form-control"
                                                 placeholder="Ticket #"
+                                                maxLength={50}
                                                 disabled={
                                                   isReadOnly || !isRowEnabled
                                                 }
@@ -1606,6 +1613,7 @@ export function FormEditForm({
                                                 name={`ticketDetails.${index}.ticketDetail`}
                                                 className="form-control"
                                                 placeholder="Detail"
+                                                maxLength={50}
                                                 disabled={
                                                   isReadOnly || !isRowEnabled
                                                 }
@@ -1619,7 +1627,7 @@ export function FormEditForm({
                                                 thousandSeparator
                                                 allowNegative={false}
                                                 isAllowed={({ value }) =>
-                                                  value.length <= 9
+                                                  value.length <= 8
                                                 }
                                                 disabled={
                                                   isReadOnly || !isRowEnabled
@@ -1770,6 +1778,7 @@ export function FormEditForm({
                                                 name={`hotelDetails.${index}.hotelName`}
                                                 className="form-control"
                                                 placeholder="Hotel Name"
+                                                maxLength={50}
                                                 disabled={isReadOnly}
                                               />
                                             </td>
@@ -1779,6 +1788,7 @@ export function FormEditForm({
                                                 name={`hotelDetails.${index}.roomNumber`}
                                                 className="form-control"
                                                 placeholder="Room #"
+                                                maxLength={50}
                                                 disabled={isReadOnly}
                                               />
                                             </td>
@@ -1788,6 +1798,7 @@ export function FormEditForm({
                                                 name={`hotelDetails.${index}.roomType`}
                                                 className="form-control"
                                                 placeholder="Type"
+                                                maxLength={50}
                                                 disabled={isReadOnly}
                                               />
                                             </td>
@@ -1797,6 +1808,7 @@ export function FormEditForm({
                                                 name={`hotelDetails.${index}.description`}
                                                 className="form-control"
                                                 placeholder="Description"
+                                                maxLength={200}
                                                 disabled={isReadOnly}
                                               />
                                             </td>
@@ -1808,7 +1820,7 @@ export function FormEditForm({
                                                 thousandSeparator
                                                 allowNegative={false}
                                                 isAllowed={({ value }) =>
-                                                  value.length <= 9
+                                                  value.length <= 8
                                                 }
                                                 disabled={isReadOnly}
                                                 value={hotel.amount ?? ""}
