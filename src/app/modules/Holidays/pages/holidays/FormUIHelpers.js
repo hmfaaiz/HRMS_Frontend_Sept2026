@@ -11,22 +11,7 @@ export const sizePerPageList = [
   { text: "50", value: 50},
   { text: "100", value: 100},
 ]
-// export const initialFilter = {
-//   //   filter: {
-//   //     lastName: "",
-//   //     firstName: "",
-//   //     email: "",
-//   //     ipAddress: "",
-//   //   },
-//   // sortBy: "asc",
-//   // page: 1,
-//   // limit: 10,
-  
-//     sortOrder: "asc", // asc||desc
-//     // sortField: "id",
-//     pageNumber: 1,
-//     pageSize: 10
-// }
+
 
 export const initialFilter = {
   filter: {
@@ -38,5 +23,6 @@ export const initialFilter = {
 
     sortOrder: "asc",
     pageSize: 10,
-    pageNumber: 1
+    pageNumber: 1,
+    subsidiaryId:"",
 }
