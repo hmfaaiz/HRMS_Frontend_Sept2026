@@ -53,6 +53,7 @@ export function FormEditDialog({ id, onHide }) {
         advanceAmount: values.advanceRequested ? values.advanceAmount : 0,
         travelSegments:
           values.travelSegments?.map((segment) => ({
+            childMasterId: segment.childMasterId,
             fromLocation: segment.fromLocation,
             toLocation: segment.toLocation,
             fromDate: formatLocalDate(segment.fromDate),
@@ -65,6 +66,8 @@ export function FormEditDialog({ id, onHide }) {
             selfEntitlement: segment.selfEntitlement,
             selfAmount: segment.selfAmount,
           })) || [],
+        ticketDetails: values.ticketDetails,
+        hotelDetails: values.hotelDetails,
       },
     };
 

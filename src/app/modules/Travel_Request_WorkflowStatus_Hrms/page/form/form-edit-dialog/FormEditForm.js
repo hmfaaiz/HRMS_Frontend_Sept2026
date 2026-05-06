@@ -12,10 +12,10 @@ import {
   Checkbox,
 } from "../../../../../../_metronic/_partials/controls";
 import DatePicker from "react-datepicker";
-import { Plus, Trash2, CirclePlus, Calendar } from "lucide-react";
+import { Plus, Trash2, CirclePlus, CircleMinus, Calendar } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
-import { Modal } from "react-bootstrap";
+import { Modal, Accordion, Button, Card } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 
 export function FormEditForm({
@@ -29,6 +29,8 @@ export function FormEditForm({
   isReadOnly,
 }) {
   const dispatch = useDispatch();
+  const [activeTicketKey, setActiveTicketKey] = React.useState("0");
+  const [activeHotelKey, setActiveHotelKey] = React.useState("0");
   const isApprovingRef = React.useRef(false);
   const { dashboard, employeeEntitlement, auth } = useSelector(
     (state) => ({
@@ -82,24 +84,22 @@ export function FormEditForm({
   const formValidation = Yup.object().shape({
     purposeOfTravel: Yup.string().required(VALIDATION_MESSAGES.required),
     // projectName: Yup.string().required(VALIDATION_MESSAGES.required),
-    travelType: Yup.string().required(VALIDATION_MESSAGES.required),
+    travelTypeId: Yup.string().required(VALIDATION_MESSAGES.required),
     dailyAllowanceRate: Yup.number()
       .required(VALIDATION_MESSAGES.required)
       .min(0, VALIDATION_MESSAGES.minOneValue)
-      .test(
-        "limit-check",
-        VALIDATION_MESSAGES.amountExceedLimit,
-        function(value) {
-          const limit = employeeEntitlement?.dailyAllowanceAmount || 0;
-          if (limit > 0 && value > limit) {
-            return false;
-          }
-          return true;
-        },
-      ),
+      .test("limit-check", VALIDATION_MESSAGES.amountExceedLimit, function(
+        value,
+      ) {
+        const limit = employeeEntitlement?.dailyAllowanceAmount || 0;
+        if (limit > 0 && value > limit) {
+          return false;
+        }
+        return true;
+      }),
     dailyAllowanceDays: Yup.number()
       .required(VALIDATION_MESSAGES.required)
-      .min(1, VALIDATION_MESSAGES.minOneValue),
+      .min(0, VALIDATION_MESSAGES.minOneValue),
     travelSegments: Yup.array()
       .of(
         Yup.object().shape({
@@ -186,36 +186,14 @@ export function FormEditForm({
       },
     ),
     travelRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
+    authorityRemarks: Yup.string().nullable(),
     taxiFareRate: Yup.number().nullable(),
   });
 
   // Combined Template logic for create/edit
   const initialValues = useMemo(() => {
-    if (user && (user.Id || user.id)) {
-      return {
-        ...user,
-        projectName: user.projectName || "General",
-        advanceRequested: user.advanceRequired,
-        dailyAllowanceDays: Math.floor(user.dailyAllowanceDay || 0),
-        travelSegments:
-          user.Master?.map((m) => ({
-            fromLocation: m.fromLocationId,
-            toLocation: m.toLocationId,
-            fromDate: m.fromDate ? new Date(m.fromDate) : null,
-            toDate: m.toDate ? new Date(m.toDate) : null,
-            modeOfTravel: m.modeOfTravelId,
-            classOfTravel: m.classOfTravelId,
-            accommodationRequired: m.accomodationRequired,
-            hotelEntitlement: m.hotelEntitlementId,
-            hotelEntitlementAmount: m.hotelEntitlementAmount,
-            selfEntitlement: m.selfEntitlement,
-            selfAmount: m.selfAmount,
-          })) || [],
-        travelRemarks: user.travelRequestRemarks || "",
-      };
-    }
-
     const segmentTemplate = {
+      childMasterId: 0,
       fromLocation: "",
       toLocation: "",
       fromDate: null,
@@ -228,6 +206,114 @@ export function FormEditForm({
       selfEntitlement: false,
       selfAmount: 0,
     };
+
+    const ticketDetailTemplate = {
+      fromLocation: "",
+      toLocation: "",
+      flightName: "",
+      description: "",
+      ticketNumber: "",
+      ticketDetail: "",
+      ticketAmount: "",
+      isTicketEnabled: false,
+      noTicketReason: "",
+    };
+
+    const hotelDetailTemplate = {
+      hotelName: "",
+      description: "",
+      roomNumber: "",
+      roomType: "",
+      amount: "",
+    };
+
+    if (user && (user.Id || user.id)) {
+      const segments = user.Master || user.Masters || [];
+      const journeyDetails =
+        user.JourneyDetail || user.JourneyDetails || user.JourneyDetails || [];
+      const hotelDetailsData =
+        user.TravelHotelDetail ||
+        user.TravelHotelDetails ||
+        user.TravelHotelDetails ||
+        [];
+
+      const mappedSegments = segments.map((m) => ({
+        childMasterId: m.childMasterId || m.Id || m.id,
+        fromLocation: m.fromLocationId,
+        toLocation: m.toLocationId,
+        fromDate: m.fromDate ? new Date(m.fromDate) : null,
+        toDate: m.toDate ? new Date(m.toDate) : null,
+        modeOfTravel: m.modeOfTravelId,
+        classOfTravel: m.classOfTravelId,
+        accommodationRequired: m.accomodationRequired,
+        hotelEntitlement: m.hotelEntitlementId,
+        hotelEntitlementAmount: m.hotelEntitlementAmount,
+        selfEntitlement: m.selfEntitlement,
+        selfAmount: m.selfAmount,
+      }));
+
+      return {
+        ...user,
+        projectName: user.projectName || "General",
+        advanceRequested: user.advanceRequired,
+        dailyAllowanceDays: Math.floor(user.dailyAllowanceDay || 0),
+        travelSegments:
+          mappedSegments.length > 0
+            ? mappedSegments
+            : [{ ...segmentTemplate }, { ...segmentTemplate }],
+        ticketDetails: (mappedSegments.length > 0
+          ? mappedSegments
+          : [{ ...segmentTemplate }]
+        ).map((seg) => {
+          const t = journeyDetails.find(
+            (jd) =>
+              String(jd.childMasterId) === String(seg.childMasterId || seg.Id),
+          );
+          const parseStr = (v) =>
+            v !== null && v !== undefined && v !== "0" && v !== 0
+              ? String(v)
+              : "";
+          return {
+            childMasterId: seg.childMasterId || seg.Id,
+            fromLocation: parseStr(t?.fromLocation),
+            toLocation: parseStr(t?.toLocation),
+            flightName: parseStr(t?.flightName),
+            description: parseStr(t?.description),
+            ticketNumber: parseStr(t?.ticketNumber),
+            ticketDetail: parseStr(t?.ticketdetail),
+            ticketAmount: t?.ticketamount ?? "",
+            isTicketEnabled: t?.isticket || false,
+            noTicketReason: parseStr(t?.noTicketReason),
+          };
+        }),
+        hotelDetails: (mappedSegments.length > 0
+          ? mappedSegments
+          : [{ ...segmentTemplate }]
+        ).map((seg) => {
+          const h = hotelDetailsData.find(
+            (hd) =>
+              String(hd.childMasterId) === String(seg.childMasterId || seg.Id),
+          );
+          const parseStr = (v) =>
+            v !== null && v !== undefined && v !== "0" && v !== 0
+              ? String(v)
+              : "";
+          return {
+            childMasterId: seg.childMasterId || seg.Id,
+            hotelName: parseStr(h?.hotelName),
+            description: parseStr(h?.description),
+            roomNumber: parseStr(h?.roomNumber),
+            roomType: parseStr(h?.roomType) || parseStr(h?.roomtype),
+            amount:
+              h?.amount != null && h?.amount !== 0 && h?.amount !== "0"
+                ? h.amount
+                : "",
+          };
+        }),
+        travelRemarks: user.travelRequestRemarks || "",
+        taxiFareRate: user.taxiFareRate || user.taxiFareAmount || 0,
+      };
+    }
 
     return {
       employeeId: employeeId || "",
@@ -242,7 +328,10 @@ export function FormEditForm({
       advanceRemarks: "",
       taxiFareRate: 0,
       travelSegments: [{ ...segmentTemplate }, { ...segmentTemplate }],
+      ticketDetails: [{ ...ticketDetailTemplate }],
+      hotelDetails: [{ ...hotelDetailTemplate }],
       travelRemarks: "",
+      authorityRemarks: "",
       request_status: "A",
     };
   }, [user, employeeId]);
@@ -253,9 +342,9 @@ export function FormEditForm({
         enableReinitialize={true}
         initialValues={initialValues}
         validationSchema={formValidation}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           if (saveForm) {
-            saveForm({ ...values, isApproving: isApprovingRef.current });
+            await saveForm({ ...values, isApproving: isApprovingRef.current });
           }
           isApprovingRef.current = false; // reset after every submission
         }}
@@ -410,9 +499,7 @@ export function FormEditForm({
                         {travelTypeOptions.find(
                           (opt) =>
                             String(opt.value) === String(values.travelTypeId),
-                        )?.label ||
-                          values.travelType ||
-                          "-"}
+                        )?.label || "-"}
                       </span>
                     </label>
                   </div>
@@ -503,7 +590,8 @@ export function FormEditForm({
                                         (Limit=
                                         {
                                           employeeEntitlement.hotelEntitlementSelfAmount
-                                        })
+                                        }
+                                        )
                                       </span>
                                     )}
                                   </td>
@@ -1047,18 +1135,7 @@ export function FormEditForm({
                                       )}
                                   </td>
                                 )}
-                                <td className="text-center align-middle">
-                                  {!isReadOnly && index >= 2 && (
-                                    <button
-                                      type="button"
-                                      className="bg-transparent border-0 p-0"
-                                      disabled={!isPolicyDefined}
-                                      onClick={() => arrayHelpers.remove(index)}
-                                    >
-                                      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                    </button>
-                                  )}
-                                </td>
+                                <td className="text-center align-middle"></td>
                               </tr>
                             ))}
                           </tbody>
@@ -1071,10 +1148,10 @@ export function FormEditForm({
 
               {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
               <div className="border-t pt-4">
-                <div className="grid grid-cols-6 md:grid-cols-9 gap-x-3 gap-y-3">
+                <div className="flex flex-col lg:flex-row gap-8 justify-between items-start">
                   {/* Daily Allowance */}
-                  <div className="col-span-3">
-                    <h6 className="font-bold  text-primary ">
+                  <div className="max-w-[500px] w-full">
+                    <h6 className="font-bold text-primary mb-2">
                       Daily Allowance
                     </h6>
                     <div className="grid grid-cols-3 gap-x-2">
@@ -1107,7 +1184,7 @@ export function FormEditForm({
                         />
                         {errors.dailyAllowanceRate &&
                           touched.dailyAllowanceRate && (
-                            <div className="form-feedBack text-xs mt-1">
+                            <div className="form-feedBack mt-1">
                               {errors.dailyAllowanceRate}
                             </div>
                           )}
@@ -1130,7 +1207,7 @@ export function FormEditForm({
                         />
                         {errors.dailyAllowanceDays &&
                           touched.dailyAllowanceDays && (
-                            <div className="form-feedBack text-xs mt-1">
+                            <div className="form-feedBack mt-1">
                               {errors.dailyAllowanceDays}
                             </div>
                           )}
@@ -1151,10 +1228,10 @@ export function FormEditForm({
                   </div>
 
                   {/* Taxi Fare */}
-                  <div className="col-span-2 md:col-span-1">
-                    <h6 className="font-bold text-primary">Taxi Fare per KM</h6>
+                  <div className="max-w-32 w-full">
+                    <h6 className="font-bold text-primary mb-2">Taxi Fare</h6>
                     <div>
-                      <label className="=block mb-1">Rate</label>
+                      <label className="block mb-1">Rate</label>
                       <NumericFormat
                         name="taxiFareRate"
                         className="form-control text-sm"
@@ -1167,65 +1244,63 @@ export function FormEditForm({
                       />
                     </div>
                   </div>
-                </div>
 
-                {/* Advance Request - all in one row */}
-                <div className="mt-4">
-                  <h6 className="font-bold mb-3 text-primary">
-                    Advance Request
-                  </h6>
-                  <div className="grid grid-cols-10 gap-x-3 items-end">
-                    {/* Advance Required Checkbox */}
-                    <div className="col-span-1 flex items-center pb-2">
-                      <label className="mr-2">Advance Required</label>
-                      <Checkbox
-                        disabled={isFormDisabled}
-                        isSelected={values.advanceRequested}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setFieldValue("advanceRequested", checked);
-                          if (!checked) {
-                            setFieldValue("advanceAmount", 0);
-                            setFieldValue("advanceRemarks", "");
-                          }
-                        }}
-                      />
+                  {/* Advance Request Section */}
+                  <div className="max-w-[500px] mr-8 w-full">
+                    <div className="flex items-center mt-4 mb-2">
+                      <h6 className="font-bold text-primary mr-3 mb-0">
+                        Advance Request
+                      </h6>
+                      <div className="flex items-center">
+                        <label className="ml-16 mr-2 mb-0">
+                          Advance Required
+                        </label>
+                        <Checkbox
+                          disabled={true}
+                          isSelected={values.advanceRequested}
+                        />
+                      </div>
                     </div>
-                    {/* Amount */}
-                    <div className="col-span-1">
-                      <label className=" block mb-1">
-                        Amount
-                        {values.advanceRequested && (
-                          <span className="text-danger">*</span>
+
+                    <div className="grid grid-cols-6 gap-x-3 items-end">
+                      {/* Amount */}
+                      <div className="col-span-2">
+                        <label className=" block mb-1">
+                          Amount
+                          {values.advanceRequested && (
+                            <span className="text-danger">*</span>
+                          )}
+                        </label>
+                        <NumericFormat
+                          name="advanceAmount"
+                          className="form-control text-sm"
+                          style={{ backgroundColor: "#eefbff" }}
+                          placeholder="0"
+                          thousandSeparator
+                          allowNegative={false}
+                          isAllowed={({ value }) => value.length <= 9}
+                          disabled={isFormDisabled || !values.advanceRequested}
+                          value={values.advanceAmount}
+                          onValueChange={(valuesObj) => {
+                            setFieldValue("advanceAmount", valuesObj.value);
+                          }}
+                        />
+                        {errors.advanceAmount && touched.advanceAmount && (
+                          <div className="form-feedBack mt-1">
+                            {errors.advanceAmount}
+                          </div>
                         )}
-                      </label>
-                      <NumericFormat
-                        name="advanceAmount"
-                        className="form-control text-sm"
-                        style={{ backgroundColor: "#eefbff" }}
-                        placeholder="0"
-                        thousandSeparator
-                        allowNegative={false}
-                        isAllowed={({ value }) => value.length <= 9}
-                        disabled={isFormDisabled || !values.advanceRequested}
-                        value={values.advanceAmount}
-                        onValueChange={(valuesObj) => {
-                          setFieldValue("advanceAmount", valuesObj.value);
-                        }}
-                      />
-                      {errors.advanceAmount && touched.advanceAmount && (
-                        <div className="form-feedBack text-xs mt-1">
-                          {errors.advanceAmount}
-                        </div>
-                      )}
-                    </div>
-                    <div className="col-span-8">
-                      <label className="font-bold mb-1 opacity-70">
-                        Advance Request Remarks:{" "}
-                        <span className="font-normal">
-                          {values.advanceRemarks || "-"}
-                        </span>
-                      </label>
+                      </div>
+                      {/* Advance Remarks */}
+                      <div className="col-span-4">
+                        <label className="font-bold mb-1 opacity-70">
+                          Advance Request Remarks:
+                          <span className="font-normal">
+                            {" "}
+                            {values.advanceRemarks || "-"}
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1238,6 +1313,422 @@ export function FormEditForm({
                       </span>
                     </label>
                   </div>
+                </div>
+
+                {/* Travel Journey details */}
+                <div className="w-full mt-6">
+                  <Accordion
+                    activeKey={activeTicketKey}
+                    onSelect={(key) => setActiveTicketKey(key)}
+                  >
+                    <Card>
+                      <Card.Header className="d-flex justify-content-center p-0">
+                        <div className="accordion-header-btn w-100 d-flex bg-tsecondary">
+                          <Accordion.Toggle
+                            as={Button}
+                            eventKey="0"
+                            className="flex justify-start text-bold w-full"
+                          >
+                            {activeTicketKey === "0" ? (
+                              <CircleMinus className="h-4 w-4 text-black mr-1" />
+                            ) : (
+                              <CirclePlus className="h-4 w-4 text-black mr-1" />
+                            )}
+                            <span className="text-black font-bold">
+                              Ticket Details
+                            </span>
+                          </Accordion.Toggle>
+                        </div>
+                      </Card.Header>
+                      <Accordion.Collapse eventKey="0">
+                        <Card.Body className="p-3">
+                          <FieldArray name="ticketDetails">
+                            {(arrayHelpers) => (
+                              <>
+                                {errors.ticketDetails &&
+                                  typeof errors.ticketDetails === "string" && (
+                                    <div className="form-feedBack mb-2">
+                                      {errors.ticketDetails}
+                                    </div>
+                                  )}
+
+                                <div
+                                  className="react-bootstrap-table table-responsive"
+                                  style={{ overflowX: "auto" }}
+                                >
+                                  <table className="table table-head-custom table-vertical-center table-hover">
+                                    <thead className="custom-table-header">
+                                      <tr>
+                                        <td
+                                          style={{ minWidth: "150px" }}
+                                          className=""
+                                        >
+                                          Location
+                                        </td>
+                                        <td style={{ minWidth: "40px" }}></td>
+                                        <td
+                                          style={{ minWidth: "100px" }}
+                                          className=""
+                                        >
+                                          Name
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "100px" }}
+                                          className=""
+                                        >
+                                          Description
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "120px" }}
+                                          className=""
+                                        >
+                                          Ticket Number
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "120px" }}
+                                          className=""
+                                        >
+                                          Ticket Detail
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "80px" }}
+                                          className=""
+                                        >
+                                          Ticket Amount
+                                        </td>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {values.travelSegments.map(
+                                        (segment, index) => {
+                                          const ticket =
+                                            values.ticketDetails?.[index] || {};
+                                          const fromLabel = locationOptions.find(
+                                            (opt) =>
+                                              String(opt.value) ===
+                                              String(segment.fromLocation),
+                                          )?.label;
+                                          const toLabel = locationOptions.find(
+                                            (opt) =>
+                                              String(opt.value) ===
+                                              String(segment.toLocation),
+                                          )?.label;
+                                          const locationDisplay =
+                                            fromLabel && toLabel
+                                              ? `${fromLabel} -> ${toLabel}`
+                                              : "-";
+                                          const isRowEnabled =
+                                            ticket.isTicketEnabled || false;
+
+                                          return (
+                                            <tr key={index}>
+                                              <td className="align-middle text-center">
+                                                <span className="font-bold opacity-70">
+                                                  {locationDisplay}
+                                                </span>
+                                              </td>
+                                              <td className="text-center align-middle">
+                                                <Field
+                                                  type="checkbox"
+                                                  name={`ticketDetails.${index}.isTicketEnabled`}
+                                                  onChange={(e) => {
+                                                    const isChecked =
+                                                      e.target.checked;
+                                                    setFieldValue(
+                                                      `ticketDetails.${index}.isTicketEnabled`,
+                                                      isChecked,
+                                                    );
+                                                    if (!isChecked) {
+                                                      setFieldValue(
+                                                        `ticketDetails.${index}.flightName`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `ticketDetails.${index}.description`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `ticketDetails.${index}.ticketNumber`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `ticketDetails.${index}.ticketDetail`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `ticketDetails.${index}.ticketAmount`,
+                                                        "",
+                                                      );
+                                                    }
+                                                  }}
+                                                />
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`ticketDetails.${index}.flightName`}
+                                                  className="form-control"
+                                                  placeholder="Name"
+                                                  maxLength={50}
+                                                  disabled={
+                                                    !ticket.isTicketEnabled
+                                                  }
+                                                />
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`ticketDetails.${index}.description`}
+                                                  className="form-control"
+                                                  placeholder="Description"
+                                                  maxLength={200}
+                                                  disabled={
+                                                    !ticket.isTicketEnabled
+                                                  }
+                                                />
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`ticketDetails.${index}.ticketNumber`}
+                                                  className="form-control"
+                                                  placeholder="Ticket #"
+                                                  maxLength={50}
+                                                  disabled={
+                                                    !ticket.isTicketEnabled
+                                                  }
+                                                />
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`ticketDetails.${index}.ticketDetail`}
+                                                  className="form-control"
+                                                  placeholder="Detail"
+                                                  maxLength={50}
+                                                  disabled={
+                                                    !ticket.isTicketEnabled
+                                                  }
+                                                />
+                                              </td>
+                                              <td>
+                                                <NumericFormat
+                                                  name={`ticketDetails.${index}.ticketAmount`}
+                                                  className="form-control"
+                                                  placeholder="0"
+                                                  thousandSeparator
+                                                  allowNegative={false}
+                                                  isAllowed={({ value }) =>
+                                                    value.length <= 8
+                                                  }
+                                                  disabled={
+                                                    !ticket.isTicketEnabled
+                                                  }
+                                                  onValueChange={(values) => {
+                                                    setFieldValue(
+                                                      `ticketDetails.${index}.ticketAmount`,
+                                                      values.value,
+                                                    );
+                                                  }}
+                                                  value={
+                                                    ticket.ticketAmount ?? ""
+                                                  }
+                                                />
+                                              </td>
+                                            </tr>
+                                          );
+                                        },
+                                      )}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </>
+                            )}
+                          </FieldArray>
+                        </Card.Body>
+                      </Accordion.Collapse>
+                    </Card>
+                  </Accordion>
+                </div>
+
+                {/* Travel Hotel details */}
+                <div className="w-full mt-6">
+                  <Accordion
+                    activeKey={activeHotelKey}
+                    onSelect={(key) => setActiveHotelKey(key)}
+                  >
+                    <Card>
+                      <Card.Header className="d-flex justify-content-center p-0">
+                        <div className="accordion-header-btn w-100 d-flex bg-tsecondary">
+                          <Accordion.Toggle
+                            as={Button}
+                            eventKey="0"
+                            className="flex justify-start text-bold w-full"
+                          >
+                            {activeHotelKey === "0" ? (
+                              <CircleMinus className="h-4 w-4 text-black mr-1" />
+                            ) : (
+                              <CirclePlus className="h-4 w-4 text-black mr-1" />
+                            )}
+                            <span className="text-black font-bold">
+                              Hotel Details
+                            </span>
+                          </Accordion.Toggle>
+                        </div>
+                      </Card.Header>
+                      <Accordion.Collapse eventKey="0">
+                        <Card.Body className="p-3">
+                          <FieldArray name="hotelDetails">
+                            {(arrayHelpers) => (
+                              <>
+                                {errors.hotelDetails &&
+                                  typeof errors.hotelDetails === "string" && (
+                                    <div className="form-feedBack mb-2">
+                                      {errors.hotelDetails}
+                                    </div>
+                                  )}
+
+                                <div
+                                  className="react-bootstrap-table table-responsive"
+                                  style={{ overflowX: "auto" }}
+                                >
+                                  <table className="table table-head-custom table-vertical-center table-hover">
+                                    <thead className="custom-table-header">
+                                      <tr>
+                                        <td
+                                          style={{ minWidth: "150px" }}
+                                          className=""
+                                        >
+                                          Location
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "100px" }}
+                                          className=""
+                                        >
+                                          Hotel Name
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "100px" }}
+                                          className=""
+                                        >
+                                          Room Number
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "120px" }}
+                                          className=""
+                                        >
+                                          Room Type
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "120px" }}
+                                          className=""
+                                        >
+                                          Description
+                                        </td>
+                                        <td
+                                          style={{ minWidth: "80px" }}
+                                          className=""
+                                        >
+                                          Amount
+                                        </td>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {values.travelSegments.map(
+                                        (segment, index) => {
+                                          if (
+                                            !segment.accommodationRequired ||
+                                            index ===
+                                              values.travelSegments.length - 1
+                                          ) {
+                                            return null;
+                                          }
+                                          const hotel =
+                                            values.hotelDetails?.[index] || {};
+                                          const toLabel = locationOptions.find(
+                                            (opt) =>
+                                              String(opt.value) ===
+                                              String(segment.toLocation),
+                                          )?.label;
+                                          const locationDisplay =
+                                            toLabel || "-";
+
+                                          return (
+                                            <tr key={index}>
+                                              <td className="align-middle text-center">
+                                                <span className="font-bold opacity-70">
+                                                  {locationDisplay}
+                                                </span>
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`hotelDetails.${index}.hotelName`}
+                                                  className="form-control"
+                                                  placeholder="Hotel Name"
+                                                  maxLength={50}
+                                                />
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`hotelDetails.${index}.roomNumber`}
+                                                  className="form-control"
+                                                  placeholder="Room #"
+                                                  maxLength={50}
+                                                />
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`hotelDetails.${index}.roomType`}
+                                                  className="form-control"
+                                                  placeholder="Type"
+                                                  maxLength={50}
+                                                />
+                                              </td>
+                                              <td>
+                                                <Field
+                                                  type="text"
+                                                  name={`hotelDetails.${index}.description`}
+                                                  className="form-control"
+                                                  placeholder="Description"
+                                                  maxLength={200}
+                                                />
+                                              </td>
+                                              <td>
+                                                <NumericFormat
+                                                  name={`hotelDetails.${index}.amount`}
+                                                  className="form-control"
+                                                  placeholder="0"
+                                                  thousandSeparator
+                                                  allowNegative={false}
+                                                  isAllowed={({ value }) =>
+                                                    value.length <= 8
+                                                  }
+                                                  onValueChange={(values) => {
+                                                    setFieldValue(
+                                                      `hotelDetails.${index}.amount`,
+                                                      values.value,
+                                                    );
+                                                  }}
+                                                  value={hotel.amount ?? ""}
+                                                />
+                                              </td>
+                                            </tr>
+                                          );
+                                        },
+                                      )}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </>
+                            )}
+                          </FieldArray>
+                        </Card.Body>
+                      </Accordion.Collapse>
+                    </Card>
+                  </Accordion>
                 </div>
 
                 <div className="grid grid-cols-12 gap-x-3 mt-6">

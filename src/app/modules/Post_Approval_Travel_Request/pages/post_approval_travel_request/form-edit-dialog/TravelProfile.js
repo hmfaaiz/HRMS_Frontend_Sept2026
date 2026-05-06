@@ -154,7 +154,7 @@ export default function TravelProfile({
                       <div>{travelData.projectName || "—"}</div>
 
                       <div className="font-medium">Travel Type:</div>
-                      <div>{travelData.travelType || "—"}</div>
+                      <div>{travelData.TravelType?.formName || "—"}</div>
 
                       <div className="font-medium">From Date:</div>
                       <div>{formatDate(firstSeg?.fromDate)}</div>
