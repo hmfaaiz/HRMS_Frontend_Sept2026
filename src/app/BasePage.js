@@ -567,24 +567,25 @@ const reimbursement_claim_workflow_status_approval = lazy(() =>
   import("./modules/Reimbursement_Workflow_Status/pages/index"),
 );
 
-const reimbursement_claim_workflow_status = lazy (() =>
-import ("./modules/Reimbursement_Workflow_Portal/pages/index"),
-)
+const reimbursement_claim_workflow_status = lazy(() =>
+  import("./modules/Reimbursement_Workflow_Portal/pages/index"),
+);
 
-const attendance_roster_request = lazy (() =>
-import ("./modules/Attendance_Roster_Request/pages/index"),
-) 
+const attendance_roster_request = lazy(() =>
+  import("./modules/Attendance_Roster_Request/pages/index"),
+);
 
-const attendance_roster_approval = lazy (() =>
-  import ("./modules/Attendance_Roster_Approval/pages/index"),
-)
+const attendance_roster_approval = lazy(() =>
+  import("./modules/Attendance_Roster_Approval/pages/index"),
+);
 
-const attendance_roster_workflow_status = lazy (() =>
-  import ("./modules/Attendance_Roster_Workflow/pages/index"),
-)
+const attendance_roster_workflow_status = lazy(() =>
+  import("./modules/Attendance_Roster_Workflow/pages/index"),
+);
 
-const attendance_roster_workflow_status_portal = lazy (() =>
-  import ("./modules/Attendance_Roster_Workflow_Portal/pages/index"))
+const attendance_roster_workflow_status_portal = lazy(() =>
+  import("./modules/Attendance_Roster_Workflow_Portal/pages/index"),
+);
 
 const post_approval_travel_request = lazy (() => 
  import ("./modules/Post_Approval_Travel_Request/pages/index"),
@@ -595,14 +596,15 @@ const roster_calendar_team = lazy (() =>
 
 const travel_request_workflow_status = lazy(() =>
   import("./modules/Travel_Request_WorkflowStatus_Portal/page/index"),
-)
+);
 
-// const travel_request_workflow_status_approval = lazy(() =>
-//   import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
-// )
+const travel_request_workflow_status_approval = lazy(() =>
+  import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
+);
 
-const company_att_machine_config = lazy (() =>
-  import ("./modules/Company_att_machine_config/pages/index"))
+const company_att_machine_config = lazy(() =>
+  import("./modules/Company_att_machine_config/pages/index"),
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -807,7 +809,7 @@ const ROUTES = {
   post_approval_travel_request : post_approval_travel_request,
   roster_calendar_team : roster_calendar_team,
   travel_request_workflow_status : travel_request_workflow_status,
-  // travel_request_workflow_status_approval : travel_request_workflow_status_approval,
+  travel_request_workflow_status_approval : travel_request_workflow_status_approval,
   company_att_machine_config : company_att_machine_config,
 };
 

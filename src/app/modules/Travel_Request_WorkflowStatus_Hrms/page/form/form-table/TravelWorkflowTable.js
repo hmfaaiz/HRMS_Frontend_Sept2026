@@ -12,22 +12,27 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 import { format } from "date-fns";
+import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import { TravelRequestGrid } from "../../../../Travel_Request_Approval/page/form/form-travel-details-grid/travel-request-grid";
 
 export function TravelWorkflowTable({ onHide, show }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { workflowStatusList, actionsLoading } = useSelector(
+
+  const { workflowStatusList, actionsLoading, dashboard } = useSelector(
     (state) => ({
       workflowStatusList: state?.TravelRequestWorkflowAdmin?.workflowStatusList,
       actionsLoading: state?.TravelRequestWorkflowAdmin?.actionsLoading,
+      dashboard: state.dashboard,
     }),
-    shallowEqual
+    shallowEqual,
   );
+
   const formUIProps = useMemo(() => {
     return {
       WorkflowId: FormUIContext?.WorkflowId,
-      travelData: FormUIContext?.travelData,
-      travelRequestId: FormUIContext?.travelRequestId,
+      // travelData holds the full row from the main table (same shape as Portal's rowData)
+      rowData: FormUIContext?.travelData,
     };
   }, [FormUIContext]);
 
@@ -38,10 +43,7 @@ export function TravelWorkflowTable({ onHide, show }) {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "120px",
-        maxWidth: "120px",
-      },
+      style: { minWidth: "120px", maxWidth: "120px" },
     },
     {
       dataField: "approvalAuthorityEmp",
@@ -49,12 +51,10 @@ export function TravelWorkflowTable({ onHide, show }) {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+      style: { minWidth: "160px", maxWidth: "160px" },
       formatter: (cell) => {
-        return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+        return `${cell?.firstName || ""} ${cell?.middleName ||
+          ""} ${cell?.lastName || ""}`;
       },
     },
     {
@@ -63,10 +63,7 @@ export function TravelWorkflowTable({ onHide, show }) {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+      style: { minWidth: "160px", maxWidth: "160px" },
     },
     {
       dataField: "approvalAuthorityEmp.designation.formName",
@@ -74,21 +71,23 @@ export function TravelWorkflowTable({ onHide, show }) {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+      style: { minWidth: "160px", maxWidth: "160px" },
     },
     {
-      dataField: "authorityStatus",
-      text: "Self status",
+      dataField: "approvalAuthorityEmp.employeeType.formName",
+      text: "Employee Type",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+      style: { minWidth: "160px", maxWidth: "160px" },
+    },
+    {
+      dataField: "authorityStatus",
+      text: "Self Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "120px", maxWidth: "120px" },
       formatter: (cell) => {
         let text = "";
         let classname = "";
@@ -111,10 +110,7 @@ export function TravelWorkflowTable({ onHide, show }) {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+      style: { minWidth: "160px", maxWidth: "160px" },
       formatter: (cell) => {
         return cell ? format(new Date(cell), "dd-MMM-yyyy:HH:mm:ss") : "";
       },
@@ -125,17 +121,15 @@ export function TravelWorkflowTable({ onHide, show }) {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+      style: { minWidth: "160px", maxWidth: "160px" },
     },
   ];
 
   useEffect(() => {
     if (formUIProps?.WorkflowId) {
-      dispatch(actions.fetchTravelWorkflow(formUIProps?.WorkflowId));
+      dispatch(actions.fetchTravelWorkflow(formUIProps.WorkflowId));
     }
+    dispatch(fetchAllFormsMenu(553, "allTravelTypeList"));
   }, [formUIProps.WorkflowId, dispatch]);
 
   return (
@@ -152,32 +146,125 @@ export function TravelWorkflowTable({ onHide, show }) {
           <h5 className="font-bold mb-0 text-black">Travel Approval Flow</h5>
         </Modal.Title>
       </Modal.Header>
+
       <Modal.Body className="">
-        {formUIProps?.travelData && (
+        {/* ── Summary Cards ────────────────────────────────────── */}
+        {formUIProps?.rowData && (
           <div className="w-full grid grid-cols-12 text-sm text-black gap-x-2">
-            <div className="col-span-12 bg-tsecondary p-4 rounded-lg mb-4">
-              <h6 className="font-bold mb-3 text-primary">Travel Request Detail</h6>
-              <div className="grid grid-cols-12 gap-4">
-                 <div className="col-span-3">
-                    <p className="font-medium mb-1">Employee</p>
-                    <p>{formUIProps?.travelData?.requestBelongToEmp?.firstName} {formUIProps?.travelData?.requestBelongToEmp?.lastName}</p>
-                 </div>
-                 <div className="col-span-3">
-                    <p className="font-medium mb-1">Travel Type</p>
-                    <p>{formUIProps?.travelData?.parentData?.t_travel_type?.name}</p>
-                 </div>
-                 <div className="col-span-3">
-                    <p className="font-medium mb-1">Duration</p>
-                    <p>{formUIProps?.travelData?.parentData?.totalTravelDays} Days</p>
-                 </div>
-                 <div className="col-span-3">
-                    <p className="font-medium mb-1">Reason</p>
-                    <p>{formUIProps?.travelData?.parentData?.remarks || "N/A"}</p>
-                 </div>
+            {/* Employee Detail */}
+            <div className="col-span-3 bg-tsecondary p-2 rounded-lg">
+              <h6 className="font-bold mb-0 text-primary my-2">
+                Employee Detail
+              </h6>
+              <div className="grid grid-cols-2 text-sm text-black">
+                <div className="font-medium">Employee Code</div>
+                <div>
+                  {formUIProps?.rowData?.requestBelongToEmp?.employeeCode ||
+                    "N/A"}
+                </div>
+
+                <div className="font-medium">Name</div>
+                <div>
+                  {formUIProps?.rowData?.requestBelongToEmp?.firstName || ""}{" "}
+                  {formUIProps?.rowData?.requestBelongToEmp?.middleName || ""}{" "}
+                  {formUIProps?.rowData?.requestBelongToEmp?.lastName || ""}
+                </div>
+
+                <div className="font-medium">Department</div>
+                <div>
+                  {formUIProps?.rowData?.requestBelongToEmp?.department
+                    ?.deptName || "N/A"}
+                </div>
+
+                <div className="font-medium">Designation</div>
+                <div>
+                  {formUIProps?.rowData?.requestBelongToEmp?.designation
+                    ?.formName || "N/A"}
+                </div>
+
+                <div className="font-medium">Employee Type</div>
+                <div>
+                  {formUIProps?.rowData?.requestBelongToEmp?.employeeType
+                    ?.formName || "N/A"}
+                </div>
+              </div>
+            </div>
+
+            {/* Travel Request Details */}
+            <div className="col-span-9 bg-tsecondary p-2 rounded-lg">
+              <div className="grid grid-cols-12">
+                <div className="col-span-12">
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Travel Request Details
+                  </h6>
+                  <div className="text-sm text-black">
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Travel Type</div>
+                      <div className="col-span-1">
+                        {dashboard?.allTravelTypeList?.find(
+                          (opt) =>
+                            String(opt.value) ===
+                            String(formUIProps?.rowData?.parentData?.travelTypeId),
+                        )?.label ||
+                          formUIProps?.rowData?.parentData?.travelType ||
+                          "-"}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Purpose of Travel
+                      </div>
+                      <div className="col-span-1">
+                        {formUIProps?.rowData?.parentData?.purposeOfTravel ||
+                          "-"}
+                      </div>
+                    </div>
+                    {/* <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Project Name</div>
+                      <div className="col-span-1">
+                        {formUIProps?.rowData?.parentData?.projectName || "-"}
+                      </div>
+                    </div> */}
+
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Total Allowance Amount
+                      </div>
+                      <div className="col-span-1">
+                        {formUIProps?.rowData?.parentData
+                          ?.dailyAllowanceAmount || "-"}
+                      </div>
+                    </div>
+                    {formUIProps?.rowData?.parentData?.advanceRequired && (
+                      <div className="grid grid-cols-4">
+                        <div className="font-medium col-span-1">
+                          Advance Amount
+                        </div>
+                        <div className="col-span-1">
+                          {Number(
+                            formUIProps?.rowData?.parentData?.advanceAmount ||
+                              0,
+                          ).toLocaleString()}
+                        </div>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Travel Remarks
+                      </div>
+                      <div className="col-span-1">
+                        {formUIProps?.rowData?.parentData
+                          ?.travelRequestRemarks || "-"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         )}
+
+        {/* ── Approval Flow Table ──────────────────────────────── */}
         <div className="mt-2">
           <BootstrapTable
             noDataIndication={NoRecordsFoundMessage({
@@ -185,7 +272,7 @@ export function TravelWorkflowTable({ onHide, show }) {
             })}
             wrapperClasses="table-responsive"
             bordered={false}
-            classes="table table-head-custom  table-vertical-center overflow-hidden table-hover fixed-layout-table"
+            classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
             bootstrap4
             remote
             keyField="Id"
@@ -196,16 +283,26 @@ export function TravelWorkflowTable({ onHide, show }) {
             <NoRecordsFoundMessage entities={workflowStatusList || []} />
           </BootstrapTable>
         </div>
+
+        {/* ── Travel Segment Grid ──────────────────────────────── */}
+        {formUIProps?.rowData?.parentData?.Master && (
+          <div className="mt-2 border-t">
+            <h5 className="font-bold mb-0 text-black">
+              Travel Request Details
+            </h5>
+            <TravelRequestGrid
+              segments={formUIProps?.rowData?.parentData?.Master}
+              employeeEntitlement={null}
+            />
+          </div>
+        )}
       </Modal.Body>
+
       <Modal.Footer>
-        <button
-          type="button"
-          onClick={onHide}
-          className="btn btn-light"
-        >
+        <button type="button" onClick={onHide} className="btn btn-light">
           Close
         </button>
       </Modal.Footer>
     </Modal>
-  );
+  ) ;
 }

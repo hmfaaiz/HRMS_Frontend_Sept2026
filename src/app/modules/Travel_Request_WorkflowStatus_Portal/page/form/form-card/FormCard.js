@@ -22,7 +22,7 @@ export const FormCard = () => {
       user: state?.auth?.user,
       tada: state?.auth?.userAccess["Payroll"],
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   const formUIProps = useMemo(() => {
@@ -34,12 +34,37 @@ export const FormCard = () => {
       setRowData: FormUIContext?.setRowData,
     };
   });
+  const menuOptions = [
+    {
+      name: "Request",
+      link: "/travel_request/read-all-travel-request",
+      isShow: tada?.find(
+        (el) =>
+          (el?.componentName === "TravelRequest" ||
+            el?.componentName === "ReadAllTravelRequest" ||
+            el?.slug === "read-all-travel-request") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Approval",
+      link: "/travel_request_approval/read-all-travel-request-approval",
+      isShow: tada?.find(
+        (el) =>
+          (el?.componentName === "TravelRequestApproval" ||
+            el?.componentName === "ReadAllTravelRequestApproval" ||
+            el?.slug === "read-all-travel-request-approval") &&
+          el?.isResourceShow,
+      ),
+    },
+  ];
+
   useEffect(() => {
     dispatch(
       action.fetchTravelWorkflowStatus(
         formUIProps?.queryParams,
-        user?.employeeIdMapping
-      )
+        user?.employeeIdMapping,
+      ),
     );
   }, [formUIProps?.queryParams]);
 
@@ -50,26 +75,7 @@ export const FormCard = () => {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-           menuOptions={[
-              {
-                name: "Request",
-                link: "/travel_request/read-all-travel-request",
-                isShow: tada?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllTravelRequest" &&
-                    el?.isResourceShow
-                ),
-              },
-              {
-                name: "Approval",
-                link: "/travel_request_approval/read-all-travel-request-approval",
-                isShow: tada?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllTravelRequestApproval" &&
-                    el?.isResourceShow
-                ),
-              },
-            ]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>
@@ -80,26 +86,7 @@ export const FormCard = () => {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
-              {
-                name: "Request",
-                link: "/travel_request/read-all-travel-request",
-                isShow: tada?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllTravelRequest" &&
-                    el?.isResourceShow
-                ),
-              },
-              {
-                name: "Approval",
-                link: "/travel_request_approval/read-all-travel-request-approval",
-                isShow: tada?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllTravelRequestApproval" &&
-                    el?.isResourceShow
-                ),
-              },
-            ]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>
@@ -124,4 +111,3 @@ export const FormCard = () => {
     </div>
   );
 };
-
