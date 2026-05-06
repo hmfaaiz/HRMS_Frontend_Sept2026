@@ -22,6 +22,6 @@ export const initialFilter = {
 
 
     sortOrder: "asc",
-    pageSize: 100,
+    pageSize: 3,
     pageNumber: 1
 }
