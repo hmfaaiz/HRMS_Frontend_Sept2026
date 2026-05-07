@@ -184,12 +184,12 @@ export function FormEditForm({
       }
 
       //if already loan taken ,running balanace
-      const currentLoan = entities.filter(
+      const currentLoan = entities?.filter(
         (item) => item?.loan_typeId === changeLoanType
       );
 
       let runningBalance = 0;
-      currentLoan.forEach((loan) => {
+      currentLoan?.forEach((loan) => {
         loan.details.forEach((detail) => {
           // Add the payment amount from the running balance
 
@@ -431,7 +431,7 @@ export function FormEditForm({
         });
       }
 
-      const matchingCurrentLoans = entities.filter(
+      const matchingCurrentLoans = entities?.filter(
         (item) => item?.loan_typeId === option?.value && item.isLoanContinuing
       );
       if (matchingCurrentLoans.length > 0) {

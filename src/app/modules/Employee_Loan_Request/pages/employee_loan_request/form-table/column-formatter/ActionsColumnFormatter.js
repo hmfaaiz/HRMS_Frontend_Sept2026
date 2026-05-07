@@ -19,7 +19,7 @@ export function ActionsColumnFormatter(
     completionPdfLoading,
     downloadLoanPdf,
     downloadLoanCompletionPdf,
-    showDetails,
+    showDetails,openInstallmentDetails
   }
 ) {
   // Loan is "Completed" when approved AND isLoanContinuing is false
@@ -87,6 +87,22 @@ export function ActionsColumnFormatter(
               <CirclePower className="w-4 h-4 text-black" />
             </a>
           )}
+        </OverlayTrigger>
+      )}  
+      
+        {isAccessForDelete && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={`delete-tooltip-${row.Id}`}>
+              { "Edit Detail" }
+            </Tooltip>
+          }
+        >
+       
+            <a onClick={() => openInstallmentDetails(row.Id)} style={{ cursor: "pointer" }}>
+              <Pencil className="w-4 h-4 text-black" />
+            </a>
+         
         </OverlayTrigger>
       )}
 

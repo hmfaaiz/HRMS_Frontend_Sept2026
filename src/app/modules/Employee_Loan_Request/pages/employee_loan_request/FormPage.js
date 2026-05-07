@@ -9,6 +9,7 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
 import {} from "../../_redux/redux-Actions";
+import { InstallmentDetails } from "./form-delete-dialog/InstallmentDetails";
 
 
 
@@ -20,6 +21,10 @@ export function FormPage({ history }) {
 
     openDeleteFormDialog: (id, status) => {
       history.push(`/employee_loan_request/read-all-employee-loan-request/${id}/${status}/delete`);
+    },
+
+    openInstallmentDetails: (id, status) => {
+      history.push(`/employee_loan_request/read-all-employee-loan-request/${id}/detail`);
     },
 
   };
@@ -41,6 +46,21 @@ export function FormPage({ history }) {
         )}
       </Route>
 
+ <Route path="/employee_loan_request/read-all-employee-loan-request/:id/detail">
+        {({ history, match }) => (
+          <InstallmentDetails
+            show={match != null}
+            id={match && match.params.id}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/employee_loan_request/read-all-employee-loan-request");
+            }}
+          />
+        )}
+      </Route>
+
+
+        
     
       <FormCard />
       <ToastContainer
