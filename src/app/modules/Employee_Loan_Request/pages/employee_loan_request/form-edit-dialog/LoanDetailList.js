@@ -14,11 +14,7 @@ function PatternLoanDetailListForm({
 }) {
 
 
-    // useEffect(() => {
-    //     values?.details?.forEach((_, index) => {
-    //         setFieldValue(`details[${index}].sno`, index + 1);
-    //     });
-    // }, [values.details, setFieldValue]);
+ 
     const snapshotRef = useRef({});
     useEffect(() => {
         if (!values?.details?.length) return;
@@ -70,14 +66,14 @@ function PatternLoanDetailListForm({
         return rowTime < currentMonthTime;
     };
 
-    console.log(
-        "currentMonth11111:",
-        currentMonth,
-        "currentMonthTime:",
-        currentMonthTime,
-        "details:",
-        values?.details
-    );
+    // console.log(
+    //     "currentMonth11111:",
+    //     currentMonth,
+    //     "currentMonthTime:",
+    //     currentMonthTime,
+    //     "details:",
+    //     values?.details
+    // );
 
 
     const recalcInstallments = (list, changedIndex) => {
@@ -87,8 +83,9 @@ function PatternLoanDetailListForm({
         const entered = Number(updated[changedIndex].amount_received);
 
         const totalLoan = Number(values?.total_loan_amount);
+        const totalRemainingLoan = Number(values?.loan_amount_remaining);
 
-        let remaining = totalLoan;
+        let remaining = totalRemainingLoan;
 
         // lock edited row
         updated[changedIndex] = {
@@ -99,16 +96,16 @@ function PatternLoanDetailListForm({
         // rebuild list from scratch AFTER index
         updated = updated.slice(0, changedIndex + 1);
 
-        remaining = totalLoan - entered;
+        remaining = totalRemainingLoan - entered;
 
         let date = new Date(updated[changedIndex].payroll_month_date);
 
         const perInstallment = entered;
 
         while (remaining > 0) {
-
+            console.log("remaining1111", perInstallment, remaining)
             const nextAmount = Math.min(perInstallment, remaining);
-
+            console.log("nextAmount22222", nextAmount)
             date = new Date(date);
             date.setMonth(date.getMonth() + 1);
 
@@ -227,6 +224,7 @@ function PatternLoanDetailListForm({
                                                                 `details[${index}].amount_received`,
                                                                 e.target.value
                                                             )
+                                                         
                                                             setFieldValue(`details[${index}].is_dirty`, true);
                                                         }
 
