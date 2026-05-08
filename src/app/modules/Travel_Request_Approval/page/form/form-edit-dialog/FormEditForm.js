@@ -1331,10 +1331,10 @@ export function FormEditForm({
                                   <table className="table table-head-custom table-vertical-center table-hover">
                                     <thead className="custom-table-header">
                                       <tr>
+                                        <td style={{ minWidth: "40px" }}></td>
                                         <td style={{ minWidth: "150px" }}>
                                           Location
                                         </td>
-                                        <td style={{ minWidth: "40px" }}></td>
                                         <td style={{ minWidth: "100px" }}>
                                           Name
                                         </td>
@@ -1374,17 +1374,6 @@ export function FormEditForm({
 
                                           return (
                                             <tr key={index}>
-                                              {/* Location Text */}
-                                              <td className="align-middle">
-                                                <span
-                                                  className="font-bold opacity-70"
-                                                  style={{
-                                                    whiteSpace: "nowrap",
-                                                  }}
-                                                >
-                                                  {fromLabel} -&#62; {toLabel}
-                                                </span>
-                                              </td>
                                               {/* Enable Checkbox */}
                                               <td className="text-center align-middle">
                                                 <Checkbox
@@ -1421,6 +1410,17 @@ export function FormEditForm({
                                                   }}
                                                   disabled={isReadOnly}
                                                 />
+                                              </td>
+                                              {/* Location Text */}
+                                              <td className="align-middle">
+                                                <span
+                                                  className="font-bold opacity-70"
+                                                  style={{
+                                                    whiteSpace: "nowrap",
+                                                  }}
+                                                >
+                                                  {fromLabel} -&#62; {toLabel}
+                                                </span>
                                               </td>
                                               {/* Flight Name */}
                                               <td>

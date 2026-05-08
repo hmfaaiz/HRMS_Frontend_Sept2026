@@ -6,6 +6,7 @@ import { Eye, XCircle, History } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import TravelProfile from "./TravelProfile"; 
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 
 export function EmployeeSelect({
   employeeId,
@@ -172,6 +173,13 @@ export function EmployeeSelect({
                   )}
                 </button>
               </div>
+            </div>
+            
+            <div className="mb-4">
+              <EmployeeProfile
+                employeeId={employeeId}
+                panelMode={panelMode}
+              />
             </div>
 
             {/* Travel Reference + Travel Detail Modal Button */}

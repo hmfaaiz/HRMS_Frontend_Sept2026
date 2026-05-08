@@ -206,10 +206,24 @@ export function FormTable() {
       {
         dataField: "dailyAllowanceAmount",
         text: "Entitled Daily Allowance",
+        formatter: (cell) =>
+          cell !== null && cell !== undefined
+            ? Number(cell).toLocaleString("en-US", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })
+            : "0",
       },
       {
         dataField: "taxiFareAmount",
         text: "Entitled Taxi Fare per KM",
+        formatter: (cell) =>
+          cell !== null && cell !== undefined
+            ? Number(cell).toLocaleString("en-US", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })
+            : "0",
       },
       {
         dataField: "action",
