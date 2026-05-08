@@ -504,6 +504,25 @@ export function MasterEditForm({
                       />
 
                     </div>
+                    {/* Allow Edit Leave Lines / Policy Field Start */}
+                    <div className="col-span-1 flex flex-col justify-end pb-2">
+                      <label className="font-bold mb-1 text-primary">Policy</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                        type="checkbox"
+                        name="allowEditLeaveLines"
+                        id="allowEditLeaveLines"
+                        onChange={(e) => {
+                        setFieldValue("allowEditLeaveLines", e.target.checked);
+                      }}
+                      checked={Boolean(values.allowEditLeaveLines)}
+                      disabled={isUserForRead}
+                      />
+                      <label htmlFor="allowEditLeaveLines" className="mb-0 text-sm">
+                        Allow user to edit leave lines
+                      </label>
+                      </div>
+                    </div>
                     {/* Weekends Field Start */}
                     {/* {console.log("WEEK_DAYSWEEK_DAYS" , WEEK_DAYS)} */}
                     <div className="col-span-3">
