@@ -178,13 +178,13 @@ export const fetchPreApprovalTravelRequestReport = (id) => async (dispatch) => {
   return requestFromServer
     .getPreApprovalTravelRequestReportById(id)
     .then((res) => {
-      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
       const pdfUrl = URL.createObjectURL(pdfBlob);
 
       // Trigger browser download
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = pdfUrl;
-      link.setAttribute('download', 'PreApproval_Travel_Request_Report.pdf');
+      link.setAttribute("download", "PreApproval_Travel_Request_Report.pdf");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -194,6 +194,8 @@ export const fetchPreApprovalTravelRequestReport = (id) => async (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't generate report";
       dispatch(actions.catchError({ error, callType: callTypes.pdf }));
-      toast.error(error?.response?.data?.message || "Failed to generate report");
+      toast.error(
+        error?.response?.data?.message || "Failed to generate report",
+      );
     });
 };

@@ -51,11 +51,11 @@ export function getTadaConfigurationPolicies(employeeId) {
     },
   );
 }
+
 export function getPreApprovalTravelRequestReportById(Id) {
   return axios.post(
-    `${BASE_URL}/preapproval_travel_request_report/read-preapproval-travel-request-report`,
+    `${BASE_URL}/t_preapproval_travel_request/read-preapproval-travel-request-report`,
     { Id },
-    { responseType: 'arraybuffer' },
-  
+    { responseType: "arraybuffer" },
   );
 }
