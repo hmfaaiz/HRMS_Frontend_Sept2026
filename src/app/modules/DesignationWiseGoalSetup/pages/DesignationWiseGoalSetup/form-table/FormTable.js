@@ -95,7 +95,7 @@ export function FormTable() {
 
     },
 
-  
+
 
 
 
@@ -171,14 +171,14 @@ export function FormTable() {
 
 
 
-     <div className="w-full overflow-x-auto">
-   
-        {/* {({ paginationProps, paginationTableProps }) => {
-          return ( */}
-            {/* <Pagination
+    <div className="w-full overflow-x-auto">
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
               isLoading={listLoading}
-              // paginationProps={paginationProps}
-            > */}
+              paginationProps={paginationProps}
+            >
               <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
@@ -195,16 +195,16 @@ export function FormTable() {
                 // selectRow={getSelectRow({
                 //   entities,
 
-                // })}
-                // {...paginationTableProps}
+                //  })}
+                {...paginationTableProps}
               >
                 <PleaseWaitMessage entities={entities} />
                 <NoRecordsFoundMessage entities={entities} />
               </BootstrapTable>
-            {/* </Pagination> */}
-          {/* ); */}
-        {/* }} */}
-    
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
     </div>
   );
 }
