@@ -94,24 +94,28 @@ export function FormEditForm({
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
-      dailyAllowanceAmount: Yup.number().min(
-        0,
-        VALIDATION_MESSAGES.amountCannotBeNegative,
-      ),
-      taxiFareAmount: Yup.number().min(
-        0,
-        VALIDATION_MESSAGES.amountCannotBeNegative,
-      ),
-      hotelEntitlementSelfAmount: Yup.number().when(
-        "ishotelEntitlementSelfAmountWise",
-        {
-          is: true,
-          then: Yup.number()
-            .required(VALIDATION_MESSAGES.required)
-            .min(1, VALIDATION_MESSAGES.amountGreaterThanZero),
-          otherwise: Yup.number().min(0),
-        },
-      ),
+      dailyAllowanceAmount: Yup.number()
+        .typeError(VALIDATION_MESSAGES.validNumber)
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .min(0, VALIDATION_MESSAGES.amountCannotBeNegative),
+      taxiFareAmount: Yup.number()
+        .typeError(VALIDATION_MESSAGES.validNumber)
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .min(0, VALIDATION_MESSAGES.amountCannotBeNegative),
+      hotelEntitlementSelfAmount: Yup.number()
+        .typeError(VALIDATION_MESSAGES.validNumber)
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .when(
+          "ishotelEntitlementSelfAmountWise",
+          (ishotelEntitlementSelfAmountWise, schema) => {
+            if (ishotelEntitlementSelfAmountWise) {
+              return schema
+                .required(VALIDATION_MESSAGES.required)
+                .min(1, VALIDATION_MESSAGES.amountGreaterThanZero);
+            }
+            return schema.min(0);
+          },
+        ),
     });
   }, [hotelOptions]);
 

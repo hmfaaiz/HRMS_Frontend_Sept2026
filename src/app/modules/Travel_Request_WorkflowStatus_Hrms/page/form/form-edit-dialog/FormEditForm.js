@@ -1191,7 +1191,7 @@ export function FormEditForm({
                       </div>
                       <div>
                         <label className=" block mb-1">
-                          Day <span className="text-danger">*</span>
+                          Days <span className="text-danger">*</span>
                         </label>
                         <Field
                           type="number"
@@ -1359,13 +1359,13 @@ export function FormEditForm({
                                   <table className="table table-head-custom table-vertical-center table-hover">
                                     <thead className="custom-table-header">
                                       <tr>
+                                        <td style={{ minWidth: "40px" }}></td>
                                         <td
                                           style={{ minWidth: "150px" }}
                                           className=""
                                         >
                                           Location
                                         </td>
-                                        <td style={{ minWidth: "40px" }}></td>
                                         <td
                                           style={{ minWidth: "100px" }}
                                           className=""
@@ -1422,11 +1422,6 @@ export function FormEditForm({
 
                                           return (
                                             <tr key={index}>
-                                              <td className="align-middle text-center">
-                                                <span className="font-bold opacity-70">
-                                                  {locationDisplay}
-                                                </span>
-                                              </td>
                                               <td className="text-center align-middle">
                                                 <Field
                                                   type="checkbox"
@@ -1462,6 +1457,11 @@ export function FormEditForm({
                                                     }
                                                   }}
                                                 />
+                                              </td>
+                                              <td className="align-middle text-center">
+                                                <span className="font-bold opacity-70">
+                                                  {locationDisplay}
+                                                </span>
                                               </td>
                                               <td>
                                                 <Field
