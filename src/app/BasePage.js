@@ -14,6 +14,9 @@ import HODManagement from "./modules/HOD_Setup";
 const SettingsPage = lazy(() =>
   import("./modules/Settings/pages/SettingsPage"),
 );
+const AIChatbotManagement = lazy(() =>
+  import("./modules/AIChatbotService/pages"),
+);
 
 const UserManagment = lazy(() => import("./modules/UserMangement/pages"));
 
@@ -821,6 +824,7 @@ export default function BasePage() {
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
+        <Route path="/ask/ai-chatbot" component={AIChatbotManagement} />
         {/* <Route path='vehicles/read-all-vehicles' component={VehicleManagment} /> */}
         {Object.keys(UserAccess).map((access, key) => {
           const accessName = access.replace(/ /g, "").toLowerCase();
@@ -841,6 +845,7 @@ export default function BasePage() {
         })}
 
         <>
+
           {<Redirect exact from="/" to="/dashboard" />}
           <ContentRoute path="/dashboard" component={Dashboard} />
         </>

@@ -46,7 +46,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Edit */}
-      {isAccessForEdit  && !row.requestReviewedBy &&(
+      {/* {isAccessForEdit  && !row.requestReviewedBy &&(
         <OverlayTrigger
           overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}
         >
@@ -54,10 +54,10 @@ export function ActionsColumnFormatter(
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
-      )}
+      )} */}
 
       {/* Delete or Activate */}
-      {isAccessForDelete && !row.requestReviewedBy && (
+      {/* {isAccessForDelete && !row.requestReviewedBy && (
         <OverlayTrigger
           overlay={
             <Tooltip id="delete-tooltip">
@@ -81,9 +81,7 @@ export function ActionsColumnFormatter(
             </a>
           )}
         </OverlayTrigger>
-      )}
-
- 
+      )} */} 
     </div>
   );
 }

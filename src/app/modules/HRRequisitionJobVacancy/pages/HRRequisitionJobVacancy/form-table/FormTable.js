@@ -58,14 +58,14 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadHrRequisitionJobVacancy"
+    (item) => item.componentName === "ReadHrRequisitionJobVacancy",
   );
 
   const isAccessForEdit = userAccess?.find((item) => {
     return item.componentName === "UpdateHrRequisitionJobVacancy";
   });
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteHrRequisitionJobVacancy"
+    (item) => item.componentName === "DeleteHrRequisitionJobVacancy",
   );
 
   // Posting
@@ -103,8 +103,13 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "130px",
       },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell}
+        </span>
+      ),
     },
 
     {
@@ -113,14 +118,43 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "80px",
       },
       formatter: (cell) => {
         return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
+    {
+      dataField: "Grade.formName",
+      text: "Grade",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "130px",
+      },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell || "-"}
+        </span>
+      ),
+    },
+    {
+      dataField: "Designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "130px",
+      },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell || "-"}
+        </span>
+      ),
+    },
 
- 
     {
       dataField: "Department.deptName",
       text: "Department",
@@ -128,8 +162,13 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "130px",
       },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell}
+        </span>
+      ),
     },
 
     {
@@ -139,14 +178,14 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "90px",
       },
       formatter: (cell) => {
         return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
 
-{
+    {
       classes: "text-center pr-4",
       headerClasses: "text-center pr-5",
       style: {
@@ -208,7 +247,7 @@ export function FormTable() {
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
+                  formUIProps.setQueryParams,
                 )}
                 // selectRow={getSelectRow({
                 //   entities,

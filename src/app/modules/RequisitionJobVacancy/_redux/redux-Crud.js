@@ -52,3 +52,10 @@ export function closeJobVacancy(body) {
 
   return axios.patch(`${USERS_URL}/requisition_job_vacancy/close-job-vacancy`, body);
 }
+
+
+export function getEmployeeAuthorties(empId, workflowTypeId) {
+  return axios.get(
+    `${USERS_URL}/workflow_policy/get-employee-authorties/${empId}/${workflowTypeId}`
+  );
+}
