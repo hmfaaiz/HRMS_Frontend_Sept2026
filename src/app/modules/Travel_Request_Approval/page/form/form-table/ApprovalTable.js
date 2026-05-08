@@ -133,10 +133,17 @@ export function ApprovalFormTable() {
       style: { minWidth: "180px" },
     },
     {
-      dataField: "parentData.travelType",
+      dataField: "parentData.TravelType.formName",
       text: "Travel Type",
       sort: false,
       sortCaret: sortCaret,
+      formatter: (cell, row) =>
+        row.parentData?.TravelType?.formName ||
+        dashboard?.allTravelTypeList?.find(
+          (opt) => String(opt.value) === String(row.parentData?.travelTypeId),
+        )?.label ||
+        row.parentData?.travelType ||
+        "-",
       style: { minWidth: "140px" },
     },
     // {

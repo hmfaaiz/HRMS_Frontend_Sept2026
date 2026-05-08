@@ -7,6 +7,8 @@ const initialState = {
   entities: null,
   travelRequestBalances: [],
   workflowStatusList: [],
+  userForEdit: null,
+  employeeEntitlement: null,
 };
 
 export const callTypes = {
@@ -52,6 +54,18 @@ export const TravelRequestWorkflowAdminSlice = createSlice({
       state.actionsLoading = false;
       state.error = null;
       state.workflowStatusList = data;
+    },
+    // Fetch single request for the approval edit form
+    travelRequestFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.error = null;
+      state.userForEdit = action.payload.userForEdit;
+    },
+    // Employee TADA entitlement
+    employeeEntitlementFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.error = null;
+      state.employeeEntitlement = action.payload.employeeEntitlement;
     },
   },
 });

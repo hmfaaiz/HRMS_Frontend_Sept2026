@@ -145,11 +145,25 @@ export function FormCard() {
           (el?.componentName === "TravelRequestApproval" ||
             el?.componentName === "ReadAllTravelRequestApproval" ||
             el?.slug === "read-all-travel-request-approval") &&
-          el?.isResourceShow
+          el?.isResourceShow,
+      ),
+    },
+    
+    {
+      name: "Workflow Status",
+      link:
+        "/travel_request_workflow_status/read-all-travel-request-workflow-status",
+      isShow: travel?.find(
+        (el) =>
+          (el?.componentName === "TravelRequestWorkflowStatus" ||
+            el?.componentName === "ReadAllTravelRequestWorkflowStatus" ||
+            el?.slug === "read-all-travel-request-workflow-status") &&
+          el?.isResourceShow,
       ),
     },
   ];
 
+  console.log("wow", travel)
   const hasPolicy = !!employeeEntitlement;
 
   return (
