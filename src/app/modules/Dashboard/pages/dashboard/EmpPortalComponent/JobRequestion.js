@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useSelector, shallowEqual } from "react-redux";
 
 export const JobRequestion = () => {
-  const { requisition_job_vacancy } = useSelector(
+  const { requisition_job_vacancy, interview_recommendations } = useSelector(
     (state) => ({
       requisition_job_vacancy: state?.auth?.userAccess.requisition_job_vacancy,
+      interview_recommendations: state?.auth?.userAccess.interview_recommendations
     }),
     shallowEqual
   );
@@ -24,6 +25,19 @@ export const JobRequestion = () => {
                 href={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}
               >
                 Request Job Vacancy{" "}
+              </a>
+            </p>
+          </div>
+        ) : (
+          <p className="text-sm mb-0">No Request for Job Vacancy Found</p>
+        )}
+        {interview_recommendations?.length > 0 ? (
+          <div className="font-size-xs text-black font-bold">
+            <p className="m-0 underline">
+              <a
+                href={"/interview_recommendations/read-all-interview-recommendations"}
+              >
+                Interview Recommendations{" "}
               </a>
             </p>
           </div>

@@ -1,0 +1,41 @@
+import React, { useMemo } from "react";
+import { useFormUIContext } from "../FormUIContext";
+import { useSelector } from "react-redux";
+
+const filterOptions = [
+  { value: "all", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "submitted", label: "Submitted" },
+];
+
+export function FormFilter() {
+  const formUIContext = useFormUIContext();
+  const formUIProps = useMemo(() => ({
+    recommendationFilter: formUIContext.recommendationFilter,
+    setRecommendationFilter: formUIContext.setRecommendationFilter,
+  }), [formUIContext]);
+
+  return (
+    <div className="d-flex align-items-center gap-3 mb-3">
+      <label className="font-bold mb-0 text-sm text-black text-nowrap">
+        Recommendation Status:
+      </label>
+      <div className="d-flex gap-2">
+        {filterOptions.map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            className={`btn btn-sm ${
+              formUIProps.recommendationFilter === opt.value
+                ? "btn-primary"
+                : "btn-light"
+            }`}
+            onClick={() => formUIProps.setRecommendationFilter(opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}

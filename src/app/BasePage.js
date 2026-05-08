@@ -603,7 +603,11 @@ const travel_request_workflow_status = lazy(() =>
 
 const company_att_machine_config = lazy (() =>
   import ("./modules/Company_att_machine_config/pages/index"))
-
+const interview_questionnaire  = lazy (() =>
+import ("./modules/Interview_Questionnaire/pages/index"),
+)
+const interview_recommendations = lazy (() =>
+import ("./modules/Interview_Recommendations/pages/index"))
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -809,6 +813,8 @@ const ROUTES = {
   travel_request_workflow_status : travel_request_workflow_status,
   // travel_request_workflow_status_approval : travel_request_workflow_status_approval,
   company_att_machine_config : company_att_machine_config,
+  interview_questionnaire : interview_questionnaire,
+  interview_recommendations : interview_recommendations,
 };
 
 export default function BasePage() {

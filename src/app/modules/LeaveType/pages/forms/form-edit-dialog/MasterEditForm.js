@@ -20,8 +20,21 @@ const formValidation = Yup.object().shape({
   code: Yup.string()
     .required(VALIDATION_MESSAGES.required)
     .matches(/^[A-Za-z]{1,3}$/, "Code must contain only letters (A-Z)"),
+   eligibilityOfService: Yup.number()
+  .typeError(VALIDATION_MESSAGES.required)
+  .when("type", {
+    is: 2,
+    then: (schema) => schema.required(VALIDATION_MESSAGES.required).min(0, "Must be 0 or more"),
+    otherwise: (schema) => schema.nullable().typeError(""),
+  }),
+noOfTimesLeaveAvailability: Yup.number()
+  .typeError(VALIDATION_MESSAGES.required)
+  .when("type", {
+    is: 2,
+    then: (schema) => schema.required(VALIDATION_MESSAGES.required).min(1, "Must be at least 1"),
+    otherwise: (schema) => schema.nullable().typeError(""),
+  }),
 });
-
 export function MasterEditForm({
   dropdownData,
   submitForm,
@@ -180,6 +193,49 @@ export function MasterEditForm({
                       )}
                     </div>
                   </div>
+                  {Number(values.type) === 2 && (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-1 mt-3">
+                      <div>
+                        <Field
+                        name="eligibilityOfService"
+                        component={Input}
+                        type="number"
+                        min="0"
+                        placeholder=""
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label={
+                        <span>
+                          Eligibility of service (in years) <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      value={values.eligibilityOfService ?? ""}
+                      autoComplete="off"
+                      />
+                      
+                      </div>
+                      <div>
+                        <Field
+                        name="noOfTimesLeaveAvailability"
+                        component={Input}
+                        type="number"
+                        min="1"
+                        placeholder=""
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label={
+                        <span>
+                          No. of times leave availability
+                        <span style={{ color: "red" }}>*</span>
+                        </span>
+                        }
+                        value={values.noOfTimesLeaveAvailability ?? ""}
+                        autoComplete="off"
+                        />
+                       
+                        </div>
+                        </div>
+                      )}
                 </fieldset>
               </Form>
             </Modal.Body>
