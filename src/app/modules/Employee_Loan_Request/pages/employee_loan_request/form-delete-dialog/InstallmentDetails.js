@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import * as actions from "../../../_redux/redux-Actions";
 import PatternLoanDetailListForm from "../form-edit-dialog/LoanDetailList";
+import { formatDates } from "../../../../../utils/common";
 
 export function InstallmentDetails({ id, status, show, onHide }) {
-
+    const [monthlyInstallmentsLimit, setMonthlyInstallmentsLimit] = useState();
     const loanInstallmentSchema = Yup.object().shape({
         details: Yup.array()
             .of(
@@ -43,7 +44,55 @@ export function InstallmentDetails({ id, status, show, onHide }) {
 
                     return true;
                 }
-            ),
+            )
+
+            .test(
+                "minimum-total-check",
+                "Total installment is less than loan amount",
+                function (details) {
+                    const { total_loan_amount } = this.parent;
+
+                    if (!Array.isArray(details)) return true;
+
+                    const totalLoan = Number(total_loan_amount || 0);
+
+                    const totalPaid = details.reduce((sum, item) => {
+                        return sum + Number(item?.amount_received || 0);
+                    }, 0);
+
+                    if (totalPaid < totalLoan) {
+                        return this.createError({
+                            path: "details",
+                            message: "Total installment is less than loan amount",
+                        });
+                    }
+
+                    return true;
+                }
+            )
+
+            .test(
+                "monthly-limit-check",
+                "Monthly installment limit exceeded",
+                function (details) {
+
+                    const limit = this.options.context?.monthlyInstallmentsLimit;
+
+                    if (!limit) return true;
+
+
+                    if (details.length > limit) {
+                        return this.createError({
+                            path: "details",
+                            message: `Max ${limit} installments allowed only`,
+                        });
+                    }
+
+                    return true;
+                }
+            )
+
+        ,
     });
 
     useEffect(() => {
@@ -59,7 +108,7 @@ export function InstallmentDetails({ id, status, show, onHide }) {
         currentState: state.employee_loan_request,
     }), shallowEqual);
 
-    const { userForEdit } = currentState;
+    const { userForEdit, loan_config_details_permission } = currentState;
 
     useEffect(() => {
         if (!id) {
@@ -67,12 +116,34 @@ export function InstallmentDetails({ id, status, show, onHide }) {
         }
     }, [id]);
 
+
+    useEffect(() => {
+        let monthlyInstallment = 0;
+        if (userForEdit && loan_config_details_permission) {
+
+
+
+            let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+                (item) => item.loan_typeId === userForEdit?.loan_typeId
+            );
+
+
+            if (loandetails?.max_no_of_installment_for_loan) {
+                monthlyInstallment = loandetails?.max_no_of_installment_for_loan;
+            }
+        }
+        setMonthlyInstallmentsLimit(monthlyInstallment);
+        console.log("monthlyInstallment1111", userForEdit, loan_config_details_permission, monthlyInstallment)
+    }, [loan_config_details_permission]);
+
+
+
     return (
         <Modal
             show={show}
             onHide={onHide}
             aria-labelledby="example-modal-sizes-title-lg"
-            size="xl"
+            size="lg"
         >
             <Modal.Header closeButton>
                 <Modal.Title id="example-modal-sizes-title-lg">
@@ -84,11 +155,25 @@ export function InstallmentDetails({ id, status, show, onHide }) {
                 enableReinitialize={true}
                 initialValues={{
                     ...userForEdit,
-                    list: userForEdit?.details || [],
+                    details: userForEdit?.details || [],
                 }}
                 validationSchema={loanInstallmentSchema}
-                onSubmit={(values) => {
-                    console.log("FORM VALUES", values);
+                context={{
+                    monthlyInstallmentsLimit,
+                }}
+                onSubmit={async (values) => {
+
+                    const payload = {
+                        Id: values.Id,   // sirf master id
+                        details: values.details.map(({ amount_received, is_deducted, payroll_month_date }) => ({
+                            is_deducted,
+                            amount_received,
+
+                            payroll_month_date: payroll_month_date ? formatDates(payroll_month_date, "dd-MMM-yyyy") : null,
+                        }))
+                    };
+
+                    await dispatch(actions.updateLoanInstallments(payload, onHide));
                 }}
             >
 

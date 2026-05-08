@@ -1,10 +1,7 @@
 import { Field, FieldArray } from "formik";
-import React, { useEffect, useRef } from "react";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { CirclePlus, Trash2 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
 import { Checkbox } from "../../../../../../_metronic/_partials/controls";
-
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 function PatternLoanDetailListForm({
     values,
     setFieldValue,
@@ -14,7 +11,7 @@ function PatternLoanDetailListForm({
 }) {
 
 
- 
+
     const snapshotRef = useRef({});
     useEffect(() => {
         if (!values?.details?.length) return;
@@ -65,16 +62,7 @@ function PatternLoanDetailListForm({
 
         return rowTime < currentMonthTime;
     };
-
-    // console.log(
-    //     "currentMonth11111:",
-    //     currentMonth,
-    //     "currentMonthTime:",
-    //     currentMonthTime,
-    //     "details:",
-    //     values?.details
-    // );
-
+    const [monthlyInstallmentsLimit, setMonthlyInstallmentsLimit] = useState();
 
     const recalcInstallments = (list, changedIndex) => {
 
@@ -82,37 +70,46 @@ function PatternLoanDetailListForm({
 
         const entered = Number(updated[changedIndex].amount_received);
 
-        const totalLoan = Number(values?.total_loan_amount);
-        const totalRemainingLoan = Number(values?.loan_amount_remaining);
+        const totalLoan = values?.total_loan_amount;
 
-        let remaining = totalRemainingLoan;
+        const deducted = updated.reduce((sum, item) => {
+            if (item.is_deducted) {
+                return sum + (
+                    Number(item.amount_received || 0) +
+                    Number(item.cash_payment || 0)
+                );
+            }
+            return sum;
+        }, 0);
 
-        // lock edited row
+        let remaining = Number(totalLoan) - deducted;
+
+        // lock current row
         updated[changedIndex] = {
             ...updated[changedIndex],
             amount_received: entered
         };
 
-        // rebuild list from scratch AFTER index
         updated = updated.slice(0, changedIndex + 1);
 
-        remaining = totalRemainingLoan - entered;
+        remaining = remaining - entered;
 
         let date = new Date(updated[changedIndex].payroll_month_date);
 
         const perInstallment = entered;
 
         while (remaining > 0) {
-            console.log("remaining1111", perInstallment, remaining)
+
             const nextAmount = Math.min(perInstallment, remaining);
-            console.log("nextAmount22222", nextAmount)
+
             date = new Date(date);
             date.setMonth(date.getMonth() + 1);
 
             updated.push({
                 payroll_month_date: date.toISOString(),
                 amount_received: nextAmount,
-                // running_balance: remaining - nextAmount,
+                running_balance: remaining - nextAmount,
+                is_deducted: false,
             });
 
             remaining -= nextAmount;
@@ -138,6 +135,35 @@ function PatternLoanDetailListForm({
     const isCurrentMonth = (rowDate) => {
         return formatMonth(rowDate) === currentMonthFormatted;
     };
+
+    const { currentState } = useSelector((state) => ({
+        currentState: state.employee_loan_request,
+    }), shallowEqual);
+
+
+    const { userForEdit, loan_config_details_permission } = currentState;
+
+
+
+    useEffect(() => {
+        let monthlyInstallment = 0;
+        if (userForEdit && loan_config_details_permission) {
+
+
+
+            let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+                (item) => item.loan_typeId === values?.loan_typeId
+            );
+
+
+            if (loandetails?.max_no_of_installment_for_loan) {
+                monthlyInstallment = loandetails?.max_no_of_installment_for_loan;
+            }
+        }
+        setMonthlyInstallmentsLimit(monthlyInstallment);
+        console.log("monthlyInstallment11112222", values?.loan_typeId, loan_config_details_permission, monthlyInstallment)
+    }, [loan_config_details_permission]);
+
     return (
         <>
             <FieldArray name="details">
@@ -153,8 +179,8 @@ function PatternLoanDetailListForm({
                                             <td className="w-[40px]">S.No.</td>
                                             <td className="w-[140px]">Payroll Month</td>
                                             <td className="w-[140px]">Installment Amount</td>
-                                            <td className="w-[140px]">Running Balance</td>
-                                            <td className="w-[140px]">Cash Payment</td>
+
+                                            {/* <td className="w-[140px]">Cash Payment</td> */}
                                             <td className="w-[100px]">Deducted</td>
 
                                             <td className="text-right">Action</td>
@@ -224,7 +250,7 @@ function PatternLoanDetailListForm({
                                                                 `details[${index}].amount_received`,
                                                                 e.target.value
                                                             )
-                                                         
+
                                                             setFieldValue(`details[${index}].is_dirty`, true);
                                                         }
 
@@ -240,7 +266,7 @@ function PatternLoanDetailListForm({
                                                 </td>
 
                                                 {/* Running Balance */}
-                                                <td>
+                                                {/* <td>
                                                     <Field
                                                         type="number"
                                                         name={`details[${index}].running_balance`}
@@ -266,10 +292,10 @@ function PatternLoanDetailListForm({
                                                                 {errors.details[index].running_balance}
                                                             </div>
                                                         )}
-                                                </td>
+                                                </td> */}
 
                                                 {/* Cash Payment */}
-                                                <td>
+                                                {/* <td>
                                                     <Field
                                                         type="number"
                                                         name={`details[${index}].cash_payment`}
@@ -295,7 +321,7 @@ function PatternLoanDetailListForm({
                                                                 {errors.details[index].cash_payment}
                                                             </div>
                                                         )}
-                                                </td>
+                                                </td> */}
 
                                                 {/* Deducted */}
                                                 <td>
@@ -312,7 +338,7 @@ function PatternLoanDetailListForm({
                                                         }}
                                                     />
                                                 </td>
-                                                {isCurrentMonth(row.payroll_month_date) && (
+                                                {isCurrentMonth(row.payroll_month_date) ? (
 
                                                     <td className="text-right">
                                                         <button
@@ -332,6 +358,11 @@ function PatternLoanDetailListForm({
                                                         >
                                                             Calculate
                                                         </button>
+                                                    </td>
+
+                                                ) : (
+                                                    <td className="text-right text-muted">
+                                                        Not allowed
                                                     </td>
                                                 )}
                                             </tr>
