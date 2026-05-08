@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialPreApprovalTravelRequestState = {
     listLoading: false,
     actionsLoading: null,
+    pdfLoading: false,
     totalCount: 0,
     entities: null,
     userForEdit: undefined,
@@ -15,16 +16,29 @@ const initialPreApprovalTravelRequestState = {
 export const callTypes = {
     list: "list",
     action: "action",
+    pdf: "pdf",
 };
 
 export const preapproval_travel_requestSlice = createSlice({
     name: "preapproval_travel_requestSlice",
     initialState: initialPreApprovalTravelRequestState,
     reducers: {
+        startCall: (state, action) => {
+            state.error = null;
+            if (action.payload.callType === callTypes.list) {
+                state.listLoading = true;
+            } else if (action.payload.callType === callTypes.pdf) {
+                state.pdfLoading = true;
+            } else {
+                state.actionsLoading = true;
+            }
+        },
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
+            } else if (action.payload.callType === callTypes.pdf) {
+                state.pdfLoading = false;
             } else {
                 state.actionsLoading = false;
             }
@@ -90,6 +104,10 @@ export const preapproval_travel_requestSlice = createSlice({
         employeeEntitlementFetched: (state, action) => {
             state.employeeEntitlement = action.payload.employeeEntitlement;
             state.actionsLoading = false;
+        },
+        pdfFetched: (state) => {
+            state.pdfLoading = false;
+            state.error = null;
         },
     },
 });

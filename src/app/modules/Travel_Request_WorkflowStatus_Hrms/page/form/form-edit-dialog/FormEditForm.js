@@ -1191,7 +1191,7 @@ export function FormEditForm({
                       </div>
                       <div>
                         <label className=" block mb-1">
-                          Day <span className="text-danger">*</span>
+                          Days <span className="text-danger">*</span>
                         </label>
                         <Field
                           type="number"
