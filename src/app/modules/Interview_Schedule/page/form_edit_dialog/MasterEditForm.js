@@ -17,8 +17,10 @@ import { VALIDATION_MESSAGES } from "../../../../utils/constants";
 import { getProfileInfo } from "../../_redux/formCrud";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { TimePickerField } from "../../../../../_metronic/_partials/controls/forms/TimePickerField";
-import { CircleMinus, CirclePlus, Trash2 } from "lucide-react";
+import { CircleMinus, CirclePlus, Trash2, Eye } from "lucide-react";
 import { formatDates } from "../../../../utils/common";
+import { ViewRecommendationInlineModal } from "./viewRecommendation";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const formValidation = Yup.object().shape({
   interview_date: Yup.date()
@@ -55,9 +57,15 @@ const InterviewerRow = ({
   remove,
   employeeDetails,
   setEmployeeDetails,
+  handleViewRecommendation,
 }) => {
   const empDetail = employeeDetails[interviewer.employeeId] || {};
   const selectedEmployeeIds = values.interviewers.map((i) => i.employeeId);
+
+  const hasRecommendation =
+    interviewer?.interview_remarks ||
+    interviewer?.interview_recommendation ||
+    interviewer?.recommendedApplicantStatusId;
   return (
     <tr key={index}>
 
@@ -102,17 +110,50 @@ const InterviewerRow = ({
       <td>{empDetail?.designation?.formName || ""}</td>
       <td>{empDetail?.grade?.formName || ""}</td>
       <td>{empDetail?.employeeType?.formName || ""}</td>
-      {/* <td>{empDetail?.subsidiary?.name || ""}</td> */}
       <td>{empDetail?.location?.formName || ""}</td>
       <td className="text-right">
-        <button className="bg-transparent border-none"
-          disabled={isUserForRead}
+        <div className="d-flex align-items-center justify-content-end gap-2">
 
-          type="button"
-          onClick={() => remove(index)}
-        >
-          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-        </button>
+          {/* View Recommendation — only if submitted */}
+          {hasRecommendation ? (
+            <OverlayTrigger
+              overlay={
+                <Tooltip id={`view-rec-tooltip-${index}`}>
+                  View Recommendation
+                </Tooltip>
+              }
+            >
+              <a
+                className="cursor-pointer"
+                onClick={() => handleViewRecommendation(interviewer)}
+              >
+                <Eye className="w-4 h-4 text-black" />
+              </a>
+            </OverlayTrigger>
+          ) : (
+            // Placeholder to keep column width stable
+            <span style={{ width: "16px", display: "inline-block" }} />
+          )}
+
+          {/* Delete */}
+          <OverlayTrigger
+            overlay={
+              <Tooltip id={`delete-tooltip-${index}`}>
+                Remove Interviewer
+              </Tooltip>
+            }
+          >
+            <button
+              className="bg-transparent border-none p-0"
+              disabled={isUserForRead}
+              type="button"
+              onClick={() => remove(index)}
+            >
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+            </button>
+          </OverlayTrigger>
+
+        </div>
       </td>
     </tr>
   );
@@ -130,6 +171,10 @@ export default function MasterEditForm({
   const dispatch = useDispatch();
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [showSection, setShowSection] = useState(false);
+
+  const [showRecModal, setShowRecModal] = useState(false);
+  const [selectedInterviewer, setSelectedInterviewer] = useState(null);
+
   const { dashboard, applicantStatusList } = useSelector((state) => ({
     dashboard: state?.dashboard,
     applicantStatusList: state?.interview_schedule?.applicantStatusList,
@@ -140,6 +185,10 @@ export default function MasterEditForm({
     dispatch(fetchAllActiveEmployees());
   }, []);
 
+   const handleViewRecommendation = (interviewer) => {
+    setSelectedInterviewer(interviewer);
+    setShowRecModal(true);
+  };
   // Fetch employee details when interviewers change
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
@@ -351,7 +400,7 @@ export default function MasterEditForm({
                                     <td className="">Employee Type</td>
                                     {/* <td className="">Subsidiary</td> */}
                                     <td className="">Location</td>
-                                    <td className="">Action</td>
+                                    <td className="text-right">Action</td>
                                   </tr>
 
                                   <tbody>
@@ -370,6 +419,7 @@ export default function MasterEditForm({
                                           remove={remove}
                                           employeeDetails={employeeDetails}
                                           setEmployeeDetails={setEmployeeDetails}
+                                          handleViewRecommendation={handleViewRecommendation} 
                                         />
                                       )
                                     )}
@@ -508,6 +558,12 @@ export default function MasterEditForm({
               </button>
             )}
           </Modal.Footer>
+          <ViewRecommendationInlineModal
+            show={showRecModal}
+            onHide={() => setShowRecModal(false)}
+            data={{ interviewer: selectedInterviewer }}
+            statusOptions={applicantStatusList}
+          />
         </>
       )}
     </Formik>

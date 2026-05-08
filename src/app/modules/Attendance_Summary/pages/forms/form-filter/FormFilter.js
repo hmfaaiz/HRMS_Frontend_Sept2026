@@ -33,7 +33,24 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 //Validation for date fields
 const formValidation = Yup.object().shape({
  
-});
+})
+.test(
+    "attendance-filter-all-required",
+    "All attendance filter fields must be selected together",
+    function(value) {
+      const { attendance_field, attendance_operator, attendance_count } = value;
+      if (
+        (attendance_field || attendance_operator || attendance_count) &&
+        !(attendance_field && attendance_operator && attendance_count)
+      ) {
+        return this.createError({
+          path: "attendance_field",
+          message: "Please select all three attendance filter fields.",
+        });
+      }
+      return true;
+    }
+  );
 
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
@@ -93,7 +110,22 @@ export function FormFilter({
   const allPayrollMonthYearMap = useMemo(() => {
     return new Map(allPayrollMonthYearList?.map((item) => [item.value, item]));
   }, [allPayrollMonthYearList]);
+  // Add these option arrays inside FormFilter component (before return):
+const attendanceFieldOptions = [
+  { value: "PresentDays", label: "Paid Days" },
+  { value: "AbsentDays", label: "Absent Days" },
+  { value: "LeaveDays", label: "Leave Days" },
+  { value: "OTHours", label: "OT Hours" },
+  { value: "EncashmentDays", label: "Encashment Days" },
+];
 
+const attendanceOperatorOptions = [
+  { value: "=", label: "Equal To" },
+  { value: ">", label: "Greater Than" },
+  { value: ">=", label: "Greater Than & Equal To" },
+  { value: "<", label: "Less Than" },
+  { value: "<=", label: "Less Than & Equal To" },
+];
 
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (End)
@@ -149,6 +181,9 @@ export function FormFilter({
       designationLabel: allDesignationsMap?.get(values.designationId || "")
         ?.label,
       locationLabel: allLocationMap?.get(values.locationId || "")?.label,
+      attendance_fieldLabel: attendanceFieldOptions.find(o => o.value === values.attendance_field)?.label || "",
+    attendance_operatorLabel: attendanceOperatorOptions.find(o => o.value === values.attendance_operator)?.label || "",
+    attendance_countLabel: values?.attendance_count || "",
     };
   };
 
@@ -180,7 +215,7 @@ export function FormFilter({
           applyFilter(payload);
         }}
       >
-        {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
+        {({ values,errors, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
           <>
             {/* <h6 className="mb-5">  Attendance Sheet</h6> */}
             <Form className="form form-label-right">
@@ -407,6 +442,54 @@ export function FormFilter({
                   </div>
 
 
+                </div>
+               <hr />
+               <div>
+                <h6 className="font-bold mb-0 text-primary">Attendance Filter</h6>
+                <div className="grid grid-cols-3 md:grid-cols-8 gap-x-3 gap-y-1">
+                  <div>
+                    <Field
+                    name="attendance_field"
+                    component={SearchSelect}
+                    onBlur={handleBlur}
+                    onChange={(e) => setFieldValue("attendance_field", e.value === "" ? "" : e.value)}
+                    label={<span>Field</span>}
+                    value={
+                      attendanceFieldOptions.find((o) => o.value === values.attendance_field) || ""
+                    }
+                    autoComplete="off"
+                    options={attendanceFieldOptions}
+                    />
+                   {errors.attendance_field && (
+                    <div className="invalid-feedback d-block">{errors.attendance_field}</div>
+                    )}
+                  </div>
+                  <div>
+                    <Field
+                    name="attendance_operator"
+                    component={SearchSelect}
+                    onBlur={handleBlur}
+                    onChange={(e) => setFieldValue("attendance_operator", e.value === "" ? "" : e.value)}
+                    label={<span>Operator</span>}
+                    value={
+                      attendanceOperatorOptions.find((o) => o.value === values.attendance_operator) || ""
+                    }
+                    autoComplete="off"
+                    options={attendanceOperatorOptions}
+                    />
+                  </div>
+                  <div>
+                    <label>Count</label>
+                    <Field
+                    name="attendance_count"
+                    as="input"
+                    type="number"
+                    min="0"
+                    className="form-control"
+                    onChange={(e) => setFieldValue("attendance_count", e.target.value)}
+                  />
+                  </div>
+                </div>
                 </div>
                
               </fieldset>
