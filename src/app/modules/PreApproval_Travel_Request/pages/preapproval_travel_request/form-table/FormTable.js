@@ -48,7 +48,7 @@ export function FormTable({ onEditClick, onViewClick }) {
 
   useEffect(() => {
     dispatch(actions.fetchPreApprovalTravelRequests(FormUIProps.queryParams));
-    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(555, "allTravelLocationList"));
   }, [FormUIProps.queryParams, dispatch]);
 
   // NEW: Auto-refresh when entities have incomplete data
@@ -98,19 +98,21 @@ export function FormTable({ onEditClick, onViewClick }) {
       style: { minWidth: "180px" },
     },
     {
+      dataField: "TravelType.formName",
+      text: "Travel Type",
+      sort: false,
+      sortCaret: sortCaret,
+      formatter: (cell, row) => row.TravelType?.formName || row.travelType || "-",
+      style: { minWidth: "140px" },
+    },
+    {
       dataField: "purposeOfTravel",
       text: "Purpose of Travel",
       sort: false,
       sortCaret: sortCaret,
       style: { minWidth: "180px" },
     },
-    {
-      dataField: "travelType",
-      text: "Travel Type",
-      sort: false,
-      sortCaret: sortCaret,
-      style: { minWidth: "140px" },
-    },
+
     // {
     //   dataField: "projectName",
     //   text: "Project Name",
@@ -125,7 +127,7 @@ export function FormTable({ onEditClick, onViewClick }) {
     //   formatter: (cell, row) => {
     //     const seg = row.Master?.[0];
     //     if (!seg || !seg.fromLocationId) return "-";
-    //     const loc = dashboard?.allLocationChildMenus?.find(
+    //     const loc = dashboard?.allTravelLocationList?.find(
     //       (l) => String(l.value) === String(seg.fromLocationId),
     //     );
     //     return loc ? loc.label : seg.fromLocationId;
@@ -140,7 +142,7 @@ export function FormTable({ onEditClick, onViewClick }) {
     //     const segments = row.Master || [];
     //     const seg = segments[segments.length - 1];
     //     if (!seg || !seg.toLocationId) return "-";
-    //     const loc = dashboard?.allLocationChildMenus?.find(
+    //     const loc = dashboard?.allTravelLocationList?.find(
     //       (l) => String(l.value) === String(seg.toLocationId),
     //     );
     //     return loc ? loc.label : seg.toLocationId;

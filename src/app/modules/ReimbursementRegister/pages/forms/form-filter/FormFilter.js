@@ -36,12 +36,13 @@ const formValidation = Yup.object().shape({
   // Custom test to ensure all three fields (salary_type, operator, amount) are selected together
 });
 
-//Prepare new Filter
+// Prepare new Filter
 const prepareFilter = (queryParams, values) => {
   const newQueryParams = { ...queryParams };
   newQueryParams.filter = { ...values };
   return newQueryParams;
 };
+const ALL_OPTION = { label: "All", value: "" };
 
 export function FormFilter({ dispatch, reimbursementLoading }) {
   const FormUIContext = useFormUIContext();
@@ -76,7 +77,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
     return new Map(allReimbursementTypeList?.map((item) => [item.value, item]));
   }, [allReimbursementTypeList]);
 
-  //Fetch Params from Context
+  // Fetch Params from Context
   const formUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
@@ -118,7 +119,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
 
   useEffect(() => {
     // Extract subsidiaryId logic
-        if (!allSubsidiaryList?.length) return;
+    if (!allSubsidiaryList?.length) return;
 
     const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
 
@@ -154,9 +155,9 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
           ...initialFilter.filter,
           subsidiaryId:
             initialFilter.filter?.subsidiaryId ||
-              allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
             "", // Set default subsidiaryId if it's not provided
-              from: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
+          from: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
             ?.startDate
             ? new Date(
                 allSubsidiaryList?.find(
@@ -189,18 +190,29 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
           handleBlur,
           setFieldValue,
           handleReset,
-          isValid, // Destructure isValid
-          dirty, // Destructure dirty
-        }) => (
-          <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              <Form className="form form-label-right">
-                <fieldset>
-                  <h6 className="font-bold mb-0 text-primary my-2">Employee</h6>
+          isValid,
+          dirty,
+        }) => {
 
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+          const filteredEmployees = !values.departmentId
+            ? allEmployees || []
+            : (allEmployees || []).filter(
+                (emp) =>
+                  Number(emp.departmentId) === Number(values.departmentId)
+              );
+
+          return (
+            <>
+              <Modal.Body className="overlay overlay-block cursor-default">
+                <Form className="form form-label-right">
+                  <fieldset>
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      Employee
+                    </h6>
+
+                    <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
-                    <div className="">
+                      <div className="">
                       {/* <SearchSelect
                         name="subsidiaryId"
                         label={
@@ -235,18 +247,18 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                       /> */}
-                      <SearchSelect
-                        name="subsidiaryId"
-                        label={
-                          <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
-                          if(e?.payrollMonth){
+                        <SearchSelect
+                          name="subsidiaryId"
+                          label={
+                            <span>
+                              Subsidiary<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          onChange={(e) => {
+                            const value =
+                              e.value === "--Select--" ? "" : Number(e.value);
+                            setFieldValue("subsidiaryId", value);
+                            if (e?.payrollMonth) {
                               let formattedFromDate = formatDates(
                                 e?.payrollMonth?.startDate,
                                 "yyyy-MM-dd"
@@ -256,106 +268,127 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                                 "yyyy-MM-dd"
                               );
                               setFieldValue("from", formattedFromDate);
-                              setFieldValue("to", formattedToDate); 
-                      
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                          dispatch(fetchAllDept(value));
-                          dispatch(
-                            fetchAllPayrollMonthYearList(
-                              { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
-                          );
-
-                          setFieldValue("employeeId", "");
-                          setFieldValue("departmentId", "");
-                        }}
-                        error={errors?.subsidiaryId}
-                        touched={touched?.subsidiaryId}
+                              setFieldValue("to", formattedToDate);
+                              setFieldValue(
+                                "monthId",
+                                Number(e?.payrollMonth?.Id)
+                              );
+                            }
+                            dispatch(
+                              fetchAllActiveEmployeesBySubsidiary(value)
+                            );
+                            dispatch(fetchAllDept(value));
+                            dispatch(
+                              fetchAllPayrollMonthYearList(
+                                { subsidiaryId: value },
+                                "allPayrollMonthYearList"
+                              )
+                            );
+                            // Reset dependent fields
+                            setFieldValue("employeeId", "");
+                            setFieldValue("departmentId", "");
+                          }}
+                          error={errors?.subsidiaryId}
+                          touched={touched?.subsidiaryId}
                           value={
                             allSubsidiaryList?.find(
                               (el) => el?.value === values?.subsidiaryId
                             ) || null
                           }
-                      options={allSubsidiaryList}
-                      />
-                    </div>
-                    {/* Subsidiary Field End */}
-                    {/* Deparment Field Start */}
-                    <div className="">
-                      <Field
-                        name="departmentId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("departmentId", value);
-                        }}
-                        label={<span> Department</span>}
-                        value={
-                          allDeptMap?.get(values?.departmentId || "") || ""
-                        }
-                        autoComplete="off"
-                        // options={allDept}
-                        options={[
-                          { label: "--Select--", value: "" },
-                          ...(Array.isArray(allDept) ? allDept : []),
-                        ]}
-                      />
-                    </div>
-                    {/* Deparment Field End */}
-                    <div className="">
-                      <Field
-                        name="employeeId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("employeeId", value);
-                        }}
-                        label={<span> Employee</span>}
-                        value={
-                          allEmployeesMap?.get(values?.employeeId || "") || ""
-                        }
-                        autoComplete="off"
-                        // options={allEmployees}
-                        options={[
-                          { label: "--Select--", value: "" },
-                          ...(Array.isArray(allEmployees) ? allEmployees : []),
-                        ]}
-                      />
-                    </div>
+                          options={allSubsidiaryList}
+                        />
+                      </div>
+                      <div className="">
+                        <Field
+                          name="departmentId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value === "--Select--" ? "" : Number(e.value);
+                            setFieldValue("departmentId", value);
+                            setFieldValue("employeeId", "");
+                          }}
+                          label={<span>Department</span>}
+                          value={
+                            [
+                              ALL_OPTION,
+                              ...(Array.isArray(allDept) ? allDept : []),
+                            ]?.find(
+                              (opt) => opt.value === values?.departmentId
+                            ) || ALL_OPTION
+                          }
+                          autoComplete="off"
+                          options={[
+                            ALL_OPTION,
+                            ...(Array.isArray(allDept) ? allDept : []),
+                          ]}
+                        />
+                      </div>
 
-                    <div className="">
-                      <Field
-                        name="reimbursement_typeId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("reimbursement_typeId", value);
-                        }}
-                        label={<span> Reimbursement Type</span>}
-                        value={
-                          allReimbursementTypeMap?.get(
-                            values?.reimbursement_typeId || ""
-                          ) || ""
-                        }
-                        autoComplete="off"
-                        // options={allReimbursementTypeList}
-                        options={[
-                          { label: "--Select--", value: "" },
-                          ...(Array.isArray(allReimbursementTypeList)
-                            ? allReimbursementTypeList
-                            : []),
-                        ]}
-                      />
-                    </div>
+                     
+                      <div className="">
+                        <Field
+                          name="employeeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value === "--Select--" ? "" : Number(e.value);
+                            setFieldValue("employeeId", value);
+                          }}
+                          label={<span>Employee</span>}
+                          value={
+                            [
+                              ALL_OPTION,
+                              ...(Array.isArray(filteredEmployees)
+                                ? filteredEmployees
+                                : []),
+                            ]?.find(
+                              (opt) => opt.value === values?.employeeId
+                            ) || ALL_OPTION
+                          }
+                          autoComplete="off"
+                          options={[
+                            ALL_OPTION,
+                            ...(Array.isArray(filteredEmployees)
+                              ? filteredEmployees
+                              : []),
+                          ]}
+                        />
+                      </div>
+
+                      <div className="">
+                        <Field
+                          name="reimbursement_typeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value === "--Select--" ? "" : Number(e.value);
+                            setFieldValue("reimbursement_typeId", value);
+                          }}
+                          label={<span>Reimbursement Type</span>}
+                          value={
+                            [
+                              ALL_OPTION,
+                              ...(Array.isArray(allReimbursementTypeList)
+                                ? allReimbursementTypeList
+                                : []),
+                            ]?.find(
+                              (opt) =>
+                                opt.value === values?.reimbursement_typeId
+                            ) || ALL_OPTION
+                          }
+                          autoComplete="off"
+                          options={[
+                            ALL_OPTION,
+                            ...(Array.isArray(allReimbursementTypeList)
+                              ? allReimbursementTypeList
+                              : []),
+                          ]}
+                        />
+                      </div>
                     {/* Active payroll month */}
 
                     {/* <div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
@@ -376,150 +409,150 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
   );
 })() : null}
                     </div> */}
-                  </div>
+                    </div>
 
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mt-2 mb-2 ">
-                    <div className="col-span-1">
-                      <div>
+                    <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mt-2 mb-2">
+                      <div className="col-span-1">
+                        <div>
+                          <h6 className="font-semibold mb-0 text-primary my-2 text-sm">
+                            &nbsp;
+                          </h6>
+
+                          <div className="">
+                            <Field
+                              name="monthId"
+                              component={SearchSelect}
+                              onBlur={handleBlur}
+                              onChange={(e) => {
+                                const value =
+                                  e.value === "--Select--"
+                                    ? ""
+                                    : Number(e.value);
+                                setFieldValue("monthId", value);
+                              }}
+                              label={<span>Payroll Month</span>}
+                              value={
+                                allPayrollMonthMap?.get(
+                                  values?.monthId || ""
+                                ) || ""
+                              }
+                              autoComplete="off"
+                              options={[
+                                { label: "--Select--", value: "" },
+                                ...(Array.isArray(allPayrollMonthYearList)
+                                  ? allPayrollMonthYearList
+                                  : []),
+                              ]}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="col-span-3">
                         <h6 className="font-semibold mb-0 text-primary my-2 text-sm">
-                          &nbsp;
+                          Date
                         </h6>
+                        <div className="grid md:grid-cols-3 gap-x-3">
+                          <div className="">
+                            <label>From</label>
+                            <Field
+                              className="form-control"
+                              component={DatePickerField}
+                              placeholder="From Date"
+                              selected={
+                                values?.from ? new Date(values.from) : null
+                              }
+                              maxDate={endDate}
+                              onChange={(date) => {
+                                let formattedFromDate = formatDates(
+                                  date,
+                                  "yyyy-MM-dd"
+                                );
+                                let formattedToDate = formatDates(
+                                  date,
+                                  "yyyy-MM-dd"
+                                );
+                                setFieldValue("from", formattedFromDate);
+                                setFieldValue("to", formattedToDate);
+                              }}
+                              dateFormat="dd-MMM-yyyy"
+                              name="from"
+                              autoComplete="off"
+                            />
+                          </div>
 
-                        <div className="">
-                          <Field
-                            name="monthId"
-                            component={SearchSelect}
-                            onBlur={handleBlur}
-                            onChange={(e) => {
-                              const value =
-                                e.value == "--Select--" ? "" : Number(e.value);
-                              setFieldValue("monthId", value);
-                            }}
-                            label={<span> Payroll Month</span>}
-                            value={
-                              allPayrollMonthMap?.get(values?.monthId || "") ||
-                              ""
-                            }
-                            autoComplete="off"
-                            // options={allPayrollMonthYearList}
-                            options={[
-                              { label: "--Select--", value: "" },
-                              ...(Array.isArray(allPayrollMonthYearList)
-                                ? allPayrollMonthYearList
-                                : []),
-                            ]}
-                          />
+                          <div className="">
+                            <label>To</label>
+                            <Field
+                              className="form-control"
+                              component={DatePickerField}
+                              placeholder="To Date"
+                              selected={
+                                values?.to ? new Date(values.to) : null
+                              }
+                              minDate={
+                                values.from ? new Date(values.from) : ""
+                              }
+                              maxDate={endDate}
+                              onChange={(date) => {
+                                let formattedToDate = formatDates(
+                                  date,
+                                  "yyyy-MM-dd"
+                                );
+                                setFieldValue("to", formattedToDate);
+                              }}
+                              dateFormat="dd-MMM-yyyy"
+                              name="to"
+                              autoComplete="off"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
+                  </fieldset>
+                </Form>
+              </Modal.Body>
 
-                    <div className="col-span-3 ">
-                      <h6 className="font-semibold mb-0 text-primary my-2 text-sm">
-                        Date
-                      </h6>
-
-                      <div className="grid md:grid-cols-3 gap-x-3 ">
-                        <div className="">
-                          <label>Date</label>
-                          <Field
-                            className="form-control"
-                            component={DatePickerField}
-                            placeholder="From Date "
-                            selected={
-                              values?.from ? new Date(values.from) : null
-                            }
-                            maxDate={endDate}
-                            onChange={(date) => {
-                              let formattedFromDate = formatDates(
-                                date,
-                                "yyyy-MM-dd"
-                              );
-                              let formattedToDate = formatDates(
-                                date,
-                                "yyyy-MM-dd"
-                              );
-                              setFieldValue("from", formattedFromDate);
-                              setFieldValue("to", formattedToDate); // Sync from_date and to_date
-                            }}
-                            timeInputLabel="Time:"
-                            dateFormat="dd-MMM-yyyy"
-                            // showTimeInput
-                            name="from_date"
-                            autoComplete="off"
-                          />
-                        </div>
-
-                        <div className="">
-                          <label>To</label>
-                          <Field
-                            className="form-control"
-                            component={DatePickerField}
-                            placeholder="To Date "
-                            selected={values?.to ? new Date(values.to) : null}
-                            minDate={values.from ? new Date(values.from) : ""}
-                            maxDate={endDate}
-                            onChange={(date) => {
-                              let formattedToDate = formatDates(
-                                date,
-                                "yyyy-MM-dd"
-                              );
-                              setFieldValue("to", formattedToDate);
-                            }}
-                            timeInputLabel="Time:"
-                            dateFormat="dd-MMM-yyyy"
-                            // showTimeInput
-                            name="to"
-                            autoComplete="off"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </fieldset>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                type="button"
-                onClick={() => {
-                  applyFilter(initialFilter.filter);
-                  handleReset();
-                }}
-                className="btn btn-light btn-elevate"
-              >
-                Cancel
-              </button>
-
-              <div className="d-flex justify-content-end">
+              <Modal.Footer>
                 <button
                   type="button"
                   onClick={() => {
-                    getPdf(values);
+                    applyFilter(initialFilter.filter);
+                    handleReset();
                   }}
-                  disabled={
-                    reimbursementLoading ||
-                    !values?.subsidiaryId ||
-                    // !isValid ||
-                    (!values.monthId && (!values.to || !values.from))
-                  }
-                  className="btn btn-primary btn-elevate"
+                  className="btn btn-light btn-elevate"
                 >
-                Re-Imbursement Claim Report
-                  {/* <SVG
-                      src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                    /> */}
-                  <Download className="w-4 h-4 ml-2 " />
-                  {reimbursementLoading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
+                  Cancel
                 </button>
+
+                <div className="d-flex justify-content-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      getPdf(values);
+                    }}
+                    disabled={
+                      reimbursementLoading ||
+                      !values?.subsidiaryId ||
+                      (!values.monthId && (!values.to || !values.from))
+                    }
+                    className="btn btn-primary btn-elevate"
+                  >
+                    Re-Imbursement Claim Report
+                    <Download className="w-4 h-4 ml-2" />
+                    {reimbursementLoading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
+                </div>
+              </Modal.Footer>
+
+              <div className="d-flex justify-content-end mr-5 mb-5">
+                <label>Select payroll month or dates to download</label>
               </div>
-            </Modal.Footer>
-            <div className="d-flex justify-content-end mr-5 mb-5">
-              <label>Select payroll month or dates to download</label>
-            </div>
-          </>
-        )}
+            </>
+          );
+        }}
       </Formik>
     </>
   );

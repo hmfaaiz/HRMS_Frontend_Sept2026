@@ -52,7 +52,7 @@ export function FormTable() {
     {
       dataField: "employeeCode",
       text: "Emp. Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -63,7 +63,7 @@ export function FormTable() {
     {
       dataField: "fullName",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -74,7 +74,7 @@ export function FormTable() {
     {
       dataField: "name",
       text: "Leave Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -84,7 +84,7 @@ export function FormTable() {
     {
       dataField: "from",
       text: "Date From",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -96,7 +96,7 @@ export function FormTable() {
     {
       dataField: "to",
       text: "Date To",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -108,7 +108,7 @@ export function FormTable() {
     {
       dataField: "days",
       text: "Leave Days",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

@@ -34,7 +34,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
     {
       dataField: "approvalAuthorityEmp.employeeCode", // Reference the parent object (department)
       text: "Emp Code", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -45,7 +45,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
     {
       dataField: "approvalAuthorityEmp",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -59,7 +59,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
     {
       dataField: "approvalAuthorityEmp.department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -70,7 +70,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
     {
       dataField: "approvalAuthorityEmp.designation.formName",
       text: "Designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -81,7 +81,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
     {
       dataField: "approvalAuthorityEmp.employeeType.formName",
       text: "Employee Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -118,7 +118,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
     {
       dataField: "processDate",
       text: "Process Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

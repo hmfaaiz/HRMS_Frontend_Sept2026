@@ -128,6 +128,31 @@ export const FormCard = () => {
     handleCancel();
   };
 
+  const menuOptions = [
+    {
+      name: "Request",
+      link: "/travel_request/read-all-travel-request",
+      isShow: travel?.find(
+        (el) =>
+          (el?.componentName === "ReadAllTravelRequest" ||
+            el?.slug === "read-all-travel-request") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Workflow Status",
+      link:
+        "/travel_request_workflow_status/read-all-travel-request-workflow-status",
+      isShow: travel?.find(
+        (el) =>
+          (el?.componentName === "TravelRequestWorkflowStatus" ||
+            el?.componentName === "ReadAllTravelRequestWorkflowStatus" ||
+            el?.slug === "read-all-travel-request-workflow-status") &&
+          el?.isResourceShow,
+      ),
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
@@ -135,17 +160,7 @@ export const FormCard = () => {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
-              {
-                name: "Request",
-                link: "/travel_request/read-all-travel-request",
-                isShow: travel?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllTravelRequest" &&
-                    el?.isResourceShow,
-                ),
-              },
-            ]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>
@@ -156,17 +171,7 @@ export const FormCard = () => {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
-              {
-                name: "Request",
-                link: "/travel_request/read-all-travel-request",
-                isShow: travel?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllTravelRequest" &&
-                    el?.isResourceShow,
-                ),
-              },
-            ]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>

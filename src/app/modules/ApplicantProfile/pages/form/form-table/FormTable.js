@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
@@ -18,6 +18,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { getFileName, getUploadUrl } from "../../../../../utils/common";
 import { downloadApplicantProfilePdf } from "../../../_redux/redux-Actions";
+import { Send } from "lucide-react";
 
 export function FormTable() {
   const formUIContext = useFormUIContext();
@@ -35,7 +36,7 @@ export function FormTable() {
       openConvertFormDialog: formUIContext.openConvertFormDialog,
     };
   }, [formUIContext]);
-
+  const [dataIds, setDataIds] = useState([]);
   const { currentState, userAccess, pdfGenerateLoading, profilePdfLoading } = useSelector(
     (state) => ({
       currentState: state.applicant_profile,
@@ -67,12 +68,72 @@ export function FormTable() {
   const isAccessForConvert = userAccess?.find(
     (item) => item.componentName === "ConvertApplicantEmployee"
   );
+  const usersUIContext = useFormUIContext();
+  const usersUIProps = useMemo(() => {
+    return {
+      queryParams: usersUIContext.queryParams,
+    };
+  }, [usersUIContext]);
 
+  const checkDoJ = (row) => {
+ const dateOfJoining = row?.details_applicant_vacancy?.[0]?.dateOfJoining;
+    const isFutureJoiningDate = dateOfJoining
+      ? new Date(dateOfJoining) > new Date()
+      : true;
+
+    return isFutureJoiningDate;
+
+  }
+
+
+  const selectRow = {
+    mode: "checkbox",
+    clickToSelect: true,
+
+    selected: dataIds,
+
+    // nonSelectable: entities
+    //   ?.filter((row) => !row.isToConvertToEmployee )
+    //   ?.map((row) => row.Id),
+
+    nonSelectable: entities
+      ?.filter((row) => {
+        const isFutureJoiningDate = checkDoJ(row);
+        return !row.isToConvertToEmployee || isFutureJoiningDate;
+      })
+      ?.map((row) => row.Id),
+
+    // nonSelectableStyle: {
+    //   backgroundColor: "#f5f5f5",
+    // },
+
+    onSelect: (row, isSelect) => {
+      if (isSelect) {
+        setDataIds((prev) => [...prev, row.Id]);
+      } else {
+        setDataIds((prev) =>
+          prev.filter((id) => id !== row.Id)
+        );
+      }
+    },
+
+    onSelectAll: (isSelect, rows) => {
+      const selectableIds = rows
+        .filter((row) => row.isToConvertToEmployee)
+        .map((row) => row.Id);
+
+      if (isSelect) {
+        setDataIds(selectableIds);
+      } else {
+        setDataIds([]);
+      }
+    },
+  };
   const columns = [
     {
       dataField: "applicantCode",
       text: "Applicant Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "50px" },
@@ -80,7 +141,7 @@ export function FormTable() {
     {
       dataField: "FullName",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "150px" },
@@ -88,7 +149,7 @@ export function FormTable() {
     {
       dataField: "email_personal",
       text: "Personal Email",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -96,7 +157,7 @@ export function FormTable() {
     {
       dataField: "phone_cell",
       text: "Cell No.",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -120,7 +181,7 @@ export function FormTable() {
     {
       dataField: "detailsApplicantVacancy.JobVacancy.JobName",
       text: "Job Applied",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -128,7 +189,7 @@ export function FormTable() {
     {
       dataField: "detailsApplicantVacancy.applicationDate",
       text: "Application Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -136,7 +197,7 @@ export function FormTable() {
     {
       dataField: "detailsApplicantVacancy.ApplicationStatus.formName",
       text: "Applicant Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },
@@ -168,8 +229,8 @@ export function FormTable() {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
-        downloadApplicantProfilePdf,  
-        profilePdfLoading,             
+        downloadApplicantProfilePdf,
+        profilePdfLoading,
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
@@ -190,6 +251,24 @@ export function FormTable() {
 
   return (
     <div className="w-full overflow-x-auto">
+      <button
+        className={`btn btn-primary`}
+        disabled={dataIds.length === 0}
+        // onClick={() => {
+        //   dispatch(actions.convertBulkApplicantToEmployee(dataIds));
+        //   setDataIds([])
+        //   dispatch(actions.fetchApplicantProfile(usersUIProps.queryParams));
+        // }}
+        onClick={() => {
+          dispatch(actions.convertBulkApplicantToEmployee(dataIds))
+            .then(() => {
+              setDataIds([]);
+              dispatch(actions.fetchApplicantProfile(usersUIProps.queryParams));
+            });
+        }}
+      >
+        <Send className={`w-4 h-4`} /> Convert Selected Applicants to Employee ({dataIds.length})
+      </button>
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -203,6 +282,7 @@ export function FormTable() {
                 keyField="Id"
                 data={entities === null ? [] : entities}
                 columns={columns}
+                selectRow={selectRow}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}
                 {...paginationTableProps}

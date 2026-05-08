@@ -430,6 +430,7 @@ export const VALIDATION_MESSAGES = {
   amountCannotBeNegative: "Amount cannot be negative",
   amountGreaterThanZero: "Must be greater than 0",
   endDateError: "End date cannot be earlier than start date",
+  amountExceedLimit: "Amount cannot exceed limit",
 };
 
 //Server Response Messages

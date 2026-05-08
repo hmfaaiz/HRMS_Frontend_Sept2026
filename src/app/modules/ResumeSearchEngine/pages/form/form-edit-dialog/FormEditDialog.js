@@ -54,11 +54,11 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
 
-  useEffect(() => {
-    dispatch(actions.fetchResumeSearchEngineById(id));
+  // useEffect(() => {
+  //   dispatch(actions.fetchResumeSearchEngineById(id));
 
 
-  }, [id, dispatch]);
+  // }, [id, dispatch]);
 
 
   const saveForm = async (formData, diffInDate) => {

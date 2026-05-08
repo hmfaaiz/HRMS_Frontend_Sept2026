@@ -276,6 +276,11 @@ export function BanksFilter({
 
                       dispatch(fetchUsers(banksUIProps.queryParams));
                     }}
+                    value={
+                      (dashboard?.allEmpTypeDynamicChildMenus || []).find(
+                        (item) => item.value === banksUIProps?.queryParams?.employeeTypeId
+                      ) || { label: "All", value: "" }
+                    }
 
                     options={[
                       { label: "All", value: "" },

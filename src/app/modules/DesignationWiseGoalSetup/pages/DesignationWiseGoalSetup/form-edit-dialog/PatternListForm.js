@@ -341,6 +341,11 @@ function PatternListForm({
           </>
         )}
       </FieldArray>
+      {typeof errors?.list === "string" && (
+  <div className="text-danger mt-3 font-bold">
+    {errors.list}
+  </div>
+)}
     </>
   );
 }

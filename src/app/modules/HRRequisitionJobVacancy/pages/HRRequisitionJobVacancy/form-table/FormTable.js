@@ -99,7 +99,7 @@ export function FormTable() {
     {
       dataField: "CONCATJobTitle",
       text: "Job Code / Job Title",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -115,6 +115,7 @@ export function FormTable() {
     {
       dataField: "dateOfRequest",
       text: "Date of Request",
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -158,7 +159,7 @@ export function FormTable() {
     {
       dataField: "Department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -174,7 +175,7 @@ export function FormTable() {
     {
       dataField: "desireDateOfApp",
       text: "Desire Date Of Appointment",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

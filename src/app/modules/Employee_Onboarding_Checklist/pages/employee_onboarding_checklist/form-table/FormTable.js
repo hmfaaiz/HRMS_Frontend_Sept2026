@@ -2,6 +2,8 @@ import React, { useEffect, useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
+import paginationFactory, { PaginationProvider } from "react-bootstrap-table2-paginator";
+
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -10,6 +12,7 @@ import {
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelpers";
+import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { EmployeeOnboardingActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { useEmployeeOnboardingUIContext } from "../FormUIContext";
 
@@ -66,7 +69,7 @@ export function FormTable() {
     {
       dataField: "employeeName",
       text: "Employee",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "150px" },
@@ -74,7 +77,7 @@ export function FormTable() {
     {
       dataField: "department",
       text: "department",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px" },
@@ -137,23 +140,40 @@ export function FormTable() {
     return Object.values(employeeMap);
   }, [entities]);
 
+    const totalGroupedCount = groupedData.length;
+    const paginationOptions = {
+      custom: true,
+      totalSize: entities?.totalResults || 0,
+      sizePerPageList: uiHelpers.sizePerPageList,
+      sizePerPage: formUIProps.queryParams.pageSize,
+      page: formUIProps.queryParams.pageNumber,
+};
   return (
-    <div className="w-full overflow-x-auto">
-      <BootstrapTable
-        wrapperClasses="table-responsive"
-        bordered={false}
-        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-        bootstrap4
-        remote
-        keyField="Id"
-        data={groupedData}
-        columns={columns}
-        defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}
-      >
-        <PleaseWaitMessage entities={entities} />
-        <NoRecordsFoundMessage entities={entities} />
-      </BootstrapTable>
+    <div className="w-full overflow-x-auto scrollbar-fancy">
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => (
+          <>
+            <Pagination isLoading={listLoading} paginationProps={paginationProps}>
+              <BootstrapTable
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={groupedData}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}
+                {...paginationTableProps}  
+              >
+                <PleaseWaitMessage entities={entities} />
+                <NoRecordsFoundMessage entities={entities} />
+              </BootstrapTable>
+            </Pagination>
+          </>
+        )}
+      </PaginationProvider>
     </div>
   );
 }

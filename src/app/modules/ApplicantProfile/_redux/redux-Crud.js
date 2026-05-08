@@ -52,6 +52,11 @@ export function convertApplicantToEmployee(body) {
   return axios.put(`${USERS_URL}/applicant_profile/convert-applicant-employee`, body);
 }
 
+export function convertBulkApplicantToEmployee(body) {
+   
+  return axios.put(`${USERS_URL}/applicant_profile/convert-bulk-applicant-employee`, body);
+}
+
 export function generatejob_offer_letter(body) {
 
   const config = {

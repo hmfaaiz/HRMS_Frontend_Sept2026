@@ -48,7 +48,7 @@ export function FormPage({ history }) {
 
 
 
-        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
+        {/* <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
           <Card>
             <Card.Header className="d-flex justify-content-center">
               <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
@@ -63,15 +63,15 @@ export function FormPage({ history }) {
                 </Accordion.Toggle>
               </div>
             </Card.Header>
-            <Accordion.Collapse eventKey="0">
+            <Accordion.Collapse eventKey="0"> */}
 
               <>
                 <FormFIlter />
               </>
 
-            </Accordion.Collapse>
+            {/* </Accordion.Collapse>
           </Card>
-        </Accordion>
+        </Accordion> */}
 
         <FormTable />
       </TCard>

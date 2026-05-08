@@ -80,19 +80,16 @@ export function FormEditForm({
       setDiffInDate(getDateDiffInDays(start_date, end_date));
     }
   }, [start_date, end_date]);
-
+  const defaultSubsidiary = dashboard?.allSubsidiaryList?.find(
+    (item) => item.isDefault
+  );
   return (
     <Formik
       enableReinitialize={true}
-      // initialValues={{
-      //   Id:user.Id || '',
-      //   type: user.type ||  '',
-      //   value:user.value || 0,
-      //   multiplier: user.multiplier || 0,
-      //   divisor: user.divisor || 0,
-      // }}
-
-      initialValues={user}
+      initialValues={{
+        ...user,
+        subsidiaryId: defaultSubsidiary?.value || null
+      }}
       validationSchema={holidaysEditSchema}
       onSubmit={(values) => {
         enableLoading();
@@ -212,7 +209,9 @@ export function FormEditForm({
                       type="date"
                       onChange={(e) => {
                         setFieldValue("from_date", e);
+                        setFieldValue("to_date", e);
                         setStart_date(e);
+                        setEnd_date(e);
                       }}
                     />
                   </div>
@@ -232,8 +231,8 @@ export function FormEditForm({
                         setEnd_date(e);
                       }}
 
-                      // minDate={dateOfJoining}
-                      // disabled={userForEdit?.details[0]?.is_deducted }
+                    // minDate={dateOfJoining}
+                    // disabled={userForEdit?.details[0]?.is_deducted }
                     />
                   </div>
 
@@ -293,8 +292,8 @@ export function FormEditForm({
                         values?.religionId == null
                           ? { value: null, label: "All" }
                           : dashboard?.allReligionChildMenus?.find(
-                              (option) => option.value === values.religionId
-                            ) || null
+                            (option) => option.value === values.religionId
+                          ) || null
                       }
                       // value={
                       //   dashboard?.allReligionChildMenus?.find(

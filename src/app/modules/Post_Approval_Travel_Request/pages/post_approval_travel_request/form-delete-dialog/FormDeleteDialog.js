@@ -5,7 +5,7 @@ import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
-export function FormDeleteDialog({ Id, show, onHide }) {
+export function FormDeleteDialog({ Id, show, onHide, onDeleteSuccess }) {
   const [loading, setLoading] = useState(false);
 
   const formUIContext = useFormUIContext();
@@ -37,9 +37,8 @@ export function FormDeleteDialog({ Id, show, onHide }) {
       .then(() => {
         disableLoading();
         onHide();
-        dispatch(
-          actions.fetchPostApprovalTravelRequests(formUIProps.queryParams),
-        );
+        dispatch(actions.fetchPostApprovalTravelRequests(formUIProps.queryParams));
+        if (onDeleteSuccess) onDeleteSuccess();
       })
       .catch((error) => {
         console.error("Error deleting record:", error);

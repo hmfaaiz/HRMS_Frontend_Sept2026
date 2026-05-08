@@ -34,10 +34,11 @@ export function TravelWorkflowStatusTable() {
     };
   }, [formUIContext]);
 
-  const { currentState, user } = useSelector((state) => {
+  const { currentState, user, dashboard } = useSelector((state) => {
     return {
       currentState: state?.TravelRequestWorkflowStatus,
       user: state?.auth?.user,
+      dashboard: state?.dashboard,
     };
   }, shallowEqual);
 
@@ -137,11 +138,18 @@ export function TravelWorkflowStatusTable() {
       },
     },
     {
-      dataField: "parentData.travelType",
+      dataField: "parentData.TravelType.formName",
       text: "Travel Type",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
+      formatter: (cell, row) =>
+        row.parentData?.TravelType?.formName ||
+        dashboard?.allTravelTypeList?.find(
+          (opt) => String(opt.value) === String(row.parentData?.travelTypeId),
+        )?.label ||
+        row.parentData?.travelType ||
+        "-",
       style: {
         minWidth: "130px",
         maxWidth: "130px",
