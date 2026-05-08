@@ -30,6 +30,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     type: "",
     name: "",
     code: "",
+    eligibilityOfService: null,      
+    noOfTimesLeaveAvailability: null,
   };
 
 
