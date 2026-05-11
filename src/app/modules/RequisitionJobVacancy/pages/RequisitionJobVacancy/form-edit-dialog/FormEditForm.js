@@ -31,12 +31,13 @@ import { AmountInput } from "../../../../../../_metronic/_partials/controls/form
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { RichTextInput } from "../../../../../../_metronic/_partials/controls/forms/RichTextInput";
 import { CircleX } from "lucide-react";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 const jobVacancyEditSchema = Yup.object().shape({
   // jobCode: Yup.string()
   //   .min(5, "Job code must be  5 characters")
   //   .max(10, "Job code must be  10 characters")
-    // .required(VALIDATION_MESSAGES.required),
+  // .required(VALIDATION_MESSAGES.required),
   dateOfRequest: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -126,6 +127,7 @@ export function FormEditForm({
   enableLoading,
   loading,
 }) {
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   const [jobCode, setJobCode] = useState("");
@@ -199,7 +201,13 @@ export function FormEditForm({
         jobSummary: he.decode(formData?.jobSummary || ""),
       }}
       validationSchema={jobVacancyEditSchema}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
+        const result = await confirm(
+          "Confirm Submission",
+          "Are you sure want to submit this request?",
+          "No",
+          "Yes",
+        );
         values.preferredAgeFrom =
           values.preferredAgeFrom === "" || values.preferredAgeFrom === null
             ? null
@@ -209,9 +217,10 @@ export function FormEditForm({
           values.preferredAgeTo === "" || values.preferredAgeTo === null
             ? null
             : Number(values.preferredAgeTo);
-        enableLoading();
-
-        saveForm({ ...values, authortiesList: empAuthorityList });
+        if (result) {
+          enableLoading();
+          saveForm({ ...values, authortiesList: empAuthorityList });
+        }
       }}
     >
       {({
@@ -224,6 +233,7 @@ export function FormEditForm({
         setFieldTouched,
       }) => (
         <>
+          <ConfirmationComponent />
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
