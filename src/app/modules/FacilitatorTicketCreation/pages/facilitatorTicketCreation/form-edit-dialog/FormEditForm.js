@@ -93,19 +93,19 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .required(VALIDATION_MESSAGES.required),
 
 
-      timeRangeFrom: Yup.string()
-        .when("timeRangeTo", {
-          is: (value) => value !== null && value !== "",
-          then: Yup.string().required(VALIDATION_MESSAGES.required),
-          otherwise: Yup.string().notRequired(),
-        }),
+      // timeRangeFrom: Yup.string()
+      //   .when("timeRangeTo", {
+      //     is: (value) => value !== null && value !== "",
+      //     then: Yup.string().required(VALIDATION_MESSAGES.required),
+      //     otherwise: Yup.string().notRequired(),
+      //   }),
 
-      timeRangeTo: Yup.string()
-        .when("timeRangeFrom", {
-          is: (value) => value !== null && value !== "",
-          then: Yup.string().required(VALIDATION_MESSAGES.required),
-          otherwise: Yup.string().notRequired(),
-        }),
+      // timeRangeTo: Yup.string()
+      //   .when("timeRangeFrom", {
+      //     is: (value) => value !== null && value !== "",
+      //     then: Yup.string().required(VALIDATION_MESSAGES.required),
+      //     otherwise: Yup.string().notRequired(),
+      //   }),
 
 
 
@@ -120,29 +120,29 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .nullable()
         .required(VALIDATION_MESSAGES.required),
 
-      timeRangeFrom: Yup.string().test(
-        "from-required-if-to",
-        VALIDATION_MESSAGES.required,
-        function (value) {
-          const { timeRangeTo } = this.parent;
-          if (timeRangeTo && !value) {
-            return false;
-          }
-          return true;
-        }
-      ),
+      // timeRangeFrom: Yup.string().test(
+      //   "from-required-if-to",
+      //   VALIDATION_MESSAGES.required,
+      //   function (value) {
+      //     const { timeRangeTo } = this.parent;
+      //     if (timeRangeTo && !value) {
+      //       return false;
+      //     }
+      //     return true;
+      //   }
+      // ),
 
-      timeRangeTo: Yup.string().test(
-        "to-required-if-from",
-        VALIDATION_MESSAGES.required,
-        function (value) {
-          const { timeRangeFrom } = this.parent;
-          if (timeRangeFrom && !value) {
-            return false;
-          }
-          return true;
-        }
-      ),
+      // timeRangeTo: Yup.string().test(
+      //   "to-required-if-from",
+      //   VALIDATION_MESSAGES.required,
+      //   function (value) {
+      //     const { timeRangeFrom } = this.parent;
+      //     if (timeRangeFrom && !value) {
+      //       return false;
+      //     }
+      //     return true;
+      //   }
+      // ),
 
 
 

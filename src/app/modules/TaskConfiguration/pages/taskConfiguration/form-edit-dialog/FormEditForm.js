@@ -61,7 +61,7 @@ export function FormEditForm({
 
   const { roles } = useSelector((state) => {
     return {
-   
+
       roles: state.users?.roles?.allRoles || []
     };
   }, shallowEqual);
@@ -74,7 +74,7 @@ export function FormEditForm({
       validationSchema={taskConfigEditSchema}
       onSubmit={(values) => {
         enableLoading();
-       
+
 
         saveForm(values);
       }}
@@ -178,6 +178,34 @@ export function FormEditForm({
 
 
                     </div>
+
+                    <div className="">
+                      <label>
+                        Task Creation Policy
+                      </label>
+
+
+
+
+                      <div className="overflow-auto max-h-32 border-none scrollbar-fancy">
+                        <div className="flex justify-start items-center">
+                          <input
+                            className="mr-1"
+                            name="isAllowedToCreateTask"
+                            type="checkbox"
+                            checked={values?.isAllowedToCreateTask}
+                            onChange={(e) => {
+                              setFieldValue("isAllowedToCreateTask", e.target.checked);
+                            }}
+                          />
+                          <label>Allow users to create tickets for Employee Onboarding and Exit Clearance processes.</label>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+
 
 
 
