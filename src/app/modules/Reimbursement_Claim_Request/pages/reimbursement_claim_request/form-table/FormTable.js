@@ -54,7 +54,7 @@ export function FormTable() {
     {
       dataField: "ReimbursementType.formName",
       text: "Reimbursement Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "160px", maxWidth: "160px" },
@@ -62,7 +62,7 @@ export function FormTable() {
     {
       dataField: "date",
       text: "Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
@@ -70,7 +70,7 @@ export function FormTable() {
     {
       dataField: "amount",
       text: "Amount",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
@@ -87,7 +87,7 @@ export function FormTable() {
     {
       dataField: "request_status",
       text: "Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "140px", maxWidth: "140px" },

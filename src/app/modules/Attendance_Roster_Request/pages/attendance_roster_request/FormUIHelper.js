@@ -1,4 +1,4 @@
-export const defaultSorted = [{ dataField: "id", order: "asc" }];
+export const defaultSorted = [{ dataField: "from", order: "asc" }];
 
 export const sizePerPageList = [
   { text: "3", value: 3 },
@@ -8,9 +8,10 @@ export const sizePerPageList = [
 
 export const initialFilter = {
   filter: {
-    requestStatus: "P",
-  },
+  request_status: "P",
+},
   sortOrder: "asc",
+  sortField: "from",
   pageSize: 5,
   pageNumber: 1,
 };

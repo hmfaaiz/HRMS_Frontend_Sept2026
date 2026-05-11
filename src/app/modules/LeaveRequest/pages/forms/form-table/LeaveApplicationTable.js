@@ -59,7 +59,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "t_leave_type.name",
       text: "Leave Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -70,7 +70,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "from",
       text: "From",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -84,7 +84,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "to",
       text: "To",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -98,7 +98,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "days",
       text: "Days",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -130,7 +130,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "request_status",
       text: "Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

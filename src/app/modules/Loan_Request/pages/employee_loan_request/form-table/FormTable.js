@@ -66,7 +66,7 @@ export function FormTable() {
     {
       dataField: "LoanType.name",
       text: "Loan Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -77,7 +77,7 @@ export function FormTable() {
     {
       dataField: "total_loan_amount",
       text: "total loan amount",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -89,7 +89,7 @@ export function FormTable() {
     {
       dataField: "monthly_installment",
       text: "monthly installment",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -101,7 +101,7 @@ export function FormTable() {
     {
       dataField: "total_installment",
       text: "total installments",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -127,7 +127,7 @@ export function FormTable() {
     {
       dataField: "request_status",
       text: "Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {

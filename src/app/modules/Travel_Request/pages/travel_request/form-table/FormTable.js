@@ -61,7 +61,7 @@ export function FormTable({ onViewClick }) {
     {
       dataField: "TravelType.formName",
       text: "Travel Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       formatter: (cell, row) =>
         row.TravelType?.formName || row.travelType || "-",
@@ -70,7 +70,7 @@ export function FormTable({ onViewClick }) {
     {
       text: "Purpose of Travel",
       dataField: "purposeOfTravel",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       style: { minWidth: "180px" },
     },
@@ -149,6 +149,8 @@ export function FormTable({ onViewClick }) {
     {
       dataField: "request_status",
       text: "Status",
+      sort: true,
+      sortCaret: sortCaret,
       formatter: (cell, row) => {
         let text = "";
         let className = "";

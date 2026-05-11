@@ -48,7 +48,7 @@ export function FormTable() {
     {
       dataField: "from",
       text: "From",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px" },
@@ -57,7 +57,7 @@ export function FormTable() {
     {
       dataField: "to",
       text: "To",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px" },
@@ -67,7 +67,7 @@ export function FormTable() {
     {
       dataField: "isEnable_roster_via_shift",
       text: "Type",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px" },
@@ -88,7 +88,7 @@ export function FormTable() {
     {
       dataField: "request_status",
       text: "Status",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px" },
