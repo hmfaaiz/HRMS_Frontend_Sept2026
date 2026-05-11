@@ -216,7 +216,8 @@ import { RosterWorkflowStatusSlice } from "../app/modules/Attendance_Roster_Work
 import { postApprovalTravelRequestSlice } from "../app/modules/Post_Approval_Travel_Request/_redux/redux-Slice";
 import { PortalRosterCalendarSlice } from "../app/modules/Roster_Calendar_Portal/_redux/redux-Slice";
 import { CompanyAttMachineConfigSlice } from "../app/modules/Company_att_machine_config/_redux/redux-Slice";
-
+import { InterviewQuestionnaireSlice } from "../app/modules/Interview_Questionnaire/_redux/redux-Slice";
+import { InterviewRecommendationSlice } from "../app/modules/Interview_Recommendations/_redux/redux-Slice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -430,6 +431,8 @@ export const rootReducer = combineReducers({
   post_approval_travel_request : postApprovalTravelRequestSlice.reducer,
   roster_calendar_team : PortalRosterCalendarSlice.reducer,
   company_att_machine_config: CompanyAttMachineConfigSlice.reducer,
+  interview_questionnaire: InterviewQuestionnaireSlice.reducer,
+  interview_recommendations: InterviewRecommendationSlice.reducer,
   TravelRequestWorkflowStatus: TravelRequestWorkflowStatusSlice.reducer,
   TravelRequestWorkflowAdmin: TravelRequestWorkflowAdminSlice.reducer,
 });

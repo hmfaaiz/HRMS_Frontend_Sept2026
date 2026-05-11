@@ -18,7 +18,10 @@ export const initialFilter = {
     locationId: "",
     attendanceType: "",
     employeeId: "",
-    payroll_monthId:""
+    payroll_monthId:"",
+    attendance_field: "",
+    attendance_operator: "",
+    attendance_count: "",
    
   
   },
