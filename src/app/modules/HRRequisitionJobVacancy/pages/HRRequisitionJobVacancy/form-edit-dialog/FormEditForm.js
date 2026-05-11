@@ -33,23 +33,28 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { RichTextInput } from "../../../../../../_metronic/_partials/controls/forms/RichTextInput";
 
 const jobVacancyEditSchema = Yup.object().shape({
-
-
-  jobCode: Yup.string()
-    .min(5, "Job code must be  5 characters")
-    .max(10, "Job code must be  10 characters")
-    .required(VALIDATION_MESSAGES.required),
+  // jobCode: Yup.string()
+  //   .min(5, "Job code must be  5 characters")
+  //   .max(10, "Job code must be  10 characters")
+  // .required(VALIDATION_MESSAGES.required),
   dateOfRequest: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
+  gradeId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
+  designationId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
   jobTitle: Yup.string()
     .min(1, "Job title must be at least 1 characters")
     .max(100, "Job title must be at most 100 characters")
     .required(VALIDATION_MESSAGES.required),
 
   locationId: Yup.string()
-    .nullable().required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
   jobPreferenceId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -59,13 +64,12 @@ const jobVacancyEditSchema = Yup.object().shape({
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   hiringReasonId: Yup.string()
-    .nullable().required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
   desireDateOfApp: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
-
-
 
   // notApprovedRemarks: Yup.string().when("decision", {
   //     is: 0, // if decision === 2
@@ -74,19 +78,19 @@ const jobVacancyEditSchema = Yup.object().shape({
   //   }),
 
   workExpFrom: Yup.number()
-  .nullable()
+    .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
 
     .required(VALIDATION_MESSAGES.required),
 
   workExpTo: Yup.number()
-   .nullable()
+    .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
     .max(60, "Experience (to) should not be greater than 60.")
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
       Yup.ref("workExpFrom"),
-      "Experience (to) must be greater than experience from"
+      "Experience (to) must be greater than experience from",
     ),
 
   preferredQualificationId: Yup.number()
@@ -96,10 +100,8 @@ const jobVacancyEditSchema = Yup.object().shape({
   decision: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
-  requisitionReferenceNo: Yup.string()
-    .nullable(),
-    // .required(VALIDATION_MESSAGES.required),
-
+  requisitionReferenceNo: Yup.string().nullable(),
+  // .required(VALIDATION_MESSAGES.required),
 
   salaryRangeFrom: Yup.number()
     .min(1, VALIDATION_MESSAGES.minOneValue)
@@ -110,7 +112,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
       Yup.ref("salaryRangeFrom"),
-      "Salary To must be greater than Salary From"
+      "Salary To must be greater than Salary From",
     ),
 
   isReplacement: Yup.boolean(),
@@ -142,49 +144,57 @@ export function FormEditForm({
   //drop down
   useEffect(() => {
     if (!formData.Id) {
-
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // For Location
-
+      dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
       dispatch(fetchAllFormsMenu(410, "allHiringReasonList"));
       dispatch(fetchAllFormsMenu(442, "alljobPreferenceList"));
       dispatch(fetchAllFormsMenu(108, "allQualificationList"));
 
       dispatch(fetchAllParentDept());
-      dispatch(fetchAllEmployeesWithNoPermissionData("allEmployeesWithNoPermissionList"));
+      dispatch(
+        fetchAllEmployeesWithNoPermissionData(
+          "allEmployeesWithNoPermissionList",
+        ),
+      );
       dispatch(fetchAllDept());
+    } else {
+      dispatch(
+        fetchAllDesignationByGradeId(
+          formData?.gradeId,
+          "allDesignationByGrade",
+        ),
+      );
     }
   }, [dispatch, formData.Id]);
 
   const { currentUser } = useSelector((state) => {
     return {
-
       currentUser: state.auth.user,
     };
   }, shallowEqual);
 
-  console.log("currentUser1111", currentUser)
+  console.log("currentUser1111", currentUser);
 
-  const fetchData = async (setJobCode) => {
-    if (!formData.Id) {
-      dispatch(
-        getLatestTableId(
-          "r_jobvacancy",
-          "jobCode",
-          "companyId =" + currentUser.companyId,
-          setJobCode
-        )
-      );
-    }
-  };
-  useEffect(() => {
-    fetchData(setJobCode);
-  }, [formData.Id]);
+  // const fetchData = async (setJobCode) => {
+  //   if (!formData.Id) {
+  //     dispatch(
+  //       getLatestTableId(
+  //         "r_jobvacancy",
+  //         "jobCode",
+  //         "companyId =" + currentUser.companyId,
+  //         setJobCode,
+  //       ),
+  //     );
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchData(setJobCode);
+  // }, [formData.Id]);
 
   const decisionOptions = [
     { value: 0, label: "Not Approved" },
     { value: 1, label: "Approved" },
     // { value: 2, label: "Send Back for Clarification" },
-
   ];
 
   // jobPostingStatus 4: Requisition Request
@@ -193,16 +203,16 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...formData,
-        jobCode: formData.jobCode ? formData?.jobCode : jobCode, departmentId: currentUser?.EmployeeMapping?.departmentId,
+        // jobCode: formData.jobCode ? formData?.jobCode : jobCode,
+        departmentId: currentUser?.EmployeeMapping?.departmentId,
         dateOfRequest: formData?.dateOfRequest
           ? formData?.dateOfRequest
-          : formatDates(new Date(), "yyyy-MM-dd"), dateOfReviewed: formData?.dateOfReviewed
-            ? formData?.dateOfReviewed
-            : formatDates(new Date(), "yyyy-MM-dd"),
+          : formatDates(new Date(), "yyyy-MM-dd"),
+        dateOfReviewed: formData?.dateOfReviewed
+          ? formData?.dateOfReviewed
+          : formatDates(new Date(), "yyyy-MM-dd"),
 
-        jobSummary: he.decode(
-          formData?.jobSummary || ""
-        ),
+        jobSummary: he.decode(formData?.jobSummary || ""),
       }}
       validationSchema={jobVacancyEditSchema}
       onSubmit={(values) => {
@@ -243,25 +253,27 @@ export function FormEditForm({
                 <div>
                   {/* <h6>Job</h6> */}
                   <div className="grid md:grid-cols-6 gap-x-3">
-                    <div className="">
-                      <label>
-                        <span>
-                          Job Code<span style={{ color: "red" }}>*</span>
-                        </span>
-                      </label>
-                      <Field
-                        name="jobCode"
-                        component={Input}
-                        placeholder="Enter code"
-                        disabled={true}
-                        type="text"
-                        minLength={5}
-                        maxLength={10}
-                      />
-                      {/* {errors.jobCode && (
+                    {values?.Id ? (
+                      <div className="">
+                        <label>
+                          <span>
+                            Job Code<span style={{ color: "red" }}>*</span>
+                          </span>
+                        </label>
+                        <Field
+                          name="jobCode"
+                          component={Input}
+                          placeholder="Enter code"
+                          disabled={true}
+                          type="text"
+                          minLength={5}
+                          maxLength={10}
+                        />
+                        {/* {errors.jobCode && (
                         <div className="invalid-feedback d-block">{errors.jobCode}</div>
                       )} */}
-                    </div>
+                      </div>
+                    ) : null}
 
                     <div className="">
                       <label>
@@ -272,7 +284,9 @@ export function FormEditForm({
                         className="form-control"
                         placeholder="Date of Recieved "
                         selected={
-                          values?.dateOfRequest ? new Date(values.dateOfRequest) : null
+                          values?.dateOfRequest
+                            ? new Date(values.dateOfRequest)
+                            : null
                         }
                         disabled={true}
                         dateFormat="dd-MMM-yyyy"
@@ -289,7 +303,6 @@ export function FormEditForm({
                       )}
                     </div>
 
-
                     <div className="">
                       <label>
                         {" "}
@@ -299,7 +312,9 @@ export function FormEditForm({
                         className="form-control"
                         placeholder="Date Of Reviewed "
                         selected={
-                          values?.dateOfReviewed ? new Date(values.dateOfReviewed) : null
+                          values?.dateOfReviewed
+                            ? new Date(values.dateOfReviewed)
+                            : null
                         }
                         disabled={true}
                         dateFormat="dd-MMM-yyyy"
@@ -316,23 +331,14 @@ export function FormEditForm({
                       )}
                     </div>
 
-
-
                     <div>
-
-
                       <label>Requested By</label>
-
-
 
                       <SearchSelect
                         name="requestedBy"
                         isDisabled={true}
-
                         onChange={(e) => {
                           setFieldValue("requestedBy", e.value || null);
-
-
                         }}
                         // value={
                         //   dashboard?.allEmployeesWithNoPermissionList?.find(
@@ -344,50 +350,37 @@ export function FormEditForm({
                           dashboard?.allEmployeesWithNoPermissionList?.find(
                             (option) =>
                               option?.value ===
-                              (values?.requestedBy ?? currentUser?.employeeIdMapping)
+                              (values?.requestedBy ??
+                                currentUser?.employeeIdMapping),
                           ) || null
                         }
                         error={errors.requestedBy}
                         touched={touched.requestedBy}
-
                         options={dashboard.allEmployeesWithNoPermissionList}
-
                       />
                     </div>
 
-
-
-
-
                     <div>
-
-
                       <label>Request Reviewed By </label>
-
-
 
                       <SearchSelect
                         name="requestReviewedBy"
                         isDisabled={true}
-
                         onChange={(e) => {
                           setFieldValue("requestReviewedBy", e.value || null);
-
-
                         }}
                         value={
                           dashboard?.allEmployeesWithNoPermissionList?.find(
-                            (option) => option?.value == values?.requestReviewedBy || option?.value == currentUser?.employeeIdMapping
+                            (option) =>
+                              option?.value == values?.requestReviewedBy ||
+                              option?.value == currentUser?.employeeIdMapping,
                           ) || null
                         }
                         error={errors.requestReviewedBy}
                         touched={touched.requestReviewedBy}
-
                         options={dashboard.allEmployeesWithNoPermissionList}
-
                       />
                     </div>
-
 
                     <div className="">
                       <label>
@@ -404,10 +397,8 @@ export function FormEditForm({
                         max={20}
                       />
                     </div>
-
                   </div>
                 </div>
-
 
                 {/* Job Vacany Detail */}
                 <hr></hr>
@@ -421,6 +412,61 @@ export function FormEditForm({
                       </h6>
                     </div>
                     <div className="grid md:grid-cols-6 gap-x-3">
+                      <div className="">
+                        <SearchSelect
+                          name="gradeId"
+                          label={
+                            <span>
+                              Grade<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={isdataForRead}
+                          onChange={(e) => {
+                            if (e?.value) {
+                              setFieldValue("gradeId", e.value || null);
+                              setFieldValue("designationId", null);
+                              setFieldValue("jobTitle", "");
+                              dispatch(
+                                fetchAllDesignationByGradeId(
+                                  e?.value,
+                                  "allDesignationByGrade",
+                                ),
+                              );
+                            }
+                          }}
+                          value={
+                            dashboard?.allEmployeegradeList?.find(
+                              (option) => option.value === values.gradeId,
+                            ) || null
+                          }
+                          options={dashboard?.allEmployeegradeList}
+                          error={errors.gradeId}
+                          touched={touched.gradeId}
+                        />
+                      </div>
+                      <div className="">
+                        <SearchSelect
+                          name="designationId"
+                          label={
+                            <span>
+                              Designation<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={isdataForRead || !values?.gradeId}
+                          onChange={(e) => {
+                            setFieldValue("designationId", e.value || null);
+                            setFieldValue("jobTitle", e.label || ""); // Set job title based on designation
+                          }}
+                          value={
+                            dashboard?.allDesignationByGrade?.find(
+                              (option) => option.value === values.designationId,
+                            ) || null
+                          }
+                          options={dashboard?.allDesignationByGrade}
+                          error={errors.designationId}
+                          touched={touched.designationId}
+                        />
+                      </div>
                       <div className="">
                         <label>
                           <span>
@@ -450,7 +496,6 @@ export function FormEditForm({
                         />
                       </div>
 
-
                       <div className="">
                         <SearchSelect
                           name="hiringReasonId"
@@ -463,15 +508,13 @@ export function FormEditForm({
                           isDisabled={isdataForRead}
                           onChange={(e) => {
                             setFieldValue("hiringReasonId", e.value || null);
-                             setFieldValue(
-                                "isReplacement",
-                                false
-                              )
-                              setFieldValue("replacementEmpId",null)
+                            setFieldValue("isReplacement", false);
+                            setFieldValue("replacementEmpId", null);
                           }}
                           value={
                             dashboard?.allHiringReasonList?.find(
-                              (option) => option.value === values.hiringReasonId
+                              (option) =>
+                                option.value === values.hiringReasonId,
                             ) || null
                           }
                           options={dashboard?.allHiringReasonList}
@@ -480,23 +523,22 @@ export function FormEditForm({
                         />
                       </div>
 
-
                       <div>
-
                         <div className="flex items-center gap-1 mt-1">
                           <label>Replacement By</label>
                           <input
                             name="isReplacement"
                             type="checkbox"
-                             disabled={values.hiringReasonId === 427 ? false : true}
+                            disabled={
+                              values.hiringReasonId === 427 ? false : true
+                            }
                             // onChange={handleChange}
                             onChange={() =>
                               setFieldValue(
                                 "isReplacement",
-                                !values?.isReplacement
+                                !values?.isReplacement,
                               )
                             }
-
                             value={values.isReplacement}
                             checked={values.isReplacement}
                             label="Is Replacement"
@@ -511,94 +553,89 @@ export function FormEditForm({
                         <SearchSelect
                           name="replacementEmpId"
                           // isDisabled={isdataForRead || !values.isReplacement}
-                            isDisabled={isdataForRead || !values.isReplacement || Number(values.hiringReasonId) !== 427}
-
+                          isDisabled={
+                            isdataForRead ||
+                            !values.isReplacement ||
+                            Number(values.hiringReasonId) !== 427
+                          }
                           onChange={(e) => {
                             setFieldValue("replacementEmpId", e.value || null);
-
-
                           }}
                           value={
                             dashboard?.allEmployeesWithNoPermissionList?.find(
-                              (option) => option?.value == values?.replacementEmpId
+                              (option) =>
+                                option?.value == values?.replacementEmpId,
                             ) || null
                           }
                           error={errors.replacementEmpId}
                           touched={touched.replacementEmpId}
-
                           options={[
                             { value: null, label: "Select" },
                             ...dashboard.allEmployeesWithNoPermissionList.filter(
-                              (x) => x.departmentId === currentUser?.EmployeeMapping?.departmentId
+                              (x) =>
+                                x.departmentId ===
+                                currentUser?.EmployeeMapping?.departmentId,
                             ),
                           ]}
-
                         />
                       </div>
 
+                      <div className="">
+                        <label>
+                          <span>
+                            Work Exp. From (No. of Years)
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        </label>
+                        <Field
+                          name="workExpFrom"
+                          component={Input}
+                          placeholder="Enter work experience (from)"
+                          type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(
+                              e.target.value,
+                              2,
+                            );
+                          }}
+                        />
+                      </div>
 
-                       <div className="">
-                                          <label>
-                                            <span>
-                                              Work Exp. From (No. of Years)
-                                              <span style={{ color: "red" }}>*</span>
-                                            </span>
-                                          </label>
-                                          <Field
-                                            name="workExpFrom"
-                                            component={Input}
-                                            placeholder="Enter work experience (from)"
-                                            type="number"
-                                            onInput={(e) => {
-                                              e.target.value = amountLimitDynamic(e.target.value, 2);
-                                            }}
-                                          />
-                                        </div>
-                      
-                                        <div className="">
-                                          <label>
-                                            <span>
-                                              Work Exp. To  (No. of Years)
-                                              <span style={{ color: "red" }}>*</span>
-                                            </span>
-                                          </label>
-                                          <Field
-                                            name="workExpTo"
-                                            component={Input}
-                                            placeholder="Enter work experience (to)"
-                                            type="number"
-                                            onInput={(e) => {
-                                              e.target.value = amountLimitDynamic(e.target.value, 2);
-                                            }}
-                                          />
-                                        </div>
-
+                      <div className="">
+                        <label>
+                          <span>
+                            Work Exp. To (No. of Years)
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        </label>
+                        <Field
+                          name="workExpTo"
+                          component={Input}
+                          placeholder="Enter work experience (to)"
+                          type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(
+                              e.target.value,
+                              2,
+                            );
+                          }}
+                        />
+                      </div>
                     </div>
-
                   </div>
-
-
                 </div>
-
-
-
-
-
 
                 <hr></hr>
 
                 {/* Position Preferences */}
 
                 <div className="grid md:grid-cols-6 gap-x-3">
-                  <div className="grid col-span-6">
+                  <div className="grid col-span-4">
                     <h6 className="font-bold mb-0 text-primary my-2">
                       Position Preferences
                     </h6>
 
-                    <div className="grid md:grid-cols-6 gap-x-3 ">
-
-
-
+                    <div className="grid md:grid-cols-5 gap-x-3 ">
                       <div className="">
                         <label>
                           {" "}
@@ -615,8 +652,8 @@ export function FormEditForm({
                                   value={option?.value}
                                   checked={Boolean(
                                     values?.locationId?.includes(
-                                      option?.value?.toString()
-                                    )
+                                      option?.value?.toString(),
+                                    ),
                                   )}
                                   onChange={handleChange}
                                 />
@@ -647,7 +684,7 @@ export function FormEditForm({
                           value={
                             dashboard?.alljobPreferenceList?.find(
                               (option) =>
-                                option.value === values.jobPreferenceId
+                                option.value === values.jobPreferenceId,
                             ) || null
                           }
                           options={dashboard?.alljobPreferenceList}
@@ -655,7 +692,6 @@ export function FormEditForm({
                           touched={touched.jobPreferenceId}
                         />
                       </div>
-
 
                       <div className="">
                         <label>
@@ -686,19 +722,14 @@ export function FormEditForm({
                           //     : new Date()
                           // }
 
-                           minDate={
-                            (() => {
-                              const baseDate = values?.jobPostingDateFrom
-                                ? new Date(values.jobPostingDateFrom)
-                                : new Date();
-                              baseDate.setDate(baseDate.getDate() + 1); // add 1 day
-                              return baseDate;
-                            })()
-                          }
-
+                          minDate={(() => {
+                            const baseDate = values?.jobPostingDateFrom
+                              ? new Date(values.jobPostingDateFrom)
+                              : new Date();
+                            baseDate.setDate(baseDate.getDate() + 1); // add 1 day
+                            return baseDate;
+                          })()}
                         />
-
-
                       </div>
                       <div className="">
                         <SearchSelect
@@ -713,13 +744,14 @@ export function FormEditForm({
                           onChange={(e) => {
                             setFieldValue(
                               "preferredQualificationId",
-                              e.value || null
+                              e.value || null,
                             );
                           }}
                           value={
                             dashboard?.allQualificationList?.find(
                               (option) =>
-                                option.value === values.preferredQualificationId
+                                option.value ===
+                                values.preferredQualificationId,
                             ) || null
                           }
                           options={dashboard?.allQualificationList}
@@ -727,7 +759,6 @@ export function FormEditForm({
                           touched={touched.preferredQualificationId}
                         />
                       </div>
-
 
                       <div className="">
                         <SearchSelect
@@ -744,12 +775,11 @@ export function FormEditForm({
                           }}
                           onChange={(e) => {
                             setFieldValue("departmentId", e.value || null);
-
                           }}
-
                           value={
                             dashboard.allDept?.find(
-                              (option) => option?.value === values?.departmentId
+                              (option) =>
+                                option?.value === values?.departmentId,
                             ) || null
                           }
                           error={errors.departmentId}
@@ -758,12 +788,61 @@ export function FormEditForm({
                         />
                       </div>
                     </div>
+                  </div>
+                  <div className="col-span-2">
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      Salary Range (Per Month)
+                    </h6>
 
+                    <div className="grid md:grid-cols-2 gap-x-3 gap-y-1">
+                      <div className="">
+                        <AmountInput
+                          field={{
+                            name: `salaryRangeFrom`,
+                            value: values?.salaryRangeFrom,
+                          }}
+                          form={{
+                            touched,
+                            errors,
+                            setFieldValue,
+                            setFieldTouched,
+                          }}
+                          disabled={isdataForRead}
+                          placeholder="Enter salary range (from)"
+                          label={
+                            <span>
+                              From
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                        />
+                      </div>
 
+                      <div className="">
+                        <AmountInput
+                          field={{
+                            name: `salaryRangeTo`,
+                            value: values?.salaryRangeTo,
+                          }}
+                          form={{
+                            touched,
+                            errors,
+                            setFieldValue,
+                            setFieldTouched,
+                          }}
+                          placeholder="Enter salary range (to)"
+                          disabled={isdataForRead}
+                          label={
+                            <span>
+                              To
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-
 
                 <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
                   <div className="">
@@ -776,27 +855,19 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("jobSummary", e);
                       }}
-
-
                     />
                   </div>
                 </div>
 
-
-
-                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
-                  <div >
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1 mt-1">
+                  <div>
                     <Field
                       name="reasonForRequest"
                       component={TextArea}
                       label="Reason for Request"
                     />
                   </div>
-                </div>
-
-
-                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
-                  <div >
+                  <div>
                     <Field
                       name="keyResponsibility"
                       component={TextArea}
@@ -805,20 +876,15 @@ export function FormEditForm({
                   </div>
                 </div>
 
-
-                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
-                  <div >
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1 mt-1">
+                  <div>
                     <Field
                       name="hrRemarks"
                       component={TextArea}
                       label="HR Remarks"
                     />
                   </div>
-                </div>
-
-
-                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
-                  <div >
+                  <div>
                     <Field
                       name="additionalNotes"
                       component={TextArea}
@@ -827,70 +893,11 @@ export function FormEditForm({
                   </div>
                 </div>
 
-
-
                 {/* Compensation & Benefits */}
 
                 <hr></hr>
 
-                <h6 className="font-bold mb-0 text-primary my-2">
-                  Salary Range (Per Month)
-                </h6>
-
                 <div className="grid md:grid-cols-6 gap-x-3 gap-y-1">
-                  <div className="">
-                    <AmountInput
-                      field={{
-                        name: `salaryRangeFrom`,
-                        value: values?.salaryRangeFrom,
-                      }}
-                      form={{
-                        touched,
-                        errors,
-                        setFieldValue,
-                        setFieldTouched,
-                      }}
-                      disabled={isdataForRead}
-                      placeholder="Enter salary range (from)"
-                      label={
-                        <span>
-                          From
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                    />
-                  </div>
-
-                  <div className="">
-                    <AmountInput
-                      field={{
-                        name: `salaryRangeTo`,
-                        value: values?.salaryRangeTo,
-                      }}
-                      form={{
-                        touched,
-                        errors,
-                        setFieldValue,
-                        setFieldTouched,
-                      }}
-                      placeholder="Enter salary range (to)"
-                      disabled={isdataForRead}
-                      label={
-                        <span>
-                          To
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                    />
-                  </div>
-
-
-
-                </div>
-
-
-                <div className="grid md:grid-cols-6 gap-x-3 gap-y-1">
-
                   <div className="md:col-span-1 mt-1">
                     <label htmlFor="decision">
                       Decision<span style={{ color: "red" }}>*</span>
@@ -902,7 +909,7 @@ export function FormEditForm({
                       disabled={isdataForRead}
                       onChange={(e) => {
                         setFieldValue("decision", e.target.value); // Use the raw value
-                        setFieldValue("notApprovedRemarks", "")
+                        setFieldValue("notApprovedRemarks", "");
                       }}
                     >
                       <option value="">Select </option>
@@ -912,32 +919,22 @@ export function FormEditForm({
                         </option>
                       ))}
                     </Field>
-                    {errors.decision &&
-                      touched.decision && (
-                        <div className="text-red-400 text-xs mt-1">
-                          {errors.decision}
-                        </div>
-                      )}
+                    {errors.decision && touched.decision && (
+                      <div className="text-red-400 text-xs mt-1">
+                        {errors.decision}
+                      </div>
+                    )}
                   </div>
-
-
-
-
 
                   <div className="md:col-span-5 mt-1">
                     <Field
                       name="notApprovedRemarks"
-
                       component={TextArea}
                       label="Decision Remarks"
                     />
                   </div>
                 </div>
                 <hr></hr>
-
-
-
-
               </fieldset>
             </Form>
           </Modal.Body>
@@ -960,8 +957,6 @@ export function FormEditForm({
               </button>
             )}
 
-
-
             {!isdataForRead && (
               <button
                 type="submit"
@@ -976,8 +971,7 @@ export function FormEditForm({
             )}
           </Modal.Footer>
         </>
-      )
-      }
-    </Formik >
+      )}
+    </Formik>
   );
 }

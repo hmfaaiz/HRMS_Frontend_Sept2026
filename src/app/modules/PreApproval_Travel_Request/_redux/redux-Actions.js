@@ -138,7 +138,10 @@ export const fetchTadaConfigByEmployeeId = (employeeId) => (dispatch) => {
     });
 };
 
-export const fetchLastApprovedTravelRequest = (employeeId, setLastTravelData) => (dispatch) => {
+export const fetchLastApprovedTravelRequest = (
+  employeeId,
+  setLastTravelData,
+) => (dispatch) => {
   if (!employeeId) return;
 
   const queryParams = {
@@ -146,22 +149,53 @@ export const fetchLastApprovedTravelRequest = (employeeId, setLastTravelData) =>
       employeeId: employeeId,
       isActive: 1,
       approved_status: 1,
-      request_status: "A"
+      request_status: "A",
     },
     pageSize: 1,
-    pageNumber: 1
+    pageNumber: 1,
   };
 
   return requestFromServer
     .getAllPreApprovalTravelRequest(queryParams)
     .then((response) => {
       const data = response.data?.data || response.data;
-      const entities = data?.entities || data?.rows || (Array.isArray(data) ? data : []);
+      const entities =
+        data?.entities || data?.rows || (Array.isArray(data) ? data : []);
       const lastRecord = entities.length > 0 ? entities[0] : null;
       setLastTravelData(lastRecord);
     })
     .catch((error) => {
       console.error("Error fetching last travel details:", error);
       setLastTravelData(null);
+    });
+};
+
+export const fetchPreApprovalTravelRequestReport = (id) => async (dispatch) => {
+  if (!id) return;
+
+  dispatch(actions.startCall({ callType: callTypes.pdf }));
+
+  return requestFromServer
+    .getPreApprovalTravelRequestReportById(id)
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger browser download
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.setAttribute("download", "PreApproval_Travel_Request_Report.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      dispatch(actions.pdfFetched({}));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't generate report";
+      dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+      toast.error(
+        error?.response?.data?.message || "Failed to generate report",
+      );
     });
 };

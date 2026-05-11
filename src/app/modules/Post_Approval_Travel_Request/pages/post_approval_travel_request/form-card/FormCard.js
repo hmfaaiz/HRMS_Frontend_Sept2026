@@ -3,7 +3,6 @@ import { useFormUIContext } from "../FormUIContext";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
-import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import { FormEditForm } from "../form-edit-dialog/FormEditForm";
 import { FormTable } from "../form-table/FormTable";
@@ -192,12 +191,6 @@ export function FormCard({ onRegisterReset }) {
             />
           </div>
 
-          <div className="mb-4">
-            <EmployeeProfile
-              employeeId={activeEmployeeId}
-              panelMode={panelMode}
-            />
-          </div>
 
           {travelPanelMode && activeEmployeeId && activeTravelRequestId && (
             <div className="mb-4">

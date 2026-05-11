@@ -184,12 +184,12 @@ export function FormEditForm({
       }
 
       //if already loan taken ,running balanace
-      const currentLoan = entities.filter(
+      const currentLoan = entities?.filter(
         (item) => item?.loan_typeId === changeLoanType
       );
 
       let runningBalance = 0;
-      currentLoan.forEach((loan) => {
+      currentLoan?.forEach((loan) => {
         loan.details.forEach((detail) => {
           // Add the payment amount from the running balance
 
@@ -431,7 +431,7 @@ export function FormEditForm({
         });
       }
 
-      const matchingCurrentLoans = entities.filter(
+      const matchingCurrentLoans = entities?.filter(
         (item) => item?.loan_typeId === option?.value && item.isLoanContinuing
       );
       if (matchingCurrentLoans.length > 0) {
@@ -572,6 +572,7 @@ export function FormEditForm({
           setMonthlyInstallmentsLimit,
           subsidiaryid
         );
+          dispatch(fetchEmployeeLoanRequest(formUIProps));
       }}
     >
       {({
@@ -761,7 +762,7 @@ export function FormEditForm({
                         <div className="d-flex">
                           Total Loan Amount
                              <span className="ml-1">
-                            (Limit: {maxAmountLimit?.toLocaleString() || 0})
+                            (Limit: {maxAmountLimit?.toLocaleString() || "0, Select loan type"})
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         </div>
@@ -979,7 +980,7 @@ export function FormEditForm({
                   // onClick={() => handleSubmit()}
                   onClick={() => {
                     handleSubmit();
-                      dispatch(fetchEmployeeLoanRequest(formUIProps));
+                      // dispatch(fetchEmployeeLoanRequest(formUIProps));
                   }}
                   className="btn btn-primary btn-elevate"
                   disabled={userForEdit || loading}

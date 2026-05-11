@@ -383,9 +383,9 @@ export function EmployeeSelect({
                         Accommodation Required
                       </td>
                       <td style={{ minWidth: "130px" }}>Hotel Entitlement</td>
-                      <td style={{ minWidth: "170px" }}>
+                      {/* <td style={{ minWidth: "170px" }}>
                         Hotel Entitlement Amount
-                      </td>
+                      </td> */}
                       <td style={{ minWidth: "120px" }}>Self Entitlement</td>
                       <td style={{ minWidth: "80px" }}>Self Amount</td>
                     </tr>
@@ -467,13 +467,13 @@ export function EmployeeSelect({
                               seg.HotelEntitlement?.name ||
                               "—"}
                           </td>
-                          <td className="text-xs">
+                          {/* <td className="text-xs">
                             {seg.hotelEntitlementAmount != null
                               ? Number(
                                   seg.hotelEntitlementAmount,
                                 ).toLocaleString("en-US")
                               : "—"}
-                          </td>
+                          </td> */}
                           <td className="text-xs text-center">
                             {seg.selfEntitlement ? (
                               <span>Yes</span>

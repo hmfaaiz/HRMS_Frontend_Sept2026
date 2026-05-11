@@ -1,0 +1,15 @@
+import axios from "axios";
+
+export const USERS_URL = process.env.REACT_APP_API_URL;
+
+export function askQuestion(body) {
+  return axios.post(`${USERS_URL}/ai_chatbot/ask-question`, body);
+}
+
+export function getChatHistoryById(body) {
+  return axios.post(`${USERS_URL}/ai_chatbot/read-chat-history-by-Id`, body);
+}
+
+export function getChatHistory() {
+  return axios.get(`${USERS_URL}/ai_chatbot/read-all-chat-history`);
+}

@@ -253,6 +253,8 @@ export function FormTable({ onEditClick, onViewClick }) {
           }
         },
         openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
+        openReportDownload: (id) =>
+          dispatch(actions.fetchPreApprovalTravelRequestReport(id)),
       },
     },
   ];

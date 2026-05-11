@@ -49,7 +49,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     keyResponsibility: "",
     workExpFrom:"",
     workExpTo:"",
-    
+    gradeId : null,
+    designationId : null,
 
 
 
