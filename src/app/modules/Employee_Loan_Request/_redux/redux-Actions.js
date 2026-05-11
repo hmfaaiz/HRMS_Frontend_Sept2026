@@ -481,3 +481,26 @@ export const downloadLoanCompletionPdf = (loanId) => (dispatch) => {
       toast.error("Failed to generate Completion Report", { position: "top-right", autoClose: 5000 });
     });
 };
+
+
+export const updateLoanInstallments = (data, disbaleLoading, onHide) => (dispatch) => {
+  return requestFromServer
+    .updateLoanInstallments(data)
+    .then(() => {
+      dispatch(actions.clearUserForEdit());
+      disbaleLoading();
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right", autoClose: 5000, hideProgressBar: false,
+        closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,
+      });
+      onHide();
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      disbaleLoading();
+      toast.error(error?.response?.data?.message, {
+        position: "top-right", autoClose: 5000, hideProgressBar: false,
+        closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,
+      });
+    });
+};

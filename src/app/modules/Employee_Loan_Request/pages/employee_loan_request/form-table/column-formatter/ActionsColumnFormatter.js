@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CirclePower, Pencil, Trash2, ListCollapse, BookCheck } from "lucide-react";
+import { CirclePower, Pencil, Trash2, ListCollapse, BookCheck, Calculator } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -19,7 +19,7 @@ export function ActionsColumnFormatter(
     completionPdfLoading,
     downloadLoanPdf,
     downloadLoanCompletionPdf,
-    showDetails,
+    showDetails, openInstallmentDetails
   }
 ) {
   // Loan is "Completed" when approved AND isLoanContinuing is false
@@ -33,7 +33,7 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id={`book-check-tooltip-${row.Id}`}>Loan Completion Report</Tooltip>}
         >
-         <a 
+          <a
             onClick={() => !completionPdfLoading && dispatch(downloadLoanCompletionPdf(row.Id))}
             style={{
               cursor: completionPdfLoading ? "not-allowed" : "pointer",
@@ -87,6 +87,27 @@ export function ActionsColumnFormatter(
               <CirclePower className="w-4 h-4 text-black" />
             </a>
           )}
+        </OverlayTrigger>
+      )}
+
+      {isAccessForEdit && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={`delete-tooltip-${row.Id}`}>
+              {"Edit Detail"}
+            </Tooltip>
+          }
+        >
+
+          <a  style={{ cursor: "pointer" }} onClick={() => {
+            setIds(row.Id)
+            openInstallmentDetails(row.Id)} 
+           
+            
+            }>
+            <Calculator className="w-4 h-4 text-black" />
+          </a>
+
         </OverlayTrigger>
       )}
 

@@ -79,3 +79,9 @@ export function downloadLoanCompletionPdfRequest(loanId) {
     { responseType: "arraybuffer" }
   );
 }
+
+
+export function updateLoanInstallments(data) {
+   
+  return axios.put(`${USERS_URL}/employee_loan_request/update-loan-installments`, data);
+}
