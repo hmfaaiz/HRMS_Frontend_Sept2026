@@ -572,6 +572,7 @@ export function FormEditForm({
           setMonthlyInstallmentsLimit,
           subsidiaryid
         );
+          dispatch(fetchEmployeeLoanRequest(formUIProps));
       }}
     >
       {({
@@ -761,7 +762,7 @@ export function FormEditForm({
                         <div className="d-flex">
                           Total Loan Amount
                              <span className="ml-1">
-                            (Limit: {maxAmountLimit?.toLocaleString() || 0})
+                            (Limit: {maxAmountLimit?.toLocaleString() || "0, Select loan type"})
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         </div>
@@ -979,7 +980,7 @@ export function FormEditForm({
                   // onClick={() => handleSubmit()}
                   onClick={() => {
                     handleSubmit();
-                      dispatch(fetchEmployeeLoanRequest(formUIProps));
+                      // dispatch(fetchEmployeeLoanRequest(formUIProps));
                   }}
                   className="btn btn-primary btn-elevate"
                   disabled={userForEdit || loading}

@@ -145,24 +145,24 @@ function PatternLoanDetailListForm({
 
 
 
-    useEffect(() => {
-        let monthlyInstallment = 0;
-        if (userForEdit && loan_config_details_permission) {
+    // useEffect(() => {
+    //     let monthlyInstallment = 0;
+    //     if (userForEdit && loan_config_details_permission) {
 
 
 
-            let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
-                (item) => item.loan_typeId === values?.loan_typeId
-            );
+    //         let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+    //             (item) => item.loan_typeId === values?.loan_typeId
+    //         );
 
 
-            if (loandetails?.max_no_of_installment_for_loan) {
-                monthlyInstallment = loandetails?.max_no_of_installment_for_loan;
-            }
-        }
-        setMonthlyInstallmentsLimit(monthlyInstallment);
-        console.log("monthlyInstallment11112222", values?.loan_typeId, loan_config_details_permission, monthlyInstallment)
-    }, [loan_config_details_permission]);
+    //         if (loandetails?.max_no_of_installment_for_loan) {
+    //             monthlyInstallment = loandetails?.max_no_of_installment_for_loan;
+    //         }
+    //     }
+    //     setMonthlyInstallmentsLimit(monthlyInstallment);
+    //     console.log("monthlyInstallment11112222", values?.loan_typeId, loan_config_details_permission, monthlyInstallment)
+    // }, [loan_config_details_permission]);
 
     return (
         <>
@@ -171,7 +171,13 @@ function PatternLoanDetailListForm({
                     <>
 
 
-                        <div className="w-full overflow-x-auto">
+                        <div style={{
+                            backgroundColor: "#ffffff",
+                            height: "350px",
+                            padding: "10px",
+                            overflow: "scroll",
+                        }}>
+
                             <div className="react-bootstrap-table table-responsive">
                                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                                     <thead>

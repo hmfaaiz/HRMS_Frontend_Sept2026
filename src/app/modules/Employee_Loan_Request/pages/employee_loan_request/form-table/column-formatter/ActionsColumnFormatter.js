@@ -99,7 +99,12 @@ export function ActionsColumnFormatter(
           }
         >
 
-          <a onClick={() => openInstallmentDetails(row.Id)} style={{ cursor: "pointer" }}>
+          <a  style={{ cursor: "pointer" }} onClick={() => {
+            setIds(row.Id)
+            openInstallmentDetails(row.Id)} 
+           
+            
+            }>
             <Calculator className="w-4 h-4 text-black" />
           </a>
 

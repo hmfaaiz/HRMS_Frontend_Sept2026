@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
@@ -6,100 +6,206 @@ import * as Yup from "yup";
 import * as actions from "../../../_redux/redux-Actions";
 import PatternLoanDetailListForm from "../form-edit-dialog/LoanDetailList";
 import { formatDates } from "../../../../../utils/common";
+import { useFormUIContext } from "../FormUIContext";
 
 export function InstallmentDetails({ id, status, show, onHide }) {
+
+    const FormUIContext = useFormUIContext();
+
+
+
+    const formUIProps = useMemo(() => {
+        return {
+
+            setIds: FormUIContext.setIds,
+
+        };
+    }, [FormUIContext]);
+
     const [monthlyInstallmentsLimit, setMonthlyInstallmentsLimit] = useState();
-    const loanInstallmentSchema = Yup.object().shape({
-        details: Yup.array()
-            .of(
-                Yup.object().shape({
-                    amount_received: Yup.number()
-                        .typeError("Only numbers are allowed")
-                        .required("Amount is required")
-                        .min(0, "Amount cannot be negative")
-                })
-            )
-            .test(
-                "remaining-check",
-                "Installment exceeds remaining loan amount",
-                function (details) {
-                    const { total_loan_amount } = this.parent;
+    // const loanInstallmentSchema = Yup.object().shape({
+    //     details: Yup.array()
+    //         .of(
+    //             Yup.object().shape({
+    //                 amount_received: Yup.number()
+    //                     .typeError("Only numbers are allowed")
+    //                     .required("Amount is required")
+    //                     .min(0, "Amount cannot be negative")
+    //             })
+    //         )
+    //         .test(
+    //             "remaining-check",
+    //             "Installment exceeds remaining loan amount",
+    //             function (details) {
+    //                 const { total_loan_amount } = this.parent;
 
-                    if (!Array.isArray(details)) return true;
+    //                 if (!Array.isArray(details)) return true;
 
-                    let remaining = Number(total_loan_amount || 0);
+    //                 let remaining = Number(total_loan_amount || 0);
 
-                    for (let i = 0; i < details.length; i++) {
-                        const val = Number(details[i]?.amount_received || 0);
+    //                 for (let i = 0; i < details.length; i++) {
+    //                     const val = Number(details[i]?.amount_received || 0);
 
-                        if (val > remaining) {
+    //                     if (val > remaining) {
+    //                         return this.createError({
+    //                             path: `details[${i}].amount_received`,
+    //                             message: "Amount exceeds remaining loan balance",
+    //                         });
+    //                     }
+
+    //                     remaining -= val;
+    //                 }
+
+    //                 return true;
+    //             }
+    //         )
+
+    //         .test(
+    //             "minimum-total-check",
+    //             "Total installment is less than loan amount",
+    //             function (details) {
+    //                 const { total_loan_amount } = this.parent;
+
+    //                 if (!Array.isArray(details)) return true;
+
+    //                 const totalLoan = Number(total_loan_amount || 0);
+
+    //                 const totalPaid = details.reduce((sum, item) => {
+    //                     return sum + Number(item?.amount_received || 0);
+    //                 }, 0);
+
+    //                 if (totalPaid < totalLoan) {
+    //                     return this.createError({
+    //                         path: "details",
+    //                         message: "Total installment is less than loan amount",
+    //                     });
+    //                 }
+
+    //                 return true;
+    //             }
+    //         )
+
+    //         .test(
+    //             "monthly-limit-check",
+    //             "Monthly installment limit exceeded",
+    //             function (details) {
+
+    //                 const limit = this.options.context?.monthlyInstallmentsLimit;
+
+    //                 if (!limit) return true;
+
+
+    //                 if (details.length > limit) {
+    //                     return this.createError({
+    //                         path: "details",
+    //                         message: `Max ${limit} installments allowed only`,
+    //                     });
+    //                 }
+
+    //                 return true;
+    //             }
+    //         )
+
+    //     ,
+    // });
+
+
+    const loanInstallmentSchema = (monthlyInstallmentsLimit) =>
+        Yup.object().shape({
+            details: Yup.array()
+                .of(
+                    Yup.object().shape({
+                        amount_received: Yup.number()
+                            .typeError("Only numbers are allowed")
+                            .required("Amount is required")
+                            .min(0, "Amount cannot be negative"),
+                    })
+                )
+
+                // remaining balance validation
+                .test(
+                    "remaining-check",
+                    "Installment exceeds remaining loan amount",
+                    function (details) {
+
+                        const { total_loan_amount } = this.parent;
+
+                        if (!Array.isArray(details)) return true;
+
+                        let remaining = Number(total_loan_amount || 0);
+
+                        for (let i = 0; i < details.length; i++) {
+
+                            const val = Number(details[i]?.amount_received || 0);
+
+                            if (val > remaining) {
+                                return this.createError({
+                                    path: `details[${i}].amount_received`,
+                                    message: "Amount exceeds remaining loan balance",
+                                });
+                            }
+
+                            remaining -= val;
+                        }
+
+                        return true;
+                    }
+                )
+
+                // total must equal loan amount
+                .test(
+                    "minimum-total-check",
+                    "Total installment is less than loan amount",
+                    function (details) {
+
+                        const { total_loan_amount } = this.parent;
+
+                        if (!Array.isArray(details)) return true;
+
+                        const totalLoan = Number(total_loan_amount || 0);
+
+                        const totalPaid = details.reduce((sum, item) => {
+                            return sum + Number(item?.amount_received || 0);
+                        }, 0);
+
+                        if (totalPaid < totalLoan) {
                             return this.createError({
-                                path: `details[${i}].amount_received`,
-                                message: "Amount exceeds remaining loan balance",
+                                path: "details",
+                                message: "Total installment is less than loan amount",
                             });
                         }
 
-                        remaining -= val;
+                        return true;
                     }
+                )
 
-                    return true;
-                }
-            )
+                // max installment limit validation
+                .test(
+                    "monthly-limit-check",
+                    "Monthly installment limit exceeded",
+                    function (details) {
 
-            .test(
-                "minimum-total-check",
-                "Total installment is less than loan amount",
-                function (details) {
-                    const { total_loan_amount } = this.parent;
+                        const limit = monthlyInstallmentsLimit;
 
-                    if (!Array.isArray(details)) return true;
+                        if (!limit) return true;
 
-                    const totalLoan = Number(total_loan_amount || 0);
+                        if (details.length > limit) {
+                            return this.createError({
+                                path: "details",
+                                message: `Max ${limit} installments allowed only`,
+                            });
+                        }
 
-                    const totalPaid = details.reduce((sum, item) => {
-                        return sum + Number(item?.amount_received || 0);
-                    }, 0);
-
-                    if (totalPaid < totalLoan) {
-                        return this.createError({
-                            path: "details",
-                            message: "Total installment is less than loan amount",
-                        });
+                        return true;
                     }
-
-                    return true;
-                }
-            )
-
-            .test(
-                "monthly-limit-check",
-                "Monthly installment limit exceeded",
-                function (details) {
-
-                    const limit = this.options.context?.monthlyInstallmentsLimit;
-
-                    if (!limit) return true;
-
-
-                    if (details.length > limit) {
-                        return this.createError({
-                            path: "details",
-                            message: `Max ${limit} installments allowed only`,
-                        });
-                    }
-
-                    return true;
-                }
-            )
-
-        ,
-    });
+                ),
+        });
 
     useEffect(() => {
         dispatch(actions.fetchmoduledata(id));
+        console.log('fetchmoduledata11111')
 
     }, [id, dispatch, show])
-
 
 
     const dispatch = useDispatch();
@@ -109,12 +215,15 @@ export function InstallmentDetails({ id, status, show, onHide }) {
     }), shallowEqual);
 
     const { userForEdit, loan_config_details_permission } = currentState;
-
+    console.log("currentState1111", currentState)
     useEffect(() => {
         if (!id) {
             onHide();
         }
     }, [id]);
+
+
+
 
 
     useEffect(() => {
@@ -133,8 +242,8 @@ export function InstallmentDetails({ id, status, show, onHide }) {
             }
         }
         setMonthlyInstallmentsLimit(monthlyInstallment);
-        console.log("monthlyInstallment1111", userForEdit, loan_config_details_permission, monthlyInstallment)
-    }, [loan_config_details_permission]);
+        console.log("monthlyInstallmen777777", userForEdit?.loan_typeId, loan_config_details_permission, monthlyInstallment)
+    }, [userForEdit, loan_config_details_permission]);
 
 
 
@@ -157,7 +266,8 @@ export function InstallmentDetails({ id, status, show, onHide }) {
                     ...userForEdit,
                     details: userForEdit?.details || [],
                 }}
-                validationSchema={loanInstallmentSchema}
+                // validationSchema={loanInstallmentSchema}
+                validationSchema={loanInstallmentSchema(monthlyInstallmentsLimit)}
                 context={{
                     monthlyInstallmentsLimit,
                 }}
@@ -174,6 +284,7 @@ export function InstallmentDetails({ id, status, show, onHide }) {
                     };
 
                     await dispatch(actions.updateLoanInstallments(payload, onHide));
+                    formUIProps.setIds("");
                 }}
             >
 
@@ -202,7 +313,12 @@ export function InstallmentDetails({ id, status, show, onHide }) {
                         <Modal.Footer>
                             <button
                                 type="button"
-                                onClick={onHide}
+                                onClick={() => {
+                                   onHide(); 
+                                    formUIProps.setIds("");
+
+                                }
+                                }
                                 className="btn btn-light btn-elevate"
                             >
                                 Cancel
