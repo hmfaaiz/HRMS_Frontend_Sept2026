@@ -1,7 +1,7 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react"
-import { Field, Formik } from "formik"
-import { isEqual } from "lodash"
-import { useFormUIContext } from "../FormUIContext"
+import React, { useMemo, useState, useEffect, useCallback } from "react";
+import { Field, Formik } from "formik";
+import { isEqual } from "lodash";
+import { useFormUIContext } from "../FormUIContext";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import axios from "axios";
@@ -10,7 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
-import { fetchAllDept, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllDept,
+  fetchAllFormsMenu,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { Form, Modal } from "react-bootstrap";
@@ -18,15 +21,11 @@ import {
   Card,
   CardHeader,
   Input,
-} from "../../../../../../_metronic/_partials/controls"
+} from "../../../../../../_metronic/_partials/controls";
 import { formatDates } from "../../../../../utils/common";
-
-
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 const API_URL = process.env.REACT_APP_API_URL;
-
-
-
 
 const prepareFilter = (queryParams, values) => {
   const {
@@ -35,14 +34,20 @@ const prepareFilter = (queryParams, values) => {
     designationId,
     priorityTypeId,
     desireFromDateOfApp,
-    desireToDateOfApp, vacancyStatusId, jobFinalizedFromDate, jobFinalizedToDate,
+    desireToDateOfApp,
+    vacancyStatusId,
+    jobFinalizedFromDate,
+    jobFinalizedToDate,
+    request_status,
   } = values;
-
   const newQueryParams = { ...queryParams };
   const filter = {};
 
   if (searchText) {
     filter.searchQuery = searchText.trim();
+  }
+  if (request_status) {
+    filter.request_status = request_status;
   }
 
   if (departmentId) {
@@ -81,71 +86,55 @@ const prepareFilter = (queryParams, values) => {
 };
 
 export function FormFIlter({ listLoading, user }) {
-
-
   const dispatch = useDispatch();
-  const FormUIContext = useFormUIContext()
-  const [Loading, setLoading] = useState(false)
-
-
+  const FormUIContext = useFormUIContext();
+  const [Loading, setLoading] = useState(false);
 
   const formUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
       setQueryParams: FormUIContext.setQueryParams,
-    }
-  }, [FormUIContext])
-
-
-
+    };
+  }, [FormUIContext]);
 
   function addCommas(nStr) {
-    nStr += '';
-    var x = nStr.split('.');
+    nStr += "";
+    var x = nStr.split(".");
     var x1 = x[0];
-    var x2 = x.length > 1 ? '.' + x[1] : '';
+    var x2 = x.length > 1 ? "." + x[1] : "";
     var rgx = /(\d+)(\d{3})/;
     while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      x1 = x1.replace(rgx, "$1" + "," + "$2");
     }
     return x1 + x2;
   }
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
-
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
-      newQueryParams.pageNumber = 1
+      newQueryParams.pageNumber = 1;
 
-      formUIProps.setQueryParams(newQueryParams)
+      formUIProps.setQueryParams(newQueryParams);
     }
-  }
+  };
 
   const { dashboard } = useSelector((state) => state);
   useEffect(() => {
-
     dispatch(fetchAllDept());
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllFormsMenu(412, "allPriorityTypeList"));
-
   }, []);
 
-
-  // const vacancyStatusOptions = [
-  //   { value: null, label: "All" },
-  //   { value: 0, label: "Vacancy not posted " },
-  //   { value: 1, label: "Currently Posted" },
-  //   { value: 2, label: "On Hold" },
-  //   { value: 3, label: "Closed / Expired Job" },
-  //   { value: 4, label: "Requisition Request" },
-  // ];
-
-
+  const RequestStatus = [
+    { value: "all", label: "All" },
+    { value: "P", label: "Pending" },
+    { value: "R", label: "Rejected" },
+  ];
 
   const initialFilterValues = {
     searchText: "",
-
+    request_status: "P",
   };
 
   return (
@@ -154,20 +143,21 @@ export function FormFIlter({ listLoading, user }) {
         enableReinitialize={true}
         initialValues={initialFilterValues}
         onSubmit={(values) => {
-          applyFilter(values);
+          applyFilter({
+            ...values,
+            request_status: values?.request_status ?? "P",
+          });
         }}
       >
-        {({
-          values,
-          handleSubmit,
-          handleBlur,
-          setFieldValue,
-          handleReset,
-        }) => (
+        {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
           <>
-            <form onSubmit={handleSubmit}>
-
-
+            <form
+              onSubmit={handleSubmit}
+              className="form form-label-right grid grid-cols-2 gap-x-2 items-end"
+            >
+              {/* <div className="grid grid-cols-3 gap-x-2 items-end">
+              <div className="grid grid-cols-5 gap-x-2 col-span-2">
+                <div> */}
               {/* Vacancy status */}
 
               {/* <div className="grid grid-cols-8 gap-x-3 gap-y-1">
@@ -191,12 +181,11 @@ export function FormFIlter({ listLoading, user }) {
                 </div>
               </div> */}
 
-
               {/* row 1 */}
 
-              <div className="grid grid-cols-6 gap-x-3 mt-2">
+              {/* <div className="grid grid-cols-6 gap-x-3 mt-2"> */}
 
-                {/* 
+              {/* 
                 <div className="">
                   <SearchSelect
                     name="departmentId"
@@ -215,8 +204,8 @@ export function FormFIlter({ listLoading, user }) {
                   />
                 </div> */}
 
-                {/* Designation */}
-                {/* <div className="">
+              {/* Designation */}
+              {/* <div className="">
                   <SearchSelect
                     name="designationId"
                     label="Designation"
@@ -234,8 +223,8 @@ export function FormFIlter({ listLoading, user }) {
                   />
                 </div> */}
 
-                {/* Priority */}
-                {/* <div className="">
+              {/* Priority */}
+              {/* <div className="">
                   <SearchSelect
                     name="priorityTypeId"
                     label="Priority"
@@ -253,13 +242,35 @@ export function FormFIlter({ listLoading, user }) {
                   />
                 </div> */}
 
-                {/* Job Title */}
-                <div className="flex gap-2">
+              {/* Job Title */}
+              {/* <div className="flex gap-2"> */}
 
-
-                  <div className="">
-                    {/* <label>Job Title</label> */}
-                    <Field
+              <div className="">
+                <SearchSelect
+                  name="request_status"
+                  label="Status"
+                  onChange={(e) => {
+                    setFieldValue("request_status", e.value || "all");
+                    handleSubmit();
+                  }}
+                  value={
+                    RequestStatus?.find(
+                      (option) => option.value == values.request_status,
+                    ) || "all"
+                  }
+                  options={RequestStatus}
+                />
+              </div>
+              {/* <div className=""> */}
+              {/* <label>Job Title</label> */}
+              <InputSearch
+                values={values}
+                fieldName="searchText"
+                setFieldValue={setFieldValue}
+                handleBlur={handleBlur}
+                handleSubmit={handleSubmit}
+              />
+              {/* <Field
                       component={Input}
                       label={"Job Title"}
                       name="searchText"
@@ -271,10 +282,10 @@ export function FormFIlter({ listLoading, user }) {
                         setFieldValue("searchText", e.target.value);
                         handleSubmit();
                       }}
-                    />
+                    /> */}
 
-                  </div>
-                  <div className="mt-6">
+              {/* </div> */}
+              {/* <div className="mt-6">
                     <button
                       type="button"
                       onClick={() => {
@@ -285,12 +296,12 @@ export function FormFIlter({ listLoading, user }) {
                     >
                       Cancel
                     </button>
-                  </div>
-                </div>
+                  </div> */}
+              {/* </div> */}
 
-                {/* <div className="grid grid-cols-6 gap-x-3 mt-1"> */}
-                {/* Date From */}
-                {/* <div className="">
+              {/* <div className="grid grid-cols-6 gap-x-3 mt-1"> */}
+              {/* Date From */}
+              {/* <div className="">
                   <label>Appointment (From)</label>
                   <DatePicker
                     className="form-control"
@@ -312,8 +323,8 @@ export function FormFIlter({ listLoading, user }) {
                   />
                 </div> */}
 
-                {/* Date To */}
-                {/* <div className="">
+              {/* Date To */}
+              {/* <div className="">
                   <label>Appointment (To)</label>
                   <DatePicker
                     className="form-control"
@@ -334,8 +345,8 @@ export function FormFIlter({ listLoading, user }) {
                   />
                 </div> */}
 
-                {/* Date From */}
-                {/* <div className="">
+              {/* Date From */}
+              {/* <div className="">
                   <label>Job Finalized (From)</label>
                   <DatePicker
                     className="form-control"
@@ -358,8 +369,8 @@ export function FormFIlter({ listLoading, user }) {
                   />
                 </div> */}
 
-                {/* Date To */}
-                {/* <div className="">
+              {/* Date To */}
+              {/* <div className="">
                   <label>Job Finalized (To)</label>
                   <DatePicker
                     className="form-control"
@@ -379,10 +390,10 @@ export function FormFIlter({ listLoading, user }) {
                     minDate={values?.jobFinalizedFromDate ? new Date(values.jobFinalizedFromDate) : new Date()}
                   />
                 </div> */}
-                {/* </div> */}
-              </div>
-              <Modal.Footer>
-                {/* <button
+              {/* </div> */}
+              {/* </div> */}
+              {/* <Modal.Footer> */}
+              {/* <button
                   type="button"
                   onClick={() => {
                     handleReset(); // Resets form
@@ -392,16 +403,11 @@ export function FormFIlter({ listLoading, user }) {
                 >
                   Cancel
                 </button> */}
-              </Modal.Footer>
-
-
+              {/* </Modal.Footer> */}
             </form>
-
-
           </>
         )}
-      </Formik >
+      </Formik>
     </>
   );
 }
-

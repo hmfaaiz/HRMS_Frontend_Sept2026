@@ -87,8 +87,8 @@ export function FormEditDialog({ id, show, onHide, userForRead  , parentId }) {
   
       
       user.parentFormID = parentId
-      const finalObject = { user }
-     await dispatch(actions.createform(user, disbaleLoading, onHide));
+      const finalObject = { ...user , Id : null }
+     await dispatch(actions.createform(finalObject, disbaleLoading, onHide));
      await dispatch(actions.customfetchFormDetail(parentId));
     } else {
       // const getUserStatus = userStatusTypes.find((item) => {
