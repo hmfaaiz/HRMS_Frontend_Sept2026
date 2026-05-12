@@ -24,14 +24,14 @@ export function FormCard() {
   }, [FormUIContext]);
 
   const { userAccess } = useSelector((state) => {
-    console.log("aaaa", state.auth.userAccess); 
+    console.log("aaaa", state.auth.userAccess);
     return {
       userAccess: state.auth.userAccess.hr_requisition_job_vacancy,
     };
   }, shallowEqual);
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateHrRequisitionJobVacancy"
+    (item) => item.componentName === "CreateHrRequisitionJobVacancy",
   );
 
   const { currentState } = useSelector((state) => {
@@ -47,21 +47,21 @@ export function FormCard() {
 
   return (
     <>
-      <div className="text-right my-1">
-        {accessUser && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={FormUIProps.newFormButtonClick}
-          >
-            <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
-            Add
-          </button>
-        )}
-
-
+      <div className="flex justify-start sm:justify-end items-end flex-wrap gap-2">
+        <FormFIlter />
+        <div className="flex items-center gap-2">
+          {accessUser && (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={FormUIProps.newFormButtonClick}
+            >
+              <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+              Add
+            </button>
+          )}
+        </div>
       </div>
-
       <FormTable />
     </>
   );

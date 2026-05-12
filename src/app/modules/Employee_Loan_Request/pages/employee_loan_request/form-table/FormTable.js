@@ -332,6 +332,7 @@ export function FormTable({ showDetails }) {
     openDeleteFormDialog: formUIContext.openDeleteFormDialog,
     openActiveFormDialog: formUIContext.openActiveFormDialog,
     openReadFormDialog: formUIContext.openReadFormDialog,
+    openInstallmentDetails: formUIContext.openInstallmentDetails,
   }), [formUIContext]);
 
   const { currentState, userAccess } = useSelector((state) => ({
@@ -480,6 +481,7 @@ export function FormTable({ showDetails }) {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
+        openInstallmentDetails: formUIProps.openInstallmentDetails,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
         dispatch,

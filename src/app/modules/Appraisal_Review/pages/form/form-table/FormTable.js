@@ -17,7 +17,7 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
 import { X } from "lucide-react";
-import { downloadAppraisalFinalizationPdf,  } from "../../../_redux/formActions";
+import { downloadAppraisalFinalizationPdf } from "../../../_redux/formActions";
 export function FormTable() {
   //Users UI Context
   const [selectedIds, setSelectedIds] = useState([]);
@@ -45,7 +45,13 @@ export function FormTable() {
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading, actionsLoading, finalizationPdfLoading  } = currentState;
+  const {
+    totalCount,
+    entities,
+    listLoading,
+    actionsLoading,
+    finalizationPdfLoading,
+  } = currentState;
 
   //totalCount = 10
 
@@ -304,79 +310,81 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full overflow-x-auto scrollbar-fancy">
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            <>
-              <Pagination
-                isLoading={listLoading}
-                paginationProps={paginationProps}
-              >
-                <BootstrapTable
-                  wrapperClasses="table-responsive"
-                  bordered={false}
-                  classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                  bootstrap4
-                  remote
-                  keyField="Id"
-                  data={entities === null ? [] : entities}
-                  columns={columns}
-                  defaultSorted={uiHelpers.defaultSorted}
-                  selectRow={selectRow}
-                  onTableChange={getHandlerTableChange(
-                    formUIProps.setQueryParams,
-                  )}
-                  {...paginationTableProps}
+    <>
+      <div className="w-full overflow-x-auto scrollbar-fancy">
+        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+          {({ paginationProps, paginationTableProps }) => {
+            return (
+              <>
+                <Pagination
+                  isLoading={listLoading}
+                  paginationProps={paginationProps}
                 >
-                  <PleaseWaitMessage entities={entities} />
-                  <NoRecordsFoundMessage entities={entities} />
-                </BootstrapTable>
-              </Pagination>
-              <div className="d-flex justify-content-end mt-3 gap-x-2 me-1 mr-4">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  disabled={selectedIds.length === 0 || handleBulkLoading}
-                  onClick={handleBulkAction}
-                >
-                  Finalized Selected ({selectedIds.length})
-                  {handleBulkLoading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  disabled={
-                    actionsLoading ||
-                    !formUIProps?.appraisalCategoryId ||
-                    !formUIProps?.subsidiaryId
-                  }
-                  onClick={() =>
-                    dispatch(
-                      actions.salaryRecomendationReport({
-                        appraisalCategoryId: formUIProps?.appraisalCategoryId,
-                        subsidiaryId: formUIProps?.subsidiaryId,
-                      }),
-                    )
-                  }
-                >
-                  Salary Recommendation Report
-                  {actionsLoading && (
-                    <span className="ml-3 mr-5 spinner spinner-white"></span>
-                  )}
-                </button>
-              </div>
-            </>
-          );
-        }}
-      </PaginationProvider>
+                  <BootstrapTable
+                    wrapperClasses="table-responsive"
+                    bordered={false}
+                    classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                    bootstrap4
+                    remote
+                    keyField="Id"
+                    data={entities === null ? [] : entities}
+                    columns={columns}
+                    defaultSorted={uiHelpers.defaultSorted}
+                    selectRow={selectRow}
+                    onTableChange={getHandlerTableChange(
+                      formUIProps.setQueryParams,
+                    )}
+                    {...paginationTableProps}
+                  >
+                    <PleaseWaitMessage entities={entities} />
+                    <NoRecordsFoundMessage entities={entities} />
+                  </BootstrapTable>
+                </Pagination>
+              </>
+            );
+          }}
+        </PaginationProvider>
+      </div>
+      <div className="d-flex justify-content-end mt-3 gap-x-2">
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={selectedIds.length === 0 || handleBulkLoading}
+          onClick={handleBulkAction}
+        >
+          Finalized Selected ({selectedIds.length})
+          {handleBulkLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )}
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={
+            actionsLoading ||
+            !formUIProps?.appraisalCategoryId ||
+            !formUIProps?.subsidiaryId
+          }
+          onClick={() =>
+            dispatch(
+              actions.salaryRecomendationReport({
+                appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                subsidiaryId: formUIProps?.subsidiaryId,
+              }),
+            )
+          }
+        >
+          Salary Recommendation Report
+          {actionsLoading && (
+            <span className="ml-3 mr-5 spinner spinner-white"></span>
+          )}
+        </button>
+      </div>
       <BulkPublishSummary
         bulkResult={errorState}
         onClose={handleCloseBulkResult}
       />
-    </div>
+    </>
   );
 }
 
