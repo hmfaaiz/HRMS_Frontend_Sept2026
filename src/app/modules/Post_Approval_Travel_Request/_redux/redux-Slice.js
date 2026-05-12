@@ -116,5 +116,9 @@ export const postApprovalTravelRequestSlice = createSlice({
     canApproveSet: (state, action) => {
       state.canApprove = action.payload.canApprove;
     },
+    actionCompleted: (state) => {
+      state.actionsLoading = false;
+      state.error = null;
+    },
   },
 });
