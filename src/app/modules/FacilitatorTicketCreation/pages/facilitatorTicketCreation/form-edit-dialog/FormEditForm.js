@@ -760,34 +760,9 @@ export function FormEditForm({
 
 
 
-                  {formData?.file && (
+                  {/* {formData?.file && (
                     <div className="">
-                      <label>   Attachment</label>
-
-                      {/* <FileUpload
-                      label={
-                        <>
-                       Attachment
-                        </>
-                      }
-                      isEdit={isUserForRead}
-                      id="file"
-                      name="file"
-                      type="file"
-                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                      ref={inputFile}
-                      className="hidden"
-                      onChange={(event) => {
-                        const file = event.currentTarget.files[0];
-                        setFieldValue("file", file);
-                      }}
-
-
-                    /> */}
-                      {/* {errors.file && touched.file && (
-                      <div className="invalid-feedback">{errors.file}</div>
-                    )} */}
-
+                      <label>   Attachment:</label>
 
 
 
@@ -814,9 +789,28 @@ export function FormEditForm({
 
                     </div>
 
+                  )} */}
+
+                  {formData?.file && (
+                    <div className="flex items-center gap-2">
+                      <label className="whitespace-nowrap">Attachment:</label>
+
+                      <a
+                        href={
+                          typeof formData?.file === "string"
+                            ? getUploadUrl(formData?.file)
+                            : URL.createObjectURL(formData?.file)
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline text-primary text-sm whitespace-nowrap"
+                      >
+                        {typeof formData?.file === "string"
+                          ? getFileName(formData?.file)
+                          : formData?.file?.name}
+                      </a>
+                    </div>
                   )}
-
-
 
 
 
@@ -967,34 +961,9 @@ export function FormEditForm({
                       </div>
 
 
-                      {formData?.file && (
+                      {/* {formData?.file && (
                         <div className="">
                           <label>   Attachment</label>
-
-                          {/* <FileUpload
-                      label={
-                        <>
-                       Attachment
-                        </>
-                      }
-                      isEdit={isUserForRead}
-                      id="file"
-                      name="file"
-                      type="file"
-                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                      ref={inputFile}
-                      className="hidden"
-                      onChange={(event) => {
-                        const file = event.currentTarget.files[0];
-                        setFieldValue("file", file);
-                      }}
-
-
-                    /> */}
-                          {/* {errors.file && touched.file && (
-                      <div className="invalid-feedback">{errors.file}</div>
-                    )} */}
-
 
 
 
@@ -1021,10 +990,29 @@ export function FormEditForm({
 
                         </div>
 
+                      )} */}
+
+
+                      {formData?.file && (
+                        <div className="flex items-center gap-2">
+                          <label className="whitespace-nowrap">Attachment:</label>
+
+                          <a
+                            href={
+                              typeof formData?.file === "string"
+                                ? getUploadUrl(formData?.file)
+                                : URL.createObjectURL(formData?.file)
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline text-primary text-sm whitespace-nowrap"
+                          >
+                            {typeof formData?.file === "string"
+                              ? getFileName(formData?.file)
+                              : formData?.file?.name}
+                          </a>
+                        </div>
                       )}
-
-
-
 
                     </>
 

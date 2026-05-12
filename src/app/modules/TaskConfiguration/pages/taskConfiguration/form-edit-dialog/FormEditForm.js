@@ -89,8 +89,8 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
-                  <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
+                <div className="">
+                  <div className="col-span-3 grid grid-cols-2 gap-x-3 gap-y-1">
                     {/* <div className="col-span-1">
 
                       <SubsidiarySelect
@@ -115,7 +115,7 @@ export function FormEditForm({
 
 
                     <div className="">
-                      <label>
+                      <label className="font-bold">
                         Company Task Ticket (Role Access)
                       </label>
 
@@ -151,7 +151,7 @@ export function FormEditForm({
 
 
                     <div className="">
-                      <label>
+                      <label className="font-bold">
                         Team Ticket (Role Access)
                       </label>
 
@@ -179,8 +179,15 @@ export function FormEditForm({
 
                     </div>
 
+                  
+
+
+
+
+                  </div>
+
                     <div className="">
-                      <label>
+                    <label className="font-bold">
                         Task Creation Policy
                       </label>
 
@@ -205,11 +212,6 @@ export function FormEditForm({
 
                     </div>
 
-
-
-
-
-                  </div>
 
 
 
