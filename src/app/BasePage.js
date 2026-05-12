@@ -612,6 +612,9 @@ import ("./modules/Interview_Questionnaire/pages/index"),
 )
 const interview_recommendations = lazy (() =>
 import ("./modules/Interview_Recommendations/pages/index"))
+const TravelRequestReportsModule = lazy(() =>
+  import("./modules/TravelRequestReports/pages/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -819,6 +822,7 @@ const ROUTES = {
   company_att_machine_config : company_att_machine_config,
   interview_questionnaire : interview_questionnaire,
   interview_recommendations : interview_recommendations,
+  travel_request_reports: TravelRequestReportsModule,
 };
 
 export default function BasePage() {
