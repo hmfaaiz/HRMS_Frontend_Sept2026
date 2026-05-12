@@ -67,20 +67,20 @@ export function TravelApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let classname = "";
+        let className = "";
 
         if (cell === "P") {
           text = "Pending";
-          classname = "text-pending font-bold";
+          className = "text-pending font-bold";
         } else if (cell === "A") {
+          className = "text-approved font-bold";
           text = "Approved";
-          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          classname = "text-rejected font-bold";
+          className = "text-rejected font-bold";
         }
 
-        return <span className={classname}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     {
@@ -95,20 +95,20 @@ export function TravelApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let classname = "";
+        let className = "";
 
         if (cell === "P") {
           text = "Pending";
-          classname = "text-pending font-bold";
+          className = "text-pending font-bold";
         } else if (cell === "A") {
+          className = "text-approved font-bold";
           text = "Approved";
-          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          classname = "text-rejected font-bold";
+          className = "text-rejected font-bold";
         }
 
-        return <span className={classname}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     {
