@@ -334,13 +334,12 @@ const ChatListComp = ({ chatData = [], id }) => {
                 key={chat.sessionId}
                 title={chat.question}
                 onClick={() => handleChatSelect(chat.sessionId)}
-                className={`hover:bg-white hover:border hover:border-black  m-1 py-2  px-1 rounded-lg cursor-pointer  ${
+                className={`  m-1 py-2  px-1 rounded-lg cursor-pointer  ${
                   id == chat?.sessionId
-                    ? "bg-tprimary text-white"
-                    : "bg-tsecondary text-black"
+                    ? "bg-tprimary  hover:text-black hover:bg-tsecondary hover:border hover:border-black"
+                    : "bg-tsecondary  hover:bg-white hover:border hover:border-black"
                 }`}
               >
-
                 <div className="flex justify-between items-start">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm  line-clamp-1">{chat.question}</p>

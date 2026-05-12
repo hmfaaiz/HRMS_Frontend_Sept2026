@@ -66,7 +66,6 @@ export function FormPage({ history }) {
     (item) => item.componentName === "DeleteRequisitionJobVacancy"
   );
 
-console.log("isAccessForEdit1111",isAccessForEdit)
   const [activeKey, setActiveKey] = useState(null);
   return (
  

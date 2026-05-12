@@ -219,6 +219,7 @@ import { CompanyAttMachineConfigSlice } from "../app/modules/Company_att_machine
 import { AIChatbotSlice } from "../app/modules/AIChatbotService/_redux/redux-Slice";
 import { InterviewQuestionnaireSlice } from "../app/modules/Interview_Questionnaire/_redux/redux-Slice";
 import { InterviewRecommendationSlice } from "../app/modules/Interview_Recommendations/_redux/redux-Slice";
+import { JobRequestionApprovalSlice } from "../app/modules/JobRequestionApproval/redux/formSlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -437,6 +438,7 @@ export const rootReducer = combineReducers({
   interview_recommendations: InterviewRecommendationSlice.reducer,
   TravelRequestWorkflowStatus: TravelRequestWorkflowStatusSlice.reducer,
   TravelRequestWorkflowAdmin: TravelRequestWorkflowAdminSlice.reducer,
+  job_requestion_approval : JobRequestionApprovalSlice.reducer,
 });
 
 export function* rootSaga() {
