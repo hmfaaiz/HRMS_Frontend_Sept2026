@@ -622,6 +622,10 @@ const job_requestion_approval = lazy(() =>
 const TravelRequestReportsModule = lazy(() =>
   import("./modules/TravelRequestReports/pages/index"),
 );
+
+const JobRequestionWorkflowStatus = lazy(() =>
+  import("./modules/Job_Requestion_Workflow_Status/pages/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -831,6 +835,7 @@ const ROUTES = {
   interview_recommendations: interview_recommendations,
   job_requestion_approval: job_requestion_approval,
   travel_request_reports: TravelRequestReportsModule,
+  job_requestion_workflow : JobRequestionWorkflowStatus,
 };
 
 export default function BasePage() {
