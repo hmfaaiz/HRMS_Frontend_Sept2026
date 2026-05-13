@@ -6,10 +6,10 @@ export const JobRequestion = () => {
   const {
     requisition_job_vacancy,
     interview_recommendations,
-    requisition_job_approval,
+    // requisition_job_approval,
   } = useSelector(
     (state) => ({
-      requisition_job_approval: state?.auth?.userAccess?.Recruitment,
+      // requisition_job_approval: state?.auth?.userAccess?.Recruitment,
       interview_recommendations:
         state?.auth?.userAccess?.["Interview Recommendations"],
       requisition_job_vacancy:
@@ -18,12 +18,12 @@ export const JobRequestion = () => {
     shallowEqual,
   );
 
-  const approvalForm = requisition_job_approval?.find(
-    (el) =>
-      el?.componentName == "ReadAllJobRequestionApproval" &&
-      el?.isResourceShow &&
-      el?.portalType == 2,
-  );
+  // const approvalForm = requisition_job_approval?.find(
+  //   (el) =>
+  //     el?.componentName == "ReadAllJobRequestionApproval" &&
+  //     el?.isResourceShow &&
+  //     el?.portalType == 2,
+  // );
 
   const requestForm = requisition_job_vacancy?.find(
     (el) =>
@@ -76,7 +76,7 @@ export const JobRequestion = () => {
         ) : (
           <p className="text-sm mb-0"> Interview Recommendations</p>
         )}
-        {approvalForm ? (
+        {/* {approvalForm ? (
           <div className="font-size-xs text-black font-bold">
             <p className="m-0 underline">
               <a
@@ -90,7 +90,7 @@ export const JobRequestion = () => {
           </div>
         ) : (
           <p className="text-sm mb-0">Job Requestion Approval</p>
-        )}
+        )} */}
       </div>
     </>
   );

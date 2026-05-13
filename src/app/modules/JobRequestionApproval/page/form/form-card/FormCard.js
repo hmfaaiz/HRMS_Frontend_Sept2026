@@ -12,15 +12,19 @@ import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePort
 export const FormCard = () => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { user, requisition_job_vacancy } = useSelector(
+  const {
+    user,
+    requisition_job_vacancy,
+    requisition_job_approval,
+  } = useSelector(
     (state) => ({
       user: state?.auth?.user,
       requisition_job_vacancy:
         state?.auth?.userAccess?.["Job Requisition Vacancy"],
+      requisition_job_approval: state?.auth?.userAccess?.Recruitment,
     }),
     shallowEqual,
   );
-
 
   const formUIProps = useMemo(() => {
     return {
@@ -54,6 +58,17 @@ export const FormCard = () => {
                 isShow: requisition_job_vacancy?.find(
                   (el) =>
                     el?.componentName === "ReadAllRequisitionJobVacancy" &&
+                    el?.isResourceShow &&
+                    el?.portalType == 2,
+                ),
+              },
+              {
+                name: "Workflow Status",
+                link:
+                  "/job_requestion_workflow/read-all-job-requestion-workflow",
+                isShow: requisition_job_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllJobRequestionWorkflow" &&
                     el?.isResourceShow &&
                     el?.portalType == 2,
                 ),
@@ -94,6 +109,17 @@ export const FormCard = () => {
                 isShow: requisition_job_vacancy?.find(
                   (el) =>
                     el?.componentName === "ReadAllRequisitionJobVacancy" &&
+                    el?.isResourceShow &&
+                    el?.portalType == 2,
+                ),
+              },
+              {
+                name: "Workflow Status",
+                link:
+                  "/job_requestion_workflow/read-all-job-requestion-workflow",
+                isShow: requisition_job_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllJobRequestionWorkflow" &&
                     el?.isResourceShow &&
                     el?.portalType == 2,
                 ),
