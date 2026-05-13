@@ -50,7 +50,7 @@ export function ApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "Self Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "90px", maxWidth: "90px" },
@@ -73,7 +73,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.request_status",
       text: "Request Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: { minWidth: "90px", maxWidth: "90px" },
@@ -96,7 +96,7 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp", // Reference the parent object (department)
       text: "Employee", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -119,7 +119,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData",
       text: "Job Code / Job Title",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -138,7 +138,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.dateOfRequest",
       text: "Request Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -149,7 +149,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.desireDateOfApp",
       text: "Desire Date Of Appointment",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -160,7 +160,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.Department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -194,17 +194,17 @@ export function ApprovalFormTable() {
   return (
     <div className="w-full overflow-x-auto">
       <BootstrapTable
-        noDataIndication={NoRecordsFoundMessage({ entities })}
         wrapperClasses="table-responsive"
         bordered={false}
         classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
         bootstrap4
-        remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}
-        defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // noDataIndication={NoRecordsFoundMessage({ entities })}
+        // remote
+        // defaultSorted={uiHelpers.defaultSorted}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
       >
         <PleaseWaitMessage entities={entities} />
         <NoRecordsFoundMessage entities={entities} />
