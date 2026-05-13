@@ -1,17 +1,33 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2, FileText } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
   row,
   rowIndex,
-  { openReadFormDialog, openEditFormDialog, openDeleteFormDialog },
+  {
+    openReadFormDialog,
+    openEditFormDialog,
+    openDeleteFormDialog,
+    openReportDownload,
+  },
 ) {
   const id = row.id || row.Id;
 
   return (
     <div className="space-x-2 flex justify-end">
+      {/* Download Report */}
+      <OverlayTrigger
+        overlay={
+          <Tooltip id="post-approval-report-tooltip">Download Report</Tooltip>
+        }
+      >
+        <a className="cursor-pointer" onClick={() => openReportDownload(id)}>
+          <FileText className="w-4 h-4 text-black cursor-pointer" />
+        </a>
+      </OverlayTrigger>
+
       {/* View — always visible */}
       <OverlayTrigger
         overlay={<Tooltip id="post-approval-view-tooltip">View</Tooltip>}

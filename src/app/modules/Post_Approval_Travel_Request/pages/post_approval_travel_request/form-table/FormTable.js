@@ -156,6 +156,8 @@ export function FormTable({ onEditClick, onViewClick }) {
           if (onEditClick) onEditClick(row);
         },
         openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
+        openReportDownload: (id) =>
+          dispatch(actions.fetchPostApprovalTravelRequestReport(id)),
       },
     },
   ];

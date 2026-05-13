@@ -58,14 +58,14 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadRequisitionJobVacancy"
+    (item) => item.componentName === "ReadRequisitionJobVacancy",
   );
 
   const isAccessForEdit = userAccess?.find((item) => {
     return item.componentName === "UpdateRequisitionJobVacancy";
   });
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteRequisitionJobVacancy"
+    (item) => item.componentName === "DeleteRequisitionJobVacancy",
   );
 
   // Posting
@@ -103,8 +103,13 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "130px",
       },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell}
+        </span>
+      ),
     },
 
     {
@@ -112,15 +117,45 @@ export function FormTable() {
       text: "Date of Request",
       sortCaret: sortCaret,
       headerSortingClasses,
+
       style: {
-        minWidth: "100px",
+        minWidth: "80px",
       },
       formatter: (cell) => {
         return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
+    {
+      dataField: "Grade.formName",
+      text: "Grade",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "130px",
+      },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell || "-"}
+        </span>
+      ),
+    },
+    {
+      dataField: "Designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "130px",
+      },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell || "-"}
+        </span>
+      ),
+    },
 
- 
     {
       dataField: "Department.deptName",
       text: "Department",
@@ -128,8 +163,13 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "130px",
       },
+      formatter: (cell) => (
+        <span title={cell} className="line-clamp-1">
+          {cell}
+        </span>
+      ),
     },
 
     {
@@ -139,20 +179,47 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "90px",
       },
       formatter: (cell) => {
         return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
-
-{
-      classes: "text-center pr-4",
-      headerClasses: "text-center pr-5",
+    {
+      dataField: "request_status",
+      text: "Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "50px",
+        maxWidth: "50px",
+      },
+      formatter: (cell) => {
+        let text = "";
+        let className = "";
+
+        if (cell === "P") {
+          text = "Pending";
+          className = "text-pending font-bold";
+        } else if (cell === "A") {
+          text = "Approved";
+          className = "text-approved font-bold";
+        } else if (cell === "R") {
+          text = "Rejected";
+          className = "text-rejected font-bold";
+        }
+
+        return <span className={className}>{text}</span>;
       },
     },
+    // {
+    //       classes: "text-center pr-4",
+    //       headerClasses: "text-center pr-5",
+    //       style: {
+    //         minWidth: "100px",
+    //       },
+    //     },
 
     {
       dataField: "action",
@@ -208,7 +275,7 @@ export function FormTable() {
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
+                  formUIProps.setQueryParams,
                 )}
                 // selectRow={getSelectRow({
                 //   entities,

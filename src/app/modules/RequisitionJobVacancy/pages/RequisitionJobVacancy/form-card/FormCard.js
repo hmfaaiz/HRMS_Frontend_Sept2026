@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Switch,Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import {
   Card,
@@ -17,6 +17,7 @@ import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePort
 import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "../form-delete-dialog/FormDeleteDialog";
+import { WorkflowAuthortiesTable } from "../form-table/WorkflowTable";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -28,30 +29,39 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-  const { userAccess } = useSelector((state) => {
-
+  const {
+    userAccess,
+    empAuthorityList,
+    requisition_job_approval,
+  } = useSelector((state) => {
     return {
       userAccess: state.auth.userAccess.requisition_job_vacancy,
+      empAuthorityList: state?.requisition_job_vacancy?.empAuthorityList || [],
+      requisition_job_approval: state?.auth?.userAccess?.Recruitment,
     };
   }, shallowEqual);
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateRequisitionJobVacancy"
+    (item) => item.componentName === "CreateRequisitionJobVacancy",
   );
 
-
   const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadRequisitionJobVacancy"
+    (item) => item.componentName === "ReadRequisitionJobVacancy",
   );
 
   const isAccessForEdit = userAccess?.find((item) => {
     return item.componentName === "UpdateRequisitionJobVacancy";
   });
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteRequisitionJobVacancy"
+    (item) => item.componentName === "DeleteRequisitionJobVacancy",
   );
 
-
+  const approvalForm = requisition_job_approval?.find(
+    (el) =>
+      el?.componentName == "ReadAllJobRequestionApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
@@ -62,7 +72,12 @@ export function FormCard() {
             isBackButton={true}
             isDashboardRedirect={true}
             menuOptions={[
-
+              {
+                name: "Approval",
+                link:
+                  "/job_requestion_approval/read-all-job-requestion-approval",
+                isShow: approvalForm,
+              },
             ]}
             isDashboardIcon={true}
           />
@@ -74,93 +89,115 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-              isDashboardRedirect={true}
+            isDashboardRedirect={true}
             menuOptions={[
-
+              {
+                name: "Approval",
+                link:
+                  "/job_requestion_approval/read-all-job-requestion-approval",
+                isShow: approvalForm,
+              },
             ]}
             isDashboardIcon={true}
           />
         </div>
-        <div className="px-3 py-2 rounded-lg bg-white">
-          <FormFIlter />
-          <div className="text-right my-1">
-            {accessUser && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={FormUIProps.newFormButtonClick}
-              >
-                <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
-                Add
-              </button>
-            )}
-
-
+        <div className="px-2 rounded-lg bg-white">
+          <div className="flex justify-start sm:justify-end flex-wrap gap-2 items-end">
+            <FormFIlter />
+            <div className="flex items-center gap-2">
+              {accessUser && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={FormUIProps.newFormButtonClick}
+                >
+                  <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+                  Add
+                </button>
+              )}
+            </div>
           </div>
 
           <FormTable />
           <br></br>
-
-             <Switch>
-                  {/* NEW */}
-                  {accessUser && (
-                    <Route exact path="/requisition_job_vacancy/read-all-requisition-job-vacancy/new">
-                      {({ history, match }) => (
-                        <FormEditDialog
-                          show={match != null}
-                          status="new"
-                          onHide={() => history.push("/requisition_job_vacancy/read-all-requisition-job-vacancy")}
-                        />
-                      )}
-                    </Route>
-                  )}
-          
-                  {/* EDIT */}
-                  {isAccessForEdit && (
-                    <Route path="/requisition_job_vacancy/read-all-requisition-job-vacancy/:id/edit">
-                      {({ history, match }) => (
-                        <FormEditDialog
-                          show={match != null}
-                          id={match?.params?.id}
-                          status="edit"
-                          onHide={() => history.push("/requisition_job_vacancy/read-all-requisition-job-vacancy")}
-                        />
-                      )}
-                    </Route>
-                  )}
-                  {/* READ */}
-                  {isAccessForView && (
-                    <Route path="/requisition_job_vacancy/read-all-requisition-job-vacancy/:id/read">
-                      {({ history, match }) => (
-                        <FormEditDialog
-                          show={match != null}
-                          id={match?.params?.id}
-                          status="read"
-                          dataForRead={true}
-                          onHide={() => history.push("/requisition_job_vacancy/read-all-requisition-job-vacancy")}
-                        />
-                      )}
-                    </Route>
-                  )}
-          
-                  {/* DELETE */}
-                  {isAccessForDelete && (
-                    <Route path="/requisition_job_vacancy/read-all-requisition-job-vacancy/:id/:status/delete">
-                      {({ history, match }) => (
-                        <FormDeleteDialog
-                          show={match != null}
-                          id={match?.params?.id}
-                          status={match?.params?.status}
-                          onHide={() => history.push("/requisition_job_vacancy/read-all-requisition-job-vacancy")}
-                        />
-                      )}
-                    </Route>
-                  )}
-          
-          
-                </Switch>
         </div>
+        <Switch>
+          {/* NEW */}
+          {accessUser && (
+            <Route
+              exact
+              path="/requisition_job_vacancy/read-all-requisition-job-vacancy/new"
+            >
+              {({ history, match }) => (
+                <FormEditDialog
+                  show={match != null}
+                  status="new"
+                  onHide={() =>
+                    history.push(
+                      "/requisition_job_vacancy/read-all-requisition-job-vacancy",
+                    )
+                  }
+                />
+              )}
+            </Route>
+          )}
 
+          {/* EDIT */}
+          {isAccessForEdit && (
+            <Route path="/requisition_job_vacancy/read-all-requisition-job-vacancy/:id/edit">
+              {({ history, match }) => (
+                <FormEditDialog
+                  show={match != null}
+                  id={match?.params?.id}
+                  status="edit"
+                  onHide={() =>
+                    history.push(
+                      "/requisition_job_vacancy/read-all-requisition-job-vacancy",
+                    )
+                  }
+                />
+              )}
+            </Route>
+          )}
+          {/* READ */}
+          {isAccessForView && (
+            <Route path="/requisition_job_vacancy/read-all-requisition-job-vacancy/:id/read">
+              {({ history, match }) => (
+                <FormEditDialog
+                  show={match != null}
+                  id={match?.params?.id}
+                  status="read"
+                  dataForRead={true}
+                  onHide={() =>
+                    history.push(
+                      "/requisition_job_vacancy/read-all-requisition-job-vacancy",
+                    )
+                  }
+                />
+              )}
+            </Route>
+          )}
+
+          {/* DELETE */}
+          {isAccessForDelete && (
+            <Route path="/requisition_job_vacancy/read-all-requisition-job-vacancy/:id/:status/delete">
+              {({ history, match }) => (
+                <FormDeleteDialog
+                  show={match != null}
+                  id={match?.params?.id}
+                  status={match?.params?.status}
+                  onHide={() =>
+                    history.push(
+                      "/requisition_job_vacancy/read-all-requisition-job-vacancy",
+                    )
+                  }
+                />
+              )}
+            </Route>
+          )}
+        </Switch>
+
+        <WorkflowAuthortiesTable empAuthorityList={empAuthorityList} />
       </div>
     </div>
   );

@@ -26,7 +26,6 @@ export const AdminPortal = () => {
 
   const user = useSelector((state) => state.auth?.user || {});
   const dashboard = useSelector((state) => state.dashboard || {});
-
   const [activeTab, setActiveTab] = useState("default");
 
   const [summaryFilter, setSummaryFilter] = useState({

@@ -55,7 +55,9 @@ export function FormUIProvider({ FormUIEvents, children }) {
     decision:null,
     notApprovedRemarks:"",
     workExpFrom:"",
-    workExpTo:""
+    workExpTo:"",
+    gradeId : null,
+    designationId : null,
 
 
   };

@@ -102,7 +102,8 @@ export function FormTable({ onEditClick, onViewClick }) {
       text: "Travel Type",
       sort: false,
       sortCaret: sortCaret,
-      formatter: (cell, row) => row.TravelType?.formName || row.travelType || "-",
+      formatter: (cell, row) =>
+        row.TravelType?.formName || row.travelType || "-",
       style: { minWidth: "140px" },
     },
     {
@@ -197,13 +198,8 @@ export function FormTable({ onEditClick, onViewClick }) {
           text = "Pending (HRMS)";
           className = "text-pending font-bold";
         } else if (cell === "A") {
-          if (row?.isLoanContinuing) {
-            className = "text-approved font-bold";
-            text = "Active";
-          } else {
-            className = "text-primary font-bold";
-            text = "Completed";
-          }
+          className = "text-approved font-bold";
+          text = "Approved";
         } else if (cell === "R") {
           text = "Rejected";
           className = "text-rejected font-bold";

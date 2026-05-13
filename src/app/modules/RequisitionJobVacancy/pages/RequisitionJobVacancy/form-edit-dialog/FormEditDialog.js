@@ -164,8 +164,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
     //   </Card>
     // </Accordion>
 
-    <div className="bg-white">
-      <hr></hr>
+    <div className="bg-white px-2 rounded-lg">
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
