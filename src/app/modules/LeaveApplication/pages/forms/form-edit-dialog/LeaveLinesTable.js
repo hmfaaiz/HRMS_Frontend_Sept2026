@@ -62,7 +62,7 @@ const LeaveLinesTable = ({ values, setFieldValue, isEdit }) => {
                                       disabled={
                                         isSandwich ||
                                         isEdit ||
-                                        values?.days == 0.5
+                                        values?.days == 0.5 || !row.isEditAble
                                       }
                                       onChange={(e) => {
                                         const dayVal = parseFloat(
