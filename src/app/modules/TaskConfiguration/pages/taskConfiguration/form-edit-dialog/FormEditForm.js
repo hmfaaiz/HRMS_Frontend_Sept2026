@@ -61,7 +61,7 @@ export function FormEditForm({
 
   const { roles } = useSelector((state) => {
     return {
-   
+
       roles: state.users?.roles?.allRoles || []
     };
   }, shallowEqual);
@@ -74,7 +74,7 @@ export function FormEditForm({
       validationSchema={taskConfigEditSchema}
       onSubmit={(values) => {
         enableLoading();
-       
+
 
         saveForm(values);
       }}
@@ -89,8 +89,8 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
-                  <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
+                <div className="">
+                  <div className="col-span-3 grid grid-cols-2 gap-x-3 gap-y-1">
                     {/* <div className="col-span-1">
 
                       <SubsidiarySelect
@@ -115,7 +115,7 @@ export function FormEditForm({
 
 
                     <div className="">
-                      <label>
+                      <label className="font-bold">
                         Company Task Ticket (Role Access)
                       </label>
 
@@ -151,7 +151,7 @@ export function FormEditForm({
 
 
                     <div className="">
-                      <label>
+                      <label className="font-bold">
                         Team Ticket (Role Access)
                       </label>
 
@@ -179,9 +179,39 @@ export function FormEditForm({
 
                     </div>
 
+                  
+
+
 
 
                   </div>
+
+                    <div className="">
+                    <label className="font-bold">
+                        Task Creation Policy
+                      </label>
+
+
+
+
+                      <div className="overflow-auto max-h-32 border-none scrollbar-fancy">
+                        <div className="flex justify-start items-center">
+                          <input
+                            className="mr-1"
+                            name="isAllowedToCreateTask"
+                            type="checkbox"
+                            checked={values?.isAllowedToCreateTask}
+                            onChange={(e) => {
+                              setFieldValue("isAllowedToCreateTask", e.target.checked);
+                            }}
+                          />
+                          <label>Allow users to create tickets for Employee Onboarding and Exit Clearance processes.</label>
+                        </div>
+                      </div>
+
+
+                    </div>
+
 
 
 
