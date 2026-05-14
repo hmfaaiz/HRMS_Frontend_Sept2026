@@ -27,21 +27,21 @@ export const FormApproval = () => {
   }), [FormUIContext]);
 
   const handleRequestSubmit = async (values, resetForm) => {
-    setLoading(true);
-    await dispatch(
-      actions.handleReimbursementWorkflowRequest(values, resetForm, setLoading)
-    ).then(async () => {
-      formUIProps.setIds([]);
-      formUIProps.setCurrentData(null);
-      await dispatch(
-        actions.fetchReimbursementWorkflow(formUIProps?.queryParams?.filter)
-      );
-    });
+    // setLoading(true);
+    // await dispatch(
+    //   actions.(values, resetForm, setLoading)
+    // ).then(async () => {
+    //   formUIProps.setIds([]);
+    //   formUIProps.setCurrentData(null);
+    //   await dispatch(
+    //     actions.fetchAllApplication(formUIProps?.queryParams?.filter)
+    //   );
+    // });
   };
 
   const handleRejectClick = (setFieldValue, handleSubmit) => {
-    setFieldValue("request_status", "R");
-    handleSubmit();
+    // setFieldValue("request_status", "R");
+    // handleSubmit();
   };
 
   return (
