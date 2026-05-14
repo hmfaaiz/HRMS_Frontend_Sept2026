@@ -519,7 +519,7 @@ export function MasterEditForm({
                       disabled={isUserForRead}
                       />
                       <label htmlFor="allowEditLeaveLines" className="mb-0 text-sm">
-                        Allow user to edit leave lines
+                        Allow user to edit leave lines on leave application and request form.
                       </label>
                       </div>
                     </div>
