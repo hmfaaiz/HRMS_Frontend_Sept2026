@@ -123,18 +123,18 @@ export function WorkflowTable({ onHide, show }) {
       },
       formatter: (cell) => {
         let text = "";
-        let classname = "";
+        let className = "";
         if (cell === "P") {
           text = "Pending";
-          classname = "text-pending font-bold";
+          className = "text-pending font-bold";
         } else if (cell === "A") {
+          className = "text-approved font-bold";
           text = "Approved";
-          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          classname = "text-rejected font-bold";
+          className = "text-rejected font-bold";
         }
-        return <span className={classname}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     {
@@ -204,13 +204,13 @@ export function WorkflowTable({ onHide, show }) {
               </h6>
               <div className="grid grid-cols-2 text-sm text-black">
                 <div className="font-medium">Employee Code</div>
-                <div>
-                  {workflowRecord?.Employee?.employeeCode || "N/A"}
-                </div>
+                <div>{workflowRecord?.Employee?.employeeCode || "N/A"}</div>
 
                 <div className="font-medium">Name</div>
                 <div>
-                  {workflowRecord?.Employee?.firstName || ""} {workflowRecord?.Employee?.middleName || ""} {workflowRecord?.Employee?.lastName || ""}
+                  {workflowRecord?.Employee?.firstName || ""}{" "}
+                  {workflowRecord?.Employee?.middleName || ""}{" "}
+                  {workflowRecord?.Employee?.lastName || ""}
                 </div>
 
                 <div className="font-medium">Department</div>
@@ -240,6 +240,14 @@ export function WorkflowTable({ onHide, show }) {
                   </h6>
                   <div className="text-sm text-black">
                     <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Travel Type</div>
+                      <div className="col-span-1">
+                        {workflowRecord?.TravelType?.formName ||
+                          workflowRecord?.travelType ||
+                          "-"}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
                         Purpose of Travel
                       </div>
@@ -247,18 +255,13 @@ export function WorkflowTable({ onHide, show }) {
                         {workflowRecord?.purposeOfTravel || "-"}
                       </div>
                     </div>
-                    <div className="grid grid-cols-4">
+                    {/* <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">Project Name</div>
                       <div className="col-span-1">
                         {workflowRecord?.projectName || "-"}
                       </div>
-                    </div>
-                    <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">Travel Type</div>
-                      <div className="col-span-1">
-                        {workflowRecord?.travelType || "-"}
-                      </div>
-                    </div>
+                    </div> */}
+
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
                         Total Allowance Amount

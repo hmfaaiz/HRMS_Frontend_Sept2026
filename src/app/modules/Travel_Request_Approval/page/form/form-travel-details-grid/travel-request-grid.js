@@ -34,7 +34,8 @@ export function TravelRequestGrid({ segments, employeeEntitlement }) {
         sort: false,
         sortCaret: sortCaret,
         style: { minWidth: "120px" },
-        formatter: (cell) => (cell ? format(new Date(cell), "dd-MMM-yyyy") : "-"),
+        formatter: (cell) =>
+          cell ? format(new Date(cell), "dd-MMM-yyyy") : "-",
       },
       {
         dataField: "toDate",
@@ -42,7 +43,8 @@ export function TravelRequestGrid({ segments, employeeEntitlement }) {
         sort: false,
         sortCaret: sortCaret,
         style: { minWidth: "120px" },
-        formatter: (cell) => (cell ? format(new Date(cell), "dd-MMM-yyyy") : "-"),
+        formatter: (cell) =>
+          cell ? format(new Date(cell), "dd-MMM-yyyy") : "-",
       },
       {
         dataField: "ModeOfTravel.formName",
@@ -73,21 +75,21 @@ export function TravelRequestGrid({ segments, employeeEntitlement }) {
           return "";
         },
       },
-      {
-        dataField: "hotelEntitlementAmount",
-        text: "Hotel Entitlement Amount",
-        sort: false,
-        sortCaret: sortCaret,
-        classes: "text-right",
-        headerClasses: "text-right",
-        style: { minWidth: "160px" },
-        formatter: (cell, row) => {
-          if (row.accomodationRequired && !row.selfEntitlement) {
-            return cell ? Number(cell).toLocaleString() : "0";
-          }
-          return "";
-        },
-      },
+      // {
+      //   dataField: "hotelEntitlementAmount",
+      //   text: "Hotel Entitlement Amount",
+      //   sort: false,
+      //   sortCaret: sortCaret,
+      //   classes: "text-right",
+      //   headerClasses: "text-right",
+      //   style: { minWidth: "160px" },
+      //   formatter: (cell, row) => {
+      //     if (row.accomodationRequired && !row.selfEntitlement) {
+      //       return cell ? Number(cell).toLocaleString() : "0";
+      //     }
+      //     return "";
+      //   },
+      // },
       {
         dataField: "selfAmount",
         text: "Self Amount",

@@ -208,7 +208,7 @@ import { ReimbursementApprovalSlice } from "../app/modules/Reimbursement_Claim_A
 import { ReimbursementWorkflowHrmsSlice } from "../app/modules/Reimbursement_Workflow_Status/_redux/redux-Slice";
 import { ReimbursementWorkflowStatusSlice } from "../app/modules/Reimbursement_Workflow_Portal/_redux/redux-Slice";
 import { TravelRequestWorkflowStatusSlice } from "../app/modules/Travel_Request_WorkflowStatus_Portal/_redux/redux-Slice";
-// import { TravelRequestWorkflowAdminSlice } from "../app/modules/Travel_Request_WorkflowStatus_Hrms/_redux/formSlice";
+import { TravelRequestWorkflowAdminSlice } from "../app/modules/Travel_Request_WorkflowStatus_Hrms/_redux/formSlice";
 import { RosterRequestSlice } from "../app/modules/Attendance_Roster_Request/_redux/redux-Slice";
 import { RosterApprovalSlice } from "../app/modules/Attendance_Roster_Approval/_redux/redux-Slice";
 import { RosterWorkflowHrmsSlice } from "../app/modules/Attendance_Roster_Workflow/_redux/redux-Slice";
@@ -216,7 +216,13 @@ import { RosterWorkflowStatusSlice } from "../app/modules/Attendance_Roster_Work
 import { postApprovalTravelRequestSlice } from "../app/modules/Post_Approval_Travel_Request/_redux/redux-Slice";
 import { PortalRosterCalendarSlice } from "../app/modules/Roster_Calendar_Portal/_redux/redux-Slice";
 import { CompanyAttMachineConfigSlice } from "../app/modules/Company_att_machine_config/_redux/redux-Slice";
-
+import { AIChatbotSlice } from "../app/modules/AIChatbotService/_redux/redux-Slice";
+import { InterviewQuestionnaireSlice } from "../app/modules/Interview_Questionnaire/_redux/redux-Slice";
+import { InterviewRecommendationSlice } from "../app/modules/Interview_Recommendations/_redux/redux-Slice";
+import { JobRequestionApprovalSlice } from "../app/modules/JobRequestionApproval/redux/formSlice";
+import { TravelRequestReportsSlice } from "../app/modules/TravelRequestReports/_redux/TravelRequestReportsSlice";
+import { JobRequestionWorkflowStatusSlice } from "../app/modules/Job_Requestion_Workflow_Status/_redux/redux-Slice";
+import { JobRequestionWorkflowAdminSlice } from "../app/modules/JobRequestionWorkflowStatusApproval/redux/formSlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -420,7 +426,7 @@ export const rootReducer = combineReducers({
   temporary_shift_setup: employeeTempShiftSlice.reducer,
   project_sprint: projectSprintSlice.reducer,
   reimbursement_claim_workflow_status_approval:
-  ReimbursementWorkflowHrmsSlice.reducer,
+    ReimbursementWorkflowHrmsSlice.reducer,
   reimbursement_claim_workflow_status: ReimbursementWorkflowStatusSlice.reducer,
   TravelRequestWorkflowStatus: TravelRequestWorkflowStatusSlice.reducer,
   attendance_roster_request: RosterRequestSlice.reducer,
@@ -430,6 +436,14 @@ export const rootReducer = combineReducers({
   post_approval_travel_request : postApprovalTravelRequestSlice.reducer,
   roster_calendar_team : PortalRosterCalendarSlice.reducer,
   company_att_machine_config: CompanyAttMachineConfigSlice.reducer,
+  ai_chatbot: AIChatbotSlice.reducer,
+  interview_questionnaire: InterviewQuestionnaireSlice.reducer,
+  interview_recommendations: InterviewRecommendationSlice.reducer,
+  TravelRequestWorkflowAdmin: TravelRequestWorkflowAdminSlice.reducer,
+  job_requestion_approval : JobRequestionApprovalSlice.reducer,
+  travel_request_reports: TravelRequestReportsSlice.reducer,
+  job_requestion_workflow_status: JobRequestionWorkflowStatusSlice.reducer,
+  job_requestion_workflow_admin : JobRequestionWorkflowAdminSlice.reducer,
 });
 
 export function* rootSaga() {

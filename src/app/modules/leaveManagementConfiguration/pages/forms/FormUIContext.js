@@ -33,6 +33,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     isSandwich: 0,
     leavetypePolicies: [],
     leaveTypeSalaryDeductionPolicies: [],
+    leaveTypeSalaryDeductionPolicies: [],
+    allowEditLeaveLines: false, 
   };
 
 

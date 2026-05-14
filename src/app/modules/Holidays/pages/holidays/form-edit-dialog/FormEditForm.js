@@ -211,6 +211,7 @@ export function FormEditForm({
                         setFieldValue("from_date", e);
                         setFieldValue("to_date", e);
                         setStart_date(e);
+                        setEnd_date(e);
                       }}
                     />
                   </div>

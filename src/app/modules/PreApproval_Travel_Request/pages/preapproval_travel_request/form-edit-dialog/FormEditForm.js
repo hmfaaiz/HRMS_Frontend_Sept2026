@@ -7,10 +7,10 @@ import { fetchTadaConfigByEmployeeId } from "../../../_redux/redux-Actions";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { Checkbox } from "../../../../../../_metronic/_partials/controls";
 import DatePicker from "react-datepicker";
-import { Trash2, CirclePlus } from "lucide-react";
+import { Plus, Trash2, CirclePlus, CircleMinus, Calendar } from "lucide-react";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
-import { Modal } from "react-bootstrap";
+import { Modal, Accordion, Button, Card } from "react-bootstrap";
 
 export function FormEditForm({
   employeeId,
@@ -23,6 +23,8 @@ export function FormEditForm({
   isReadOnly,
 }) {
   const dispatch = useDispatch();
+  const [activeTicketKey, setActiveTicketKey] = React.useState("0");
+  const [activeHotelKey, setActiveHotelKey] = React.useState("0");
   const isApprovingRef = React.useRef(false);
   const { dashboard, employeeEntitlement, auth } = useSelector(
     (state) => ({
@@ -36,14 +38,14 @@ export function FormEditForm({
 
   const transportOptions = dashboard?.allTransportModeList || [];
   const hotelOptions = dashboard?.allHotelEntitlementList || [];
-  const locationOptions = dashboard?.allLocationChildMenus || [];
+  const locationOptions = dashboard?.allTravelLocationList || [];
   const travelTypeOptions = dashboard?.allTravelTypeList || [];
   const travelClassOptions = dashboard?.allClassOfTravelList || [];
 
   React.useEffect(() => {
     dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
     dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
-    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(555, "allTravelLocationList"));
     dispatch(fetchAllFormsMenu(553, "allTravelTypeList"));
     dispatch(fetchAllFormsMenu(554, "allClassOfTravelList"));
   }, [dispatch]);
@@ -74,11 +76,20 @@ export function FormEditForm({
   // Validation Schema
   const formValidation = Yup.object().shape({
     purposeOfTravel: Yup.string().required(VALIDATION_MESSAGES.required),
-    projectName: Yup.string().required(VALIDATION_MESSAGES.required),
-    travelType: Yup.string().required(VALIDATION_MESSAGES.required),
+    // projectName: Yup.string().required(VALIDATION_MESSAGES.required),
+    travelTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
     dailyAllowanceRate: Yup.number()
       .required(VALIDATION_MESSAGES.required)
-      .min(0, VALIDATION_MESSAGES.minOneValue),
+      .min(0, VALIDATION_MESSAGES.minOneValue)
+      .test("limit-check", VALIDATION_MESSAGES.amountExceedLimit, function(
+        value,
+      ) {
+        const limit = employeeEntitlement?.dailyAllowanceAmount || 0;
+        if (limit > 0 && value > limit) {
+          return false;
+        }
+        return true;
+      }),
     dailyAllowanceDays: Yup.number()
       .required(VALIDATION_MESSAGES.required)
       .min(1, VALIDATION_MESSAGES.minOneValue),
@@ -114,16 +125,16 @@ export function FormEditForm({
                 : schema.nullable();
             },
           ),
-          hotelEntitlementAmount: Yup.number().when(
-            ["accommodationRequired", "selfEntitlement"],
-            (accommodationRequired, selfEntitlement, schema) => {
-              return accommodationRequired && !selfEntitlement
-                ? schema
-                    .required(VALIDATION_MESSAGES.required)
-                    .min(0, VALIDATION_MESSAGES.minOneValue)
-                : schema.nullable();
-            },
-          ),
+          // hotelEntitlementAmount: Yup.number().when(
+          //   ["accommodationRequired", "selfEntitlement"],
+          //   (accommodationRequired, selfEntitlement, schema) => {
+          //     return accommodationRequired && !selfEntitlement
+          //       ? schema
+          //           .required(VALIDATION_MESSAGES.required)
+          //           .min(0, VALIDATION_MESSAGES.minOneValue)
+          //       : schema.nullable();
+          //   },
+          // ),
           selfAmount: Yup.number().when(
             ["accommodationRequired", "selfEntitlement"],
             (accommodationRequired, selfEntitlement, schema) => {
@@ -131,6 +142,18 @@ export function FormEditForm({
                 ? schema
                     .required(VALIDATION_MESSAGES.required)
                     .min(0, VALIDATION_MESSAGES.minOneValue)
+                    .test(
+                      "self-amount-limit",
+                      VALIDATION_MESSAGES.amountExceedLimit,
+                      function(value) {
+                        const limit =
+                          employeeEntitlement?.hotelEntitlementSelfAmount || 0;
+                        if (limit > 0 && value > limit) {
+                          return false;
+                        }
+                        return true;
+                      },
+                    )
                 : schema.nullable();
             },
           ),
@@ -157,35 +180,27 @@ export function FormEditForm({
     ),
     travelRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
     taxiFareRate: Yup.number().nullable(),
+    ticketDetails: Yup.array().of(
+      Yup.object().shape({
+        isTicketEnabled: Yup.boolean(),
+        flightName: Yup.string().when("isTicketEnabled", (enabled, schema) =>
+          enabled
+            ? schema.required(VALIDATION_MESSAGES.required)
+            : schema.nullable(),
+        ),
+      }),
+    ),
+    hotelDetails: Yup.array().of(
+      Yup.object().shape({
+        hotelName: Yup.string().nullable(),
+      }),
+    ),
   });
 
   // Combined Template logic for create/edit
   const initialValues = useMemo(() => {
-    if (user && (user.Id || user.id)) {
-      return {
-        ...user,
-        advanceRequested: user.advanceRequired,
-        dailyAllowanceDays: Math.floor(user.dailyAllowanceDay || 0),
-        travelSegments:
-          user.Master?.map((m) => ({
-            fromLocation: m.fromLocationId,
-            toLocation: m.toLocationId,
-            fromDate: m.fromDate ? new Date(m.fromDate) : null,
-            toDate: m.toDate ? new Date(m.toDate) : null,
-            modeOfTravel: m.modeOfTravelId,
-            classOfTravel: m.classOfTravelId,
-            accommodationRequired: m.accomodationRequired,
-            hotelEntitlement: m.hotelEntitlementId,
-            hotelEntitlementAmount: m.hotelEntitlementAmount,
-            selfEntitlement: m.selfEntitlement,
-            selfAmount: m.selfAmount,
-          })) || [],
-        travelRemarks: user.travelRequestRemarks || "",
-        taxiFareRate: user.taxiFareRate || user.taxiFareAmount || 0,
-      };
-    }
-
     const segmentTemplate = {
+      childMasterId: 0,
       fromLocation: "",
       toLocation: "",
       fromDate: null,
@@ -199,11 +214,119 @@ export function FormEditForm({
       selfAmount: 0,
     };
 
+    const ticketDetailTemplate = {
+      fromLocation: "",
+      toLocation: "",
+      flightName: "",
+      description: "",
+      ticketNumber: "",
+      ticketDetail: "",
+      ticketAmount: "",
+      isTicketEnabled: false,
+      noTicketReason: "",
+    };
+
+    const hotelDetailTemplate = {
+      hotelName: "",
+      description: "",
+      roomNumber: "",
+      roomType: "",
+      amount: "",
+    };
+
+    if (user && (user.Id || user.id)) {
+      const segments = user.Master || user.Masters || [];
+      const journeyDetails =
+        user.JourneyDetail || user.JourneyDetails || user.JourneyDetails || [];
+      const hotelDetailsData =
+        user.TravelHotelDetail ||
+        user.TravelHotelDetails ||
+        user.TravelHotelDetails ||
+        [];
+
+      const mappedSegments = segments.map((m) => ({
+        childMasterId: m.Id || m.id,
+        fromLocation: m.fromLocationId,
+        toLocation: m.toLocationId,
+        fromDate: m.fromDate ? new Date(m.fromDate) : null,
+        toDate: m.toDate ? new Date(m.toDate) : null,
+        modeOfTravel: m.modeOfTravelId,
+        classOfTravel: m.classOfTravelId,
+        accommodationRequired: m.accomodationRequired,
+        hotelEntitlement: m.hotelEntitlementId,
+        hotelEntitlementAmount: m.hotelEntitlementAmount,
+        selfEntitlement: m.selfEntitlement,
+        selfAmount: m.selfAmount,
+      }));
+
+      return {
+        ...user,
+        projectName: user.projectName || "General",
+        advanceRequested: user.advanceRequired,
+        dailyAllowanceDays: Math.floor(user.dailyAllowanceDay || 0),
+        travelSegments:
+          mappedSegments.length > 0
+            ? mappedSegments
+            : [{ ...segmentTemplate }, { ...segmentTemplate }],
+        ticketDetails: (mappedSegments.length > 0
+          ? mappedSegments
+          : [{ ...segmentTemplate }]
+        ).map((seg) => {
+          const t = journeyDetails.find(
+            (jd) =>
+              String(jd.childMasterId) === String(seg.childMasterId || seg.Id),
+          );
+          const parseStr = (v) =>
+            v !== null && v !== undefined && v !== "0" && v !== 0
+              ? String(v)
+              : "";
+          return {
+            childMasterId: seg.childMasterId || seg.Id,
+            fromLocation: parseStr(t?.fromLocation),
+            toLocation: parseStr(t?.toLocation),
+            flightName: parseStr(t?.flightName),
+            description: parseStr(t?.description),
+            ticketNumber: parseStr(t?.ticketNumber),
+            ticketDetail: parseStr(t?.ticketdetail),
+            ticketAmount: t?.ticketamount ?? "",
+            isTicketEnabled: t?.isticket || false,
+            noTicketReason: parseStr(t?.noTicketReason),
+          };
+        }),
+        hotelDetails: (mappedSegments.length > 0
+          ? mappedSegments
+          : [{ ...segmentTemplate }]
+        ).map((seg) => {
+          const h = hotelDetailsData.find(
+            (hd) =>
+              String(hd.childMasterId) === String(seg.childMasterId || seg.Id),
+          );
+          const parseStr = (v) =>
+            v !== null && v !== undefined && v !== "0" && v !== 0
+              ? String(v)
+              : "";
+          return {
+            childMasterId: seg.childMasterId || seg.Id,
+            hotelName: parseStr(h?.hotelName),
+            description: parseStr(h?.description),
+            roomNumber: parseStr(h?.roomNumber),
+            roomType: parseStr(h?.roomType) || parseStr(h?.roomtype),
+            amount:
+              h?.amount != null && h?.amount !== 0 && h?.amount !== "0"
+                ? h.amount
+                : "",
+          };
+        }),
+        travelRemarks: user.travelRequestRemarks || "",
+        taxiFareRate: user.taxiFareRate || user.taxiFareAmount || 0,
+      };
+    }
+
     return {
       employeeId: employeeId || "",
       purposeOfTravel: "",
-      projectName: "",
-      travelType: "",
+      projectName: "General",
+      travelTypeId: "",
       dailyAllowanceRate: 0,
       dailyAllowanceDays: 0,
       dailyAllowanceAmount: 0,
@@ -212,6 +335,8 @@ export function FormEditForm({
       advanceRemarks: "",
       taxiFareRate: 0,
       travelSegments: [{ ...segmentTemplate }, { ...segmentTemplate }],
+      ticketDetails: [{ ...ticketDetailTemplate }],
+      hotelDetails: [{ ...hotelDetailTemplate }],
       travelRemarks: "",
       request_status: "A",
     };
@@ -230,8 +355,8 @@ export function FormEditForm({
             subsidiaryId: employeeDetails?.subsidiaryId || user?.subsidiaryId,
             employeeId: employeeId || user?.employeeId,
             purposeOfTravel: values.purposeOfTravel,
-            projectName: values.projectName,
-            travelType: values.travelType,
+            projectName: values.projectName || "General",
+            travelTypeId: values.travelTypeId,
             dailyAllowanceRate: values.dailyAllowanceRate,
             dailyAllowanceDay: values.dailyAllowanceDays,
             dailyAllowanceAmount: values.dailyAllowanceAmount,
@@ -244,6 +369,8 @@ export function FormEditForm({
             taxiFareRate: values.taxiFareRate,
             request_status: values.request_status || "A",
             ...(isApprovingRef.current ? { approved_status: 1 } : {}),
+            ticketDetails: values.ticketDetails,
+            hotelDetails: values.hotelDetails,
             Master: values.travelSegments.map((segment) => {
               const formatLocalDate = (dateObj) => {
                 if (!dateObj) return null;
@@ -254,6 +381,7 @@ export function FormEditForm({
                 )}-${String(d.getDate()).padStart(2, "0")}`;
               };
               return {
+                childMasterId: segment.childMasterId,
                 fromLocationId: segment.fromLocation,
                 toLocationId: segment.toLocation,
                 fromDate: formatLocalDate(segment.fromDate),
@@ -263,7 +391,7 @@ export function FormEditForm({
                 accommodationRequired: segment.accommodationRequired,
                 isSelf: segment.selfEntitlement,
                 hotelEntitlementId: segment.hotelEntitlement,
-                hotelAmount: segment.hotelEntitlementAmount,
+                hotelAmount: segment.hotelEntitlementAmount || 0,
                 selfAmount: segment.selfAmount,
               };
             }),
@@ -363,7 +491,10 @@ export function FormEditForm({
 
           React.useEffect(() => {
             if (employeeEntitlement) {
-              if (employeeEntitlement.dailyAllowanceAmount && !(user?.Id || user?.id)) {
+              if (
+                employeeEntitlement.dailyAllowanceAmount &&
+                !(user?.Id || user?.id)
+              ) {
                 setFieldValue(
                   "dailyAllowanceRate",
                   employeeEntitlement.dailyAllowanceAmount,
@@ -417,7 +548,29 @@ export function FormEditForm({
                 <h6 className="text-primary font-bold mb-3">Travel Details</h6>
                 <div className="grid grid-cols-12 gap-x-3 mb-4">
                   <div className="col-span-2">
-                    <label>
+                    <label className="">
+                      Travel Type <span className="text-danger">*</span>
+                    </label>
+                    <Field
+                      as="select"
+                      name="travelTypeId"
+                      className="form-control"
+                      style={{ backgroundColor: "#eefbff" }}
+                      disabled={!isPolicyDefined}
+                    >
+                      <option value="">Select</option>
+                      {travelTypeOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </Field>
+                    {errors.travelTypeId && touched.travelTypeId && (
+                      <div className="form-feedBack">{errors.travelTypeId}</div>
+                    )}
+                  </div>
+                  <div className="col-span-6">
+                    <label className="">
                       Purpose of Travel <span className="text-danger">*</span>
                     </label>
                     <Field
@@ -431,43 +584,6 @@ export function FormEditForm({
                       <div className="form-feedBack">
                         {errors.purposeOfTravel}
                       </div>
-                    )}
-                  </div>
-                  <div className="col-span-2">
-                    <label>
-                      Project Name <span className="text-danger">*</span>
-                    </label>
-                    <Field
-                      name="projectName"
-                      className="form-control"
-                      style={{ backgroundColor: "#eefbff" }}
-                      placeholder="Project Name"
-                      disabled={!isPolicyDefined}
-                    />
-                    {errors.projectName && touched.projectName && (
-                      <div className="form-feedBack">{errors.projectName}</div>
-                    )}
-                  </div>
-                  <div className="col-span-2">
-                    <label>
-                      Travel Type <span className="text-danger">*</span>
-                    </label>
-                    <Field
-                      as="select"
-                      name="travelType"
-                      className="form-control"
-                      style={{ backgroundColor: "#eefbff" }}
-                      disabled={!isPolicyDefined}
-                    >
-                      <option value="">Select</option>
-                      {travelTypeOptions.map((opt) => (
-                        <option key={opt.value} value={opt.label}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </Field>
-                    {errors.travelType && touched.travelType && (
-                      <div className="form-feedBack">{errors.travelType}</div>
                     )}
                   </div>
                 </div>
@@ -496,20 +612,16 @@ export function FormEditForm({
                               const originLocation =
                                 segments[0]?.fromLocation || "";
 
-                              // 1. Clear the toLocation of the previous last row
-                              // so the user can select an intermediate destination
                               setFieldValue(
                                 `travelSegments.${lastIndex}.toLocation`,
                                 "",
                               );
 
-                              // 2. Add new row with current chaining logic:
-                              // fromLocation = cleared to allow user to pick next leg
-                              // toLocation = origin (forcing round trip to be the end)
                               arrayHelpers.push({
+                                childMasterId: 0,
                                 fromLocation: "",
                                 toLocation: originLocation,
-                                fromDate: segments[lastIndex]?.toDate || null,
+                                fromDate: null,
                                 toDate: null,
                                 modeOfTravel: segments[0]?.modeOfTravel || "",
                                 classOfTravel: "",
@@ -519,6 +631,38 @@ export function FormEditForm({
                                 selfEntitlement: false,
                                 selfAmount: 0,
                               });
+
+                              const ticketDetailTemplate = {
+                                fromLocation: "",
+                                toLocation: "",
+                                flightName: "",
+                                description: "",
+                                ticketNumber: "",
+                                ticketDetail: "",
+                                ticketAmount: "",
+                                isTicketEnabled: false,
+                                noTicketReason: "",
+                              };
+
+                              const hotelDetailTemplate = {
+                                hotelName: "",
+                                description: "",
+                                roomNumber: "",
+                                roomType: "",
+                                amount: "",
+                              };
+
+                              const newTicketDetails = [
+                                ...values.ticketDetails,
+                              ];
+                              newTicketDetails.push({
+                                ...ticketDetailTemplate,
+                              });
+                              setFieldValue("ticketDetails", newTicketDetails);
+
+                              const newHotelDetails = [...values.hotelDetails];
+                              newHotelDetails.push({ ...hotelDetailTemplate });
+                              setFieldValue("hotelDetails", newHotelDetails);
                             }}
                           >
                             <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
@@ -557,13 +701,8 @@ export function FormEditForm({
                               <td style={{ minWidth: "60px" }}>
                                 Accommodation Required
                               </td>
-
-                              {/* Dynamic Accommodation Headers */}
                               <td style={{ minWidth: "150px" }}>
                                 Hotel Entitlement
-                              </td>
-                              <td style={{ minWidth: "100px" }}>
-                                Hotel Entitlement Amount
                               </td>
                               {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
                                 <>
@@ -572,6 +711,18 @@ export function FormEditForm({
                                   </td>
                                   <td style={{ minWidth: "100px" }}>
                                     Self Amount
+                                    {employeeEntitlement?.hotelEntitlementSelfAmount && (
+                                      <span
+                                        className="text-muted font-normal block"
+                                        style={{ fontSize: "10px" }}
+                                      >
+                                        (Limit=
+                                        {
+                                          employeeEntitlement.hotelEntitlementSelfAmount
+                                        }
+                                        )
+                                      </span>
+                                    )}
                                   </td>
                                 </>
                               )}
@@ -593,7 +744,6 @@ export function FormEditForm({
                                         `travelSegments.${index}.fromLocation`,
                                         val,
                                       );
-                                      // Scalable Logic: First row fromLocation is the final return destination
                                       if (
                                         index === 0 &&
                                         values.travelSegments.length > 1
@@ -624,7 +774,7 @@ export function FormEditForm({
                                     ?.fromLocation &&
                                     touched.travelSegments?.[index]
                                       ?.fromLocation && (
-                                      <div className="form-feedBack text-xs mt-1">
+                                      <div className="form-feedBack  mt-1">
                                         {
                                           errors.travelSegments[index]
                                             .fromLocation
@@ -655,7 +805,6 @@ export function FormEditForm({
                                         `travelSegments.${index}.toLocation`,
                                         val,
                                       );
-                                      // Scalable Logic: current toLocation is the next row's fromLocation
                                       if (
                                         index <
                                         values.travelSegments.length - 1
@@ -684,7 +833,7 @@ export function FormEditForm({
                                   {errors.travelSegments?.[index]?.toLocation &&
                                     touched.travelSegments?.[index]
                                       ?.toLocation && (
-                                      <div className="form-feedBack text-xs mt-1">
+                                      <div className="form-feedBack  mt-1">
                                         {
                                           errors.travelSegments[index]
                                             .toLocation
@@ -727,7 +876,7 @@ export function FormEditForm({
                                   {errors.travelSegments?.[index]?.fromDate &&
                                     touched.travelSegments?.[index]
                                       ?.fromDate && (
-                                      <div className="form-feedBack text-xs mt-1">
+                                      <div className="form-feedBack  mt-1">
                                         {errors.travelSegments[index].fromDate}
                                       </div>
                                     )}
@@ -746,17 +895,6 @@ export function FormEditForm({
                                         `travelSegments.${index}.toDate`,
                                         val,
                                       );
-                                      // Scalable Logic: current toDate is the next row's fromDate
-                                      if (
-                                        index <
-                                        values.travelSegments.length - 1
-                                      ) {
-                                        setFieldValue(
-                                          `travelSegments.${index +
-                                            1}.fromDate`,
-                                          val,
-                                        );
-                                      }
                                     }}
                                     dateFormat="dd-MMM-yyyy"
                                     name={`travelSegments.${index}.toDate`}
@@ -772,7 +910,7 @@ export function FormEditForm({
                                   />
                                   {errors.travelSegments?.[index]?.toDate &&
                                     touched.travelSegments?.[index]?.toDate && (
-                                      <div className="form-feedBack text-xs mt-1">
+                                      <div className="form-feedBack  mt-1">
                                         {errors.travelSegments[index].toDate}
                                       </div>
                                     )}
@@ -817,7 +955,7 @@ export function FormEditForm({
                                     ?.modeOfTravel &&
                                     touched.travelSegments?.[index]
                                       ?.modeOfTravel && (
-                                      <div className="form-feedBack text-xs mt-1">
+                                      <div className="form-feedBack  mt-1">
                                         {
                                           errors.travelSegments[index]
                                             .modeOfTravel
@@ -843,7 +981,7 @@ export function FormEditForm({
                                     ?.classOfTravel &&
                                     touched.travelSegments?.[index]
                                       ?.classOfTravel && (
-                                      <div className="form-feedBack text-xs mt-1">
+                                      <div className="form-feedBack  mt-1">
                                         {
                                           errors.travelSegments[index]
                                             .classOfTravel
@@ -854,7 +992,12 @@ export function FormEditForm({
                                 <td className="text-center align-middle">
                                   <div className="flex justify-center items-center h-full">
                                     <Checkbox
-                                      disabled={!isPolicyDefined}
+                                      disabled={
+                                        !isPolicyDefined ||
+                                        (values.travelSegments.length > 1 &&
+                                          index ===
+                                            values.travelSegments.length - 1)
+                                      }
                                       isSelected={segment.accommodationRequired}
                                       onChange={(e) => {
                                         const checked = e.target.checked;
@@ -879,18 +1022,40 @@ export function FormEditForm({
                                             `travelSegments.${index}.selfAmount`,
                                             0,
                                           );
+                                          setFieldValue(
+                                            `hotelDetails.${index}.hotelName`,
+                                            "",
+                                          );
+                                          setFieldValue(
+                                            `hotelDetails.${index}.description`,
+                                            "",
+                                          );
+                                          setFieldValue(
+                                            `hotelDetails.${index}.roomNumber`,
+                                            "",
+                                          );
+                                          setFieldValue(
+                                            `hotelDetails.${index}.roomType`,
+                                            "",
+                                          );
+                                          setFieldValue(
+                                            `hotelDetails.${index}.amount`,
+                                            "",
+                                          );
                                         }
                                       }}
                                     />
                                   </div>
                                 </td>
 
-                                {/* Conditional Fields per row */}
                                 <td
                                   style={{
                                     opacity:
                                       !segment.accommodationRequired ||
-                                      segment.selfEntitlement
+                                      segment.selfEntitlement ||
+                                      (values.travelSegments.length > 1 &&
+                                        index ===
+                                          values.travelSegments.length - 1)
                                         ? 0.4
                                         : 1,
                                   }}
@@ -902,7 +1067,10 @@ export function FormEditForm({
                                     disabled={
                                       !segment.accommodationRequired ||
                                       segment.selfEntitlement ||
-                                      !isPolicyDefined
+                                      !isPolicyDefined ||
+                                      (values.travelSegments.length > 1 &&
+                                        index ===
+                                          values.travelSegments.length - 1)
                                     }
                                     onChange={(e) => {
                                       const val = e.target.value;
@@ -933,59 +1101,10 @@ export function FormEditForm({
                                     ?.hotelEntitlement &&
                                     touched.travelSegments?.[index]
                                       ?.hotelEntitlement && (
-                                      <div className="form-feedBack text-xs mt-1">
+                                      <div className="form-feedBack  mt-1">
                                         {
                                           errors.travelSegments[index]
                                             .hotelEntitlement
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                                <td
-                                  style={{
-                                    opacity:
-                                      !segment.accommodationRequired ||
-                                      !segment.hotelEntitlement ||
-                                      segment.selfEntitlement
-                                        ? 0.4
-                                        : 1,
-                                  }}
-                                >
-                                  <NumericFormat
-                                    name={`travelSegments.${index}.hotelEntitlementAmount`}
-                                    className="form-control"
-                                    placeholder="0"
-                                    thousandSeparator
-                                    allowNegative={false}
-                                    isAllowed={({ value }) => value.length <= 9}
-                                    disabled={
-                                      !segment.accommodationRequired ||
-                                      !segment.hotelEntitlement ||
-                                      segment.selfEntitlement ||
-                                      !isPolicyDefined
-                                    }
-                                    value={
-                                      !segment.accommodationRequired ||
-                                      !segment.hotelEntitlement ||
-                                      segment.selfEntitlement
-                                        ? ""
-                                        : segment.hotelEntitlementAmount
-                                    }
-                                    onValueChange={(valuesObj) => {
-                                      setFieldValue(
-                                        `travelSegments.${index}.hotelEntitlementAmount`,
-                                        valuesObj.value,
-                                      );
-                                    }}
-                                  />
-                                  {errors.travelSegments?.[index]
-                                    ?.hotelEntitlementAmount &&
-                                    touched.travelSegments?.[index]
-                                      ?.hotelEntitlementAmount && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {
-                                          errors.travelSegments[index]
-                                            .hotelEntitlementAmount
                                         }
                                       </div>
                                     )}
@@ -997,7 +1116,10 @@ export function FormEditForm({
                                       style={{
                                         opacity:
                                           !segment.accommodationRequired ||
-                                          segment.hotelEntitlement
+                                          segment.hotelEntitlement ||
+                                          (values.travelSegments.length > 1 &&
+                                            index ===
+                                              values.travelSegments.length - 1)
                                             ? 0.4
                                             : 1,
                                       }}
@@ -1007,7 +1129,10 @@ export function FormEditForm({
                                           !segment.accommodationRequired ||
                                           !!segment.hotelEntitlement ||
                                           !isPolicyDefined ||
-                                          !employeeEntitlement?.ishotelEntitlementSelfAmountWise
+                                          !employeeEntitlement?.ishotelEntitlementSelfAmountWise ||
+                                          (values.travelSegments.length > 1 &&
+                                            index ===
+                                              values.travelSegments.length - 1)
                                         }
                                         isSelected={segment.selfEntitlement}
                                         onChange={(e) => {
@@ -1042,7 +1167,10 @@ export function FormEditForm({
                                       opacity:
                                         !segment.accommodationRequired ||
                                         !segment.selfEntitlement ||
-                                        segment.hotelEntitlement
+                                        segment.hotelEntitlement ||
+                                        (values.travelSegments.length > 1 &&
+                                          index ===
+                                            values.travelSegments.length - 1)
                                           ? 0.4
                                           : 1,
                                     }}
@@ -1060,7 +1188,10 @@ export function FormEditForm({
                                         !segment.accommodationRequired ||
                                         !segment.selfEntitlement ||
                                         !!segment.hotelEntitlement ||
-                                        !isPolicyDefined
+                                        !isPolicyDefined ||
+                                        (values.travelSegments.length > 1 &&
+                                          index ===
+                                            values.travelSegments.length - 1)
                                       }
                                       value={
                                         !segment.accommodationRequired ||
@@ -1080,7 +1211,7 @@ export function FormEditForm({
                                       ?.selfAmount &&
                                       touched.travelSegments?.[index]
                                         ?.selfAmount && (
-                                        <div className="form-feedBack text-xs mt-1">
+                                        <div className="form-feedBack  mt-1">
                                           {
                                             errors.travelSegments[index]
                                               .selfAmount
@@ -1095,7 +1226,26 @@ export function FormEditForm({
                                       type="button"
                                       className="bg-transparent border-0 p-0"
                                       disabled={!isPolicyDefined}
-                                      onClick={() => arrayHelpers.remove(index)}
+                                      onClick={() => {
+                                        arrayHelpers.remove(index);
+                                        const ticketDetails = [
+                                          ...values.ticketDetails,
+                                        ];
+                                        ticketDetails.splice(index, 1);
+                                        setFieldValue(
+                                          "ticketDetails",
+                                          ticketDetails,
+                                        );
+
+                                        const hotelDetails = [
+                                          ...values.hotelDetails,
+                                        ];
+                                        hotelDetails.splice(index, 1);
+                                        setFieldValue(
+                                          "hotelDetails",
+                                          hotelDetails,
+                                        );
+                                      }}
                                     >
                                       <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                     </button>
@@ -1113,20 +1263,22 @@ export function FormEditForm({
 
               {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
               <div className="border-t pt-4">
-                <div className="grid grid-cols-6 md:grid-cols-12 gap-x-3 gap-y-3">
+                <div className="flex flex-col lg:flex-row gap-8 justify-between">
                   {/* Daily Allowance */}
-                  <div className="col-span-3">
-                    <h6 className="font-bold  text-primary ">
+                  <div className="max-w-[500px]">
+                    <h6 className="font-bold text-primary mb-2">
                       Daily Allowance
                     </h6>
                     <div className="grid grid-cols-3 gap-x-2">
                       <div>
-                        <label className=" mb-1 flex items-center gap-1">
+                        <label className="mb-1 flex items-center gap-1">
                           Rate <span className="text-danger">*</span>
                           {employeeEntitlement?.dailyAllowanceAmount && (
-                            <span className="text-muted font-normal ml-1">
-                              (Limit ={" "}
-                              {employeeEntitlement.dailyAllowanceAmount})
+                            <span
+                              className="text-muted font-normal"
+                              style={{ fontSize: "10px" }}
+                            >
+                              (Limit={employeeEntitlement.dailyAllowanceAmount})
                             </span>
                           )}
                         </label>
@@ -1149,14 +1301,14 @@ export function FormEditForm({
                         />
                         {errors.dailyAllowanceRate &&
                           touched.dailyAllowanceRate && (
-                            <div className="form-feedBack text-xs mt-1">
+                            <div className="form-feedBack mt-1">
                               {errors.dailyAllowanceRate}
                             </div>
                           )}
                       </div>
                       <div>
-                        <label className=" block mb-1">
-                          Day <span className="text-danger">*</span>
+                        <label className="block mb-1">
+                          Days <span className="text-danger">*</span>
                         </label>
                         <Field
                           type="number"
@@ -1166,19 +1318,10 @@ export function FormEditForm({
                           placeholder="0"
                           min="0"
                           disabled={!isPolicyDefined || !!isReadOnly}
-                          onInput={(e) => {
-                            e.target.value = e.target.value.slice(0, 3);
-                          }}
                         />
-                        {errors.dailyAllowanceDays &&
-                          touched.dailyAllowanceDays && (
-                            <div className="form-feedBack text-xs mt-1">
-                              {errors.dailyAllowanceDays}
-                            </div>
-                          )}
                       </div>
                       <div>
-                        <label className=" block mb-1">Amount</label>
+                        <label className="block mb-1">Amount</label>
                         <NumericFormat
                           name="dailyAllowanceAmount"
                           className="form-control text-sm bg-light"
@@ -1193,122 +1336,539 @@ export function FormEditForm({
                   </div>
 
                   {/* Taxi Fare */}
-                  <div className="col-span-2 md:col-span-1">
-                    <h6 className="font-bold text-primary">Taxi Fare per KM</h6>
+                  <div className="max-w-32">
+                    <h6 className="font-bold text-primary mb-2">Taxi Fare</h6>
                     <div>
-                      <label className="=block mb-1">Rate</label>
+                      <label className="block mb-1">Rate</label>
                       <NumericFormat
                         name="taxiFareRate"
                         className="form-control text-sm"
                         placeholder="0"
                         thousandSeparator
                         allowNegative={false}
-                        isAllowed={({ value }) => value.length <= 6}
                         disabled={true}
                         value={values.taxiFareRate}
                       />
                     </div>
                   </div>
-                </div>
 
-                {/* Advance Request - all in one row */}
-                <div className="mt-4">
-                  <h6 className="font-bold mb-3 text-primary">
-                    Advance Request
-                  </h6>
-                  <div className="grid grid-cols-10 gap-x-3 items-end">
-                    {/* Advance Required Checkbox */}
-                    <div className="col-span-1 flex items-center pb-2">
-                      <label className="mr-2">Advance Required</label>
-                      <Checkbox
-                        disabled={isFormDisabled}
-                        isSelected={values.advanceRequested}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setFieldValue("advanceRequested", checked);
-                          if (!checked) {
-                            setFieldValue("advanceAmount", 0);
-                            setFieldValue("advanceRemarks", "");
-                          }
-                        }}
-                      />
+                  {/* Advance Request Section */}
+                  <div className="max-w-[500px] mr-8">
+                    <div className="flex items-center mb-2">
+                      <h6 className="font-bold text-primary mr-3 mb-0">
+                        Advance Request
+                      </h6>
+                      <div className="flex items-center">
+                        <Checkbox
+                          disabled={isFormDisabled}
+                          isSelected={values.advanceRequested}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setFieldValue("advanceRequested", checked);
+                            if (!checked) {
+                              setFieldValue("advanceAmount", 0);
+                              setFieldValue("advanceRemarks", "");
+                            }
+                          }}
+                        />
+                        <label className="ml-2 mb-0">Advance Required</label>
+                      </div>
                     </div>
-                    {/* Amount */}
-                    <div className="col-span-1">
-                      <label className=" block mb-1">
-                        Amount
-                        {values.advanceRequested && (
-                          <span className="text-danger">*</span>
-                        )}
-                      </label>
-                      <NumericFormat
-                        name="advanceAmount"
-                        className="form-control text-sm"
-                        style={{ backgroundColor: "#eefbff" }}
-                        placeholder="0"
-                        thousandSeparator
-                        allowNegative={false}
-                        isAllowed={({ value }) => value.length <= 9}
-                        disabled={isFormDisabled || !values.advanceRequested}
-                        value={values.advanceAmount}
-                        onValueChange={(valuesObj) => {
-                          setFieldValue("advanceAmount", valuesObj.value);
-                        }}
-                      />
-                      {errors.advanceAmount && touched.advanceAmount && (
-                        <div className="form-feedBack text-xs mt-1">
-                          {errors.advanceAmount}
-                        </div>
-                      )}
-                    </div>
-                    {/* Advance Remarks */}
-                    <div className="col-span-5">
-                      <label className=" block mb-1">
-                        Advance Request Remarks
-                        {values.advanceRequested && (
-                          <span className="text-danger">*</span>
-                        )}
-                      </label>
-                      <Field
-                        as="textarea"
-                        name="advanceRemarks"
-                        className="form-control"
-                        style={{ backgroundColor: "#eefbff", height: "38px" }}
-                        rows="1"
-                        placeholder="Enter advance remarks..."
-                        maxLength={500}
-                        disabled={isFormDisabled || !values.advanceRequested}
-                      />
-                      {errors.advanceRemarks && touched.advanceRemarks && (
-                        <div className="form-feedBack text-xs mt-1">
-                          {errors.advanceRemarks}
-                        </div>
-                      )}
+
+                    <div className="grid grid-cols-6 gap-x-3 items-end">
+                      {/* Amount */}
+                      <div className="col-span-2">
+                        <label className="block mb-1">
+                          Amount
+                          {values.advanceRequested && (
+                            <span className="text-danger">*</span>
+                          )}
+                        </label>
+                        <NumericFormat
+                          name="advanceAmount"
+                          className="form-control text-sm"
+                          style={{ backgroundColor: "#eefbff" }}
+                          placeholder="0"
+                          thousandSeparator
+                          allowNegative={false}
+                          isAllowed={({ value }) => value.length <= 9}
+                          disabled={isFormDisabled || !values.advanceRequested}
+                          value={values.advanceAmount}
+                          onValueChange={(valuesObj) => {
+                            setFieldValue("advanceAmount", valuesObj.value);
+                          }}
+                        />
+                      </div>
+                      {/* Advance Remarks */}
+                      <div className="col-span-4">
+                        <label className="block mb-1">
+                          Advance Request Remarks
+                          {values.advanceRequested && (
+                            <span className="text-danger">*</span>
+                          )}
+                        </label>
+                        <Field
+                          as="textarea"
+                          name="advanceRemarks"
+                          className="form-control"
+                          style={{ backgroundColor: "#eefbff", height: "38px" }}
+                          rows="1"
+                          placeholder="Enter remarks..."
+                          maxLength={500}
+                          disabled={isFormDisabled || !values.advanceRequested}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-12 gap-x-3 mt-4">
-                  <div className="col-span-6">
-                    <label>
-                      Remarks
-                      <span className="text-danger">*</span>
-                    </label>
-                    <Field
-                      as="textarea"
-                      name="travelRemarks"
-                      className="form-control"
-                      style={{ backgroundColor: "#eefbff" }}
-                      rows="3"
-                      placeholder="Enter travel remarks..."
-                      maxLength={500}
-                      disabled={!isPolicyDefined}
-                    />
-                    {errors.travelRemarks && touched.travelRemarks && (
-                      <div className="form-feedBack text-xs mt-1">
-                        {errors.travelRemarks}
+              </div>
+
+              {/* Travel Journey details */}
+              <div className="w-full mt-6">
+                <Accordion
+                  activeKey={activeTicketKey}
+                  onSelect={(key) => setActiveTicketKey(key)}
+                >
+                  <Card>
+                    <Card.Header className="d-flex justify-content-center p-0">
+                      <div className="accordion-header-btn w-100 d-flex bg-tsecondary">
+                        <Accordion.Toggle
+                          as={Button}
+                          eventKey="0"
+                          className="flex justify-start text-bold w-full"
+                        >
+                          {activeTicketKey === "0" ? (
+                            <CircleMinus className="h-4 w-4 text-black mr-1" />
+                          ) : (
+                            <CirclePlus className="h-4 w-4 text-black mr-1" />
+                          )}
+                          <span className="text-black font-bold">
+                            Ticket Details
+                          </span>
+                        </Accordion.Toggle>
                       </div>
-                    )}
-                  </div>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                      <Card.Body className="p-3">
+                        <FieldArray name="ticketDetails">
+                          {(arrayHelpers) => (
+                            <>
+                              {errors.ticketDetails &&
+                                typeof errors.ticketDetails === "string" && (
+                                  <div className="form-feedBack mb-2">
+                                    {errors.ticketDetails}
+                                  </div>
+                                )}
+
+                              <div
+                                className="react-bootstrap-table table-responsive"
+                                style={{ overflowX: "auto" }}
+                              >
+                                <table className="table table-head-custom table-vertical-center table-hover">
+                                  <thead className="custom-table-header">
+                                    <tr>
+                                      <td style={{ minWidth: "40px" }}></td>
+                                      <td
+                                        style={{ minWidth: "150px" }}
+                                        className=""
+                                      >
+                                        Location
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "100px" }}
+                                        className=""
+                                      >
+                                        Name
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "100px" }}
+                                        className=""
+                                      >
+                                        Description
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "120px" }}
+                                        className=""
+                                      >
+                                        Ticket Number
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "120px" }}
+                                        className=""
+                                      >
+                                        Ticket Detail
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "80px" }}
+                                        className=""
+                                      >
+                                        Ticket Amount
+                                      </td>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {values.travelSegments.map(
+                                      (segment, index) => {
+                                        const ticket =
+                                          values.ticketDetails?.[index] || {};
+                                        const fromLabel = locationOptions.find(
+                                          (opt) =>
+                                            String(opt.value) ===
+                                            String(segment.fromLocation),
+                                        )?.label;
+                                        const toLabel = locationOptions.find(
+                                          (opt) =>
+                                            String(opt.value) ===
+                                            String(segment.toLocation),
+                                        )?.label;
+                                        const locationDisplay =
+                                          fromLabel && toLabel
+                                            ? `${fromLabel} -> ${toLabel}`
+                                            : "-";
+                                        const isRowEnabled =
+                                          ticket.isTicketEnabled || false;
+
+                                        return (
+                                          <tr key={index}>
+                                            <td className="text-center align-middle">
+                                              <Checkbox
+                                                isSelected={isRowEnabled}
+                                                onChange={(e) => {
+                                                  const checked =
+                                                    e.target.checked;
+                                                  setFieldValue(
+                                                    `ticketDetails.${index}.isTicketEnabled`,
+                                                    checked,
+                                                  );
+                                                  if (!checked) {
+                                                    setFieldValue(
+                                                      `ticketDetails.${index}.flightName`,
+                                                      "",
+                                                    );
+                                                    setFieldValue(
+                                                      `ticketDetails.${index}.description`,
+                                                      "",
+                                                    );
+                                                    setFieldValue(
+                                                      `ticketDetails.${index}.ticketNumber`,
+                                                      "",
+                                                    );
+                                                    setFieldValue(
+                                                      `ticketDetails.${index}.ticketDetail`,
+                                                      "",
+                                                    );
+                                                    setFieldValue(
+                                                      `ticketDetails.${index}.ticketAmount`,
+                                                      "",
+                                                    );
+                                                  }
+                                                }}
+                                                disabled={isReadOnly}
+                                              />
+                                            </td>
+                                            <td className="align-middle text-center">
+                                              <span className="font-bold opacity-70">
+                                                {locationDisplay}
+                                              </span>
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`ticketDetails.${index}.flightName`}
+                                                className="form-control"
+                                                placeholder="Name"
+                                                maxLength={50}
+                                                disabled={
+                                                  isReadOnly || !isRowEnabled
+                                                }
+                                              />
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`ticketDetails.${index}.description`}
+                                                className="form-control"
+                                                placeholder="Description"
+                                                maxLength={200}
+                                                disabled={
+                                                  isReadOnly || !isRowEnabled
+                                                }
+                                              />
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`ticketDetails.${index}.ticketNumber`}
+                                                className="form-control"
+                                                placeholder="Ticket #"
+                                                maxLength={50}
+                                                disabled={
+                                                  isReadOnly || !isRowEnabled
+                                                }
+                                              />
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`ticketDetails.${index}.ticketDetail`}
+                                                className="form-control"
+                                                placeholder="Detail"
+                                                maxLength={50}
+                                                disabled={
+                                                  isReadOnly || !isRowEnabled
+                                                }
+                                              />
+                                            </td>
+                                            <td>
+                                              <NumericFormat
+                                                name={`ticketDetails.${index}.ticketAmount`}
+                                                className="form-control"
+                                                placeholder="0"
+                                                thousandSeparator
+                                                allowNegative={false}
+                                                isAllowed={({ value }) =>
+                                                  value.length <= 8
+                                                }
+                                                disabled={
+                                                  isReadOnly || !isRowEnabled
+                                                }
+                                                value={
+                                                  ticket.ticketAmount ?? ""
+                                                }
+                                                onValueChange={(valuesObj) => {
+                                                  setFieldValue(
+                                                    `ticketDetails.${index}.ticketAmount`,
+                                                    valuesObj.value,
+                                                  );
+                                                }}
+                                              />
+                                            </td>
+                                          </tr>
+                                        );
+                                      },
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </>
+                          )}
+                        </FieldArray>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+              </div>
+
+              {/* Travel Hotel details */}
+              <div className="w-full mt-6">
+                <Accordion
+                  activeKey={activeHotelKey}
+                  onSelect={(key) => setActiveHotelKey(key)}
+                >
+                  <Card>
+                    <Card.Header className="d-flex justify-content-center p-0">
+                      <div className="accordion-header-btn w-100 d-flex bg-tsecondary">
+                        <Accordion.Toggle
+                          as={Button}
+                          eventKey="0"
+                          className="flex justify-start text-bold w-full"
+                        >
+                          {activeHotelKey === "0" ? (
+                            <CircleMinus className="h-4 w-4 text-black mr-1" />
+                          ) : (
+                            <CirclePlus className="h-4 w-4 text-black mr-1" />
+                          )}
+                          <span className="text-black font-bold">
+                            Hotel Details
+                          </span>
+                        </Accordion.Toggle>
+                      </div>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                      <Card.Body className="p-3">
+                        <FieldArray name="hotelDetails">
+                          {(arrayHelpers) => (
+                            <>
+                              {errors.hotelDetails &&
+                                typeof errors.hotelDetails === "string" && (
+                                  <div className="form-feedBack mb-2">
+                                    {errors.hotelDetails}
+                                  </div>
+                                )}
+
+                              <div
+                                className="react-bootstrap-table table-responsive"
+                                style={{ overflowX: "auto" }}
+                              >
+                                <table className="table table-head-custom table-vertical-center table-hover">
+                                  <thead className="custom-table-header">
+                                    <tr>
+                                      <td
+                                        style={{ minWidth: "150px" }}
+                                        className=""
+                                      >
+                                        Location
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "100px" }}
+                                        className=""
+                                      >
+                                        Hotel Name
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "100px" }}
+                                        className=""
+                                      >
+                                        Room Number
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "120px" }}
+                                        className=""
+                                      >
+                                        Room Type
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "120px" }}
+                                        className=""
+                                      >
+                                        Description
+                                      </td>
+                                      <td
+                                        style={{ minWidth: "80px" }}
+                                        className=""
+                                      >
+                                        Amount
+                                      </td>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {values.travelSegments.map(
+                                      (segment, index) => {
+                                        if (
+                                          !segment.accommodationRequired ||
+                                          index ===
+                                            values.travelSegments.length - 1
+                                        ) {
+                                          return null;
+                                        }
+                                        const hotel =
+                                          values.hotelDetails?.[index] || {};
+                                        const fromLabel = locationOptions.find(
+                                          (opt) =>
+                                            String(opt.value) ===
+                                            String(segment.fromLocation),
+                                        )?.label;
+                                        const toLabel = locationOptions.find(
+                                          (opt) =>
+                                            String(opt.value) ===
+                                            String(segment.toLocation),
+                                        )?.label;
+                                        const locationDisplay = toLabel || "-";
+
+                                        return (
+                                          <tr key={index}>
+                                            <td className="align-middle text-center">
+                                              <span className="font-bold opacity-70">
+                                                {locationDisplay}
+                                              </span>
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`hotelDetails.${index}.hotelName`}
+                                                className="form-control"
+                                                placeholder="Hotel Name"
+                                                maxLength={50}
+                                                disabled={isReadOnly}
+                                              />
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`hotelDetails.${index}.roomNumber`}
+                                                className="form-control"
+                                                placeholder="Room #"
+                                                maxLength={50}
+                                                disabled={isReadOnly}
+                                              />
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`hotelDetails.${index}.roomType`}
+                                                className="form-control"
+                                                placeholder="Type"
+                                                maxLength={50}
+                                                disabled={isReadOnly}
+                                              />
+                                            </td>
+                                            <td>
+                                              <Field
+                                                type="text"
+                                                name={`hotelDetails.${index}.description`}
+                                                className="form-control"
+                                                placeholder="Description"
+                                                maxLength={200}
+                                                disabled={isReadOnly}
+                                              />
+                                            </td>
+                                            <td>
+                                              <NumericFormat
+                                                name={`hotelDetails.${index}.amount`}
+                                                className="form-control"
+                                                placeholder="0"
+                                                thousandSeparator
+                                                allowNegative={false}
+                                                isAllowed={({ value }) =>
+                                                  value.length <= 8
+                                                }
+                                                disabled={isReadOnly}
+                                                value={hotel.amount ?? ""}
+                                                onValueChange={(valuesObj) => {
+                                                  setFieldValue(
+                                                    `hotelDetails.${index}.amount`,
+                                                    valuesObj.value,
+                                                  );
+                                                }}
+                                              />
+                                            </td>
+                                          </tr>
+                                        );
+                                      },
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </>
+                          )}
+                        </FieldArray>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+              </div>
+
+              <div className="grid grid-cols-12 gap-x-3 mt-4">
+                <div className="col-span-6">
+                  <label className="">
+                    Remarks
+                    <span className="text-danger">*</span>
+                  </label>
+                  <Field
+                    as="textarea"
+                    name="travelRemarks"
+                    className="form-control"
+                    style={{ backgroundColor: "#eefbff" }}
+                    rows="3"
+                    placeholder="Enter travel remarks..."
+                    maxLength={500}
+                    disabled={!isPolicyDefined}
+                  />
+                  {errors.travelRemarks && touched.travelRemarks && (
+                    <div className="form-feedBack  mt-1">
+                      {errors.travelRemarks}
+                    </div>
+                  )}
                 </div>
               </div>
 

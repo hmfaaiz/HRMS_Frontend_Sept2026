@@ -1,12 +1,13 @@
 import React, { useMemo } from "react";
 import { Modal, Accordion, Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import BootstrapTable from "react-bootstrap-table-next";
 import {
   NoRecordsFoundMessage,
   PleaseWaitMessage,
 } from "../../../../../../_metronic/_helpers";
+import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 
 export default function TravelProfile({
   employeeId,
@@ -14,11 +15,32 @@ export default function TravelProfile({
   show,
   onHide,
 }) {
-  const { approvedEmployeeList, dashboard } = useSelector((state) => ({
-    approvedEmployeeList:
-      state.post_approval_travel_request.approvedEmployeeList,
-    dashboard: state.dashboard,
-  }));
+  const dispatch = useDispatch();
+  const { approvedEmployeeList, dashboard } = useSelector(
+    (state) => ({
+      approvedEmployeeList:
+        state.post_approval_travel_request.approvedEmployeeList,
+      dashboard: state.dashboard,
+    }),
+    shallowEqual,
+  );
+
+  React.useEffect(() => {
+    if (show) {
+      if (!dashboard?.allTravelLocationList?.length) {
+        dispatch(fetchAllFormsMenu(555, "allTravelLocationList"));
+      }
+      if (!dashboard?.allTransportModeList?.length) {
+        dispatch(fetchAllFormsMenu(551, "allTransportModeList"));
+      }
+      if (!dashboard?.allHotelEntitlementList?.length) {
+        dispatch(fetchAllFormsMenu(552, "allHotelEntitlementList"));
+      }
+      if (!dashboard?.allClassOfTravelList?.length) {
+        dispatch(fetchAllFormsMenu(554, "allClassOfTravelList"));
+      }
+    }
+  }, [show, dispatch, dashboard]);
 
   const travelData = useMemo(() => {
     if (!employeeId || !travelRequestId) return null;
@@ -59,13 +81,13 @@ export default function TravelProfile({
       dataField: "fromLocationId",
       text: "From Location",
       style: { minWidth: "130px" },
-      formatter: (cell) => getLabel(dashboard?.allLocationChildMenus, cell),
+      formatter: (cell) => getLabel(dashboard?.allTravelLocationList, cell),
     },
     {
       dataField: "toLocationId",
       text: "To Location",
       style: { minWidth: "130px" },
-      formatter: (cell) => getLabel(dashboard?.allLocationChildMenus, cell),
+      formatter: (cell) => getLabel(dashboard?.allTravelLocationList, cell),
     },
     {
       dataField: "fromDate",
@@ -106,13 +128,6 @@ export default function TravelProfile({
           ? getLabel(dashboard?.allHotelEntitlementList, cell)
           : "—",
     },
-    {
-      dataField: "hotelEntitlementAmount",
-      text: "Hotel Amount",
-      style: { minWidth: "120px" },
-      formatter: (cell, row) =>
-        row.accomodationRequired && cell ? Number(cell).toLocaleString() : "—",
-    },
   ];
 
   return (
@@ -150,11 +165,8 @@ export default function TravelProfile({
                       <div className="font-medium">Purpose of Travel:</div>
                       <div>{travelData.purposeOfTravel || "—"}</div>
 
-                      <div className="font-medium">Project Name:</div>
-                      <div>{travelData.projectName || "—"}</div>
-
                       <div className="font-medium">Travel Type:</div>
-                      <div>{travelData.travelType || "—"}</div>
+                      <div>{travelData.TravelType?.formName || "—"}</div>
 
                       <div className="font-medium">From Date:</div>
                       <div>{formatDate(firstSeg?.fromDate)}</div>

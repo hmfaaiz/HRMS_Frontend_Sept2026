@@ -14,6 +14,9 @@ import HODManagement from "./modules/HOD_Setup";
 const SettingsPage = lazy(() =>
   import("./modules/Settings/pages/SettingsPage"),
 );
+const AIChatbotManagement = lazy(() =>
+  import("./modules/AIChatbotService/pages"),
+);
 
 const UserManagment = lazy(() => import("./modules/UserMangement/pages"));
 
@@ -567,43 +570,66 @@ const reimbursement_claim_workflow_status_approval = lazy(() =>
   import("./modules/Reimbursement_Workflow_Status/pages/index"),
 );
 
-const reimbursement_claim_workflow_status = lazy (() =>
-import ("./modules/Reimbursement_Workflow_Portal/pages/index"),
-)
+const reimbursement_claim_workflow_status = lazy(() =>
+  import("./modules/Reimbursement_Workflow_Portal/pages/index"),
+);
 
-const attendance_roster_request = lazy (() =>
-import ("./modules/Attendance_Roster_Request/pages/index"),
-) 
+const attendance_roster_request = lazy(() =>
+  import("./modules/Attendance_Roster_Request/pages/index"),
+);
 
-const attendance_roster_approval = lazy (() =>
-  import ("./modules/Attendance_Roster_Approval/pages/index"),
-)
+const attendance_roster_approval = lazy(() =>
+  import("./modules/Attendance_Roster_Approval/pages/index"),
+);
 
-const attendance_roster_workflow_status = lazy (() =>
-  import ("./modules/Attendance_Roster_Workflow/pages/index"),
-)
+const attendance_roster_workflow_status = lazy(() =>
+  import("./modules/Attendance_Roster_Workflow/pages/index"),
+);
 
-const attendance_roster_workflow_status_portal = lazy (() =>
-  import ("./modules/Attendance_Roster_Workflow_Portal/pages/index"))
+const attendance_roster_workflow_status_portal = lazy(() =>
+  import("./modules/Attendance_Roster_Workflow_Portal/pages/index"),
+);
 
-const post_approval_travel_request = lazy (() => 
- import ("./modules/Post_Approval_Travel_Request/pages/index"),
-)
-const roster_calendar_team = lazy (() => 
- import ("./modules/Roster_Calendar_Portal/pages/index"),
-)
+const post_approval_travel_request = lazy(() =>
+  import("./modules/Post_Approval_Travel_Request/pages/index"),
+);
+const roster_calendar_team = lazy(() =>
+  import("./modules/Roster_Calendar_Portal/pages/index"),
+);
 
 const travel_request_workflow_status = lazy(() =>
   import("./modules/Travel_Request_WorkflowStatus_Portal/page/index"),
-)
+);
 
-// const travel_request_workflow_status_approval = lazy(() =>
-//   import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
-// )
+const travel_request_workflow_status_approval = lazy(() =>
+  import("./modules/Travel_Request_WorkflowStatus_Hrms/page/index"),
+);
 
-const company_att_machine_config = lazy (() =>
-  import ("./modules/Company_att_machine_config/pages/index"))
+const company_att_machine_config = lazy(() =>
+  import("./modules/Company_att_machine_config/pages/index"),
+);
+const interview_questionnaire = lazy(() =>
+  import("./modules/Interview_Questionnaire/pages/index"),
+);
+const interview_recommendations = lazy(() =>
+  import("./modules/Interview_Recommendations/pages/index"),
+);
 
+const job_requestion_approval = lazy(() =>
+  import("./modules/JobRequestionApproval/page/index"),
+);
+
+const TravelRequestReportsModule = lazy(() =>
+  import("./modules/TravelRequestReports/pages/index"),
+);
+
+const JobRequestionWorkflowStatus = lazy(() =>
+  import("./modules/Job_Requestion_Workflow_Status/pages/index"),
+);
+
+const JobRequestionWorkflowStatusApproval = lazy(() =>
+  import("./modules/JobRequestionWorkflowStatusApproval/page/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -797,18 +823,24 @@ const ROUTES = {
   travel_request_approval: travel_request_approval,
   temporary_shift_setup: employee_temporary_shift_setup,
   reimbursement_claim_approval: reimbursement_claim_approval,
-  project_sprint : project_sprint,
-  reimbursement_claim_workflow_status_approval : reimbursement_claim_workflow_status_approval,
-  reimbursement_claim_workflow_status : reimbursement_claim_workflow_status,
-  attendance_roster_request : attendance_roster_request,
-  attendance_roster_approval : attendance_roster_approval,
-  attendance_roster_workflow_status : attendance_roster_workflow_status,
-  attendance_roster_workflow_status_portal : attendance_roster_workflow_status_portal,
-  post_approval_travel_request : post_approval_travel_request,
-  roster_calendar_team : roster_calendar_team,
-  travel_request_workflow_status : travel_request_workflow_status,
-  // travel_request_workflow_status_approval : travel_request_workflow_status_approval,
-  company_att_machine_config : company_att_machine_config,
+  project_sprint: project_sprint,
+  reimbursement_claim_workflow_status_approval: reimbursement_claim_workflow_status_approval,
+  reimbursement_claim_workflow_status: reimbursement_claim_workflow_status,
+  attendance_roster_request: attendance_roster_request,
+  attendance_roster_approval: attendance_roster_approval,
+  attendance_roster_workflow_status: attendance_roster_workflow_status,
+  attendance_roster_workflow_status_portal: attendance_roster_workflow_status_portal,
+  post_approval_travel_request: post_approval_travel_request,
+  roster_calendar_team: roster_calendar_team,
+  travel_request_workflow_status: travel_request_workflow_status,
+  travel_request_workflow_status_approval: travel_request_workflow_status_approval,
+  company_att_machine_config: company_att_machine_config,
+  interview_questionnaire: interview_questionnaire,
+  interview_recommendations: interview_recommendations,
+  job_requestion_approval: job_requestion_approval,
+  travel_request_reports: TravelRequestReportsModule,
+  job_requestion_workflow : JobRequestionWorkflowStatus,
+  job_requestion_workflow_approval : JobRequestionWorkflowStatusApproval,
 };
 
 export default function BasePage() {
@@ -821,6 +853,7 @@ export default function BasePage() {
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
+        <Route path="/ask/ai-chatbot" component={AIChatbotManagement} />
         {/* <Route path='vehicles/read-all-vehicles' component={VehicleManagment} /> */}
         {Object.keys(UserAccess).map((access, key) => {
           const accessName = access.replace(/ /g, "").toLowerCase();

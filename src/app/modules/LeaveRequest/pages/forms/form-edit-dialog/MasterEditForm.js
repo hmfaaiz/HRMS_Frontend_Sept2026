@@ -72,6 +72,8 @@ export function MasterEditForm({
   const inputFile = useRef(null);
   const debounceRef = useRef(null);
   const formikRef = useRef(null);
+    const [isEligible, setIsEligible] = React.useState(true);
+  const [eligibilityMsg, setEligibilityMsg] = React.useState("");
   //Validation for Form.
   //If payroll month is available then form should not allow to add date for before payroll month end date.
   //else just normal validation for form
@@ -220,6 +222,28 @@ export function MasterEditForm({
     }
   }, [employeeId]);
 
+    const checkEligibility = (leaveTypeId) => {
+  const record = leaveBalances?.find(
+    (e) => e?.leaveType === leaveTypeId
+  );
+
+ const eligible = record?.isEligibleForThisLeave ?? true;
+const isLeaveAvailed = record?.isLeaveAvailed ?? false;
+
+
+setIsEligible(eligible);
+
+if (!eligible) {
+  const msg = isLeaveAvailed
+    ? "Unable to proceed: The employee has already availed the maximum allowable number of occurrences for the selected leave type."
+    : "The employee is not eligible to avail this leave; therefore, the leave request cannot be processed.";
+
+  setEligibilityMsg(msg);
+} else {
+  setEligibilityMsg("");
+}
+};
+
   return (
     <>
       {/* Formik Start */}
@@ -321,6 +345,7 @@ export function MasterEditForm({
                           e.target.value == "Select"
                             ? ""
                             : Number(e.target.value);
+                             checkEligibility(value)
                         setFieldValue("leaveType", value);
                         await validateAndFetch(
                           { ...values, leaveType: value },
@@ -564,6 +589,11 @@ export function MasterEditForm({
                     )}
                   </div>
                 </div>
+                                             {!isEligible && eligibilityMsg && !user.isEligibleForThisLeave &&(
+  <div style={{ color: "red", marginBottom: "10px" }}>
+    {eligibilityMsg}
+  </div>
+)}
               </fieldset>
               <LeaveLinesTable
                 values={values}
@@ -585,6 +615,7 @@ export function MasterEditForm({
                   // //   inputFile.current.value = "";
                   // // }
                   setValues(initialValue);
+                  setEligibilityMsg("")
                 }}
                 className="btn btn-light btn-elevate"
               >
@@ -596,7 +627,7 @@ export function MasterEditForm({
               {employeeId && accessUser ? (
                 <button
                   type="submit"
-                  disabled={loading || values?.leaveLines?.length == 0}
+                  disabled={loading || values?.leaveLines?.length == 0 || !isEligible}
                   onClick={() => handleSubmit()}
                   className="btn btn-primary btn-elevate"
                 >

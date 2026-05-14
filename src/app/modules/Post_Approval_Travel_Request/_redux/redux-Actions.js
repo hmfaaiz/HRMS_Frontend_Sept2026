@@ -200,3 +200,24 @@ export const checkCanApproveRequest = (Id) => (dispatch) => {
       return false;
     });
 };
+
+export const fetchPostApprovalTravelRequestReport = (Id) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getPostApprovalTravelRequestReport(Id)
+    .then((response) => {
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `PostApprovalTravelRequestReport_${Id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      dispatch(actions.actionCompleted());
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error("Failed to download report");
+    });
+};

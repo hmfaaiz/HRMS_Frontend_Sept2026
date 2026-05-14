@@ -10,19 +10,28 @@ import {
   PleaseWaitMessage,
   sortCaret,
 } from "../../../../../../_metronic/_helpers";
+import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 import { format } from "date-fns";
 import { TravelRequestGrid } from "../../../../Travel_Request_Approval/page/form/form-travel-details-grid/travel-request-grid";
 export function TravelWorkflowTable({ onHide, show }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { workflowStatusList, actionsLoading, employeeEntitlement } = useSelector(
+  const {
+    workflowStatusList,
+    actionsLoading,
+    employeeEntitlement,
+    dashboard,
+  } = useSelector(
     (state) => ({
-      workflowStatusList: state?.TravelRequestWorkflowStatus?.workflowStatusList,
+      workflowStatusList:
+        state?.TravelRequestWorkflowStatus?.workflowStatusList,
       actionsLoading: state?.TravelRequestWorkflowStatus?.actionsLoading,
-      employeeEntitlement: state?.TravelRequestWorkflowStatus?.employeeEntitlement,
+      employeeEntitlement:
+        state?.TravelRequestWorkflowStatus?.employeeEntitlement,
+      dashboard: state.dashboard,
     }),
-    shallowEqual
+    shallowEqual,
   );
   const formUIProps = useMemo(() => {
     return {
@@ -101,18 +110,18 @@ export function TravelWorkflowTable({ onHide, show }) {
       },
       formatter: (cell) => {
         let text = "";
-        let classname = "";
+        let className = "";
         if (cell === "P") {
           text = "Pending";
-          classname = "text-pending font-bold";
+          className = "text-pending font-bold";
         } else if (cell === "A") {
+          className = "text-approved font-bold";
           text = "Approved";
-          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          classname = "text-rejected font-bold";
+          className = "text-rejected font-bold";
         }
-        return <span className={classname}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     {
@@ -143,6 +152,7 @@ export function TravelWorkflowTable({ onHide, show }) {
   ];
   useEffect(() => {
     dispatch(actions.fetchTravelWorkflow(formUIProps?.workflowId));
+    dispatch(fetchAllFormsMenu(553, "allTravelTypeList"));
   }, [formUIProps.workflowId, dispatch]);
 
   useEffect(() => {
@@ -219,31 +229,42 @@ export function TravelWorkflowTable({ onHide, show }) {
                   </h6>
                   <div className="text-sm text-black">
                     <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Travel Type</div>
+                      <div className="col-span-1">
+                        {dashboard?.allTravelTypeList?.find(
+                          (opt) =>
+                            String(opt.value) ===
+                            String(
+                              formUIProps?.rowData?.parentData?.travelTypeId,
+                            ),
+                        )?.label ||
+                          formUIProps?.rowData?.parentData?.travelType ||
+                          "-"}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
                         Purpose of Travel
                       </div>
                       <div className="col-span-1">
-                        {formUIProps?.rowData?.parentData?.purposeOfTravel || "-"}
+                        {formUIProps?.rowData?.parentData?.purposeOfTravel ||
+                          "-"}
                       </div>
                     </div>
-                    <div className="grid grid-cols-4">
+                    {/* <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">Project Name</div>
                       <div className="col-span-1">
                         {formUIProps?.rowData?.parentData?.projectName || "-"}
                       </div>
-                    </div>
-                    <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">Travel Type</div>
-                      <div className="col-span-1">
-                        {formUIProps?.rowData?.parentData?.travelType || "-"}
-                      </div>
-                    </div>
+                    </div> */}
+
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
                         Total Allowance Amount
                       </div>
                       <div className="col-span-1">
-                        {formUIProps?.rowData?.parentData?.dailyAllowanceAmount || "-"}
+                        {formUIProps?.rowData?.parentData
+                          ?.dailyAllowanceAmount || "-"}
                       </div>
                     </div>
                     {formUIProps?.rowData?.parentData?.advanceRequired && (
@@ -253,7 +274,8 @@ export function TravelWorkflowTable({ onHide, show }) {
                         </div>
                         <div className="col-span-1">
                           {Number(
-                            formUIProps?.rowData?.parentData?.advanceAmount || 0,
+                            formUIProps?.rowData?.parentData?.advanceAmount ||
+                              0,
                           ).toLocaleString()}
                         </div>
                       </div>

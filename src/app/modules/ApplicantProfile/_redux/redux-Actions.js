@@ -335,6 +335,38 @@ export const convertApplicantProfile = (id) => (dispatch) => {
       });
     });
 };
+export const convertBulkApplicantToEmployee = (dataIds) => (dispatch) => {
+  return requestFromServer
+    .convertBulkApplicantToEmployee({dataIds})
+    .then((response) => {
+
+      toast.success(response?.data?.data?.message || SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+
+    })
+    .catch((error) => {
+
+      //error.clientMessage = "Can't update User"
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
 
 export const Generatejob_offer_letter = (body) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.pdfGenerate }));

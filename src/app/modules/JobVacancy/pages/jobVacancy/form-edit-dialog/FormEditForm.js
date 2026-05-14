@@ -33,10 +33,10 @@ import { RichTextInput } from "../../../../../../_metronic/_partials/controls/fo
 const jobVacancyEditSchema = Yup.object().shape({
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
 
-  jobCode: Yup.string()
-    .min(5, "Job code must be  5 characters")
-    .max(10, "Job code must be  10 characters")
-    .required(VALIDATION_MESSAGES.required),
+  // jobCode: Yup.string()
+  //   .min(5, "Job code must be  5 characters")
+  //   .max(10, "Job code must be  10 characters")
+  //   .required(VALIDATION_MESSAGES.required),
   jobDate: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -325,24 +325,24 @@ export function FormEditForm({
     return formData;
   }, [formData]);
 
-  const fetchData = async (setJobCode) => {
+  // const fetchData = async (setJobCode) => {
     
-    if (!formData.Id || formData.Id && !isdataForRead && formData.jobPostingStatus == 3) {
+  //   if (!formData.Id || formData.Id && !isdataForRead && formData.jobPostingStatus == 3) {
      
-      dispatch(
-        getLatestTableId(
-          "r_jobvacancy",
-          "jobCode",
-          "companyId =" + currentUser.companyId,
-          setJobCode
-        )
-      );
-    }
-  };
-  useEffect(() => {
+  //     dispatch(
+  //       getLatestTableId(
+  //         "r_jobvacancy",
+  //         "jobCode",
+  //         "companyId =" + currentUser.companyId,
+  //         setJobCode
+  //       )
+  //     );
+  //   }
+  // };
+  // useEffect(() => {
    
-    fetchData(setJobCode);
-  }, [!formData.Id,isdataForRead]);
+  //   fetchData(setJobCode);
+  // }, [!formData.Id,isdataForRead]);
 
   useEffect(() => {
     if (cleanedFormData?.gradeId) {
@@ -418,7 +418,7 @@ export function FormEditForm({
                 <div>
                   {/* <h6>Job</h6> */}
                   <div className="grid md:grid-cols-6 gap-x-3">
-                    <div className="">
+                    {values?.Id ? <div className="">
                       <label>
                         <span>
                           Job Code<span style={{ color: "red" }}>*</span>
@@ -436,7 +436,7 @@ export function FormEditForm({
                       {/* {errors.jobCode && (
                         <div className="invalid-feedback d-block">{errors.jobCode}</div>
                       )} */}
-                    </div>
+                    </div> : null}
 
                     <div className="">
                       <label>

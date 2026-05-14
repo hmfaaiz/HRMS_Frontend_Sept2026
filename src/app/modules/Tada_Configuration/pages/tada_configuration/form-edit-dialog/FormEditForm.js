@@ -94,14 +94,28 @@ export function FormEditForm({
         .of(Yup.string())
         .min(1, VALIDATION_MESSAGES.atLeastOne)
         .required(VALIDATION_MESSAGES.atLeastOne),
-      dailyAllowanceAmount: Yup.number().min(
-        0,
-        VALIDATION_MESSAGES.amountCannotBeNegative,
-      ),
-      taxiFareAmount: Yup.number().min(
-        0,
-        VALIDATION_MESSAGES.amountCannotBeNegative,
-      ),
+      dailyAllowanceAmount: Yup.number()
+        .typeError(VALIDATION_MESSAGES.validNumber)
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .min(0, VALIDATION_MESSAGES.amountCannotBeNegative),
+      taxiFareAmount: Yup.number()
+        .typeError(VALIDATION_MESSAGES.validNumber)
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .min(0, VALIDATION_MESSAGES.amountCannotBeNegative),
+      hotelEntitlementSelfAmount: Yup.number()
+        .typeError(VALIDATION_MESSAGES.validNumber)
+        .transform((value) => (isNaN(value) ? 0 : value))
+        .when(
+          "ishotelEntitlementSelfAmountWise",
+          (ishotelEntitlementSelfAmountWise, schema) => {
+            if (ishotelEntitlementSelfAmountWise) {
+              return schema
+                .required(VALIDATION_MESSAGES.required)
+                .min(1, VALIDATION_MESSAGES.amountGreaterThanZero);
+            }
+            return schema.min(0);
+          },
+        ),
     });
   }, [hotelOptions]);
 
@@ -521,6 +535,33 @@ export function FormEditForm({
                           )}
                         </span>
                       </div>
+                    </div>
+                    {/* Self Amount */}
+                    <div>
+                      <label className="text-sm font-medium">
+                        Self Amount
+                        {values.ishotelEntitlementSelfAmountWise && (
+                          <span style={{ color: "red" }}>*</span>
+                        )}
+                      </label>
+                      <AmountInput
+                        field={{
+                          name: "hotelEntitlementSelfAmount",
+                          value: values.hotelEntitlementSelfAmount,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={
+                          isUserForRead ||
+                          !values.subsidiaryId ||
+                          !values.ishotelEntitlementSelfAmountWise
+                        }
+                        placeholder="0"
+                      />
                     </div>
 
                     {/* Daily Allowance */}

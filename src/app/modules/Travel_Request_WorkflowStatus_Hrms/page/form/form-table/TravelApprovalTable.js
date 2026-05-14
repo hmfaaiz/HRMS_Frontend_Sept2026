@@ -1,5 +1,8 @@
 import React, { useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory, {
+  PaginationProvider,
+} from "react-bootstrap-table2-paginator";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/formActions";
 import {
@@ -9,6 +12,7 @@ import {
   sortCaret,
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
+import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import * as uiHelpers from "../../FormUIHelper";
 import { useFormUIContext } from "../../FormUIContext";
 import { ActionsColumnFormatter } from "./column-formatter/ActionCloumnFormatter";
@@ -24,18 +28,20 @@ export function TravelApprovalFormTable() {
       setQueryParams: formUIContext?.setQueryParams,
       setTravelRequestId: formUIContext?.setTravelRequestId,
       setWorkflowId: formUIContext?.setWorkflowId,
+      setApprovalId: formUIContext?.setApprovalId,
       setTravelData: formUIContext?.setTravelData,
     };
   }, [formUIContext]);
 
-  const { currentState, user } = useSelector((state) => {
+  const { currentState, user, dashboard } = useSelector((state) => {
     return {
       currentState: state?.TravelRequestWorkflowAdmin,
       user: state?.auth?.user,
+      dashboard: state?.dashboard,
     };
   }, shallowEqual);
 
-  const { entities } = currentState;
+  const { entities, totalCount, listLoading } = currentState;
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -61,20 +67,20 @@ export function TravelApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let classname = "";
+        let className = "";
 
         if (cell === "P") {
           text = "Pending";
-          classname = "text-pending font-bold";
+          className = "text-pending font-bold";
         } else if (cell === "A") {
+          className = "text-approved font-bold";
           text = "Approved";
-          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          classname = "text-rejected font-bold";
+          className = "text-rejected font-bold";
         }
 
-        return <span className={classname}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     {
@@ -89,20 +95,20 @@ export function TravelApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let classname = "";
+        let className = "";
 
         if (cell === "P") {
           text = "Pending";
-          classname = "text-pending font-bold";
+          className = "text-pending font-bold";
         } else if (cell === "A") {
+          className = "text-approved font-bold";
           text = "Approved";
-          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          classname = "text-rejected font-bold";
+          className = "text-rejected font-bold";
         }
 
-        return <span className={classname}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     {
@@ -153,11 +159,18 @@ export function TravelApprovalFormTable() {
       },
     },
     {
-      dataField: "parentData.travelType",
+      dataField: "parentData.TravelType.formName",
       text: "Travel Type",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
+      formatter: (cell, row) =>
+        row.parentData?.TravelType?.formName ||
+        dashboard?.allTravelTypeList?.find(
+          (opt) => String(opt.value) === String(row.parentData?.travelTypeId),
+        )?.label ||
+        row.parentData?.travelType ||
+        "-",
       style: {
         minWidth: "110px",
         maxWidth: "110px",
@@ -223,6 +236,7 @@ export function TravelApprovalFormTable() {
       formatExtraData: {
         setTravelRequestId: FormUIProps.setTravelRequestId,
         setWorkflowId: FormUIProps.setWorkflowId,
+        setApprovalId: FormUIProps.setApprovalId,
         setTravelData: FormUIProps?.setTravelData,
       },
 
@@ -232,24 +246,39 @@ export function TravelApprovalFormTable() {
     },
   ];
 
+  const paginationOptions = {
+    custom: true,
+    totalSize: totalCount,
+    sizePerPageList: uiHelpers.sizePerPageList,
+    sizePerPage: FormUIProps.queryParams.pageSize,
+    page: FormUIProps.queryParams.pageNumber,
+  };
+
   return (
     <div className="overflow-x-auto w-full">
-      <BootstrapTable
-        noDataIndication={NoRecordsFoundMessage({ entities })}
-        wrapperClasses="table-responsive"
-        bordered={false}
-        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-        bootstrap4
-        remote
-        keyField="Id"
-        data={entities === null ? [] : entities}
-        columns={columns}
-        defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
-      >
-        <PleaseWaitMessage entities={entities} />
-        <NoRecordsFoundMessage entities={entities} />
-      </BootstrapTable>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => (
+          <Pagination isLoading={listLoading} paginationProps={paginationProps}>
+            <BootstrapTable
+              noDataIndication={NoRecordsFoundMessage({ entities })}
+              wrapperClasses="table-responsive"
+              bordered={false}
+              classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+              bootstrap4
+              remote
+              keyField="Id"
+              data={entities === null ? [] : entities}
+              columns={columns}
+              defaultSorted={uiHelpers.defaultSorted}
+              onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+              {...paginationTableProps}
+            >
+              <PleaseWaitMessage entities={entities} />
+              <NoRecordsFoundMessage entities={entities} />
+            </BootstrapTable>
+          </Pagination>
+        )}
+      </PaginationProvider>
     </div>
   );
 }
