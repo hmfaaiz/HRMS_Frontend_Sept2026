@@ -63,7 +63,8 @@ console.log("dateWiseAttLogs1111",dateWiseAttLogs)
                             height: "350px",
                             padding: "10px",
                             overflow: "scroll",
-                        }}>
+                        }}
+                        >
             <table className="table table-bordered text-center mb-0">
               <thead className="bg-light text-white">
                 <tr>
