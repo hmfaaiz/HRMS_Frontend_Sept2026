@@ -232,7 +232,7 @@ const DefaultArea = ({
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
                     key={`big-${alertIdx}`}
-                    expand={alertIdx == 0 || alertIdx == 1 }
+                    expand={alertIdx == 0 || alertIdx == 1}
                     data={e}
                   />
                 );
@@ -245,7 +245,13 @@ const DefaultArea = ({
               ?.filter((el) => el?.dashlet_type === "chart" && el?.is_fav)
               ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
               ?.map((e, alertIdx) => {
-                return <ChartData expand={false} key={`chart-${alertIdx}`} data={e} />;
+                return (
+                  <ChartData
+                    expand={false}
+                    key={`chart-${alertIdx}`}
+                    data={e}
+                  />
+                );
               })}
         </div>
       </div>
@@ -258,6 +264,7 @@ const DefaultArea = ({
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={alertIdx == 1}
                 />
               );
             }

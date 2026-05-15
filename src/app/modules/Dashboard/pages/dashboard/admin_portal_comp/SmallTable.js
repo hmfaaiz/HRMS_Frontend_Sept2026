@@ -5,8 +5,8 @@ import { PeriodType } from "../EmpUIHelper";
 import { useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 
-const SingleCard = ({ data, setSmallTableModalData }) => {
-  const [activeKey, setActiveKey] = useState(null); // Start with accordion closed
+const SingleCard = ({ data, setSmallTableModalData, expand }) => {
+  const [activeKey, setActiveKey] = useState(expand ? "0" : null);
   let theme = data?.theme_class;
   const dashboard = useSelector((state) => state.dashboard || []);
 
@@ -51,12 +51,12 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
                 className="flex items-center gap-2 p-0 border-0 bg-transparent shadow-none hover:bg-transparent"
                 style={{ outline: "none" }}
               >
-                <h6 className="font-bold mb-0 text-tprimary">{getHeading()}</h6>
                 {activeKey === "0" ? (
                   <CircleMinus className="h-4 w-4 text-tprimary" />
                 ) : (
                   <CirclePlus className="h-4 w-4 text-tprimary" />
                 )}
+                <h6 className="font-bold mb-0 text-tprimary">{getHeading()}</h6>
               </Accordion.Toggle>
             </div>
           </Card.Header>
@@ -131,8 +131,12 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
   );
 };
 
-export default function SmallTable({ data, setSmallTableModalData }) {
+export default function SmallTable({ data, setSmallTableModalData, expand }) {
   return (
-    <SingleCard data={data} setSmallTableModalData={setSmallTableModalData} />
+    <SingleCard
+      data={data}
+      setSmallTableModalData={setSmallTableModalData}
+      expand={expand}
+    />
   );
 }

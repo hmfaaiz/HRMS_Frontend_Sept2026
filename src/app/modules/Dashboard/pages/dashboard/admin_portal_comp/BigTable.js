@@ -125,12 +125,12 @@ export function BigTable({ data, setBigTableModalData , expand }) {
                 className="flex items-center gap-2 p-0 border-0 bg-transparent shadow-none hover:bg-transparent"
                 style={{ outline: "none" }}
               >
-                <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
                 {activeKey === "0" ? (
                   <CircleMinus className="h-4 w-4 text-primary" />
                 ) : (
                   <CirclePlus className="h-4 w-4 text-primary" />
                 )}
+                <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
               </Accordion.Toggle>
 
               {/* Right side - View All button (only visible when accordion is open) */}

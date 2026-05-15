@@ -171,10 +171,7 @@ const PayrollArea = ({
                     setBigTableModalData={setBigTableModalData}
                     key={`big-${alertIdx}`}
                     data={e}
-                    expand={
-                      alertIdx == 0 ||
-                      alertIdx == 1
-                    }
+                    expand={alertIdx == 0 || alertIdx == 1}
                   />
                 );
               })}
@@ -207,6 +204,7 @@ const PayrollArea = ({
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={alertIdx == 1}
                 />
               );
             }

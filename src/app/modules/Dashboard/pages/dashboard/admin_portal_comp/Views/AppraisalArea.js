@@ -198,6 +198,7 @@ const AppraisalArea = ({
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={alertIdx == 1}
                 />
               );
             }

@@ -154,10 +154,7 @@ const AttendanceArea = ({
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
                     key={`big-${alertIdx}`}
-                    expand={
-                      alertIdx == 0 ||
-                      alertIdx == 1
-                    }
+                    expand={alertIdx == 0 || alertIdx == 1}
                     data={e}
                   />
                 );
@@ -191,6 +188,7 @@ const AttendanceArea = ({
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={alertIdx == 1}
                 />
               );
             }
