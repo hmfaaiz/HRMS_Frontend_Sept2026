@@ -28,6 +28,7 @@ const facilitator_ticket_creationEditSchema = (value) => {
 
 
             timeRangeFrom: Yup.string()
+            .nullable()
                 .when("timeRangeTo", {
                     is: (value) => value !== null && value !== "",
                     then: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -35,6 +36,7 @@ const facilitator_ticket_creationEditSchema = (value) => {
                 }),
 
             timeRangeTo: Yup.string()
+            .nullable()
                 .when("timeRangeFrom", {
                     is: (value) => value !== null && value !== "",
                     then: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -51,7 +53,9 @@ const facilitator_ticket_creationEditSchema = (value) => {
 
 
 
-            timeRangeFrom: Yup.string().test(
+            timeRangeFrom: Yup.string()
+            .nullable()
+            .test(
                 "from-required-if-to",
                 VALIDATION_MESSAGES.required,
                 function (value) {
@@ -63,7 +67,9 @@ const facilitator_ticket_creationEditSchema = (value) => {
                 }
             ),
 
-            timeRangeTo: Yup.string().test(
+            timeRangeTo: Yup.string()
+            .nullable()
+            .test(
                 "to-required-if-from",
                 VALIDATION_MESSAGES.required,
                 function (value) {
