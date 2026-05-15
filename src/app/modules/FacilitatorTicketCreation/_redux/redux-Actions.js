@@ -162,7 +162,7 @@ export const updateTicketCreation = (user, disbaleLoading,clear, onHide) => (dis
 
       const updatedTicketCreation = response?.config?.data; // response.data?.data;
 
-      dispatch(actions.ticketCreationUpdated({ updatedTicketCreation }));
+      // dispatch(actions.ticketCreationUpdated({ updatedTicketCreation }));
 
       disbaleLoading();
       clear();

@@ -17,12 +17,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const FormUIContext = useFormUIContext();
 
 
-  const usersUIProps = useMemo(() => {
-    return {
-      queryParams: FormUIContext.queryParams,
-    };
-  }, [FormUIContext]);
-
   const formUIProps = useMemo(() => {
     return {
       initUser: FormUIContext.initUser,
@@ -66,14 +60,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   }, [id, dispatch]);
 
 
-  const saveForm = async (user) => {
+  const saveForm = async (data) => {
 
 
 
     if (!id) {
 
-      dispatch(actions.createTaskConfig(user, disbaleLoading, onHide)).then(async () => {
-        await dispatch(actions.fetchTaskConfigurations(usersUIProps.queryParams));
+      dispatch(actions.createTaskConfig(data, disbaleLoading, onHide)).then(async () => {
+        await dispatch(actions.fetchTaskConfigurations(formUIProps.queryParams));
       });
 
 
@@ -84,17 +78,18 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       // user.number_of_days=
       const formUpdatedFields = {
-        Id: user.Id,
-        subsidiaryId: user.subsidiaryId,
-        teamTicketApproverId: user.teamTicketApproverId,
-        companyTaskApproverId: user.companyTaskApproverId,
+        Id: data.Id,
+        subsidiaryId: data.subsidiaryId,
+        teamTicketApproverId: data.teamTicketApproverId,
+        companyTaskApproverId: data.companyTaskApproverId,
+        isAllowedToCreateTask: data.isAllowedToCreateTask,
 
       };
 
 
 
       await dispatch(actions.updateTaskConfig(formUpdatedFields, disbaleLoading, onHide)).then(async () => {
-        await dispatch(actions.fetchTaskConfigurations(usersUIProps.queryParams));
+        await dispatch(actions.fetchTaskConfigurations(formUIProps.queryParams));
       });
     }
   };

@@ -162,11 +162,12 @@ export const updateTicketCreation = (user, disbaleLoading,clear, onHide) => (dis
 
       const updatedTicketCreation = response?.config?.data; // response.data?.data;
 
-      dispatch(actions.ticketCreationUpdated({ updatedTicketCreation }));
+      // dispatch(actions.ticketCreationUpdated({ updatedTicketCreation }));
 
       disbaleLoading();
       clear();
       onHide();
+      console.log("onHide11111")
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 5000,
