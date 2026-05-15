@@ -52,7 +52,7 @@ export function UserProfileDropdown() {
     };
   }, [uiService]);
 
-  // 🔽 Close on outside click
+  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -84,6 +84,12 @@ export function UserProfileDropdown() {
             }
             alt="User"
             className="w-full h-full object-cover bg-primary"
+             onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = toAbsoluteUrl(
+                                          "/media/users/profileImage.png",
+                                        );
+                                      }}
           />
         </div>
         <ChevronDown className="w-4 h-4" />

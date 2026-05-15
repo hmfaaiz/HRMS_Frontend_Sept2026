@@ -152,6 +152,10 @@ const SeparationArea = ({
                     setBigTableModalData={setBigTableModalData}
                     key={`big-${alertIdx}`}
                     data={e}
+                    expand={
+                      alertIdx == 0 ||
+                      alertIdx == 1
+                    }
                   />
                 );
               })}
