@@ -21,6 +21,8 @@ import { useHistory } from "react-router-dom";
 import { formatTime } from "../../../../../utils/common";
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+import { ClockFading } from "lucide-react";
+import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 
 const isValidMonthRequest = (monthStartDate, monthEndDate, attDate) => {
   const start = new Date(monthStartDate);
@@ -40,6 +42,7 @@ export function FormTable() {
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
       newAttendanceRequest: formUIContext?.newAttendanceRequest,
+      viewttendanceLogs: formUIContext?.viewttendanceLogs,
       employeeId: formUIContext?.employeeId,
       panelMode: formUIContext.panelMode,
       currentLevel: formUIContext.currentLevel,
@@ -171,9 +174,8 @@ export function FormTable() {
           <>
             {showMainStatus ? (
               <span
-                className={`${
-                  uiHelpers.attendanceStatusMap[row?.attendanceStatus]
-                } cursor-pointer font-bold text-underline-hover`}
+                className={`${uiHelpers.attendanceStatusMap[row?.attendanceStatus]
+                  } cursor-pointer font-bold text-underline-hover`}
                 onClick={() => FormUIProps?.newAttendanceRequest(row?.Id)}
               >
                 {cell}
@@ -258,6 +260,50 @@ export function FormTable() {
         return <span className={className}>{text}</span>;
       },
     },
+
+    // {
+    //   dataField: "",
+    //   text: "Attendance Logs",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "140px",
+    //     maxWidth: "140px",
+    //   },
+    //   formatter: (cell, row) => {
+
+    //     return (
+    //       <>
+
+    //         <span
+    //           className={` cursor-pointer font-bold text-underline-hover`}
+    //           onClick={() => FormUIProps?.viewttendanceLogs(row?.attDate)}
+    //         >
+    //           <ClockFading className=" w-4 h-4 pointer" />
+    //         </span>
+
+
+    //       </>
+    //     );
+    //   },
+    // },
+
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        viewttendanceLogs: FormUIProps?.viewttendanceLogs,
+
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "170px",
+      },
+    },
     // {
     //   dataField: "workflowAuthorties",
     //   text: "Pending At",
@@ -336,8 +382,8 @@ export function FormTable() {
                   </>
                 )} */}
                 {empAuthorityList &&
-                empAuthorityList?.length === 0 &&
-                !isPolicyExists ? (
+                  empAuthorityList?.length === 0 &&
+                  !isPolicyExists ? (
                   <span className="text-xs text-red-500 font-semibold">
                     Designation workflow policy does not exist for this
                     employee.

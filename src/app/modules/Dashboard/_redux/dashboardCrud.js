@@ -301,3 +301,7 @@ export const getAllCurrentParentTask = async () => {
 };export const getAllAlertTasks = async () => {
   return await axios.get(`${USERS_URL}/portal_ticket_creation/read-alert-facilitator-ticket-creation`);
 };
+
+export const getAttLogsByDate = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-date-att-logs`, body);
+};
