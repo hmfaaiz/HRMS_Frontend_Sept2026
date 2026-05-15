@@ -11,7 +11,7 @@ import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import { useSelector, shallowEqual } from "react-redux";
-import { LogsDialog } from "./logs/LogsDialog";
+import { LogsDialog } from "./log/LogsDialog";
 
 export function AttendanceViewPage({ history }) {
   const FormUIEvents = {
