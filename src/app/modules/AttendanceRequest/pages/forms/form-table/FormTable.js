@@ -40,6 +40,7 @@ export function FormTable() {
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
       newAttendanceRequest: formUIContext?.newAttendanceRequest,
+      viewttendanceLogs: formUIContext?.viewttendanceLogs,
       employeeId: formUIContext?.employeeId,
       panelMode: formUIContext.panelMode,
       currentLevel: formUIContext.currentLevel,
@@ -256,6 +257,34 @@ export function FormTable() {
         }
 
         return <span className={className}>{text}</span>;
+      },
+    },
+
+   {
+      dataField: "",
+      text: "Attendance Logs",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "140px",
+        maxWidth: "140px",
+      },
+      formatter: (cell, row) => {
+       
+        return (
+          <>
+
+              <span
+                className={` cursor-pointer font-bold text-underline-hover`}
+                onClick={() => FormUIProps?.viewttendanceLogs(row?.attDate)}
+              >
+               View Logs {(row?.attDate)}
+              </span>
+            
+            
+          </>
+        );
       },
     },
     // {
