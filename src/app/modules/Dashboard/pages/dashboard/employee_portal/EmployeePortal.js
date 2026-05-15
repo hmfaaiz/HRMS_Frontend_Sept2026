@@ -130,9 +130,27 @@ export const EmployeePortal = () => {
                   portalInfo={portalInfo}
                   moduleRights={moduleRights}
                   detailViewType={detailViewType}
+                  setAttModalData={setAttModalData}
                 />
               </div>
             )}
+            <TableModel
+              show={!!attModalData}
+              onHide={() => setAttModalData(null)}
+              heading={"Team Members"}
+              data={{
+                result: (attModalData || []).map((el) => ({
+                  Id: el?.employeeId || el?.employeeCode,
+                  code: el?.employeeCode,
+                  name: `${el?.firstName || ""} ${el?.middleName ||
+                    ""} ${el?.lastName || ""}`.trim(),
+                  designation: el?.designation?.formName,
+                  check_In: el?.t_attendances?.[0]?.timeIn || "-",
+                  check_Out: el?.t_attendances?.[0]?.timeOut || "-",
+                  status: el?.t_attendances?.[0]?.status || "-",
+                })),
+              }}
+            />
           </>
         </div>
       )}
@@ -145,7 +163,12 @@ export const EmployeePortal = () => {
   );
 };
 
-const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
+const DetailView = ({
+  portalInfo,
+  moduleRights,
+  detailViewType,
+  setAttModalData,
+}) => {
   return (
     <>
       {portalInfo?.reportingEmployee &&
@@ -153,21 +176,9 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
           <>
             <div className="flex flex-col lg:flex-row gap-4">
               <PendingRequestSelf
-                leaveApprovalCount={portalInfo?.leaveApproval || 0}
-                attendanceApprovalCount={portalInfo?.attApproval || 0}
-                loanApprovalCount={portalInfo?.loanApproval || 0}
-                resignationApprovalCount={portalInfo?.resignApproval || 0}
-                rosterApproval={portalInfo?.rosterApproval || 0}
-                tadaApproval={portalInfo?.tadaApproval || 0}
-                reimbApproval={portalInfo?.reimbApproval || 0}
                 moduleRights={moduleRights}
-              />
-              <ReportingEmpTable
-                empAuthorityList={
-                  portalInfo?.reportingEmployee?.length > 0
-                    ? portalInfo?.reportingEmployee
-                    : []
-                }
+                data={portalInfo}
+                setAttModalData={setAttModalData}
               />
             </div>
             <EmployeePortalMenu
@@ -284,13 +295,7 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
   );
 };
 
-const CompactView = ({
-  portalInfo,
-  moduleRights,
-  attModalData,
-  setAttModalData,
-  isTeamExists,
-}) => {
+const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
   const {
     leave,
     attendance,
@@ -635,24 +640,6 @@ const CompactView = ({
           link={"/company_doc_portal/read-all-company-doc-portal"}
         />
       ) : null}
-
-      <TableModel
-        show={!!attModalData}
-        onHide={() => setAttModalData(null)}
-        heading={"Team Members"}
-        data={{
-          result: (attModalData || []).map((el) => ({
-            Id: el?.employeeId || el?.employeeCode,
-            code: el?.employeeCode,
-            name: `${el?.firstName || ""} ${el?.middleName ||
-              ""} ${el?.lastName || ""}`.trim(),
-            designation: el?.designation?.formName,
-            check_In: el?.t_attendances?.[0]?.timeIn || "-",
-            check_Out: el?.t_attendances?.[0]?.timeOut || "-",
-            status: el?.t_attendances?.[0]?.status || "-",
-          })),
-        }}
-      />
     </div>
   );
 };
