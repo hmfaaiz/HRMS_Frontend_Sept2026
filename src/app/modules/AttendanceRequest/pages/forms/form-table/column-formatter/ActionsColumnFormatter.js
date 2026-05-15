@@ -2,6 +2,7 @@ import React from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { ClockFading } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -12,27 +13,24 @@ export function ActionsColumnFormatter(
     openDeleteFormDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadFormDialog
+    openReadFormDialog,viewttendanceLogs
   }
 ) {
   const isUserRead = false;
   return (
     <>
       <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
-        <a
-          title=""
-          className="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-          onClick={() => openReadFormDialog(row.Id, isUserRead)}
-        >
-          <span className="svg-icon svg-icon-md svg-icon-primary">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-            />
-          </span>
-        </a>
+        overlay={<Tooltip id="products-edit-tooltip">View Logs</Tooltip>}>
+ 
+          <span
+              className={` cursor-pointer font-bold text-underline-hover`}
+              onClick={() => viewttendanceLogs(row?.attDate)}
+            >
+              <ClockFading className=" w-4 h-4 pointer" />
+            </span>
+    
       </OverlayTrigger>
-      {isAccessForEdit && row.isActive && (
+      {/* {isAccessForEdit && row.isActive && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -76,7 +74,7 @@ export function ActionsColumnFormatter(
           
           }
         </OverlayTrigger>
-      )}
+      )} */}
     </>
   );
 }
