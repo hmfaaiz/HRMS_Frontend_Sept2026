@@ -78,6 +78,17 @@ export function FormCard() {
                   "/job_requestion_approval/read-all-job-requestion-approval",
                 isShow: approvalForm,
               },
+              {
+                name: "Workflow Status",
+                link:
+                  "/job_requestion_workflow/read-all-job-requestion-workflow",
+                isShow: requisition_job_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllJobRequestionWorkflow" &&
+                    el?.isResourceShow &&
+                    el?.portalType == 2,
+                ),
+              },
             ]}
             isDashboardIcon={true}
           />
@@ -96,6 +107,17 @@ export function FormCard() {
                 link:
                   "/job_requestion_approval/read-all-job-requestion-approval",
                 isShow: approvalForm,
+              },
+              {
+                name: "Workflow Status",
+                link:
+                  "/job_requestion_workflow/read-all-job-requestion-workflow",
+                isShow: requisition_job_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllJobRequestionWorkflow" &&
+                    el?.isResourceShow &&
+                    el?.portalType == 2,
+                ),
               },
             ]}
             isDashboardIcon={true}

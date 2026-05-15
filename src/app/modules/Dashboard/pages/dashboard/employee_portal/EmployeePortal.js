@@ -130,9 +130,27 @@ export const EmployeePortal = () => {
                   portalInfo={portalInfo}
                   moduleRights={moduleRights}
                   detailViewType={detailViewType}
+                  setAttModalData={setAttModalData}
                 />
               </div>
             )}
+            <TableModel
+              show={!!attModalData}
+              onHide={() => setAttModalData(null)}
+              heading={"Team Members"}
+              data={{
+                result: (attModalData || []).map((el) => ({
+                  Id: el?.employeeId || el?.employeeCode,
+                  code: el?.employeeCode,
+                  name: `${el?.firstName || ""} ${el?.middleName ||
+                    ""} ${el?.lastName || ""}`.trim(),
+                  designation: el?.designation?.formName,
+                  check_In: el?.t_attendances?.[0]?.timeIn || "-",
+                  check_Out: el?.t_attendances?.[0]?.timeOut || "-",
+                  status: el?.t_attendances?.[0]?.status || "-",
+                })),
+              }}
+            />
           </>
         </div>
       )}
@@ -145,7 +163,12 @@ export const EmployeePortal = () => {
   );
 };
 
-const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
+const DetailView = ({
+  portalInfo,
+  moduleRights,
+  detailViewType,
+  setAttModalData,
+}) => {
   return (
     <>
       {portalInfo?.reportingEmployee &&
@@ -153,21 +176,9 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
           <>
             <div className="flex flex-col lg:flex-row gap-4">
               <PendingRequestSelf
-                leaveApprovalCount={portalInfo?.leaveApproval || 0}
-                attendanceApprovalCount={portalInfo?.attApproval || 0}
-                loanApprovalCount={portalInfo?.loanApproval || 0}
-                resignationApprovalCount={portalInfo?.resignApproval || 0}
-                rosterApproval={portalInfo?.rosterApproval || 0}
-                tadaApproval={portalInfo?.tadaApproval || 0}
-                reimbApproval={portalInfo?.reimbApproval || 0}
                 moduleRights={moduleRights}
-              />
-              <ReportingEmpTable
-                empAuthorityList={
-                  portalInfo?.reportingEmployee?.length > 0
-                    ? portalInfo?.reportingEmployee
-                    : []
-                }
+                data={portalInfo}
+                setAttModalData={setAttModalData}
               />
             </div>
             <EmployeePortalMenu
@@ -284,13 +295,7 @@ const DetailView = ({ portalInfo, moduleRights, detailViewType }) => {
   );
 };
 
-const CompactView = ({
-  portalInfo,
-  moduleRights,
-  attModalData,
-  setAttModalData,
-  isTeamExists,
-}) => {
+const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
   const {
     leave,
     attendance,
@@ -303,10 +308,12 @@ const CompactView = ({
     ticket_setup_portal,
     reimbursement_claim,
     roster,
+    recruitment,
   } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
       attendance: state?.auth?.userAccess["Attendance"],
+      recruitment: state?.auth?.userAccess["Recruitment"],
       roster: state?.auth?.userAccess["Attendance Management"],
       loan: state?.auth?.userAccess["Payroll"],
       resignation: state?.auth?.userAccess["Resignation"],
@@ -319,6 +326,7 @@ const CompactView = ({
     }),
     shallowEqual,
   );
+  console.log("recruitmentrecruitment", recruitment);
   /// leave
   const isLeaveRequest = leave?.find(
     (el) =>
@@ -404,6 +412,13 @@ const CompactView = ({
       el?.isAccess &&
       el?.portalType == 2,
   );
+  /// for job aproval
+  const isAccessForJobApproval = recruitment?.find(
+    (el) =>
+      el?.componentName === "ReadAllJobRequestionApproval" &&
+      el?.isAccess &&
+      el?.portalType == 2,
+  );
   /// appriasl
   const isAppraisalEvaluation = appraisalEval?.find(
     (el) =>
@@ -449,7 +464,8 @@ const CompactView = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 ">
       {/* Attendance Request */}
-      {moduleRights?.find((e) => e?.value == 3)?.allow && isAttRequest ? (
+      {moduleRights?.find((e) => e?.value == 3)?.allow &&
+      (isAttRequest || isAttApproval) ? (
         <CompactViewCard
           Icon={UserCheck}
           name={"Attendance"}
@@ -464,7 +480,8 @@ const CompactView = ({
         />
       ) : null}
       {/* Leave Request */}
-      {moduleRights?.find((e) => e?.value == 2)?.allow && isLeaveRequest ? (
+      {moduleRights?.find((e) => e?.value == 2)?.allow &&
+      (isLeaveRequest || isLeaveApproval) ? (
         <CompactViewCard
           Icon={UserRoundX}
           name={"Leave"}
@@ -477,7 +494,8 @@ const CompactView = ({
         />
       ) : null}
       {/* Loan Request */}
-      {moduleRights?.find((e) => e?.value == 4)?.allow && isLoanRequest ? (
+      {moduleRights?.find((e) => e?.value == 4)?.allow &&
+      (isLoanRequest || isLoanApproval) ? (
         <CompactViewCard
           Icon={Banknote}
           isTeamExists={isTeamExists}
@@ -490,7 +508,8 @@ const CompactView = ({
         />
       ) : null}
       {/* Roster Claim */}
-      {moduleRights?.find((e) => e?.value == 4)?.allow && isRostRequest ? (
+      {moduleRights?.find((e) => e?.value == 4)?.allow &&
+      (isRostRequest || isRostApproval) ? (
         <CompactViewCard
           Icon={NotebookTabs}
           isTeamExists={isTeamExists}
@@ -505,7 +524,8 @@ const CompactView = ({
         />
       ) : null}
       {/* tada */}
-      {moduleRights?.find((e) => e?.value == 4)?.allow && istadaRequest ? (
+      {moduleRights?.find((e) => e?.value == 4)?.allow &&
+      (istadaRequest || istadaApproval) ? (
         <CompactViewCard
           Icon={Luggage}
           isTeamExists={isTeamExists}
@@ -513,8 +533,7 @@ const CompactView = ({
           count={portalInfo?.tadaApproval}
           countLink={
             istadaApproval
-              ? // ? "/reimbursement_claim_approval/read-all-reimbursement-claim-approval"
-                "/"
+              ? "/travel_request_approval/read-all-travel-request-approval"
               : false
           }
           link={
@@ -524,7 +543,8 @@ const CompactView = ({
         />
       ) : null}
       {/* Reimbursement Claim */}
-      {moduleRights?.find((e) => e?.value == 4)?.allow && isreimbRequest ? (
+      {moduleRights?.find((e) => e?.value == 4)?.allow &&
+      (isreimbRequest || isreimbApproval) ? (
         <CompactViewCard
           Icon={Receipt}
           isTeamExists={isTeamExists}
@@ -553,7 +573,7 @@ const CompactView = ({
       ) : null}
       {/* Seperation Request  */}
       {moduleRights?.find((e) => e?.value == "separation")?.allow &&
-      isAccessForResignationRequest ? (
+      (isAccessForResignationRequest || isAccessForResignationApproval) ? (
         <CompactViewCard
           Icon={FileUser}
           isTeamExists={isTeamExists}
@@ -573,13 +593,18 @@ const CompactView = ({
         />
       ) : null}
       {/* /// Job Requisition */}
-      {moduleRights?.find((e) => e?.value == 5)?.allow && isAccessForJobReq ? (
+      {moduleRights?.find((e) => e?.value == 5)?.allow &&
+      (isAccessForJobReq || isAccessForJobApproval) ? (
         <CompactViewCard
           Icon={BriefcaseBusiness}
           isTeamExists={isTeamExists}
           name={"Job Requestion"}
-          showCount={false}
-          count={0}
+          count={portalInfo?.jobApproval}
+          countLink={
+            isAccessForJobApproval
+              ? "/job_requestion_approval/read-all-job-requestion-approval"
+              : false
+          }
           link={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}
         />
       ) : null}
@@ -615,24 +640,6 @@ const CompactView = ({
           link={"/company_doc_portal/read-all-company-doc-portal"}
         />
       ) : null}
-
-      <TableModel
-        show={!!attModalData}
-        onHide={() => setAttModalData(null)}
-        heading={"Team Members"}
-        data={{
-          result: (attModalData || []).map((el) => ({
-            Id: el?.employeeId || el?.employeeCode,
-            code: el?.employeeCode,
-            name: `${el?.firstName || ""} ${el?.middleName ||
-              ""} ${el?.lastName || ""}`.trim(),
-            designation: el?.designation?.formName,
-            check_In: el?.t_attendances?.[0]?.timeIn || "-",
-            check_Out: el?.t_attendances?.[0]?.timeOut || "-",
-            status: el?.t_attendances?.[0]?.status || "-",
-          })),
-        }}
-      />
     </div>
   );
 };
