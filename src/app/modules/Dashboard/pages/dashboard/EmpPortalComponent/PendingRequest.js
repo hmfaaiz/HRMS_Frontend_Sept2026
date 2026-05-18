@@ -166,31 +166,33 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       <div className="p-3 rounded-lg bg-white w-full flex max-h-64 flex-col overflow-y-auto justify-between">
         <h6 className="font-bold mb-0 text-primary my-2">Pending Requests</h6>
 
-        <div className="flex gap-1.5 w-full mb-2 overflow-x-auto scrollbar-fancy scroll-pb-6">
-          {/* Team Member Card - Sticky on the left */}
-          {moduleRights?.find((el) => el?.value == 3)?.allow ? (
-            <div className="sticky left-0 z-10 flex-shrink-0 w-48 bg-white px-3 sm:w-72">
-              <TeamMemberCard
-                team={data?.reportingEmployee}
-                setAttModalData={setAttModalData}
-              />
-            </div>
-          ) : null}
-
-          {/* Scrollable Workflow Cards */}
-          <div className="flex gap-1.5 min-w-min">
-            {filteredCards.map((el) => (
-              <div key={el.name} className="flex-shrink-0 w-48 sm:w-64">
-                <WorkflowApprovalCard
-                  name={el.name}
-                  approvalUrl={el.approvalUrl}
-                  isApproval={el.isApproval}
-                  count={el.count}
-                  isWorkflow={el.isWorkflow}
-                  workflowUrl={el.workflowUrl}
+        <div className="flex gap-1.5 w-full mb-2 overflow-x-auto scrollbar-fancy">
+          <div className="flex gap-1.5 w-full pb-3">
+            {/* Team Member Card - Sticky on the left */}
+            {moduleRights?.find((el) => el?.value == 3)?.allow ? (
+              <div className="sticky left-0 z-10 flex-shrink-0 w-48 bg-white px-3 sm:w-72">
+                <TeamMemberCard
+                  team={data?.reportingEmployee}
+                  setAttModalData={setAttModalData}
                 />
               </div>
-            ))}
+            ) : null}
+
+            {/* Scrollable Workflow Cards */}
+            <div className="flex gap-1.5 min-w-min">
+              {filteredCards.map((el) => (
+                <div key={el.name} className="flex-shrink-0 w-48 sm:w-64">
+                  <WorkflowApprovalCard
+                    name={el.name}
+                    approvalUrl={el.approvalUrl}
+                    isApproval={el.isApproval}
+                    count={el.count}
+                    isWorkflow={el.isWorkflow}
+                    workflowUrl={el.workflowUrl}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

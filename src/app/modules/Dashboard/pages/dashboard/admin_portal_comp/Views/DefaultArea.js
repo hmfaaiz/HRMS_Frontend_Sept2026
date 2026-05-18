@@ -259,12 +259,19 @@ const DefaultArea = ({
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
             if (e?.dashlet_type === "small_table" && e?.is_fav) {
+              const isFirstOfThisType =
+                allDashboardAlerts
+                  .filter(
+                    (item) =>
+                      item?.dashlet_type === "small_table" && item?.is_fav,
+                  )
+                  .findIndex((item) => item === e) === 0;
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
-                  expand={alertIdx == 1}
+                  expand={isFirstOfThisType}
                 />
               );
             }

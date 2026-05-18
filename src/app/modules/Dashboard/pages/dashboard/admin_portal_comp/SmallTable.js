@@ -132,6 +132,7 @@ const SingleCard = ({ data, setSmallTableModalData, expand }) => {
 };
 
 export default function SmallTable({ data, setSmallTableModalData, expand }) {
+  
   return (
     <SingleCard
       data={data}
