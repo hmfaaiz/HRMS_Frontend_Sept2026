@@ -7,6 +7,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAttLogsByDate } from "../../../../Dashboard/_redux/dashboardActions";
+import { formatDates } from "../../../../../utils/common";
 
 export function FormEditDialog({ onHide, userForRead }) {
   const [loading, setLoading] = useState(false);
@@ -53,6 +55,10 @@ export function FormEditDialog({ onHide, userForRead }) {
 
   useEffect(() => {
     dispatch(actions.fetchRecordByFilters(formUIProps.filters))
+    if(formUIProps.filters.employeeId && formUIProps.filters.attDateIn ){
+      dispatch(fetchAttLogsByDate({employeeId:formUIProps.filters.employeeId, attDate:formatDates(formUIProps.filters.attDateIn, "dd-MMM-yyyy")   }));
+    }
+   
   }, [formUIProps.filters, dispatch])
 
   useEffect(() => {

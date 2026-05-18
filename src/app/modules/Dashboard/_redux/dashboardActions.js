@@ -936,3 +936,18 @@ export const fetchAllAlertTasks = () => async (dispatch) => {
       dispatch(actions.getAllAlertTasks({}));
     });
 };
+
+
+export const fetchAttLogsByDate = (body) => async (dispatch) => {
+  return await requestFromServer
+    .getAttLogsByDate(body)
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.DateWiseAttLogsFetched(entities));
+      return entities;
+    })
+    .catch((error) => {
+      dispatch(actions.DateWiseAttLogsFetched({}));
+    });
+};
+
