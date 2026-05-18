@@ -4,21 +4,11 @@ import * as action from "../../../_redux/dashboardActions";
 import { EmployeeLoanDetail } from "../EmpPortalComponent/LoanDetailTable";
 import { LeaveBalanceDetail } from "../EmpPortalComponent/LeaveBalanceDetail";
 import EmployeeProfile from "../EmpPortalComponent/EmployeeProfile";
-import { ReportingEmpTable } from "../EmpPortalComponent/ReportingEmpTable";
 import { AttendanceSummary } from "../EmpPortalComponent/AttendanceSummary";
 import { HolidayTable } from "../EmpPortalComponent/HolidayCalendar";
 import { PendingRequestSelf } from "../EmpPortalComponent/PendingRequest";
 import AttendanceBarChart from "../EmpPortalComponent/AttendanceBarChart";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
-import { JobRequestion } from "../EmpPortalComponent/JobRequestion";
-import { CompanyDocument } from "../EmpPortalComponent/CompanyDocument";
-import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
-import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
-import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
-import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
-import { ReimbursementDetail } from "../EmpPortalComponent/ReimbursementDetail";
-import { AttendanceRosterDetail } from "../EmpPortalComponent/AttendanceRosterDetail";
-import { TravelRequestPortalDetail } from "../EmpPortalComponent/TravelRequestPortalDetail";
 import {
   Banknote,
   Bell,
@@ -34,7 +24,6 @@ import {
   HeartHandshake,
   NotebookTabs,
   Luggage,
-  HandCoins,
 } from "lucide-react";
 import TableModel from "../../../../Task_Dashboard/pages/form-setup/form-data/TableModel";
 import { LoanDetailMgt } from "../EmpPortalComponent/LoanDetailMgt";
@@ -237,7 +226,7 @@ const DetailView = ({
           ) : null}
         </div>
       ) : null}
-      <div className="flex flex-col md:flex-row gap-4">
+      {/* <div className="flex flex-col md:flex-row gap-4">
         {moduleRights?.find((e) => e?.value == 4)?.allow ? (
           <>
             <AttendanceRosterDetail />
@@ -245,8 +234,8 @@ const DetailView = ({
             <ReimbursementDetail />
           </>
         ) : null}
-      </div>
-      {moduleRights?.find((e) => e?.value == "separation")?.allow ||
+      </div> */}
+      {/* {moduleRights?.find((e) => e?.value == "separation")?.allow ||
       moduleRights?.find((e) => e?.value == 6)?.allow ||
       moduleRights?.find((e) => e?.value == 5)?.allow ? (
         <div className="flex flex-col md:flex-row gap-4">
@@ -279,7 +268,7 @@ const DetailView = ({
             <CompanyDocument />
           ) : null}
         </div>
-      ) : null}
+      ) : null} */}
 
       {moduleRights?.find((e) => e?.value == 3)?.allow ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
