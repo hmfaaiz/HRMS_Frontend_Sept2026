@@ -293,7 +293,7 @@ export const MenuOption = () => {
         className="bg-tprimary px-4 py-2 flex justify-between items-center rounded-lg cursor-pointer transition-all duration-300 relative z-10"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <h5 className="font-weight-bolder m-0 text-white py-1">More</h5>
+        <h5 className="font-weight-bolder m-0 text-white py-1">Associated Modules</h5>
         <Plus
           className={`w-5 h-5 font-bold text-white transition-transform duration-300 ${
             isExpanded ? "rotate-45" : ""
