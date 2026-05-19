@@ -39,6 +39,7 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const [activeTicketKey, setActiveTicketKey] = React.useState("0");
   const [activeHotelKey, setActiveHotelKey] = React.useState(null);
+  const [activeTravelKey, setActiveTravelKey] = React.useState(null);
   const [showEntitlementModal, setShowEntitlementModal] = React.useState(false);
   const isApprovingRef = React.useRef(false);
   const { dashboard, employeeEntitlement, auth, workflowRecord } = useSelector(
@@ -200,8 +201,20 @@ export function FormEditForm({
           : schema.nullable();
       },
     ),
-    travelRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
+    travelRemarks: Yup.string().nullable(),
     taxiFareRate: Yup.number().nullable(),
+    taxiFareAmount: Yup.number()
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue === "" ? null : value,
+      )
+      .min(0, VALIDATION_MESSAGES.minOneValue),
+    otherAmount: Yup.number()
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue === "" ? null : value,
+      )
+      .min(0, VALIDATION_MESSAGES.minOneValue),
   });
 
   // Combined Template logic for create/edit
@@ -282,6 +295,9 @@ export function FormEditForm({
           };
         }),
         travelRemarks: user.travelRequestRemarks || "",
+        taxiFareAmount: user.taxiFareAmount || 0,
+        otherAmount: user.otherAmount || 0,
+        totalTravelBudget: user.totalTravelBudget || 0,
       };
     }
 
@@ -333,12 +349,16 @@ export function FormEditForm({
       advanceAmount: 0,
       advanceRemarks: "",
       taxiFareRate: 0,
+      taxiFareAmount: 0,
+      otherAmount: 0,
+      totalTravelBudget: 0,
       travelSegments: [{ ...segmentTemplate }, { ...segmentTemplate }],
       ticketDetails: [{ ...ticketDetailTemplate }],
       hotelDetails: [{ ...hotelDetailTemplate }],
       addTicketInfo: false,
       travelRemarks: "",
       request_status: "A",
+      isAccessToUpdate: user?.isAccessToUpdate ?? true,
     };
   }, [user, employeeId]);
 
@@ -439,6 +459,42 @@ export function FormEditForm({
             setFieldValue,
           ]);
 
+          // Calculate and update total travel budget in formik values
+          React.useEffect(() => {
+            const hotelTotal =
+              values.hotelDetails?.reduce(
+                (sum, h) => sum + (Number(h.amount) || 0),
+                0,
+              ) || 0;
+            const ticketTotal =
+              values.ticketDetails?.reduce(
+                (sum, t) => sum + (Number(t.ticketAmount) || 0),
+                0,
+              ) || 0;
+            const dailyAllowanceTotal =
+              Number(values.dailyAllowanceAmount) || 0;
+            const taxiFareAmount = Number(values.taxiFareAmount) || 0;
+            const otherAmount = Number(values.otherAmount) || 0;
+
+            const totalBudget =
+              hotelTotal +
+              ticketTotal +
+              dailyAllowanceTotal +
+              taxiFareAmount +
+              otherAmount;
+
+            if (values.totalTravelBudget !== totalBudget) {
+              setFieldValue("totalTravelBudget", totalBudget);
+            }
+          }, [
+            values.hotelDetails,
+            values.ticketDetails,
+            values.dailyAllowanceAmount,
+            values.taxiFareAmount,
+            values.otherAmount,
+            setFieldValue,
+          ]);
+
           React.useEffect(() => {
             if (employeeEntitlement) {
               if (
@@ -493,801 +549,884 @@ export function FormEditForm({
 
           return (
             <Form className="form form-label-right">
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center justify-between">
-                    <h6 className="text-primary font-bold m-0 text-end">
-                      Travel Details
-                    </h6>
-
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-sm flex items-center gap-2 ml-4"
-                      onClick={handleEntitlementClick}
-                      disabled={!effectiveEmployeeId}
-                    >
-                      <FileText className="w-4 h-4" />
-                      Entitlement Detail
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {/* Close (Cross) Button */}
-                    <button
-                      type="button"
-                      className="bg-transparent border-0 p-0 ml-2"
-                      onClick={onCancel}
-                      title="Close"
-                    >
-                      <XCircle className="w-5 h-5 text-black cursor-pointer" />
-                    </button>
-                  </div>
+              {/* Header Actions Row (Entitlement & Close) */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm flex items-center gap-2"
+                    onClick={handleEntitlementClick}
+                    disabled={!effectiveEmployeeId}
+                  >
+                    <FileText className="w-4 h-4" />
+                    Entitlement Detail
+                  </button>
                 </div>
-                <div className="grid grid-cols-12 gap-x-3 mb-4">
-                  <div className="col-span-2">
-                    <label className="font-bold mb-1 opacity-70">
-                      Travel Type:
-                      <span className="font-normal">
-                        {" "}
-                        {travelTypeOptions.find(
-                          (opt) =>
-                            String(opt.value) === String(values.travelTypeId),
-                        )?.label ||
-                          values.travelType ||
-                          "-"}
-                      </span>
-                    </label>
-                  </div>
-                  <div className="col-span-6">
-                    <label className="font-bold mb-1 opacity-70">
-                      Purpose of Travel:
-                      <span className="font-normal">
-                        {" "}
-                        {values.purposeOfTravel || "-"}
-                      </span>
-                    </label>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="bg-transparent border-0 p-0 ml-2"
+                    onClick={onCancel}
+                    title="Close"
+                  >
+                    <XCircle className="w-5 h-5 text-black cursor-pointer" />
+                  </button>
                 </div>
               </div>
 
-              {/* Travel Segments (FieldArray) */}
-              <div className="w-full">
-                <FieldArray name="travelSegments">
-                  {(arrayHelpers) => (
-                    <>
-                      {errors.travelSegments &&
-                        typeof errors.travelSegments === "string" && (
-                          <div className="form-feedBack mb-2">
-                            {errors.travelSegments}
+              {/* Main Travel Details Accordion */}
+              <div className="w-full mb-6">
+                <Accordion
+                  activeKey={activeTravelKey}
+                  onSelect={(key) => setActiveTravelKey(key)}
+                >
+                  <Card>
+                    <Card.Header className="d-flex justify-content-center p-0">
+                      <div className="accordion-header-btn w-100 d-flex bg-tsecondary">
+                        <Accordion.Toggle
+                          as={Button}
+                          eventKey="0"
+                          className="flex justify-start text-bold w-full"
+                        >
+                          {activeTravelKey === "0" ? (
+                            <CircleMinus className="h-4 w-4 text-black mr-1" />
+                          ) : (
+                            <CirclePlus className="h-4 w-4 text-black mr-1" />
+                          )}
+                          <span className="text-black font-bold">
+                            Travel Details
+                          </span>
+                        </Accordion.Toggle>
+                      </div>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                      <Card.Body className="p-3">
+                        <div className="mb-6">
+                          <div className="grid grid-cols-12 gap-x-3 mb-4">
+                            <div className="col-span-2">
+                              <label className="font-bold mb-1 opacity-70">
+                                Travel Type:
+                                <span className="font-normal">
+                                  {" "}
+                                  {travelTypeOptions.find(
+                                    (opt) =>
+                                      String(opt.value) ===
+                                      String(values.travelTypeId),
+                                  )?.label ||
+                                    values.travelType ||
+                                    "-"}
+                                </span>
+                              </label>
+                            </div>
+                            <div className="col-span-6">
+                              <label className="font-bold mb-1 opacity-70">
+                                Purpose of Travel:
+                                <span className="font-normal">
+                                  {" "}
+                                  {values.purposeOfTravel || "-"}
+                                </span>
+                              </label>
+                            </div>
                           </div>
-                        )}
+                        </div>
 
-                      <div
-                        className="react-bootstrap-table table-responsive"
-                        style={{ overflowX: "auto" }}
-                      >
-                        <table className="table table-head-custom table-vertical-center table-hover">
-                          <thead className="custom-table-header">
-                            <tr>
-                              <td style={{ minWidth: "120px" }}>
-                                From Location{" "}
-                                <span className="text-danger">*</span>
-                              </td>
-                              <td style={{ minWidth: "120px" }}>
-                                To Location{" "}
-                                <span className="text-danger">*</span>
-                              </td>
-                              <td style={{ minWidth: "100px" }}>
-                                From Date <span className="text-danger">*</span>
-                              </td>
-                              <td style={{ minWidth: "100px" }}>
-                                To Date <span className="text-danger">*</span>
-                              </td>
-                              <td style={{ minWidth: "120px" }}>
-                                Mode of Travel{" "}
-                                <span className="text-danger">*</span>
-                              </td>
-                              <td style={{ minWidth: "120px" }}>
-                                Class of Travel{" "}
-                              </td>
-                              <td style={{ minWidth: "60px" }}>
-                                Accommodation Required
-                              </td>
+                        {/* Travel Segments (FieldArray) */}
+                        <div className="w-full">
+                          <FieldArray name="travelSegments">
+                            {(arrayHelpers) => (
+                              <>
+                                {errors.travelSegments &&
+                                  typeof errors.travelSegments === "string" && (
+                                    <div className="form-feedBack mb-2">
+                                      {errors.travelSegments}
+                                    </div>
+                                  )}
 
-                              {/* Dynamic Accommodation Headers */}
-                              <td style={{ minWidth: "150px" }}>
-                                Hotel Entitlement
-                              </td>
-                              {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
-                                <>
-                                  <td style={{ minWidth: "80px" }}>
-                                    Self Entitlement
-                                  </td>
-                                  <td style={{ minWidth: "100px" }}>
-                                    Self Amount
-                                    {employeeEntitlement?.hotelEntitlementSelfAmount && (
-                                      <span
-                                        className="text-muted font-normal block"
-                                        style={{ fontSize: "10px" }}
-                                      >
-                                        (Limit=
+                                <div
+                                  className="react-bootstrap-table table-responsive"
+                                  style={{ overflowX: "auto" }}
+                                >
+                                  <table className="table table-head-custom table-vertical-center table-hover">
+                                    <thead className="custom-table-header">
+                                      <tr>
+                                        <td style={{ minWidth: "120px" }}>
+                                          From Location{" "}
+                                          <span className="text-danger">*</span>
+                                        </td>
+                                        <td style={{ minWidth: "120px" }}>
+                                          To Location{" "}
+                                          <span className="text-danger">*</span>
+                                        </td>
+                                        <td style={{ minWidth: "100px" }}>
+                                          From Date{" "}
+                                          <span className="text-danger">*</span>
+                                        </td>
+                                        <td style={{ minWidth: "100px" }}>
+                                          To Date{" "}
+                                          <span className="text-danger">*</span>
+                                        </td>
+                                        <td style={{ minWidth: "120px" }}>
+                                          Mode of Travel{" "}
+                                          <span className="text-danger">*</span>
+                                        </td>
+                                        <td style={{ minWidth: "120px" }}>
+                                          Class of Travel{" "}
+                                        </td>
+                                        <td style={{ minWidth: "60px" }}>
+                                          Accommodation Required
+                                        </td>
+
+                                        {/* Dynamic Accommodation Headers */}
+                                        <td style={{ minWidth: "150px" }}>
+                                          Hotel Entitlement
+                                        </td>
+                                        {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
+                                          <>
+                                            <td style={{ minWidth: "80px" }}>
+                                              Self Entitlement
+                                            </td>
+                                            <td style={{ minWidth: "100px" }}>
+                                              Self Amount
+                                              {employeeEntitlement?.hotelEntitlementSelfAmount && (
+                                                <span
+                                                  className="text-muted font-normal block"
+                                                  style={{ fontSize: "10px" }}
+                                                >
+                                                  (Limit=
+                                                  {
+                                                    employeeEntitlement.hotelEntitlementSelfAmount
+                                                  }
+                                                  )
+                                                </span>
+                                              )}
+                                            </td>
+                                          </>
+                                        )}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {values.travelSegments.map(
+                                        (segment, index) => (
+                                          <tr key={index}>
+                                            <td>
+                                              <Field
+                                                as="select"
+                                                name={`travelSegments.${index}.fromLocation`}
+                                                className="form-control"
+                                                disabled={true}
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  setFieldValue(
+                                                    `travelSegments.${index}.fromLocation`,
+                                                    val,
+                                                  );
+                                                  if (
+                                                    index === 0 &&
+                                                    values.travelSegments
+                                                      .length > 1
+                                                  ) {
+                                                    setFieldValue(
+                                                      `travelSegments.${values
+                                                        .travelSegments.length -
+                                                        1}.toLocation`,
+                                                      val,
+                                                    );
+                                                  }
+                                                }}
+                                              >
+                                                <option value="">Select</option>
+                                                {locationOptions.map((opt) => (
+                                                  <option
+                                                    key={opt.value}
+                                                    value={opt.value}
+                                                    disabled={
+                                                      opt.value ==
+                                                      segment.toLocation
+                                                    }
+                                                  >
+                                                    {opt.label}
+                                                  </option>
+                                                ))}
+                                              </Field>
+                                              {errors.travelSegments?.[index]
+                                                ?.fromLocation &&
+                                                touched.travelSegments?.[index]
+                                                  ?.fromLocation && (
+                                                  <div className="form-feedBack text-xs mt-1">
+                                                    {
+                                                      errors.travelSegments[
+                                                        index
+                                                      ].fromLocation
+                                                    }
+                                                  </div>
+                                                )}
+                                            </td>
+                                            <td>
+                                              <Field
+                                                as="select"
+                                                name={`travelSegments.${index}.toLocation`}
+                                                className="form-control"
+                                                disabled={true}
+                                                style={
+                                                  values.travelSegments.length >
+                                                    1 &&
+                                                  index ===
+                                                    values.travelSegments
+                                                      .length -
+                                                      1
+                                                    ? {
+                                                        backgroundColor:
+                                                          "#f3f6f9",
+                                                      }
+                                                    : {}
+                                                }
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  setFieldValue(
+                                                    `travelSegments.${index}.toLocation`,
+                                                    val,
+                                                  );
+                                                  // Scalable Logic: current toLocation is the next row's fromLocation
+                                                  if (
+                                                    index <
+                                                    values.travelSegments
+                                                      .length -
+                                                      1
+                                                  ) {
+                                                    setFieldValue(
+                                                      `travelSegments.${index +
+                                                        1}.fromLocation`,
+                                                      val,
+                                                    );
+                                                  }
+                                                }}
+                                              >
+                                                <option value="">Select</option>
+                                                {locationOptions.map((opt) => (
+                                                  <option
+                                                    key={opt.value}
+                                                    value={opt.value}
+                                                    disabled={
+                                                      opt.value ==
+                                                      segment.fromLocation
+                                                    }
+                                                  >
+                                                    {opt.label}
+                                                  </option>
+                                                ))}
+                                              </Field>
+                                              {errors.travelSegments?.[index]
+                                                ?.toLocation &&
+                                                touched.travelSegments?.[index]
+                                                  ?.toLocation && (
+                                                  <div className="form-feedBack text-xs mt-1">
+                                                    {
+                                                      errors.travelSegments[
+                                                        index
+                                                      ].toLocation
+                                                    }
+                                                  </div>
+                                                )}
+                                            </td>
+                                            <td>
+                                              <DatePicker
+                                                className="form-control"
+                                                disabled={true}
+                                                selected={
+                                                  segment.fromDate
+                                                    ? new Date(segment.fromDate)
+                                                    : null
+                                                }
+                                                onChange={(val) =>
+                                                  setFieldValue(
+                                                    `travelSegments.${index}.fromDate`,
+                                                    val,
+                                                  )
+                                                }
+                                                dateFormat="dd-MMM-yyyy"
+                                                name={`travelSegments.${index}.fromDate`}
+                                                autoComplete="off"
+                                                placeholderText="Select Date"
+                                                popperClassName="z-[9999]"
+                                                popperPlacement="bottom"
+                                                minDate={
+                                                  index > 0 &&
+                                                  values.travelSegments[
+                                                    index - 1
+                                                  ]?.toDate
+                                                    ? new Date(
+                                                        values.travelSegments[
+                                                          index - 1
+                                                        ].toDate,
+                                                      )
+                                                    : null
+                                                }
+                                              />
+                                              {errors.travelSegments?.[index]
+                                                ?.fromDate &&
+                                                touched.travelSegments?.[index]
+                                                  ?.fromDate && (
+                                                  <div className="form-feedBack text-xs mt-1">
+                                                    {
+                                                      errors.travelSegments[
+                                                        index
+                                                      ].fromDate
+                                                    }
+                                                  </div>
+                                                )}
+                                            </td>
+                                            <td>
+                                              <DatePicker
+                                                className="form-control"
+                                                disabled={true}
+                                                selected={
+                                                  segment.toDate
+                                                    ? new Date(segment.toDate)
+                                                    : null
+                                                }
+                                                onChange={(val) => {
+                                                  setFieldValue(
+                                                    `travelSegments.${index}.toDate`,
+                                                    val,
+                                                  );
+                                                }}
+                                                dateFormat="dd-MMM-yyyy"
+                                                name={`travelSegments.${index}.toDate`}
+                                                autoComplete="off"
+                                                placeholderText="Select Date"
+                                                popperClassName="z-[9999]"
+                                                popperPlacement="bottom"
+                                                minDate={
+                                                  segment.fromDate
+                                                    ? new Date(segment.fromDate)
+                                                    : null
+                                                }
+                                              />
+                                              {errors.travelSegments?.[index]
+                                                ?.toDate &&
+                                                touched.travelSegments?.[index]
+                                                  ?.toDate && (
+                                                  <div className="form-feedBack text-xs mt-1">
+                                                    {
+                                                      errors.travelSegments[
+                                                        index
+                                                      ].toDate
+                                                    }
+                                                  </div>
+                                                )}
+                                            </td>
+                                            <td>
+                                              <Field
+                                                as="select"
+                                                name={`travelSegments.${index}.modeOfTravel`}
+                                                className="form-control"
+                                                disabled={true}
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  setFieldValue(
+                                                    `travelSegments.${index}.modeOfTravel`,
+                                                    val,
+                                                  );
+                                                  if (
+                                                    index === 0 &&
+                                                    values.travelSegments
+                                                      .length > 1
+                                                  ) {
+                                                    for (
+                                                      let i = 1;
+                                                      i <
+                                                      values.travelSegments
+                                                        .length;
+                                                      i++
+                                                    ) {
+                                                      setFieldValue(
+                                                        `travelSegments.${i}.modeOfTravel`,
+                                                        val,
+                                                      );
+                                                    }
+                                                  }
+                                                }}
+                                              >
+                                                <option value="">Select</option>
+                                                {filteredTransportOptions.map(
+                                                  (opt) => (
+                                                    <option
+                                                      key={opt.value}
+                                                      value={opt.value}
+                                                    >
+                                                      {opt.label}
+                                                    </option>
+                                                  ),
+                                                )}
+                                              </Field>
+                                              {errors.travelSegments?.[index]
+                                                ?.modeOfTravel &&
+                                                touched.travelSegments?.[index]
+                                                  ?.modeOfTravel && (
+                                                  <div className="form-feedBack text-xs mt-1">
+                                                    {
+                                                      errors.travelSegments[
+                                                        index
+                                                      ].modeOfTravel
+                                                    }
+                                                  </div>
+                                                )}
+                                            </td>
+                                            <td>
+                                              <Field
+                                                as="select"
+                                                name={`travelSegments.${index}.classOfTravel`}
+                                                className="form-control"
+                                                disabled={true}
+                                              >
+                                                <option value="">Select</option>
+                                                {travelClassOptions.map(
+                                                  (opt) => (
+                                                    <option
+                                                      key={opt.value}
+                                                      value={opt.value}
+                                                    >
+                                                      {opt.label}
+                                                    </option>
+                                                  ),
+                                                )}
+                                              </Field>
+                                              {errors.travelSegments?.[index]
+                                                ?.classOfTravel &&
+                                                touched.travelSegments?.[index]
+                                                  ?.classOfTravel && (
+                                                  <div className="form-feedBack text-xs mt-1">
+                                                    {
+                                                      errors.travelSegments[
+                                                        index
+                                                      ].classOfTravel
+                                                    }
+                                                  </div>
+                                                )}
+                                            </td>
+                                            <td className="text-center align-middle">
+                                              <div className="flex justify-center items-center h-full">
+                                                <Checkbox
+                                                  disabled={true}
+                                                  isSelected={
+                                                    segment.accommodationRequired
+                                                  }
+                                                  onChange={(e) => {
+                                                    const checked =
+                                                      e.target.checked;
+                                                    setFieldValue(
+                                                      `travelSegments.${index}.accommodationRequired`,
+                                                      checked,
+                                                    );
+                                                    if (!checked) {
+                                                      setFieldValue(
+                                                        `travelSegments.${index}.hotelEntitlement`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `travelSegments.${index}.hotelEntitlementAmount`,
+                                                        0,
+                                                      );
+                                                      setFieldValue(
+                                                        `travelSegments.${index}.selfEntitlement`,
+                                                        false,
+                                                      );
+                                                      setFieldValue(
+                                                        `travelSegments.${index}.selfAmount`,
+                                                        0,
+                                                      );
+                                                      // Clear corresponding hotel details row data
+                                                      setFieldValue(
+                                                        `hotelDetails.${index}.hotelName`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `hotelDetails.${index}.description`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `hotelDetails.${index}.roomNumber`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `hotelDetails.${index}.roomType`,
+                                                        "",
+                                                      );
+                                                      setFieldValue(
+                                                        `hotelDetails.${index}.amount`,
+                                                        "",
+                                                      );
+                                                    }
+                                                  }}
+                                                />
+                                              </div>
+                                            </td>
+
+                                            {/* Conditional Fields per row */}
+                                            <td
+                                              style={{
+                                                opacity:
+                                                  !segment.accommodationRequired ||
+                                                  segment.selfEntitlement ||
+                                                  (values.travelSegments
+                                                    .length > 1 &&
+                                                    index ===
+                                                      values.travelSegments
+                                                        .length -
+                                                        1)
+                                                    ? 0.4
+                                                    : 1,
+                                              }}
+                                            >
+                                              <Field
+                                                as="select"
+                                                name={`travelSegments.${index}.hotelEntitlement`}
+                                                className="form-control"
+                                                disabled={true}
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  setFieldValue(
+                                                    `travelSegments.${index}.hotelEntitlement`,
+                                                    val,
+                                                  );
+                                                  if (val) {
+                                                    setFieldValue(
+                                                      `travelSegments.${index}.selfEntitlement`,
+                                                      false,
+                                                    );
+                                                    setFieldValue(
+                                                      `travelSegments.${index}.selfAmount`,
+                                                      0,
+                                                    );
+                                                  }
+                                                }}
+                                              >
+                                                <option value="">Select</option>
+                                                {filteredHotelOptions.map(
+                                                  (opt) => (
+                                                    <option
+                                                      key={opt.value}
+                                                      value={opt.value}
+                                                    >
+                                                      {opt.label}
+                                                    </option>
+                                                  ),
+                                                )}
+                                              </Field>
+                                              {errors.travelSegments?.[index]
+                                                ?.hotelEntitlement &&
+                                                touched.travelSegments?.[index]
+                                                  ?.hotelEntitlement && (
+                                                  <div className="form-feedBack text-xs mt-1">
+                                                    {
+                                                      errors.travelSegments[
+                                                        index
+                                                      ].hotelEntitlement
+                                                    }
+                                                  </div>
+                                                )}
+                                            </td>
+                                            {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
+                                              <td className="text-center align-middle">
+                                                <div
+                                                  className="flex justify-center items-center h-full"
+                                                  style={{
+                                                    opacity:
+                                                      !segment.accommodationRequired ||
+                                                      segment.hotelEntitlement ||
+                                                      (values.travelSegments
+                                                        .length > 1 &&
+                                                        index ===
+                                                          values.travelSegments
+                                                            .length -
+                                                            1)
+                                                        ? 0.4
+                                                        : 1,
+                                                  }}
+                                                >
+                                                  <Checkbox
+                                                    disabled={true}
+                                                    isSelected={
+                                                      segment.selfEntitlement
+                                                    }
+                                                    onChange={(e) => {
+                                                      const checked =
+                                                        e.target.checked;
+                                                      setFieldValue(
+                                                        `travelSegments.${index}.selfEntitlement`,
+                                                        checked,
+                                                      );
+                                                      if (checked) {
+                                                        setFieldValue(
+                                                          `travelSegments.${index}.hotelEntitlement`,
+                                                          "",
+                                                        );
+                                                        setFieldValue(
+                                                          `travelSegments.${index}.hotelEntitlementAmount`,
+                                                          0,
+                                                        );
+                                                      } else {
+                                                        setFieldValue(
+                                                          `travelSegments.${index}.selfAmount`,
+                                                          0,
+                                                        );
+                                                      }
+                                                    }}
+                                                  />
+                                                </div>
+                                              </td>
+                                            )}
+                                            {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
+                                              <td
+                                                style={{
+                                                  opacity:
+                                                    !segment.accommodationRequired ||
+                                                    !segment.selfEntitlement ||
+                                                    segment.hotelEntitlement ||
+                                                    (values.travelSegments
+                                                      .length > 1 &&
+                                                      index ===
+                                                        values.travelSegments
+                                                          .length -
+                                                          1)
+                                                      ? 0.4
+                                                      : 1,
+                                                }}
+                                              >
+                                                <NumericFormat
+                                                  name={`travelSegments.${index}.selfAmount`}
+                                                  className="form-control"
+                                                  placeholder="0"
+                                                  thousandSeparator
+                                                  allowNegative={false}
+                                                  isAllowed={({ value }) =>
+                                                    value.length <= 9
+                                                  }
+                                                  disabled={true}
+                                                  value={
+                                                    !segment.accommodationRequired ||
+                                                    !segment.selfEntitlement ||
+                                                    !!segment.hotelEntitlement
+                                                      ? ""
+                                                      : segment.selfAmount
+                                                  }
+                                                  onValueChange={(
+                                                    valuesObj,
+                                                  ) => {
+                                                    setFieldValue(
+                                                      `travelSegments.${index}.selfAmount`,
+                                                      valuesObj.value,
+                                                    );
+                                                  }}
+                                                />
+                                                {errors.travelSegments?.[index]
+                                                  ?.selfAmount &&
+                                                  touched.travelSegments?.[
+                                                    index
+                                                  ]?.selfAmount && (
+                                                    <div className="form-feedBack text-xs mt-1">
+                                                      {
+                                                        errors.travelSegments[
+                                                          index
+                                                        ].selfAmount
+                                                      }
+                                                    </div>
+                                                  )}
+                                              </td>
+                                            )}
+                                          </tr>
+                                        ),
+                                      )}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </>
+                            )}
+                          </FieldArray>
+                        </div>
+
+                        {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
+                        <div className="border-t pt-4">
+                          <div className="flex flex-col lg:flex-row gap-8 justify-between">
+                            {/* Daily Allowance */}
+                            <div className="max-w-[400px]">
+                              <h6 className="font-bold text-primary mb-2">
+                                Daily Allowance
+                              </h6>
+                              <div className="grid grid-cols-3 gap-x-2">
+                                <div>
+                                  <label className=" mb-1 flex items-center gap-1">
+                                    Rate <span className="text-danger">*</span>
+                                    {employeeEntitlement?.dailyAllowanceAmount && (
+                                      <span className="text-muted font-normal ml-1">
+                                        (Limit ={" "}
                                         {
-                                          employeeEntitlement.hotelEntitlementSelfAmount
+                                          employeeEntitlement.dailyAllowanceAmount
                                         }
                                         )
                                       </span>
                                     )}
-                                  </td>
-                                </>
-                              )}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {values.travelSegments.map((segment, index) => (
-                              <tr key={index}>
-                                <td>
-                                  <Field
-                                    as="select"
-                                    name={`travelSegments.${index}.fromLocation`}
-                                    className="form-control"
+                                  </label>
+                                  <NumericFormat
+                                    name="dailyAllowanceRate"
+                                    className="form-control text-sm bg-light"
+                                    placeholder="0"
+                                    thousandSeparator
+                                    allowNegative={false}
+                                    isAllowed={({ value }) => value.length <= 6}
                                     disabled={true}
-                                    onChange={(e) => {
-                                      const val = e.target.value;
+                                    value={values.dailyAllowanceRate}
+                                    onValueChange={(valuesObj) => {
                                       setFieldValue(
-                                        `travelSegments.${index}.fromLocation`,
-                                        val,
+                                        "dailyAllowanceRate",
+                                        valuesObj.value,
                                       );
-                                      if (
-                                        index === 0 &&
-                                        values.travelSegments.length > 1
-                                      ) {
-                                        setFieldValue(
-                                          `travelSegments.${values
-                                            .travelSegments.length -
-                                            1}.toLocation`,
-                                          val,
-                                        );
-                                      }
                                     }}
-                                  >
-                                    <option value="">Select</option>
-                                    {locationOptions.map((opt) => (
-                                      <option
-                                        key={opt.value}
-                                        value={opt.value}
-                                        disabled={
-                                          opt.value == segment.toLocation
-                                        }
-                                      >
-                                        {opt.label}
-                                      </option>
-                                    ))}
-                                  </Field>
-                                  {errors.travelSegments?.[index]
-                                    ?.fromLocation &&
-                                    touched.travelSegments?.[index]
-                                      ?.fromLocation && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {
-                                          errors.travelSegments[index]
-                                            .fromLocation
-                                        }
+                                  />
+                                  {errors.dailyAllowanceRate &&
+                                    touched.dailyAllowanceRate && (
+                                      <div className="form-feedBack mt-1 text-xs">
+                                        {errors.dailyAllowanceRate}
                                       </div>
                                     )}
-                                </td>
-                                <td>
+                                </div>
+                                <div>
+                                  <label className=" block mb-1">
+                                    Days <span className="text-danger">*</span>
+                                  </label>
                                   <Field
-                                    as="select"
-                                    name={`travelSegments.${index}.toLocation`}
-                                    className="form-control"
+                                    type="number"
+                                    name="dailyAllowanceDays"
+                                    className="form-control text-sm bg-light"
+                                    placeholder="0"
+                                    min="0"
                                     disabled={true}
-                                    style={
-                                      values.travelSegments.length > 1 &&
-                                      index === values.travelSegments.length - 1
-                                        ? { backgroundColor: "#f3f6f9" }
-                                        : {}
-                                    }
-                                    onChange={(e) => {
-                                      const val = e.target.value;
-                                      setFieldValue(
-                                        `travelSegments.${index}.toLocation`,
-                                        val,
+                                    onInput={(e) => {
+                                      e.target.value = e.target.value.slice(
+                                        0,
+                                        3,
                                       );
-                                      // Scalable Logic: current toLocation is the next row's fromLocation
-                                      if (
-                                        index <
-                                        values.travelSegments.length - 1
-                                      ) {
-                                        setFieldValue(
-                                          `travelSegments.${index +
-                                            1}.fromLocation`,
-                                          val,
-                                        );
-                                      }
                                     }}
-                                  >
-                                    <option value="">Select</option>
-                                    {locationOptions.map((opt) => (
-                                      <option
-                                        key={opt.value}
-                                        value={opt.value}
-                                        disabled={
-                                          opt.value == segment.fromLocation
-                                        }
-                                      >
-                                        {opt.label}
-                                      </option>
-                                    ))}
-                                  </Field>
-                                  {errors.travelSegments?.[index]?.toLocation &&
-                                    touched.travelSegments?.[index]
-                                      ?.toLocation && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {
-                                          errors.travelSegments[index]
-                                            .toLocation
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    disabled={!isPolicyDefined}
-                                    selected={
-                                      segment.fromDate
-                                        ? new Date(segment.fromDate)
-                                        : null
-                                    }
-                                    onChange={(val) =>
-                                      setFieldValue(
-                                        `travelSegments.${index}.fromDate`,
-                                        val,
-                                      )
-                                    }
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`travelSegments.${index}.fromDate`}
-                                    autoComplete="off"
-                                    placeholderText="Select Date"
-                                    popperClassName="z-[9999]"
-                                    popperPlacement="bottom"
-                                    minDate={
-                                      index > 0 &&
-                                      values.travelSegments[index - 1]?.toDate
-                                        ? new Date(
-                                            values.travelSegments[
-                                              index - 1
-                                            ].toDate,
-                                          )
-                                        : null
-                                    }
                                   />
-                                  {errors.travelSegments?.[index]?.fromDate &&
-                                    touched.travelSegments?.[index]
-                                      ?.fromDate && (
+                                  {errors.dailyAllowanceDays &&
+                                    touched.dailyAllowanceDays && (
                                       <div className="form-feedBack text-xs mt-1">
-                                        {errors.travelSegments[index].fromDate}
+                                        {errors.dailyAllowanceDays}
                                       </div>
                                     )}
-                                </td>
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    disabled={!isPolicyDefined}
-                                    selected={
-                                      segment.toDate
-                                        ? new Date(segment.toDate)
-                                        : null
-                                    }
-                                    onChange={(val) => {
-                                      setFieldValue(
-                                        `travelSegments.${index}.toDate`,
-                                        val,
-                                      );
-                                    }}
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`travelSegments.${index}.toDate`}
-                                    autoComplete="off"
-                                    placeholderText="Select Date"
-                                    popperClassName="z-[9999]"
-                                    popperPlacement="bottom"
-                                    minDate={
-                                      segment.fromDate
-                                        ? new Date(segment.fromDate)
-                                        : null
-                                    }
+                                </div>
+                                <div>
+                                  <label className=" block mb-1">Amount</label>
+                                  <NumericFormat
+                                    name="dailyAllowanceAmount"
+                                    className="form-control text-sm bg-light"
+                                    placeholder="0"
+                                    thousandSeparator
+                                    allowNegative={false}
+                                    disabled={true}
+                                    value={values.dailyAllowanceAmount}
                                   />
-                                  {errors.travelSegments?.[index]?.toDate &&
-                                    touched.travelSegments?.[index]?.toDate && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {errors.travelSegments[index].toDate}
-                                      </div>
-                                    )}
-                                </td>
-                                <td>
-                                  <Field
-                                    as="select"
-                                    name={`travelSegments.${index}.modeOfTravel`}
-                                    className="form-control"
-                                    disabled={!isPolicyDefined}
-                                    onChange={(e) => {
-                                      const val = e.target.value;
-                                      setFieldValue(
-                                        `travelSegments.${index}.modeOfTravel`,
-                                        val,
-                                      );
-                                      if (
-                                        index === 0 &&
-                                        values.travelSegments.length > 1
-                                      ) {
-                                        for (
-                                          let i = 1;
-                                          i < values.travelSegments.length;
-                                          i++
-                                        ) {
-                                          setFieldValue(
-                                            `travelSegments.${i}.modeOfTravel`,
-                                            val,
-                                          );
-                                        }
-                                      }
-                                    }}
-                                  >
-                                    <option value="">Select</option>
-                                    {filteredTransportOptions.map((opt) => (
-                                      <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                      </option>
-                                    ))}
-                                  </Field>
-                                  {errors.travelSegments?.[index]
-                                    ?.modeOfTravel &&
-                                    touched.travelSegments?.[index]
-                                      ?.modeOfTravel && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {
-                                          errors.travelSegments[index]
-                                            .modeOfTravel
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                                <td>
-                                  <Field
-                                    as="select"
-                                    name={`travelSegments.${index}.classOfTravel`}
-                                    className="form-control"
-                                    disabled={!isPolicyDefined}
-                                  >
-                                    <option value="">Select</option>
-                                    {travelClassOptions.map((opt) => (
-                                      <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                      </option>
-                                    ))}
-                                  </Field>
-                                  {errors.travelSegments?.[index]
-                                    ?.classOfTravel &&
-                                    touched.travelSegments?.[index]
-                                      ?.classOfTravel && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {
-                                          errors.travelSegments[index]
-                                            .classOfTravel
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                                <td className="text-center align-middle">
-                                  <div className="flex justify-center items-center h-full">
-                                    <Checkbox
-                                      disabled={
-                                        !isPolicyDefined ||
-                                        (values.travelSegments.length > 1 &&
-                                          index ===
-                                            values.travelSegments.length - 1)
-                                      }
-                                      isSelected={segment.accommodationRequired}
-                                      onChange={(e) => {
-                                        const checked = e.target.checked;
-                                        setFieldValue(
-                                          `travelSegments.${index}.accommodationRequired`,
-                                          checked,
-                                        );
-                                        if (!checked) {
-                                          setFieldValue(
-                                            `travelSegments.${index}.hotelEntitlement`,
-                                            "",
-                                          );
-                                          setFieldValue(
-                                            `travelSegments.${index}.hotelEntitlementAmount`,
-                                            0,
-                                          );
-                                          setFieldValue(
-                                            `travelSegments.${index}.selfEntitlement`,
-                                            false,
-                                          );
-                                          setFieldValue(
-                                            `travelSegments.${index}.selfAmount`,
-                                            0,
-                                          );
-                                          // Clear corresponding hotel details row data
-                                          setFieldValue(
-                                            `hotelDetails.${index}.hotelName`,
-                                            "",
-                                          );
-                                          setFieldValue(
-                                            `hotelDetails.${index}.description`,
-                                            "",
-                                          );
-                                          setFieldValue(
-                                            `hotelDetails.${index}.roomNumber`,
-                                            "",
-                                          );
-                                          setFieldValue(
-                                            `hotelDetails.${index}.roomType`,
-                                            "",
-                                          );
-                                          setFieldValue(
-                                            `hotelDetails.${index}.amount`,
-                                            "",
-                                          );
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                </td>
+                                </div>
+                              </div>
+                            </div>
 
-                                {/* Conditional Fields per row */}
-                                <td
-                                  style={{
-                                    opacity:
-                                      !segment.accommodationRequired ||
-                                      segment.selfEntitlement ||
-                                      (values.travelSegments.length > 1 &&
-                                        index ===
-                                          values.travelSegments.length - 1)
-                                        ? 0.4
-                                        : 1,
-                                  }}
-                                >
-                                  <Field
-                                    as="select"
-                                    name={`travelSegments.${index}.hotelEntitlement`}
-                                    className="form-control"
-                                    disabled={
-                                      !segment.accommodationRequired ||
-                                      segment.selfEntitlement ||
-                                      !isPolicyDefined ||
-                                      (values.travelSegments.length > 1 &&
-                                        index ===
-                                          values.travelSegments.length - 1)
-                                    }
-                                    onChange={(e) => {
-                                      const val = e.target.value;
-                                      setFieldValue(
-                                        `travelSegments.${index}.hotelEntitlement`,
-                                        val,
-                                      );
-                                      if (val) {
-                                        setFieldValue(
-                                          `travelSegments.${index}.selfEntitlement`,
-                                          false,
-                                        );
-                                        setFieldValue(
-                                          `travelSegments.${index}.selfAmount`,
-                                          0,
-                                        );
-                                      }
-                                    }}
-                                  >
-                                    <option value="">Select</option>
-                                    {filteredHotelOptions.map((opt) => (
-                                      <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                      </option>
-                                    ))}
-                                  </Field>
-                                  {errors.travelSegments?.[index]
-                                    ?.hotelEntitlement &&
-                                    touched.travelSegments?.[index]
-                                      ?.hotelEntitlement && (
+                            {/* Taxi Fare */}
+                            <div className="max-w-32">
+                              <h6 className="font-bold text-primary mb-2">
+                                Taxi Fare
+                              </h6>
+                              <div>
+                                <label className="block mb-1">Rate</label>
+                                <NumericFormat
+                                  name="taxiFareRate"
+                                  className="form-control text-sm"
+                                  placeholder="0"
+                                  thousandSeparator
+                                  allowNegative={false}
+                                  isAllowed={({ value }) => value.length <= 6}
+                                  disabled={true}
+                                  value={values.taxiFareRate}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Advance Request Section */}
+                            <div className="max-w-[300px] mr-8 ">
+                              <div className="flex items-center mb-2">
+                                <h6 className="font-bold text-primary mr-3 mb-0">
+                                  Advance Request
+                                </h6>
+                                <div className="flex items-center">
+                                  <label className="ml-16 mr-2 mb-0">
+                                    Advance Required
+                                  </label>
+                                  <Checkbox
+                                    disabled={true}
+                                    isSelected={values.advanceRequested}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-6 gap-x-3 items-end">
+                                {/* Amount */}
+                                <div className="col-span-2">
+                                  <label className=" block mb-1">
+                                    Amount
+                                    {values.advanceRequested && (
+                                      <span className="text-danger">*</span>
+                                    )}
+                                  </label>
+                                  <NumericFormat
+                                    name="advanceAmount"
+                                    className="form-control text-sm"
+                                    style={{ backgroundColor: "#eefbff" }}
+                                    placeholder="0"
+                                    thousandSeparator
+                                    allowNegative={false}
+                                    isAllowed={({ value }) => value.length <= 9}
+                                    disabled={true}
+                                    value={values.advanceAmount}
+                                  />
+                                  {errors.advanceAmount &&
+                                    touched.advanceAmount && (
                                       <div className="form-feedBack text-xs mt-1">
-                                        {
-                                          errors.travelSegments[index]
-                                            .hotelEntitlement
-                                        }
+                                        {errors.advanceAmount}
                                       </div>
                                     )}
-                                </td>
-                                {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
-                                  <td className="text-center align-middle">
-                                    <div
-                                      className="flex justify-center items-center h-full"
-                                      style={{
-                                        opacity:
-                                          !segment.accommodationRequired ||
-                                          segment.hotelEntitlement ||
-                                          (values.travelSegments.length > 1 &&
-                                            index ===
-                                              values.travelSegments.length - 1)
-                                            ? 0.4
-                                            : 1,
-                                      }}
-                                    >
-                                      <Checkbox
-                                        disabled={
-                                          !segment.accommodationRequired ||
-                                          !!segment.hotelEntitlement ||
-                                          !isPolicyDefined ||
-                                          !employeeEntitlement?.ishotelEntitlementSelfAmountWise ||
-                                          (values.travelSegments.length > 1 &&
-                                            index ===
-                                              values.travelSegments.length - 1)
-                                        }
-                                        isSelected={segment.selfEntitlement}
-                                        onChange={(e) => {
-                                          const checked = e.target.checked;
-                                          setFieldValue(
-                                            `travelSegments.${index}.selfEntitlement`,
-                                            checked,
-                                          );
-                                          if (checked) {
-                                            setFieldValue(
-                                              `travelSegments.${index}.hotelEntitlement`,
-                                              "",
-                                            );
-                                            setFieldValue(
-                                              `travelSegments.${index}.hotelEntitlementAmount`,
-                                              0,
-                                            );
-                                          } else {
-                                            setFieldValue(
-                                              `travelSegments.${index}.selfAmount`,
-                                              0,
-                                            );
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                  </td>
-                                )}
-                                {employeeEntitlement?.ishotelEntitlementSelfAmountWise && (
-                                  <td
-                                    style={{
-                                      opacity:
-                                        !segment.accommodationRequired ||
-                                        !segment.selfEntitlement ||
-                                        segment.hotelEntitlement ||
-                                        (values.travelSegments.length > 1 &&
-                                          index ===
-                                            values.travelSegments.length - 1)
-                                          ? 0.4
-                                          : 1,
-                                    }}
-                                  >
-                                    <NumericFormat
-                                      name={`travelSegments.${index}.selfAmount`}
-                                      className="form-control"
-                                      placeholder="0"
-                                      thousandSeparator
-                                      allowNegative={false}
-                                      isAllowed={({ value }) =>
-                                        value.length <= 9
-                                      }
-                                      disabled={
-                                        !segment.accommodationRequired ||
-                                        !segment.selfEntitlement ||
-                                        !!segment.hotelEntitlement ||
-                                        !isPolicyDefined ||
-                                        (values.travelSegments.length > 1 &&
-                                          index ===
-                                            values.travelSegments.length - 1)
-                                      }
-                                      value={
-                                        !segment.accommodationRequired ||
-                                        !segment.selfEntitlement ||
-                                        !!segment.hotelEntitlement
-                                          ? ""
-                                          : segment.selfAmount
-                                      }
-                                      onValueChange={(valuesObj) => {
-                                        setFieldValue(
-                                          `travelSegments.${index}.selfAmount`,
-                                          valuesObj.value,
-                                        );
-                                      }}
-                                    />
-                                    {errors.travelSegments?.[index]
-                                      ?.selfAmount &&
-                                      touched.travelSegments?.[index]
-                                        ?.selfAmount && (
-                                        <div className="form-feedBack text-xs mt-1">
-                                          {
-                                            errors.travelSegments[index]
-                                              .selfAmount
-                                          }
-                                        </div>
-                                      )}
-                                  </td>
-                                )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </>
-                  )}
-                </FieldArray>
+                                </div>
+                                {/* Advance Remarks */}
+                                <div className="col-span-4">
+                                  <label className="font-bold mb-1 opacity-70">
+                                    Advance Request Remarks:
+                                    <span className="font-normal">
+                                      {" "}
+                                      {values.advanceRemarks || "-"}
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-12 gap-x-3 mt-4 mb-8">
+                          <div className="col-span-6">
+                            <label className="font-bold mb-1 opacity-70">
+                              Applicant Remarks:{" "}
+                              <span className="font-normal">
+                                {values.travelRemarks || "-"}
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
               </div>
 
-              {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
-              <div className="border-t pt-4">
-                <div className="flex flex-col lg:flex-row gap-8 justify-between">
-                  {/* Daily Allowance */}
-                  <div className="max-w-[400px]">
-                    <h6 className="font-bold text-primary mb-2">
-                      Daily Allowance
-                    </h6>
-                    <div className="grid grid-cols-3 gap-x-2">
-                      <div>
-                        <label className=" mb-1 flex items-center gap-1">
-                          Rate <span className="text-danger">*</span>
-                          {employeeEntitlement?.dailyAllowanceAmount && (
-                            <span className="text-muted font-normal ml-1">
-                              (Limit ={" "}
-                              {employeeEntitlement.dailyAllowanceAmount})
-                            </span>
-                          )}
-                        </label>
-                        <NumericFormat
-                          name="dailyAllowanceRate"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
-                          placeholder="0"
-                          thousandSeparator
-                          allowNegative={false}
-                          isAllowed={({ value }) => value.length <= 6}
-                          disabled={!isPolicyDefined}
-                          value={values.dailyAllowanceRate}
-                          onValueChange={(valuesObj) => {
-                            setFieldValue(
-                              "dailyAllowanceRate",
-                              valuesObj.value,
-                            );
-                          }}
-                        />
-                        {errors.dailyAllowanceRate &&
-                          touched.dailyAllowanceRate && (
-                            <div className="form-feedBack text-xs mt-1">
-                              {errors.dailyAllowanceRate}
-                            </div>
-                          )}
-                      </div>
-                      <div>
-                        <label className=" block mb-1">
-                          Days <span className="text-danger">*</span>
-                        </label>
-                        <Field
-                          type="number"
-                          name="dailyAllowanceDays"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
-                          placeholder="0"
-                          min="0"
-                          disabled={!isPolicyDefined || !!isReadOnly}
-                          onInput={(e) => {
-                            e.target.value = e.target.value.slice(0, 3);
-                          }}
-                        />
-                        {errors.dailyAllowanceDays &&
-                          touched.dailyAllowanceDays && (
-                            <div className="form-feedBack text-xs mt-1">
-                              {errors.dailyAllowanceDays}
-                            </div>
-                          )}
-                      </div>
-                      <div>
-                        <label className=" block mb-1">Amount</label>
-                        <NumericFormat
-                          name="dailyAllowanceAmount"
-                          className="form-control text-sm bg-light"
-                          placeholder="0"
-                          thousandSeparator
-                          allowNegative={false}
-                          disabled={true}
-                          value={values.dailyAllowanceAmount}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Taxi Fare */}
-                  <div className="max-w-32">
-                    <h6 className="font-bold text-primary mb-2">Taxi Fare</h6>
-                    <div>
-                      <label className="block mb-1">Rate</label>
-                      <NumericFormat
-                        name="taxiFareRate"
-                        className="form-control text-sm"
-                        placeholder="0"
-                        thousandSeparator
-                        allowNegative={false}
-                        isAllowed={({ value }) => value.length <= 6}
-                        disabled={true}
-                        value={values.taxiFareRate}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Advance Request Section */}
-                  <div className="max-w-[300px] mr-8 ">
-                    <div className="flex items-center mb-2">
-                      <h6 className="font-bold text-primary mr-3 mb-0">
-                        Advance Request
-                      </h6>
-                      <div className="flex items-center">
-                        <label className="ml-16 mr-2 mb-0">
-                          Advance Required
-                        </label>
-                        <Checkbox
-                          disabled={true}
-                          isSelected={values.advanceRequested}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-6 gap-x-3 items-end">
-                      {/* Amount */}
-                      <div className="col-span-2">
-                        <label className=" block mb-1">
-                          Amount
-                          {values.advanceRequested && (
-                            <span className="text-danger">*</span>
-                          )}
-                        </label>
-                        <NumericFormat
-                          name="advanceAmount"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
-                          placeholder="0"
-                          thousandSeparator
-                          allowNegative={false}
-                          isAllowed={({ value }) => value.length <= 9}
-                          disabled={true}
-                          value={values.advanceAmount}
-                        />
-                        {errors.advanceAmount && touched.advanceAmount && (
-                          <div className="form-feedBack text-xs mt-1">
-                            {errors.advanceAmount}
-                          </div>
-                        )}
-                      </div>
-                      {/* Advance Remarks */}
-                      <div className="col-span-4">
-                        <label className="font-bold mb-1 opacity-70">
-                          Advance Request Remarks:
-                          <span className="font-normal">
-                            {" "}
-                            {values.advanceRemarks || "-"}
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-12 gap-x-3 mt-4 mb-8">
-                  <div className="col-span-6">
-                    <label className="font-bold mb-1 opacity-70">
-                      Applicant Remarks:{" "}
-                      <span className="font-normal">
-                        {values.travelRemarks || "-"}
-                      </span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Travel Journey details */}
+              {/* Travel Journey details */}
+              {values.isAccessToUpdate && (
                 <div className="w-full">
                   <Accordion
                     activeKey={activeTicketKey}
@@ -1576,8 +1715,10 @@ export function FormEditForm({
                     </Card>
                   </Accordion>
                 </div>
+              )}
 
-                {/* Travel Hotel details */}
+              {/* Travel Hotel details */}
+              {values.isAccessToUpdate && (
                 <div className="w-full mt-9">
                   <Accordion
                     activeKey={activeHotelKey}
@@ -1821,30 +1962,135 @@ export function FormEditForm({
                       </Accordion.Collapse>
                     </Card>
                   </Accordion>
-                </div>
-                <div className="grid grid-cols-12 gap-x-3 mt-6">
-                  <div className="col-span-6">
-                    <label>
-                      Authority Remarks
-                      {values.request_status === "R" && (
-                        <span className="text-danger">*</span>
-                      )}
-                    </label>
-                    <Field
-                      as="textarea"
-                      name="authorityRemarks"
-                      className="form-control"
-                      style={{ backgroundColor: "#eefbff" }}
-                      rows="3"
-                      placeholder="Enter authority remarks here..."
-                      maxLength={500}
-                    />
-                    {errors.authorityRemarks && touched.authorityRemarks && (
-                      <div className="form-feedBack text-xs mt-1">
-                        {errors.authorityRemarks}
+
+                  {/* Travel Cost Summary */}
+                  <div className="border-t  flex justify-end pt-2">
+                    <div className="w-[300px]">
+                      <div className="flex flex-col gap-y-4 pr-[9px]">
+                        {/* Total Allowance Total */}
+                        <div className="flex justify-between items-center gap-x-2">
+                          <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                            Total Allowance
+                          </label>
+                          <NumericFormat
+                            name="dailyAllowanceTotal"
+                            className="form-control text-sm bg-light"
+                            placeholder="0"
+                            thousandSeparator
+                            allowNegative={false}
+                            disabled={true}
+                            value={values.dailyAllowanceAmount}
+                            style={{ width: "159px" }}
+                          />
+                        </div>
+
+                        {/* Taxi Fare Input */}
+                        <div className="flex justify-between items-center gap-x-2">
+                          <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                            Taxi Fare Amount
+                          </label>
+                          <div
+                            className="flex flex-col"
+                            style={{ width: "159px" }}
+                          >
+                            <NumericFormat
+                              name="taxiFareAmount"
+                              className="form-control text-sm"
+                              placeholder="0"
+                              thousandSeparator
+                              allowNegative={false}
+                              isAllowed={({ value }) => value.length <= 9}
+                              disabled={isReadOnly}
+                              value={values.taxiFareAmount ?? ""}
+                              onValueChange={(valuesObj) => {
+                                setFieldValue(
+                                  "taxiFareAmount",
+                                  valuesObj.value,
+                                );
+                              }}
+                            />
+                            {errors.taxiFareAmount &&
+                              touched.taxiFareAmount && (
+                                <div className="form-feedBack text-xs mt-1">
+                                  {errors.taxiFareAmount}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+
+                        {/* Other Amount Input */}
+                        <div className="flex justify-between items-center gap-x-2">
+                          <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                            Other Amount
+                          </label>
+                          <div
+                            className="flex flex-col"
+                            style={{ width: "159px" }}
+                          >
+                            <NumericFormat
+                              name="otherAmount"
+                              className="form-control text-sm"
+                              placeholder="0"
+                              thousandSeparator
+                              allowNegative={false}
+                              isAllowed={({ value }) => value.length <= 9}
+                              disabled={isReadOnly}
+                              value={values.otherAmount ?? ""}
+                              onValueChange={(valuesObj) => {
+                                setFieldValue("otherAmount", valuesObj.value);
+                              }}
+                            />
+                            {errors.otherAmount && touched.otherAmount && (
+                              <div className="form-feedBack text-xs mt-1">
+                                {errors.otherAmount}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Total Travel Budget */}
+                        <div className="flex justify-between items-center gap-x-2">
+                          <label className="block mb-0 font-bold text-nowrap">
+                            Total Travel Budget
+                          </label>
+                          <NumericFormat
+                            name="totalTravelBudget"
+                            className="form-control text-sm bg-light"
+                            placeholder="0"
+                            thousandSeparator
+                            allowNegative={false}
+                            disabled={true}
+                            value={values.totalTravelBudget}
+                            style={{ width: "159px" }}
+                          />
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
+                </div>
+              )}
+              <div className="grid grid-cols-12 gap-x-3 mt-6">
+                <div className="col-span-6">
+                  <label>
+                    Authority Remarks
+                    {values.request_status === "R" && (
+                      <span className="text-danger">*</span>
+                    )}
+                  </label>
+                  <Field
+                    as="textarea"
+                    name="authorityRemarks"
+                    className="form-control"
+                    style={{ backgroundColor: "#eefbff" }}
+                    rows="3"
+                    placeholder="Enter authority remarks here..."
+                    maxLength={500}
+                  />
+                  {errors.authorityRemarks && touched.authorityRemarks && (
+                    <div className="form-feedBack text-xs mt-1">
+                      {errors.authorityRemarks}
+                    </div>
+                  )}
                 </div>
               </div>
 

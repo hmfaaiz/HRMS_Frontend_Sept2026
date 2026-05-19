@@ -72,10 +72,16 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     };
 
     if (!payload.id) {
-      dispatch(actions.createPreApprovalTravelRequest(payload, disableLoading, onHide));
+      dispatch(
+        actions.createPreApprovalTravelRequest(payload, disableLoading, onHide),
+      );
     } else {
-      await dispatch(actions.updatePreApprovalTravelRequest(payload, disableLoading, onHide));
-      await dispatch(actions.fetchPreApprovalTravelRequests(formUIProps.queryParams));
+      await dispatch(
+        actions.updatePreApprovalTravelRequest(payload, disableLoading, onHide),
+      );
+      await dispatch(
+        actions.fetchPreApprovalTravelRequests(formUIProps.queryParams),
+      );
     }
   };
 
