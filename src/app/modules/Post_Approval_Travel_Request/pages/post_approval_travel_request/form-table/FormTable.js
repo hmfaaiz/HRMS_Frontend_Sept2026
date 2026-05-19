@@ -51,7 +51,8 @@ export function FormTable({ onEditClick, onViewClick }) {
     return raw.filter((row) => {
       const emp = row.Employee;
       const employeeStr = emp
-        ? `${emp.employeeCode || ""} ${emp.firstName || ""} ${emp.lastName || ""}`.toLowerCase()
+        ? `${emp.employeeCode || ""} ${emp.firstName || ""} ${emp.lastName ||
+            ""}`.toLowerCase()
         : "";
       const travelRef = (
         row.PreApprovalRequest?.purposeOfTravel || ""
@@ -70,9 +71,8 @@ export function FormTable({ onEditClick, onViewClick }) {
       sortCaret: sortCaret,
       formatter: (cell) =>
         cell
-          ? `${cell.employeeCode || ""}-${cell.firstName || ""} ${
-              cell.lastName || ""
-            }`.trim()
+          ? `${cell.employeeCode || ""}-${cell.firstName ||
+              ""} ${cell.lastName || ""}`.trim()
           : "-",
       style: { minWidth: "180px" },
     },
@@ -134,7 +134,7 @@ export function FormTable({ onEditClick, onViewClick }) {
         } else if (cell === 1) {
           return <span className="text-approved font-bold">Approved</span>;
         }
-        return "-";
+        return <span className={className}>{text}</span>;
       },
       style: { minWidth: "110px" },
     },

@@ -180,14 +180,22 @@ export function FormEditForm({
     ),
     travelRemarks: Yup.string().nullable(),
     taxiFareRate: Yup.number().nullable(),
+    taxiFareAmount: Yup.number()
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue === "" ? null : value,
+      )
+      .min(0, VALIDATION_MESSAGES.minOneValue),
+    otherAmount: Yup.number()
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue === "" ? null : value,
+      )
+      .min(0, VALIDATION_MESSAGES.minOneValue),
     ticketDetails: Yup.array().of(
       Yup.object().shape({
         isTicketEnabled: Yup.boolean(),
-        flightName: Yup.string().when("isTicketEnabled", (enabled, schema) =>
-          enabled
-            ? schema.required(VALIDATION_MESSAGES.required)
-            : schema.nullable(),
-        ),
+        flightName: Yup.string().nullable(),
       }),
     ),
     hotelDetails: Yup.array().of(
@@ -319,6 +327,9 @@ export function FormEditForm({
         }),
         travelRemarks: user.travelRequestRemarks || "",
         taxiFareRate: user.taxiFareRate || user.taxiFareAmount || 0,
+        taxiFareAmount: user.taxiFareAmount || 0,
+        otherAmount: user.otherAmount || 0,
+        totalTravelBudget: user.totalTravelBudget || 0,
       };
     }
 
@@ -334,9 +345,12 @@ export function FormEditForm({
       advanceAmount: 0,
       advanceRemarks: "",
       taxiFareRate: 0,
+      taxiFareAmount: 0,
+      otherAmount: 0,
+      totalTravelBudget: 0,
       travelSegments: [{ ...segmentTemplate }, { ...segmentTemplate }],
-      ticketDetails: [{ ...ticketDetailTemplate }],
-      hotelDetails: [{ ...hotelDetailTemplate }],
+      ticketDetails: [{ ...ticketDetailTemplate }, { ...ticketDetailTemplate }],
+      hotelDetails: [{ ...hotelDetailTemplate }, { ...hotelDetailTemplate }],
       travelRemarks: "",
       request_status: "A",
     };
@@ -367,6 +381,9 @@ export function FormEditForm({
               : "",
             travelRemarks: values.travelRemarks,
             taxiFareRate: values.taxiFareRate,
+            taxiFareAmount: values.taxiFareAmount || 0,
+            otherAmount: values.otherAmount || 0,
+            totalTravelBudget: values.totalTravelBudget || 0,
             request_status: values.request_status || "A",
             ...(isApprovingRef.current ? { approved_status: 1 } : {}),
             ticketDetails: values.ticketDetails,
@@ -486,6 +503,42 @@ export function FormEditForm({
           }, [
             values.dailyAllowanceRate,
             values.dailyAllowanceDays,
+            setFieldValue,
+          ]);
+
+          // Calculate and update total travel budget in formik values
+          React.useEffect(() => {
+            const hotelTotal =
+              values.hotelDetails?.reduce(
+                (sum, h) => sum + (Number(h.amount) || 0),
+                0,
+              ) || 0;
+            const ticketTotal =
+              values.ticketDetails?.reduce(
+                (sum, t) => sum + (Number(t.ticketAmount) || 0),
+                0,
+              ) || 0;
+            const dailyAllowanceTotal =
+              Number(values.dailyAllowanceAmount) || 0;
+            const taxiFareAmountVal = Number(values.taxiFareAmount) || 0;
+            const otherAmountVal = Number(values.otherAmount) || 0;
+
+            const totalBudget =
+              hotelTotal +
+              ticketTotal +
+              dailyAllowanceTotal +
+              taxiFareAmountVal +
+              otherAmountVal;
+
+            if (values.totalTravelBudget !== totalBudget) {
+              setFieldValue("totalTravelBudget", totalBudget);
+            }
+          }, [
+            values.hotelDetails,
+            values.ticketDetails,
+            values.dailyAllowanceAmount,
+            values.taxiFareAmount,
+            values.otherAmount,
             setFieldValue,
           ]);
 
@@ -1844,6 +1897,101 @@ export function FormEditForm({
                     </Accordion.Collapse>
                   </Card>
                 </Accordion>
+              </div>
+
+              {/* Travel Cost Summary */}
+              <div className="border-t flex justify-end pt-2">
+                <div className="w-[300px]">
+                  <div className="flex flex-col gap-y-4 pr-[9px]">
+                    {/* Daily Allowance Total */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                        Total Allowance
+                      </label>
+                      <NumericFormat
+                        name="dailyAllowanceTotal"
+                        className="form-control text-sm bg-light"
+                        placeholder="0"
+                        thousandSeparator
+                        allowNegative={false}
+                        disabled={true}
+                        value={values.dailyAllowanceAmount}
+                        style={{ width: "159px" }}
+                      />
+                    </div>
+
+                    {/* Taxi Fare Input */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                        Taxi Fare Amount
+                      </label>
+                      <div className="flex flex-col" style={{ width: "159px" }}>
+                        <NumericFormat
+                          name="taxiFareAmount"
+                          className="form-control text-sm"
+                          placeholder="0"
+                          thousandSeparator
+                          allowNegative={false}
+                          isAllowed={({ value }) => value.length <= 9}
+                          disabled={isReadOnly}
+                          value={values.taxiFareAmount ?? ""}
+                          onValueChange={(valuesObj) => {
+                            setFieldValue("taxiFareAmount", valuesObj.value);
+                          }}
+                        />
+                        {errors.taxiFareAmount && touched.taxiFareAmount && (
+                          <div className="form-feedBack text-xs mt-1">
+                            {errors.taxiFareAmount}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Other Amount Input */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                        Other Amount
+                      </label>
+                      <div className="flex flex-col" style={{ width: "159px" }}>
+                        <NumericFormat
+                          name="otherAmount"
+                          className="form-control text-sm"
+                          placeholder="0"
+                          thousandSeparator
+                          allowNegative={false}
+                          isAllowed={({ value }) => value.length <= 9}
+                          disabled={isReadOnly}
+                          value={values.otherAmount ?? ""}
+                          onValueChange={(valuesObj) => {
+                            setFieldValue("otherAmount", valuesObj.value);
+                          }}
+                        />
+                        {errors.otherAmount && touched.otherAmount && (
+                          <div className="form-feedBack text-xs mt-1">
+                            {errors.otherAmount}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Total Travel Budget */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-bold text-nowrap">
+                        Total Travel Budget
+                      </label>
+                      <NumericFormat
+                        name="totalTravelBudget"
+                        className="form-control text-sm bg-light"
+                        placeholder="0"
+                        thousandSeparator
+                        allowNegative={false}
+                        disabled={true}
+                        value={values.totalTravelBudget}
+                        style={{ width: "159px" }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-12 gap-x-3 mt-4">
