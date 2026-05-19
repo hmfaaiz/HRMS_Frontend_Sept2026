@@ -19,6 +19,7 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
       selectedJob: FormUIContext?.selectedJob,
       selectedApplicant: FormUIContext?.selectedApplicant,
       applicantVacancyId: FormUIContext?.applicantVacancyId,
+      newButtonClick: FormUIContext?.newButtonClick,
     };
   }, [FormUIContext]);
 
@@ -27,15 +28,19 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
   };
 
   const dispatch = useDispatch();
-  const { userForEdit, actionsLoading  , entities} = useSelector(
+  const { userForEdit, actionsLoading, entities, userAccess } = useSelector(
     (state) => ({
       userForEdit: state.interview_schedule.userForEdit,
       entities: state.interview_schedule.entities,
       actionsLoading: state.interview_schedule.actionsLoading,
+      userAccess: state?.auth?.userAccess["interview_schedule"],
     }),
-    shallowEqual
+    shallowEqual,
   );
 
+  const accessToCreate = userAccess.find(
+    (item) => item?.componentName === "CreateInterviewSchedule",
+  );
 
   useEffect(() => {
     if (id) {
@@ -43,7 +48,7 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
     }
   }, [id, dispatch]);
 
-  const saveForm = async (data) => {
+  const saveForm = async (data, open) => {
     if (!id) {
       let payload = {
         ...data,
@@ -59,8 +64,11 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
           ...formUIProps.queryParams,
           applicantVacancyId: formUIProps?.applicantVacancyId,
           applicantId: formUIProps?.selectedApplicant,
-        })
+        }),
       );
+      if (open && accessToCreate?.isAccess) {
+        formUIProps.newButtonClick();
+      }
     }
   };
 
