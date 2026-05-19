@@ -42,8 +42,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   }, [id, dispatch]);
 
   const saveForm = async (values) => {
-    console.log("🚀 Submitting with workflowId:", workflowId);
-    console.log("🚀 workflowId type:", typeof workflowId);
+    console.log("🚀 Submitting with ID:", id);
 
     enableLoading();
 
@@ -57,15 +56,16 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     };
 
     const payload = {
-      Ids: [workflowId], // This must be the WorkflowStatus ID (e.g., 581)
+      Ids: [id], // Use the prop 'id' directly as it is the WorkflowStatus ID
       request_status: values.request_status || "A",
       approved_status: values.isApproving ? 1 : 0,
       authorityRemarks:
         values.authorityRemarks || (values.isApproving ? "Approved" : ""),
       updatedData: {
         ...values,
-        parentRecordId: values.Id,
-        workflowId: workflowId, // Send lowercase too for safety
+        isAccessToUpdate: values.isAccessToUpdate,
+        parentRecordId: values.parentRecordId || values.Id,
+        workflowId: id,
         dailyAllowanceDay: values.dailyAllowanceDays, // Map back to original name
         advanceAmount: values.advanceRequested ? values.advanceAmount : 0,
         travelSegments:
@@ -88,10 +88,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
     console.log("📦 FINAL PAYLOAD TO SEND:", payload);
 
-    // await dispatch(actions.handleTravelRequestApproval(payload));
-    // await dispatch(
-    //   actions.fetchTravelApprovalRequests(formUIProps.queryParams),
-    // );
+    await dispatch(actions.handleTravelRequestApproval(payload));
+    await dispatch(
+      actions.fetchTravelApprovalRequests(formUIProps.queryParams),
+    );
     disableLoading();
     onHide();
   };

@@ -185,7 +185,7 @@ export function FormEditForm({
           : schema.nullable();
       },
     ),
-    travelRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
+    travelRemarks: Yup.string().nullable(),
     authorityRemarks: Yup.string().nullable(),
     taxiFareRate: Yup.number().nullable(),
   });
@@ -1167,13 +1167,12 @@ export function FormEditForm({
                         </label>
                         <NumericFormat
                           name="dailyAllowanceRate"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
+                          className="form-control text-sm bg-light"
                           placeholder="0"
                           thousandSeparator
                           allowNegative={false}
                           isAllowed={({ value }) => value.length <= 6}
-                          disabled={!isPolicyDefined}
+                          disabled={true}
                           value={values.dailyAllowanceRate}
                           onValueChange={(valuesObj) => {
                             setFieldValue(
@@ -1196,11 +1195,10 @@ export function FormEditForm({
                         <Field
                           type="number"
                           name="dailyAllowanceDays"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
+                          className="form-control text-sm bg-light"
                           placeholder="0"
                           min="0"
-                          disabled={!isPolicyDefined || !!isReadOnly}
+                          disabled={true}
                           onInput={(e) => {
                             e.target.value = e.target.value.slice(0, 3);
                           }}

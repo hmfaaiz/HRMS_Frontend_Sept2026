@@ -62,6 +62,12 @@ export const MenuOption = () => {
       el?.isResourceShow &&
       el?.portalType == 2,
   );
+  const PostTravelRequest = payroll?.find(
+    (el) =>
+      el?.componentName === "ReadAllPostTravelRequest" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
 
   const claimRequest = payroll?.find(
     (el) =>
@@ -158,12 +164,19 @@ export const MenuOption = () => {
     {
       icon: <Luggage className="w-6 h-6 text-black" />,
       name: "Travel",
-      isShow: moduleRights?.find((e) => e?.value == 4)?.allow && TravelRequest,
+      isShow:
+        moduleRights?.find((e) => e?.value == 4)?.allow &&
+        (TravelRequest || PostTravelRequest),
       linkList: [
         {
           link: "/travel_request/read-all-travel-request",
           show: TravelRequest,
           name: "Travel Request",
+        },
+        {
+          link: "/post_travel_request/read-all-post-travel-request",
+          show: PostTravelRequest,
+          name: "Post Travel Request",
         },
       ],
     },
