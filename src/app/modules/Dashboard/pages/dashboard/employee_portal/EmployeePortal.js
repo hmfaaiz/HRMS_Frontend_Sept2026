@@ -226,49 +226,6 @@ const DetailView = ({
           ) : null}
         </div>
       ) : null}
-      {/* <div className="flex flex-col md:flex-row gap-4">
-        {moduleRights?.find((e) => e?.value == 4)?.allow ? (
-          <>
-            <AttendanceRosterDetail />
-            <TravelRequestPortalDetail />
-            <ReimbursementDetail />
-          </>
-        ) : null}
-      </div> */}
-      {/* {moduleRights?.find((e) => e?.value == "separation")?.allow ||
-      moduleRights?.find((e) => e?.value == 6)?.allow ||
-      moduleRights?.find((e) => e?.value == 5)?.allow ? (
-        <div className="flex flex-col md:flex-row gap-4">
-          {moduleRights?.find((e) => e?.value == 5)?.allow ? (
-            <JobRequestion />
-          ) : null}
-          {moduleRights?.find((e) => e?.value == 6)?.allow ? (
-            <AppraisalEvaluation />
-          ) : null}
-          {moduleRights?.find((e) => e?.value == "separation")?.allow ? (
-            <ResignationRequest
-              isDisabled={
-                portalInfo?.allowResignationRequest === 0 ||
-                portalInfo?.allowResignationRequest === false
-              }
-            />
-          ) : null}
-        </div>
-      ) : null}
-      {moduleRights?.find((e) => e?.value == 1)?.allow ||
-      moduleRights?.find((e) => e?.value == 7)?.allow ? (
-        <div className="flex flex-col md:flex-row gap-4">
-          {moduleRights?.find((e) => e?.value == 7)?.allow ? (
-            <HelpDesk />
-          ) : null}
-          {moduleRights?.find((e) => e?.value == 7)?.allow ? (
-            <ProjectManagement />
-          ) : null}
-          {moduleRights?.find((e) => e?.value == 1)?.allow ? (
-            <CompanyDocument />
-          ) : null}
-        </div>
-      ) : null} */}
 
       {moduleRights?.find((e) => e?.value == 3)?.allow ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
