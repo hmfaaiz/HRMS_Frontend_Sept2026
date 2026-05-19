@@ -134,7 +134,6 @@ export function FormTable({ onEditClick, onViewClick }) {
         } else if (cell === 1) {
           return <span className="text-approved font-bold">Approved</span>;
         }
-        return <span className={className}>{text}</span>;
       },
       style: { minWidth: "110px" },
     },
