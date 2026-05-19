@@ -201,6 +201,7 @@ const EmployeeArea = ({
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
                     key={`big-${alertIdx}`}
+                    expand={alertIdx == 0 || alertIdx == 1}
                     data={e}
                   />
                 );
@@ -213,7 +214,13 @@ const EmployeeArea = ({
               ?.filter((e) => e?.tab_key == "1" && e?.dashlet_type == "chart")
               ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
               ?.map((e, alertIdx) => {
-                return <ChartData key={`chart-${alertIdx}`} data={e} />;
+                return (
+                  <ChartData
+                    expand={false}
+                    key={`chart-${alertIdx}`}
+                    data={e}
+                  />
+                );
               })}
         </div>
       </div>
@@ -221,11 +228,20 @@ const EmployeeArea = ({
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
             if (e?.dashlet_type == "small_table" && e?.tab_key == "1") {
+               const isFirstOfThisType =
+                allDashboardAlerts
+                  .filter(
+                    (item) =>
+                      item?.dashlet_type === "small_table" &&
+                      item?.tab_key == "1",
+                  )
+                  .findIndex((item) => item === e) === 0;
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={isFirstOfThisType}
                 />
               );
             }

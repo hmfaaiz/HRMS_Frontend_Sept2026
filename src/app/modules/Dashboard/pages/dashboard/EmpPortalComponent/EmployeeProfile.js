@@ -8,6 +8,7 @@ import { AttendanceMarking } from "./AttendanceMarking";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { Link } from "react-router-dom";
+import { MenuOption } from "./MenuOption";
 
 const renderInfoGrid = (data, fields) => (
   <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
@@ -90,8 +91,6 @@ const EmployeeProfile = ({
         {/* Top right icons */}
         {isAttMarkShow && (
           <div className="absolute top-2 right-2 flex gap-1">
-            {/* <SearchSelect isDisabled={} /> */}
-
             <OverlayTrigger
               overlay={
                 <Tooltip id="products-edit-tooltip">Compact View</Tooltip>
@@ -203,12 +202,7 @@ const EmployeeProfile = ({
                 {/* Office Information */}
                 {isOpen && (
                   <>
-                    {/* <h6 className="font-bold mb-0 text-primary my-2 mt-4">
-                  Office Information
-                </h6> */}
                     {renderInfoGrid(profileInfo?.profileInfo, [
-                      // ["Company", profileInfo?.profileInfo?.company?.name],
-                      // ["Subsidiary", profileInfo?.profileInfo?.subsidiary?.name],
                       [
                         "Reporting To",
                         profileInfo?.profileInfo?.ReportTo
@@ -219,8 +213,6 @@ const EmployeeProfile = ({
                           : null,
                       ],
                       ["Grade", profileInfo?.profileInfo?.grade?.formName],
-                      // ["Payroll Group", profileInfo?.profileInfo?.payrollGroup?.formName],
-                      // ["Team", profileInfo?.profileInfo?.team?.formName],
                       [
                         "Employee Type",
                         profileInfo?.profileInfo?.employeeType?.formName,
@@ -229,25 +221,13 @@ const EmployeeProfile = ({
                         "Employee Status",
                         profileInfo?.profileInfo?.employeeStatus?.formName,
                       ],
-                      [
-                        "Default Shift",
-                        profileInfo?.profileInfo?.defaultShift?.name,
-                      ],
                     ])}
 
-                    {/* Personal Information */}
-                    {/* <h6 className="font-bold mb-0 text-primary my-2 mt-6">
-                  Personal Information
-                </h6> */}
                     {renderInfoGrid(profileInfo?.profileInfo, [
-                      // ["Country", profileInfo?.profileInfo?.country?.name],
-                      // ["City", profileInfo?.profileInfo?.city?.name],
                       [
                         "Location",
                         profileInfo?.profileInfo?.location?.formName,
                       ],
-                      // ["Region", profileInfo?.profileInfo?.region?.formName],
-                      // ["Gender", profileInfo?.profileInfo?.gender],
                       [
                         "Date of Joining",
                         profileInfo?.profileInfo?.dateOfJoining,
@@ -256,15 +236,6 @@ const EmployeeProfile = ({
                         "Date of Confirmation",
                         profileInfo?.profileInfo?.dateOfConfirmation,
                       ],
-                      // [
-                      //   "Date of Birth",
-                      //   formatDate(profileInfo?.profileInfo?.dateOfBirth, "dd-MMM-yyyy"),
-                      // ],
-                      ["ID Card No", profileInfo?.profileInfo?.nic_no],
-                      // ["Official Email", profileInfo?.profileInfo?.email_official],
-                      // ["Cell No", profileInfo?.profileInfo?.phone_cell],
-                      // ["Phone (Home)", profileInfo?.profileInfo?.phone_home],
-                      // ["Passport No", profileInfo?.profileInfo?.passportNo],
                     ])}
                   </>
                 )}
@@ -274,23 +245,9 @@ const EmployeeProfile = ({
             )}
           </div>
 
-          {/* Emergency Contact */}
-          {/* {isOpen && (
-            <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
-              <h6 className="font-bold mb-0 text-primary my-2">
-                Emergency Contact
-              </h6>
-              {profileInfo?.contactInfo?.length > 0 ? (
-                renderInfoGrid(profileInfo?.contactInfo[0], [
-                  ["Name", profileInfo?.contactInfo[0]?.relation_name],
-                  ["Relation", profileInfo?.contactInfo[0]?.relation_text],
-                  ["Contact No", profileInfo?.contactInfo[0]?.contactNo],
-                ])
-              ) : (
-                <p className="text-sm mb-0">No Contact Info Found</p>
-              )}
-            </div>
-          )} */}
+          <>
+            <MenuOption />
+          </>
 
           {isOpen &&
             portal_ticket_creation?.length > 0 &&
@@ -387,7 +344,7 @@ const TeamCardCompact = ({ team, setAttModalData }) => {
                 ),
               )
             }
-            className="text-white rounded-full cursor-pointer bg-green-600 px-5 py-3 text-md font-semibold text-center"
+            className="text-white rounded-full cursor-pointer bg-tgreen px-5 py-3 text-md font-semibold text-center"
           >
             Present{" "}
             {team?.filter((e) =>
@@ -402,7 +359,7 @@ const TeamCardCompact = ({ team, setAttModalData }) => {
                 ),
               )
             }
-            className="text-white rounded-full btn-danger cursor-pointer px-5 py-3 text-md font-semibold text-center"
+            className="text-white rounded-full bg-tred cursor-pointer px-5 py-3 text-md font-semibold text-center"
           >
             Absents{" "}
             {team?.filter(

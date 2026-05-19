@@ -115,6 +115,7 @@ const initialDashboardState = {
   allCompanyEmployeesData: [],
   allCurrentParentTask: [],
   allAlertTask: [],
+  dateWiseAttLogs: [],
 };
 
 export const callTypes = {
@@ -481,7 +482,10 @@ export const dashboardSlice = createSlice({
     
     AllAlertTaskFetched: (state, action) => {
       state.allAlertTask = action.payload;
-      console.log("state.allAlertTask111111",state.allAlertTask)
+    },
+
+    DateWiseAttLogsFetched: (state, action) => {
+      state.dateWiseAttLogs = action.payload;
     },
 
   }

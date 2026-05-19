@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Pie, Bar, Doughnut, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,7 +10,8 @@ import {
   Filler,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { useState } from "react";
+import { Accordion, Card } from "react-bootstrap";
+import { CircleMinus, CirclePlus } from "lucide-react";
 import { BarChart, LineChart, PieChart, TorusIcon } from "lucide-react";
 import { PeriodType } from "../EmpUIHelper";
 import { useSelector } from "react-redux";
@@ -92,7 +93,7 @@ const getOptions = (chartType, chartId) => {
                 ? typeof v.x === "number"
                   ? v.x
                   : v.y
-                : v
+                : v,
             );
             // Convert all values to number
             const total = dataArr.reduce((a, b) => a + Number(b), 0);
@@ -169,8 +170,9 @@ const getOptions = (chartType, chartId) => {
     },
   };
 };
-const ChartData = ({ data }) => {
+const ChartData = ({ data, expand }) => {
   const [chartType, setChartType] = useState(data?.graph_type || "pie");
+  const [activeKey, setActiveKey] = useState(expand ? "0" : null); //
   const dashboard = useSelector((state) => state.dashboard || []);
   // Memoize departmentData and total
   const departmentData = useMemo(() => {
@@ -184,7 +186,7 @@ const ChartData = ({ data }) => {
         {
           data: values,
           backgroundColor: values.map(
-            (_, idx) => colorPalette[idx % colorPalette.length]
+            (_, idx) => colorPalette[idx % colorPalette.length],
           ),
           fill: true,
         },
@@ -251,128 +253,155 @@ const ChartData = ({ data }) => {
 
   return (
     <div className="bg-white rounded-lg px-3 py-2">
-      <div className="flex justify-between items-start">
-        <h6 className="font-bold mb-0 text-primary">
-          {getHeading()}
-          {/* <p className="text-xs m-0 font-normal text-black">
-            Interactive chart — hover to explore values.
-          </p> */}
-        </h6>
-        {/* chart type selection */}
-        <div className="flex space-x-1">
-          {chartTypes.map((type) => (
-            <button
-              key={type.key}
-              type="button"
-              onClick={() => setChartType(type.key)}
-              className={`text-xs border-none rounded-sm w-6 h-6  ${
-                type.key === chartType
-                  ? "text-tprimary bg-tsecondary"
-                  : "text-black bg-tlight"
-              }`}
-            >
-              {type.icon}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="relative max-h-[23rem] overflow-auto scrollbar-fancy mt-1">
-        <div
-          style={{
-            width:
-              chartType === "pie" || chartType === "doughnut"
-                ? "180px"
-                : "100%",
-            height:
-              chartType === "pie" || chartType === "doughnut"
-                ? "180px"
-                : "auto",
-            display:
-              chartType !== "pie" || chartType !== "doughnut" ? "flex" : "",
-            alignItems:
-              chartType !== "pie" || chartType !== "doughnut" ? "end" : "",
-            position: "relative",
-            margin:
-              chartType === "pie" || chartType === "doughnut"
-                ? "0px auto"
-                : "0px",
-          }}
-          className="mb-2"
-        >
-          {data?.data?.length === 0 && (
-            <label className="text-center">No Record Available</label>
-          )}
-          {chartType === "pie" && (
-            <Pie
-              data={departmentData}
-              options={getOptions(chartType, data?.Id)}
-              plugins={[ChartDataLabels]}
-            />
-          )}
-          {chartType === "bar" && (
-            <Bar
-              data={departmentData}
-              options={getOptions(chartType, data?.Id)}
-              plugins={[ChartDataLabels]}
-            />
-          )}
-          {chartType === "horizontalBar" && (
-            <Bar
-              data={departmentData}
-              options={{ ...getOptions(chartType, data?.Id), indexAxis: "y" }}
-              plugins={[ChartDataLabels]}
-            />
-          )}
-          {chartType === "doughnut" && (
-            <Doughnut
-              data={departmentData}
-              options={getOptions(chartType, data?.Id)}
-              plugins={[ChartDataLabels]}
-            />
-          )}
-          {chartType === "line" && (
-            <Line
-              data={departmentData}
-              options={getOptions(chartType, data?.Id)}
-              plugins={[ChartDataLabels]}
-            />
-          )}
-        </div>
-        <hr />
-        <div className="grid grid-cols-4 gap-x-2 gap-y-1">
-          {data?.data?.length > 0 &&
-            data?.data?.map((e, idx) => (
-              <div
-                key={idx}
-                className="grid grid-cols-5 gap-x-2 gap-y-1 items-center text-xs"
+      <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+        <Card className="border-0">
+          <Card.Header className="bg-white border-0 p-0">
+            <div className="flex justify-between items-center w-full">
+              {/* Left side - Accordion toggle with icon and heading */}
+              <Accordion.Toggle
+                eventKey="0"
+                className="flex items-center gap-2 p-0 border-0 bg-transparent shadow-none hover:bg-transparent"
+                style={{ outline: "none" }}
               >
-                {/* <label
+                {activeKey === "0" ? (
+                  <CircleMinus className="h-4 w-4 text-tprimary" />
+                ) : (
+                  <CirclePlus className="h-4 w-4 text-tprimary" />
+                )}
+                <h6 className="font-bold mb-0 text-tprimary">{getHeading()}</h6>
+              </Accordion.Toggle>
+
+              {/* Right side - Chart type selection buttons (only visible when accordion is open) */}
+              {activeKey === "0" && (
+                <div className="flex space-x-1">
+                  {chartTypes.map((type) => (
+                    <button
+                      key={type.key}
+                      type="button"
+                      onClick={() => setChartType(type.key)}
+                      className={`text-xs border-none rounded-sm w-6 h-6  ${
+                        type.key === chartType
+                          ? "text-tprimary bg-tsecondary"
+                          : "text-black bg-tlight"
+                      }`}
+                    >
+                      {type.icon}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <div className="relative max-h-[23rem] overflow-auto scrollbar-fancy mt-1">
+              <div
+                style={{
+                  width:
+                    chartType === "pie" || chartType === "doughnut"
+                      ? "180px"
+                      : "100%",
+                  height:
+                    chartType === "pie" || chartType === "doughnut"
+                      ? "180px"
+                      : "auto",
+                  display:
+                    chartType !== "pie" || chartType !== "doughnut"
+                      ? "flex"
+                      : "",
+                  alignItems:
+                    chartType !== "pie" || chartType !== "doughnut"
+                      ? "end"
+                      : "",
+                  position: "relative",
+                  margin:
+                    chartType === "pie" || chartType === "doughnut"
+                      ? "0px auto"
+                      : "0px",
+                }}
+                className="mb-2"
+              >
+                {data?.data?.length === 0 && (
+                  <label className="text-center">No Record Available</label>
+                )}
+                {chartType === "pie" && (
+                  <Pie
+                    data={departmentData}
+                    options={getOptions(chartType, data?.Id)}
+                    plugins={[ChartDataLabels]}
+                  />
+                )}
+                {chartType === "bar" && (
+                  <Bar
+                    data={departmentData}
+                    options={getOptions(chartType, data?.Id)}
+                    plugins={[ChartDataLabels]}
+                  />
+                )}
+                {chartType === "horizontalBar" && (
+                  <Bar
+                    data={departmentData}
+                    options={{
+                      ...getOptions(chartType, data?.Id),
+                      indexAxis: "y",
+                    }}
+                    plugins={[ChartDataLabels]}
+                  />
+                )}
+                {chartType === "doughnut" && (
+                  <Doughnut
+                    data={departmentData}
+                    options={getOptions(chartType, data?.Id)}
+                    plugins={[ChartDataLabels]}
+                  />
+                )}
+                {chartType === "line" && (
+                  <Line
+                    data={departmentData}
+                    options={getOptions(chartType, data?.Id)}
+                    plugins={[ChartDataLabels]}
+                  />
+                )}
+              </div>
+              <hr />
+              <div className="grid grid-cols-4 gap-x-2 gap-y-1">
+                {data?.data?.length > 0 &&
+                  data?.data?.map((e, idx) => (
+                    <div
+                      key={idx}
+                      className="grid grid-cols-5 gap-x-2 gap-y-1 items-center text-xs"
+                    >
+                      {/* <label
                   style={{
                     color: departmentData.datasets[0].backgroundColor[idx],
                   }}
                   className="w-2 h-2 rounded-full"
                 /> */}
-                <p
-                  style={{
-                    color: departmentData.datasets[0].backgroundColor[idx],
-                  }}
-                  className="text-black m-0 p-0 col-span-3 truncate"
-                  title={e?.label}
-                >
-                  {e?.label}
-                </p>
-                <p
-                  style={{
-                    color: departmentData.datasets[0].backgroundColor[idx],
-                  }}
-                  className="font-extrabold m-0 col-span-2 text-right"
-                >
-                  {e?.total ? Number(e?.total)?.toLocaleString() : 0}
-                </p>
+                      <p
+                        style={{
+                          color:
+                            departmentData.datasets[0].backgroundColor[idx],
+                        }}
+                        className="text-black m-0 p-0 col-span-3 truncate"
+                        title={e?.label}
+                      >
+                        {e?.label}
+                      </p>
+                      <p
+                        style={{
+                          color:
+                            departmentData.datasets[0].backgroundColor[idx],
+                        }}
+                        className="font-extrabold m-0 col-span-2 text-right"
+                      >
+                        {e?.total ? Number(e?.total)?.toLocaleString() : 0}
+                      </p>
+                    </div>
+                  ))}
               </div>
-            ))}
-        </div>
-      </div>
+            </div>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
     </div>
   );
 };

@@ -368,7 +368,7 @@ function PatternLoanDetailListForm({
 
                                                 ) : (
                                                     <td className="text-right text-muted">
-                                                        Not allowed
+                                                        -
                                                     </td>
                                                 )}
                                             </tr>

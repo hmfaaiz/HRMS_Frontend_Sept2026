@@ -171,6 +171,7 @@ const PayrollArea = ({
                     setBigTableModalData={setBigTableModalData}
                     key={`big-${alertIdx}`}
                     data={e}
+                    expand={alertIdx == 0 || alertIdx == 1}
                   />
                 );
               })}
@@ -184,7 +185,13 @@ const PayrollArea = ({
               )
               ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
               ?.map((e, alertIdx) => {
-                return <ChartData key={`chart-${alertIdx}`} data={e} />;
+                return (
+                  <ChartData
+                    expand={false}
+                    key={`chart-${alertIdx}`}
+                    data={e}
+                  />
+                );
               })}
         </div>
       </div>
@@ -192,11 +199,20 @@ const PayrollArea = ({
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
             if (e?.dashlet_type === "small_table" && e?.tab_key == "4") {
+               const isFirstOfThisType =
+                allDashboardAlerts
+                  .filter(
+                    (item) =>
+                      item?.dashlet_type === "small_table" &&
+                      item?.tab_key == "4",
+                  )
+                  .findIndex((item) => item === e) === 0;
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={isFirstOfThisType}
                 />
               );
             }

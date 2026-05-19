@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -22,7 +22,8 @@ import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboard
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 import { TimeInput } from "../../../../../../_metronic/_partials/controls/forms/TimeInput";
-import { Eye, XCircle } from "lucide-react";
+import { ClockFading, Eye, XCircle } from "lucide-react";
+import { LogsDialog } from "../log/LogsDialog";
 
 //Validations for Form
 const formValidation = Yup.object().shape({
@@ -85,7 +86,7 @@ export function MasterEditForm({
           .test(
             "max-3-days",
             "Date Out cannot be more than 3 days after Date In",
-            function(value) {
+            function (value) {
               const { attDateIn } = this.parent;
               if (!value || !attDateIn) return true; // If either value is missing, let other validations handle it
               const dateIn = new Date(formatDates(attDateIn, "yyyy-MM-dd"));
@@ -98,7 +99,7 @@ export function MasterEditForm({
           .test(
             "date-out-not-equal-if-different",
             "Date Out must be after Date In if they are not the same",
-            function(value) {
+            function (value) {
               const { attDateIn } = this.parent;
               if (!value || !attDateIn) return true;
 
@@ -126,7 +127,7 @@ export function MasterEditForm({
           .test(
             "time-out-after-time-in-if-same-date",
             " Date In and Date Out are same, Time Out must be after Time In",
-            function(value) {
+            function (value) {
               const { timeIn, attDateIn, attDateOut } = this.parent;
               if (!value || !timeIn || !attDateIn || !attDateOut) return true;
 
@@ -159,7 +160,7 @@ export function MasterEditForm({
           .test(
             "max-3-days",
             "Date Out cannot be more than 3 days after Date In",
-            function(value) {
+            function (value) {
               const { attDateIn } = this.parent;
               if (!value || !attDateIn) return true; // If either value is missing, let other validations handle it
               const dateIn = new Date(formatDates(attDateIn, "yyyy-MM-dd"));
@@ -189,8 +190,15 @@ export function MasterEditForm({
     return new Map(allEmployees?.map((item) => [item.value, item]));
   }, [allEmployees]);
   const dispatch = useDispatch();
-  const { activeFiscalYear } = useSelector((state) => state.dashboard);
-console.log("user1111",user)
+
+  const [showLogsModal, setShowLogsModal] = useState(false);
+  const { dateWiseAttLogs } = useSelector(
+    (state) => ({
+      dateWiseAttLogs: state.dashboard.dateWiseAttLogs,
+    }),
+    shallowEqual
+  );
+
   return (
     <>
       <Formik
@@ -199,16 +207,16 @@ console.log("user1111",user)
         validationSchema={formValidation}
         onSubmit={(values) => {
           enableLoading();
-            const payload = {
-                  ...values,
-                  attDateIn: values.attDateIn
-                    ? formatDates(values.attDateIn, "dd-MMM-yyyy")
-                    : null,attDateOut: values.attDateOut
-                    ? formatDates(values.attDateOut, "dd-MMM-yyyy")
-                    : null,
-                   
+          const payload = {
+            ...values,
+            attDateIn: values.attDateIn
+              ? formatDates(values.attDateIn, "dd-MMM-yyyy")
+              : null, attDateOut: values.attDateOut
+                ? formatDates(values.attDateOut, "dd-MMM-yyyy")
+                : null,
 
-                    }
+
+          }
 
 
           submitForm(payload);
@@ -308,19 +316,36 @@ console.log("user1111",user)
                           View Details
                         </button>
                       )}
-                      
-                      {/* {values.attDate && (
-                        <label className="pl-3">
-                          {" "}
-                          Date {values.attDate}
-                        </label>
-                      )} */}
-                        
 
-                 
+                      <span
+
+                        onClick={() => setShowLogsModal(true)}
+                      >
+                        <ClockFading className="ml-4 w-6 h-6  text-primary" />
+
+                      </span>
+
+               
+
+
                     </div>
 
-                    
+
+                    <div className="mt-6  flex">
+
+
+
+
+
+                      <LogsDialog
+                        show={showLogsModal}
+                        onHide={() => setShowLogsModal(false)}
+                      />
+
+
+                    </div>
+
+
 
                     {/* Active payroll month */}
 
@@ -355,21 +380,21 @@ console.log("user1111",user)
                   </div>
 
 
-                     
-                  
-                   <div className="col-span-4 md:col-span-6">
-                     {values.attDate && (
-                        <label >
-                          {" "}
-                          Attendance Date: {values.attDate}
-                        </label>
-                      )}
-                   
-                   </div>
-                 
-                    
-                   
-                  
+
+
+                  <div className="col-span-4 md:col-span-6">
+                    {values.attDate && (
+                      <label >
+                        {" "}
+                        Attendance Date: {values.attDate}
+                      </label>
+                    )}
+
+                  </div>
+
+
+
+
 
                   {/* Date In Field Start */}
                   <div>
@@ -382,7 +407,7 @@ console.log("user1111",user)
                         setfilters((prevState) => ({
                           ...prevState,
                           // attDateIn: date,
-                          attDateIn: date ? formatDates(date, "dd-MMM-yyyy"): null,
+                          attDateIn: date ? formatDates(date, "dd-MMM-yyyy") : null,
                         }));
                       }}
                       label={
