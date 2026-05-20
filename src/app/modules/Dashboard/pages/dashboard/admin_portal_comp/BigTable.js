@@ -12,7 +12,7 @@ import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import { PeriodType } from "../EmpUIHelper";
 
-export function BigTable({ data, setBigTableModalData , expand }) {
+export function BigTable({ data, setBigTableModalData, expand }) {
   const [activeKey, setActiveKey] = useState(expand ? "0" : null); // Start with accordion closed (null)
 
   const columnData = data?.data?.length > 0 ? data?.data[0] : {};
@@ -114,7 +114,7 @@ export function BigTable({ data, setBigTableModalData , expand }) {
   };
 
   return (
-    <div className="bg-white rounded-lg px-3 py-2">
+    <div className="bg-white rounded-lg px-3 py-2 self-start">
       <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
         <Card className="border-0">
           <Card.Header className="bg-white border-0 p-0">
