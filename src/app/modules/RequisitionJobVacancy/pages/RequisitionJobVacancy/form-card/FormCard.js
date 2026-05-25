@@ -29,10 +29,15 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-  const { userAccess , empAuthorityList } = useSelector((state) => {
+  const {
+    userAccess,
+    empAuthorityList,
+    requisition_job_approval,
+  } = useSelector((state) => {
     return {
       userAccess: state.auth.userAccess.requisition_job_vacancy,
-     empAuthorityList : state?.requisition_job_vacancy?.empAuthorityList || [],
+      empAuthorityList: state?.requisition_job_vacancy?.empAuthorityList || [],
+      requisition_job_approval: state?.auth?.userAccess?.Recruitment,
     };
   }, shallowEqual);
 
@@ -51,6 +56,13 @@ export function FormCard() {
     (item) => item.componentName === "DeleteRequisitionJobVacancy",
   );
 
+  const approvalForm = requisition_job_approval?.find(
+    (el) =>
+      el?.componentName == "ReadAllJobRequestionApproval" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
@@ -59,7 +71,25 @@ export function FormCard() {
             name={CurrentModuleName()}
             isBackButton={true}
             isDashboardRedirect={true}
-            menuOptions={[]}
+            menuOptions={[
+              {
+                name: "Approval",
+                link:
+                  "/job_requestion_approval/read-all-job-requestion-approval",
+                isShow: approvalForm,
+              },
+              {
+                name: "Workflow Status",
+                link:
+                  "/job_requestion_workflow/read-all-job-requestion-workflow",
+                isShow: requisition_job_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllJobRequestionWorkflow" &&
+                    el?.isResourceShow &&
+                    el?.portalType == 2,
+                ),
+              },
+            ]}
             isDashboardIcon={true}
           />
         </div>
@@ -71,12 +101,30 @@ export function FormCard() {
             name={CurrentModuleName()}
             isBackButton={true}
             isDashboardRedirect={true}
-            menuOptions={[]}
+            menuOptions={[
+              {
+                name: "Approval",
+                link:
+                  "/job_requestion_approval/read-all-job-requestion-approval",
+                isShow: approvalForm,
+              },
+              {
+                name: "Workflow Status",
+                link:
+                  "/job_requestion_workflow/read-all-job-requestion-workflow",
+                isShow: requisition_job_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllJobRequestionWorkflow" &&
+                    el?.isResourceShow &&
+                    el?.portalType == 2,
+                ),
+              },
+            ]}
             isDashboardIcon={true}
           />
         </div>
         <div className="px-2 rounded-lg bg-white">
-          <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+          <div className="flex justify-start sm:justify-end flex-wrap gap-2 items-end">
             <FormFIlter />
             <div className="flex items-center gap-2">
               {accessUser && (

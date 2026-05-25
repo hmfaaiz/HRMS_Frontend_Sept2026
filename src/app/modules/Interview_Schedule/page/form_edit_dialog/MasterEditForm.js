@@ -26,21 +26,19 @@ const formValidation = Yup.object().shape({
   interview_date: Yup.date()
     .typeError("Please select the date")
     .required(VALIDATION_MESSAGES.required),
-  interview_time: Yup.string()
-    .required(VALIDATION_MESSAGES.required)
-    // .trim()
-    // .min(1, VALIDATION_MESSAGES.required) // catches empty string
-    // .matches(
-    //   /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i,
-    //   "Enter time as hh:mm AM/PM"
-    // ),
-    ,
+  interview_time: Yup.string().required(VALIDATION_MESSAGES.required),
+  // .trim()
+  // .min(1, VALIDATION_MESSAGES.required) // catches empty string
+  // .matches(
+  //   /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i,
+  //   "Enter time as hh:mm AM/PM"
+  // ),
   locationId: Yup.string().required(VALIDATION_MESSAGES.required),
   interviewers: Yup.array()
     .of(
       Yup.object().shape({
         employeeId: Yup.string().required(VALIDATION_MESSAGES.required),
-      })
+      }),
     )
     .min(1, "At least one interviewer is required"),
 });
@@ -68,7 +66,6 @@ const InterviewerRow = ({
     interviewer?.recommendedApplicantStatusId;
   return (
     <tr key={index}>
-
       <td className="w-80">
         <SearchSelect
           name={`interviewers[${index}].employeeId`}
@@ -77,7 +74,7 @@ const InterviewerRow = ({
           isDisabled={isUserForRead}
           value={
             dashboard?.allEmployees?.find(
-              (x) => x.value === values.interviewers[index]?.employeeId
+              (x) => x.value === values.interviewers[index]?.employeeId,
             ) || null
           }
           onChange={(e) => {
@@ -113,7 +110,6 @@ const InterviewerRow = ({
       <td>{empDetail?.location?.formName || ""}</td>
       <td className="text-right">
         <div className="d-flex align-items-center justify-content-end gap-2">
-
           {/* View Recommendation — only if submitted */}
           {hasRecommendation ? (
             <OverlayTrigger
@@ -152,7 +148,6 @@ const InterviewerRow = ({
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </button>
           </OverlayTrigger>
-
         </div>
       </td>
     </tr>
@@ -180,12 +175,14 @@ export default function MasterEditForm({
     applicantStatusList: state?.interview_schedule?.applicantStatusList,
   }));
 
+  console.log("applicantStatusListapplicantStatusList" , applicantStatusList)
+
   useEffect(() => {
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // for all location
     dispatch(fetchAllActiveEmployees());
   }, []);
 
-   const handleViewRecommendation = (interviewer) => {
+  const handleViewRecommendation = (interviewer) => {
     setSelectedInterviewer(interviewer);
     setShowRecModal(true);
   };
@@ -229,11 +226,10 @@ export default function MasterEditForm({
           interview_date: values.interview_date
             ? formatDates(values.interview_date, "dd-MMM-yyyy")
             : null,
-
-        }
-
-
-        saveForm(payload);
+        };
+        /// first extract recomended for next interview id and then match with current values
+        const recommendedForNextInterviewId = applicantStatusList?.find((el)=> el?.actualName == "recommendedForNextInterview")?.value
+        saveForm(payload , values?.Id ? recommendedForNextInterviewId === values?.recommendedApplicantStatusId : false);
       }}
     >
       {({
@@ -245,7 +241,7 @@ export default function MasterEditForm({
         setFieldTouched,
       }) => (
         <>
-    { console.log("errors1111",errors)}
+          {console.log("errors1111", errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -253,8 +249,7 @@ export default function MasterEditForm({
               </div>
             )}
             <Form className="form form-label-right">
-              
-              <div >
+              <div>
                 <fieldset disabled={isUserForRead}>
                   <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="">
@@ -301,10 +296,11 @@ export default function MasterEditForm({
                       /> */}
 
                       <label>
-                        <span>Interview Time
-                          <span style={{ color: "red" }}>*</span></span>
+                        <span>
+                          Interview Time
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
                       </label>
-
 
                       <input
                         type="time"
@@ -316,7 +312,6 @@ export default function MasterEditForm({
                           values?.interview_time ? values.interview_time : ""
                         }
                         onChange={(e) => {
-
                           const val = e.target.value;
                           setFieldValue("interview_time", val);
                         }}
@@ -339,7 +334,7 @@ export default function MasterEditForm({
                         }}
                         value={
                           dashboard?.allLocationChildMenus?.find(
-                            (option) => option.value === values.locationId
+                            (option) => option.value === values.locationId,
                           ) || null
                         }
                         options={dashboard?.allLocationChildMenus}
@@ -349,7 +344,6 @@ export default function MasterEditForm({
                     </div>
                   </div>
                   <div className="grid lg:grid-cols-1 gap-x-3 mt-1">
-
                     <div className="">
                       <label>
                         <span>Interview Detail</span>
@@ -391,7 +385,6 @@ export default function MasterEditForm({
                               <div className="react-bootstrap-table table-responsive">
                                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                                   <tr className="custom-table-header">
-
                                     <td className="">Interviewer</td>
                                     {/* <td className="">Name</td> */}
                                     <td className="">Department</td>
@@ -418,14 +411,17 @@ export default function MasterEditForm({
                                           isUserForRead={isUserForRead}
                                           remove={remove}
                                           employeeDetails={employeeDetails}
-                                          setEmployeeDetails={setEmployeeDetails}
-                                          handleViewRecommendation={handleViewRecommendation} 
+                                          setEmployeeDetails={
+                                            setEmployeeDetails
+                                          }
+                                          handleViewRecommendation={
+                                            handleViewRecommendation
+                                          }
                                         />
-                                      )
+                                      ),
                                     )}
                                   </tbody>
                                 </table>
-
 
                                 {typeof errors?.interviewers === "string" && (
                                   <div>
@@ -441,27 +437,25 @@ export default function MasterEditForm({
                           </div>
                         )}
                       </FieldArray>
-
                     </div>
                   </div>
                 </fieldset>
                 <div className="">
                   <div className="flex justify-end">
-
-                    <button
-                      type="button"
-                      onClick={() => setShowSection(!showSection)}
-                      className="btn btn-primary btn-sm mt-1 text-right"
-                    >
-
-                      {showSection ? (
-                        <CircleMinus className="h-4 w-4 mr-1" />
-                      ) : (
-                        <CirclePlus className="h-4 w-4 mr-1" />
-                      )}
-                      Interview Recommendations
-
-                    </button>
+                    {values?.Id ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowSection(!showSection)}
+                        className="btn btn-primary btn-sm mt-1 text-right"
+                      >
+                        {showSection ? (
+                          <CircleMinus className="h-4 w-4 mr-1" />
+                        ) : (
+                          <CirclePlus className="h-4 w-4 mr-1" />
+                        )}
+                        Interview Recommendations
+                      </button>
+                    ) : null}
                   </div>
                   {showSection && (
                     <div className="">
@@ -498,14 +492,14 @@ export default function MasterEditForm({
                             onChange={(e) => {
                               setFieldValue(
                                 "recommendedApplicantStatusId",
-                                e.value || null
+                                e.value || null,
                               );
                             }}
                             value={
                               applicantStatusList?.find(
                                 (option) =>
                                   option.value ===
-                                  values.recommendedApplicantStatusId
+                                  values.recommendedApplicantStatusId,
                               ) || null
                             }
                             options={applicantStatusList}
@@ -514,12 +508,8 @@ export default function MasterEditForm({
                           />
                         </div>
                       </div>
-
                     </div>
                   )}
-
-
-
                 </div>
               </div>
             </Form>

@@ -161,13 +161,8 @@ export function FormTable({ onViewClick }) {
           text = "Pending (HRMS)";
           className = "text-pending font-bold";
         } else if (cell === "A") {
-          if (row?.isLoanContinuing) {
-            className = "text-approved font-bold";
-            text = "Active";
-          } else {
-            className = "text-primary font-bold";
-            text = "Completed";
-          }
+          className = "text-approved font-bold";
+          text = "Approved";
         } else if (cell === "R") {
           text = "Rejected";
           className = "text-rejected font-bold";

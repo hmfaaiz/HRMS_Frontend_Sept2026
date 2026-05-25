@@ -92,6 +92,9 @@ export const FormCard = () => {
       advanceAmount: values.advanceRequested ? values.advanceAmount : 0,
       advanceRemarks: values.advanceRequested ? values.advanceRemarks : "",
       travelRequestRemarks: values.travelRemarks,
+      taxiFareAmount: values.taxiFareAmount || 0,
+      otherAmount: values.otherAmount || 0,
+      totalTravelBudget: values.totalTravelBudget || 0,
       travelDetails: (values.travelSegments || []).map((segment) => ({
         ...segment,
         fromLocationId: segment.fromLocation,

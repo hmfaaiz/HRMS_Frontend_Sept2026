@@ -51,6 +51,7 @@ export function deletePostApprovalTravelRequest(Id) {
 export function getAllReimbursementConfigPolicy(body) {
  
 
+
   return axios.post(`${BASE_URL}/reimbursement_claim/read-reimbursement-configuration-policies`, body);
 
   
@@ -64,5 +65,13 @@ export function checkCanApprove(Id) {
   return axios.post(
     `${BASE_URL}/post_approval_travel_request/can-approve-post-approval-request`,
     { Id },
+  );
+}
+
+export function getPostApprovalTravelRequestReport(Id) {
+  return axios.post(
+    `${BASE_URL}/post_approval_travel_request/post-approval-travel-request-report`,
+    { Id },
+    { responseType: "arraybuffer" },
   );
 }

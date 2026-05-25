@@ -138,9 +138,29 @@ export function FormCard() {
 
   const menuOptions = [
     {
+      name: "Travel Request",
+      link: "/travel_request/read-all-travel-request",
+      isShow: travel?.some(
+        (el) =>
+          (el?.componentName === "TravelRequest" ||
+            el?.slug === "read-all-travel-request") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Post Travel Request",
+      link: "/post_travel_request/read-all-post-travel-request",
+      isShow: travel?.some(
+        (el) =>
+          (el?.componentName === "ReadAllPostTravelRequest" ||
+            el?.slug === "read-all-post-travel-request") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
       name: "Approval",
       link: "/travel_request_approval/read-all-travel-request-approval",
-      isShow: travel?.find(
+      isShow: travel?.some(
         (el) =>
           (el?.componentName === "TravelRequestApproval" ||
             el?.componentName === "ReadAllTravelRequestApproval" ||
@@ -148,12 +168,11 @@ export function FormCard() {
           el?.isResourceShow,
       ),
     },
-    
     {
       name: "Workflow Status",
       link:
         "/travel_request_workflow_status/read-all-travel-request-workflow-status",
-      isShow: travel?.find(
+      isShow: travel?.some(
         (el) =>
           (el?.componentName === "TravelRequestWorkflowStatus" ||
             el?.componentName === "ReadAllTravelRequestWorkflowStatus" ||

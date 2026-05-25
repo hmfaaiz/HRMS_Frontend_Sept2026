@@ -153,10 +153,13 @@ export function FormEditForm({
             .map((s) => s.trim())
         : [],
       postApprover: Array.isArray(user?.postApprover)
-  ? user.postApprover.map(String)
-  : typeof user?.postApprover === "string"
-  ? user.postApprover.split(",").filter(Boolean).map((s) => s.trim())
-  : [],
+        ? user.postApprover.map(String)
+        : typeof user?.postApprover === "string"
+        ? user.postApprover
+            .split(",")
+            .filter(Boolean)
+            .map((s) => s.trim())
+        : [],
       modeOfTransportId: Array.isArray(user?.modeOfTransportId)
         ? user.modeOfTransportId.map(String)
         : typeof user?.modeOfTransportId === "string"
@@ -375,7 +378,7 @@ export function FormEditForm({
                       <MultiSelect
                         label={
                           <span>
-                            TA DA Pre Travel Approver
+                            TADA Pre Travel Approver
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -399,7 +402,7 @@ export function FormEditForm({
                         disabled={isUserForRead || !values.subsidiaryId}
                         error={errors.preApprover}
                         touched={touched.preApprover}
-                        placeholder="Select TA DA Request Approver"
+                        placeholder="Select TADA Request Approver"
                       />
                     </div>
                     {/* Post Approver */}
@@ -407,7 +410,7 @@ export function FormEditForm({
                       <MultiSelect
                         label={
                           <span>
-                            TA DA Post Travel Approver
+                            TADA Post Travel Approver
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -431,7 +434,7 @@ export function FormEditForm({
                         disabled={isUserForRead || !values.subsidiaryId}
                         error={errors.postApprover}
                         touched={touched.postApprover}
-                        placeholder="Select TA DA Post Travel Approver"
+                        placeholder="Select TADA Post Travel Approver"
                       />
                     </div>
                     {/* Mode of Transport */}

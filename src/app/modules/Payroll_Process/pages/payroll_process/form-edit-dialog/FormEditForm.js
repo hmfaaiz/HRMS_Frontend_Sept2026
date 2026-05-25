@@ -67,6 +67,7 @@ export function FormEditForm({
   const [isStopSalModalOpen, setIsStopSalModalOpen] = useState(false);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [selectedLoans, setSelectedLoans] = useState([]);
+  const [validationError, setValidationError] = useState("");
   const [
     payrollConfigApproverPermission,
     setPayrollConfigApproverPermission,
@@ -273,7 +274,7 @@ export function FormEditForm({
   useEffect(() => {
     setSelectedEmployees(
       currentState?.payroll_group_details?.stop_salary_employees_list?.map(
-        (employee) => employee.employeeId
+        (employee) => employee
       )
     );
     setSelectedLoans(
@@ -333,166 +334,322 @@ export function FormEditForm({
               </div>
             )}
 
-            {isStopSalModalOpen && (
-              <>
-                <Modal
-                  show={isStopSalModalOpen}
-                  onHide={handleModalClose}
-                  style={{ zIndex: "99999" }}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>Stop Salary</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    {" "}
-                    <Form className="form form-label-right">
-                      <fieldset disabled={isUserForRead}>
-                        {/* allEmployeesWithNoPermissionList */}
+{isStopSalModalOpen && (
+  <>
+    <Modal
+      show={isStopSalModalOpen}
+      onHide={() => {
+        setValidationError("");
+        setSelectedEmployees([]);
+        handleModalClose();
+      }}
+      style={{ zIndex: "99999" }}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Stop Salary</Modal.Title>
+      </Modal.Header>
 
-                        <label> Employee </label>
+      <Modal.Body>
+        <Form className="form form-label-right">
+          {validationError && (
+            <div className="alert alert-danger text-xs mt-0.5">
+              {validationError}
+            </div>
+          )}
 
-                        <div className="overflow-auto max-h-48 border-none">
-                          {currentState?.payroll_group_details?.employees_list?.map(
-                            (option) => (
-                              <div
-                                key={option.Id}
-                                className="flex justify-start items-center border-none"
-                              >
-                                <input
-                                  className="mr-1"
-                                  name="employeeId"
-                                  type="checkbox"
-                                  value={option.Id}
-                                  checked={selectedEmployees.includes(
-                                    option.Id
-                                  )}
-                                  onChange={() =>
-                                    handleCheckboxChange(option.Id)
-                                  }
-                                />
-                                <label className="">{option?.employeeCode} - {option.fullName} </label>
-                              </div>
-                            )
-                          )}
-                          {/* {errors.employeeId && touched.employeeId && (
-                                <div className="invalid-text">{errors.employeeId}</div>
-                              )} */}
+          <fieldset disabled={isUserForRead}>
+            <label> Employee </label>
+
+            <div className="overflow-auto max-h-48 border-none">
+              {currentState?.payroll_group_details?.employees_list?.map(
+                (option) => {
+                  const cleanSelectedEmployees = selectedEmployees.filter(
+                    (item) => typeof item === "object"
+                  );
+
+                  const isChecked = cleanSelectedEmployees.some(
+                    (item) => item.employeeId === option.Id
+                  );
+
+                  const selectedItem = cleanSelectedEmployees.find(
+                    (item) => item.employeeId === option.Id
+                  );
+
+                  return (
+                    <div key={option.Id}>
+                      <div className="flex justify-start items-center border-none">
+                        <input
+                          className="mr-1"
+                          name="employeeId"
+                          type="checkbox"
+                          value={option.Id}
+                          checked={isChecked}
+                          onChange={() => {
+                            setValidationError("");
+
+                            setSelectedEmployees((prev) => {
+                              const cleanPrev = prev.filter(
+                                (item) => typeof item === "object"
+                              );
+
+                              const exists = cleanPrev.some(
+                                (item) => item.employeeId === option.Id
+                              );
+
+                              if (exists) {
+                                return cleanPrev.filter(
+                                  (item) => item.employeeId !== option.Id
+                                );
+                              }
+
+                              return [
+                                ...cleanPrev,
+                                {
+                                  employeeId: option.Id,
+                                  reason: "",
+                                },
+                              ];
+                            });
+                          }}
+                        />
+
+                        <label className="">
+                          {option?.employeeCode} - {option.fullName}
+                        </label>
+                      </div>
+
+                      {isChecked && (
+                        <div className="flex justify-start items-center border-none my-0.5">
+                          <input
+                            className="mr-1 form-control"
+                            name="reason"
+                            type="text"
+                            value={selectedItem?.reason || ""}
+                            placeholder="Reason"
+                            onChange={(e) => {
+                              setValidationError("");
+
+                              setSelectedEmployees((prev) => {
+                                const cleanPrev = prev.filter(
+                                  (item) => typeof item === "object"
+                                );
+
+                                return cleanPrev.map((item) =>
+                                  item.employeeId === option.Id
+                                    ? {
+                                        ...item,
+                                        reason: e.target.value,
+                                      }
+                                    : item
+                                );
+                              });
+                            }}
+                          />
                         </div>
-                      </fieldset>
-                    </Form>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleModalClose}>
-                      No
-                    </Button>
-                    {currentState?.payroll_group_details?.employees_list
-                      .length > 0 && (
-                      <Button
-                        variant="primary"
-                        onClick={() =>
-                          createPayrollStop_Salary(
-                            values.subsidiaryId,
-                            values.payroll_groupId,
-                            values.payroll_monthId,
-                            selectedEmployees
-                          )
-                        }
-                      >
-                        Yes
-                      </Button>
-                    )}
-                  </Modal.Footer>
-                </Modal>
-              </>
+                      )}
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          </fieldset>
+        </Form>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setValidationError("");
+            setSelectedEmployees([]);
+            handleModalClose();
+          }}
+        >
+          Cancel
+        </Button>
+
+        {currentState?.payroll_group_details?.employees_list.length > 0 && (
+          <Button
+            variant="primary"
+            disabled={!selectedEmployees?.length}
+            onClick={() => {
+              const cleanSelectedEmployees = selectedEmployees.filter(
+                (item) => typeof item === "object"
+              );
+
+              const invalidItems = cleanSelectedEmployees.filter(
+                (item) => !item.reason || item.reason.trim() === ""
+              );
+
+              if (invalidItems.length > 0) {
+                setValidationError(
+                  `Please provide reason for ${invalidItems.length} selected employee(s)`
+                );
+                return;
+              }
+
+              createPayrollStop_Salary(
+                values.subsidiaryId,
+                values.payroll_groupId,
+                values.payroll_monthId,
+                cleanSelectedEmployees
+              );
+
+              setValidationError("");
+            }}
+          >
+            Submit
+          </Button>
+        )}
+      </Modal.Footer>
+    </Modal>
+  </>
+)}
+{isStopLoanModalOpen && (
+  <>
+    <Modal
+      show={isStopLoanModalOpen}
+      onHide={() => {
+        setValidationError("");
+        handleLoanModalClose();
+      }}
+      style={{ zIndex: "99999" }}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Stop Loan</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form className="form form-label-right">
+           {validationError && (
+              <div className="alert alert-danger text-xs mt-1">
+                {validationError}
+              </div>
             )}
+          <fieldset disabled={isUserForRead}>
+            <label>Employee</label>
+            <div className="overflow-auto max-h-48 border-none">
+              {currentState?.payroll_group_details?.for_loan_employees_list?.map(
+                (option) => {
+                  const isChecked = selectedLoans.some(
+                    (item) => item.loan_request_detailId === option?.Id
+                  );
+                  const selectedItem = selectedLoans.find(
+                    (item) => item.loan_request_detailId === option?.Id
+                  );
+                  const isReasonEmpty = isChecked && (!selectedItem?.reason || selectedItem.reason.trim() === "");
+                  
+                  return (
+                    <div key={option.Id}>
+                      <div className="flex justify-start items-center border-none">
+                        <input
+                          className="mr-1"
+                          name="employeeId"
+                          type="checkbox"
+                          value={option.Id}
+                          checked={isChecked}
+                          onChange={() => {
+                            setValidationError(""); // Clear error when checkbox changes
+                            handleLoanCheckboxChange({
+                              loan_request_detailId: option?.Id,
+                              employeeId: option?.employeeId,
+                              loan_typeId:
+                                option?.Employee_loan_request
+                                  ?.LoanType?.Id,
+                              reason: "",
+                            });
+                          }}
+                        />
 
-            {isStopLoanModalOpen && (
-              <>
-                <Modal
-                  show={isStopLoanModalOpen}
-                  onHide={handleLoanModalClose}
-                  style={{ zIndex: "99999" }}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>Stop Loan</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    {" "}
-                    <Form className="form form-label-right">
-                      <fieldset disabled={isUserForRead}>
-                        {/* allEmployeesWithNoPermissionList */}
+                        <label className="">
+                          {`${option?.Employee_loan_request
+                            ?.Employee?.employeeCode ||
+                            ""} - ${option?.Employee_loan_request
+                            ?.Employee?.fullName || ""} - ${option
+                            ?.Employee_loan_request?.LoanType
+                            ?.name ||
+                            ""} (${option?.amount_received || ""})`}
+                        </label>
+                      </div>
 
-                        <label>Employee</label>
-                        <div className="overflow-auto max-h-48 border-none">
-                          {currentState?.payroll_group_details?.for_loan_employees_list?.map(
-                            (option) => (
-                              <div
-                                key={option.Id}
-                                className="flex justify-start items-center border-none"
-                              >
-                                <input
-                                  className="mr-1"
-                                  name="employeeId"
-                                  type="checkbox"
-                                  value={option.Id}
-                                  // checked={selectedLoans.includes(
-                                  //   option?.Id
-                                  // )}
-
-                                  checked={selectedLoans.some(
-                                    (item) =>
-                                      item.loan_request_detailId === option?.Id
-                                  )}
-                                  onChange={() =>
-                                    handleLoanCheckboxChange({
-                                      loan_request_detailId: option?.Id,
-                                      employeeId: option?.employeeId,
-                                      loan_typeId:
-                                        option?.Employee_loan_request?.LoanType
-                                          ?.Id,
-                                    })
-                                  }
-                                />
-                                {console.log("option?.Employee_loan_request" , option?.Employee_loan_request)}
-                                <label className="">
-                                  {`${option?.Employee_loan_request?.Employee
-                                    ?.employeeCode || ""} - ${option?.Employee_loan_request?.Employee
-                                    ?.fullName || ""} - ${option
-                                    ?.Employee_loan_request?.LoanType?.name ||
-                                    ""} (${option?.amount_received || ""})`}
-                                </label>
-                              </div>
-                            )
-                          )}
+                      {isChecked && (
+                        <div className="flex justify-start items-center border-none my-0.5">
+                          <input
+                            className={`mr-1 form-control ${isReasonEmpty ? 'is-invalid' : ''}`}
+                            name="reason"
+                            type="text"
+                            value={selectedItem?.reason || ""}
+                            placeholder="Reason (Required)"
+                            onChange={(e) => {
+                              setValidationError(""); // Clear error when typing
+                              setSelectedLoans(prev =>
+                                prev.map(item =>
+                                  item.loan_request_detailId === option?.Id
+                                    ? { ...item, reason: e?.target?.value }
+                                    : item
+                                )
+                              );
+                            }}
+                          />
+                          {/* {isReasonEmpty && (
+                            <div className="invalid-feedback d-block">
+                              Reason is required
+                            </div>
+                          )} */}
                         </div>
-                      </fieldset>
-                    </Form>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleLoanModalClose}>
-                      No
-                    </Button>
-                    {currentState?.payroll_group_details
-                      ?.for_loan_employees_list.length > 0 && (
-                      <Button
-                        variant="primary"
-                        onClick={() =>
-                          createPayrollStop_Loan(
-                            values.subsidiaryId,
-                            values.payroll_groupId,
-                            values.payroll_monthId,
-                            selectedLoans
-                          )
-                        }
-                      >
-                        Yes
-                      </Button>
-                    )}
-                  </Modal.Footer>
-                </Modal>
-              </>
-            )}
-
+                      )}
+                    </div>
+                  );
+                }
+              )}
+            </div>
+            
+            {/* Global validation error */}
+           
+          </fieldset>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setValidationError("");
+            handleLoanModalClose();
+          }}
+        >
+          Cancel
+        </Button>
+        {currentState?.payroll_group_details
+          ?.for_loan_employees_list.length > 0 && (
+          <Button
+            variant="primary"
+            disabled={!selectedLoans?.length}
+            onClick={() => {
+              // Validate all checked items have reason
+              const invalidItems = selectedLoans.filter(
+                (item) => !item.reason || item.reason.trim() === ""
+              );
+              
+              if (invalidItems.length > 0) {
+                setValidationError(`Please provide reason for ${invalidItems.length} selected loan(s)`);
+                return;
+              }
+              
+              createPayrollStop_Loan(
+                values.subsidiaryId,
+                values.payroll_groupId,
+                values.payroll_monthId,
+                selectedLoans,
+              );
+              setValidationError("");
+            }}
+          >
+            Submit
+          </Button>
+        )}
+      </Modal.Footer>
+    </Modal>
+  </>
+)}
             <PayrollCheckListModel data={formUIProps.payrollCheckListData} formUIProps={formUIProps} />
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
@@ -792,6 +949,19 @@ export function FormEditForm({
                           </span>
                         </label>
                       </div>
+
+                        <div className="">
+                        <label>
+                          Total Employees (Not Approved for Payroll):
+                          <span style={{ fontWeight: "bold" }}>
+                            {" "}
+                            {currentState?.payroll_group_details
+                              ?.active_employee - currentState?.payroll_group_details
+                              ?.total_employees || 0}
+                          </span>
+                        </label>
+                      </div>
+
                       <div className="">
                         <label>
                           Total Employees (Approved for Payroll):
@@ -803,12 +973,26 @@ export function FormEditForm({
                         </label>
                       </div>
 
+
+
                       <div className="">
                         <label>
                           Salary setup created & approved:{" "}
                           <span style={{ fontWeight: "bold" }}>
                             {" "}
                             {currentState?.payroll_group_details
+                              ?.slary_setup_not_created || 0}
+                          </span>
+                        </label>
+                      </div>
+
+                                            <div className="">
+                        <label>
+                          Salary setup not created:{" "}
+                          <span style={{ fontWeight: "bold" }}>
+                            {" "}
+                            {currentState?.payroll_group_details
+                              ?.total_employees - currentState?.payroll_group_details
                               ?.slary_setup_not_created || 0}
                           </span>
                         </label>
@@ -833,6 +1017,17 @@ export function FormEditForm({
                           </span>
                         </label>
                       </div>
+
+                      {currentState?.payroll_group_details
+                              ?.employeeWithZeroAttendance > 0 ?                <div >
+                        <label style={{ fontWeight: "bold" }} className="text-red-500">
+                          Employees with 0 attendance days:{" "}
+                          <span >
+                            {currentState?.payroll_group_details
+                              ?.employeeWithZeroAttendance || 0}
+                          </span>
+                        </label>
+                      </div> : null}
                     </div>
                   </div>
 

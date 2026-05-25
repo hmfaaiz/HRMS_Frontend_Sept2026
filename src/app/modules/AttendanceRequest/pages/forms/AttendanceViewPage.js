@@ -11,12 +11,19 @@ import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import { useSelector, shallowEqual } from "react-redux";
+import { LogsDialog } from "./log/LogsDialog";
 
 export function AttendanceViewPage({ history }) {
   const FormUIEvents = {
     newAttendanceRequest: (Id) => {
       return history.push(
         `/attendance_request/read-all-attendance-request/${Id}/new`
+      );
+    },
+
+     viewttendanceLogs: (attDate) => {
+      return history.push(
+        `/attendance_request/read-all-attendance-request/${attDate}/logs`
       );
     },
   };
@@ -39,6 +46,18 @@ export function AttendanceViewPage({ history }) {
           />
         )}
       </Route>
+      
+      <Route path="/attendance_request/read-all-attendance-request/:attDate/logs">
+  {({ history, match, location }) => (
+    <LogsDialog
+      show={!!match}
+    
+      onHide={() => {
+        history.push("/attendance_request/read-all-attendance-request");
+      }}
+    />
+  )}
+</Route>
       {/* <Card>
         <CardHeader title={CurrentModuleName()}></CardHeader>
         <FormFilter />
