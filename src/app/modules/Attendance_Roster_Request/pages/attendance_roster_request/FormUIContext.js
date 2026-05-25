@@ -29,6 +29,8 @@ export function FormUIProvider({ children, FormUIEvents }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setIds]               = useState(null);
   const [employeeId, setemployeeId] = useState(null); 
+  const [workflowId, setWorkflowId] = useState(null);
+  const [currentData, setCurrentData] = useState(null);
 
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prev) => {
@@ -47,6 +49,10 @@ export function FormUIProvider({ children, FormUIEvents }) {
     setemployeeId,    
     initUser,
     openDeleteDialog: FormUIEvents?.openDeleteDialog,
+    workflowId,
+    setWorkflowId,
+    currentData,
+    setCurrentData,
   };
 
   return (

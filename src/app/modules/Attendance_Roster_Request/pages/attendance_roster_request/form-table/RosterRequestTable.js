@@ -26,6 +26,8 @@ export function FormTable() {
     employeeId: formUIContext.employeeId,
     queryParams: formUIContext.queryParams,
     setQueryParams: formUIContext.setQueryParams,
+    setWorkflowId: formUIContext.setWorkflowId,  
+    setCurrentData: formUIContext.setCurrentData,
   }), [formUIContext]);
 
   const { currentState, userAccess, user } = useSelector((state) => ({
@@ -114,13 +116,15 @@ export function FormTable() {
       formatExtraData: {
         setIds: formUIProps.setIds,
         setViewRecord,
+        setWorkflowId: formUIProps.setWorkflowId,  
+        setCurrentData: formUIProps.setCurrentData, 
         isAccessForReapply:
           isAccessForReapply &&
           user?.employeeIdMapping === formUIProps?.employeeId
             ? isAccessForReapply.isAccess
             : false,
       },
-      headerClasses: "text-left",
+      headerClasses: "text-right",
       style: { minWidth: "100px" },
     },
   ];

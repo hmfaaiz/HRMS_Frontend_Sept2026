@@ -28,6 +28,8 @@ export function FormTable() {
       employeeId: formUIContext.employeeId,
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
+      setWorkflowId: formUIContext.setWorkflowId,  
+      setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
 
@@ -131,13 +133,15 @@ export function FormTable() {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         setIds: formUIProps.setIds,
+        setWorkflowId: formUIProps.setWorkflowId,  
+        setCurrentData: formUIProps.setCurrentData, 
         isAccessForReapply:
           isAccessForReapply &&
           user?.employeeIdMapping === formUIProps?.employeeId?.value
             ? isAccessForReapply.isAccess
             : false,
       },
-      headerClasses: "text-left",
+      headerClasses: "text-right",
       style: { minWidth: "80px" },
     },
   ];

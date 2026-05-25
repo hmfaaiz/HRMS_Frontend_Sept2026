@@ -8,7 +8,7 @@ export const sizePerPageList = [
 
 export const initialFilter = {
   filter: {
-  request_status: "P",
+  request_status: "",
 },
   sortOrder: "asc",
   sortField: "from",

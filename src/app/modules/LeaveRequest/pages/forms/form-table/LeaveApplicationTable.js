@@ -32,6 +32,8 @@ export function LeaveApplicationTable() {
       setQueryParamsLeaveApp: formUIContext.setQueryParamsLeaveApp,
       editRecord: formUIContext.editRecord,
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      setWorkflowId: formUIContext.setWorkflowId,  
+      setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
 
@@ -211,9 +213,11 @@ export function LeaveApplicationTable() {
           ? isAccessForReApply?.isAccess &&
             user?.employeeIdMapping === FormUIProps?.employeeId
           : false,
+        setWorkflowId: FormUIProps.setWorkflowId,   
+        setCurrentData: FormUIProps.setCurrentData,
       },
-      classes: "text-left pr-0",
-      headerClasses: "text-left pr-3",
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
       style: {
         minWidth: "100px",
         maxWidth: "100px",

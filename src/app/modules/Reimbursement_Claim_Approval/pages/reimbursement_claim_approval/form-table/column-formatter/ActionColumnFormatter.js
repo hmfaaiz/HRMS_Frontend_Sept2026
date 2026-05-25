@@ -7,6 +7,7 @@ export function ActionsColumnFormatter(
   { setWorkflowId, setCurrentData }
 ) {
   return (
+  <div className="flex items-center justify-end gap-3 w-full">
     <OverlayTrigger overlay={<Tooltip>View Detail</Tooltip>}>
       <a
         style={{ cursor: "pointer" }}
@@ -18,5 +19,6 @@ export function ActionsColumnFormatter(
         <Eye className="w-4 h-4" />
       </a>
     </OverlayTrigger>
+    </div>
   );
 }

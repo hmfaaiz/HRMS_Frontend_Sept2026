@@ -68,3 +68,8 @@ export function getPayrollMonth(body) {
     body
   );
 }
+export function getWorkflowStatusByLoanId(loanId) {
+  return axios.get(
+    `${USERS_URL}/loan_approval/read-loan-approval/${loanId}`
+  );
+}

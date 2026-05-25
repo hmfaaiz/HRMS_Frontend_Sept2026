@@ -94,14 +94,35 @@ export function DetailTimeLogsTable() {
       formatter: (cell) => (cell ? (cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell) : ""),
     },
     {
-      dataField: "workDescription",
-      text: "Work Description",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "70px" },
-      formatter: (cell) => (cell ? (cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell) : ""),
-    },
+  dataField: "workDescription",
+  text: "Work Description",
+  sort: false,
+  sortCaret: sortCaret,
+  headerSortingClasses,
+  style: {
+    minWidth: "250px",
+    whiteSpace: "normal",
+    wordBreak: "break-word",
+  },
+
+  formatter: (cell) => {
+    if (!cell) return "";
+
+    return (
+      <div
+        title={cell}
+        style={{
+          whiteSpace: "normal",
+          wordBreak: "break-word",
+          overflowWrap: "break-word",
+          lineHeight: "1.4",
+        }}
+      >
+        {cell}
+      </div>
+    );
+  },
+},
     {
       dataField: "loggedDate",
       text: "Logged Date",
