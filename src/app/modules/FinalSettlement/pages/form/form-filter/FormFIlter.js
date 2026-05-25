@@ -10,21 +10,45 @@ import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
-import { fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllDept,
+  fetchAllFormsMenu,
+  fetchAllSubsidiaryData,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
-
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values;
+  const {
+    searchText,
+    departmentId,
+    designationId,
+    subsidiaryId,
+    employeeTypeId,
+    type,
+  } = values;
   const newQueryParams = { ...queryParams };
-  const filter = {};
+  const filter = { ...queryParams?.filter };
 
   if (searchText) {
     filter.searchQuery = searchText;
-    // filter.email = searchText
+  }
+  if (departmentId) {
+    filter.departmentId = departmentId;
+  }
+  if (designationId) {
+    filter.designationId = designationId;
+  }
+  if (subsidiaryId) {
+    filter.subsidiaryId = subsidiaryId;
+  }
+  if (employeeTypeId) {
+    filter.employeeTypeId = employeeTypeId;
+  }
+  if (type) {
+    filter.type = type;
   }
   newQueryParams.filter = filter;
   return newQueryParams;
@@ -33,7 +57,6 @@ const prepareFilter = (queryParams, values) => {
 export function FormFIlter({ listLoading, user }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const [Loading, setLoading] = useState(false);
   const { dashboard } = useSelector((state) => state);
   const formUIProps = useMemo(() => {
     return {
@@ -42,24 +65,12 @@ export function FormFIlter({ listLoading, user }) {
     };
   }, [FormUIContext]);
 
-  function addCommas(nStr) {
-    nStr += "";
-    let x = nStr.split(".");
-    let x1 = x[0];
-    let x2 = x.length > 1 ? "." + x[1] : "";
-    let rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, "$1" + "," + "$2");
-    }
-    return x1 + x2;
-  }
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
       newQueryParams.pageNumber = 1;
-
       formUIProps.setQueryParams(newQueryParams);
     }
   };
@@ -79,24 +90,27 @@ export function FormFIlter({ listLoading, user }) {
 
   useEffect(() => {
     if (!dashboard?.allSubsidiaryList?.length) {
-      return
+      return;
     }
-    const findDefaultSubs = dashboard?.allSubsidiaryList?.find((el) => el?.isDefault)
+    const findDefaultSubs = dashboard?.allSubsidiaryList?.find(
+      (el) => el?.isDefault,
+    );
     if (!findDefaultSubs) {
-      return
+      return;
     }
 
     const updatedQueryParams = {
       ...formUIProps.queryParams,
       subsidiaryId: findDefaultSubs.value,
-      subsidiaryLabel: findDefaultSubs.value !== "" ? findDefaultSubs.label : "",
+      type: "notCreated",
+      subsidiaryLabel:
+        findDefaultSubs.value !== "" ? findDefaultSubs.label : "",
       pageNumber: 1,
     };
 
     formUIProps.setQueryParams(updatedQueryParams);
     dispatch(fetchAllDept(findDefaultSubs.value));
-  }, [dashboard?.allSubsidiaryList])
-
+  }, [dashboard?.allSubsidiaryList]);
 
   const empTypeOptions = [
     { label: "All", value: "" },
@@ -108,7 +122,12 @@ export function FormFIlter({ listLoading, user }) {
       <Formik
         enableReinitialize={true}
         initialValues={{
-          searchText: "",
+          searchQuery: "",
+          type: "notCreated",
+          subsidiaryId: "",
+          departmentId: "",
+          designationId: "",
+          employeeTypeId: "",
         }}
         onSubmit={(values) => {
           applyFilter(values);
@@ -151,41 +170,32 @@ export function FormFIlter({ listLoading, user }) {
             /> */}
 
             <div className="grid md:grid-cols-7 gap-3 mb-2 ">
-
               <div className="">
                 <div>
                   <SearchSelect
                     name="subsidiaryId"
-                    label={
-                      <span>
-                        {" "}
-                        Subsidiary
-
-                      </span>
-                    }
-
+                    label={<span> Subsidiary</span>}
                     value={
                       (dashboard?.allSubsidiaryList || []).find(
-                        (item) => item.value === formUIProps?.queryParams?.subsidiaryId
+                        (item) =>
+                          item.value === formUIProps?.queryParams?.subsidiaryId,
                       ) || { label: "All", value: "" }
                     }
                     onChange={(e) => {
+                      setFieldValue("subsidiaryId", e.value);
+                      dispatch(fetchAllDept(e.value));
+                      handleSubmit();
+                      // const updatedQueryParams = {
+                      //   ...formUIProps.queryParams,
+                      //   subsidiaryId: e.value,
+                      //   subsidiaryLabel: e.value !== "" ? e.label : "",
+                      //   pageNumber: 1,
+                      // };
 
-                      const updatedQueryParams = {
-                        ...formUIProps.queryParams,
-                        subsidiaryId: e.value,
-                        subsidiaryLabel: e.value !== "" ? e.label : "",
-                        pageNumber: 1,
-                      };
-
-
-                      formUIProps.setQueryParams(updatedQueryParams);
-
+                      // formUIProps.setQueryParams(updatedQueryParams);
 
                       // dispatch(fetchSeparation(formUIProps.queryParams));
-                      dispatch(fetchAllDept(e.value));
                     }}
-
                     // options={dashboard.allSubsidiaryList}
                     options={[
                       { label: "All", value: "" },
@@ -200,35 +210,25 @@ export function FormFIlter({ listLoading, user }) {
                 <div>
                   <SearchSelect
                     name="departmentId"
-                    label={
-                      <span>
-                        {" "}
-                        Department
-
-                      </span>
-                    }
-
+                    label={<span> Department</span>}
                     value={
                       (dashboard?.allDept || []).find(
-                        (item) => item.value === formUIProps?.queryParams?.departmentId
+                        (item) =>
+                          item.value === formUIProps?.queryParams?.departmentId,
                       ) || { label: "All", value: "" }
                     }
                     onChange={(e) => {
-
-                      const updatedQueryParams = {
-                        ...formUIProps.queryParams,
-                        departmentId: e.value,
-                        departmentLabel: e.value !== "" ? e.label : "",
-                        pageNumber: 1,
-                      };
-
-
-                      formUIProps.setQueryParams(updatedQueryParams);
-
-
+                      setFieldValue("departmentId", e?.value);
+                      handleSubmit();
+                      // const updatedQueryParams = {
+                      //   ...formUIProps.queryParams,
+                      //   departmentId: e.value,
+                      //   departmentLabel: e.value !== "" ? e.label : "",
+                      //   pageNumber: 1,
+                      // };
+                      // formUIProps.setQueryParams(updatedQueryParams);
                       // dispatch(fetchSeparation(formUIProps.queryParams));
                     }}
-
                     // options={dashboard.allDept}
                     options={[
                       { label: "All", value: "" },
@@ -243,36 +243,27 @@ export function FormFIlter({ listLoading, user }) {
                 <div>
                   <SearchSelect
                     name="designationId"
-                    label={
-                      <span>
-                        {" "}
-                        Designation
-
-                      </span>
-                    }
-
-
+                    label={<span> Designation</span>}
                     value={
                       (dashboard?.allDesignations || []).find(
-                        (item) => item.value === formUIProps?.queryParams?.designationId
+                        (item) =>
+                          item.value ===
+                          formUIProps?.queryParams?.designationId,
                       ) || { label: "All", value: "" }
                     }
                     onChange={(e) => {
+                      // const updatedQueryParams = {
+                      //   ...formUIProps.queryParams,
+                      //   designationId: e.value,
+                      //   designationLabel: e.value !== "" ? e.label : "",
+                      //   pageNumber: 1,
+                      // };
 
-                      const updatedQueryParams = {
-                        ...formUIProps.queryParams,
-                        designationId: e.value,
-                        designationLabel: e.value !== "" ? e.label : "",
-                        pageNumber: 1,
-                      };
-
-
-                      formUIProps.setQueryParams(updatedQueryParams);
-
-
+                      // formUIProps.setQueryParams(updatedQueryParams);
+                      setFieldValue("designation", e?.value);
+                      handleSubmit();
                       // dispatch(fetchSeparation(formUIProps.queryParams));
                     }}
-
                     // options={dashboard?.allDesignations}
                     options={[
                       { label: "All", value: "" },
@@ -288,58 +279,44 @@ export function FormFIlter({ listLoading, user }) {
                 <div>
                   <SearchSelect
                     name="employeeTypeId"
-                    label={
-                      <span>
-                        {" "}
-                        Employee Type
-
-                      </span>
-                    }
-
+                    label={<span> Employee Type</span>}
                     options={empTypeOptions}
                     value={
                       empTypeOptions.find(
                         (item) =>
-                          String(item.value) === String(formUIProps?.queryParams?.employeeTypeId)
+                          String(item.value) ===
+                          String(formUIProps?.queryParams?.employeeTypeId),
                       ) || { label: "All", value: "" }
                     }
-
                     onChange={(e) => {
+                      setFieldValue("employeeTypeId", e?.value);
+                      handleSubmit();
+                      // const updatedQueryParams = {
+                      //   ...formUIProps.queryParams,
+                      //   employeeTypeId: e.value,
+                      //   employeeLabel: e.value !== "" ? e.label : "",
+                      //   pageNumber: 1,
+                      // };
 
-                      const updatedQueryParams = {
-                        ...formUIProps.queryParams,
-                        employeeTypeId: e.value,
-                        employeeLabel: e.value !== "" ? e.label : "",
-                        pageNumber: 1,
-                      };
-
-
-                      formUIProps.setQueryParams(updatedQueryParams);
-
+                      // formUIProps.setQueryParams(updatedQueryParams);
 
                       // dispatch(fetchSeparation(formUIProps.queryParams));
                     }}
 
-                  // options={[
-                  //   { label: "All", value: "" },
-                  //   ...(dashboard?.allEmpTypeDynamicChildMenus || []),
-                  //   ...(dashboard?.allEmpTypeChildMenus || []),
-                  // ]}
-
-
+                    // options={[
+                    //   { label: "All", value: "" },
+                    //   ...(dashboard?.allEmpTypeDynamicChildMenus || []),
+                    //   ...(dashboard?.allEmpTypeChildMenus || []),
+                    // ]}
                   />
                 </div>
               </div>
 
-
-
-
               <div>
-                <label> <span>
+                <label>
                   {" "}
-                  Search
-
-                </span></label>
+                  <span> Search</span>
+                </label>
                 <InputSearch
                   values={values}
                   fieldName="searchText"
@@ -379,9 +356,69 @@ export function FormFIlter({ listLoading, user }) {
                 </label>
 
               </div> */}
+            </div>
+            <button
+              type="button"
+              className={`btn mr-2 rounded-xl ${
+                values?.type === "notCreated"
+                  ? "bg-black text-white"
+                  : "btn-secondary"
+              }`}
+              onClick={() => {
+                // const updatedQueryParams = {
+                //   ...formUIProps.queryParams,
+                //   type: "notCreated",
+                //   pageNumber: 1,
+                // };
+                setFieldValue("type", "notCreated");
+                handleSubmit();
+                // formUIProps.setQueryParams(updatedQueryParams);
+              }}
+            >
+              Not Created
+            </button>
+            <button
+              type="button"
+              className={`btn mr-2 rounded-xl ${
+                values?.type === "notFinal"
+                  ? "bg-black text-white"
+                  : "btn-secondary"
+              }`}
+              onClick={() => {
+                // const updatedQueryParams = {
+                //   ...formUIProps.queryParams,
+                //   type: "notFinal",
+                //   pageNumber: 1,
+                // };
+                setFieldValue("type", "notFinal");
+                handleSubmit();
+                // formUIProps.setQueryParams(updatedQueryParams);
+              }}
+            >
+              Created
+            </button>
+            <button
+              type="button"
+              className={`btn mr-2 rounded-xl ${
+                values?.type === "final"
+                  ? "bg-black text-white"
+                  : "btn-secondary"
+              }`}
+              onClick={() => {
+                // const updatedQueryParams = {
+                //   ...formUIProps.queryParams,
+                //   type: "final",
+                //   pageNumber: 1,
+                // };
+                setFieldValue("type", "final");
+                handleSubmit();
+                // formUIProps.setQueryParams(updatedQueryParams);
+              }}
+            >
+              Finalized
+            </button>
 
-
-              <div className="">
+            {/* <div className="">
                 <label className="flex items-center gap-2">
                   <Field
                     type="checkbox"
@@ -410,12 +447,7 @@ export function FormFIlter({ listLoading, user }) {
                   </span>
                 </label>
 
-              </div>
-
-
-
-            </div>
-
+              </div> */}
           </form>
         )}
       </Formik>

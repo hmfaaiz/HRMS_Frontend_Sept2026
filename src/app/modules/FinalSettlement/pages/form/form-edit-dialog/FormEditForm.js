@@ -244,7 +244,7 @@ export function FormEditForm({
       if (selectedEmp) {
         setDepartmentId(selectedEmp?.departmentId)
         setDateOfJoining(selectedEmp?.dateOfJoining);
-        setPayrollMonthEligibility(selectedEmp?.payrollMonthEligibility);
+        // setPayrollMonthEligibility(selectedEmp?.payrollMonthEligibility);
 
 
 
@@ -328,7 +328,6 @@ export function FormEditForm({
       setLocalizationId(matchedSubsidiary?.localizationId);
     }
   }, [formData?.subsidiaryId]);
-  console.log("attSumPanelMode222", data)
   return (
     <Formik
       enableReinitialize={true}
@@ -461,7 +460,7 @@ export function FormEditForm({
                       name="employeeId"
                       className={!values.employeeId ? 'form-control is-invalid' : 'form-control'}
                       placeholder=""
-                      isDisabled={formData.Id || isdataForRead}
+                      isDisabled={formData.Id || isdataForRead || true}
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
@@ -476,7 +475,7 @@ export function FormEditForm({
                         if (selectedEmp) {
                           setDepartmentId(selectedEmp?.departmentId);
                           setDateOfJoining(selectedEmp?.dateOfJoining);
-                          setPayrollMonthEligibility(selectedEmp?.payrollMonthEligibility);
+                          // setPayrollMonthEligibility(selectedEmp?.payrollMonthEligibility);
                         }
                       }}
                       label={
@@ -494,21 +493,21 @@ export function FormEditForm({
                       options={
                         activeEmployeeList?.map((option) => {
                           // check if this employee already exists in entities array
-                          const isAlreadyUsed = entities?.some(
-                            (entity) => entity.employeeId === option.value
-                          );
+                          // const isAlreadyUsed = entities?.some(
+                          //   (entity) => entity.employeeId === option.value
+                          // );
 
-                          const notForFinalSettlement = entities?.some(
-                            (entity) =>
-                              entity.employeeId === option.value &&
-                              entity.Separation?.isNotEligibleForFinalSettlement === true
-                          );
+                          // const notForFinalSettlement = entities?.some(
+                          //   (entity) =>
+                          //     entity.employeeId === option.value &&
+                          //     entity.Separation?.isNotEligibleForFinalSettlement === true
+                          // );
 
 
                           return {
                             label: option.label,
                             value: option.value,
-                            isDisabled: isAlreadyUsed || notForFinalSettlement // disable if already used
+                            // isDisabled: isAlreadyUsed || notForFinalSettlement // disable if already used
                           };
                         }) || []
                       }
@@ -605,18 +604,17 @@ export function FormEditForm({
 
                   <div className="col-span-5 flex items-end justify-start gap-3 mt-6 " style={{ pointerEvents: 'auto', opacity: 1 }}>
 
-                    {payrollMonthEligibility === false &&
-                      <span>
+                    {/* {payrollMonthEligibility === false &&
+                      <span className="text-xs">
                         Last Working Date of Employee does not falls in any Payroll Month.
                         Kindly create Payroll Month first and then proceed with Final Settlement.
                       </span>
-                    }
+                    } */}
                   </div>
 
 
 
                 </div>
-                {console.log("attSumPanelMode111", attSumPanelMode)}
                 <EmployeeProfile
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={panelMode}
@@ -642,7 +640,9 @@ export function FormEditForm({
                         <button
                           type="button"
                           className="btn btn-primary btn-elevate"
-                          disabled={!values.employeeId || isdataForRead || !payrollMonthEligibility}
+                          disabled={!values.employeeId || isdataForRead 
+                            // || !payrollMonthEligibility
+                          }
                           onClick={() => {
                             setConfirmationModal(true);
                             setAttSumPanelMode(false)
@@ -1469,7 +1469,7 @@ export function FormEditForm({
                 <div >
 
                   <h6 className="font-bold mb-0 text-primary">
-                    Grautity Detail
+                    Gratuity Detail
                   </h6>
 
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
@@ -1690,7 +1690,7 @@ export function FormEditForm({
                     {toBeCalculated ? (
                       <button
                         type="button"
-                        disabled={!payrollMonthEligibility}
+                        // disabled={!payrollMonthEligibility}
 
                         onClick={() => {
                           handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
@@ -1812,7 +1812,9 @@ export function FormEditForm({
 
                     <button
                       type="button"
-                      disabled={!values.exitClearence || isdataForRead || values.settlementFinalized || values.netFinalSettlementAmount < 0 || !payrollMonthEligibility}
+                      disabled={!values.exitClearence || isdataForRead || values.settlementFinalized || values.netFinalSettlementAmount < 0 
+                        // || !payrollMonthEligibility
+                      }
                       onClick={() => {
                         setFinalizeModal(true)
                       }}
@@ -1827,7 +1829,9 @@ export function FormEditForm({
 
                     <button
                       type="submit"
-                      disabled={values.settlementFinalized || isdataForRead || !payrollMonthEligibility}
+                      disabled={values.settlementFinalized || isdataForRead 
+                        // || !payrollMonthEligibility
+                        }
 
                       onClick={() => {
                         handleSubmit();

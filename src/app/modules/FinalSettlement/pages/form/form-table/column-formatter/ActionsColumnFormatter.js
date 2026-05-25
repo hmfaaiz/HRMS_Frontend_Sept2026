@@ -4,7 +4,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Generatejob_offer_letter } from "../../../../_redux/redux-Actions";
-import { CirclePower, Download, Eye, Pencil, Send, Trash2 } from "lucide-react";
+import { CirclePower, Download, Eye, Pencil, Plus, Send, Trash2 } from "lucide-react";
 export function ActionsColumnFormatter(
   cellContent,
   row,
@@ -22,39 +22,63 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     isAccessForConvert,
     isAccessForOfferLetter,
-  }
+    newFormButtonClick,
+    isAccessForCreate,
+  },
 ) {
   const isUserRead = false;
 
-
   return (
     <div className="space-x-2">
- 
-
-
-
       {/* View */}
       {isAccessForView && (
         <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
-          <a className="" onClick={() => openReadFormDialog(row.employeeId)}>
+          <button
+            style={{ background: "none", border: "none", padding: 0 }}
+            type="button"
+            className=""
+            onClick={() => openReadFormDialog(row.employeeId)}
+          >
             <Eye className="w-4 h-4 text-black cursor-pointer" />
-          </a>
+          </button>
         </OverlayTrigger>
       )}
 
       {/* Edit */}
-      {isAccessForEdit && !row.settlementFinalized &&(
+      {isAccessForEdit && !row.settlementFinalized && (
         <OverlayTrigger
-          overlay={<Tooltip id={`edit-tooltip-${row.employeeId}`}>Edit</Tooltip>}
+          overlay={
+            <Tooltip id={`edit-tooltip-${row.employeeId}`}>Edit</Tooltip>
+          }
         >
-          <a onClick={() => openEditFormDialog(row.employeeId)}>
+          <button
+            style={{ background: "none", border: "none", padding: 0 }}
+            type="button"
+            onClick={() => openEditFormDialog(row.employeeId)}
+          >
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
-          </a>
+          </button>
+        </OverlayTrigger>
+      )}
+
+      {isAccessForCreate && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={`edit-tooltip-${row.employeeId}`}>Create</Tooltip>
+          }
+        >
+          <button
+            style={{ background: "none", border: "none", padding: 0 }}
+            type="button"
+            onClick={() => newFormButtonClick(row.employeeId)}
+          >
+            <Plus className="w-4 h-4 text-black cursor-pointer" />
+          </button>
         </OverlayTrigger>
       )}
 
       {/* Delete or Activate */}
-      {isAccessForDelete && !row.settlementFinalized &&(
+      {isAccessForDelete && !row.settlementFinalized && (
         <OverlayTrigger
           overlay={
             <Tooltip id="delete-tooltip">
@@ -63,18 +87,24 @@ export function ActionsColumnFormatter(
           }
         >
           {row.isActive ? (
-            <a onClick={() => openDeleteFormDialog(row.employeeId, row.isActive)}>
+            <button
+              style={{ background: "none", border: "none", padding: 0 }}
+              type="button"
+              onClick={() => openDeleteFormDialog(row.employeeId, row.isActive)}
+            >
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
+            </button>
           ) : (
-            <a onClick={() => openActiveFormDialog(row.employeeId, row.isActive)}>
+            <button
+              style={{ background: "none", border: "none", padding: 0 }}
+              type="button"
+              onClick={() => openActiveFormDialog(row.employeeId, row.isActive)}
+            >
               <CirclePower className="w-4 h-4 text-black cursor-pointer" />
-            </a>
+            </button>
           )}
         </OverlayTrigger>
       )}
-
-  
     </div>
   );
 }
