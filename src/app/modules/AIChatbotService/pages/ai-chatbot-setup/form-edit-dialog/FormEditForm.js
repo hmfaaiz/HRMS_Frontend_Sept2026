@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { ChevronRight, MoveUp, Plus, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { formatDate } from "../../../../../utils/common";
 import { useFormUIContext } from "../FormUIContext";
 import { useDispatch } from "react-redux";
@@ -74,9 +74,9 @@ export function FormEditForm({
         {/* Messages Container - Scrollable area */}
         <div
           ref={messagesContainerRef}
-          className="flex-1 overflow-y-auto py-4 px-4 scrollbar-fancy"
+          className="flex-1 overflow-y-auto pt-2 px-4 scrollbar-fancy"
         >
-          <div className="h-[60dvh] md:max-h-[60dvh] border-b-2 border-b-black overflow-auto scrollbar-fancy scroll-smooth">
+          <div className="h-[66dvh] md:max-h-[66dvh] border-b-2 border-b-black overflow-auto scrollbar-fancy scroll-smooth">
             {currentChat.map((msg, index) => (
               <div key={index} className="mb-3 flex flex-col gap-3">
                 {/* QUESTION (right side - 40%) */}
@@ -88,31 +88,45 @@ export function FormEditForm({
                   </div>
                 )}
 
-                {msg.content && (
+                {(msg.content || msg.processText || msg.isStreaming) && (
                   <div className="flex justify-start">
                     <div
                       className={`
-         p-2 w-fit min-w-[80%] max-w-[95%] sm:max-w-[90%] md:max-w-[82%]  rounded-xl text-sm rounded-bl-none  leading-6
+        p-2 w-fit min-w-[80%] max-w-[95%] sm:max-w-[90%] md:max-w-[82%]
+        rounded-xl text-sm rounded-bl-none leading-6
         ${msg.isError ? "bg-red-400 text-white" : "bg-tsecondary text-black"}
       `}
                     >
-                      {console.log("bject", msg)}
-                      {msg.isError ? (
-                        <div className="text-left whitespace-pre-wrap">
-                          {msg.content}
+                      {msg.isStreaming && msg.processText && (
+                        <div className="flex items-center gap-2 p-1">
+                          <span className="spinner spinner-white"></span>
+                          <span className="text-sm text-gray-500 ml-4">
+                            {msg.processText}...
+                          </span>
                         </div>
-                      ) : !msg?.isStreaming ? (
-                        <AssistantHtml
-                          isContinue={msg?.isStreaming == false}
-                          html={msg.content || ""}
-                        />
-                      ) : (
+                      )}
+
+                      {msg.content && !msg.isError && msg.isStreaming && (
                         <div
-                          className="assistant-html text-left overflow-x-auto break-words"
+                          className="assistant-html text-left overflow-x-auto break-words opacity-50"
                           dangerouslySetInnerHTML={{
                             __html: msg.content || "",
                           }}
                         />
+                      )}
+
+                      {msg.content && !msg.isError && !msg.isStreaming && (
+                        <AssistantHtml
+                          key={`${id}-${index}`}
+                          html={msg.content || ""}
+                          uid={`${id}-${index}`}
+                        />
+                      )}
+
+                      {msg.isError && (
+                        <div className="text-left whitespace-pre-wrap">
+                          {msg.content}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -135,7 +149,7 @@ export function FormEditForm({
                 handleSend();
               }}
             >
-              {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+              {() => (
                 <Form className="form form-label-right">
                   <fieldset disabled={actionsLoading}>
                     <div className="relative max-w-[960px] mx-auto">
@@ -368,44 +382,71 @@ const ChatListComp = ({ chatData = [], id }) => {
   );
 };
 
-const AssistantHtml = ({ html }) => {
+const loadScriptOnce = (src) =>
+  new Promise((resolve, reject) => {
+    if (window.Chart) return resolve(window.Chart);
+
+    const existing = document.querySelector(`script[src="${src}"]`);
+
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.Chart));
+      existing.addEventListener("error", reject);
+      if (window.Chart) resolve(window.Chart);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.onload = () => {
+      if (window.Chart) resolve(window.Chart);
+      else reject(new Error("Chart.js loaded but window.Chart missing"));
+    };
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+
+const AssistantHtml = ({ html, uid }) => {
   const ref = useRef(null);
 
   useEffect(() => {
     const container = ref.current;
     if (!container || !html) return;
 
-    const scripts = Array.from(container.querySelectorAll("script"));
+    let cancelled = false;
 
-    const runScripts = async () => {
-      for (const oldScript of scripts) {
-        const newScript = document.createElement("script");
+    const run = async () => {
+      try {
+        await loadScriptOnce("https://cdn.jsdelivr.net/npm/chart.js");
 
-        Array.from(oldScript.attributes).forEach((attr) => {
-          newScript.setAttribute(attr.name, attr.value);
+        if (cancelled || !window.Chart) return;
+
+        const scripts = Array.from(container.querySelectorAll("script"));
+        scripts.forEach((s) => s.remove());
+
+        scripts.forEach((oldScript) => {
+          if (oldScript.src) return;
+
+          const code = oldScript.innerHTML;
+          if (!code?.trim()) return;
+
+          try {
+            new Function("Chart", code)(window.Chart);
+          } catch (err) {
+            console.error("Assistant script error:", err);
+          }
         });
-
-        if (oldScript.src) {
-          await new Promise((resolve, reject) => {
-            newScript.onload = resolve;
-            newScript.onerror = reject;
-            document.body.appendChild(newScript);
-          });
-        } else {
-          newScript.textContent = oldScript.textContent;
-          document.body.appendChild(newScript);
-        }
-
-        oldScript.remove();
+      } catch (err) {
+        console.error("Chart load error:", err);
       }
     };
-    runScripts();
+
+    run();
 
     return () => {
-      // optional cleanup if needed
+      cancelled = true;
     };
-  }, [html]);
-
+  }, [html, uid]);
   return (
     <div
       ref={ref}

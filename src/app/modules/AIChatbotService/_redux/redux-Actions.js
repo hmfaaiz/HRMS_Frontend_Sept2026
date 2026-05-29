@@ -138,6 +138,7 @@ export const askQuestion = (payload) => async (dispatch, getState) => {
     toast.error(error.message || "Something went wrong");
   }
 };
+
 export const fetchCurrentChatById = (payload) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
