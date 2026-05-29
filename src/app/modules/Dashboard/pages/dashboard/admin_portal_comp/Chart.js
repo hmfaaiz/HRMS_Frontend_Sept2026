@@ -263,12 +263,12 @@ const ChartData = ({ data, expand }) => {
                 className="flex items-center gap-2 p-0 border-0 bg-transparent shadow-none hover:bg-transparent"
                 style={{ outline: "none" }}
               >
-                <h6 className="font-bold mb-0 text-tprimary">{getHeading()}</h6>
                 {activeKey === "0" ? (
                   <CircleMinus className="h-4 w-4 text-tprimary" />
                 ) : (
                   <CirclePlus className="h-4 w-4 text-tprimary" />
                 )}
+                <h6 className="font-bold mb-0 text-tprimary">{getHeading()}</h6>
               </Accordion.Toggle>
 
               {/* Right side - Chart type selection buttons (only visible when accordion is open) */}

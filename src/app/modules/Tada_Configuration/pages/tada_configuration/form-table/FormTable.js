@@ -175,7 +175,7 @@ export function FormTable() {
       },
       {
         dataField: "resolvedPreApproverNames",
-        text: "TA DA Request Approver",
+        text: "TADA Request Approver",
       },
       {
         dataField: "modeOfTransportId",

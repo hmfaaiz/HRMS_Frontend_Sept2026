@@ -8,6 +8,7 @@ import { AttendanceMarking } from "./AttendanceMarking";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { Link } from "react-router-dom";
+import { MenuOption } from "./MenuOption";
 
 const renderInfoGrid = (data, fields) => (
   <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
@@ -90,8 +91,6 @@ const EmployeeProfile = ({
         {/* Top right icons */}
         {isAttMarkShow && (
           <div className="absolute top-2 right-2 flex gap-1">
-            {/* <SearchSelect isDisabled={} /> */}
-
             <OverlayTrigger
               overlay={
                 <Tooltip id="products-edit-tooltip">Compact View</Tooltip>
@@ -246,7 +245,10 @@ const EmployeeProfile = ({
             )}
           </div>
 
-        
+          <>
+            <MenuOption />
+          </>
+
           {isOpen &&
             portal_ticket_creation?.length > 0 &&
             allAlertTask?.rows?.length > 0 && (

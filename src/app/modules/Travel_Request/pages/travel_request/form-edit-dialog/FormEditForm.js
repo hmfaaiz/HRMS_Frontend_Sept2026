@@ -197,7 +197,7 @@ export function FormEditForm({
           : schema.nullable();
       },
     ),
-    travelRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
+    travelRemarks: Yup.string().nullable(),
     taxiFareRate: Yup.number().nullable(),
   });
 
@@ -1292,13 +1292,12 @@ export function FormEditForm({
                         </label>
                         <NumericFormat
                           name="dailyAllowanceRate"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
+                          className="form-control text-sm bg-light"
                           placeholder="0"
                           thousandSeparator
                           allowNegative={false}
                           isAllowed={({ value }) => value.length <= 6}
-                          disabled={!isPolicyDefined}
+                          disabled={true}
                           value={values.dailyAllowanceRate}
                           onValueChange={(valuesObj) => {
                             setFieldValue(
@@ -1306,9 +1305,6 @@ export function FormEditForm({
                               valuesObj.value,
                             );
                           }}
-                          onBlur={() =>
-                            setFieldTouched("dailyAllowanceRate", true)
-                          }
                         />
                         {errors.dailyAllowanceRate &&
                           touched.dailyAllowanceRate && (
@@ -1324,11 +1320,10 @@ export function FormEditForm({
                         <Field
                           type="number"
                           name="dailyAllowanceDays"
-                          className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
+                          className="form-control text-sm bg-light"
                           placeholder="0"
                           min="0"
-                          disabled={!isPolicyDefined || !!isReadOnly}
+                          disabled={true}
                           onInput={(e) => {
                             e.target.value = e.target.value.slice(0, 3);
                           }}
@@ -1377,7 +1372,9 @@ export function FormEditForm({
 
                 {/* Advance Request Section */}
                 <div className="mt-4">
-                  <h6 className="font-bold text-primary mb-2">Advance Request</h6>
+                  <h6 className="font-bold text-primary mb-2">
+                    Advance Request
+                  </h6>
                   <div className="flex flex-col lg:flex-row gap-8 items-start">
                     <div className="flex items-center lg:pt-8">
                       <Checkbox
@@ -1451,10 +1448,7 @@ export function FormEditForm({
                 </div>
                 <div className="grid grid-cols-12 gap-x-3 mt-4">
                   <div className="col-span-6">
-                    <label>
-                      Remarks
-                      <span className="text-danger">*</span>
-                    </label>
+                    <label>Remarks</label>
                     <Field
                       as="textarea"
                       name="travelRemarks"

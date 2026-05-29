@@ -33,24 +33,17 @@ export function FormTable() {
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       openConvertFormDialog: formUIContext.openConvertFormDialog,
-
+      newFormButtonClick: formUIContext.newFormButtonClick,
     };
   }, [formUIContext]);
 
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.final_settlement,
 
-  const { currentState, userAccess } = useSelector(
-    (state) => {
-      return {
-
-
-        currentState: state.final_settlement,
-
-        userAccess: state?.auth?.userAccess["final_settlement"],
-      }
-    },
-    shallowEqual
-  );
-
+      userAccess: state?.auth?.userAccess["final_settlement"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -61,33 +54,29 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setIds([]);
 
-
     dispatch(actions.fetchFinalSettlement(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
-
   const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadFinalSettlement"
+    (item) => item.componentName === "ReadFinalSettlement",
   );
 
   const isAccessForEdit = userAccess?.find((item) => {
     return item.componentName === "UpdateFinalSettlement";
   });
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteFinalSettlement"
+    (item) => item.componentName === "DeleteFinalSettlement",
   );
 
-
-
-
+    const isAccessForCreate = userAccess?.find(
+    (item) => item.componentName === "CreateFinalSettlement",
+  );
 
   const columns = [
-
-
     {
       dataField: "Employee.employeeCode",
       text: "Employee Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -97,7 +86,7 @@ export function FormTable() {
     {
       dataField: "Employee.fullName",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -108,7 +97,7 @@ export function FormTable() {
     {
       dataField: "Employee.department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -119,7 +108,7 @@ export function FormTable() {
     {
       dataField: "Employee.designation.formName",
       text: "Designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -130,7 +119,7 @@ export function FormTable() {
     {
       dataField: "Employee.employeeType.formName",
       text: "employee Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -140,41 +129,40 @@ export function FormTable() {
     {
       dataField: "netFinalSettlementAmount",
       text: "Total Payable Amount",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "160px",
       },
     },
-   
-       {
+
+    {
       dataField: "exitClearence",
       text: "HR Clearance",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "160px",
       },
       formatter: (cell) => {
-    if (cell === 1) return "Received";
-    if (cell === 0) return "Not Received";
-    return ""; // agar koi aur value ho
-  },
-    }, 
-     {
+        if (cell === 1) return "Received";
+        if (cell === 0) return "Not Received";
+        return ""; // agar koi aur value ho
+      },
+    },
+    {
       dataField: "settlementFinalized",
       text: "Finalized",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "160px",
       },
-        formatter: (cell) => (cell ? "Yes" : "No"),
+      formatter: (cell) => (cell ? "Yes" : "No"),
     },
-
 
     {
       dataField: "action",
@@ -189,14 +177,128 @@ export function FormTable() {
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
 
-
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,
+      },
 
+      classes: "text-end pr-0",
+      headerClasses: "text-end pr-3",
+      style: {
+        minWidth: "100px",
+      },
+    },
+  ];
 
+  const seperationColumns = [
+    {
+      dataField: "Employee.employeeCode",
+      text: "Employee Code",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
+    {
+      dataField: "Employee.fullName",
+      text: "Name",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+
+    {
+      dataField: "Employee.department.deptName",
+      text: "Department",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
+
+    {
+      dataField: "Employee.designation.formName",
+      text: "Designation",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
+
+    {
+      dataField: "Employee.employeeType.formName",
+      text: "employee Type",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
+    {
+      dataField: "ExitType.formName",
+      text: "Exit Type",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
+    {
+      dataField: "ExitReason.exitReason",
+      text: "Exit Reason",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "resignationDateFormatted",
+      text: "Resignation Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+      // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
+    },
+    {
+      dataField: "lastWorkingDateFormatted",
+      text: "Last Working Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+      // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
+    },
+
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        dispatch,
+        // pdfGenerateLoading,
+        newFormButtonClick: formUIProps.newFormButtonClick,
+        isAccessForCreate: isAccessForCreate ? isAccessForCreate.isAccess : false,
       },
 
       classes: "text-end pr-0",
@@ -233,10 +335,14 @@ export function FormTable() {
                 remote
                 keyField="Id"
                 data={entities === null ? [] : entities}
-                columns={columns}
+                columns={
+                  formUIProps?.queryParams?.filter?.type == "notCreated"
+                    ? seperationColumns
+                    : columns
+                }
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
+                  formUIProps.setQueryParams,
                 )}
                 // selectRow={getSelectRow({
                 //   entities,

@@ -166,31 +166,33 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       <div className="p-3 rounded-lg bg-white w-full flex max-h-64 flex-col overflow-y-auto justify-between">
         <h6 className="font-bold mb-0 text-primary my-2">Pending Requests</h6>
 
-        <div className="flex gap-1.5 w-full mb-2 overflow-x-auto scrollbar-fancy scroll-pb-6">
-          {/* Team Member Card - Sticky on the left */}
-          {moduleRights?.find((el) => el?.value == 3)?.allow ? (
-            <div className="sticky left-0 z-10 flex-shrink-0 w-48 bg-white px-3 sm:w-72">
-              <TeamMemberCard
-                team={data?.reportingEmployee}
-                setAttModalData={setAttModalData}
-              />
-            </div>
-          ) : null}
-
-          {/* Scrollable Workflow Cards */}
-          <div className="flex gap-1.5 min-w-min">
-            {filteredCards.map((el) => (
-              <div key={el.name} className="flex-shrink-0 w-48 sm:w-64">
-                <WorkflowApprovalCard
-                  name={el.name}
-                  approvalUrl={el.approvalUrl}
-                  isApproval={el.isApproval}
-                  count={el.count}
-                  isWorkflow={el.isWorkflow}
-                  workflowUrl={el.workflowUrl}
+        <div className="flex gap-1.5 w-full mb-2 overflow-x-auto scrollbar-fancy">
+          <div className="flex gap-1.5 w-full pb-3">
+            {/* Team Member Card - Sticky on the left */}
+            {moduleRights?.find((el) => el?.value == 3)?.allow ? (
+              <div className="sticky left-0 z-10 flex-shrink-0 bg-white px-3 sm:w-72">
+                <TeamMemberCard
+                  team={data?.reportingEmployee}
+                  setAttModalData={setAttModalData}
                 />
               </div>
-            ))}
+            ) : null}
+
+            {/* Scrollable Workflow Cards */}
+            <div className="flex gap-1.5 min-w-min">
+              {filteredCards.map((el) => (
+                <div key={el.name} className="flex-shrink-0 w-48 sm:w-64">
+                  <WorkflowApprovalCard
+                    name={el.name}
+                    approvalUrl={el.approvalUrl}
+                    isApproval={el.isApproval}
+                    count={el.count}
+                    isWorkflow={el.isWorkflow}
+                    workflowUrl={el.workflowUrl}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -200,7 +202,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
 
 const TeamMemberCard = ({ team, setAttModalData }) => {
   return (
-    <div className="bg-tprimary font-weight-bolder w-full px-4 py-3 rounded-lg d-flex gap-1 flex-column justify-content-between h-full">
+    <div className="bg-tprimary font-weight-bolder max-sm:min-w-48 w-full px-4 py-3 rounded-lg d-flex gap-1 flex-column justify-content-between h-full">
       <div className="flex justify-between items-center">
         <span className="text-white font-semibold text-base sm:text-lg flex items-center truncate line-clamp-1">
           Team Members
@@ -210,7 +212,7 @@ const TeamMemberCard = ({ team, setAttModalData }) => {
         </span>
       </div>
 
-      <div className="flex gap-x-5 items-center">
+      <div className="flex gap-x-2 md:gap-x-5 items-center">
         <span
           onClick={() =>
             setAttModalData(
@@ -219,7 +221,7 @@ const TeamMemberCard = ({ team, setAttModalData }) => {
               ),
             )
           }
-          className="text-white rounded-full cursor-pointer bg-tgreen py-2 px-4 text-sm font-normal text-center"
+          className="text-white rounded-full cursor-pointer bg-tgreen px-2 py-1 md:py-2 md:px-4 text-xs md:text-sm font-normal text-center line-clamp-1"
         >
           Present{" "}
           {team?.filter((e) => e?.t_attendances[0]?.status.includes("Present"))
@@ -233,7 +235,7 @@ const TeamMemberCard = ({ team, setAttModalData }) => {
               ),
             )
           }
-          className="text-white rounded-full cursor-pointer py-2 px-4 bg-tred text-sm font-normal text-center"
+          className="text-white rounded-full cursor-pointer px-2 py-1 md:py-2 md:px-4 bg-tred text-xs md:text-sm font-normal text-center line-clamp-1"
         >
           Absents{" "}
           {team?.filter((e) => !e?.t_attendances[0]?.status.includes("Present"))
@@ -262,7 +264,7 @@ const WorkflowApprovalCard = ({
           {count}
         </span>
       </div>
-      <div className="font-size-xs flex flex-col max-sm:flex-row max-sm:gap-4 text-black mt-2">
+      <div className="font-size-xs flex flex-col text-black mt-2">
         <p className="m-0 underline text-xs">
           {isApproval ? (
             <a href={approvalUrl}>Request Approval </a>

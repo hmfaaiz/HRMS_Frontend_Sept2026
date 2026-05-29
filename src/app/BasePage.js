@@ -593,6 +593,9 @@ const attendance_roster_workflow_status_portal = lazy(() =>
 const post_approval_travel_request = lazy(() =>
   import("./modules/Post_Approval_Travel_Request/pages/index"),
 );
+const post_travel_request = lazy(() =>
+  import("./modules/Post_Travel_Request_Portal/pages/index"),
+);
 const roster_calendar_team = lazy(() =>
   import("./modules/Roster_Calendar_Portal/pages/index"),
 );
@@ -831,6 +834,7 @@ const ROUTES = {
   attendance_roster_workflow_status: attendance_roster_workflow_status,
   attendance_roster_workflow_status_portal: attendance_roster_workflow_status_portal,
   post_approval_travel_request: post_approval_travel_request,
+  post_travel_request_portal: post_travel_request,
   roster_calendar_team: roster_calendar_team,
   travel_request_workflow_status: travel_request_workflow_status,
   travel_request_workflow_status_approval: travel_request_workflow_status_approval,

@@ -87,7 +87,7 @@ export function FormCard() {
                       </div>
              <div className="flex md:col-span-2 items-center gap-2 md:justify-end  ">
           {/* <CardHeaderToolbar> */}
-          {accessUser && (
+          {/* {accessUser && (
             <>
               <button
                 type="button"
@@ -99,7 +99,7 @@ export function FormCard() {
                 Add
               </button>
             </>
-          )}
+          )} */}
              <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ">
             <OverlayTrigger
               overlay={<Tooltip id="products-edit-tooltip">Export PDF</Tooltip>}

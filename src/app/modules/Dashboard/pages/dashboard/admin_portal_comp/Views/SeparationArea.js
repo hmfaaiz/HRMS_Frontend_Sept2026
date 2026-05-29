@@ -137,41 +137,62 @@ const SeparationArea = ({
           </div>
         </div>
         {/* chart area  */}
-        <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
-          {allDashboardAlerts?.length > 0 &&
+        {(() => {
+          const sortedBigTables =
             allDashboardAlerts
               ?.filter(
-                (e) =>
-                  e?.dashlet_type === "big_table" &&
-                  e?.tab_key === "separation",
+                (el) =>
+                  el?.dashlet_type === "big_table" &&
+                  el?.tab_key == "separation",
               )
-              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
-              ?.map((e, alertIdx) => {
-                return (
-                  <BigTable
-                    setBigTableModalData={setBigTableModalData}
-                    key={`big-${alertIdx}`}
-                    data={e}
-                    expand={
-                      alertIdx == 0 ||
-                      alertIdx == 1
-                    }
-                  />
-                );
-              })}
-        </div>
-        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
-          {allDashboardAlerts?.length > 0 &&
+              ?.sort(
+                (a, b) => (b?.data?.length || 0) - (a?.data?.length || 0),
+              ) || [];
+
+          const sortedCharts =
             allDashboardAlerts
               ?.filter(
-                (e) =>
-                  e?.dashlet_type === "chart" && e?.tab_key === "separation",
+                (el) =>
+                  el?.dashlet_type === "chart" && el?.tab_key == "separation",
               )
-              ?.sort((a, b) => (b?.data?.length || 0) - (a?.data?.length || 0))
-              ?.map((e, alertIdx) => {
-                return <ChartData key={`chart-${alertIdx}`} data={e} />;
-              })}
-        </div>
+              ?.sort(
+                (a, b) => (b?.data?.length || 0) - (a?.data?.length || 0),
+              ) || [];
+
+          const dashboardItems = [...sortedBigTables, ...sortedCharts];
+
+          const leftItems = dashboardItems.filter((_, i) => i % 2 === 0);
+          const rightItems = dashboardItems.filter((_, i) => i % 2 !== 0);
+
+          const renderItem = (e, i, side) => {
+            if (e?.dashlet_type === "big_table") {
+              return (
+                <BigTable
+                  key={`big-${side}-${i}`}
+                  setBigTableModalData={setBigTableModalData}
+                  expand={i === 0}
+                  data={e}
+                />
+              );
+            }
+
+            return (
+              <ChartData key={`chart-${side}-${i}`} expand={false} data={e} />
+            );
+          };
+
+          return (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 items-start">
+              <div className="space-y-2">
+                {leftItems.map((e, i) => renderItem(e, i, "left"))}
+              </div>
+
+              <div className="space-y-2">
+                {rightItems.map((e, i) => renderItem(e, i, "right"))}
+              </div>
+            </div>
+          );
+        })()}
       </div>
       <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
@@ -180,11 +201,20 @@ const SeparationArea = ({
               e?.dashlet_type === "small_table" &&
               e?.tab_key === "separation"
             ) {
+              const isFirstOfThisType =
+                allDashboardAlerts
+                  .filter(
+                    (item) =>
+                      item?.dashlet_type === "small_table" &&
+                      item?.tab_key == "separation",
+                  )
+                  .findIndex((item) => item === e) === 0;
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={isFirstOfThisType}
                 />
               );
             }

@@ -44,12 +44,15 @@ const initUser = {
   totalDeduction: "",
   netSalary: "",
   loanBalance: "",
-  gratuityAmount: "",
-  totalPFAmount: "",
-  pf_employer_amount: "",
-  pf_employee_amount: "",
+  gratuityAmount: 0,
+  totalPFAmount: 0,
+  pf_employer_amount: 0,
+  pf_employee_amount: 0,
   exitClearence: "",
   hrRemarks: "",
+  pension_employer_amount : 0,
+  pension_employee_amount : 0,
+  totalPensionAmount : 0,
 
 
 

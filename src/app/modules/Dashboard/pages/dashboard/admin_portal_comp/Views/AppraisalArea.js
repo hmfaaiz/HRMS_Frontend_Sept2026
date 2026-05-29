@@ -150,7 +150,7 @@ const AppraisalArea = ({
           </div>
         </div>
         {/* chart area  */}
-        <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts
               ?.filter(
@@ -162,10 +162,7 @@ const AppraisalArea = ({
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
                     key={`big-${alertIdx}`}
-                    expand={
-                      alertIdx == 0 ||
-                      alertIdx == 1
-                    }
+                    expand={alertIdx == 0 || alertIdx == 1}
                     data={e}
                   />
                 );
@@ -187,17 +184,80 @@ const AppraisalArea = ({
                   />
                 );
               })}
-        </div>
+        </div> */}
+
+        {(() => {
+          const sortedBigTables =
+            allDashboardAlerts
+              ?.filter(
+                (el) => el?.dashlet_type === "big_table" && el?.tab_key == "6",
+              )
+              ?.sort(
+                (a, b) => (b?.data?.length || 0) - (a?.data?.length || 0),
+              ) || [];
+
+          const sortedCharts =
+            allDashboardAlerts
+              ?.filter(
+                (el) => el?.dashlet_type === "chart" && el?.tab_key == "6",
+              )
+              ?.sort(
+                (a, b) => (b?.data?.length || 0) - (a?.data?.length || 0),
+              ) || [];
+
+          const dashboardItems = [...sortedBigTables, ...sortedCharts];
+
+          const leftItems = dashboardItems.filter((_, i) => i % 2 === 0);
+          const rightItems = dashboardItems.filter((_, i) => i % 2 !== 0);
+
+          const renderItem = (e, i, side) => {
+            if (e?.dashlet_type === "big_table") {
+              return (
+                <BigTable
+                  key={`big-${side}-${i}`}
+                  setBigTableModalData={setBigTableModalData}
+                  expand={i === 0}
+                  data={e}
+                />
+              );
+            }
+
+            return (
+              <ChartData key={`chart-${side}-${i}`} expand={false} data={e} />
+            );
+          };
+
+          return (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 items-start">
+              <div className="space-y-2">
+                {leftItems.map((e, i) => renderItem(e, i, "left"))}
+              </div>
+
+              <div className="space-y-2">
+                {rightItems.map((e, i) => renderItem(e, i, "right"))}
+              </div>
+            </div>
+          );
+        })()}
       </div>
       <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
             if (e?.dashlet_type === "small_table" && e?.tab_key == "6") {
+              const isFirstOfThisType =
+                allDashboardAlerts
+                  .filter(
+                    (item) =>
+                      item?.dashlet_type === "small_table" &&
+                      item?.tab_key == "6",
+                  )
+                  .findIndex((item) => item === e) === 0;
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}
                   key={`small-${alertIdx}`}
                   data={e}
+                  expand={isFirstOfThisType}
                 />
               );
             }

@@ -101,12 +101,7 @@ export function FormEditForm({
                           {msg.content}
                         </div>
                       ) : (
-                        <div
-                          className="assistant-html text-left overflow-x-auto break-words"
-                          dangerouslySetInnerHTML={{
-                            __html: msg.content || "",
-                          }}
-                        />
+                        <AssistantHtml html={msg.content || ""} />
                       )}
                     </div>
                   </div>
@@ -361,5 +356,53 @@ const ChatListComp = ({ chatData = [], id }) => {
         )}
       </div>
     </div>
+  );
+};
+
+const AssistantHtml = ({ html }) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const container = ref.current;
+    if (!container || !html) return;
+
+    const scripts = Array.from(container.querySelectorAll("script"));
+
+    const runScripts = async () => {
+      for (const oldScript of scripts) {
+        const newScript = document.createElement("script");
+
+        Array.from(oldScript.attributes).forEach((attr) => {
+          newScript.setAttribute(attr.name, attr.value);
+        });
+
+        if (oldScript.src) {
+          await new Promise((resolve, reject) => {
+            newScript.onload = resolve;
+            newScript.onerror = reject;
+            document.body.appendChild(newScript);
+          });
+        } else {
+          newScript.textContent = oldScript.textContent;
+          document.body.appendChild(newScript);
+        }
+
+        oldScript.remove();
+      }
+    };
+
+    runScripts();
+
+    return () => {
+      // optional cleanup if needed
+    };
+  }, [html]);
+
+  return (
+    <div
+      ref={ref}
+      className="assistant-html text-left overflow-x-auto break-words"
+      dangerouslySetInnerHTML={{ __html: html || "" }}
+    />
   );
 };
