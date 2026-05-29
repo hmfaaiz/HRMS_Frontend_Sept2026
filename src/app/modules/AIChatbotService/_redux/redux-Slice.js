@@ -54,7 +54,12 @@ export const AIChatbotSlice = createSlice({
       const msg = state.currentChat.find((x) => x.id === assistantMessageId);
 
       if (msg) {
-        msg.content += content || "";
+        // Add newline before each chunk except the first one
+        if (msg.content && msg.content.length > 0) {
+          msg.content += "\n" + (content || "");
+        } else {
+          msg.content = content || "";
+        }
       }
     },
     AskQuestionChunkReceived: (state, action) => {

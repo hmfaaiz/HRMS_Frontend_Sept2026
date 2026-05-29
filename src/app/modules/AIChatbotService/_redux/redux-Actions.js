@@ -117,6 +117,8 @@ export const askQuestion = (payload) => async (dispatch, getState) => {
               assistantMessageId,
               data: chunk.data,
               content: chunk?.answer,
+              isStreaming: false,
+
             }),
           );
         }
