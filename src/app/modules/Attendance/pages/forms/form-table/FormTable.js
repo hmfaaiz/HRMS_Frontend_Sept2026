@@ -203,7 +203,7 @@ export function FormTable() {
   style: {
     minWidth: "100px",
     maxWidth: "100px",
-    textAlign: "center",
+    textAlign: "text-end pr-3",
   },
   // formatter: (cell, row) => {
   //   return (
