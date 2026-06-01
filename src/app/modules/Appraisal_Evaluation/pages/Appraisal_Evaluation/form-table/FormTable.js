@@ -30,6 +30,7 @@ export function FormTable() {
       openEditFormDialog: formUIContext.openEditFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       openAnalysisFormDialog: formUIContext.openAnalysisFormDialog,
+      openConsentDialog: formUIContext.openConsentDialog,
     };
   }, [formUIContext]);
 
@@ -193,6 +194,7 @@ export function FormTable() {
       formatExtraData: {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openConsentDialog: formUIProps.openConsentDialog,
         openAnalysisFormDialog: formUIProps.openAnalysisFormDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,

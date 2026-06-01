@@ -30,3 +30,10 @@ export function getAppraisalEmployeeDetail(body) {
     body
   );
 }
+
+export function updateEvaluationConsent(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_evaluation/update-evaluation-consent`,
+    body
+  );
+}

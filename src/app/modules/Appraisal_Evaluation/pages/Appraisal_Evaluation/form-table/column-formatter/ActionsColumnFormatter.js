@@ -1,6 +1,14 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CircleArrowOutUpRight, CirclePower, Eye, IdCardLanyard, Pencil, Trash2 } from "lucide-react";
+import {
+  CircleArrowOutUpRight,
+  CirclePower,
+  Eye,
+  IdCardLanyard,
+  Pencil,
+  ThumbsUp,
+  Trash2,
+} from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -10,13 +18,34 @@ export function ActionsColumnFormatter(
   {
     openEditFormDialog,
     openReadFormDialog,
+    openConsentDialog,
     isAccessForEdit,
     isAccessForRead,
     openAnalysisFormDialog,
-  }
+  },
 ) {
   return (
     <div className="space-x-2">
+      {row?.isSubmitted && row?.sendConsent && row?.isSelf ? (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">
+              Send Consent
+            </Tooltip>
+          }
+        >
+          <a
+            title=""
+            className=""
+            onClick={() => {
+              if (row?.appraisalReviewId)
+                openConsentDialog(row?.appraisalReviewId);
+            }}
+          >
+            <ThumbsUp className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      ) : null}
       <OverlayTrigger
         overlay={
           <Tooltip id="products-edit-tooltip">View Employee Analaytics</Tooltip>
@@ -49,7 +78,7 @@ export function ActionsColumnFormatter(
           }
         >
           <a title="" className="" onClick={() => openEditFormDialog(row.Id)}>
-            <CircleArrowOutUpRight  className="w-4 h-4 text-black cursor-pointer" />
+            <CircleArrowOutUpRight className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
