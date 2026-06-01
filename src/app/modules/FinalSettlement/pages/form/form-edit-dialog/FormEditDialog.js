@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FormEditForm } from "./FormEditForm";
 import { FormEditDialogHeader } from './FormEditDialogHeader'
-
+import {  useLocation } from "react-router-dom";
 import * as actions from "../../../_redux/redux-Actions";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,18 +11,27 @@ import { useFormUIContext } from "../FormUIContext";
 
 
 export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
-
+    const location = useLocation();
   const [loading, setLoading] = useState(false);
-
+  const [employeeId , setemployeeId] = useState(null)
   const FormUIContext = useFormUIContext();
 
   const [activeKey, setActiveKey] = useState("0");
 
-  useEffect(() => {
-
-    setActiveKey("0"); // jab new user aaye to accordion open kar do
-
-  }, [id, status]);
+useEffect(() => {
+  if (status === "new") {  
+    const queryParams = new URLSearchParams(location?.search);
+    const encodedEmpId = queryParams.get("Id");
+    const decodedEmpId = encodedEmpId ? atob(encodedEmpId) : "";
+    if (decodedEmpId) {
+      setemployeeId(decodedEmpId);
+      // Clear URL parameter without page reload
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }
+  setActiveKey("0");
+}, [id, status, location?.search]); 
 
   const usersUIProps = useMemo(() => {
     return {
@@ -133,6 +142,24 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
     }
   };
 
+const initialFormData = useMemo(() => {
+  // If we have dataForEdit from API, use that
+  if (dataForEdit && Object.keys(dataForEdit).length > 0) {
+    return dataForEdit;
+  }
+  
+  if (status === "new" && employeeId) {
+    return {
+      ...formUIProps.initUser,
+      employeeId: Number(employeeId)
+    };
+  }
+  
+  // Default case
+  return formUIProps.initUser;
+}, [status, dataForEdit, employeeId, formUIProps.initUser]); // 
+
+
   return (
 
 
@@ -140,7 +167,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
-        formData={dataForEdit || formUIProps.initUser}
+      formData={initialFormData}  
         onHide={onHide}
         isdataForRead={dataForRead}
         enableLoading={enableLoading}

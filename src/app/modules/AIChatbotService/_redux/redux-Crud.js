@@ -13,3 +13,7 @@ export function getChatHistoryById(body) {
 export function getChatHistory() {
   return axios.get(`${USERS_URL}/ai_chatbot/read-all-chat-history`);
 }
+
+export function deleteChat(payload) {
+  return axios.post(`${USERS_URL}/ai_chatbot/delete-chat-history`, payload);
+}
