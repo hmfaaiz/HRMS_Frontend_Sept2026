@@ -6,22 +6,28 @@ import { FormUIProvider } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormCard } from "./form-card/FormCard";
 import { FormAnalyticsDialog } from "./form-analytics-dialog/FormAnalyticsDialog";
+import { FormConsentDialog } from "./form-consent-dialog/FormConsentDialog";
 
 export function FormPage({ history }) {
   const FormUIEvents = {
     openEditFormDialog: (id) => {
       history.push(
-        `/appraisal_evaluation/read-all-appraisal-evaluation/${id}/edit`
+        `/appraisal_evaluation/read-all-appraisal-evaluation/${id}/edit`,
       );
     },
     openReadFormDialog: (id) => {
       history.push(
-        `/appraisal_evaluation/read-all-appraisal-evaluation/${id}/read`
+        `/appraisal_evaluation/read-all-appraisal-evaluation/${id}/read`,
       );
     },
-    openAnalysisFormDialog: (empId , Id) => {
+    openAnalysisFormDialog: (empId, Id) => {
       history.push(
-        `/appraisal_evaluation/read-all-appraisal-evaluation/${empId}/${Id}/employee-detail`
+        `/appraisal_evaluation/read-all-appraisal-evaluation/${empId}/${Id}/employee-detail`,
+      );
+    },
+    openConsentDialog: (Id) => {
+      history.push(
+        `/appraisal_evaluation/read-all-appraisal-evaluation/${Id}/consent`,
       );
     },
   };
@@ -34,7 +40,7 @@ export function FormPage({ history }) {
             id={match && match.params.id}
             onHide={() => {
               history.push(
-                "/appraisal_evaluation/read-all-appraisal-evaluation"
+                "/appraisal_evaluation/read-all-appraisal-evaluation",
               );
             }}
           />
@@ -48,7 +54,20 @@ export function FormPage({ history }) {
             userForRead={true}
             onHide={() => {
               history.push(
-                "/appraisal_evaluation/read-all-appraisal-evaluation"
+                "/appraisal_evaluation/read-all-appraisal-evaluation",
+              );
+            }}
+          />
+        )}
+      </Route>
+      <Route path="/appraisal_evaluation/read-all-appraisal-evaluation/:id/consent">
+        {({ history, match }) => (
+          <FormConsentDialog
+            show={match != null}
+            id={match && match.params.id}
+            onHide={() => {
+              history.push(
+                "/appraisal_evaluation/read-all-appraisal-evaluation",
               );
             }}
           />
@@ -62,7 +81,7 @@ export function FormPage({ history }) {
             empId={match && match.params.empId}
             onHide={() => {
               history.push(
-                "/appraisal_evaluation/read-all-appraisal-evaluation"
+                "/appraisal_evaluation/read-all-appraisal-evaluation",
               );
             }}
           />

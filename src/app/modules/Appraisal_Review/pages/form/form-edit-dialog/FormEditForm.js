@@ -194,6 +194,12 @@ export function MasterEditForm({
     saveFrom(valuesWithFlag);
   };
 
+  const handleSubmitWithConsent = (sendConsent, handleSubmit, values) => {
+    // handleSubmit(); // trigger Formik validation
+    const valuesWithFlag = { ...values, sendConsent };
+    saveFrom(valuesWithFlag);
+  };
+
   useEffect(() => {
     if (user?.employeeId) {
       formUIProps.setEmployeeId(user.employeeId);
@@ -1192,6 +1198,15 @@ export function MasterEditForm({
                       </>
                     ) : null}
                     {/* )} */}
+                    {values?.employeeId && values?.consentComment ? (
+                      <span className="text-xs">
+                        Employee Consent :{" "}
+                        <span className="underline font-semibold">
+                          {" "}
+                          {values?.consentComment}
+                        </span>{" "}
+                      </span>
+                    ) : null}
                   </fieldset>
                 </Form>
               </Modal.Body>
@@ -1218,6 +1233,27 @@ export function MasterEditForm({
                       disabled={loading || !isValid || !values?.employeeId}
                     >
                       Save
+                      {loading && (
+                        <span className="ml-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+                  )}
+
+                  {!isUserForRead && !values.isFinalize && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-elevate"
+                      onClick={() =>
+                        handleSubmitWithConsent(true, handleSubmit, values)
+                      }
+                      disabled={
+                        loading ||
+                        !isValid ||
+                        !values?.employeeId ||
+                        values?.sendConsent
+                      }
+                    >
+                      {values?.sendConsent ? "Consent Sended" : "Send Consent"}
                       {loading && (
                         <span className="ml-3 spinner spinner-white"></span>
                       )}
