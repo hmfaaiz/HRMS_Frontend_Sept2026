@@ -175,7 +175,7 @@ const DetailView = ({
                 detailViewType == 1
                   ? "My Details"
                   : detailViewType == 2
-                  ? "Department Details"
+                  ? "Department Details"  
                   : "Company Details"
               }
             />

@@ -224,6 +224,9 @@ import { JobRequestionApprovalSlice } from "../app/modules/JobRequestionApproval
 import { TravelRequestReportsSlice } from "../app/modules/TravelRequestReports/_redux/TravelRequestReportsSlice";
 import { JobRequestionWorkflowStatusSlice } from "../app/modules/Job_Requestion_Workflow_Status/_redux/redux-Slice";
 import { JobRequestionWorkflowAdminSlice } from "../app/modules/JobRequestionWorkflowStatusApproval/redux/formSlice";
+import { ClosePayrollMonthSlice } from "../app/modules/Close_Payroll_Month_Process/_redux/ClosePayrollMonthSlice";
+import { EmployeeTaskSlice } from "../app/modules/employee_task_portal/_redux/redux-Slice";
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -446,6 +449,9 @@ export const rootReducer = combineReducers({
   travel_request_reports: TravelRequestReportsSlice.reducer,
   job_requestion_workflow_status: JobRequestionWorkflowStatusSlice.reducer,
   job_requestion_workflow_admin : JobRequestionWorkflowAdminSlice.reducer,
+  close_payroll_month: ClosePayrollMonthSlice.reducer,
+  employee_task_portal: EmployeeTaskSlice.reducer,
+
 });
 
 export function* rootSaga() {
