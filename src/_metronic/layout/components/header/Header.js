@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import objectPath from "object-path";
 import { useHtmlClassService } from "../../_core/MetronicLayout";
 import { Topbar } from "./Topbar";
-import { Menu, Search, SquareArrowOutUpRight } from "lucide-react";
+import { Menu, Minus, Search, SquareArrowOutUpRight } from "lucide-react";
 import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
@@ -24,6 +24,8 @@ export function Header({ toggleMenuVisibility, company, isEmployeePortal }) {
       ),
     };
   }, [uiService]);
+
+  const isAIChatbotPage = window.location.pathname.includes("/ask/ai-chatbot");
 
   const handleSearch = () => {
     if (value.trim()) {
@@ -73,48 +75,36 @@ export function Header({ toggleMenuVisibility, company, isEmployeePortal }) {
             </div>
           </div>
         </div>
-        {user?.allowAIChatbot ? (
-          <div className="flex gap-2 items-center">
-            <div className="min-w-full md:min-w-[36rem] relative">
-              <input
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSearch();
-                  }
-                }}
-                placeholder="Ask me anything..."
-                className="w-full bg-white border-none text-sm text-black placeholder:text-xs placeholder-gray-700 focus:outline-none p-2 pr-10 rounded-sm resize-none"
-              />
-
-              {/* Search Icon - Right Side par fixed */}
-              <button
-                onClick={handleSearch}
-                className="absolute right-2 top-1/2 -translate-y-1/2  border-none bg-transparent transition-colors"
-              >
-                <Search size={18} className="text-black w-5 h-5" />
-              </button>
-            </div>
-            <SquareArrowOutUpRight
-              onClick={() => window.open("/ask/ai-chatbot/new", "_blank")}
-              className="w-5 h-5 text-white cursor-pointer"
-              strokeWidth={3}
-            />
-          </div>
-        ) : null}
         {/*end::Logo Section*/}
         {/*begin::Header Content Section*/}
-        <div className="">
-          {/* <AnimateLoading /> */}
-          {/*begin::Header Menu Wrapper*/}
-          {/* {layoutProps.menuHeaderDisplay && <HeaderMenuWrapper />} */}
-          {!layoutProps.menuHeaderDisplay && <div />}
-          {/*end::Header Menu Wrapper*/}
+        <div className="flex gap-2">
+          {user?.allowAIChatbot && !isAIChatbotPage  ? (
+            <div className="flex gap-2 items-center">
+              <button
+                style={{ border: "1.5px solid #0093dd" }}
+                onClick={() => window.open("/ask/ai-chatbot/new", "_blank")}
+                className="text-tprimary bg-white rounded-3xl text-sm shadow-[0_0_10px_#FFFFFF] px-3 py-1.5"
+              >
+                AI Assistance{" "}
+                <Minus
+                  onClick={() => window.open("/ask/ai-chatbot/new", "_blank")}
+                  className="w-4 h-4 rotate-90 text-tprimary cursor-pointer"
+                />
+                <SquareArrowOutUpRight className="w-3.5 h-3.5 text-tprimary cursor-pointer" />
+              </button>
+            </div>
+          ) : null}
+          <div className="">
+            {/* <AnimateLoading /> */}
+            {/*begin::Header Menu Wrapper*/}
+            {/* {layoutProps.menuHeaderDisplay && <HeaderMenuWrapper />} */}
+            {!layoutProps.menuHeaderDisplay && <div />}
+            {/*end::Header Menu Wrapper*/}
 
-          {/*begin::Topbar*/}
-          <Topbar />
-          {/*end::Topbar*/}
+            {/*begin::Topbar*/}
+            <Topbar />
+            {/*end::Topbar*/}
+          </div>
         </div>
         {/*end::Header Content Section*/}
       </div>

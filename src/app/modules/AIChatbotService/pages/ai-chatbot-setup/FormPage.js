@@ -3,9 +3,11 @@ import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
+import { useFormUIContext } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { useDispatch } from "react-redux";
 import * as actions from "../../_redux/redux-Actions";
+import { FormDeleteDialog } from "../form-delete-dialog/FormDeleteDialog";
 
 export function FormPage({ history }) {
   const dispatch = useDispatch();
@@ -32,8 +34,10 @@ export function FormPage({ history }) {
         <Route exact path="/ask/ai-chatbot/new" component={NewFormRoute} />
         {/* Case 2: Edit existing form */}
         <Route path="/ask/ai-chatbot/:id/continue" component={EditFormRoute} />
+
       </Switch>
 
+      <DeleteFormRoute />
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -49,6 +53,18 @@ export function FormPage({ history }) {
   );
 }
 
+function DeleteFormRoute() {
+  const { deleteId, setDeleteId } = useFormUIContext();
+
+  return (
+    <FormDeleteDialog
+      id={deleteId}
+      show={!!deleteId}
+      onHide={() => setDeleteId(null)}
+    />
+  );
+}
+
 //  Component for NEW form (empty)
 function NewFormRoute() {
   const history = useHistory();
@@ -61,6 +77,7 @@ function NewFormRoute() {
   // If there's a pre-filled question, show it in the dialog
   // No redirect needed - stay on /new
   return (
+    <>
     <FormEditDialog
       value={decodedQuestion}
       show={true}
@@ -68,6 +85,7 @@ function NewFormRoute() {
         history.push("/ask/ai-chatbot");
       }}
     />
+    </>
   );
 }
 
