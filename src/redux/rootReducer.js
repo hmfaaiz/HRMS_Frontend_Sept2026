@@ -226,6 +226,7 @@ import { JobRequestionWorkflowStatusSlice } from "../app/modules/Job_Requestion_
 import { JobRequestionWorkflowAdminSlice } from "../app/modules/JobRequestionWorkflowStatusApproval/redux/formSlice";
 import { ClosePayrollMonthSlice } from "../app/modules/Close_Payroll_Month_Process/_redux/ClosePayrollMonthSlice";
 import { EmployeeTaskSlice } from "../app/modules/employee_task_portal/_redux/redux-Slice";
+import { PolicyforNewYearBudgetSlice } from "../app/modules/PolicyforNewYearBudget/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -451,6 +452,7 @@ export const rootReducer = combineReducers({
   job_requestion_workflow_admin : JobRequestionWorkflowAdminSlice.reducer,
   close_payroll_month: ClosePayrollMonthSlice.reducer,
   employee_task_portal: EmployeeTaskSlice.reducer,
+  policy_for_new_year_budget: PolicyforNewYearBudgetSlice.reducer,
 
 });
 
