@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
@@ -10,53 +10,31 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import PatternListForm from "./PatternListForm";
-import { fetchAllAppraisalPeriod, fetchAllApprovedResignedEmp } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllApprovedResignedEmp } from "../../../../Dashboard/_redux/dashboardActions";
 import { fetchDesignationWiseGoalSetupByEmp } from "../../../_redux/redux-Actions";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { Eye, XCircle } from "lucide-react";
-
-
+import OnboardChecklistForm from "./OnboardChecklistForm";
 
 const employeeEditSchema = Yup.object().shape({
   employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
-
-
-  list: Yup.array()
-    .of(
-      Yup.object().shape({
-
-
-
-        departmentId: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-        designationId: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-        approverEmployeeId: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-
-        isClearanceProvided: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-
-
-
-
-        sno: Yup.number().required(VALIDATION_MESSAGES.required),
-
-        clearanceDate: Yup.date()
-          .nullable()
-          .when("isClearanceProvided", {
-            is: 1,
-            then: (schema) => schema.required(VALIDATION_MESSAGES.required),
-            otherwise: (schema) => schema.nullable().notRequired(),
-          }),
-      })
-    )
-
-
+  patternList: Yup.array().of(  // Changed from "list" to "patternList"
+    Yup.object().shape({
+      departmentId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+      designationId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+      approverEmployeeId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+      isClearanceProvided: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+      sno: Yup.number().required(VALIDATION_MESSAGES.required),
+      clearanceDate: Yup.date()
+        .nullable()
+        .when("isClearanceProvided", {
+          is: 1,
+          then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+          otherwise: (schema) => schema.nullable().notRequired(),
+        }),
+    })
+  ),
+  onboardChecklist: Yup.array(), // Add validation if needed
 });
 
 export function FormEditForm({
@@ -66,64 +44,46 @@ export function FormEditForm({
   onHide,
   isdataForRead,
   enableLoading,
-  loading, setPanelMode, panelMode
+  loading,
+  setPanelMode,
+  panelMode
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [clearanceDate, setClearanceDate] = useState()
+  const [clearanceDate, setClearanceDate] = useState();
+
+  const { entities } = useSelector(
+    (state) => state.exit_clearance,
+    shallowEqual
+  );
 
   useEffect(() => {
-
-    dispatch(
-      fetchAllApprovedResignedEmp(
-        "approvedResignedEmpList"
-      )
-    );
-
-
-
-
-  }, [dispatch, data.employeeId]);
-
-
+    dispatch(fetchAllApprovedResignedEmp("approvedResignedEmpList"));
+  }, [dispatch]);
 
   useEffect(() => {
     if (data?.employeeId && dashboard?.approvedResignedEmpList?.length > 0) {
       const selected = dashboard.approvedResignedEmpList.find(
         (option) => Number(option?.value) === Number(data?.employeeId)
       );
-
       setClearanceDate(selected || null);
-      console.log("setting111 fixed", selected);
     }
-  }, [dashboard?.approvedResignedEmpList]);
-
-
-  const { currentState } = useSelector(
-    (state) => {
-      return {
-        currentState: state.exit_clearance,
-
-      }
-    },
-    shallowEqual
-  );
-
-
-  const { entities } = currentState;
-
-
+  }, [dashboard?.approvedResignedEmpList, data?.employeeId]);
 
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
         ...data,
-        list: data.list?.map(item => ({
+        patternList: data.patternList || data.list?.map(item => ({
           ...item,
           isClearanceProvided: item.isClearanceProvided ?? 0
-        })) || []
-
+        })) || [],
+        onboardChecklist: (data.onboardChecklist || (data.list?.filter(item => item.returnableAssets === true) || [])).map(item => ({
+          ...item,
+          returnDate: item.assetReturnDate || "",
+          remarks: item.assetReturnRemarks || ""
+        }))
       }}
       validationSchema={employeeEditSchema}
       onSubmit={(values) => {
@@ -133,7 +93,6 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
         <>
-
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -142,8 +101,7 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
-                <div className="grid md:grid-cols-9 gap-x-3 gap-y-1 ">
-
+                <div className="grid md:grid-cols-9 gap-x-3 gap-y-1">
                   <div className="col-span-3">
                     <SearchSelect
                       name="employeeId"
@@ -155,38 +113,34 @@ export function FormEditForm({
                       isDisabled={isdataForRead || data.dataIsExist}
                       onChange={(e) => {
                         setFieldValue("employeeId", e.value || null);
-                        setFieldValue("list", []);
+                        setFieldValue("patternList", []);  // Changed from "list" to "patternList"
+                        setFieldValue("onboardChecklist", []);  // Also clear onboardChecklist
                         if (e.value) {
                           dispatch(
-                            fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value, designationId: e.designationId })
+                            fetchDesignationWiseGoalSetupByEmp({
+                              employeeId: e.value,
+                              designationId: e.designationId
+                            })
                           );
                         }
-
-
-
                       }}
                       value={
                         dashboard?.approvedResignedEmpList?.find(
                           (option) => option?.value == values?.employeeId
                         ) || null
                       }
-                      // options={dashboard?.approvedResignedEmpList}
                       options={
                         dashboard?.approvedResignedEmpList?.map((opt) => ({
                           ...opt,
                           isDisabled: entities?.some((ent) => ent.employeeId === opt.value),
                         })) || []
                       }
-
-
                       error={errors.employeeId}
                       touched={touched.employeeId}
                     />
                   </div>
+
                   <div className="mt-6 col-span-1">
-
-
-
                     {panelMode ? (
                       <button
                         type="button"
@@ -202,24 +156,11 @@ export function FormEditForm({
                         className="btn btn-primary d-flex align-items-center gap-2"
                         onClick={() => setPanelMode(!panelMode)}
                       >
-
-
                         <Eye className="w-4 h-4 text-white" />
                         View Details
                       </button>
                     )}
-
-
-
-
                   </div>
-
-
-
-
-
-
-
                 </div>
 
                 <EmployeeProfile
@@ -227,21 +168,32 @@ export function FormEditForm({
                   panelMode={panelMode}
                 />
                 <hr />
+
                 <div>
                   <PatternListForm
                     values={values}
-
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
-
                     isdataForRead={isdataForRead}
                     clearanceDate={clearanceDate}
+                  />
+                </div>
+
+                <div>
+                  <OnboardChecklistForm
+                    values={values}
+                    setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
+                    isdataForRead={isdataForRead}
+                    isApproved={values.isApproved}
                   />
                 </div>
               </fieldset>
             </Form>
           </Modal.Body>
+
           <Modal.Footer>
             {!isdataForRead ? (
               <button
@@ -261,44 +213,29 @@ export function FormEditForm({
               </button>
             )}
 
-            {/* <button
-                type="submit"
-                onClick={() => handleSubmit()}
-                className="btn btn-primary btn-elevate"
-              >
-                Save
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button> */}
-
             {!isdataForRead && (
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
                 className="btn btn-primary btn-elevate"
-                disabled={!values?.list?.length}
+                disabled={!values?.patternList?.length}
               >
-                Save {data.Id}
+                Save
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
             )}
+
             {(!isdataForRead && data?.dataIsExist) && (
               <button
-                type="submit"
-                // onClick={() => handleSubmit()}
+                type="button"
                 className="btn btn-primary btn-elevate"
-                disabled={isdataForRead || values.list?.some(item => item?.isClearanceProvided == 0)}
+                disabled={isdataForRead || values.patternList?.some(item => item?.isClearanceProvided == 0)}
                 onClick={() => {
-                  setFieldValue("isApproved", 1)
-                  handleSubmit()
-
-                }
-
-
-                }
+                  setFieldValue("isApproved", 1);
+                  handleSubmit();
+                }}
               >
                 Finalize
                 {loading && (
