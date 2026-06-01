@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
 import { appraisalEvaluationSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
@@ -24,7 +25,7 @@ export const fetchAppraisalEvaluationById = (id) => (dispatch) => {
         question: [],
         ratingSelection: false,
         ratingDetail: {},
-      })
+      }),
     );
   }
   dispatch(actions.startCall({ callType: callTypes.action }));
@@ -45,7 +46,7 @@ export const fetchAppraisalEvaluationById = (id) => (dispatch) => {
           employeeDetail,
           isHREvaluation,
           appraisalEmpDetail,
-        })
+        }),
       );
     })
     .catch((error) => {
@@ -87,7 +88,7 @@ export const updateAppraisalEvaluation = (body) => (dispatch) => {
 };
 
 export const fetchAppraisalEmployeeDetail = (empId, Id, onHide) => (
-  dispatch
+  dispatch,
 ) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
@@ -109,5 +110,31 @@ export const fetchAppraisalEmployeeDetail = (empId, Id, onHide) => (
         progress: undefined,
       });
       dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+export const updateEvaluationConsent = (body, onHide, setLoading) => (
+  dispatch,
+) => {
+  return requestFromServer
+    .updateEvaluationConsent(body)
+    .then(() => {
+      toast.success(SERVER_MESSAGES.updatedSuccess);
+      onHide();
+      setLoading(false);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      setLoading(false);
     });
 };

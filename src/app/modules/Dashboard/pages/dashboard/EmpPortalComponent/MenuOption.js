@@ -321,7 +321,7 @@ export const MenuOption = () => {
       ],
     },
   ];
-  console.log(employeeTaskItem, "tasl")
+
   return (
     <div className="px-5 py-4 rounded-lg bg-white w-full relative">
       {/* Header section - clickable */}
