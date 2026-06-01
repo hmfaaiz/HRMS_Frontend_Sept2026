@@ -40,13 +40,11 @@ export const AIChatbotSlice = createSlice({
         id: assistantMessageId,
         question,
         content: "",
+        processText: "",
         isStreaming: true,
         isError: false,
         meta: {},
       });
-
-      state.actionsLoading = true;
-      state.error = null;
     },
     AskQuestionProcessReceived: (state, action) => {
       const { assistantMessageId, content } = action.payload;
@@ -54,7 +52,7 @@ export const AIChatbotSlice = createSlice({
       const msg = state.currentChat.find((x) => x.id === assistantMessageId);
 
       if (msg) {
-        msg.content += content || "";
+        msg.processText = content || "";
       }
     },
     AskQuestionChunkReceived: (state, action) => {
@@ -63,31 +61,25 @@ export const AIChatbotSlice = createSlice({
       const msg = state.currentChat.find((x) => x.id === assistantMessageId);
 
       if (msg) {
+        msg.processText = "";
         msg.content += content || "";
       }
     },
 
     AskQuestionCompleted: (state, action) => {
-      const { assistantMessageId, data, content } = action.payload;
+      const { assistantMessageId, data } = action.payload;
 
-      const index = state.currentChat.findIndex(
-        (x) => x.id === assistantMessageId,
-      );
+      const msg = state.currentChat.find((x) => x.id === assistantMessageId);
 
-      if (index !== -1) {
-        state.currentChat[index] = {
-          ...state.currentChat[index], // initial question/id safe rahen
-          ...data, // backend payload merge
-          content: data?.answer,
-          isStreaming: false,
-          isError: data?.success === false || !!data?.error,
-        };
+      if (msg) {
+        msg.processText = "";
+        msg.content = data?.answer || msg.content;
+        msg.isStreaming = false;
+        msg.isError = data?.success === false || !!data?.error;
       }
 
       state.actionsLoading = false;
-      state.error = data?.success === false ? data?.error : null;
     },
-
     AskQuestionFailed: (state, action) => {
       const { assistantMessageId, message, data } = action.payload;
 
