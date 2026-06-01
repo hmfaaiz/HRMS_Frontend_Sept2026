@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
 import { AIChatbotSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
@@ -117,6 +118,7 @@ export const askQuestion = (payload) => async (dispatch, getState) => {
               assistantMessageId,
               data: chunk.data,
               content: chunk?.answer,
+              isStreaming: false,
             }),
           );
         }
@@ -136,6 +138,7 @@ export const askQuestion = (payload) => async (dispatch, getState) => {
     toast.error(error.message || "Something went wrong");
   }
 };
+
 export const fetchCurrentChatById = (payload) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
@@ -155,13 +158,28 @@ export const fetchChatList = () => async (dispatch) => {
   return requestFromServer
     .getChatHistory()
     .then((response) => {
-      console.log("response ", response?.data?.data);
       dispatch(actions.ChatListFetched(response?.data?.data));
     })
     .catch((error) => {
       error.clientMessage = error?.response?.data?.message || "Can't find";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
       toast.error(error?.response?.data?.message || "Something went wrong");
+    });
+};
+
+export const deleteRecord = (sessionId) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.list }));
+  return requestFromServer
+    .deleteChat({ sessionId })
+    .then((response) => {
+      toast.success(SERVER_MESSAGES.deletedSuccess);
+    })
+    .catch((error) => {
+      error.clientMessage = error?.response?.data?.message || "Can't find";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+      toast.error(
+        error?.response?.data?.message || SERVER_MESSAGES.deletedFail,
+      );
     });
 };
 

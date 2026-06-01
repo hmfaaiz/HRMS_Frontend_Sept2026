@@ -15,6 +15,7 @@ import {
   fetchAllDept,
   fetchAllEmployeesWithNoPermissionData,
 } from "../../../../../../_metronic/redux/dashboardActions";
+import { Checkbox } from "@material-ui/core";
 
 function PatternListForm({
   values,
@@ -41,6 +42,7 @@ function PatternListForm({
     attachment: "100px",
     responsibleEmployee: "450px",
     taskStatus: "270px",
+    returnableAssets: "50px",
     completionDate: "120px",
     remarks: "400px",
     action: "5px",
@@ -79,6 +81,7 @@ function PatternListForm({
                   attachmentPath: null,
                   responsibleEmployeeId: "",
                   taskStatus: "", // NO DEFAULT - EMPTY
+                  returnableAssets: false,
                   completionDate: "",
                   remarks: "",
                   sno: "",
@@ -114,6 +117,9 @@ function PatternListForm({
                     <th style={{ width: columnWidths.responsibleEmployee }}>
                       Assign to Employee<span style={{ color: "red" }}>*</span>
                     </th>
+                    <th style={{ width: columnWidths.returnableAssets }}>
+                      Returnable Assets
+                    </th>
                     <th style={{ width: columnWidths.taskStatus }}>
                       Task Status
                     </th>
@@ -136,8 +142,8 @@ function PatternListForm({
                       const filteredTaskStatusOptions =
                         row.originalTaskStatus === "Completed"
                           ? taskStatusOptions.filter(
-                              (opt) => opt.value === "Completed",
-                            )
+                            (opt) => opt.value === "Completed",
+                          )
                           : taskStatusOptions;
 
                       return (
@@ -254,7 +260,7 @@ function PatternListForm({
                                 }
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-primary underline"
+                                className="text-primary underline line-clamp-1"
                                 style={{ fontSize: "12px" }}
                               >
                                 {row.attachment instanceof File
@@ -298,6 +304,18 @@ function PatternListForm({
                                   {errors.list[index].responsibleEmployeeId}
                                 </div>
                               )}
+                          </td>
+
+                          <td style={{ width: columnWidths.returnableAssets }}>
+                            <input
+                              type="checkbox"
+                              name={`list[${index}].returnableAssets`}
+                              checked={row.returnableAssets || false}
+                              onChange={(e) =>
+                                setFieldValue(`list[${index}].returnableAssets`, e.target.checked)
+                              }
+                              disabled={isdataForRead || isApproved === 1}
+                            />
                           </td>
 
                           <td style={{ width: columnWidths.taskStatus }}>

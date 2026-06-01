@@ -19,6 +19,7 @@ const employeeChecklistSchema = Yup.object().shape({
   employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
   isApproved: Yup.number().nullable(),
 
+
   list: Yup.array().of(
     Yup.object().shape({
       departmentId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -29,6 +30,7 @@ const employeeChecklistSchema = Yup.object().shape({
 
       // Task status is NOT required
       taskStatus: Yup.string().nullable(),
+      returnableAssets: Yup.string().nullable(),
 
       // Completion date only required when status is "Completed"
       completionDate: Yup.string().when(["taskStatus", "isApproved"], {

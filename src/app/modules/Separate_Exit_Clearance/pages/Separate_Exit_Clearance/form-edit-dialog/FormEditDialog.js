@@ -10,24 +10,24 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ show,Id, onHide, dataForRead }) {
+export function FormEditDialog({ show, Id, onHide, dataForRead }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
- 
+
   const usersUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
     };
   }, [FormUIContext]);
 
-  const formUIProps  = useMemo(() => {
+  const formUIProps = useMemo(() => {
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
-        panelMode: FormUIContext.panelMode,
+      panelMode: FormUIContext.panelMode,
       setPanelMode: FormUIContext.setPanelMode,
     };
   }, [FormUIContext]);
@@ -49,62 +49,62 @@ export function FormEditDialog({ show,Id, onHide, dataForRead }) {
     userStatusTypes,
     isdataForRead,
   } = useSelector((state) => {
-   
-  
+
+
     return {
       actionsLoading: state.users.actionsLoading,
       dataForEdit: state.exit_clearance.dataForEdit,
       isdataForRead: state.exit_clearance.dataForRead,
     };
   }, shallowEqual);
-  
+
 
 
 
   useEffect(() => {
-  
-   dispatch(actions.fetchExitTypeExitReasonDataForEdit(Id));
- 
- 
 
-    
-  }, [Id,dispatch,show]);
+    dispatch(actions.fetchExitTypeExitReasonDataForEdit(Id));
+
+
+
+
+  }, [Id, dispatch, show]);
 
 
   const saveForm = async (data) => {
 
- 
+
 
     if (!data.dataIsExist) {
- 
-    
+
+
       const finalObject = { data }
       await dispatch(actions.createExitTypeExitReason(data, disbaleLoading, onHide));
       await dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
-      
+
 
     } else {
 
-     
+
 
 
       const formUpdatedFields = {
         employeeId: data?.employeeId,
         isApproved: data?.isApproved,
-
-        list:data?.list,
+        patternList: data?.patternList || data?.list || [],
+        onboardChecklist: data?.onboardChecklist || [],
       };
 
-      
 
-     await dispatch(actions.updateExitTypeExitReason(formUpdatedFields, disbaleLoading, onHide));
-     await dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
+
+      await dispatch(actions.updateExitTypeExitReason(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
     }
   };
 
   return (
     <Modal
-       size="xl"
+      size="xl"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"

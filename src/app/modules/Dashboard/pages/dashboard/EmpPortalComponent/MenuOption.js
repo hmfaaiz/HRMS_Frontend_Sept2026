@@ -9,6 +9,7 @@ import {
   FileUser,
   PanelsTopLeft,
   FolderCheck,
+  ListChecks,
 } from "lucide-react";
 import { useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
@@ -30,6 +31,7 @@ export const MenuOption = () => {
     projectMgt,
     portalInfo,
     company_doc_portal,
+    employee_task,
   } = useSelector((state) => {
     return {
       moduleRights: state?.dashboard?.moduleRights,
@@ -46,6 +48,7 @@ export const MenuOption = () => {
       projectMgt: state?.auth?.userAccess["Task"],
       company_doc_portal: state?.auth?.userAccess.company_doc_portal,
       portalInfo: state?.dashboard?.portalInfo,
+      employee_task: state?.auth?.userAccess["Employee_Task"],
     };
   }, shallowEqual);
 
@@ -145,6 +148,14 @@ export const MenuOption = () => {
       el?.isResourceShow &&
       el?.portalType == 2,
   );
+
+  const employeeTaskItem = employee_task?.find(
+    (el) =>
+      el?.componentName === "ReadAllEmployeeTask" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
 
   const MENUOPTION = [
     {
@@ -297,8 +308,20 @@ export const MenuOption = () => {
         },
       ],
     },
+    {
+      icon: <ListChecks className="w-6 h-6 text-black" />,
+      name: "Employee",
+      isShow: employeeTaskItem,
+      linkList: [
+        {
+          link: "/employee_task/read-all-employee-task",
+          show: employeeTaskItem,
+          name: "Checklist Task",
+        },
+      ],
+    },
   ];
-
+  console.log(employeeTaskItem, "tasl")
   return (
     <div className="px-5 py-4 rounded-lg bg-white w-full relative">
       {/* Header section - clickable */}
@@ -308,17 +331,15 @@ export const MenuOption = () => {
       >
         <h5 className="font-weight-bolder m-0 text-white py-1">Associated Modules</h5>
         <Plus
-          className={`w-5 h-5 font-bold text-white transition-transform duration-300 ${
-            isExpanded ? "rotate-45" : ""
-          }`}
+          className={`w-5 h-5 font-bold text-white transition-transform duration-300 ${isExpanded ? "rotate-45" : ""
+            }`}
         />
       </div>
 
       {/* Expandable content section - absolute positioned */}
       <div
-        className={`absolute left-0  w-full overflow-hidden transition-all duration-300 ease-in-out z-20 ${
-          isExpanded ? "h-72 opacity-100" : "h-0 opacity-0 pointer-events-none"
-        }`}
+        className={`absolute left-0  w-full overflow-hidden transition-all duration-300 ease-in-out z-20 ${isExpanded ? "h-72 opacity-100" : "h-0 opacity-0 pointer-events-none"
+          }`}
         style={{ top: "calc(100% - 8px)" }}
       >
         <div className="bg-tprimary space-y-3 shadow-md rounded-lg p-4 mx-5 h-full overflow-y-auto scrollbar-fancy ">
