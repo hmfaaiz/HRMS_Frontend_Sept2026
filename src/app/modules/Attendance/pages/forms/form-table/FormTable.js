@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import paginationFactory, {
   PaginationProvider,
 } from "react-bootstrap-table2-paginator";
@@ -17,12 +18,15 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Modal } from "react-bootstrap";
 import { format } from "date-fns";
-import { formatTime } from "../../../../../utils/common";
+import { formatDates, formatTime } from "../../../../../utils/common";
+import { fetchAttLogsByDate } from "../../../../Dashboard/_redux/dashboardActions";
+import { ClockFading } from "lucide-react";
+import { LogsDialog } from "../log/LogsDialog";
 
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
-
+ const [showLogsModal, setShowLogsModal] = useState(false);
   const FormUIProps = useMemo(() => {
     return {
       queryParams: formUIContext.queryParams,
@@ -190,6 +194,84 @@ export function FormTable() {
                 {cell}
               </span>)}
     },
+
+    {
+  dataField: "actions",
+  text: "Actions",
+  sort: false,
+  headerSortingClasses,
+  style: {
+    minWidth: "100px",
+    maxWidth: "100px",
+    textAlign: "text-end pr-3",
+  },
+  // formatter: (cell, row) => {
+  //   return (
+  //     <OverlayTrigger
+  //       placement="top"
+  //       overlay={
+  //         <Tooltip id={`products-edit-tooltip-${row.employeeId}`}>
+  //           View Logs
+  //         </Tooltip>
+  //       }
+  //     >
+  //       <span
+  //         className="cursor-pointer font-bold text-underline-hover"
+  //         onClick={() => {
+  //           dispatch(
+  //             fetchAttLogsByDate({
+  //               employeeId: row?.t_employee_profile?.employeeId,
+  //               attDate: formatDates(row?.attDate, "dd-MMM-yyyy"),
+  //             })
+  //           );
+  //         }}
+  //       >
+  //         <ClockFading className="w-4 h-4 pointer" />
+  //       </span>
+  //     </OverlayTrigger>
+  //   );
+  // },
+
+  formatter: (cell, row) => {
+  return (
+    <>
+      <OverlayTrigger
+        placement="top"
+        overlay={
+          <Tooltip id={`products-edit-tooltip-${row?.employeeCode}`}>
+            View Logs
+          </Tooltip>
+        }
+      >
+        <span
+          className="cursor-pointer"
+          onClick={() => {
+            dispatch(
+              fetchAttLogsByDate({
+                employeeId:
+                  row?.t_employee_profile?.employeeId,
+                attDate: formatDates(
+                  row?.attDate,
+                  "dd-MMM-yyyy"
+                ),
+              })
+            );
+
+            setShowLogsModal(true);
+          }}
+        >
+          <ClockFading className="ml-2 w-5 h-5 " />
+        </span>
+      </OverlayTrigger>
+{/* 
+      <LogsDialog
+        show={showLogsModal}
+        onHide={() => setShowLogsModal(false)}
+      /> */}
+    </>
+  );
+},
+}
    
     // {
     //   dataField: "finalRemarks",
@@ -216,6 +298,10 @@ export function FormTable() {
   return (
     <>
       <Modal.Body className="overlay overlay-block cursor-default">
+            <LogsDialog
+      show={showLogsModal}
+      onHide={() => setShowLogsModal(false)}
+    />
         <PaginationProvider pagination={paginationFactory(paginationOptions)}>
           {({ paginationProps, paginationTableProps }) => {
             return (
