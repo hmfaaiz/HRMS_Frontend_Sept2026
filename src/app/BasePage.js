@@ -92,6 +92,9 @@ const FiscalSetupModule = lazy(() =>
 const PayrollMonthSetupModule = lazy(() =>
   import("./modules/Payroll_Month_Setup/pages/index"),
 );
+const ClosePayrollMonthSetupModule = lazy(() =>
+  import("./modules/Close_Payroll_Month_Process/pages/index"),
+);
 const ArrearPolicyModule = lazy(() =>
   import("./modules/ArrearPolicy/pages/index"),
 );
@@ -633,6 +636,9 @@ const JobRequestionWorkflowStatus = lazy(() =>
 const JobRequestionWorkflowStatusApproval = lazy(() =>
   import("./modules/JobRequestionWorkflowStatusApproval/page/index"),
 );
+const employee_task_portal = lazy(() =>
+  import("./modules/employee_task_portal/pages/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -845,6 +851,9 @@ const ROUTES = {
   travel_request_reports: TravelRequestReportsModule,
   job_requestion_workflow : JobRequestionWorkflowStatus,
   job_requestion_workflow_approval : JobRequestionWorkflowStatusApproval,
+  close_payroll_month: ClosePayrollMonthSetupModule,
+  employee_task: employee_task_portal,
+
 };
 
 export default function BasePage() {
