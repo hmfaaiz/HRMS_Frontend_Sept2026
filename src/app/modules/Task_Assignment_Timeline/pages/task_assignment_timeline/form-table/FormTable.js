@@ -74,9 +74,9 @@ function DetailSubTable({ masterId }) {
             <th>File</th>
             <th>Created Date</th>
             <th>Due Date</th>
-            <th>From Time</th>
+            {/* <th>From Time</th>
             <th>To Time</th>
-            <th>No Of Hours</th>
+            <th>No Of Hours</th> */}
             <th>Status</th>
           </tr>
         </thead>
@@ -125,9 +125,9 @@ function DetailSubTable({ masterId }) {
                     </span>
                   ) : ""}
                 </td>
-                <td>{detail.timeRangeFrom || ""}</td>
+                {/* <td>{detail.timeRangeFrom || ""}</td>
                 <td>{detail.timeRangeTo || ""}</td>
-                <td>{detail.noOfHours || ""}</td>
+                <td>{detail.noOfHours || ""}</td> */}
                 <td>
                   {ticketStatusOptions.find((s) => s.value === detail.ticketStatus)?.label || ""}
                 </td>
@@ -312,62 +312,93 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     //   }
     // },
 
-    {
-  dataField: "Details[0].AssignByProfile.fullName",
+//     {
+//   dataField: "Details[0].AssignByProfile.fullName",
+//   text: "Assign By",
+//   style: { width: "100px", maxWidth: "100px" },
+//   formatter: (_, row) => {
+//     const lastDetail = row?.Details?.[row?.Details.length - 1];
+//     const name = lastDetail?.AssignByProfile?.fullName || "";
+
+//     if (!name) return "";
+
+//     return name.length > 30 ? (
+//       <span
+//         data-bs-toggle="tooltip"
+//         title={name}
+//         style={{ cursor: "pointer" }}
+//       >
+//         {name.substring(0, 30) + "..."}
+//       </span>
+//     ) : (
+//       name
+//     );
+//   }
+// },
+
+//     // {
+//     //   dataField: "Details[0].AssignToProfile.fullName",
+//     //   text: "Assign To",
+//     //   style: { minWidth: "100px" },
+//     //   formatter: (_, row) => {
+//     //     const lastDetail = row?.Details?.[row?.Details.length - 1];
+//     //     return lastDetail?.AssignToProfile?.fullName || "";
+//     //   }
+//     // },
+
+//     {
+//   dataField: "Details[0].AssignToProfile.fullName",
+//   text: "Assign To",
+//   style: { width: "100px", maxWidth: "100px" },
+
+//   formatter: (_, row) => {
+//     const lastDetail = row?.Details?.[row?.Details.length - 1];
+//     const name = lastDetail?.AssignToProfile?.fullName || "";
+
+//     if (!name) return "";
+
+//     return name.length > 30 ? (
+//       <span
+//         data-bs-toggle="tooltip"
+//         title={name}
+//         style={{ cursor: "pointer" }}
+//       >
+//         {name.substring(0, 30) + "..."}
+//       </span>
+//     ) : (
+//       name
+//     );
+//   }
+// },
+   // Assign By — from master
+{
+  dataField: "assignBy",
   text: "Assign By",
   style: { width: "100px", maxWidth: "100px" },
   formatter: (_, row) => {
-    const lastDetail = row?.Details?.[row?.Details.length - 1];
-    const name = lastDetail?.AssignByProfile?.fullName || "";
-
+    const name = row?.AssignByEmployee?.fullName || "";
     if (!name) return "";
-
     return name.length > 30 ? (
-      <span
-        data-bs-toggle="tooltip"
-        title={name}
-        style={{ cursor: "pointer" }}
-      >
+      <span data-bs-toggle="tooltip" title={name} style={{ cursor: "pointer" }}>
         {name.substring(0, 30) + "..."}
       </span>
-    ) : (
-      name
-    );
+    ) : name;
   }
 },
 
-    // {
-    //   dataField: "Details[0].AssignToProfile.fullName",
-    //   text: "Assign To",
-    //   style: { minWidth: "100px" },
-    //   formatter: (_, row) => {
-    //     const lastDetail = row?.Details?.[row?.Details.length - 1];
-    //     return lastDetail?.AssignToProfile?.fullName || "";
-    //   }
-    // },
-
-    {
-  dataField: "Details[0].AssignToProfile.fullName",
+// Assign To — from master
+{
+  dataField: "assignTo",
   text: "Assign To",
   style: { width: "100px", maxWidth: "100px" },
-
   formatter: (_, row) => {
-    const lastDetail = row?.Details?.[row?.Details.length - 1];
-    const name = lastDetail?.AssignToProfile?.fullName || "";
-
+    const name = row?.EmployeeProfile?.fullName || "";
     if (!name) return "";
-
     return name.length > 30 ? (
-      <span
-        data-bs-toggle="tooltip"
-        title={name}
-        style={{ cursor: "pointer" }}
-      >
+      <span data-bs-toggle="tooltip" title={name} style={{ cursor: "pointer" }}>
         {name.substring(0, 30) + "..."}
       </span>
-    ) : (
-      name
-    );
+    ) : name;
   }
 },
     {
@@ -460,7 +491,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         </span>
       ),
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
     },
     //     {

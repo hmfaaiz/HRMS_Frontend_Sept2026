@@ -13,6 +13,7 @@ import {
   fetchAllFormsMenu,
   fetchAllPayrollMonthYearList,
 } from "../../../../../../_metronic/redux/dashboardActions";
+import { WorkflowTable } from "../form-table/WorkflowTable"; 
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -32,6 +33,8 @@ export function FormCard() {
       setemployeeId: FormUIContext.setemployeeId,
       queryParams: FormUIContext.queryParams,
       id: FormUIContext.ids,
+      workflowId: FormUIContext.workflowId,       
+      setWorkflowId: FormUIContext.setWorkflowId,
     };
   }, [FormUIContext]);
 
@@ -133,6 +136,12 @@ export function FormCard() {
         <FormTable />
         <WorkflowAuthortiesTable />
       </div>
+       {FormUIProps.workflowId && (
+        <WorkflowTable
+          show={FormUIProps.workflowId !== null}
+          onHide={() => FormUIProps.setWorkflowId(null)}
+        />
+      )}
     </div>
   );
 }

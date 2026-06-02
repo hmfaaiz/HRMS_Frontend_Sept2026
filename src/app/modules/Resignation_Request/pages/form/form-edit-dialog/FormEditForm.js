@@ -20,6 +20,7 @@ import {
 
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { fetchExitReasonData } from "../../../../Dashboard/_redux/dashboardActions";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 export const getSeparationEditSchema = () => {
   return Yup.object().shape({
@@ -46,15 +47,17 @@ export const getSeparationEditSchema = () => {
 export function FormEditForm({
   saveForm,
   formData,
+  enableLoading,
   loading,
   empAuthorityList,
 }) {
   const dispatch = useDispatch();
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const { dashboard } = useSelector((state) => state);
 
   const inputFile = useRef(null);
   const [dateOfJoining, setDateOfJoining] = useState("");
-
+  
   //drop down
   useEffect(() => {
     dispatch(fetchAllFormsMenu(526, "allExitTypeList"));
@@ -125,7 +128,15 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{ ...formData, employeetatus: 1 }}
       validationSchema={getSeparationEditSchema(formData)}
-      onSubmit={async (values) => {
+       onSubmit={async (values) => {
+        // ← REPLACE the old one-liner with this block
+        const result = await confirm(
+          "Confirm Submission",
+          "Are you sure you want to submit this request?",
+          "No",
+          "Yes",
+        );
+        if (!result) return;
         saveForm(values);
       }}
     >
@@ -138,6 +149,7 @@ export function FormEditForm({
         handleReset,
       }) => (
         <>
+        <ConfirmationComponent /> 
           <Modal.Body className="overlay overlay-block cursor-default">
             {loading && (
               <div className="overlay-layer bg-transparent">

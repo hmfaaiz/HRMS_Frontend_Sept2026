@@ -25,6 +25,7 @@ import {
 } from "../../../_redux/redux-Crud";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { toast } from "react-toastify";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 const ReimbursementClaimSchema = Yup.object().shape({
   reimbursement_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -55,6 +56,7 @@ export function FormEditForm({
 
   const [empAuthorityList, setEmpAuthorityList] = useState([]);
   const [isPolicyExists, setIsPolicyExists] = useState(false);
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
 
   const { dashboard } = useSelector((state) => state);
   const { currentState } = useSelector(
@@ -143,7 +145,8 @@ export function FormEditForm({
   }, [dashboard?.allReimbursementTypeList, policies]);
 
   // ── Calculate remaining amount limit ───────
-  const calculateRemainingAmount = (
+  // ── Calculate remaining amount limit ───────
+const calculateRemainingAmount = (
   reimbursementTypeId,
   payrollForId,
   policies,
@@ -155,6 +158,20 @@ export function FormEditForm({
   const maxAmount = matchingPolicy?.max_amount || 0;
   const limit_type = matchingPolicy?.limit_type || 1;
 
+  // Exclude rejected claims from used-amount calculation
+  const isNotRejected = (entity) => {
+    if (entity.request_status === "R") return false;
+    if (
+      (entity.request_status === null ||
+        entity.request_status === undefined ||
+        entity.request_status === "") &&
+      entity.approved_status === 2
+    ) {
+      return false; // Rejected via HRMS
+    }
+    return true;
+  };
+
   let claimedAmount = 0;
 
   if (limit_type == 1) {
@@ -162,7 +179,8 @@ export function FormEditForm({
       ?.filter(
         (entity) =>
           entity.reimbursement_typeId === reimbursementTypeId &&
-          entity.pay_in_payroll_forId === payrollForId
+          entity.pay_in_payroll_forId === payrollForId &&
+          isNotRejected(entity)
       )
       ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
   } else if (limit_type == 2) {
@@ -176,6 +194,7 @@ export function FormEditForm({
       ?.filter((entity) => {
         if (!entity?.PayInPayrollForId?.startDate) return false;
         if (!fiscalStart || !fiscalEnd) return false;
+        if (!isNotRejected(entity)) return false;
 
         const entityStartDate = new Date(entity.PayInPayrollForId.startDate);
         return (
@@ -194,19 +213,19 @@ export function FormEditForm({
   return finalMaxAmount;
 };
 
-  // ── Min date for date picker 
-  const getMinDate = () => {
-    const payrollStart = activeFiscalYear?.payrollMonth?.startDate
-      ? new Date(activeFiscalYear.payrollMonth.startDate)
-      : null;
-    const joiningDate = employeeData?.dateOfJoining
-      ? new Date(employeeData.dateOfJoining)
-      : null;
-    if (payrollStart && joiningDate) {
-      return payrollStart > joiningDate ? payrollStart : joiningDate;
-    }
-    return payrollStart || joiningDate || null;
-  };
+// ── Min date for date picker ──────────────────────────────────────
+const getMinDate = () => {
+  const payrollStart = activeFiscalYear?.payrollMonth?.startDate
+    ? new Date(activeFiscalYear.payrollMonth.startDate)
+    : null;
+  const joiningDate = employeeData?.dateOfJoining
+    ? new Date(employeeData.dateOfJoining)
+    : null;
+  if (payrollStart && joiningDate) {
+    return payrollStart > joiningDate ? payrollStart : joiningDate;
+  }
+  return payrollStart || joiningDate || null;
+};
 
   return (
     <Formik
@@ -221,8 +240,15 @@ export function FormEditForm({
         return errors;
       }}
       onSubmit={async (values, { resetForm }) => {
+        
+        const result = await confirm(
+          "Confirm Submission",
+          "Are you sure you want to submit this request?",
+          "No",
+          "Yes",
+        );
+        if (!result) return;
         enableLoading();
-
         if (!empAuthorityList || empAuthorityList.length === 0) {
           disbaleLoading();
           toast.error(
@@ -312,6 +338,7 @@ export function FormEditForm({
 
         return (
           <>
+          <ConfirmationComponent />
             {/* Workflow policy warnings */}
             {empAuthorityList && empAuthorityList?.length === 0 && !isPolicyExists ? (
               <span className="text-xs text-red-500 font-semibold">

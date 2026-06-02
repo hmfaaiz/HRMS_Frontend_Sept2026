@@ -115,31 +115,43 @@ export function LeaveApprovalFormTable() {
     //     return <span style={style}>{text}</span>;
     //   },
     // },
-    {
-      dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
-      text: "Code", // Column heading
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "120px",
-        maxWidth: "120px",
-      },
-    },
-    {
-      dataField: "requestBelongToEmp",
-      text: "Name",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "190px",
-        maxWidth: "190px",
-      },
-      formatter: (cell) => {
-        return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
-      },
-    },
+    // {
+    //   dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
+    //   text: "Code", // Column heading
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "120px",
+    //     maxWidth: "120px",
+    //   },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp",
+    //   text: "Name",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "190px",
+    //     maxWidth: "190px",
+    //   },
+    //   formatter: (cell) => {
+    //     return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+    //   },
+    // },
+     {
+          dataField: "requestBelongToEmp",
+          text: "Employee",
+          sort: true,
+          sortCaret, headerSortingClasses,
+          style: { minWidth: "200px", maxWidth: "200px" },
+          formatter: (cell) => {
+            const code = cell?.employeeCode || "";
+            const name = `${cell?.firstName || ""} ${cell?.middleName ? cell.middleName + " " : ""}${cell?.lastName || ""}`.trim();
+            return code && name ? `${code} - ${name}` : code || name || "";
+          },
+        },
     // {
     //   dataField: "requestBelongToEmp.department.deptName",
     //   text: "Department",
@@ -222,7 +234,7 @@ export function LeaveApprovalFormTable() {
         setLeaveWorkflowId: FormUIProps.setLeaveWorkflowId,
         setLeaveData: FormUIProps?.setLeaveData,
       },
-
+      headerClasses: "text-right",
       style: {
         minWidth: "100px",
       },

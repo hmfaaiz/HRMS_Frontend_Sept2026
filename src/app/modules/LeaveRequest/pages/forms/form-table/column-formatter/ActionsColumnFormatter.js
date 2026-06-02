@@ -2,7 +2,7 @@ import React from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Minus, RotateCcw } from "lucide-react";
+import { Minus, RotateCcw, Eye } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -15,6 +15,8 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     isAccessForReApply,
+    setWorkflowId,
+    setCurrentData,
   }
 ) {
   //Function to check if the date doesn't lie before the payroll month date
@@ -27,7 +29,7 @@ export function ActionsColumnFormatter(
   };
 
   return (
-    <>
+    <div className="flex items-center justify-end gap-2">
       {isAccessForEdit && row.isActive && row.request_status === "P" && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
@@ -50,13 +52,12 @@ export function ActionsColumnFormatter(
           overlay={<Tooltip id="products-edit-tooltip">Re-apply</Tooltip>}
         >
           <a title="" className="" onClick={() => editRecord(row.Id)}>
-            <RotateCcw className="w-4 h-4 " />
+            <RotateCcw className="w-4 h-4" />
           </a>
         </OverlayTrigger>
       ) : (
         <span className="font-bold"><Minus className="w-4 h-4" /></span>
       )}
-
       {isAccessForDelete && checkPayrolMonth(row, payrollData) && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Delete</Tooltip>}
@@ -77,6 +78,26 @@ export function ActionsColumnFormatter(
           )}
         </OverlayTrigger>
       )}
-    </>
+
+      {row?.request_status === "P" ||
+      row?.request_status === "A" ||
+      row?.request_status === "R" ? (
+        <OverlayTrigger
+          overlay={<Tooltip id="view-leave-workflow-tooltip">View Workflow</Tooltip>}
+        >
+          <a
+            className="cursor-pointer"
+            onClick={() => {
+              setWorkflowId(row.Id);
+              setCurrentData(row);
+            }}
+          >
+            <Eye className="w-4 h-4 text-black" />
+          </a>
+        </OverlayTrigger>
+      ) : (
+        <span className="font-bold"><Minus className="w-4 h-4" /></span>
+      )}
+    </div>
   );
 }
