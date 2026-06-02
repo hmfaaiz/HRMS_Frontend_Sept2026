@@ -61,9 +61,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchHoliday(id));
+    dispatch(actions.fetchPolicyforNewYearBudget(id));
 
-    // dispatch(actions.fetchHoliday(formUIProps .queryParams))
+    // dispatch(actions.fetchPolicyforNewYearBudget(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
@@ -74,8 +74,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     if (!id) {
       7
       const finalObject = { data }
-      dispatch(actions.createHoliday(data, disbaleLoading, onHide)).then(async () => {
-        await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      dispatch(actions.createPolicyforNewYearBudget(data, disbaleLoading, onHide)).then(async () => {
+        await dispatch(actions.fetchPolicyforNewYearBudgets(usersUIProps.queryParams));
       });
 
 
@@ -89,13 +89,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         departmentId: data.departmentId,
         exceed_strength_upto: data.exceed_strength_upto,
         exceed_amounth_upto: data.exceed_amounth_upto,
+        approverId: data.approverId,
 
       };
 
 
 
-      await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide)).then(async () => {
-        await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      await dispatch(actions.updatePolicyforNewYearBudget(formUpdatedFields, disbaleLoading, onHide)).then(async () => {
+        await dispatch(actions.fetchPolicyforNewYearBudgets(usersUIProps.queryParams));
       });
     }
   };

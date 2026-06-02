@@ -3,13 +3,14 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
-  DatePickerField,
+
   Input,
 } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 import {
-  fetchAllFormsMenu,
+
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -21,10 +22,21 @@ import { fetchAllDepartmentBySubsidiaryIds } from "../../../../Dashboard/_redux/
 const policy_for_new_year_budgetEditSchema = Yup.object().shape({
 
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  approverId: Yup.array()
+    .of(Yup.string())
+    .min(1, "At least one approver is required")
+    .required("At least one approver is required"),
 
 
-  exceed_strength_upto: Yup.number().required(VALIDATION_MESSAGES.required),
-  exceed_amounth_upto: Yup.number().required(VALIDATION_MESSAGES.required),
+  exceed_strength_upto: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(/^\d+$/, 'Maximum 10 digits allowed')
+    .max(9, 'Maximum 10 digits allowed'),
+
+  exceed_amounth_upto: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(/^\d+$/, 'Maximum 10 digits allowed')
+    .max(9, 'Maximum 10 digits allowed'),
 
   departmentId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
 });
@@ -40,21 +52,14 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [start_date, setStart_date] = useState();
-  const [end_date, setEnd_date] = useState();
-  const [diffInDate, setDiffInDate] = useState();
-  useEffect(() => {
-    if (!formData?.Id) {
-  
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-       dispatch(fetchAllDepartmentBySubsidiaryIds([formData?.subsidiaryId] || [0]));
-    }
-  }, [dispatch, formData?.Id]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+
+
+  const { currentState, userAccess, roles } = useSelector((state) => {
     return {
       currentState: state.policy_for_new_year_budget,
       userAccess: state?.auth?.userAccess["policy_for_new_year_budget"],
+      roles: state.users?.roles?.allRoles || []
     };
   }, shallowEqual);
 
@@ -62,6 +67,20 @@ export function FormEditForm({
   const defaultSubsidiary = dashboard?.allSubsidiaryList?.find(
     (item) => item.isDefault
   );
+
+
+  useEffect(() => {
+
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    dispatch(fetchAllDepartmentBySubsidiaryIds([formData?.subsidiaryId] || [0]));
+    dispatch(fetchRoles());
+  }, [dispatch, formData?.Id]);
+
+
+  useEffect(() => {
+    dispatch(fetchAllDepartmentBySubsidiaryIds([defaultSubsidiary?.value] || [0]));
+  }, [dispatch, defaultSubsidiary?.value]);
+
   return (
     <Formik
       enableReinitialize={true}
@@ -74,13 +93,13 @@ export function FormEditForm({
         enableLoading();
         const payload = {
           ...values,
-        
+
         };
 
         saveForm(payload);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+      {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -93,7 +112,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
-                     
+
                       <SubsidiarySelect
                         name="subsidiaryId"
                         label={
@@ -104,20 +123,21 @@ export function FormEditForm({
                         isDisabled={isUserForRead}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-                            dispatch(fetchAllDepartmentBySubsidiaryIds( [e.value] || [0]));
+                          dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         currentValue={values?.subsidiaryId}
                         initializeSubsidiary={(e) => {
-                          setFieldValue("subsidiaryId", e.value || null);
-                          dispatch(fetchAllDepartmentBySubsidiaryIds( [e.value] || [0]));
+                          // setFieldValue("subsidiaryId", e.value || null);
+                          // dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
+
                         }}
                       />
                     </div>
 
                   </div>
-            
+
 
                   <div className="col-span-1">
                     <SearchSelect
@@ -137,7 +157,7 @@ export function FormEditForm({
                         ) || null
                       }
                       options={dashboard?.departmentBySubIdsList}
-                 
+
                       error={errors.departmentId}
                       touched={touched.departmentId}
                     />
@@ -153,30 +173,62 @@ export function FormEditForm({
                     <Field
                       name="exceed_strength_upto"
                       component={Input}
-             
+
                       type="number"
-                
+
                     />
                   </div>
 
                   <div className="col-span-1">
                     <label>
                       <span>
-                       Exceed Amount Upto<span style={{ color: "red" }}>*</span>
+                        Exceed Amount Upto<span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
                     <Field
                       name="exceed_amounth_upto"
                       component={Input}
-                  
-                    
+
+
                       type="number"
-                 
+
                     />
                   </div>
 
-            
-           
+                  <div className="">
+                    <label>
+                      Budget Approver For HRMS<span style={{ color: "red" }}>*</span>
+                    </label>
+
+
+
+
+
+                    <div className="overflow-auto max-h-20 border-none scrollbar-fancy">
+                      {roles?.map((option) => (
+                        <div key={option.Id} className="flex justify-start items-center">
+                          <input className="mr-1"
+                            name="approverId"
+                            type="checkbox"
+                            value={option.value}
+                            checked={Boolean(values?.approverId?.includes(option?.value?.toString()))}
+                            onChange={handleChange}
+                          />
+                          <label>{option.label}
+                          </label>
+                        </div>
+                      ))}
+
+
+                    </div>
+                    {errors.approverId && (
+                      <div className="text-danger mt-1">
+                        {errors.approverId}
+                      </div>
+                    )}
+
+                  </div>
+
                 </div>
               </fieldset>
             </Form>

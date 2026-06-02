@@ -60,7 +60,7 @@ console.log("userAccess11111",userAccess)
     formUIProps.setIds([]);
 
 
-    dispatch(actions.fetchHolidays(formUIProps.queryParams));
+    dispatch(actions.fetchPolicyforNewYearBudgets(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(

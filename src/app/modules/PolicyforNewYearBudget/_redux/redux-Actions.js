@@ -6,16 +6,16 @@ import { toast } from "react-toastify";
 const { actions } = PolicyforNewYearBudgetSlice;
 
 
-export const fetchHolidays = (queryparm) => async (dispatch) => {
+export const fetchPolicyforNewYearBudgets = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllHoliday(queryparm)
+  return requestFromServer.getAllPolicyforNewYearBudget(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.holidayFetched(response));
+      dispatch(actions.policyforNewYearBudgetFetched(response));
     })
     .catch((error) => {
     
@@ -24,20 +24,20 @@ export const fetchHolidays = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchHoliday = (id) => (dispatch) => {
+export const fetchPolicyforNewYearBudget = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.HolidayFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.PolicyforNewYearBudgetFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getHolidayById({ Id: id })
+    .getPolicyforNewYearBudgetById({ Id: id })
     .then((response) => {
       const entities = response.data?.data;
 
    
-      dispatch(actions.HolidayFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.PolicyforNewYearBudgetFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -45,13 +45,13 @@ export const fetchHoliday = (id) => (dispatch) => {
     });
 };
 
-export const deleteHoliday = (id) => (dispatch) => {
+export const deletePolicyforNewYearBudget = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteHoliday({ Id: id })
+    .deletePolicyforNewYearBudget({ Id: id })
     .then((response) => {
     
-      dispatch(actions.HolidayDeleted({ Id: id }));
+      dispatch(actions.PolicyforNewYearBudgetDeleted({ Id: id }));
       toast.success("Successfully Deleted", {
         position: "top-right",
         autoClose: 5000,
@@ -68,35 +68,21 @@ export const deleteHoliday = (id) => (dispatch) => {
     });
 };
 
-export const sendHolidayEmail = (id) => (dispatch) => {
-  dispatch(actions.startCall({ callType: callTypes.action }));
-  return requestFromServer
-    .sendHolidayEmail({ Id: id })
-    .then((response) => {
-      dispatch(actions.HolidayEmailSend());
-      toast.success(SERVER_MESSAGES.emailSuccess);
-    })
-    .catch((error) => {
-      dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(SERVER_MESSAGES.emailFail);
-    });
-};
 
 
-
-export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
+export const createPolicyforNewYearBudget = (holidayForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createHoliday(holidayForCreation)
+    .createPolicyforNewYearBudget(holidayForCreation)
     .then((res) => {
    
       const user = res.data?.data;
      
   
-      dispatch(actions.holidayCreated(user));
+      dispatch(actions.policyforNewYearBudgetCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
         position: "top-right",
@@ -125,14 +111,14 @@ export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
     });
 };
 
-export const updateHoliday = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updatePolicyforNewYearBudget = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateHoliday(user)
+    .updatePolicyforNewYearBudget(user)
     .then((response) => {
   
       const updatedHoliday = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.holidayUpdated({ updatedHoliday }));
+      dispatch(actions.policyforNewYearBudgetUpdated({ updatedHoliday }));
     
       disbaleLoading();
       onHide();

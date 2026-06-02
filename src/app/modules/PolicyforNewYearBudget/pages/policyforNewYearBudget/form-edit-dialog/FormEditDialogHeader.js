@@ -10,19 +10,17 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   const { userForEdit, actionsLoading } = useSelector(
     
     (state) => ({
-      userForEdit: state.holidays.userForEdit,
+      userForEdit: state.policy_for_new_year_budget.userForEdit,
       actionsLoading: state.users.actionsLoading,
     }),
     shallowEqual
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Holiday";
+    let _title = id ? "" : "Add Manpower Budget Configuration ";
     if (id) {
-      _title = `Edit Holidays`;
-    } //else if (isUserForRead) {
-    //   _title = `Read user '}'`
-    // }
+      _title = `Edit Manpower Budget Configuration `;
+    }
     setTitle(_title);
   }, [userForEdit, actionsLoading]);
 
@@ -31,7 +29,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View Holidays"}
+          {!isUserForRead ? title : "View Manpower Budget Configuration "}
         </Modal.Title>
       </Modal.Header>
     </>

@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
-import { FormSendEmailDialog } from "./form-send-email-dialog/FormSendEmailDialog";
 
 import { FormCard } from "./form-card/FormCard";
 import { } from "../../_redux/redux-Actions";
@@ -32,9 +31,7 @@ export function FormPage({ history }) {
     openReadFormDialog: (id, isUserRead) => {
       history.push(`/policy_for_new_year_budget/read-all-policy-for-new-year-budget/${id}/read`);
     },
-    openSendEmailFormDialog: (id, isUserRead) => {
-      history.push(`/policy_for_new_year_budget/read-all-policy-for-new-year-budget/${id}/send-email`);
-    },
+  
   };
   return (
 
@@ -85,18 +82,7 @@ export function FormPage({ history }) {
           />
         )}
       </Route>
-      <Route path="/policy_for_new_year_budget/read-all-policy-for-new-year-budget/:id/send-email">
-        {({ history, match }) => (
-          <FormSendEmailDialog
-            show={match != null}
-            id={match && match.params.id}
-            onHide={() => {
-              history.push("/policy_for_new_year_budget/read-all-policy-for-new-year-budget");
-            }}
-          />
-        )}
-      </Route>
-
+    
       <FormCard />
       <ToastContainer
         position="top-right"

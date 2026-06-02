@@ -42,13 +42,13 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteHoliday = () => {
+  const deletePolicyforNewYearBudget = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteHoliday(id)).then(() => {
+    dispatch(actions.deletePolicyforNewYearBudget(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      dispatch(actions.fetchPolicyforNewYearBudgets(usersUIProps.queryParams));
    
       disableLoading();
     });
@@ -84,7 +84,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteHoliday}
+            onClick={deletePolicyforNewYearBudget}
             className="btn btn-danger  btn-elevate"
           >
             Delete 

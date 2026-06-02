@@ -8,7 +8,7 @@ import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 import { useLocation, useHistory } from "react-router-dom";
-import { fetchHolidays } from "../../../_redux/redux-Actions";
+import { fetchPolicyforNewYearBudgets } from "../../../_redux/redux-Actions";
 
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -58,60 +58,7 @@ export function FormFIlter({ listLoading, user }) {
       formUIProps.setQueryParams(newQueryParams)
     }
   }
-  useEffect(() => {
-    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-
-  }, [dispatch]);
-  useEffect(() => {
-
-    if (hasResolvedSubsidiary.current) return;
-
-    if (!dashboard?.allSubsidiaryList?.length) return;
-
-    const searchParams = new URLSearchParams(location.search);
-    const subsidiaryFromUrl = searchParams.get("subsidiary");
-
-    let finalSubsidiaryId = null;
-
-    // 1️ URL has highest priority
-    if (subsidiaryFromUrl) {
-      // finalSubsidiaryId = parseInt(subsidiaryFromUrl, 10);
-
-      // remove param safely
-      searchParams.delete("subsidiary");
-      const newUrl =
-        location.pathname +
-        (searchParams.toString() ? `?${searchParams.toString()}` : "");
-      history.replace(newUrl);
-    }
-    // // 2️ fallback → default subsidiary
-    // else {
-    finalSubsidiaryId = dashboard?.allSubsidiaryList?.find(
-      (e) => e?.isDefault
-    )?.value;
-    // }
-
-    // 3️ nothing found → stop
-    if (!finalSubsidiaryId) return;
-
-    hasResolvedSubsidiary.current = true; //  LOCK IT
-
-    const updatedQueryParams = {
-      ...formUIProps.queryParams,
-      subsidiaryId: finalSubsidiaryId,
-      pageNumber: 1,
-    };
-
-    formUIProps.setQueryParams(updatedQueryParams);
-
-
-    dispatch(fetchHolidays(updatedQueryParams));
-
-
-  }, [
-    location.search,
-    dashboard?.allSubsidiaryList
-  ]);
+ 
 
   return (
     <>

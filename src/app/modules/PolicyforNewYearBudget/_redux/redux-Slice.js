@@ -39,7 +39,7 @@ export const PolicyforNewYearBudgetSlice = createSlice({
             }
         },
 
-        holidayFetched: (state, action) => {
+        policyforNewYearBudgetFetched: (state, action) => {
         
   
             const entities = action.payload.data?.data.rows;
@@ -64,7 +64,7 @@ export const PolicyforNewYearBudgetSlice = createSlice({
         },
 
          //get User By ID
-         HolidayFetchedForEdit: (state, action) => {
+         PolicyforNewYearBudgetFetchedForEdit: (state, action) => {
            
    
             state.actionsLoading = false;
@@ -73,7 +73,7 @@ export const PolicyforNewYearBudgetSlice = createSlice({
         },
 
       
-        HolidayDeleted: (state, action) => {
+        PolicyforNewYearBudgetDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -83,51 +83,25 @@ export const PolicyforNewYearBudgetSlice = createSlice({
                 (el) => el.Id !== action.payload.Id
             );
         },
-                HolidayEmailSend: (state, action) => {
-
-            state.error = null;
-            state.actionsLoading = false;
-         
-          
-        },
+     
 
 
 
 
 
-        // holidayCreated: (state, action) => {
-           
-        //     state.actionsLoading = false;
-        //     state.error = null;
-        //     state.entities.unshift(action.payload);
-        // },
 
 
-        holidayCreated: (state, action) => {
+        policyforNewYearBudgetCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
-        
-            // Clone the payload to avoid direct mutation
-            // let payload = JSON.stringify(action.payload);
-            // let payloadObj = JSON.parse(payload);
-        
-            // // If basis_of_gratuityId is 0, set "Gross", if 1, set "Basis"
-            // if (payloadObj.basis_of_gratuityId == 0) {
-             
-            //     payloadObj.basis_of_gratuity = "Gross";
-            // } else if (payloadObj.basis_of_gratuityId == 1) {
-          
-            //     payloadObj.basis_of_gratuity = "Basis";
-            // }
-        
-            // Add the modified payload to the beginning of the entities list
+
             state.entities.unshift(action.payload);
         },
         
 
 
 
-        holidayUpdated: (state, action) => {
+        policyforNewYearBudgetUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
