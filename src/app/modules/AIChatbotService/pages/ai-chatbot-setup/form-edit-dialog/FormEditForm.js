@@ -158,7 +158,7 @@ export function FormEditForm({
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="AI Assistance: How can I assist you today?"
+                        placeholder="AI Assistant: How can I assist you today?"
                         rows={1}
                         disabled={actionsLoading}
                         style={{
@@ -370,20 +370,26 @@ const ChatListComp = ({ chatData = [], id }) => {
                     <span className="text-sm line-clamp-1">
                       {chat.question}
                     </span>
-                    <div className="flex items-center gap-x-1">
+                    <div className="flex items-center justify-between gap-x-1">
                       <span className="text-xs text-tprimary">
                         {formatDate(new Date(chat.createdAt), "dd-MMM-yyyy")}
                       </span>
-                      <span className="text-xs bg-tprimary text-white px-1 py-0.5 rounded-md">
-                        {chat.totalMessages}{" "}
-                        {chat.totalMessages === 1 ? "message" : "messages"}
-                      </span>
+                      <button
+                        title="Delete Chat"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          FormUIProps.setDeleteId(chat?.sessionId);
+                        }}
+                        className="p-0 shadow-sm border border-red-500"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                      </button>
                     </div>
                   </div>
                 </div>
 
                 {/* Delete Icon - positioned absolute on right side */}
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {/* <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <button
                     title="Delete Chat"
                     onClick={(e) => {
@@ -394,7 +400,7 @@ const ChatListComp = ({ chatData = [], id }) => {
                   >
                     <Trash2 className="w-4 h-4 text-red-600" />
                   </button>
-                </div>
+                </div> */}
               </div>
             ))}
           </div>

@@ -339,32 +339,50 @@ const TeamCardCompact = ({ team, setAttModalData }) => {
           <span
             onClick={() =>
               setAttModalData(
-                team?.filter((e) =>
-                  e?.t_attendances[0]?.status.includes("Present"),
-                ),
+                team?.filter((e) => {
+                  // Check if attendance exists and has at least one record
+                  const attendance = e?.t_attendances?.[0];
+                  return (
+                    attendance &&
+                    (attendance?.timeIn !== "" || attendance?.timeOut !== "")
+                  );
+                }),
               )
             }
             className="text-white rounded-full cursor-pointer bg-tgreen px-5 py-3 text-md font-semibold text-center"
           >
             Present{" "}
-            {team?.filter((e) =>
-              e?.t_attendances[0]?.status.includes("Present"),
-            )?.length || 0}
+            {team?.filter((e) => {
+              const attendance = e?.t_attendances?.[0];
+              return (
+                attendance &&
+                (attendance?.timeIn !== "" || attendance?.timeOut !== "")
+              );
+            })?.length || 0}
           </span>
           <span
             onClick={() =>
               setAttModalData(
-                team?.filter(
-                  (e) => !e?.t_attendances[0]?.status.includes("Present"),
-                ),
+                team?.filter((e) => {
+                  const attendance = e?.t_attendances?.[0];
+                  // Absent if: no attendance record OR both timeIn and timeOut are empty
+                  return (
+                    !attendance ||
+                    (attendance?.timeIn === "" && attendance?.timeOut === "")
+                  );
+                }),
               )
             }
             className="text-white rounded-full bg-tred cursor-pointer px-5 py-3 text-md font-semibold text-center"
           >
             Absents{" "}
-            {team?.filter(
-              (e) => !e?.t_attendances[0]?.status.includes("Present"),
-            )?.length || 0}
+            {team?.filter((e) => {
+              const attendance = e?.t_attendances?.[0];
+              return (
+                !attendance ||
+                (attendance?.timeIn === "" && attendance?.timeOut === "")
+              );
+            })?.length || 0}
           </span>
         </div>
       </div>
