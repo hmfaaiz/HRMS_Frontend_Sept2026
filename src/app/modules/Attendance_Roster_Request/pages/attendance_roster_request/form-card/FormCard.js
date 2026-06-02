@@ -13,6 +13,7 @@ import {
   fetchAllRosterPattern,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { getEmployeeHierarchy} from "../../../../Dashboard/_redux/dashboardActions"
+import { RosterWorkflowStatusModal } from "../form-table/RosterWorkflowStatusModal";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -32,6 +33,8 @@ export function FormCard() {
     setemployeeId: FormUIContext.setemployeeId,
     queryParams:   FormUIContext.queryParams,
     id:            FormUIContext.ids,
+    workflowId:    FormUIContext.workflowId,    // ✅ ADD
+    setWorkflowId: FormUIContext.setWorkflowId,
   }), [FormUIContext]);
 
   //Fetch dropdowns once on mount 
@@ -124,6 +127,12 @@ export function FormCard() {
         <FormTable />
         <WorkflowAuthortiesTable />
       </div>
+      {FormUIProps.workflowId && (
+        <RosterWorkflowStatusModal
+          show={!!FormUIProps.workflowId}
+          onHide={() => FormUIProps.setWorkflowId(null)}
+        />
+      )}
     </div>
   );
 }

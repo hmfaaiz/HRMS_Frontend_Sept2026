@@ -209,7 +209,7 @@ export function ApprovalFormTable() {
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps?.setCurrentData,
       },
-
+      headerClasses: "text-right",
       style: {
         minWidth: "100px",
       },
@@ -299,7 +299,8 @@ export function ApprovalFormTable() {
         }}
         remote
         keyField="Id"
-        data={entities === null ? [] : entities}
+        // data={entities === null ? [] : entities}
+        data={Array.isArray(entities) ? entities : []}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
         onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}

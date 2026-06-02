@@ -25,7 +25,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
 import { Modal, Accordion, Button, Card } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
-
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog"; 
 export function FormEditForm({
   employeeId,
   employeeDetails,
@@ -42,6 +42,7 @@ export function FormEditForm({
   const [activeTravelKey, setActiveTravelKey] = React.useState(null);
   const [showEntitlementModal, setShowEntitlementModal] = React.useState(false);
   const isApprovingRef = React.useRef(false);
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const { dashboard, employeeEntitlement, auth, workflowRecord } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
@@ -51,7 +52,6 @@ export function FormEditForm({
     }),
     shallowEqual,
   );
-
   const transportOptions = dashboard?.allTransportModeList || [];
   const hotelOptions = dashboard?.allHotelEntitlementList || [];
   const locationOptions = dashboard?.allTravelLocationList || [];
@@ -2109,14 +2109,21 @@ export function FormEditForm({
                       type="button"
                       className="btn btn-danger btn-sm font-bold px-8"
                       disabled={isReadOnly || isSubmitting}
-                      onClick={() => {
-                        if (!values.authorityRemarks) {
-                          toast.error("Remarks are required for rejection");
-                          return;
-                        }
-                        setFieldValue("request_status", "R");
-                        setTimeout(() => submitForm(), 0);
-                      }}
+                     onClick={async () => {
+  if (!values.authorityRemarks) {
+    toast.error("Remarks are required for rejection");
+    return;
+  }
+  const result = await confirm(
+    "Reject Request",
+    "Are you sure you want to reject this request?",
+    "Cancel",
+    "Reject",
+  );
+  if (!result) return;
+  setFieldValue("request_status", "R");
+  setTimeout(() => submitForm(), 0);
+}}
                     >
                       Reject
                     </button>
@@ -2124,11 +2131,18 @@ export function FormEditForm({
                       type="button"
                       className="btn btn-success btn-sm font-bold px-8"
                       disabled={isReadOnly || isSubmitting}
-                      onClick={() => {
-                        isApprovingRef.current = true;
-                        setFieldValue("request_status", "A");
-                        setTimeout(() => submitForm(), 0);
-                      }}
+                      onClick={async () => {
+  const result = await confirm(
+    "Approve Request",
+    "Are you sure you want to approve this request?",
+    "Cancel",
+    "Approve",
+  );
+  if (!result) return;
+  isApprovingRef.current = true;
+  setFieldValue("request_status", "A");
+  setTimeout(() => submitForm(), 0);
+}}
                     >
                       Approve
                     </button>
@@ -2140,6 +2154,7 @@ export function FormEditForm({
         }}
       </Formik>
       {/* Entitlement Details Modal */}
+      <ConfirmationComponent />
       <Modal
         show={showEntitlementModal}
         onHide={() => setShowEntitlementModal(false)}

@@ -16,6 +16,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [ids, setIds] = useState("");
   const [isFileReq, setIsFileReq] = useState(false);
+  const [workflowId, setWorkflowId] = useState(null);   
+  const [currentData, setCurrentData] = useState(null); 
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -59,6 +61,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
     initUser,
     setemployeeId,
     employeeId,
+    workflowId,       
+    setWorkflowId,    
+    currentData,      
+    setCurrentData,   
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

@@ -110,29 +110,41 @@ export function ApprovalFormTable() {
         return <span className={classname}>{text}</span>;
       },
     },
+    // {
+    //   dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
+    //   text: "Code", // Column heading
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "120px",
+    //     maxWidth: "120px",
+    //   },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp",
+    //   text: "Name",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "150px",
+    //     maxWidth: "150px",
+    //   },
+    //   formatter: (cell) => {
+    //     return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+    //   },
+    // },
     {
-      dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
-      text: "Code", // Column heading
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "120px",
-        maxWidth: "120px",
-      },
-    },
-    {
-      dataField: "requestBelongToEmp",
-      text: "Name",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "150px",
-        maxWidth: "150px",
-      },
+     dataField: "requestBelongToEmp",
+      text: "Employee",
+      sort: true,
+      sortCaret, headerSortingClasses,
+      style: { minWidth: "200px", maxWidth: "200px" },
       formatter: (cell) => {
-        return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+        const code = cell?.employeeCode || "";
+        const name = `${cell?.firstName || ""} ${cell?.middleName ? cell.middleName + " " : ""}${cell?.lastName || ""}`.trim();
+        return code && name ? `${code} - ${name}` : code || name || "";
       },
     },
     // {
@@ -210,7 +222,7 @@ export function ApprovalFormTable() {
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps?.setCurrentData,
       },
-
+      headerClasses: "text-right",
       style: {
         minWidth: "100px",
       },

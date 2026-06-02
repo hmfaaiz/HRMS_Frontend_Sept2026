@@ -12,6 +12,7 @@ const initialReimbursementClaimState = {
   payrollData: null,
   reimbursementTypes: null,
   reimbursement_config_policies_permission: null,
+  workflowStatusList: [],
 };
 
 export const callTypes = {
@@ -23,6 +24,14 @@ export const ReimbursementClaimSlice = createSlice({
   name: "reimbursement_claim",
   initialState: initialReimbursementClaimState,
   reducers: {
+    startCall: (state, action) => {
+      state.error = null;
+      if (action.payload.callType === callTypes.list) {
+        state.listLoading = true;
+      } else {
+        state.actionsLoading = true;
+      }
+    },
     catchError: (state, action) => {
       state.error = `${action.type}: ${action.payload.error}`;
       if (action.payload.callType === callTypes.list) {
@@ -101,5 +110,10 @@ export const ReimbursementClaimSlice = createSlice({
             state.error = null;
             state.reimbursement_config_policies_permission = action.payload;
     },
+    WorkflowStatusFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.error = null;
+      state.workflowStatusList = action.payload || [];
+},
   },
 });

@@ -16,7 +16,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [panelMode, setPanelMode] = useState(false);
   const [userForEdit, setUserForEdit] = useState(null);
   const [userForRead, setUserForRead] = useState(false);
-  
+  const [workflowId, setWorkflowId] = useState(null);
+  const [workflowRowData, setWorkflowRowData] = useState(null);
   const [employeeId, setEmployeeId] = useState(null);
   
   const setQueryParams = useCallback((nextQueryParams) => {
@@ -51,9 +52,13 @@ export function FormUIProvider({ FormUIEvents, children }) {
       setUserForRead,
       employeeId,
       setEmployeeId,
+      workflowId,
+      setWorkflowId,
+      workflowRowData,
+      setWorkflowRowData,
       newFormButtonClick: FormUIEvents.newFormButtonClick,
     };
-  }, [queryParams, ids, FormUIEvents, initUser, panelMode, userForEdit, userForRead, employeeId, setQueryParams]);
+ }, [queryParams, ids, FormUIEvents, initUser, panelMode, userForEdit, userForRead, employeeId, setQueryParams, workflowId, workflowRowData]);
 
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

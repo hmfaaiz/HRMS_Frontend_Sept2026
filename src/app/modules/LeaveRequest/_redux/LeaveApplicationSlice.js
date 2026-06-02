@@ -17,6 +17,7 @@ const initialState = {
   empAuthorityList: [],
   isPolicyExists: false,
   sandwichPolicy : null,
+  workflowStatusList: [],
 };
 
 export const callTypes = {
@@ -110,6 +111,11 @@ export const LeaveRequestSlice = createSlice({
       const { data, isPolicyExists } = action.payload;
       state.empAuthorityList = data;
       state.isPolicyExists = isPolicyExists;
+    },
+    WorkflowStatusFetched: (state, action) => {  // ADD
+      state.actionsLoading = false;
+      state.error = null;
+      state.workflowStatusList = action.payload || [];
     },
   },
 });

@@ -76,24 +76,35 @@ export function ApprovalFormTable() {
       style: { minWidth: "90px", maxWidth: "90px" },
       formatter: statusFormatter,
     },
-    {
-      dataField: "requestBelongToEmp.employeeCode",
-      text: "Code",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "120px", maxWidth: "120px" },
-    },
-    {
-      dataField: "requestBelongToEmp",
-      text: "Name",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "150px", maxWidth: "150px" },
-      formatter: (cell) =>
-        `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
-    },
+    // {
+    //   dataField: "requestBelongToEmp.employeeCode",
+    //   text: "Code",
+    //   sort: false,
+    //   sortCaret,
+    //   headerSortingClasses,
+    //   style: { minWidth: "120px", maxWidth: "120px" },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp",
+    //   text: "Name",
+    //   sort: false,
+    //   sortCaret,
+    //   headerSortingClasses,
+    //   style: { minWidth: "150px", maxWidth: "150px" },
+    //   formatter: (cell) =>
+    //     `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
+    // },
+     {dataField: "requestBelongToEmp",
+          text: "Employee",
+          sort: true,
+          sortCaret, headerSortingClasses,
+          style: { minWidth: "200px", maxWidth: "200px" },
+          formatter: (cell) => {
+            const code = cell?.employeeCode || "";
+            const name = `${cell?.firstName || ""} ${cell?.middleName ? cell.middleName + " " : ""}${cell?.lastName || ""}`.trim();
+            return code && name ? `${code} - ${name}` : code || name || "";
+          },
+        },
     {
       dataField: "parentData.from",
       text: "From Date",
@@ -150,6 +161,7 @@ export function ApprovalFormTable() {
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps.setCurrentData,
       },
+      headerClasses: "text-right",
       style: { minWidth: "80px" },
     },
   ];
