@@ -1192,13 +1192,19 @@ export function MasterEditForm({
                       </>
                     ) : null}
                     {values?.employeeId && values?.consentComment ? (
-                      <span className="text-xs text-pending">
-                        Employee Consent :{" "}
-                        <span className="underline font-semibold">
-                          {" "}
-                          {values?.consentComment}
-                        </span>{" "}
-                      </span>
+                      <>
+                        <hr />
+                        <h6 className="font-bold mb-0 text-primary">
+                          Employee Consent{"  "}
+                        </h6>
+                        <span className="text-sm font-bold">
+                          Comment :{" "}
+                          <span className="font-semibold">
+                            {" "}
+                            {values?.consentComment}
+                          </span>{" "}
+                        </span>
+                      </>
                     ) : null}
                     {/* )} */}
                   </fieldset>

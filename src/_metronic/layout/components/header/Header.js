@@ -85,7 +85,7 @@ export function Header({ toggleMenuVisibility, company, isEmployeePortal }) {
                 onClick={() => window.open("/ask/ai-chatbot/new", "_blank")}
                 className="text-tprimary bg-white rounded-3xl text-sm shadow-[0_0_10px_#FFFFFF] px-3 py-1.5"
               >
-                AI Assistance{" "}
+                AI Assistant{" "}
                 <Minus
                   onClick={() => window.open("/ask/ai-chatbot/new", "_blank")}
                   className="w-4 h-4 rotate-90 text-tprimary cursor-pointer"
