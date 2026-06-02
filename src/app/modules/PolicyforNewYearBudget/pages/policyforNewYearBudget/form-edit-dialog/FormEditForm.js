@@ -28,15 +28,27 @@ const policy_for_new_year_budgetEditSchema = Yup.object().shape({
     .required("At least one approver is required"),
 
 
-  exceed_strength_upto: Yup.string()
+  exceed_strength_upto: Yup.number()
     .required(VALIDATION_MESSAGES.required)
-    .matches(/^\d+$/, 'Maximum 10 digits allowed')
-    .max(9, 'Maximum 10 digits allowed'),
 
-  exceed_amounth_upto: Yup.string()
+    .max(999999999, 'Maximum 9 digits allowed'),
+
+
+  exceed_amounth_upto: Yup.number()
     .required(VALIDATION_MESSAGES.required)
-    .matches(/^\d+$/, 'Maximum 10 digits allowed')
-    .max(9, 'Maximum 10 digits allowed'),
+    .max(999999999, "Maximum 9 digits allowed")
+    .test(
+      "salary-greater-than-strength",
+      "Budgeted Salary must be greater than Budgeted Strength",
+      function (value) {
+        const { exceed_strength_upto } = this.parent;
+
+        if (!value || !exceed_strength_upto) return true;
+
+        return Number(value) > Number(exceed_strength_upto);
+      }
+    ),
+
 
   departmentId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
 });
@@ -122,6 +134,8 @@ export function FormEditForm({
                         }
                         isDisabled={isUserForRead}
                         onChange={(e) => {
+                          setFieldValue("departmentId", e.value || null);
+
                           setFieldValue("subsidiaryId", e.value || null);
                           dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
                         }}
