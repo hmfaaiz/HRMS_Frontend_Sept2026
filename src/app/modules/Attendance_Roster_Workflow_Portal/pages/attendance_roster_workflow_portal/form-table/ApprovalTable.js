@@ -161,6 +161,7 @@ export function ApprovalFormTable() {
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps.setCurrentData,
       },
+      headerClasses: "text-right",
       style: { minWidth: "80px" },
     },
   ];

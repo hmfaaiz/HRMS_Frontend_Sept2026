@@ -227,7 +227,7 @@ export function LeaveApprovalFormTable() {
         setLeaveWorkflowId: FormUIProps.setLeaveWorkflowId,
         setLeaveData: FormUIProps?.setLeaveData,
       },
-
+      headerClasses: "text-right",
       style: {
         minWidth: "100px",
       },

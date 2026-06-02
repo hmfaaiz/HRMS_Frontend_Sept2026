@@ -17,6 +17,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
 import { Modal, Accordion, Button, Card } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 export function FormEditForm({
   employeeId,
@@ -32,6 +33,8 @@ export function FormEditForm({
   const [activeTicketKey, setActiveTicketKey] = React.useState("0");
   const [activeHotelKey, setActiveHotelKey] = React.useState("0");
   const isApprovingRef = React.useRef(false);
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
+
   const { dashboard, employeeEntitlement, auth } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
@@ -338,6 +341,8 @@ export function FormEditForm({
 
   return (
     <div className="mt-4">
+      <ConfirmationComponent />
+
       <Formik
         enableReinitialize={true}
         initialValues={initialValues}
@@ -346,7 +351,7 @@ export function FormEditForm({
           if (saveForm) {
             await saveForm({ ...values, isApproving: isApprovingRef.current });
           }
-          isApprovingRef.current = false; // reset after every submission
+          isApprovingRef.current = false;
         }}
       >
         {({
@@ -676,7 +681,7 @@ export function FormEditForm({
                                       if (
                                         index <
                                         values.travelSegments.length - 1
-                                      ) {
+                                      ) { 
                                         setFieldValue(
                                           `travelSegments.${index +
                                             1}.fromLocation`,
@@ -1358,40 +1363,22 @@ export function FormEditForm({
                                     <thead className="custom-table-header">
                                       <tr>
                                         <td style={{ minWidth: "40px" }}></td>
-                                        <td
-                                          style={{ minWidth: "150px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "150px" }}>
                                           Location
                                         </td>
-                                        <td
-                                          style={{ minWidth: "100px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "100px" }}>
                                           Name
                                         </td>
-                                        <td
-                                          style={{ minWidth: "100px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "100px" }}>
                                           Description
                                         </td>
-                                        <td
-                                          style={{ minWidth: "120px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "120px" }}>
                                           Ticket Number
                                         </td>
-                                        <td
-                                          style={{ minWidth: "120px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "120px" }}>
                                           Ticket Detail
                                         </td>
-                                        <td
-                                          style={{ minWidth: "80px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "80px" }}>
                                           Ticket Amount
                                         </td>
                                       </tr>
@@ -1468,9 +1455,7 @@ export function FormEditForm({
                                                   className="form-control"
                                                   placeholder="Name"
                                                   maxLength={50}
-                                                  disabled={
-                                                    !ticket.isTicketEnabled
-                                                  }
+                                                  disabled={!isRowEnabled}
                                                 />
                                               </td>
                                               <td>
@@ -1480,9 +1465,7 @@ export function FormEditForm({
                                                   className="form-control"
                                                   placeholder="Description"
                                                   maxLength={200}
-                                                  disabled={
-                                                    !ticket.isTicketEnabled
-                                                  }
+                                                  disabled={!isRowEnabled}
                                                 />
                                               </td>
                                               <td>
@@ -1492,9 +1475,7 @@ export function FormEditForm({
                                                   className="form-control"
                                                   placeholder="Ticket #"
                                                   maxLength={50}
-                                                  disabled={
-                                                    !ticket.isTicketEnabled
-                                                  }
+                                                  disabled={!isRowEnabled}
                                                 />
                                               </td>
                                               <td>
@@ -1504,9 +1485,7 @@ export function FormEditForm({
                                                   className="form-control"
                                                   placeholder="Detail"
                                                   maxLength={50}
-                                                  disabled={
-                                                    !ticket.isTicketEnabled
-                                                  }
+                                                  disabled={!isRowEnabled}
                                                 />
                                               </td>
                                               <td>
@@ -1519,13 +1498,11 @@ export function FormEditForm({
                                                   isAllowed={({ value }) =>
                                                     value.length <= 8
                                                   }
-                                                  disabled={
-                                                    !ticket.isTicketEnabled
-                                                  }
-                                                  onValueChange={(values) => {
+                                                  disabled={!isRowEnabled}
+                                                  onValueChange={(vals) => {
                                                     setFieldValue(
                                                       `ticketDetails.${index}.ticketAmount`,
-                                                      values.value,
+                                                      vals.value,
                                                     );
                                                   }}
                                                   value={
@@ -1549,7 +1526,7 @@ export function FormEditForm({
                   </Accordion>
                 </div>
 
-                {/* Travel Hotel details */}
+                {/* Hotel Details Accordion */}
                 <div className="w-full mt-6">
                   <Accordion
                     activeKey={activeHotelKey}
@@ -1585,7 +1562,6 @@ export function FormEditForm({
                                       {errors.hotelDetails}
                                     </div>
                                   )}
-
                                 <div
                                   className="react-bootstrap-table table-responsive"
                                   style={{ overflowX: "auto" }}
@@ -1593,40 +1569,22 @@ export function FormEditForm({
                                   <table className="table table-head-custom table-vertical-center table-hover">
                                     <thead className="custom-table-header">
                                       <tr>
-                                        <td
-                                          style={{ minWidth: "150px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "150px" }}>
                                           Location
                                         </td>
-                                        <td
-                                          style={{ minWidth: "100px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "100px" }}>
                                           Hotel Name
                                         </td>
-                                        <td
-                                          style={{ minWidth: "100px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "100px" }}>
                                           Room Number
                                         </td>
-                                        <td
-                                          style={{ minWidth: "120px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "120px" }}>
                                           Room Type
                                         </td>
-                                        <td
-                                          style={{ minWidth: "120px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "120px" }}>
                                           Description
                                         </td>
-                                        <td
-                                          style={{ minWidth: "80px" }}
-                                          className=""
-                                        >
+                                        <td style={{ minWidth: "80px" }}>
                                           Amount
                                         </td>
                                       </tr>
@@ -1648,14 +1606,12 @@ export function FormEditForm({
                                               String(opt.value) ===
                                               String(segment.toLocation),
                                           )?.label;
-                                          const locationDisplay =
-                                            toLabel || "-";
 
                                           return (
                                             <tr key={index}>
                                               <td className="align-middle text-center">
                                                 <span className="font-bold opacity-70">
-                                                  {locationDisplay}
+                                                  {toLabel || "-"}
                                                 </span>
                                               </td>
                                               <td>
@@ -1704,10 +1660,10 @@ export function FormEditForm({
                                                   isAllowed={({ value }) =>
                                                     value.length <= 8
                                                   }
-                                                  onValueChange={(values) => {
+                                                  onValueChange={(vals) => {
                                                     setFieldValue(
                                                       `hotelDetails.${index}.amount`,
-                                                      values.value,
+                                                      vals.value,
                                                     );
                                                   }}
                                                   value={hotel.amount ?? ""}
@@ -1729,6 +1685,7 @@ export function FormEditForm({
                   </Accordion>
                 </div>
 
+                {/* Authority Remarks */}
                 <div className="grid grid-cols-12 gap-x-3 mt-6">
                   <div className="col-span-6">
                     <label>
@@ -1770,22 +1727,37 @@ export function FormEditForm({
                       type="button"
                       className="btn btn-danger btn-sm font-bold px-8"
                       disabled={isReadOnly || isSubmitting}
-                      onClick={() => {
+                      onClick={async () => {
                         if (!values.authorityRemarks) {
                           toast.error("Remarks are required for rejection");
                           return;
                         }
+                        const result = await confirm(
+                          "Reject Request",
+                          "Are you sure you want to reject this request?",
+                          "Cancel",
+                          "Reject",
+                        );
+                        if (!result) return;
                         setFieldValue("request_status", "R");
                         setTimeout(() => submitForm(), 0);
                       }}
                     >
                       Reject
                     </button>
+
                     <button
                       type="button"
                       className="btn btn-success btn-sm font-bold px-8"
                       disabled={isReadOnly || isSubmitting}
-                      onClick={() => {
+                      onClick={async () => {
+                        const result = await confirm(
+                          "Approve Request",
+                          "Are you sure you want to approve this request?",
+                          "Cancel",
+                          "Approve",
+                        );
+                        if (!result) return;
                         isApprovingRef.current = true;
                         setFieldValue("request_status", "A");
                         setTimeout(() => submitForm(), 0);

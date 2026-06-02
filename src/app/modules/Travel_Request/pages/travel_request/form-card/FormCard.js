@@ -12,7 +12,7 @@ import { FormFilter } from "../form-filter/FormFilter";
 import { CirclePlus } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 import { WorkflowAuthortiesTable } from "../form-table/WorkflowAuthortiesTable";
-
+import { TravelRequestWorkflowModal } from "../form-table/TravelRequestWorkflowModel";
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const [employeeDetails, setEmployeeDetails] = useState({});
@@ -55,6 +55,10 @@ export function FormCard() {
       setIds: FormUIContext.setIds,
       employeeId: FormUIContext.employeeId,
       setEmployeeId: FormUIContext.setEmployeeId,
+      workflowId: FormUIContext.workflowId,
+    setWorkflowId: FormUIContext.setWorkflowId,
+    workflowRowData: FormUIContext.workflowRowData,
+    setWorkflowRowData: FormUIContext.setWorkflowRowData,
     };
   }, [FormUIContext]);
 
@@ -241,6 +245,7 @@ export function FormCard() {
                 saveForm={saveForm}
                 onHide={handleCancel}
                 disableLoading={disableLoading}
+                loading={loading}   
               />
             )}
           </div>
@@ -258,6 +263,18 @@ export function FormCard() {
             />
           </div>
         )}
+        {/* Workflow Modal */}
+{FormUIProps.workflowId && (
+  <TravelRequestWorkflowModal
+    show={!!FormUIProps.workflowId}
+    workflowId={FormUIProps.workflowId}
+    rowData={FormUIProps.workflowRowData}
+    onHide={() => {
+      FormUIProps.setWorkflowId(null);
+      FormUIProps.setWorkflowRowData(null);
+    }}
+  />
+)}
 
         {/* Workflow Authorities Card */}
         <WorkflowAuthortiesTable />

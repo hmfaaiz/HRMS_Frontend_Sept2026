@@ -9,7 +9,7 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../redux/formAction";
 import { initialFilter } from "../../FormUIHelper";
 import { toast } from "react-toastify";
-import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog"; // ✅ import hook
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 const formValidation = Yup.object().shape({
   authorityRemarks: Yup.string().when("request_status", {
@@ -32,6 +32,7 @@ export const FormApproval = () => {
       setIds: FormUIContext?.setIds,
       setCurrentData: FormUIContext?.setCurrentData,
       queryParams: FormUIContext?.queryParams,
+      setQueryParams: FormUIContext?.setQueryParams, 
     };
   }, [FormUIContext]);
 
@@ -45,17 +46,22 @@ export const FormApproval = () => {
     try {
       setLoading(true);
       await dispatch(
-        actions.handleAttendanceRequest(values, resetForm, setLoading),
+        actions.handleAttendanceRequest(values, resetForm, setLoading)
       );
+      
       formUIProps.setIds([]);
       formUIProps.setCurrentData(null);
+      
+      resetForm();
+      
       await dispatch(
         actions.fetchAttendanceApprovalApplication(
-          formUIProps?.queryParams?.filter,
-        ),
+          formUIProps?.queryParams?.filter || initialFilter,
+          user?.employeeIdMapping
+        )
       );
-    } catch {
-      // error handled in action
+    } catch (error) {
+      console.error("Error handling request:", error);
     } finally {
       setLoading(false);
       setPendingAction(null);
@@ -69,6 +75,7 @@ export const FormApproval = () => {
       (!values.authorityRemarks || values.authorityRemarks.trim() === "")
     ) {
       formikRef.current?.setFieldTouched("authorityRemarks", true);
+      toast.error("Remarks are required for rejection");
       return;
     }
 
@@ -92,10 +99,12 @@ export const FormApproval = () => {
       formikRef.current?.handleSubmit();
     }, 50);
   };
+  
   const intVal = {
     authorityRemarks: "",
     request_status: "",
   };
+  
   return (
     <>
       <ConfirmationComponent />

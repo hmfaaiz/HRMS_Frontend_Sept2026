@@ -187,7 +187,7 @@ export function TravelWorkflowStatusTable() {
         setWorkflowId: FormUIProps.setWorkflowId,
         setRowData: FormUIProps?.setRowData,
       },
-
+      headerClasses: "text-right",
       style: {
         minWidth: "100px",
       },
