@@ -11,6 +11,7 @@ const initialExitClearanceSlice = {
     dataForEdit: undefined,
     lastError: null,
     dataForRead: false,
+    employeeOnboardingChecklist: null,
 
 };
 
@@ -37,7 +38,7 @@ export const ExitClearanceSlice = createSlice({
 
 
             const entities = action.payload.data?.data;
-console.log("entities111",entities)
+            console.log("entities111", entities)
             const totalResult = action.payload.data?.data.totalResults;
 
             state.listLoading = false;
@@ -47,7 +48,6 @@ console.log("entities111",entities)
         },
 
         //get User By ID
-
 
 
 
@@ -109,7 +109,10 @@ console.log("entities111",entities)
             });
 
         },
-
-
+        EmployeeOnboardingChecklistFetched: (state, action) => {
+            state.actionsLoading = false;
+            state.employeeOnboardingChecklist = action.payload.dataForEdit;
+            state.error = null;
+        },
     },
 });

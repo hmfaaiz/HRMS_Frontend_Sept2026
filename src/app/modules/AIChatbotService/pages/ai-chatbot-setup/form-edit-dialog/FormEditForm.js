@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { ChevronRight, MoveUp, Plus } from "lucide-react";
+import { Plus, Search, Trash2 } from "lucide-react";
 import { formatDate } from "../../../../../utils/common";
 import { useFormUIContext } from "../FormUIContext";
 import { useDispatch } from "react-redux";
@@ -48,7 +48,7 @@ export function FormEditForm({
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      // textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [question]);
 
@@ -64,49 +64,69 @@ export function FormEditForm({
   return (
     <div className="grid grid-cols-12 min-h-[80dvh] gap-x-2 overflow-hidden">
       <ChatListComp chatData={chatList} id={id} />
-      <div className="col-span-12 md:col-span-9 lg:col-span-10 flex flex-col bg-white min-w-0">
+      <div className="col-span-12 md:col-span-8 lg:col-span-10 flex flex-col bg-white min-w-0 rounded-2xl">
         {/* Header */}
-        <div className="flex-shrink-0 text-gray-800 text-xl font-semibold py-4 border-b border-gray-200 px-4">
+        {/* <div className="flex-shrink-0 text-gray-800 text-xl font-semibold py-4 border-b border-gray-200 px-4">
           <span>AI HR Assistant</span>
-        </div>
-        <hr />
+        </div> */}
+        {/* <hr /> */}
 
         {/* Messages Container - Scrollable area */}
         <div
           ref={messagesContainerRef}
-          className="flex-1 overflow-y-auto py-4 px-4 scrollbar-fancy"
+          className="flex-1 overflow-y-auto pt-2 px-4 scrollbar-fancy"
         >
-          <div className="h-[58dvh] md:max-h-[58dvh] border-b-2 border-b-black overflow-auto scrollbar-fancy scroll-smooth">
+          <div className="h-[66dvh] md:max-h-[66dvh] border-b-2 border-b-black overflow-auto scrollbar-fancy scroll-smooth">
             {currentChat.map((msg, index) => (
-              <div key={index} className="mb-3 flex flex-col gap-2">
+              <div key={index} className="mb-3 flex flex-col gap-3">
                 {/* QUESTION (right side - 40%) */}
                 {msg.question && (
                   <div className="flex justify-end">
-                    <div className="max-w-[85%] sm:max-w-[70%] md:max-w-[50%] lg:max-w-[40%] text-sm bg-tprimary text-white p-2 rounded-xl rounded-br-none leading-6 whitespace-pre-wrap break-words">
+                    <div className="max-w-[85%] sm:max-w-[70%] md:max-w-[50%] lg:max-w-[40%] text-sm bg-tprimary text-white px-4 py-2 rounded-xl rounded-br-none leading-6 whitespace-pre-wrap break-words">
                       {msg.question}
                     </div>
                   </div>
                 )}
 
-                {msg.content && (
+                {(msg.content || msg.processText || msg.isStreaming) && (
                   <div className="flex justify-start">
                     <div
                       className={`
-         p-2 w-fit min-w-[80%] max-w-[95%] sm:max-w-[90%] md:max-w-[82%]  rounded-xl text-sm rounded-bl-none  leading-6
+        p-2 w-fit min-w-[80%] max-w-[95%] sm:max-w-[90%] md:max-w-[82%]
+        rounded-xl text-sm rounded-bl-none leading-6
         ${msg.isError ? "bg-red-400 text-white" : "bg-tsecondary text-black"}
       `}
                     >
-                      {msg.isError ? (
-                        <div className="text-left whitespace-pre-wrap">
-                          {msg.content}
+                      {msg.isStreaming && msg.processText && (
+                        <div className="flex items-center gap-2 p-1">
+                          <span className="spinner spinner-white"></span>
+                          <span className="text-sm text-gray-500 ml-4">
+                            {msg.processText}...
+                          </span>
                         </div>
-                      ) : (
+                      )}
+
+                      {msg.content && !msg.isError && msg.isStreaming && (
                         <div
-                          className="assistant-html text-left overflow-x-auto break-words"
+                          className="assistant-html text-left overflow-x-auto break-words opacity-50"
                           dangerouslySetInnerHTML={{
                             __html: msg.content || "",
                           }}
                         />
+                      )}
+
+                      {msg.content && !msg.isError && !msg.isStreaming && (
+                        <AssistantHtml
+                          key={`${id}-${index}`}
+                          html={msg.content || ""}
+                          uid={`${id}-${index}`}
+                        />
+                      )}
+
+                      {msg.isError && (
+                        <div className="text-left whitespace-pre-wrap">
+                          {msg.content}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -118,7 +138,7 @@ export function FormEditForm({
         </div>
 
         {/* Input Area - Fixed at bottom */}
-        <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-3">
+        <div className="flex-shrink-0 rounded-2xl bg-white px-4 py-3">
           <div className="w-full">
             <Formik
               enableReinitialize={true}
@@ -129,24 +149,25 @@ export function FormEditForm({
                 handleSend();
               }}
             >
-              {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+              {() => (
                 <Form className="form form-label-right">
                   <fieldset disabled={actionsLoading}>
-                    <div className="relative max-w-[900px] mx-auto">
+                    <div className="relative max-w-[960px] mx-auto">
                       <textarea
                         ref={textareaRef}
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Message AI HR Assistant..."
+                        placeholder="AI Assistance: How can I assist you today?"
                         rows={1}
                         disabled={actionsLoading}
-                        className={`
-                          form-control w-full resize-none border border-gray-200 rounded-2xl 
-                          bg-transparent p-3 pr-14 text-gray-800 text-[15px] leading-6 
-                          max-h-[120px] min-h-[44px] focus:outline-none focus:ring-1 
-                          focus:ring-tprimary focus:border-tprimary
-                          placeholder:text-gray-400
+                        style={{
+                          border: "1.5px solid #0093DD",
+                          height: "auto",
+                        }}
+                        className={` w-full  resize-none shadow-[0_0_15px_#0093DD]   rounded-full 
+                          bg-transparent px-5 py-4 pl-14 text-gray-800 text-sm leading-6  
+                          placeholder:text-gray-500
                           ${
                             actionsLoading
                               ? "opacity-60 cursor-not-allowed"
@@ -159,7 +180,7 @@ export function FormEditForm({
                         onClick={handleSend}
                         disabled={actionsLoading || !question.trim()}
                         className={`
-                              absolute bottom-2 right-2 w-8 h-8 rounded-full bg-tprimary text-white 
+                              absolute bottom-[1.25rem] left-3 w-9 h-9 rounded-full bg-tprimary text-white 
                               border-none outline-none flex items-center justify-center transition-all 
                               ${
                                 actionsLoading || !question.trim()
@@ -173,11 +194,13 @@ export function FormEditForm({
                             : "Send message"
                         }
                       >
-                        <MoveUp className="w-4 h-4" />
+                        <Search className="w-6 h-6" />
                       </button>
                     </div>
                     <div className="text-center text-gray-400 text-xs mt-2">
-                      AI may make mistakes. Verify important information.
+                      Information generated by AI may occasionally be incomplete
+                      or outdated; please verify critical details using
+                      BasharOne HRMS data or reports.
                     </div>
                   </fieldset>
                 </Form>
@@ -297,6 +320,7 @@ const ChatListComp = ({ chatData = [], id }) => {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
       existingButtonClick: FormUIContext.existingButtonClick,
+      setDeleteId: FormUIContext.setDeleteId,
     };
   }, [FormUIContext]);
 
@@ -311,49 +335,65 @@ const ChatListComp = ({ chatData = [], id }) => {
   };
 
   return (
-    <div className="col-span-12 md:col-span-3 lg:col-span-2 bg-white border-r border-gray-200 flex flex-col h-full md:max-h-none max-h-[220px] overflow-hidden">
+    <div className="col-span-12 md:col-span-4 space-y-3 rounded-2xl lg:col-span-2 bg-tprimary border-r px-4 border-gray-200 flex flex-col h-full md:max-h-none max-h-[220px] overflow-hidden">
       {/* New Chat Button */}
-      <div className="pt-4 px-4 border-b border-gray-200">
+      <div className="pt-4 border-b border-gray-200">
         <button
           onClick={handleNewChat}
-          className="w-full bg-tprimary border-none hover:text-black text-white font-medium py-2 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2"
+          style={{ border: "1.5px solid #0093dd" }}
+          className="w-full bg-white border-none text-tprimary font-medium py-2 px-4 rounded-3xl transition duration-200 flex items-center justify-center gap-2  shadow-[0_0_10px_#FFFFFF] hover:shadow-[0_0_15px_#e6f8ff]  relative"
         >
-          <Plus className="w-5 h-5 text-white" />
+          <Plus className="w-5 h-5 text-white bg-tprimary rounded-full p-1 absolute left-4" />
           New Chat
         </button>
       </div>
-      <hr />
+      <div />
       {/* Chat List */}
-      <div className="flex-1 overflow-y-auto max-h-[180px] md:max-h-[58dvh]">
+      <div className="flex-1 overflow-y-auto">
         {chatData.length === 0 ? (
           <div className="text-center text-black py-6">No chats available</div>
         ) : (
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-gray-200 space-y-3">
             {chatData.map((chat) => (
               <div
                 key={chat.sessionId}
                 title={chat.question}
                 onClick={() => handleChatSelect(chat.sessionId)}
-                className={`  m-1 py-2  px-1 rounded-lg cursor-pointer  ${
+                className={`group relative py-2 text-black px-4 space-y-1 rounded-full cursor-pointer ${
                   id == chat?.sessionId
-                    ? "bg-tprimary  hover:text-black hover:bg-tsecondary hover:border hover:border-black"
-                    : "bg-tsecondary  hover:bg-white hover:border hover:border-black"
+                    ? "bg-tsecondary shadow-md"
+                    : "bg-white hover:bg-gray-100"
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm  line-clamp-1">{chat.question}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs ">
+                    <span className="text-sm line-clamp-1">
+                      {chat.question}
+                    </span>
+                    <div className="flex items-center gap-x-1">
+                      <span className="text-xs text-tprimary">
                         {formatDate(new Date(chat.createdAt), "dd-MMM-yyyy")}
                       </span>
-                      <span className="text-xs ">
-                        • {chat.totalMessages}{" "}
+                      <span className="text-xs bg-tprimary text-white px-1 py-0.5 rounded-md">
+                        {chat.totalMessages}{" "}
                         {chat.totalMessages === 1 ? "message" : "messages"}
                       </span>
                     </div>
                   </div>
-                  <ChevronRight className="w-3.5 h-3.5 " />
+                </div>
+
+                {/* Delete Icon - positioned absolute on right side */}
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <button
+                    title="Delete Chat"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      FormUIProps.setDeleteId(chat?.sessionId);
+                    }}
+                    className="px-2 py-1 rounded-full bg-red-200  shadow-sm border border-red-500"
+                  >
+                    <Trash2 className="w-4 h-4 text-red-600" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -361,5 +401,79 @@ const ChatListComp = ({ chatData = [], id }) => {
         )}
       </div>
     </div>
+  );
+};
+
+const loadScriptOnce = (src) =>
+  new Promise((resolve, reject) => {
+    if (window.Chart) return resolve(window.Chart);
+
+    const existing = document.querySelector(`script[src="${src}"]`);
+
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.Chart));
+      existing.addEventListener("error", reject);
+      if (window.Chart) resolve(window.Chart);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.onload = () => {
+      if (window.Chart) resolve(window.Chart);
+      else reject(new Error("Chart.js loaded but window.Chart missing"));
+    };
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+
+const AssistantHtml = ({ html, uid }) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const container = ref.current;
+    if (!container || !html) return;
+
+    let cancelled = false;
+
+    const run = async () => {
+      try {
+        await loadScriptOnce("https://cdn.jsdelivr.net/npm/chart.js");
+
+        if (cancelled || !window.Chart) return;
+
+        const scripts = Array.from(container.querySelectorAll("script"));
+        scripts.forEach((s) => s.remove());
+
+        scripts.forEach((oldScript) => {
+          if (oldScript.src) return;
+
+          const code = oldScript.innerHTML;
+          if (!code?.trim()) return;
+
+          try {
+            new Function("Chart", code)(window.Chart);
+          } catch (err) {
+            console.error("Assistant script error:", err);
+          }
+        });
+      } catch (err) {
+        console.error("Chart load error:", err);
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [html, uid]);
+  return (
+    <div
+      ref={ref}
+      className="assistant-html text-left overflow-x-auto break-words"
+      dangerouslySetInnerHTML={{ __html: html || "" }}
+    />
   );
 };

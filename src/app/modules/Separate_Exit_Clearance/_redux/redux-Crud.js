@@ -6,7 +6,7 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 export function createExitTypeExitReason(body) {
 
   return axios.post(`${USERS_URL}/exit_clearance/create-exit-clearance`, body);
-  
+
 }
 
 
@@ -23,7 +23,7 @@ export function getAccrueGratuityConfigById(Id) {
 
 //Update
 export function updateExitTypeExitReason(accrueGratuityConfig) {
-   
+
   return axios.put(`${USERS_URL}/exit_clearance/update-exit-clearance`, accrueGratuityConfig);
 }
 
@@ -37,5 +37,11 @@ export function deleteExitTypeExitReason(Id) {
 //Designation wise goal setup
 export function getDesignationWiseGoalSetupByEmp(body) {
 
-  return axios.post(`${USERS_URL}/exit_clearance/load-data`,body);
+  return axios.post(`${USERS_URL}/exit_clearance/load-data`, body);
 }
+
+export function getEmployeeOnboardingchecklistByEmployee(employeeId) {
+  return axios.get(`${USERS_URL}/exit_clearance/employee-onboarding-checklist/${employeeId}`);
+}
+
+

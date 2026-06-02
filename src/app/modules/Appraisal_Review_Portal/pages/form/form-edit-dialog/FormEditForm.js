@@ -16,7 +16,11 @@ import { CirclePlus, Eye, Trash2, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import * as actions from "../../../_redux/formActions";
 import { useFromUIContext } from "../FormUIContext";
-import { Checkbox, Input, TextArea } from "../../../../../../_metronic/_partials/controls";
+import {
+  Checkbox,
+  Input,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
 import { decodeHtml } from "../../../../../utils/common";
 
 const formValidation = (minPoint, maxPoint) =>
@@ -213,7 +217,14 @@ export function MasterEditForm({
           user?.maxPoint || 1,
         )}
       >
-        {({ handleSubmit, values, setFieldValue, isValid , touched , errors }) => {
+        {({
+          handleSubmit,
+          values,
+          setFieldValue,
+          isValid,
+          touched,
+          errors,
+        }) => {
           return (
             <>
               <ScoreCalculator values={values} setFieldValue={setFieldValue} />
@@ -1179,6 +1190,15 @@ export function MasterEditForm({
                           </div>
                         </div>
                       </>
+                    ) : null}
+                    {values?.employeeId && values?.consentComment ? (
+                      <span className="text-xs text-pending">
+                        Employee Consent :{" "}
+                        <span className="underline font-semibold">
+                          {" "}
+                          {values?.consentComment}
+                        </span>{" "}
+                      </span>
                     ) : null}
                     {/* )} */}
                   </fieldset>

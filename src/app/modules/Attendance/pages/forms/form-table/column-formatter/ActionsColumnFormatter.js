@@ -12,12 +12,14 @@ export function ActionsColumnFormatter(
     openDeleteFormDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadFormDialog
+    openReadFormDialog,
   }
 ) {
   const isUserRead = false;
   return (
     <>
+
+      
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
         <a
