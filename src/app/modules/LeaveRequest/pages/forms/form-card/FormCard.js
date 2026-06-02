@@ -22,6 +22,7 @@ import {
   getEmployeeHierarchy,
   requestRaisedBySenior,
 } from "../../../../Dashboard/_redux/dashboardActions";
+import { WorkflowTable } from "../form-table/WorkflowTable"; 
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -39,6 +40,8 @@ export function FormCard() {
       currentLevel: FormUIContext.currentLevel,
       setCurrentLevel: FormUIContext.setCurrentLevel,
       initUser: FormUIContext.initUser,
+      workflowId: FormUIContext.workflowId,      
+      setWorkflowId: FormUIContext.setWorkflowId, 
     };
   }, [FormUIContext]);
 
@@ -207,6 +210,12 @@ export function FormCard() {
         <LeaveApplicationTable />
         <WorkflowAuthortiesTable />
       </div>
+      {formUIProps.workflowId && (
+  <WorkflowTable
+    show={formUIProps.workflowId !== null}
+    onHide={() => formUIProps.setWorkflowId(null)}
+  />
+)}
     </div>
   );
 }

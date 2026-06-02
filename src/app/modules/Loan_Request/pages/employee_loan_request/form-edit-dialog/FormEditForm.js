@@ -31,6 +31,7 @@ import {
   fetchEmployeeLoanRequest,
 } from "../../../_redux/redux-Actions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 const EmployeeLoanRequestSchema = Yup.object().shape({
   loan_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -110,6 +111,7 @@ export function FormEditForm({
       isPolicyExists: state?.loan_request?.isPolicyExists,
     };
   }, shallowEqual);
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
 
   const { loan_type, userForEdit } = currentState;
 
@@ -407,7 +409,15 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={user}
       validationSchema={EmployeeLoanRequestSchema}
-      onSubmit={(values, { resetForm }) => {
+      onSubmit={async (values, { resetForm }) => {
+        
+        const result = await confirm(
+          "Confirm Submission",
+          "Are you sure you want to submit this request?",
+          "No",
+          "Yes",
+        );
+        if (!result) return;
         enableLoading();
         const clearForm = () => {
           resetForm();
@@ -442,6 +452,7 @@ export function FormEditForm({
                 <div className="spinner spinner-lg spinner-success" />
               </div>
             )} */}
+          <ConfirmationComponent />
           {empAuthorityList &&
           empAuthorityList?.length === 0 &&
           !isPolicyExists ? (

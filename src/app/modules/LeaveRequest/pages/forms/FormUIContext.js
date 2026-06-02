@@ -19,6 +19,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [employeeId, setemployeeId] = useState("");
   const [panelMode, setPanelMode] = useState(false);
   const [id, setId] = useState("");
+  const [workflowId, setWorkflowId] = useState(null);  
+  const [currentData, setCurrentData] = useState(null); 
   const setQueryParamsLeaveApp = useCallback((nextQueryParams) => {
     setQueryParamsLeaveAppBaseLeaveApp((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -66,6 +68,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setCurrentLevel,
     initUser,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
+    workflowId,      
+    setWorkflowId,    
+    currentData,      
+    setCurrentData,  
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

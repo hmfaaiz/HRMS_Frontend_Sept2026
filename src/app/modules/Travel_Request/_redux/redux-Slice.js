@@ -11,6 +11,7 @@ const initialTravelRequestState = {
   employeeEntitlement: null,
   empAuthorityList: [],
   isPolicyExists: false,
+  workflowStatusList: [], 
 };
 
 export const callTypes = {
@@ -71,5 +72,10 @@ export const travel_requestSlice = createSlice({
       state.isPolicyExists = action.payload.isPolicyExists;
       state.actionsLoading = false;
     },
+    workflowStatusFetched: (state, action) => {
+  state.actionsLoading = false;
+  state.error = null;
+  state.workflowStatusList = action.payload;
+},
   },
 });

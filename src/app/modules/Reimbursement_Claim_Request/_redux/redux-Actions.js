@@ -145,3 +145,14 @@ export const fetchReimbursementConfigPolicies = (body) => (dispatch) => {
       dispatch(actions.ReimbursementConfigPoliciesFetched(null));
     });
 };
+export const fetchWorkflowStatusByClaimId = (claimId) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getWorkflowStatusByClaimId(claimId)
+    .then((res) => {
+      dispatch(actions.WorkflowStatusFetched(res.data?.data));
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};

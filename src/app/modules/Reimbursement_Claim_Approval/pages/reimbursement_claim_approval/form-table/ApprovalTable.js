@@ -55,17 +55,29 @@ export function ApprovalFormTable() {
         return <span className={cls}>{text}</span>;
       },
     },
-    {
-      dataField: "requestBelongToEmp.employeeCode",
-      text: "Code",
-      style: { minWidth: "120px", maxWidth: "120px" },
-    },
+    // {
+    //   dataField: "requestBelongToEmp.employeeCode",
+    //   text: "Code",
+    //   style: { minWidth: "120px", maxWidth: "120px" },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp",
+    //   text: "Name",
+    //   style: { minWidth: "150px", maxWidth: "150px" },
+    //   formatter: (cell) =>
+    //     `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
+    // },
     {
       dataField: "requestBelongToEmp",
-      text: "Name",
-      style: { minWidth: "150px", maxWidth: "150px" },
-      formatter: (cell) =>
-        `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
+      text: "Employee",
+      sort: true,
+      sortCaret, headerSortingClasses,
+      style: { minWidth: "200px", maxWidth: "200px" },
+      formatter: (cell) => {
+        const code = cell?.employeeCode || "";
+        const name = `${cell?.firstName || ""} ${cell?.middleName ? cell.middleName + " " : ""}${cell?.lastName || ""}`.trim();
+        return code && name ? `${code} - ${name}` : code || name || "";
+      },
     },
     {
       dataField: "parentData.ReimbursementType.formName",
@@ -92,6 +104,8 @@ export function ApprovalFormTable() {
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps.setCurrentData,
       },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
       style: { minWidth: "100px" },
     },
   ];
