@@ -44,6 +44,8 @@ export function ApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "Status",
+      sort: true,
+      sortCaret, headerSortingClasses,
       style: { minWidth: "90px", maxWidth: "90px" },
       formatter: (cell) => {
         const map = {
@@ -82,16 +84,22 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.ReimbursementType.formName",
       text: "Reimbursement Type",
+      sort: true,
+      sortCaret, headerSortingClasses,
       style: { minWidth: "150px", maxWidth: "150px" },
     },
     {
       dataField: "parentData.amount",
       text: "Amount",
+      sort: true,
+      sortCaret, headerSortingClasses,
       style: { minWidth: "100px", maxWidth: "100px" },
     },
     {
       dataField: "parentData.date",
       text: "Claim Date",
+      sort: true,
+      sortCaret, headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
       formatter: (cell) => cell ? format(new Date(cell), "dd-MMM-yyyy") : "",
     },
@@ -140,7 +148,7 @@ export function ApprovalFormTable() {
             FormUIProps.setIds(isSelect ? selectable.map((r) => r.Id) : []);
           },
         }}
-        remote
+        // remote
         keyField="Id"
         data={entities || []}
         columns={columns}

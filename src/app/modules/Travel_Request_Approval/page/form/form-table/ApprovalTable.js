@@ -59,7 +59,7 @@ export function ApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -123,8 +123,9 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp", // Reference the parent object (department)
       text: "Employee", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
+      headerSortingClasses,
       formatter: (cell) => {
         return cell
           ? `${cell.employeeCode}-${cell?.firstName}${cell?.middleName} ${cell?.lastName}`
@@ -135,8 +136,9 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.TravelType.formName",
       text: "Travel Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
+      headerSortingClasses,
       formatter: (cell, row) =>
         row.parentData?.TravelType?.formName ||
         dashboard?.allTravelTypeList?.find(
@@ -177,6 +179,9 @@ export function ApprovalFormTable() {
     {
       dataField: "firstFromDate",
       text: "From Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       isDummyField: true,
       formatter: (cell, row) => {
         const seg = row.parentData?.Master?.[0];
@@ -194,6 +199,9 @@ export function ApprovalFormTable() {
     {
       dataField: "lastToDate",
       text: "To Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       isDummyField: true,
       formatter: (cell, row) => {
         const segments = row.parentData?.Master || [];
@@ -280,11 +288,11 @@ export function ApprovalFormTable() {
               bordered={false}
               classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
               bootstrap4
-              remote
+              // remote
               keyField="Id"
               data={entities || []}
               columns={columns}
-              onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+              // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
               {...paginationTableProps}
             >
               <PleaseWaitMessage entities={entities} />

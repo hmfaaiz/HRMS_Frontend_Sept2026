@@ -62,7 +62,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -177,7 +177,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "parentData.t_leave_type.name",
       text: "Leave Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -188,7 +188,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "parentData.from",
       text: "From",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -202,7 +202,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "parentData.to",
       text: "To",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -216,7 +216,7 @@ export function LeaveApprovalFormTable() {
     {
       dataField: "parentData.days",
       text: "Days",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -314,12 +314,12 @@ export function LeaveApprovalFormTable() {
             }
           },
         }}
-        remote
+        // remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
         // selectRow={getSelectRow({
         //   entities,
 

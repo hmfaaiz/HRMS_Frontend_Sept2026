@@ -59,7 +59,7 @@ export function TravelWorkflowStatusTable() {
     {
       dataField: "authorityStatus",
       text: "Self status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -87,7 +87,7 @@ export function TravelWorkflowStatusTable() {
     {
       dataField: "parentData.request_status",
       text: "Request status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -115,7 +115,7 @@ export function TravelWorkflowStatusTable() {
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -126,7 +126,7 @@ export function TravelWorkflowStatusTable() {
     {
       dataField: "requestBelongToEmp",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -140,7 +140,7 @@ export function TravelWorkflowStatusTable() {
     {
       dataField: "parentData.TravelType.formName",
       text: "Travel Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       formatter: (cell, row) =>
@@ -158,6 +158,9 @@ export function TravelWorkflowStatusTable() {
     {
       dataField: "fromDate",
       text: "From Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       isDummyField: true,
       formatter: (cell, row) => {
         const seg = row.parentData?.Master?.[0];
@@ -169,6 +172,9 @@ export function TravelWorkflowStatusTable() {
     {
       dataField: "toDate",
       text: "To Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       isDummyField: true,
       formatter: (cell, row) => {
         const segments = row.parentData?.Master || [];
@@ -243,12 +249,12 @@ export function TravelWorkflowStatusTable() {
         //     }
         //   },
         // }}
-        remote
+        // remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
         // selectRow={getSelectRow({
         //   entities,
 

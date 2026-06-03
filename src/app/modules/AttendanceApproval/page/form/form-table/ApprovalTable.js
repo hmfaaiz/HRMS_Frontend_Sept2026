@@ -118,7 +118,7 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -129,7 +129,7 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -165,7 +165,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.attDate",
       text: "Att Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -179,7 +179,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.timeIn",
       text: "Time In",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -191,7 +191,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.timeOut",
       text: "Time Out",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -297,13 +297,13 @@ export function ApprovalFormTable() {
             }
           },
         }}
-        remote
+        // remote
         keyField="Id"
         // data={entities === null ? [] : entities}
         data={Array.isArray(entities) ? entities : []}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
       >
         <PleaseWaitMessage entities={entities} />
         <NoRecordsFoundMessage entities={entities} />

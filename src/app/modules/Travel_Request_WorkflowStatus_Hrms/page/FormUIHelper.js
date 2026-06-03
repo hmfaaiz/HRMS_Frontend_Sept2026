@@ -11,7 +11,7 @@ export const initialFilter = {
     departmentId: null,
     requestBelongTo: null,
     approvalBelongTo: null,
-    requestStatus: "P",
+    requestStatus: null,
     travelTypes: null,
     travelDate: { from: "", to: "" },
     requestDate: { from: "", to: "" },
@@ -23,6 +23,10 @@ export const initialFilter = {
 };
 
 export const requestFilter = [
+   {
+    label: "All",       
+    value: null,
+  },
   {
     label: "Pending",
     value: "P",
