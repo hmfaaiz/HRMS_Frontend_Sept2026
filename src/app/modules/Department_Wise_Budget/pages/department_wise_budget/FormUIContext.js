@@ -30,9 +30,9 @@ export function FormUIProvider({ FormUIEvents, children }) {
     Id: "",
     subsidiaryId: "",
     departmentId: null,
-    fiscalYearId: null,
-    budgeted_strength:"",
-    budgeted_strength: "",
+    bugetYearId: null,
+   
+    list:[],
 
    
 

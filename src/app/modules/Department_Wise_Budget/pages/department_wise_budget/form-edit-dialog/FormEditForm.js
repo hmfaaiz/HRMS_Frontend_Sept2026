@@ -18,6 +18,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { fetchAllDepartmentBySubsidiaryIds, fetchAllBudgetYearDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
+import PatternListForm from "./PatternList";
 
 // percentage: Yup.string().required("Required*"),
 const department_wise_budgetEditSchema = Yup.object().shape({
@@ -25,30 +26,40 @@ const department_wise_budgetEditSchema = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
 
-  budgeted_strength: Yup.number()
-    .required(VALIDATION_MESSAGES.required)
-    .max(999999999, 'Maximum 9 digits allowed'),
-
-  budgeted_salary: Yup.number()
-    .required(VALIDATION_MESSAGES.required)
-    .max(999999999, "Maximum 9 digits allowed")
-    .test(
-      "salary-greater-than-strength",
-      "Budgeted Salary must be greater than Budgeted Strength",
-      function (value) {
-        const { budgeted_strength } = this.parent;
-
-        if (!value || !budgeted_strength) return true;
-
-        return Number(value) > Number(budgeted_strength);
-      }
-    ),
 
 
 
 
   departmentId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
-  fiscalYearId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+  budgetYearId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+
+
+  list: Yup.array().of(
+    Yup.object().shape({
+      budgeted_strength: Yup.number()
+        .required(VALIDATION_MESSAGES.required)
+        .max(999999999, 'Maximum 9 digits allowed'),
+
+      budgeted_salary: Yup.number()
+        .required(VALIDATION_MESSAGES.required)
+        .max(999999999, "Maximum 9 digits allowed")
+        .test(
+          "salary-greater-than-strength",
+          "Budgeted Salary must be greater than Budgeted Strength",
+          function (value) {
+            const { budgeted_strength } = this.parent;
+
+            if (!value || !budgeted_strength) return true;
+
+            return Number(value) > Number(budgeted_strength);
+          }
+        ),
+
+      designationId: Yup.string()
+        .required(VALIDATION_MESSAGES.required),
+      sno: Yup.number().required(VALIDATION_MESSAGES.required),
+    })
+  ),
 });
 
 export function FormEditForm({
@@ -56,7 +67,7 @@ export function FormEditForm({
   formData,
   actionsLoading,
   onHide,
-  isUserForRead,
+  isdataForRead,
   enableLoading,
   loading,
 }) {
@@ -115,7 +126,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
         <>
-          {console.log("errors1111", errors)}
+         
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -123,36 +134,68 @@ export function FormEditForm({
               </div>
             )}
             <Form className="form form-label-right">
-              <fieldset disabled={isUserForRead}>
+              <fieldset disabled={isdataForRead}>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
-                  <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
-                    <div className="col-span-1">
 
-                      <SubsidiarySelect
-                        name="subsidiaryId"
-                        label={
-                          <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isUserForRead}
-                        onChange={(e) => {
-                          setFieldValue("departmentId", e.value || null);
-                          setFieldValue("fiscalYearId", e.value || null);
-                          setFieldValue("subsidiaryId", e.value || null);
-                          dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
-                          dispatch(fetchAllBudgetYearDataBySubsidiaryId(e?.value));
-                        }}
-                        error={errors?.subsidiaryId}
-                        touched={touched?.subsidiaryId}
-                        currentValue={values?.subsidiaryId}
-                        initializeSubsidiary={(e) => {
+                  <div className="col-span-1">
+
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isdataForRead}
+                      onChange={(e) => {
+                        setFieldValue("departmentId", e.value || null);
+                        setFieldValue("budgetYearId", e.value || null);
+                        setFieldValue("subsidiaryId", e.value || null);
+                        dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
+                        dispatch(fetchAllBudgetYearDataBySubsidiaryId(e?.value));
+                      }}
+                      error={errors?.subsidiaryId}
+                      touched={touched?.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
 
 
-                        }}
-                      />
-                    </div>
+                      }}
+                    />
+                  </div>
 
+                  <div className="col-span-1">
+                    <SearchSelect
+                      name="budgetYearId"
+                      label={<span>Budget Year</span>}
+                      isDisabled={
+                        isdataForRead || !values?.subsidiaryId
+                      }
+                      onChange={(e) => {
+                        const selectedFY = dashboard?.budgetyearBySubList?.find(
+                          (option) => option.value === e?.value
+                        );
+
+                        setFieldValue("budgetYearId", e.value || null);
+
+
+                      }}
+                      value={
+                        dashboard?.budgetyearBySubList?.find(
+                          (option) => option.value === values.budgetYearId
+                        ) || null
+                      }
+
+                      options={[
+                        { label: "Select", value: "" },
+                        ...(dashboard?.budgetyearBySubList || []).filter(
+                          (item) => item.isActive
+                        ),
+                      ]}
+                      isOptionDisabled={(option) => !option.isActive}
+                      error={errors.budgetYearId}
+                      touched={touched.budgetYearId}
+                    />
                   </div>
 
 
@@ -164,7 +207,7 @@ export function FormEditForm({
                           Department<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead}
+                      isDisabled={isdataForRead}
                       onChange={(e) => {
                         setFieldValue("departmentId", e.value || null);
                       }}
@@ -184,44 +227,11 @@ export function FormEditForm({
                   <div className="col-span-1">
                     <label>
                       <span>
-                        Budgeted Strength<span style={{ color: "red" }}>*</span>
+                        Current Strength
                       </span>
                     </label>
                     <Field
-                      name="budgeted_strength"
-                      component={Input}
-                      disabled={formData?.Id ? true : false}
-                      type="number"
-
-                    />
-                  </div>
-
-                  <div className="col-span-1">
-                    <label>
-                      <span>
-                        Budgeted Salary<span style={{ color: "red" }}>*</span>
-                      </span>
-                    </label>
-                    <Field
-                      name="budgeted_salary"
-                      component={Input}
-                      disabled={formData?.Id ? true : false}
-
-                      type="number"
-
-                    />
-                  </div>
-
-
-
-                  <div className="col-span-1">
-                    <label>
-                      <span>
-                        Remaining Budgeted Strength
-                      </span>
-                    </label>
-                    <Field
-                      name="remaining_budgeted_strength"
+                      name=""
                       component={Input}
                       disabled={true}
                       type="number"
@@ -232,11 +242,11 @@ export function FormEditForm({
                   <div className="col-span-1">
                     <label>
                       <span>
-                        Remaining Budgeted Salary
+                        Current Salary
                       </span>
                     </label>
                     <Field
-                      name="remaining_budgeted_salary"
+                      name=""
                       component={Input}
                       disabled={true}
 
@@ -245,78 +255,28 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-span-1">
-                    <label>
-                      <span>
-                        Request Status
-                      </span>
-                    </label>
-                    <Field
-                      name="request_status"
-                      component={Input}
-                      disabled={true}
-
-                    />
-                  </div>
-
-                  <div className="col-span-2">
-                    <label>
-                      <span>
-                        Request Remarks
-                      </span>
-                    </label>
-                    <Field
-                      name="request_remarks"
-                      component={TextArea}
-
-                      className="form-control " // Force full height
-                      autoComplete="off"
-                      disabled={true}
-                    />
-                  </div>
 
 
-                  <div className="col-span-1">
-                    <SearchSelect
-                      name="fiscalYearId"
-                      label={<span>Fiscal Year</span>}
-                      isDisabled={
-                        isUserForRead || !values?.subsidiaryId
-                      }
-                      onChange={(e) => {
-                        const selectedFY = dashboard?.budgetyearBySubList?.find(
-                          (option) => option.value === e?.value
-                        );
-
-                        setFieldValue("fiscalYearId", e.value || null);
 
 
-                      }}
-                      value={
-                        dashboard?.budgetyearBySubList?.find(
-                          (option) => option.value === values.fiscalYearId
-                        ) || null
-                      }
 
-                      options={[
-                        { label: "Select", value: "" },
-                        ...(dashboard?.budgetyearBySubList || []).filter(
-                          (item) => item.isActive
-                        ),
-                      ]}
-                      isOptionDisabled={(option) => !option.isActive}
-                      error={errors.fiscalYearId}
-                      touched={touched.fiscalYearId}
-                    />
-                  </div>
+                </div>
 
+                <div>
+                  <PatternListForm
+                    values={values}
+                    setFieldValue={setFieldValue}
+                    errors={errors}
+                    touched={touched}
 
+                    isdataForRead={isdataForRead}
+                  />
                 </div>
               </fieldset>
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            {!isUserForRead ? (
+            {!isdataForRead ? (
               <button
                 type="button"
                 onClick={onHide}
@@ -345,7 +305,7 @@ export function FormEditForm({
                 )}
               </button> */}
 
-            {!isUserForRead && (
+            {!isdataForRead && (
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
