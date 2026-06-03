@@ -17,7 +17,7 @@ import {
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-import { fetchAllDepartmentBySubsidiaryIds, fetchAllFiscalYearDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllDepartmentBySubsidiaryIds, fetchAllBudgetYearDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
 
 // percentage: Yup.string().required("Required*"),
 const department_wise_budgetEditSchema = Yup.object().shape({
@@ -83,14 +83,14 @@ export function FormEditForm({
 
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllDepartmentBySubsidiaryIds([formData?.subsidiaryId] || [0]));
-    dispatch(fetchAllFiscalYearDataBySubsidiaryId(formData?.subsidiaryId));
+    dispatch(fetchAllBudgetYearDataBySubsidiaryId(formData?.subsidiaryId));
     dispatch(fetchRoles());
   }, [dispatch, formData?.Id]);
 
 
   useEffect(() => {
     dispatch(fetchAllDepartmentBySubsidiaryIds([defaultSubsidiary?.value] || [0]));
-    dispatch(fetchAllFiscalYearDataBySubsidiaryId(defaultSubsidiary?.value));
+    dispatch(fetchAllBudgetYearDataBySubsidiaryId(defaultSubsidiary?.value));
   }, [dispatch, defaultSubsidiary?.value]);
 
 
@@ -141,7 +141,7 @@ export function FormEditForm({
                           setFieldValue("fiscalYearId", e.value || null);
                           setFieldValue("subsidiaryId", e.value || null);
                           dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
-                          dispatch(fetchAllFiscalYearDataBySubsidiaryId(e?.value));
+                          dispatch(fetchAllBudgetYearDataBySubsidiaryId(e?.value));
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
@@ -284,7 +284,7 @@ export function FormEditForm({
                         isUserForRead || !values?.subsidiaryId
                       }
                       onChange={(e) => {
-                        const selectedFY = dashboard?.fiscalyearBySubList?.find(
+                        const selectedFY = dashboard?.budgetyearBySubList?.find(
                           (option) => option.value === e?.value
                         );
 
@@ -293,14 +293,14 @@ export function FormEditForm({
 
                       }}
                       value={
-                        dashboard?.fiscalyearBySubList?.find(
+                        dashboard?.budgetyearBySubList?.find(
                           (option) => option.value === values.fiscalYearId
                         ) || null
                       }
 
                       options={[
                         { label: "Select", value: "" },
-                        ...(dashboard?.fiscalyearBySubList || []).filter(
+                        ...(dashboard?.budgetyearBySubList || []).filter(
                           (item) => item.isActive
                         ),
                       ]}
