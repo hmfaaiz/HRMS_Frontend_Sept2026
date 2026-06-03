@@ -14,6 +14,7 @@ export const fetchAllRecord = (queryparm, type) => async (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't find Workflow Record";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
+      toast.error(error?.response?.data?.message);
     });
 };
 
