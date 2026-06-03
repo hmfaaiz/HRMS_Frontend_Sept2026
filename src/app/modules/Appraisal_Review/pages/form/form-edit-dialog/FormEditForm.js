@@ -1199,13 +1199,19 @@ export function MasterEditForm({
                     ) : null}
                     {/* )} */}
                     {values?.employeeId && values?.consentComment ? (
-                      <span className="text-xs">
-                        Employee Consent :{" "}
-                        <span className="underline font-semibold">
-                          {" "}
-                          {values?.consentComment}
-                        </span>{" "}
-                      </span>
+                      <>
+                        <hr />
+                        <h6 className="font-bold mb-0 text-primary">
+                          Employee Consent{"  "}
+                        </h6>
+                        <span className="text-sm font-bold">
+                          Comment :{" "}
+                          <span className="font-semibold">
+                            {" "}
+                            {values?.consentComment}
+                          </span>{" "}
+                        </span>
+                      </>
                     ) : null}
                   </fieldset>
                 </Form>
@@ -1242,7 +1248,7 @@ export function MasterEditForm({
                   {!isUserForRead && !values.isFinalize && (
                     <button
                       type="button"
-                      className="btn btn-secondary btn-elevate"
+                      className="btn btn-primary btn-elevate"
                       onClick={() =>
                         handleSubmitWithConsent(true, handleSubmit, values)
                       }
