@@ -32,6 +32,8 @@ export function LeaveApplicationTable() {
       setQueryParamsLeaveApp: formUIContext.setQueryParamsLeaveApp,
       editRecord: formUIContext.editRecord,
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      setWorkflowId: formUIContext.setWorkflowId,  
+      setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
 
@@ -59,7 +61,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "t_leave_type.name",
       text: "Leave Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -70,7 +72,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "from",
       text: "From",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -84,7 +86,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "to",
       text: "To",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -98,7 +100,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "days",
       text: "Days",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -130,7 +132,7 @@ export function LeaveApplicationTable() {
     {
       dataField: "request_status",
       text: "Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -211,9 +213,11 @@ export function LeaveApplicationTable() {
           ? isAccessForReApply?.isAccess &&
             user?.employeeIdMapping === FormUIProps?.employeeId
           : false,
+        setWorkflowId: FormUIProps.setWorkflowId,   
+        setCurrentData: FormUIProps.setCurrentData,
       },
-      classes: "text-left pr-0",
-      headerClasses: "text-left pr-3",
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
       style: {
         minWidth: "100px",
         maxWidth: "100px",

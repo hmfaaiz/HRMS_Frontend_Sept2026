@@ -69,7 +69,7 @@ export function FormTable({ openRecommendationModal , openViewModal}) {
     {
       dataField: "Applicant.applicantCode",
       text: "Applicant Code",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "110px" },
@@ -78,7 +78,7 @@ export function FormTable({ openRecommendationModal , openViewModal}) {
     {
       dataField: "Applicant",
       text: "Applicant Name",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "150px" },
@@ -92,7 +92,7 @@ export function FormTable({ openRecommendationModal , openViewModal}) {
     {
       dataField: "Applicant.email_personal",
       text: "Personal Email",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "160px" },
@@ -124,7 +124,7 @@ export function FormTable({ openRecommendationModal , openViewModal}) {
     {
       dataField: "JobVacancy.jobTitle",
       text: "Job Applied",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "140px" },
@@ -133,7 +133,7 @@ export function FormTable({ openRecommendationModal , openViewModal}) {
     {
       dataField: "interview_date",
       text: "Interview Date",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "110px" },
@@ -143,7 +143,7 @@ export function FormTable({ openRecommendationModal , openViewModal}) {
     {
       dataField: "interview_time",
       text: "Interview Time",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "110px" },
@@ -152,7 +152,7 @@ export function FormTable({ openRecommendationModal , openViewModal}) {
     {
       dataField: "Location.formName",
       text: "Location",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px" },

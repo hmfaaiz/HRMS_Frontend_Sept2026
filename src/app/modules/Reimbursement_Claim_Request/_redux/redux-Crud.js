@@ -61,3 +61,8 @@ export function getAllReimbursementConfigPolicy(body) {
     body
   );
 }
+export function getWorkflowStatusByClaimId(claimId) {
+  return axios.get(
+    `${USERS_URL}/reimbursement_claim_workflow_status_approval/read-reimbursement-claim-workflow-status-approval/${claimId}`
+  );
+}

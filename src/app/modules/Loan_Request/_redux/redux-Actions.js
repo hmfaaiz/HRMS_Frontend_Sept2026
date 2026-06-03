@@ -269,3 +269,14 @@ export const getEmployeeAuthorities = (empId) => (dispatch) => {
       error.clientMessage = "Can't Get Employee Authorities";
     });
 };
+export const fetchWorkflowStatusByLoanId = (loanId) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getWorkflowStatusByLoanId(loanId)
+    .then((res) => {
+      dispatch(actions.WorkflowStatusFetched(res.data?.data));
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};

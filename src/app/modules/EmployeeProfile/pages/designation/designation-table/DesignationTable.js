@@ -69,7 +69,8 @@ export function DesignationTable({onHide}) {
   //   dispatch(actions.fetchContactInfo(religionUIProps.queryParams));
   // }, [religionUIProps.queryParams, dispatch, totalCount]);
 
-  
+ 
+  const isInactive = !religionUIProps.queryParams.isActive;
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateProfile"
   );
@@ -149,9 +150,33 @@ export function DesignationTable({onHide}) {
       formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
     },
 
-    
-   
-       {
+    ...(isInactive
+      ? [
+          {
+            dataField: "exitType",
+            text: "Exit Type",
+            sort: false,
+            style: { minWidth: "140px" },
+            formatter: (cell) => cell || "-",
+          },
+          {
+            dataField: "exitReason",
+            text: "Exit Reason",
+            sort: false,
+            style: { minWidth: "140px" },
+            formatter: (cell) => cell || "-",
+          },
+          {
+            dataField: "lastWorkingDate",
+            text: "Last Working Date",
+            sort: false,
+            style: { minWidth: "160px" },
+            formatter: (cell) => cell || "-",
+          },
+        ]
+      : []),
+
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -167,8 +192,8 @@ export function DesignationTable({onHide}) {
           ? isAccessForDelete.isAccess
           : false,
         dispatch,
-  profilePdfLoading,
-  downloadEmpProfilePdf,
+        profilePdfLoading,
+        downloadEmpProfilePdf,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -187,7 +212,7 @@ export function DesignationTable({onHide}) {
     page: religionUIProps.queryParams.pageNumber,
   };
 
-    return (
+  return (
     <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
@@ -196,16 +221,16 @@ export function DesignationTable({onHide}) {
               isLoading={listLoading}
               paginationProps={paginationProps}
             >
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
+            <BootstrapTable
+              wrapperClasses="table-responsive"
+              bordered={false}
+              classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+              bootstrap4
+              remote
+              keyField="Id"
+              data={entities === null ? [] : entities}
+              columns={columns}
+              defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   religionUIProps.setQueryParams
                 )}
@@ -213,12 +238,12 @@ export function DesignationTable({onHide}) {
                 //   entities,
 
                 // })}
-                {...paginationTableProps}
-              >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
-            </Pagination>
+              {...paginationTableProps}
+            >
+              <PleaseWaitMessage entities={entities} />
+              <NoRecordsFoundMessage entities={entities} />
+            </BootstrapTable>
+          </Pagination>
           );
         }}
       </PaginationProvider>

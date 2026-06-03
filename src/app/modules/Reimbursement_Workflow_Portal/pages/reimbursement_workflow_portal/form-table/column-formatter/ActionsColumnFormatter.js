@@ -9,6 +9,7 @@ export function ActionsColumnFormatter(
   { setWorkflowId, setCurrentData }
 ) {
   return (
+    <div className="d-flex justify-content-end">
     <OverlayTrigger
       overlay={<Tooltip id="reimbursement-view-tooltip">View Detail</Tooltip>}
     >
@@ -23,5 +24,6 @@ export function ActionsColumnFormatter(
         <Eye className="w-4 h-4" />
       </button>
     </OverlayTrigger>
+    </div>
   );
 }

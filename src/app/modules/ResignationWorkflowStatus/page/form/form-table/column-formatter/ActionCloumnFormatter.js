@@ -10,6 +10,7 @@ export function ActionsColumnFormatter(
 ) {
   return (
     <>
+    <div className="flex items-center gap-2">
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View Detail</Tooltip>}
       >
@@ -22,6 +23,7 @@ export function ActionsColumnFormatter(
           <Eye className="w-4 h-4" />
         </a>
       </OverlayTrigger>
+      </div>
     </>
   );
 }

@@ -195,7 +195,7 @@ export function FormTable() {
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps?.setCurrentData,
       },
-
+      headerClasses: "text-right",
       style: {
         minWidth: "100px",
       },

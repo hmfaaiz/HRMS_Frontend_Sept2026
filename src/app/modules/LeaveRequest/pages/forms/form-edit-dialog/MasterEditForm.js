@@ -24,6 +24,7 @@ import LeaveLinesTable from "../../../../LeaveApplication/pages/forms/form-edit-
 import { EmployeeSelect } from "./EmployeeSelect";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { RotateCcw } from "lucide-react";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 export function MasterEditForm({
   submitForm,
@@ -70,6 +71,8 @@ export function MasterEditForm({
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
+  
   const debounceRef = useRef(null);
   const formikRef = useRef(null);
     const [isEligible, setIsEligible] = React.useState(true);
@@ -252,8 +255,16 @@ if (!eligible) {
         innerRef={formikRef}
         initialValues={user}
         validationSchema={formValidation}
-        onSubmit={(values, { resetForm }) => {
-          enableLoading();
+         onSubmit={async (values, { resetForm }) => {
+        
+        const result = await confirm(
+          "Confirm Submission",
+          "Are you sure you want to submit this request?",
+          "No",
+          "Yes",
+        );
+        if (!result) return;
+        enableLoading();
           //This clearForm function is created to clear form as well as clear any uploaded file as well.
           //resetForm function doesn't clear file properly so we use this function
           const clearForm = () => {
@@ -284,6 +295,7 @@ if (!eligible) {
           validateForm,
         }) => (
           <>
+          <ConfirmationComponent />
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
                 <div className="spinner spinner-lg spinner-success" />
