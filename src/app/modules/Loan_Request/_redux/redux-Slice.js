@@ -15,6 +15,7 @@ const initialLoanRequestState = {
   empAuthorityList: [],
   isPolicyExists: false,
   payrollData: null,
+  workflowStatusList: [],
 };
 
 export const callTypes = {
@@ -26,6 +27,14 @@ export const LoanRequestSlice = createSlice({
   name: "loan_request",
   initialState: initialLoanRequestState,
   reducers: {
+    startCall: (state, action) => {         
+      state.error = null;
+      if (action.payload.callType === callTypes.list) {
+        state.listLoading = true;
+      } else {
+        state.actionsLoading = true;
+      }
+    },
     catchError: (state, action) => {
       state.error = `${action.type}: ${action.payload.error}`;
       if (action.payload.callType === callTypes.list) {
@@ -129,6 +138,11 @@ export const LoanRequestSlice = createSlice({
       const payrollData = action?.payload?.payrollData;
       state.error = null;
       state.payrollData = payrollData;
+    },
+     WorkflowStatusFetched: (state, action) => {  
+      state.actionsLoading = false;
+      state.error = null;
+      state.workflowStatusList = action.payload || [];
     },
   },
 });

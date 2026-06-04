@@ -33,6 +33,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
     openAnalysisFormDialog: FormUIEvents.openAnalysisFormDialog,
+    openConsentDialog : FormUIEvents.openConsentDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

@@ -65,22 +65,33 @@ export function ApprovalFormTable() {
         return <span className={cls}>{text}</span>;
       },
     },
-    {
-      dataField: "requestBelongToEmp.employeeCode",
-      text: "Code",
-      sort: true,                                               
-      sortCaret, headerSortingClasses,  
-      style: { minWidth: "70px", maxWidth: "70px" },
-    },
-    {
-      dataField: "requestBelongToEmp",
-      text: "Name",
-      sort: true,                                               
-      sortCaret, headerSortingClasses,  
-      style: { minWidth: "150px", maxWidth: "150px" },
-      formatter: (cell) =>
-        `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
-    },
+    // {
+    //   dataField: "requestBelongToEmp.employeeCode",
+    //   text: "Code",
+    //   sort: true,                                               
+    //   sortCaret, headerSortingClasses,  
+    //   style: { minWidth: "70px", maxWidth: "70px" },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp",
+    //   text: "Name",
+    //   sort: true,                                               
+    //   sortCaret, headerSortingClasses,  
+    //   style: { minWidth: "150px", maxWidth: "150px" },
+    //   formatter: (cell) =>
+    //     `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
+    // },
+     {dataField: "requestBelongToEmp",
+          text: "Employee",
+          sort: true,
+          sortCaret, headerSortingClasses,
+          style: { minWidth: "200px", maxWidth: "200px" },
+          formatter: (cell) => {
+            const code = cell?.employeeCode || "";
+            const name = `${cell?.firstName || ""} ${cell?.middleName ? cell.middleName + " " : ""}${cell?.lastName || ""}`.trim();
+            return code && name ? `${code} - ${name}` : code || name || "";
+          },
+        },
     {
       dataField: "requestBelongToEmp.department.deptName",
       text: "Department",

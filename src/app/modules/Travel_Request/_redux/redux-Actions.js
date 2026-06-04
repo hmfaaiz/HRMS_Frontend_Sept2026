@@ -88,3 +88,19 @@ export const getEmployeeAuthorities = (empId) => (dispatch) => {
       );
     });
 };
+export const fetchTravelRequestWorkflow = (id) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  if (id) {
+    return requestFromServer
+      .getWorkflowStatusByParentId(id)
+      .then((response) => {
+        dispatch(actions.workflowStatusFetched(response.data?.data || []));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Workflow";
+        dispatch(actions.catchError({ error, callType: callTypes.action }));
+      });
+  } else {
+    dispatch(actions.workflowStatusFetched([]));
+  }
+};

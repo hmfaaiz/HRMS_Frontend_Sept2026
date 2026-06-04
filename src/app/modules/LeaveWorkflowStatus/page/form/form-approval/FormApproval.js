@@ -1,5 +1,5 @@
 import { Field, Formik } from "formik";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { TextArea } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../../FormUIContext";
@@ -8,6 +8,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../redux/formAction";
 import { initialFilter } from "../../FormUIHelper";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog"; // ✅ import hook
 
 const formValidation = Yup.object().shape({
   authorityRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -16,6 +17,9 @@ const formValidation = Yup.object().shape({
 export const FormApproval = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null); 
+  const formikRef = useRef(null);
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const FormUIContext = useFormUIContext();
   const formUIProps = useMemo(() => {
     return {
@@ -34,8 +38,8 @@ export const FormApproval = () => {
   const handleRequestSubmit = async (values, resetForm) => {
     try {
       setLoading(true);
-      await dispatch(actions.handleLeaveRequest(values, resetForm));
-      setLoading(false);
+      await dispatch(actions.handleLeaveRequest(values, resetForm, setLoading));
+      // setLoading(false);
       formUIProps.setIds([]);
       formUIProps.setLeaveData(null);
       await dispatch(
@@ -44,9 +48,37 @@ export const FormApproval = () => {
           user?.employeeIdMapping
         )
       );
-    } catch (err) {
+    }catch {
+      // error handled in action
+    } finally {
       setLoading(false);
+      setPendingAction(null);
     }
+  };
+   const handleActionClick = async (action, setFieldValue, values) => {
+    // validate remarks for reject before showing modal
+    if (action === "R" && (!values.authorityRemarks || values.authorityRemarks.trim() === "")) {
+      formikRef.current?.setFieldTouched("authorityRemarks", true);
+      return;
+    }
+
+    const result = await confirm(
+      action === "A" ? "Approve Request" : "Reject Request",
+      `Are you sure you want to ${action === "A" ? "approve" : "reject"} the selected request(s)?`,
+      "Cancel",
+      action === "A" ? "Approve" : "Reject",
+    );
+
+    if (!result) {
+      setPendingAction(null);
+      return;
+    }
+
+    setPendingAction({ action });
+    setFieldValue("request_status", action);
+    setTimeout(() => {
+      formikRef.current?.handleSubmit();
+    }, 50);
   };
   const intVal = {
     authorityRemarks: "",
@@ -54,69 +86,69 @@ export const FormApproval = () => {
   };
   return (
     <>
+      <ConfirmationComponent />
+
       <Formik
-        enableReinitialize={true}
-        initialValues={intVal}
+        enableReinitialize
+        innerRef={formikRef}
+        initialValues={{ authorityRemarks: "", request_status: "" }}
         validationSchema={formValidation}
         onSubmit={(values, { resetForm }) => {
-          handleRequestSubmit({ ...values, Ids: formUIProps.Ids }, resetForm);
-          // resetForm({ values: intVal });
+          const submitValues = { ...values, Ids: formUIProps.Ids };
+          handleRequestSubmit(submitValues, resetForm);
         }}
       >
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
-          <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              <button
-                type="button"
-                onClick={() => {
-                  setFieldValue("request_status", "A");
-                  handleSubmit();
-                }}
-                disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                className="btn btn-success btn-elevate"
-              >
-                Approve Request
-              </button>
-              <button
-                type="button"
-                disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                onClick={() => {
-                  setFieldValue("request_status", "R");
-                  handleSubmit();
-                }}
-                className="btn btn-danger btn-elevate mx-2"
-              >
-                Reject Request
-              </button>
-              <Form className="form form-label-right">
-                <fieldset
-                  disabled={formUIProps?.Ids?.length > 0 ? false : true}
-                >
-                  <div className="from-group row">
-                    <div className="col-12 col-md-8 mt-3">
-                      <Field
-                        name="authorityRemarks"
-                        component={TextArea}
-                        placeholder=""
-                        onChange={(e) => {
-                          setFieldValue("authorityRemarks", e.target.value);
-                        }}
-                        onBlur={handleBlur}
-                        label={
-                          <span>
-                            {" "}
-                            Remarks<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.authorityRemarks}
-                        autoComplete="off"
-                      />
-                    </div>
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={() => handleActionClick("A", setFieldValue, values)}
+              disabled={!(formUIProps?.Ids?.length > 0) || loading}
+              className="btn btn-success"
+            >
+              Approve
+              {loading && pendingAction?.action === "A" && (
+                <span className="ml-2 spinner spinner-white"></span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              disabled={!(formUIProps?.Ids?.length > 0) || loading}
+              onClick={() => handleActionClick("R", setFieldValue, values)}
+              className="btn btn-danger mx-2"
+            >
+              Reject
+              {loading && pendingAction?.action === "R" && (
+                <span className="ml-2 spinner spinner-white"></span>
+              )}
+            </button>
+
+            <Form className="form form-label-right">
+              <fieldset disabled={!(formUIProps?.Ids?.length > 0)}>
+                <div className="from-group row">
+                  <div className="col-12 col-md-12 mt-3">
+                    <Field
+                      name="authorityRemarks"
+                      component={TextArea}
+                      placeholder=""
+                      onChange={(e) =>
+                        setFieldValue("authorityRemarks", e.target.value)
+                      }
+                      onBlur={handleBlur}
+                      label={
+                        <span>
+                          Remarks<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      value={values.authorityRemarks}
+                      autoComplete="off"
+                    />
                   </div>
-                </fieldset>
-              </Form>
-            </Modal.Body>
-          </>
+                </div>
+              </fieldset>
+            </Form>
+          </div>
         )}
       </Formik>
     </>

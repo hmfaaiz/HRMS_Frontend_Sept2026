@@ -27,7 +27,7 @@ import { NumericFormat } from "react-number-format";
 import { Label } from "@material-ui/icons";
 // import { Toast } from "react-bootstrap";
 import { toast } from "react-toastify";
-
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 export function FormEditForm({
   employeeId,
   employeeDetails,
@@ -35,6 +35,7 @@ export function FormEditForm({
   saveForm,
   onHide,
   disableLoading,
+  loading,
   user,
   isReadOnly,
   isViewMode = false,
@@ -60,7 +61,8 @@ export function FormEditForm({
   );
 
   const [showEntitlementModal, setShowEntitlementModal] = React.useState(false);
-
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
+  
   const modeText = isEditMode ? "Edit" : isViewMode ? "View" : "Add";
 
   const transportOptions = dashboard?.allTransportModeList || [];
@@ -264,7 +266,14 @@ export function FormEditForm({
         enableReinitialize={true}
         initialValues={initialValues}
         validationSchema={formValidation}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
+          const result = await confirm(
+            "Confirm Submission",
+            "Are you sure you want to submit this travel request?",
+            "No",
+            "Yes",
+          );
+          if (!result) return;
           const payload = {
             id: user?.Id || user?.id,
             companyId: employeeDetails?.companyId || user?.companyId,
@@ -310,11 +319,11 @@ export function FormEditForm({
             authortiesList: empAuthorityList,
           };
 
-          if (!empAuthorityList || empAuthorityList.length === 0) {
+           if (!empAuthorityList || empAuthorityList.length === 0) {
             toast.error(
               isPolicyExists
-                ? "No workflow authorities found for this employee. Cannot submit."
-                : "Workflow policy does not exist for this employee. Cannot submit.",
+              ? "No workflow authorities found for this employee. Cannot submit."
+              : "Workflow policy does not exist for this employee. Cannot submit.",
               { position: "top-right", autoClose: 5000 },
             );
             return;
@@ -322,8 +331,6 @@ export function FormEditForm({
 
           if (saveForm) {
             saveForm(payload);
-          } else {
-            console.error("saveForm prop missing in FormEditForm");
           }
         }}
       >
@@ -466,6 +473,7 @@ export function FormEditForm({
 
           return (
             <Form className="form form-label-right">
+              <ConfirmationComponent />
               {/* Travel Details Heading and Header Fields */}
               <div className="mb-6">
                 <h6 className="text-primary font-bold mb-3">
@@ -1474,6 +1482,7 @@ export function FormEditForm({
                   type="button"
                   className="btn btn-light btn-sm font-bold px-6"
                   onClick={onCancel}
+                  disabled={loading}  
                 >
                   {isReadOnly ? "Close" : "Cancel"}
                 </button>
@@ -1481,12 +1490,20 @@ export function FormEditForm({
                   <button
                     type="submit"
                     className="btn btn-primary btn-sm font-bold px-8"
-                    disabled={isFormDisabled}
+                    disabled={isFormDisabled || loading} 
                   >
-                    Save
-                  </button>
+                   {loading ? (
+        <>
+          Saving...
+          <span className="ml-2 spinner spinner-white spinner-sm" />
+        </>
+      ) : (
+        "Save"
+                  
                 )}
-              </div>
+                </button>
+  )}
+        </div>
             </Form>
           );
         }}

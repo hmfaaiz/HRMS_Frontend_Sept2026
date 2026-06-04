@@ -30,6 +30,7 @@ export function FormTable() {
       openEditFormDialog: formUIContext.openEditFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       openAnalysisFormDialog: formUIContext.openAnalysisFormDialog,
+      openConsentDialog: formUIContext.openConsentDialog,
     };
   }, [formUIContext]);
 
@@ -64,7 +65,7 @@ export function FormTable() {
     {
       dataField: "FromEmp.employeeCode",
       text: "Code",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -74,7 +75,7 @@ export function FormTable() {
     {
       dataField: "FromEmp.name",
       text: "name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -84,7 +85,7 @@ export function FormTable() {
     {
       dataField: "FromEmp.department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -94,7 +95,7 @@ export function FormTable() {
     {
       dataField: "FromEmp.designation.formName",
       text: "Designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -124,7 +125,7 @@ export function FormTable() {
     {
       dataField: "AppraisalCategory.formName",
       text: "Appraisal Category",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -135,7 +136,7 @@ export function FormTable() {
     {
       dataField: "isHREvaluation",
       text: "Feedback Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -152,7 +153,7 @@ export function FormTable() {
     {
       dataField: "isSubmitted",
       text: "Feedback Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -174,7 +175,7 @@ export function FormTable() {
     {
       dataField: "isSupervisor",
       text: "Submitted by Employee",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -193,6 +194,7 @@ export function FormTable() {
       formatExtraData: {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openConsentDialog: formUIProps.openConsentDialog,
         openAnalysisFormDialog: formUIProps.openAnalysisFormDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,

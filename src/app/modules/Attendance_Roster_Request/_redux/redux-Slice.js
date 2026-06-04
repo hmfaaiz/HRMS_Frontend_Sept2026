@@ -10,6 +10,7 @@ const initialState = {
   error: null,
   empAuthorityList: [],
   payrollData: null,
+  workflowStatusList: [],
 };
 
 export const callTypes = {
@@ -66,6 +67,11 @@ export const RosterRequestSlice = createSlice({
     PayrollMonthFetched: (state, action) => {
       state.error = null;
       state.payrollData = action.payload.payrollData;
+    },
+    RosterWorkflowStatusFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.error = null;
+      state.workflowStatusList = action.payload;
     },
   },
 });

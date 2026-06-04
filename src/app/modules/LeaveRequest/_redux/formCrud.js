@@ -64,3 +64,8 @@ export function getLeaveApplicationDetail(body) {
     body
   );
 }
+export function getWorkflowStatusByLeaveId(leaveId) {
+  return axios.get(
+    `${USERS_URL}/leave-approval/read-leave-approval/${leaveId}`
+  );
+}

@@ -10,6 +10,7 @@ export function ActionsColumnFormatter(
 ) {
   return (
     <>
+    <div className="d-flex justify-content-end">
       <OverlayTrigger
         overlay={
           <Tooltip id="products-edit-tooltip">View Detail</Tooltip>
@@ -30,6 +31,7 @@ export function ActionsColumnFormatter(
           <Eye className="w-4 h-4" />
         </a>
       </OverlayTrigger>
+      </div>
       {/* <OverlayTrigger
         overlay={
           <Tooltip id="products-edit-tooltip">View Workflow Status</Tooltip>

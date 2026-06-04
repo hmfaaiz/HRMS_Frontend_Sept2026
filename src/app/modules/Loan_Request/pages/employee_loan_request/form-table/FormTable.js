@@ -37,6 +37,8 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      setWorkflowId: formUIContext.setWorkflowId,   
+      setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
 
@@ -66,7 +68,7 @@ export function FormTable() {
     {
       dataField: "LoanType.name",
       text: "Loan Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -77,7 +79,7 @@ export function FormTable() {
     {
       dataField: "total_loan_amount",
       text: "total loan amount",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -89,7 +91,7 @@ export function FormTable() {
     {
       dataField: "monthly_installment",
       text: "monthly installment",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -101,7 +103,7 @@ export function FormTable() {
     {
       dataField: "total_installment",
       text: "total installments",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -127,7 +129,7 @@ export function FormTable() {
     {
       dataField: "request_status",
       text: "Status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -208,8 +210,10 @@ export function FormTable() {
           user?.employeeIdMapping === formUIProps?.employeeId?.value
             ? isAccessForReapply.isAccess
             : false,
+          setWorkflowId: formUIProps.setWorkflowId,  
+          setCurrentData: formUIProps.setCurrentData,
       },
-      headerClasses: "text-left",
+      headerClasses: "text-right",
       style: {
         minWidth: "10px",
       },

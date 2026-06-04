@@ -27,3 +27,8 @@ export function getEmployeeAuthorties(empId, workflowTypeId) {
     `${BASE_URL}/workflow_policy/get-employee-authorties/${empId}/${workflowTypeId}`,
   );
 }
+export function getWorkflowStatusByParentId(id) {
+  return axios.get(
+    `${BASE_URL}/travel_request_workflow_status_approval/read-travel-request-workflow-status-approval/${id}`,
+  );
+}

@@ -296,3 +296,14 @@ export const getLeaveApplicationDetail = (data, employeeId, disableLoading) => (
       });
   }
 };
+export const fetchWorkflowStatusByLeaveId = (leaveId) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getWorkflowStatusByLeaveId(leaveId)
+    .then((res) => {
+      dispatch(actions.WorkflowStatusFetched(res.data?.data));
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};

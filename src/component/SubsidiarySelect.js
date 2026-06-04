@@ -66,7 +66,6 @@ export const SubsidiarySelect = ({
     : effectiveOptions;
 
   useEffect(() => {
-    // debugger
     // Only run initialization when we have real subsidiaries (not just "All")
     if (!initialized && effectiveOptions.length > 0) {
       setInitialized(true);

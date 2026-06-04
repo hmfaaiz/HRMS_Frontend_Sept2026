@@ -22,6 +22,7 @@ import {
 import { toast } from "react-toastify";
 import { getEmployeeAuthorties } from "../../../_redux/redux-Crud";
 import { getPayrollMonth } from "../../../_redux/redux-Actions";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 export function RosterRequestFormEditForm({
   saveForm,
@@ -38,7 +39,8 @@ export function RosterRequestFormEditForm({
   // Local authority state
   const [empAuthorityList, setEmpAuthorityList] = useState([]);
   const [isPolicyExists, setIsPolicyExists] = useState(false);
-
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
+  
   const allEmployeeShifts = useSelector(
     (s) => s?.dashboard?.allEmployeeShifts || [],
   );
@@ -179,7 +181,15 @@ export function RosterRequestFormEditForm({
           : [{ employeeId: employeeId || "" }],
       }}
       validationSchema={RosterRequestSchema}
-      onSubmit={(values, { resetForm }) => {
+      onSubmit={async (values, { resetForm }) => {
+        
+        const result = await confirm(
+          "Confirm Submission",
+          "Are you sure you want to submit this request?",
+          "No",
+          "Yes",
+        );
+        if (!result) return;
         enableLoading();
 
         //Guard: no authorities ──
@@ -243,6 +253,7 @@ export function RosterRequestFormEditForm({
         handleChange,
       }) => (
         <>
+        <ConfirmationComponent />
           {/* ── Workflow authority warnings ── */}
           {empAuthorityList.length === 0 && !isPolicyExists ? (
             <span className="text-xs text-red-500 font-semibold">

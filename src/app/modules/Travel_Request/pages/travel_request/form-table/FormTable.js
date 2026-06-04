@@ -21,14 +21,16 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 export function FormTable({ onViewClick }) {
   const FormUIContext = useFormUIContext();
   const FormUIProps = useMemo(() => {
-    return {
-      employeeId: FormUIContext.employeeId,
-      setUserForEdit: FormUIContext.setUserForEdit,
-      setPanelMode: FormUIContext.setPanelMode,
-      queryParams: FormUIContext.queryParams,
-      setQueryParams: FormUIContext.setQueryParams,
-    };
-  }, [FormUIContext]);
+  return {
+    employeeId: FormUIContext.employeeId,
+    setUserForEdit: FormUIContext.setUserForEdit,
+    setPanelMode: FormUIContext.setPanelMode,
+    queryParams: FormUIContext.queryParams,
+    setQueryParams: FormUIContext.setQueryParams,
+    setWorkflowId: FormUIContext.setWorkflowId,      
+    setWorkflowRowData: FormUIContext.setWorkflowRowData,
+  };
+}, [FormUIContext]);
 
   const { currentState } = useSelector(
     (state) => ({
@@ -61,7 +63,7 @@ export function FormTable({ onViewClick }) {
     {
       dataField: "TravelType.formName",
       text: "Travel Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       formatter: (cell, row) =>
         row.TravelType?.formName || row.travelType || "-",
@@ -70,7 +72,7 @@ export function FormTable({ onViewClick }) {
     {
       text: "Purpose of Travel",
       dataField: "purposeOfTravel",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       style: { minWidth: "180px" },
     },
@@ -149,6 +151,8 @@ export function FormTable({ onViewClick }) {
     {
       dataField: "request_status",
       text: "Status",
+      sort: true,
+      sortCaret: sortCaret,
       formatter: (cell, row) => {
         let text = "";
         let className = "";
@@ -193,16 +197,20 @@ export function FormTable({ onViewClick }) {
       style: { minWidth: "100px" },
       formatter: ActionsColumnFormatter,
       formatExtraData: {
-        openReadFormDialog: (row) => {
-          if (onViewClick) {
-            onViewClick(row);
-          } else {
-            FormUIProps.setUserForEdit(row);
-            FormUIProps.setPanelMode(true);
-          }
-        },
-      },
-    },
+  openReadFormDialog: (row) => {
+    if (onViewClick) {
+      onViewClick(row);
+    } else {
+      FormUIProps.setUserForEdit(row);
+      FormUIProps.setPanelMode(true);
+    }
+  },
+  openWorkflowDialog: (row) => {        // ADD
+    FormUIProps.setWorkflowId(row.id || row.Id);
+    FormUIProps.setWorkflowRowData(row);
+  },
+},
+    }
   ];
 
   const paginationOptions = {
