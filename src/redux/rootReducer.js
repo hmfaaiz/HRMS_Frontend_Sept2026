@@ -228,6 +228,7 @@ import { ClosePayrollMonthSlice } from "../app/modules/Close_Payroll_Month_Proce
 import { EmployeeTaskSlice } from "../app/modules/employee_task_portal/_redux/redux-Slice";
 import { PolicyforNewYearBudgetSlice } from "../app/modules/PolicyforNewYearBudget/_redux/redux-Slice";
 import { DepartmentWiseBudgetSlice } from "../app/modules/Department_Wise_Budget/_redux/redux-Slice";
+import { PortalDepartmentWiseBudgetSlice } from "../app/modules/Portal_Department_Wise_Budget/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -455,6 +456,7 @@ export const rootReducer = combineReducers({
   employee_task_portal: EmployeeTaskSlice.reducer,
   policy_for_new_year_budget: PolicyforNewYearBudgetSlice.reducer,
   department_wise_budget: DepartmentWiseBudgetSlice.reducer,
+  portal_department_wise_budget: PortalDepartmentWiseBudgetSlice.reducer,
 
 });
 

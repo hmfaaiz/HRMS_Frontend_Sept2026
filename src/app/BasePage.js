@@ -647,6 +647,9 @@ const policy_for_new_year_budget = lazy(() =>
 const department_wise_budget = lazy(() =>
   import("./modules/Department_Wise_Budget/pages/index"),
 );
+const portal_department_wise_budget = lazy(() =>
+  import("./modules/Portal_Department_Wise_Budget/pages/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -863,6 +866,7 @@ const ROUTES = {
   employee_task: employee_task_portal,
   policy_for_new_year_budget: policy_for_new_year_budget,
   department_wise_budget: department_wise_budget,
+  portal_department_wise_budget: portal_department_wise_budget,
 
 };
 
