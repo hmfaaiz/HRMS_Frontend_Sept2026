@@ -41,7 +41,7 @@ export const DepartmentWiseBudgetSlice = createSlice({
             }
         },
 
-        policyforNewYearBudgetFetched: (state, action) => {
+        departmentWiseBudgetFetched: (state, action) => {
         
   
             const entities = action.payload.data?.data.rows;
@@ -66,7 +66,7 @@ export const DepartmentWiseBudgetSlice = createSlice({
         },
 
          //get User By ID
-         PolicyforNewYearBudgetFetchedForEdit: (state, action) => {
+         departmentWiseBudgetFetchedForEdit: (state, action) => {
            
    
             state.actionsLoading = false;
@@ -77,7 +77,7 @@ export const DepartmentWiseBudgetSlice = createSlice({
         },
 
       
-        PolicyforNewYearBudgetDeleted: (state, action) => {
+        DepartmentWiseBudgetDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -95,7 +95,7 @@ export const DepartmentWiseBudgetSlice = createSlice({
 
 
 
-        policyforNewYearBudgetCreated: (state, action) => {
+        departmentWiseBudgetCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
 
@@ -105,7 +105,7 @@ export const DepartmentWiseBudgetSlice = createSlice({
 
 
 
-        policyforNewYearBudgetUpdated: (state, action) => {
+        departmentWiseBudgetUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)

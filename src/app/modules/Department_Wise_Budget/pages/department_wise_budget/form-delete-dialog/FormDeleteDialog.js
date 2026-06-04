@@ -44,7 +44,7 @@ export function FormDeleteDialog({ subsidiaryId, budgetYearId, departmentId, sta
 
   const deleteDepartmentWiseBudget = () => {
     // server request for deleting customer by id
-    console.log("subsidiaryId , budgetYearId , departmentId}11111111111111",subsidiaryId , budgetYearId , departmentId)
+   
     enableLoading();
     dispatch(actions.deleteDepartmentWiseBudget({subsidiaryId , budgetYearId , departmentId})).then(() => {
       onHide();

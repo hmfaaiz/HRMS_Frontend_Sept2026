@@ -10,12 +10,12 @@ export const fetchDepartmentWiseBudgets = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllPolicyforNewYearBudget(queryparm)
+  return requestFromServer.getAllDepartmentWiseBudget(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.policyforNewYearBudgetFetched(response));
+      dispatch(actions.departmentWiseBudgetFetched(response));
     })
     .catch((error) => {
     
@@ -26,18 +26,18 @@ export const fetchDepartmentWiseBudgets = (queryparm) => async (dispatch) => {
 
 export const fetchDepartmentWiseBudget = (body) => (dispatch) => {
 
-console.log("hit11111",body)
+
   if (!body.subsidiaryId || !body.budgetYearId || !body.departmentId) {
-    return dispatch(actions.PolicyforNewYearBudgetFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.departmentWiseBudgetFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getPolicyforNewYearBudgetById(body)
+    .getDepartmentWiseBudgetById(body)
     .then((response) => {
       const entities = response.data.data;
 
    
-      dispatch(actions.PolicyforNewYearBudgetFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.departmentWiseBudgetFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -51,7 +51,7 @@ export const deleteDepartmentWiseBudget = (body) => (dispatch) => {
     .deleteDepartmentWiseBudget(body)
     .then((response) => {
     
-      dispatch(actions.PolicyforNewYearBudgetDeleted(body));
+      dispatch(actions.DepartmentWiseBudgetDeleted(body));
       toast.success("Successfully Deleted", {
         position: "top-right",
         autoClose: 5000,
@@ -70,19 +70,19 @@ export const deleteDepartmentWiseBudget = (body) => (dispatch) => {
 
 
 
-export const createPolicyforNewYearBudget = (holidayForCreation, disbaleLoading, onHide) => (
+export const createDepartmentWiseBudget = (holidayForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createPolicyforNewYearBudget(holidayForCreation)
+    .createDepartmentWiseBudget(holidayForCreation)
     .then((res) => {
    
       const user = res.data?.data;
      
   
-      dispatch(actions.policyforNewYearBudgetCreated(user));
+      dispatch(actions.departmentWiseBudgetCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
         position: "top-right",
@@ -111,14 +111,14 @@ export const createPolicyforNewYearBudget = (holidayForCreation, disbaleLoading,
     });
 };
 
-export const updatePolicyforNewYearBudget = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateDepartmentWiseBudget = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updatePolicyforNewYearBudget(user)
+    .updateDepartmentWiseBudget(user)
     .then((response) => {
   
       const updatedHoliday = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.policyforNewYearBudgetUpdated({ updatedHoliday }));
+      dispatch(actions.departmentWiseBudgetUpdated({ updatedHoliday }));
     
       disbaleLoading();
       onHide();

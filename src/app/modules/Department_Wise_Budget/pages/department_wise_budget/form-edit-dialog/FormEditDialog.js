@@ -58,7 +58,7 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
   }));
 
 
-  console.log("data5555555", userForRead)
+
 
   useEffect(() => {
     dispatch(actions.fetchDepartmentWiseBudget({ subsidiaryId, budgetYearId, departmentId }));
@@ -71,7 +71,7 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
     if (!(subsidiaryId && budgetYearId && departmentId)) {
 
 
-      dispatch(actions.createPolicyforNewYearBudget(data, disbaleLoading, onHide)).then(async () => {
+      dispatch(actions.createDepartmentWiseBudget(data, disbaleLoading, onHide)).then(async () => {
         await dispatch(actions.fetchDepartmentWiseBudgets(usersUIProps.queryParams));
       });
 
@@ -87,7 +87,7 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
 
 
 
-      await dispatch(actions.updatePolicyforNewYearBudget(data, disbaleLoading, onHide)).then(async () => {
+      await dispatch(actions.updateDepartmentWiseBudget(data, disbaleLoading, onHide)).then(async () => {
         await dispatch(actions.fetchDepartmentWiseBudgets(usersUIProps.queryParams));
       });
     }
