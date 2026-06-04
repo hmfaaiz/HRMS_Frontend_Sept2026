@@ -30,7 +30,15 @@ function PatternListForm({
         });
     }, [values.list, setFieldValue]);
 
+    const totalStrength = values?.list?.reduce(
+        (sum, item) => sum + Number(item?.budgeted_strength || 0),
+        0
+    );
 
+    const totalSalary = values?.list?.reduce(
+        (sum, item) => sum + Number(item?.budgeted_salary || 0),
+        0
+    );
     return (
         <>
             <FieldArray name="list">
@@ -258,13 +266,28 @@ function PatternListForm({
                                             </tr>
 
                                         ))}
-                                       {typeof errors.list === "string" && (
-  <tr>
-    <td colSpan="9" className="text-danger text-left">
-      {errors.list}
-    </td>
-  </tr>
-)}
+                                        <tr className="font-weight-bold ">
+                                            <td colSpan="2" className="text-left">
+                                                Total:
+                                            </td>
+
+                                            <td>
+                                                {totalStrength.toLocaleString("en-US")}
+                                            </td>
+
+                                            <td>
+                                                {totalSalary.toLocaleString("en-US")}
+                                            </td>
+
+                                            <td colSpan="5"></td>
+                                        </tr>
+                                        {typeof errors.list === "string" && (
+                                            <tr>
+                                                <td colSpan="9" className="text-danger text-left">
+                                                    {errors.list}
+                                                </td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

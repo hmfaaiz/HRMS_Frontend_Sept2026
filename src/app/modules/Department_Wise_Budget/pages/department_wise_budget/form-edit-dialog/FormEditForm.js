@@ -63,7 +63,20 @@ const department_wise_budgetEditSchema = Yup.object().shape({
 
         business_need: Yup.string().required(VALIDATION_MESSAGES.required),
         impact_of_position: Yup.string().required(VALIDATION_MESSAGES.required),
-        expected_date_of_joining: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+        expected_date_of_joining: Yup.date()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required)
+          .test(
+            "expected-after-request",
+            "Expected Date of Joining must be after Request Date",
+            function (value) {
+              const { request_date } = this.parent;
+
+              if (!value || !request_date) return true;
+
+              return new Date(value) > new Date(request_date);
+            }
+          ),
         request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
       })
     )
@@ -146,13 +159,7 @@ export function FormEditForm({
             ...item,
             sno: index + 1,
 
-            // request_date: item.request_date
-            //   ? new Date(item.request_date)
-            //   : null,
 
-            // expected_date_of_joining: item.expected_date_of_joining
-            //   ? new Date(item.expected_date_of_joining)
-            //   : null,
           }))
           : [],
       }}
@@ -169,7 +176,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
         <>
-          {console.log("errors1111", errors)}
+
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -270,33 +277,34 @@ export function FormEditForm({
                   <div className="col-span-1">
                     <label>
                       <span>
-                        Current Strength
+                        Current Strength:  {currentState?.totalEmployees?.toLocaleString("en-US")}
                       </span>
                     </label>
-                    <Field
+                    {/* <Field
                       name=""
                       component={Input}
                       disabled={true}
                       type="number"
                       value={Number(currentState?.totalEmployees || 0)}
 
-                    />
+                    /> */}
                   </div>
 
                   <div className="col-span-1">
                     <label>
                       <span>
-                        Current Salary
+                        Current Salary:  {currentState?.totalSalary?.toLocaleString("en-US")}
                       </span>
                     </label>
-                    <Field
+                    {/* <Field
                       name=""
                       component={Input}
                       disabled={true}
-                      value={Number(currentState?.totalSalary || 0)}
+                      // value={Number(currentState?.totalSalary || 0)}
+                       value={currentState?.totalSalary?.toLocaleString("en-US")}
                       type="number"
 
-                    />
+                    /> */}
                   </div>
 
 
