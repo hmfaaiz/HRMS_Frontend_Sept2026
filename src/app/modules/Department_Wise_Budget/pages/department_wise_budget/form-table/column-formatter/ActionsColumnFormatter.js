@@ -21,12 +21,7 @@ export function ActionsColumnFormatter(
 ) {
   const isUserRead = false;
 
-  const recordIsEditable = () => {
-    if (new Date(row?.from_date) >= new Date(row?.activePayrollMonth?.startDate)) {
-      return true;
-    }
-    return false;
-  };
+
 
   return (
     <div className="space-x-2">
@@ -37,7 +32,7 @@ export function ActionsColumnFormatter(
         <a
           title=""
           className=""
-          onClick={() => openReadFormDialog(row.Id, isUserRead)}
+          onClick={() => openReadFormDialog(row.subsidiaryId,row.budgetYearId,row.departmentId, isUserRead)}
         >
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
@@ -47,7 +42,7 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
-          <a title="" className="" onClick={() => openEditFormDialog(row.Id)}>
+          <a title="" className="" onClick={() => openEditFormDialog(row?.subsidiaryId,row?.budgetYearId,row?.departmentId)}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
@@ -65,7 +60,7 @@ export function ActionsColumnFormatter(
             <a
               title=""
               className=""
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
+              onClick={() => openDeleteFormDialog(row?.subsidiaryId,row?.budgetYearId,row?.departmentId)}
             >
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>

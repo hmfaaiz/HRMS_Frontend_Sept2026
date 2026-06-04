@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show, onHide, userForRead }) {
+export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show, onHide, userForRead }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -58,19 +58,17 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   }));
 
 
-
+  console.log("data5555555", userForRead)
 
   useEffect(() => {
-    dispatch(actions.fetchDepartmentWiseBudget(id));
+    dispatch(actions.fetchDepartmentWiseBudget({ subsidiaryId, budgetYearId, departmentId }));
 
-    // dispatch(actions.fetchDepartmentWiseBudget(formUIProps .queryParams))
-  }, [id, dispatch]);
+  }, [subsidiaryId && budgetYearId && departmentId, dispatch]);
 
 
   const saveForm = async (data) => {
 
-
-    if (!id) {
+    if (!(subsidiaryId && budgetYearId && departmentId)) {
 
 
       dispatch(actions.createPolicyforNewYearBudget(data, disbaleLoading, onHide)).then(async () => {
@@ -82,19 +80,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     } else {
 
 
-      const formUpdatedFields = {
-        Id: data.Id,
-        subsidiaryId: data.subsidiaryId,
-        departmentId: data.departmentId,
-        fiscalYearId: data.fiscalYearId,
-        budgeted_strength: data.budgeted_strength,
-        budgeted_salary: data.budgeted_salary,
-
-      };
+      // const formUpdatedFields = {
+      //   Id: data?.designationId,
+      //   list:data?.list,
+      // };
 
 
 
-      await dispatch(actions.updatePolicyforNewYearBudget(formUpdatedFields, disbaleLoading, onHide)).then(async () => {
+      await dispatch(actions.updatePolicyforNewYearBudget(data, disbaleLoading, onHide)).then(async () => {
         await dispatch(actions.fetchDepartmentWiseBudgets(usersUIProps.queryParams));
       });
     }
@@ -107,7 +100,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
     >
-      <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+      <FormEditDialogHeader id={null} isUserForRead={userForRead} />
       <FormEditForm
         saveForm={saveForm}
         formData={userForEdit || formUIProps.initUser}
@@ -115,7 +108,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         roles={roles}
         centers={centers}
         userStatusTypes={userStatusTypes}
-        isUserForRead={userForRead}
+        isdataForRead={userForRead}
         enableLoading={enableLoading}
         loading={loading}
 

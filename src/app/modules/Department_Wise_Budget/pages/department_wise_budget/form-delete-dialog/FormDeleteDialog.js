@@ -5,7 +5,7 @@ import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
-export function FormDeleteDialog({ id, status, show, onHide }) {
+export function FormDeleteDialog({ subsidiaryId, budgetYearId, departmentId, status, show, onHide }) {
 
   const [loading, setLoading] = useState(false);
   // Customers UI Context
@@ -33,19 +33,20 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
 
   // if !id we should close modal
   useEffect(() => {
-    if (!id) {
+    if (!(subsidiaryId && budgetYearId && departmentId)) {
       onHide();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [subsidiaryId && budgetYearId && departmentId]);
 
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
   const deleteDepartmentWiseBudget = () => {
     // server request for deleting customer by id
+    console.log("subsidiaryId , budgetYearId , departmentId}11111111111111",subsidiaryId , budgetYearId , departmentId)
     enableLoading();
-    dispatch(actions.deleteDepartmentWiseBudget(id)).then(() => {
+    dispatch(actions.deleteDepartmentWiseBudget({subsidiaryId , budgetYearId , departmentId})).then(() => {
       onHide();
       // refresh list after deletion
       dispatch(actions.fetchDepartmentWiseBudgets(usersUIProps.queryParams));

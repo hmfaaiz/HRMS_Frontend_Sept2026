@@ -102,7 +102,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "budgeted_strength",
+      dataField: "totalStrength",
       text: "Budgeted Strength",
       sort: false,
       sortCaret: sortCaret,
@@ -115,7 +115,7 @@ export function FormTable() {
 
 
     {
-      dataField: "budgeted_salary",
+      dataField: "totalSalary",
       text: "Budgeted Salary",
       sort: false,
       sortCaret: sortCaret,
@@ -126,21 +126,10 @@ export function FormTable() {
        formatter: (cell) => formatNumberWithCommas(cell),
 
     },
+    
     {
-      dataField: "remaining_budgeted_strength",
-      text: "Remaining Budgeted Strength",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
- formatter: (cell) => formatNumberWithCommas(cell),
-    },
-
-    {
-      dataField: "remaining_budgeted_salary",
-      text: "Remaining Budgeted Salary",
+      dataField: "totalPositions",
+      text: "Total Positions",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -150,18 +139,11 @@ export function FormTable() {
        formatter: (cell) => formatNumberWithCommas(cell),
 
     },
+  
 
-    {
-      dataField: "request_status",
-      text: "Request Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
+  
 
-    },
+
     {
       dataField: "isApproved",
       text: "Approved",

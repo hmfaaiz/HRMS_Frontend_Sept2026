@@ -16,9 +16,9 @@ export function getAllPolicyforNewYearBudget(body) {
   return axios.post(`${USERS_URL}/department_wise_budget/read-all-department-wise-budget`, body);
 }
 
-export function getPolicyforNewYearBudgetById(id) {
+export function getPolicyforNewYearBudgetById(body) {
 
-  return axios.post(`${USERS_URL}/department_wise_budget/read-department-wise-budget`, id);
+  return axios.post(`${USERS_URL}/department_wise_budget/read-department-wise-budget`, body);
 }
 
 //Update

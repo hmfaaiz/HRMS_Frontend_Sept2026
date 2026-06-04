@@ -13,25 +13,76 @@ import { } from "../../_redux/redux-Actions";
 
 
 export function FormPage({ history }) {
-console.log("aaaaaaaaa")
+  console.log("aaaaaaaaa")
   const dispatch = useDispatch();
   const FormUIEvents = {
     newFormButtonClick: () => {
       history.push("/department_wise_budget/read-all-department-wise-budget/new");
     },
-    openEditFormDialog: (id) => {
-      history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/edit`);
-    },
-    openDeleteFormDialog: (id, status) => {
-      history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/${status}/delete`);
-    },
+    // openEditFormDialog: (id) => {
+    //   history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/edit`);
+    // },
+    // openDeleteFormDialog: (id, status) => {
+    //   history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/${status}/delete`);
+    // },
     openActiveFormDialog: (id) => {
       history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/active`);
     },
-    openReadFormDialog: (id, isUserRead) => {
-      history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/read`);
+    openReadFormDialog: (
+      subsidiaryId,
+      budgetYearId,
+      departmentId,
+      isUserRead
+    ) => {
+      history.push({
+        pathname:
+          "/department_wise_budget/read-all-department-wise-budget/read",
+        state: {
+          subsidiaryId,
+          budgetYearId,
+          departmentId,
+          isUserRead,
+        },
+      });
     },
-  
+
+    openEditFormDialog: (
+      subsidiaryId,
+      budgetYearId,
+      departmentId,
+      isUserRead
+    ) => {
+      history.push({
+        pathname:
+          "/department_wise_budget/read-all-department-wise-budget/edit",
+        state: {
+          subsidiaryId,
+          budgetYearId,
+          departmentId,
+          isUserRead,
+        },
+      });
+    }, 
+    
+    
+    openDeleteFormDialog: (
+      subsidiaryId,
+      budgetYearId,
+      departmentId,
+      isUserRead
+    ) => {
+      history.push({
+        pathname:
+          "/department_wise_budget/read-all-department-wise-budget/delete",
+        state: {
+          subsidiaryId,
+          budgetYearId,
+          departmentId,
+          isUserRead,
+        },
+      });
+    },
+
   };
   return (
 
@@ -47,7 +98,7 @@ console.log("aaaaaaaaa")
           />
         )}
       </Route>
-      <Route path="/department_wise_budget/read-all-department-wise-budget/:id/edit">
+      {/* <Route path="/department_wise_budget/read-all-department-wise-budget/:id/edit">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
@@ -57,8 +108,8 @@ console.log("aaaaaaaaa")
             }}
           />
         )}
-      </Route>
-      <Route path="/department_wise_budget/read-all-department-wise-budget/:id/read">
+      </Route> */}
+      {/* <Route path="/department_wise_budget/read-all-department-wise-budget/:id/read">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
@@ -69,8 +120,43 @@ console.log("aaaaaaaaa")
             }}
           />
         )}
+      </Route> */}
+
+      <Route path="/department_wise_budget/read-all-department-wise-budget/read">
+        {({ history, location, match }) => (
+          <FormEditDialog
+            show={match != null}
+            subsidiaryId={location?.state?.subsidiaryId}
+            budgetYearId={location?.state?.budgetYearId}
+            departmentId={location?.state?.departmentId}
+            userForRead={true}
+            onHide={() => {
+              history.push(
+                "/department_wise_budget/read-all-department-wise-budget"
+              );
+            }}
+          />
+        )}
       </Route>
-      <Route path="/department_wise_budget/read-all-department-wise-budget/:id/:status/delete">
+
+
+      <Route path="/department_wise_budget/read-all-department-wise-budget/edit">
+        {({ history, location, match }) => (
+          <FormEditDialog
+            show={match != null}
+            subsidiaryId={location?.state?.subsidiaryId}
+            budgetYearId={location?.state?.budgetYearId}
+            departmentId={location?.state?.departmentId}
+            userForRead={false}
+            onHide={() => {
+              history.push(
+                "/department_wise_budget/read-all-department-wise-budget"
+              );
+            }}
+          />
+        )}
+      </Route>
+      {/* <Route path="/department_wise_budget/read-all-department-wise-budget/:id/:status/delete">
         {({ history, match }) => (
           <FormDeleteDialog
             show={match != null}
@@ -81,8 +167,25 @@ console.log("aaaaaaaaa")
             }}
           />
         )}
-      </Route>
-    
+      </Route> */}
+
+ <Route path="/department_wise_budget/read-all-department-wise-budget/delete">
+  {({ history, match, location }) => (
+    <FormDeleteDialog
+      show={match != null}
+      subsidiaryId={location?.state?.subsidiaryId}
+      budgetYearId={location?.state?.budgetYearId}
+      departmentId={location?.state?.departmentId}
+      status={match?.params?.status}
+      onHide={() => {
+        history.push(
+          "/department_wise_budget/read-all-department-wise-budget"
+        );
+      }}
+    />
+  )}
+</Route>
+
       <FormCard />
       <ToastContainer
         position="top-right"

@@ -23,7 +23,7 @@ import PatternListForm from "./PatternList";
 // percentage: Yup.string().required("Required*"),
 const department_wise_budgetEditSchema = Yup.object().shape({
 
-  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
 
 
 
@@ -34,32 +34,52 @@ const department_wise_budgetEditSchema = Yup.object().shape({
   budgetYearId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
 
 
-  list: Yup.array().of(
-    Yup.object().shape({
-      budgeted_strength: Yup.number()
-        .required(VALIDATION_MESSAGES.required)
-        .max(999999999, 'Maximum 9 digits allowed'),
+  list: Yup.array()
+    .of(
+      Yup.object().shape({
+        budgeted_strength: Yup.number()
+          .required(VALIDATION_MESSAGES.required)
+          .max(999999999, 'Maximum 9 digits allowed'),
 
-      budgeted_salary: Yup.number()
-        .required(VALIDATION_MESSAGES.required)
-        .max(999999999, "Maximum 9 digits allowed")
-        .test(
-          "salary-greater-than-strength",
-          "Budgeted Salary must be greater than Budgeted Strength",
-          function (value) {
-            const { budgeted_strength } = this.parent;
+        budgeted_salary: Yup.number()
+          .required(VALIDATION_MESSAGES.required)
+          .max(999999999, "Maximum 9 digits allowed")
+          .test(
+            "salary-greater-than-strength",
+            "Budgeted Salary must be greater than Budgeted Strength",
+            function (value) {
+              const { budgeted_strength } = this.parent;
 
-            if (!value || !budgeted_strength) return true;
+              if (!value || !budgeted_strength) return true;
 
-            return Number(value) > Number(budgeted_strength);
-          }
-        ),
+              return Number(value) > Number(budgeted_strength);
+            }
+          ),
 
-      designationId: Yup.string()
-        .required(VALIDATION_MESSAGES.required),
-      sno: Yup.number().required(VALIDATION_MESSAGES.required),
-    })
-  ),
+        designationId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+        sno: Yup.number().required(VALIDATION_MESSAGES.required),
+
+        business_need: Yup.string().required(VALIDATION_MESSAGES.required),
+        impact_of_position: Yup.string().required(VALIDATION_MESSAGES.required),
+        expected_date_of_joining: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+        request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+      })
+    )
+    .test(
+      "unique-designation",
+      "Duplicate designation is not allowed",
+      function (list) {
+        if (!list || !list.length) return true;
+
+        const designationIds = list
+          .map((item) => item.designationId)
+          .filter(Boolean);
+
+        return designationIds.length === new Set(designationIds).size;
+      }
+    ),
 });
 
 export function FormEditForm({
@@ -76,7 +96,7 @@ export function FormEditForm({
 
 
 
-  const { currentState, userAccess, roles } = useSelector((state) => {
+  const { currentState, userAccess, roles, } = useSelector((state) => {
     return {
       currentState: state.department_wise_budget,
       userAccess: state?.auth?.userAccess["department_wise_budget"],
@@ -89,14 +109,14 @@ export function FormEditForm({
     (item) => item.isDefault
   );
 
-
+  console.log("formData1111111", formData)
   useEffect(() => {
 
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-    dispatch(fetchAllDepartmentBySubsidiaryIds([formData?.subsidiaryId] || [0]));
-    dispatch(fetchAllBudgetYearDataBySubsidiaryId(formData?.subsidiaryId));
+    dispatch(fetchAllDepartmentBySubsidiaryIds([formData[0]?.subsidiaryId] || [0]));
+    dispatch(fetchAllBudgetYearDataBySubsidiaryId(formData[0]?.subsidiaryId));
     dispatch(fetchRoles());
-  }, [dispatch, formData?.Id]);
+  }, [dispatch, formData]);
 
 
   useEffect(() => {
@@ -104,14 +124,37 @@ export function FormEditForm({
     dispatch(fetchAllBudgetYearDataBySubsidiaryId(defaultSubsidiary?.value));
   }, [dispatch, defaultSubsidiary?.value]);
 
-
+  console.log("isdataForRe555555555", isdataForRead)
 
   return (
     <Formik
       enableReinitialize={true}
+      // initialValues={{
+      //   ...formData,
+      //   subsidiaryId: defaultSubsidiary?.value || null
+      // }}
       initialValues={{
-        ...formData,
-        subsidiaryId: defaultSubsidiary?.value || null
+        subsidiaryId:
+          formData?.[0]?.subsidiaryId || defaultSubsidiary?.value || null,
+
+        departmentId: formData?.[0]?.departmentId || null,
+
+        budgetYearId: formData?.[0]?.budgetYearId || null,
+
+        list: formData?.length
+          ? formData.map((item, index) => ({
+            ...item,
+            sno: index + 1,
+
+            // request_date: item.request_date
+            //   ? new Date(item.request_date)
+            //   : null,
+
+            // expected_date_of_joining: item.expected_date_of_joining
+            //   ? new Date(item.expected_date_of_joining)
+            //   : null,
+          }))
+          : [],
       }}
       validationSchema={department_wise_budgetEditSchema}
       onSubmit={(values) => {
@@ -126,7 +169,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
         <>
-         
+          {console.log("errors1111", errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -235,6 +278,7 @@ export function FormEditForm({
                       component={Input}
                       disabled={true}
                       type="number"
+                      value={Number(currentState?.totalEmployees || 0)}
 
                     />
                   </div>
@@ -249,7 +293,7 @@ export function FormEditForm({
                       name=""
                       component={Input}
                       disabled={true}
-
+                      value={Number(currentState?.totalSalary || 0)}
                       type="number"
 
                     />

@@ -11,6 +11,8 @@ const initialDepartmentWiseBudgetState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    totalEmployees: 0,
+    totalSalary: 0,
 };
 
 
@@ -68,7 +70,9 @@ export const DepartmentWiseBudgetSlice = createSlice({
            
    
             state.actionsLoading = false;
-            state.userForEdit = action.payload.userForEdit;
+            state.userForEdit = action.payload.userForEdit?.data;
+            state.totalEmployees = action.payload.userForEdit?.totalEmployees;
+            state.totalSalary = action.payload.userForEdit?.totalSalary;
             state.error = null;
         },
 

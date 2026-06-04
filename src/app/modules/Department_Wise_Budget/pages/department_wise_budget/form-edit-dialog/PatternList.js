@@ -1,4 +1,4 @@
-import { Field, FieldArray } from "formik";
+import { Field, FieldArray, ErrorMessage } from "formik";
 import React, { useEffect, useMemo } from "react";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
@@ -37,7 +37,7 @@ function PatternListForm({
                 {({ insert, remove, push }) => (
                     <>
                         <div className="flex justify-between items-center">
-                            <h6 className="font-bold mb-0 text-primary">Department List</h6>
+                            <h6 className="font-bold mb-0 text-primary">Designation List</h6>
 
                             {/* {!isdataForRead && values?.list.length < 31 && ( */}
                             <button
@@ -70,14 +70,14 @@ function PatternListForm({
                                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                                     <thead>
                                         <tr className="custom-table-header">
-                                            <td>S.No.</td>
-                                            <td>Designation</td>
-                                            <td>Strength</td>
-                                            <td>Budget Amount</td>
-                                            <td>Request Date</td>
-                                            <td>Expected Date of Joining</td>
-                                            <td>Business need</td>
-                                            <td>Impact of Position</td>
+                                            <td className="w-[5px]">S.No.</td>
+                                            <td className="w-[220px]">Designation</td>
+                                            <td className="w-[5px]">Strength</td>
+                                            <td className="w-[100px]">Budget Amount</td>
+                                            <td className="w-[100px]">Request Date</td>
+                                            <td className="w-[100px]">Expected Date of Joining</td>
+                                            <td className="w-[300px]">Business need</td>
+                                            <td className="w-[300px]">Impact of Position</td>
                                             {/* <td>Status</td> */}
                                             <td className="text-right">Action</td>
                                         </tr>
@@ -93,10 +93,8 @@ function PatternListForm({
                                                         value={index + 1}
                                                         type="number"
                                                         className="form-control"
-                                                        style={{ width: "100px" }}
-                                                        // onInput={(e) => {
-                                                        //                             e.target.value = amountLimitDynamic(e.target.value,2); // Limit to 3 digits
-                                                        //                           }}
+                                                        style={{ width: "30px" }}
+
                                                         disabled
                                                     />
                                                     {errors.list?.[index]?.sno &&
@@ -146,6 +144,9 @@ function PatternListForm({
                                                         className="form-control"
                                                         disabled={isdataForRead}
                                                     />
+                                                    <div className="text-danger">
+                                                        <ErrorMessage name={`list[${index}].budgeted_strength`} />
+                                                    </div>
                                                 </td>
 
                                                 <td>
@@ -155,6 +156,9 @@ function PatternListForm({
                                                         className="form-control"
                                                         disabled={isdataForRead}
                                                     />
+                                                    <div className="text-danger">
+                                                        <ErrorMessage name={`list[${index}].budgeted_salary`} />
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <DatePicker
@@ -171,6 +175,9 @@ function PatternListForm({
                                                         }}
                                                         disabled={isdataForRead}
                                                     />
+                                                    <div className="text-danger">
+                                                        <ErrorMessage name={`list[${index}].request_date`} />
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <DatePicker
@@ -187,6 +194,9 @@ function PatternListForm({
                                                         }}
                                                         disabled={isdataForRead}
                                                     />
+                                                    <div className="text-danger">
+                                                        <ErrorMessage name={`list[${index}].expected_date_of_joining`} />
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <Field
@@ -196,6 +206,10 @@ function PatternListForm({
                                                         className="form-control"
                                                         disabled={isdataForRead}
                                                     />
+                                                    <div className="text-danger">
+                                                        <ErrorMessage name={`list[${index}].business_need`} />
+                                                    </div>
+
                                                 </td>
 
                                                 <td>
@@ -206,6 +220,9 @@ function PatternListForm({
                                                         className="form-control"
                                                         disabled={isdataForRead}
                                                     />
+                                                    <div className="text-danger">
+                                                        <ErrorMessage name={`list[${index}].impact_of_position`} />
+                                                    </div>
                                                 </td>
 
                                                 {/* <td>
@@ -222,23 +239,32 @@ function PatternListForm({
                                                 </td> */}
 
                                                 {/* Delete Button Starts */}
-                                                {!values?.list[index]?.isPresent && (
-                                                    <td className="text-right">
-                                                        <button
-                                                            disabled={isdataForRead}
-                                                            className="border-none bg-transparent"
-                                                            type="button"
-                                                            onClick={() => {
-                                                                remove(index);
-                                                            }}
-                                                        >
-                                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                                        </button>
-                                                    </td>
-                                                )}
+                                                {/* {!values?.list[index]?.isPresent && ( */}
+                                                <td className="text-right">
+                                                    <button
+                                                        disabled={isdataForRead}
+                                                        className="border-none bg-transparent"
+                                                        type="button"
+                                                        onClick={() => {
+                                                            remove(index);
+                                                        }}
+                                                    >
+                                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                                    </button>
+                                                </td>
+                                                {/* )} */}
+
 
                                             </tr>
+
                                         ))}
+                                       {typeof errors.list === "string" && (
+  <tr>
+    <td colSpan="9" className="text-danger text-left">
+      {errors.list}
+    </td>
+  </tr>
+)}
                                     </tbody>
                                 </table>
                             </div>

@@ -24,17 +24,17 @@ export const fetchDepartmentWiseBudgets = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchDepartmentWiseBudget = (id) => (dispatch) => {
+export const fetchDepartmentWiseBudget = (body) => (dispatch) => {
 
-
-  if (!id) {
+console.log("hit11111",body)
+  if (!body.subsidiaryId || !body.budgetYearId || !body.departmentId) {
     return dispatch(actions.PolicyforNewYearBudgetFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getPolicyforNewYearBudgetById({ Id: id })
+    .getPolicyforNewYearBudgetById(body)
     .then((response) => {
-      const entities = response.data?.data;
+      const entities = response.data.data;
 
    
       dispatch(actions.PolicyforNewYearBudgetFetchedForEdit({ userForEdit: entities }));
@@ -45,13 +45,13 @@ export const fetchDepartmentWiseBudget = (id) => (dispatch) => {
     });
 };
 
-export const deleteDepartmentWiseBudget = (id) => (dispatch) => {
+export const deleteDepartmentWiseBudget = (body) => (dispatch) => {
 
   return requestFromServer
-    .deleteDepartmentWiseBudget({ Id: id })
+    .deleteDepartmentWiseBudget(body)
     .then((response) => {
     
-      dispatch(actions.PolicyforNewYearBudgetDeleted({ Id: id }));
+      dispatch(actions.PolicyforNewYearBudgetDeleted(body));
       toast.success("Successfully Deleted", {
         position: "top-right",
         autoClose: 5000,
