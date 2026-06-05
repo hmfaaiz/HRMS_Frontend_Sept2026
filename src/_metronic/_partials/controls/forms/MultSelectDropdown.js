@@ -28,29 +28,104 @@ const ValueContainer = ({ children, selectProps, ...props }) => {
   const selectedValues = props.getValue();
   const allValues = props?.options || [];
 
-  console.log("allValuesallValues", allValues);
   return (
     <components.ValueContainer {...props} selectProps={selectProps}>
-      {selectedValues.length > 0 ? (
+      {selectedValues.length > 0 && (
         <div
           title={selectedValues.map((v) => v?.label).join(", ")}
           onClick={() => selectProps.onMenuOpen?.()} // ← change this line
           className="text-[10.4px] text-gray-700 truncate whitespace-nowrap overflow-hidden mr-8"
+          style={{ flex: 1 }}
         >
-          {allValues?.length - 1 == selectedValues?.length
+          {allValues?.length === selectedValues?.length
             ? "All"
             : selectedValues.map((v) => v?.label).join(", ")}
         </div>
-      ) : (
-        children
       )}
+      {children}
     </components.ValueContainer>
+  );
+};
+
+const MenuList = (props) => {
+  const { selectProps, children } = props;
+  const childrenArray = React.Children.toArray(children);
+
+  const isAllSelected = selectProps.value?.length === selectProps.options?.length && selectProps.options?.length > 0;
+
+  return (
+    <components.MenuList {...props}>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          if (isAllSelected) return;
+          const selectableOptions = selectProps.options.filter(opt => !opt.isDisabled);
+          selectProps.onChange(selectableOptions, { action: 'select-option' });
+        }}
+        style={{
+          padding: '5px 10px',
+          fontSize: '10.4px',
+          cursor: isAllSelected ? 'not-allowed' : 'pointer',
+          backgroundColor: isAllSelected ? '#F5F5F5' : '#e6f8ff',
+          color: '#374151',
+        }}
+        onMouseEnter={(e) => {
+          if (!isAllSelected) e.target.style.backgroundColor = '#dcdfe0';
+        }}
+        onMouseLeave={(e) => {
+          if (!isAllSelected) e.target.style.backgroundColor = '#e6f8ff';
+        }}
+        onMouseDown={(e) => e.preventDefault()}
+      >
+        All
+      </div>
+
+      <div style={{
+        padding: '5px 10px', backgroundColor: '#e6f8ff',
+      }}>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={selectProps.inputValue}
+          onChange={(e) => selectProps.onInputChange(e.target.value, { action: 'input-change' })}
+          style={{
+            width: '100%',
+            padding: '6px',
+            fontSize: '10.4px',
+            border: '1px solid #dcdfe0',
+            borderRadius: '4px',
+            outline: 'none',
+            boxSizing: 'border-box'
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.target.focus();
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Enter') {
+              e.stopPropagation();
+            }
+          }}
+          autoFocus
+        />
+      </div>
+
+      {childrenArray.length > 0 ? (
+        childrenArray
+      ) : (
+        <div style={{ padding: '5px 10px', fontSize: '10.4px', color: '#9ca3af', textAlign: 'center' }}>
+          No options found
+        </div>
+      )}
+    </components.MenuList>
   );
 };
 
 // ───────────────────────────────────────────────────────────────────────────
 
-const CUSTOM_COMPONENTS = { MultiValue, ValueContainer, ClearIndicator };
+const CUSTOM_COMPONENTS = { MultiValue, ValueContainer, ClearIndicator, MenuList };
 
 const MultiSelect = ({
   label,
@@ -66,6 +141,7 @@ const MultiSelect = ({
   const wrapperRef = useRef(null);
   const selectRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   // Close on outside click (works in modal too)
   useEffect(() => {
@@ -73,6 +149,7 @@ const MultiSelect = ({
       if (!wrapperRef.current) return;
       if (!wrapperRef.current.contains(e.target)) {
         setMenuOpen(false);
+        setSearchText("");
       }
     };
     document.addEventListener("mousedown", handler, true);
@@ -81,22 +158,9 @@ const MultiSelect = ({
 
   const classes = useStyles();
 
-  const allOption = { label: "All", value: "" };
-  const isAllSelected =
-    value?.length === options?.length && options?.length > 0;
-
-  const optionsWithAll = [
-    { ...allOption, isDisabled: isAllSelected },
-    ...options,
-  ];
-
   const handleChange = (selected) => {
     if (!selected) {
       onChange([]);
-      return;
-    }
-    if (selected.some((opt) => opt.value === "")) {
-      onChange([...options?.filter((el) => !el?.isDisabled)]);
       return;
     }
     onChange([...selected]);
@@ -124,7 +188,7 @@ const MultiSelect = ({
       fontSize: "10.4px",
       cursor: "pointer",
     }),
-    input: (base) => ({ ...base, margin: 0, padding: 0, fontSize: "10.4px" }),
+    input: (base) => ({ ...base, margin: 0, padding: 0, fontSize: "10.4px", width: 0, opacity: 0 }),
     placeholder: (base) => ({ ...base, color: "#9ca3af", fontSize: "10.4px" }),
     menu: (base) => ({
       ...base,
@@ -138,10 +202,10 @@ const MultiSelect = ({
       backgroundColor: state.isSelected
         ? "#0093DD"
         : state.isFocused
-        ? "#dcdfe0"
-        : state.isDisabled
-        ? "#F5F5F5"
-        : "#e6f8ff",
+          ? "#dcdfe0"
+          : state.isDisabled
+            ? "#F5F5F5"
+            : "#e6f8ff",
       color: state.isSelected ? "white" : "#374151",
       padding: "5px 10px",
       fontSize: "10.4px",
@@ -180,22 +244,32 @@ const MultiSelect = ({
       <Select
         ref={selectRef}
         isMulti
-        options={optionsWithAll}
+        options={options}
         value={value}
         onChange={handleChange}
         isDisabled={disabled}
         isLoading={loading}
         styles={customStyles}
         closeMenuOnSelect={false}
-        menuShouldCloseOnBlur={true}
+        menuShouldCloseOnBlur={false}
         hideSelectedOptions={false}
         isClearable={true}
-        isSearchable={true}
+        isSearchable={false}
         menuIsOpen={menuOpen}
         onMenuOpen={() => setMenuOpen(true)}
-        onMenuClose={() => setMenuOpen(false)}
+        onMenuClose={() => {
+          // Let the outside click handler manage closing menu
+        }}
         onFocus={() => setMenuOpen(true)}
-        onBlur={() => setMenuOpen(false)}
+        inputValue={searchText}
+        onInputChange={(val, actionMeta) => {
+          if (actionMeta.action === "input-change") {
+            setSearchText(val);
+          }
+        }}
+        onBlur={(e) => {
+          // Do nothing. We rely on the useEffect outside click handler to close the menu.
+        }}
         onMenuToggle={handleMenuToggle} // custom prop consumed by ValueContainer
         components={CUSTOM_COMPONENTS} // stable reference — never recreated
         {...props}
