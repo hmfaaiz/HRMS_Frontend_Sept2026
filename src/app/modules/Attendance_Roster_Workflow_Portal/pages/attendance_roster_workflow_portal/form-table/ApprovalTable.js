@@ -61,7 +61,7 @@ export function ApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "Self Status",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "90px", maxWidth: "90px" },
@@ -70,7 +70,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.request_status",
       text: "Request Status",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "90px", maxWidth: "90px" },
@@ -108,7 +108,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.from",
       text: "From Date",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
@@ -117,7 +117,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.to",
       text: "To Date",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
@@ -126,7 +126,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.isEnable_roster_via_shift",
       text: "Roster Via",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "100px", maxWidth: "100px" },
@@ -135,7 +135,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.Shift.name",
       text: "Shift",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
@@ -145,7 +145,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.Pattern.patternName",
       text: "Pattern",
-      sort: false,
+      sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
@@ -174,12 +174,12 @@ export function ApprovalFormTable() {
         bordered={false}
         classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
         bootstrap4
-        remote
+        // remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
       >
         <PleaseWaitMessage entities={entities} />
         <NoRecordsFoundMessage entities={entities} />

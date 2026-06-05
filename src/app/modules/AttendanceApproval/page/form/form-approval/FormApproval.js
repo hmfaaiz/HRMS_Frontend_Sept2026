@@ -56,7 +56,7 @@ export const FormApproval = () => {
       
       await dispatch(
         actions.fetchAttendanceApprovalApplication(
-          formUIProps?.queryParams?.filter || initialFilter,
+          formUIProps?.queryParams,
           user?.employeeIdMapping
         )
       );

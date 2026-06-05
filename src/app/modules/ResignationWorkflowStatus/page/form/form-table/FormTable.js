@@ -53,7 +53,7 @@ export function FormTable() {
     {
       dataField: "authorityStatus",
       text: "Self status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -81,7 +81,7 @@ export function FormTable() {
     {
       dataField: "parentData.request_status",
       text: "Request status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -109,7 +109,7 @@ export function FormTable() {
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -120,7 +120,7 @@ export function FormTable() {
     {
       dataField: "requestBelongToEmp",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -134,7 +134,7 @@ export function FormTable() {
     {
       dataField: "parentData.resignationDate",
       text: "Resignation Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -145,7 +145,7 @@ export function FormTable() {
     {
       dataField: "parentData.lastWorkingDate",
       text: "Last Working Date",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -156,7 +156,7 @@ export function FormTable() {
     {
       dataField: "parentData.ExitType.formName",
       text: "Exit Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -167,7 +167,7 @@ export function FormTable() {
     {
       dataField: "parentData.ExitReason.exitReason",
       text: "Exit Reason",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -178,7 +178,7 @@ export function FormTable() {
     {
       dataField: "parentData.exitRemark",
       text: "Remarks",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -210,12 +210,12 @@ export function FormTable() {
         bordered={false}
         classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
         bootstrap4
-        remote
+        // remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
       >
         <PleaseWaitMessage entities={entities} />
         <NoRecordsFoundMessage entities={entities} />
