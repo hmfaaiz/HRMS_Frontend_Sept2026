@@ -5,6 +5,8 @@ import * as actions from "../../../_redux/redux-Actions";
 import {
   NoRecordsFoundMessage,
   PleaseWaitMessage,
+  sortCaret,
+  headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelper";
 import { useFormUIContext } from "../FormUIContext";
@@ -57,11 +59,17 @@ export function ApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.employeeCode",
       text: "Code",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "120px", maxWidth: "120px" },
     },
     {
       dataField: "requestBelongToEmp",
       text: "Name",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "150px", maxWidth: "150px" },
       formatter: (cell) =>
         `${cell?.firstName || ""} ${cell?.middleName || ""} ${cell?.lastName || ""}`,
@@ -69,16 +77,25 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.from",
       text: "From",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "110px", maxWidth: "110px" },
     },
     {
       dataField: "parentData.to",
       text: "To",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "110px", maxWidth: "110px" },
     },
     {
       dataField: "parentData.Shift.name",
       text: "Shift / Pattern",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "130px", maxWidth: "130px" },
       formatter: (cell, row) =>
         row?.parentData?.Shift?.name ||
@@ -88,6 +105,9 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.request_remarks",
       text: "Remarks",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "130px", maxWidth: "130px" },
       formatter: (cell) => cell || "—",
     },
@@ -135,7 +155,7 @@ export function ApprovalFormTable() {
             FormUIProps.setIds(isSelect ? selectable.map((r) => r.Id) : []);
           },
         }}
-        remote
+        // remote
         keyField="Id"
         data={entities || []}
         columns={columns}

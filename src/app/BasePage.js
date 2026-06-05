@@ -274,6 +274,11 @@ const EmailConfiguration = lazy(() =>
   import("./modules/EmailConfiguration/pages/index"),
 );
 
+const AiApiConfiguration = lazy(() =>
+  import("./modules/Ai_Api_Configuration/pages/index"),
+);
+
+
 const DesignationMapping = lazy(() =>
   import("./modules/DesignationMapping/pages/index"),
 );
@@ -340,6 +345,10 @@ const DesignationWiseGoalSetup = lazy(() =>
 
 const EmployeeGoalSetup = lazy(() =>
   import("./modules/EmployeeGoalSetup/pages/index"),
+);
+
+const EmployeeGoalSetupPortal = lazy(() =>
+  import("./modules/EmployeeGoalSetupPortal/pages/index"),
 );
 
 const ContributionReport = lazy(() =>
@@ -756,6 +765,7 @@ const ROUTES = {
   career: RecruitmentConfiguration,
   configuration: DashboardAlertConfig,
   email_configuration: EmailConfiguration,
+  ai_api_configuration: AiApiConfiguration,
   exit_type_exit_reason: ExitTypeExitReasonModule,
   separation: SeparationModule,
   email_configuration: EmailConfiguration,
@@ -777,6 +787,7 @@ const ROUTES = {
   appraisal_evaluation: AppraisalEvaluationManagement,
   designation_wise_goal_setup: DesignationWiseGoalSetup,
   employee_goal_setup: EmployeeGoalSetup,
+  employee_goal_setup_portal: EmployeeGoalSetupPortal,
   contribution_report: ContributionReport,
   release_payslip: ReleasePayslip,
   employee_resignation: ResignationRequest,
@@ -851,7 +862,7 @@ const ROUTES = {
   attendance_roster_workflow_status: attendance_roster_workflow_status,
   attendance_roster_workflow_status_portal: attendance_roster_workflow_status_portal,
   post_approval_travel_request: post_approval_travel_request,
-  post_travel_request_portal: post_travel_request,
+  post_travel_request: post_travel_request,
   roster_calendar_team: roster_calendar_team,
   travel_request_workflow_status: travel_request_workflow_status,
   travel_request_workflow_status_approval: travel_request_workflow_status_approval,

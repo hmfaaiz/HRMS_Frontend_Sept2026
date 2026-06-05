@@ -36,13 +36,14 @@ export const LeaveApprovalSlice = createSlice({
       }
     },
     LeaveApprovalApplicationFetched: (state, action) => {
-      const entities = action.payload.data?.data?.rows || [];
-      const totalResult = action.payload.data?.data?.totalResults || 0;
-      state.listLoading = false;
-      state.error = null;
-      state.entities = entities;
-      state.totalCount = totalResult;
-    },
+  const payload = action.payload.data?.data;
+  const entities = Array.isArray(payload) ? payload : (payload?.rows || []);
+  const totalResult = Array.isArray(payload) ? payload.length : (payload?.totalResults || 0);
+  state.listLoading = false;
+  state.error = null;
+  state.entities = entities;
+  state.totalCount = totalResult;
+},
     // EmployeeLeaveHierarchyFetched: (state, action) => {
     //   const { levelList, employeeList } = action?.payload;
     //   state.error = null;

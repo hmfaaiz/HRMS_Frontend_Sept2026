@@ -46,8 +46,8 @@ export function FormTable() {
         const rolesArray = Array.isArray(rawRoles)
           ? rawRoles
           : Array.isArray(rawRoles?.allRoles)
-          ? rawRoles.allRoles
-          : [];
+            ? rawRoles.allRoles
+            : [];
         return rolesArray.map((r) => ({
           label: r.label || r.formName || r.name || "",
           value: r.value || r.Id || r.id || "",
@@ -136,8 +136,8 @@ export function FormTable() {
         entity.preApproverNames ||
         (entity.PreApprovers?.length > 0
           ? entity.PreApprovers.map((a) => a.name || a.formName || a.label)
-              .filter(Boolean)
-              .join(", ")
+            .filter(Boolean)
+            .join(", ")
           : "-"),
     }));
   }, [entities, roles, dashboard]);
@@ -150,6 +150,7 @@ export function FormTable() {
         formatter: (cell, row) =>
           row.Subsidiary?.name ||
           getNamesFromIds(cell, dashboard?.allSubidiaryList),
+        style: { whiteSpace: "nowrap" },
       },
       {
         dataField: "gradeId",
@@ -209,9 +210,9 @@ export function FormTable() {
         formatter: (cell) =>
           cell !== null && cell !== undefined
             ? Number(cell).toLocaleString("en-US", {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })
             : "0",
       },
       {
@@ -220,9 +221,9 @@ export function FormTable() {
         formatter: (cell) =>
           cell !== null && cell !== undefined
             ? Number(cell).toLocaleString("en-US", {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })
             : "0",
       },
       {

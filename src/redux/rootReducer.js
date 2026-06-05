@@ -114,6 +114,7 @@ import { NewsEventTickerSlice } from "../app/modules/NewsEventTicker/_redux/redu
 import { RecruitmentPortalConfigSlice } from "../app/modules/Recruitment_Portal_Config/_redux/redux-Slice";
 import { DashboardAlertConfigSlice } from "../app/modules/Dashboard_Alert_Config/_redux/redux-Slice";
 import { EmailConfigurationSlice } from "../app/modules/EmailConfiguration/_redux/redux-Slice";
+import { Ai_Api_ConfigurationSlice } from "../app/modules/Ai_Api_Configuration/_redux/redux-Slice";
 import { DesignationMappingSlice } from "../app/modules/DesignationMapping/_redux/redux-Slice";
 import { ExitTypeExitReasonSlice } from "../app/modules/Exit_Type_Exit_Reason/_redux/redux-Slice";
 import { SeparationSlice } from "../app/modules/Separation/_redux/redux-Slice";
@@ -133,6 +134,7 @@ import { HRRequisitionJobVacancySlice } from "../app/modules/HRRequisitionJobVac
 import { appraisalEvaluationSlice } from "../app/modules/Appraisal_Evaluation/_redux/redux-Slice";
 import { DesignationWiseGoalSetupSlice } from "../app/modules/DesignationWiseGoalSetup/_redux/redux-Slice";
 import { EmployeeGoalSetupSlice } from "../app/modules/EmployeeGoalSetup/_redux/redux-Slice";
+import { EmployeeGoalSetupPortalSlice } from "../app/modules/EmployeeGoalSetupPortal/_redux/redux-Slice";
 import { ContributionReportSlice } from "../app/modules/ContributionRreport/_redux/ContributionReportSlice";
 
 import { releasePayslipSlice } from "../app/modules/Release_Payslip/_redux/redux-Slice";
@@ -341,6 +343,7 @@ export const rootReducer = combineReducers({
   recruitment_portal_config: RecruitmentPortalConfigSlice.reducer,
   dashboard_alert_config: DashboardAlertConfigSlice.reducer,
   email_config: EmailConfigurationSlice.reducer,
+  ai_api_configuration: Ai_Api_ConfigurationSlice.reducer,
   desig_map: DesignationMappingSlice.reducer,
   exit_type_exit_reason: ExitTypeExitReasonSlice.reducer,
   separation: SeparationSlice.reducer,
@@ -363,6 +366,7 @@ export const rootReducer = combineReducers({
   appraisal_evaluation: appraisalEvaluationSlice.reducer,
   designation_wise_goal_setup: DesignationWiseGoalSetupSlice.reducer,
   employee_goal_setup: EmployeeGoalSetupSlice.reducer,
+  employee_goal_setup_portal: EmployeeGoalSetupPortalSlice.reducer,
   contribution_report: ContributionReportSlice.reducer,
   release_payslip: releasePayslipSlice.reducer,
   designation_dep_map_for_exit_clearance:

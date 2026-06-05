@@ -103,6 +103,13 @@ export const MenuOption = () => {
       el?.portalType == 2,
   );
 
+  const appraisalGoalSetup = appraisal?.find(
+    (el) =>
+      el?.componentName === "ReadAllEmployeeGoalSetup" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
   const appraisalRatingFinal = appraisal?.find(
     (el) =>
       el?.componentName === "AppraisalReviewFinalization" &&
@@ -238,8 +245,13 @@ export const MenuOption = () => {
       name: "Appraisal",
       isShow:
         moduleRights?.find((e) => e?.value == 6)?.allow &&
-        (appraisalFeedbackSubmission || appraisalRatingFinal),
+        (appraisalGoalSetup || appraisalFeedbackSubmission || appraisalRatingFinal),
       linkList: [
+        {
+          link: "/employee_goal_setup_portal/read-all-employee-goal-setup",
+          show: appraisalGoalSetup,
+          name: "Employee Goal Setup",
+        },
         {
           link: "/appraisal_evaluation/read-all-appraisal-evaluation",
           show: appraisalFeedbackSubmission,
@@ -343,7 +355,6 @@ export const MenuOption = () => {
       ],
     },
   ];
-
   return (
     <div className="px-5 py-4 rounded-lg bg-white w-full relative">
       {/* Header section - clickable */}

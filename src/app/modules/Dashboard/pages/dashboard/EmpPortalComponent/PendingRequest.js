@@ -216,30 +216,51 @@ const TeamMemberCard = ({ team, setAttModalData }) => {
         <span
           onClick={() =>
             setAttModalData(
-              team?.filter((e) =>
-                e?.t_attendances[0]?.status.includes("Present"),
-              ),
+              team?.filter((e) => {
+                // Check if attendance exists and has at least one record
+                const attendance = e?.t_attendances?.[0];
+                return (
+                  attendance &&
+                  (attendance?.timeIn !== "" || attendance?.timeOut !== "")
+                );
+              }),
             )
           }
           className="text-white rounded-full cursor-pointer bg-tgreen px-2 py-1 md:py-2 md:px-4 text-xs md:text-sm font-normal text-center line-clamp-1"
         >
           Present{" "}
-          {team?.filter((e) => e?.t_attendances[0]?.status.includes("Present"))
-            ?.length || 0}
+          {team?.filter((e) => {
+            const attendance = e?.t_attendances?.[0];
+            return (
+              attendance &&
+              (attendance?.timeIn !== "" || attendance?.timeOut !== "")
+            );
+          })?.length || 0}
         </span>
+
         <span
           onClick={() =>
             setAttModalData(
-              team?.filter(
-                (e) => !e?.t_attendances[0]?.status.includes("Present"),
-              ),
+              team?.filter((e) => {
+                const attendance = e?.t_attendances?.[0];
+                // Absent if: no attendance record OR both timeIn and timeOut are empty
+                return (
+                  !attendance ||
+                  (attendance?.timeIn === "" && attendance?.timeOut === "")
+                );
+              }),
             )
           }
           className="text-white rounded-full cursor-pointer px-2 py-1 md:py-2 md:px-4 bg-tred text-xs md:text-sm font-normal text-center line-clamp-1"
         >
-          Absents{" "}
-          {team?.filter((e) => !e?.t_attendances[0]?.status.includes("Present"))
-            ?.length || 0}
+          Absent{" "}
+          {team?.filter((e) => {
+            const attendance = e?.t_attendances?.[0];
+            return (
+              !attendance ||
+              (attendance?.timeIn === "" && attendance?.timeOut === "")
+            );
+          })?.length || 0}
         </span>
       </div>
     </div>

@@ -16,6 +16,7 @@ import {
 import * as Yup from "yup";
 import { TimeInput } from "../../../../../_metronic/_partials/controls/forms/TimeInput";
 import { SubsidiarySelect } from "../../../../../component/SubsidiarySelect";
+import MultiSelect from "../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 
 const validationSchema = Yup.object().shape({
   subsidiaryId: Yup.string()
@@ -28,16 +29,22 @@ const validationSchema = Yup.object().shape({
   autoSkippingHours: Yup.string()
     .matches(
       /^(?:[01]\d|2[0-3])[0-5]\d$/,
-      "Time must be in HHMM format and valid 24-hour format"
+      "Time must be in HHMM format and valid 24-hour format",
     )
     .when("autoSkipping", {
       is: true,
       then: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
   enableHrRequestWorkflow: Yup.boolean(),
-  emailCreationEmpId: Yup.string().nullable(),
-  emailApprovedEmpId: Yup.string().nullable(),
-  emailRejectedEmpId: Yup.string().nullable(),
+  emailCreationEmpId: Yup.array().nullable()
+    .min(1, VALIDATION_MESSAGES.required)
+    .required(VALIDATION_MESSAGES.required),
+  emailApprovedEmpId: Yup.array().nullable()
+    .min(1, VALIDATION_MESSAGES.required)
+    .required(VALIDATION_MESSAGES.required),
+  emailRejectedEmpId: Yup.array().nullable()
+    .min(1, VALIDATION_MESSAGES.required)
+    .required(VALIDATION_MESSAGES.required),
   emailPendingToApprovers: Yup.boolean(),
   isMonday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
@@ -56,7 +63,7 @@ const validationSchema = Yup.object().shape({
           parent.isSaturday ||
           parent.isSunday
         );
-      }
+      },
     ),
   }),
   isTuesday: Yup.boolean().when("emailPendingToApprovers", {
@@ -76,7 +83,7 @@ const validationSchema = Yup.object().shape({
           parent.isSaturday ||
           parent.isSunday
         );
-      }
+      },
     ),
   }),
   isWednesday: Yup.boolean().when("emailPendingToApprovers", {
@@ -96,7 +103,7 @@ const validationSchema = Yup.object().shape({
           parent.isSaturday ||
           parent.isSunday
         );
-      }
+      },
     ),
   }),
   isThursday: Yup.boolean().when("emailPendingToApprovers", {
@@ -116,7 +123,7 @@ const validationSchema = Yup.object().shape({
           parent.isSaturday ||
           parent.isSunday
         );
-      }
+      },
     ),
   }),
   isFriday: Yup.boolean().when("emailPendingToApprovers", {
@@ -136,7 +143,7 @@ const validationSchema = Yup.object().shape({
           parent.isSaturday ||
           parent.isSunday
         );
-      }
+      },
     ),
   }),
   isSaturday: Yup.boolean().when("emailPendingToApprovers", {
@@ -156,7 +163,7 @@ const validationSchema = Yup.object().shape({
           parent.isSaturday ||
           parent.isSunday
         );
-      }
+      },
     ),
   }),
   isSunday: Yup.boolean().when("emailPendingToApprovers", {
@@ -176,7 +183,7 @@ const validationSchema = Yup.object().shape({
           parent.isSaturday ||
           parent.isSunday
         );
-      }
+      },
     ),
   }),
   emailTime: Yup.string().nullable(),
@@ -215,6 +222,7 @@ const WorkflowEditForm = ({
         values,
         handleBlur,
         setFieldValue,
+        setFieldTouched,
         formik,
       }) => (
         <>
@@ -282,7 +290,7 @@ const WorkflowEditForm = ({
                       }}
                       value={
                         dashboard?.allEmployeeRequestTypeList?.find(
-                          (e) => e.value === values?.workflowTypeId
+                          (e) => e.value === values?.workflowTypeId,
                         ) || null
                       }
                       error={errors.workflowTypeId}
@@ -369,7 +377,31 @@ const WorkflowEditForm = ({
                       </div>
                     </div> */}
                   <div className="col-span-6 lg:col-span-4">
-                    <SearchSelect
+                    <MultiSelect
+                      label={
+                        <span>
+                          Send Email to selected Employee, once request is
+                          created
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      options={dashboard?.allEmployees || []}
+                      value={dashboard?.allEmployees?.filter((el) =>
+                        values?.emailCreationEmpId?.includes(String(el.value)),
+                      )}
+                      onChange={(e) => {
+                        setFieldTouched("emailCreationEmpId", true);
+                        if (Array?.isArray(e)) {
+                          setFieldValue("emailCreationEmpId", [
+                            ...e?.map((el) => String(el?.value)),
+                          ]);
+                        }
+                      }}
+                      error={errors.emailCreationEmpId}
+                      touched={touched.emailCreationEmpId}
+                      disabled={isUserForRead}
+                    />
+                    {/* <SearchSelect
                       isDisabled={isUserForRead}
                       name="emailCreationEmpId"
                       label={
@@ -384,16 +416,40 @@ const WorkflowEditForm = ({
                       }}
                       value={
                         dashboard?.allEmployees?.find(
-                          (e) => e.value === values?.emailCreationEmpId
+                          (e) => e.value === values?.emailCreationEmpId,
                         ) || null
                       }
                       error={errors.emailCreationEmpId}
                       touched={touched.emailCreationEmpId}
                       options={dashboard?.allEmployees}
-                    />
+                    /> */}
                   </div>
                   <div className="col-span-6 lg:col-span-4">
-                    <SearchSelect
+                    <MultiSelect
+                      label={
+                        <span>
+                          Send Email to selected Employee, if request is
+                          approved
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      options={dashboard?.allEmployees || []}
+                      value={dashboard?.allEmployees?.filter((el) =>
+                        values?.emailApprovedEmpId?.includes(String(el.value)),
+                      )}
+                      onChange={(e) => {
+                        setFieldTouched("emailApprovedEmpId", true);
+                        if (Array?.isArray(e)) {
+                          setFieldValue("emailApprovedEmpId", [
+                            ...e?.map((el) => String(el?.value)),
+                          ]);
+                        }
+                      }}
+                      error={errors.emailApprovedEmpId}
+                      touched={touched.emailApprovedEmpId}
+                      disabled={isUserForRead}
+                    />
+                    {/* <SearchSelect
                       isDisabled={isUserForRead}
                       name="emailApprovedEmpId"
                       label={
@@ -408,16 +464,40 @@ const WorkflowEditForm = ({
                       }}
                       value={
                         dashboard?.allEmployees?.find(
-                          (e) => e.value === values?.emailApprovedEmpId
+                          (e) => e.value === values?.emailApprovedEmpId,
                         ) || null
                       }
                       error={errors.emailApprovedEmpId}
                       touched={touched.emailApprovedEmpId}
                       options={dashboard?.allEmployees}
-                    />
+                    /> */}
                   </div>
                   <div className="col-span-6 lg:col-span-4">
-                    <SearchSelect
+                    <MultiSelect
+                      label={
+                        <span>
+                          Send Email to selected Employee, if request is
+                          rejected.
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      options={dashboard?.allEmployees || []}
+                      value={dashboard?.allEmployees?.filter((el) =>
+                        values?.emailRejectedEmpId?.includes(String(el.value)),
+                      )}
+                      onChange={(e) => {
+                        setFieldTouched("emailRejectedEmpId", true);
+                        if (Array?.isArray(e)) {
+                          setFieldValue("emailRejectedEmpId", [
+                            ...e?.map((el) => String(el?.value)),
+                          ]);
+                        }
+                      }}
+                      error={errors.emailRejectedEmpId}
+                      touched={touched.emailRejectedEmpId}
+                      disabled={isUserForRead}
+                    />
+                    {/* <SearchSelect
                       isDisabled={isUserForRead}
                       name="emailRejectedEmpId"
                       label={
@@ -429,7 +509,7 @@ const WorkflowEditForm = ({
                       }
                       value={
                         dashboard?.allEmployees?.find(
-                          (e) => e.value === values?.emailRejectedEmpId
+                          (e) => e.value === values?.emailRejectedEmpId,
                         ) || null
                       }
                       onChange={({ value }) => {
@@ -438,7 +518,7 @@ const WorkflowEditForm = ({
                       error={errors.emailRejectedEmpId}
                       touched={touched.emailRejectedEmpId}
                       options={dashboard?.allEmployees}
-                    />
+                    /> */}
                   </div>
                 </div>
                 <hr />
@@ -464,7 +544,7 @@ const WorkflowEditForm = ({
                           }
                           setFieldValue(
                             "emailPendingToApprovers",
-                            !values?.emailPendingToApprovers
+                            !values?.emailPendingToApprovers,
                           );
                         }}
                         onBlur={handleBlur}
@@ -496,7 +576,7 @@ const WorkflowEditForm = ({
                             onChange={() => {
                               setFieldValue(
                                 `is${day}`,
-                                values[`is${day}`] ? false : true
+                                values[`is${day}`] ? false : true,
                               );
                             }}
                             checked={values[`is${day}`]}
