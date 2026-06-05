@@ -38,3 +38,15 @@ export function viewAppraisalDetail(body) {
     body
   );
 }
+
+export function getAppraisalPublishReport(body) {
+  const config = {
+    responseType: "arraybuffer",
+  };
+  return axios.post(
+    `${USERS_URL}/appraisal_publish/appraisal-Publishing-Report`,
+    body,
+    config
+  );
+}
+
