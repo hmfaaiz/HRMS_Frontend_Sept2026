@@ -648,6 +648,17 @@ const JobRequestionWorkflowStatusApproval = lazy(() =>
 const employee_task_portal = lazy(() =>
   import("./modules/employee_task_portal/pages/index"),
 );
+
+const policy_for_new_year_budget = lazy(() =>
+  import("./modules/PolicyforNewYearBudget/pages/index"),
+);
+
+const department_wise_budget = lazy(() =>
+  import("./modules/Department_Wise_Budget/pages/index"),
+);
+const portal_department_wise_budget = lazy(() =>
+  import("./modules/Portal_Department_Wise_Budget/pages/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -864,6 +875,9 @@ const ROUTES = {
   job_requestion_workflow_approval : JobRequestionWorkflowStatusApproval,
   close_payroll_month: ClosePayrollMonthSetupModule,
   employee_task: employee_task_portal,
+  policy_for_new_year_budget: policy_for_new_year_budget,
+  department_wise_budget: department_wise_budget,
+  portal_department_wise_budget: portal_department_wise_budget,
 
 };
 

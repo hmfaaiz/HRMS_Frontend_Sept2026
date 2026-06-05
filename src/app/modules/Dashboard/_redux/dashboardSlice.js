@@ -116,6 +116,7 @@ const initialDashboardState = {
   allCurrentParentTask: [],
   allAlertTask: [],
   dateWiseAttLogs: [],
+  budgetyearBySubList: [],
 };
 
 export const callTypes = {
@@ -486,6 +487,10 @@ export const dashboardSlice = createSlice({
 
     DateWiseAttLogsFetched: (state, action) => {
       state.dateWiseAttLogs = action.payload;
+    },
+
+      AllBudgetYearBySubListFetch: (state, action) => {
+      state.budgetyearBySubList = action.payload;
     },
 
   }
