@@ -58,7 +58,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "Self status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -86,7 +86,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "parentData.request_status",
       text: "Request status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -114,7 +114,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -125,7 +125,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "requestBelongToEmp",
       text: "Name",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -139,7 +139,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.department.deptName",
       text: "Department",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -150,7 +150,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "requestBelongToEmp.designation.formName",
       text: "Designation",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -161,7 +161,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "parentData.TravelType.formName",
       text: "Travel Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       formatter: (cell, row) =>
@@ -179,6 +179,9 @@ export function TravelApprovalFormTable() {
     {
       dataField: "fromDate",
       text: "From Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       isDummyField: true,
       formatter: (cell, row) => {
         const seg = row.parentData?.Master?.[0];
@@ -190,6 +193,9 @@ export function TravelApprovalFormTable() {
     {
       dataField: "toDate",
       text: "To Date",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       isDummyField: true,
       formatter: (cell, row) => {
         const segments = row.parentData?.Master || [];
@@ -202,7 +208,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "parentData.dailyAllowanceDay",
       text: "Travel Days",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -213,7 +219,7 @@ export function TravelApprovalFormTable() {
     {
       dataField: "approvalAuthorityEmp",
       text: "Request Pending At",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -265,12 +271,12 @@ export function TravelApprovalFormTable() {
               bordered={false}
               classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
               bootstrap4
-              remote
+              // remote
               keyField="Id"
               data={entities === null ? [] : entities}
               columns={columns}
               defaultSorted={uiHelpers.defaultSorted}
-              onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+              // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
               {...paginationTableProps}
             >
               <PleaseWaitMessage entities={entities} />

@@ -45,7 +45,7 @@ export function ApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "Self status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -73,7 +73,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.request_status",
       text: "Request status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -187,7 +187,7 @@ export function ApprovalFormTable() {
     {
       dataField: "approvalAuthorityEmp",
       text: "Request Pending At",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -295,12 +295,12 @@ export function ApprovalFormTable() {
             }
           },
         }}
-        remote
+        // remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
       >
         <PleaseWaitMessage entities={entities} />
         <NoRecordsFoundMessage entities={entities} />

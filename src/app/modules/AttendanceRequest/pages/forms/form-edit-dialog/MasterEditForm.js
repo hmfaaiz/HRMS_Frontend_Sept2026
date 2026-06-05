@@ -165,8 +165,10 @@ export function MasterEditForm({
     <>
       <Formik
         enableReinitialize={true}
+        key={user?.Id} 
         initialValues={{
           ...user,
+          request_remarks: "", 
           attDate: user?.attDate ? new Date(user.attDate) : null,
           attDateIn: user?.attDateIn || user?.attDate,
           // &&

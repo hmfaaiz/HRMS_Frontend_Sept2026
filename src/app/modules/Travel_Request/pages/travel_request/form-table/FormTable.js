@@ -12,6 +12,7 @@ import {
   NoRecordsFoundMessage,
   PleaseWaitMessage,
   sortCaret,
+  headerSortingClasses,
   getHandlerTableChange,
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelpers";
@@ -65,6 +66,7 @@ export function FormTable({ onViewClick }) {
       text: "Travel Type",
       sort: true,
       sortCaret: sortCaret,
+      headerSortingClasses,
       formatter: (cell, row) =>
         row.TravelType?.formName || row.travelType || "-",
       style: { minWidth: "140px" },
@@ -74,6 +76,7 @@ export function FormTable({ onViewClick }) {
       dataField: "purposeOfTravel",
       sort: true,
       sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "180px" },
     },
 
@@ -153,6 +156,7 @@ export function FormTable({ onViewClick }) {
       text: "Status",
       sort: true,
       sortCaret: sortCaret,
+      headerSortingClasses,
       formatter: (cell, row) => {
         let text = "";
         let className = "";
@@ -231,11 +235,11 @@ export function FormTable({ onViewClick }) {
               bordered={false}
               classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
               bootstrap4
-              remote
+              // remote
               keyField="Id"
               data={entities || []}
               columns={columns}
-              onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+              // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
               {...paginationTableProps}
             >
               <PleaseWaitMessage entities={entities} />
