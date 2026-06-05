@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, shallowEqual } from "react-redux";
 
-export const HelpDesk = () => {
+export const DepartmentWiseBudget = () => {
   const {
     portal_department_wise_budget,
     auth,

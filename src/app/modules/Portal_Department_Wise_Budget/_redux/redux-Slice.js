@@ -42,33 +42,33 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
         },
 
         departmentWiseBudgetFetched: (state, action) => {
-        
-  
+
+
             const entities = action.payload.data?.data.rows;
-           
+
             const totalResult = action.payload.data?.data.totalResults;
             // const updatedEntities = entities.map(entity => {
-             
+
             //     const basis_of_gratuity = entity.basis_of_gratuityId === 0 ? 'Gross' : 'Basis';
-                
-            
+
+
             //     return {
             //         ...entity,
             //         basis_of_gratuity // Add the new field to the entity
             //     };
             // });
-          
+
             state.listLoading = false;
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
-           
+
         },
 
-         //get User By ID
-         departmentWiseBudgetFetchedForEdit: (state, action) => {
-           
-   
+        //get User By ID
+        departmentWiseBudgetFetchedForEdit: (state, action) => {
+
+
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit?.data;
             state.totalEmployees = action.payload.userForEdit?.totalEmployees;
@@ -76,18 +76,18 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
             state.error = null;
         },
 
-      
+
         DepartmentWiseBudgetDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
-         
-          
+
+
             state.entities = state.entities.filter(
                 (el) => el.Id !== action.payload.Id
             );
         },
-     
+
 
 
 
@@ -101,7 +101,7 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
 
             state.entities.unshift(action.payload);
         },
-        
+
 
 
 
@@ -109,10 +109,10 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
-            
-          
+
+
             state.entities = state.entities.map((entity) => {
-                
+
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
@@ -122,12 +122,20 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
                 }
                 return entity;
             });
-           
+
+        },
+
+        EmployeeAuthorityFetched: (state, action) => {
+            state.listLoading = false;
+            state.error = null;
+            const { data, isPolicyExists } = action.payload;
+            state.empAuthorityList = data;
+            state.isPolicyExists = isPolicyExists;
         },
 
 
-        
-        
+
+
 
     },
 });

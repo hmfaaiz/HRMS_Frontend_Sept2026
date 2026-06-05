@@ -45,20 +45,22 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
     roles,
     centers,
     userStatusTypes,
-    isuserForRead,
+    isuserForRead, currentState,
   } = useSelector((state) => ({
 
 
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
-    userForEdit: state.department_wise_budget.userForEdit,
+    userForEdit: state.portal_department_wise_budget.userForEdit,
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
-    isuserForRead: state.department_wise_budget.userForRead,
+    isuserForRead: state.portal_department_wise_budget.userForRead,
+    currentState: state.portal_department_wise_budget,
   }));
 
 
 
+  const { empAuthorityList } = currentState;
 
   useEffect(() => {
     dispatch(actions.fetchDepartmentWiseBudget({ subsidiaryId, budgetYearId, departmentId }));
@@ -68,29 +70,21 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
 
   const saveForm = async (data) => {
 
-    if (!(subsidiaryId && budgetYearId && departmentId)) {
+    if (data?.subsidiaryId && data?.budgetYearId && data?.departmentId && empAuthorityList.length > 0) {
+      let body = {
+        ...data,
+        empAuthorityList
+      }
 
-
-      dispatch(actions.createDepartmentWiseBudget(data, disbaleLoading, onHide)).then(async () => {
+      dispatch(actions.createDepartmentWiseBudget(body, disbaleLoading, onHide)).then(async () => {
         await dispatch(actions.fetchDepartmentWiseBudgets(usersUIProps.queryParams));
       });
 
 
 
-    } else {
-
-
-      // const formUpdatedFields = {
-      //   Id: data?.designationId,
-      //   list:data?.list,
-      // };
-
-
-
-      await dispatch(actions.updateDepartmentWiseBudget(data, disbaleLoading, onHide)).then(async () => {
-        await dispatch(actions.fetchDepartmentWiseBudgets(usersUIProps.queryParams));
-      });
     }
+
+
   };
 
   return (

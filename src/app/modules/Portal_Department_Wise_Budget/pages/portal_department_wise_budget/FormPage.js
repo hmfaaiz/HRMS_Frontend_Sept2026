@@ -13,20 +13,20 @@ import { } from "../../_redux/redux-Actions";
 
 
 export function FormPage({ history }) {
-
+console.log("hit11111")
   const dispatch = useDispatch();
   const FormUIEvents = {
     newFormButtonClick: () => {
-      history.push("/department_wise_budget/read-all-department-wise-budget/new");
+      history.push("/portal_department_wise_budget/read-all-portal-department-wise-budget/new");
     },
     // openEditFormDialog: (id) => {
-    //   history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/edit`);
+    //   history.push(`/portal_department_wise_budget/read-all-portal-department-wise-budget/${id}/edit`);
     // },
     // openDeleteFormDialog: (id, status) => {
-    //   history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/${status}/delete`);
+    //   history.push(`/portal_department_wise_budget/read-all-portal-department-wise-budget/${id}/${status}/delete`);
     // },
     openActiveFormDialog: (id) => {
-      history.push(`/department_wise_budget/read-all-department-wise-budget/${id}/active`);
+      history.push(`/portal_department_wise_budget/read-all-portal-department-wise-budget/${id}/active`);
     },
     openReadFormDialog: (
       subsidiaryId,
@@ -36,7 +36,7 @@ export function FormPage({ history }) {
     ) => {
       history.push({
         pathname:
-          "/department_wise_budget/read-all-department-wise-budget/read",
+          "/portal_department_wise_budget/read-all-portal-department-wise-budget/read",
         state: {
           subsidiaryId,
           budgetYearId,
@@ -54,7 +54,7 @@ export function FormPage({ history }) {
     ) => {
       history.push({
         pathname:
-          "/department_wise_budget/read-all-department-wise-budget/edit",
+          "/portal_department_wise_budget/read-all-portal-department-wise-budget/edit",
         state: {
           subsidiaryId,
           budgetYearId,
@@ -73,7 +73,7 @@ export function FormPage({ history }) {
     ) => {
       history.push({
         pathname:
-          "/department_wise_budget/read-all-department-wise-budget/delete",
+          "/portal_department_wise_budget/read-all-portal-department-wise-budget/delete",
         state: {
           subsidiaryId,
           budgetYearId,
@@ -88,41 +88,43 @@ export function FormPage({ history }) {
 
 
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <Route exact path="/department_wise_budget/read-all-department-wise-budget/new">
+
+         <FormCard />
+      <Route exact path="/portal_department_wise_budget/read-all-portal-department-wise-budget/new">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             onHide={() => {
-              history.push("/department_wise_budget/read-all-department-wise-budget");
+              history.push("/portal_department_wise_budget/read-all-portal-department-wise-budget");
             }}
           />
         )}
       </Route>
-      {/* <Route path="/department_wise_budget/read-all-department-wise-budget/:id/edit">
+      {/* <Route path="/portal_department_wise_budget/read-all-portal-department-wise-budget/:id/edit">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             id={match && match.params.id}
             onHide={() => {
-              history.push("/department_wise_budget/read-all-department-wise-budget");
+              history.push("/portal_department_wise_budget/read-all-portal-department-wise-budget");
             }}
           />
         )}
       </Route> */}
-      {/* <Route path="/department_wise_budget/read-all-department-wise-budget/:id/read">
+      {/* <Route path="/portal_department_wise_budget/read-all-portal-department-wise-budget/:id/read">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             id={match && match.params.id}
             userForRead={true}
             onHide={() => {
-              history.push("/department_wise_budget/read-all-department-wise-budget");
+              history.push("/portal_department_wise_budget/read-all-portal-department-wise-budget");
             }}
           />
         )}
       </Route> */}
 
-      <Route path="/department_wise_budget/read-all-department-wise-budget/read">
+      <Route path="/portal_department_wise_budget/read-all-portal-department-wise-budget/read">
         {({ history, location, match }) => (
           <FormEditDialog
             show={match != null}
@@ -132,7 +134,7 @@ export function FormPage({ history }) {
             userForRead={true}
             onHide={() => {
               history.push(
-                "/department_wise_budget/read-all-department-wise-budget"
+                "/portal_department_wise_budget/read-all-portal-department-wise-budget"
               );
             }}
           />
@@ -140,7 +142,7 @@ export function FormPage({ history }) {
       </Route>
 
 
-      <Route path="/department_wise_budget/read-all-department-wise-budget/edit">
+      <Route path="/portal_department_wise_budget/read-all-portal-department-wise-budget/edit">
         {({ history, location, match }) => (
           <FormEditDialog
             show={match != null}
@@ -150,26 +152,26 @@ export function FormPage({ history }) {
             userForRead={false}
             onHide={() => {
               history.push(
-                "/department_wise_budget/read-all-department-wise-budget"
+                "/portal_department_wise_budget/read-all-portal-department-wise-budget"
               );
             }}
           />
         )}
       </Route>
-      {/* <Route path="/department_wise_budget/read-all-department-wise-budget/:id/:status/delete">
+      {/* <Route path="/portal_department_wise_budget/read-all-portal-department-wise-budget/:id/:status/delete">
         {({ history, match }) => (
           <FormDeleteDialog
             show={match != null}
             id={match && match.params.id}
             status={match && match.params.status}
             onHide={() => {
-              history.push("/department_wise_budget/read-all-department-wise-budget");
+              history.push("/portal_department_wise_budget/read-all-portal-department-wise-budget");
             }}
           />
         )}
       </Route> */}
 
- <Route path="/department_wise_budget/read-all-department-wise-budget/delete">
+ <Route path="/portal_department_wise_budget/read-all-portal-department-wise-budget/delete">
   {({ history, match, location }) => (
     <FormDeleteDialog
       show={match != null}
@@ -179,14 +181,14 @@ export function FormPage({ history }) {
       status={match?.params?.status}
       onHide={() => {
         history.push(
-          "/department_wise_budget/read-all-department-wise-budget"
+          "/portal_department_wise_budget/read-all-portal-department-wise-budget"
         );
       }}
     />
   )}
 </Route>
 
-      <FormCard />
+   
       <ToastContainer
         position="top-right"
         autoClose={5000}

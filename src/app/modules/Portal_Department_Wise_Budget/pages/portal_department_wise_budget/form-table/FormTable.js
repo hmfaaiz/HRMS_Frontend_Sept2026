@@ -43,8 +43,8 @@ export function FormTable() {
       return {
 
 
-        currentState: state.department_wise_budget,
-        userAccess: state?.auth?.userAccess["department_wise_budget"],
+        currentState: state.portal_department_wise_budget,
+        userAccess: state?.auth?.userAccess["portal_department_wise_budget"],
       }
     },
     shallowEqual
@@ -65,15 +65,15 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateDepartmentWiseBudget"
+    (item) => item.componentName === "UpdatePortalDepartmentWiseBudget"
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteDepartmentWiseBudget"
+    (item) => item.componentName === "DeletePortalDepartmentWiseBudget"
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadDepartmentWiseBudget"
+    (item) => item.componentName === "ReadPortalDepartmentWiseBudget"
   );
 
 
@@ -114,18 +114,18 @@ export function FormTable() {
     },
 
 
-    {
-      dataField: "totalSalary",
-      text: "Budgeted Salary",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
-       formatter: (cell) => formatNumberWithCommas(cell),
+    // {
+    //   dataField: "totalSalary",
+    //   text: "Budgeted Salary",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "10px",
+    //   },
+    //    formatter: (cell) => formatNumberWithCommas(cell),
 
-    },
+    // },
     
     {
       dataField: "totalPositions",
@@ -144,20 +144,7 @@ export function FormTable() {
   
 
 
-    {
-      dataField: "isApproved",
-      text: "Approved",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
-      formatter: (cell) => {
-        return cell ? "Yes" : "No";
-      },
 
-    },
 
     {
       dataField: "action",

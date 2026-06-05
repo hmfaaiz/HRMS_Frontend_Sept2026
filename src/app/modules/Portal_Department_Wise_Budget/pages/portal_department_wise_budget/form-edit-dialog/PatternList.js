@@ -81,13 +81,13 @@ function PatternListForm({
                                             <td className="w-[5px]">S.No.</td>
                                             <td className="w-[220px]">Designation</td>
                                             <td className="w-[5px]">Strength</td>
-                                            <td className="w-[100px]">Budget Amount</td>
-                                            <td className="w-[100px]">Request Date</td>
+                                            {/* <td className="w-[100px]">Budget Amount</td> */}
+                                 
                                             <td className="w-[100px]">Expected Date of Joining</td>
                                             <td className="w-[300px]">Business need</td>
                                             <td className="w-[300px]">Impact of Position</td>
                                             {/* <td>Status</td> */}
-                                            <td className="text-right">Action</td>
+                                            <td className="text-right">Status</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -157,7 +157,7 @@ function PatternListForm({
                                                     </div>
                                                 </td>
 
-                                                <td>
+                                                {/* <td>
                                                     <Field
                                                         name={`list[${index}].budgeted_salary`}
                                                         type="number"
@@ -167,8 +167,8 @@ function PatternListForm({
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_salary`} />
                                                     </div>
-                                                </td>
-                                                <td>
+                                                </td> */}
+                                                {/* <td>
                                                     <DatePicker
                                                         className="form-control"
                                                         name={`list[${index}].request_date`}
@@ -186,7 +186,7 @@ function PatternListForm({
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].request_date`} />
                                                     </div>
-                                                </td>
+                                                </td> */}
                                                 <td>
                                                     <DatePicker
                                                         className="form-control"
@@ -248,7 +248,8 @@ function PatternListForm({
 
                                                 {/* Delete Button Starts */}
                                                 {/* {!values?.list[index]?.isPresent && ( */}
-                                                <td className="text-right">
+                                                {isdataForRead ? null : (
+                                                           <td className="text-right">
                                                     <button
                                                         disabled={isdataForRead}
                                                         className="border-none bg-transparent"
@@ -260,6 +261,8 @@ function PatternListForm({
                                                         <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                                     </button>
                                                 </td>
+                                                )}
+                                         
                                                 {/* )} */}
 
 
@@ -275,9 +278,9 @@ function PatternListForm({
                                                 {totalStrength.toLocaleString("en-US")}
                                             </td>
 
-                                            <td>
+                                            {/* <td>
                                                 {totalSalary.toLocaleString("en-US")}
-                                            </td>
+                                            </td> */}
 
                                             <td colSpan="5"></td>
                                         </tr>

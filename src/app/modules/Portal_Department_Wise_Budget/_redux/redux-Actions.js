@@ -70,13 +70,13 @@ export const deleteDepartmentWiseBudget = (body) => (dispatch) => {
 
 
 
-export const createDepartmentWiseBudget = (holidayForCreation, disbaleLoading, onHide) => (
+export const createDepartmentWiseBudget = (body, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createDepartmentWiseBudget(holidayForCreation)
+    .createDepartmentWiseBudget(body)
     .then((res) => {
    
       const user = res.data?.data;
@@ -148,5 +148,21 @@ export const updateDepartmentWiseBudget = (user, disbaleLoading, onHide) => (dis
         draggable: true,
         progress: undefined,
       });
+    });
+};
+
+
+export const getEmployeeAuthorities = (empId) => (dispatch) => {
+  return requestFromServer
+    .getEmployeeAuthorties(empId, "654")
+    .then((res) => {
+      const data = Array.isArray(res.data?.data?.data)
+        ? res.data?.data?.data
+        : [];
+      const isPolicyExists = res.data?.data?.isPolicyExists || false;
+      dispatch(actions.EmployeeAuthorityFetched({ data, isPolicyExists }));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Get Employee Authorities";
     });
 };

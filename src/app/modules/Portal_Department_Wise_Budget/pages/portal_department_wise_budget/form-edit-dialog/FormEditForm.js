@@ -41,20 +41,20 @@ const department_wise_budgetEditSchema = Yup.object().shape({
           .required(VALIDATION_MESSAGES.required)
           .max(999999999, 'Maximum 9 digits allowed'),
 
-        budgeted_salary: Yup.number()
-          .required(VALIDATION_MESSAGES.required)
-          .max(999999999, "Maximum 9 digits allowed")
-          .test(
-            "salary-greater-than-strength",
-            "Budgeted Salary must be greater than Budgeted Strength",
-            function (value) {
-              const { budgeted_strength } = this.parent;
+        // budgeted_salary: Yup.number()
+        //   .required(VALIDATION_MESSAGES.required)
+        //   .max(999999999, "Maximum 9 digits allowed")
+        //   .test(
+        //     "salary-greater-than-strength",
+        //     "Budgeted Salary must be greater than Budgeted Strength",
+        //     function (value) {
+        //       const { budgeted_strength } = this.parent;
 
-              if (!value || !budgeted_strength) return true;
+        //       if (!value || !budgeted_strength) return true;
 
-              return Number(value) > Number(budgeted_strength);
-            }
-          ),
+        //       return Number(value) > Number(budgeted_strength);
+        //     }
+        //   ),
 
         designationId: Yup.number()
           .nullable()
@@ -66,18 +66,11 @@ const department_wise_budgetEditSchema = Yup.object().shape({
         expected_date_of_joining: Yup.date()
           .nullable()
           .required(VALIDATION_MESSAGES.required)
-          .test(
-            "expected-after-request",
-            "Expected Date of Joining must be after Request Date",
-            function (value) {
-              const { request_date } = this.parent;
-
-              if (!value || !request_date) return true;
-
-              return new Date(value) > new Date(request_date);
-            }
+          .min(
+            new Date(new Date().setHours(0, 0, 0, 0)),
+            "Expected Date of Joining cannot be in the past"
           ),
-        request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+        // request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
       })
     )
     .test(
@@ -111,8 +104,8 @@ export function FormEditForm({
 
   const { currentState, userAccess, roles, } = useSelector((state) => {
     return {
-      currentState: state.department_wise_budget,
-      userAccess: state?.auth?.userAccess["department_wise_budget"],
+      currentState: state.portal_department_wise_budget,
+      userAccess: state?.auth?.userAccess["portal_department_wise_budget"],
       roles: state.users?.roles?.allRoles || []
     };
   }, shallowEqual);
@@ -198,9 +191,9 @@ export function FormEditForm({
                       }
                       isDisabled={isdataForRead}
                       onChange={(e) => {
-                        setFieldValue("departmentId", e.value || null);
-                        setFieldValue("budgetYearId", e.value || null);
-                        setFieldValue("subsidiaryId", e.value || null);
+                        setFieldValue("departmentId",  null);
+                        setFieldValue("budgetYearId", null);
+                        setFieldValue("subsidiaryId", e.value );
                         dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
                         dispatch(fetchAllBudgetYearDataBySubsidiaryId(e?.value));
                       }}
@@ -239,10 +232,10 @@ export function FormEditForm({
                       options={[
                         { label: "Select", value: "" },
                         ...(dashboard?.budgetyearBySubList || []).filter(
-                          (item) => item.isActive
+                          (item) => item.isEditable
                         ),
                       ]}
-                      isOptionDisabled={(option) => !option.isActive}
+                      isOptionDisabled={(option) => !option.isEditable}
                       error={errors.budgetYearId}
                       touched={touched.budgetYearId}
                     />
@@ -276,7 +269,7 @@ export function FormEditForm({
 
                   <div className="col-span-1">
                     <label>
-                      <span>
+                      <span className="text-bold">
                         Current Strength:  {currentState?.totalEmployees?.toLocaleString("en-US")}
                       </span>
                     </label>
@@ -292,7 +285,7 @@ export function FormEditForm({
 
                   <div className="col-span-1">
                     <label>
-                      <span>
+                    <span className="text-bold">
                         Current Salary:  {currentState?.totalSalary?.toLocaleString("en-US")}
                       </span>
                     </label>
@@ -363,7 +356,7 @@ export function FormEditForm({
                 onClick={() => handleSubmit()}
                 className="btn btn-primary btn-elevate"
               >
-                Save
+                Submit Request
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}

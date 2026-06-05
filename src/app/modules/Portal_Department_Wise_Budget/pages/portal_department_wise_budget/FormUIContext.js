@@ -13,6 +13,7 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setIds] = useState([]);
+  const [employeeId, setemployeeId] = useState("");
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -43,7 +44,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const value = {
     queryParams,
     setQueryParamsBase,
-    setQueryParams,
+    setQueryParams, employeeId,
+    setemployeeId,
     ids,
     setIds,
     initUser,
