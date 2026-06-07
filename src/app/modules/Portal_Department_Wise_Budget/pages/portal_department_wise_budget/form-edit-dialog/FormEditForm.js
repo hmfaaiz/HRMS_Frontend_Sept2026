@@ -131,7 +131,7 @@ export function FormEditForm({
   }, [dispatch, defaultSubsidiary?.value]);
 
 
-
+console.log("formData111",formData)
   return (
     <Formik
       enableReinitialize={true}
@@ -189,7 +189,7 @@ export function FormEditForm({
                           Subsidiary<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isdataForRead}
+                      isDisabled={isdataForRead || formData[0]?.Id}
                       onChange={(e) => {
                         setFieldValue("departmentId",  null);
                         setFieldValue("budgetYearId", null);
@@ -212,7 +212,7 @@ export function FormEditForm({
                       name="budgetYearId"
                       label={<span>Budget Year</span>}
                       isDisabled={
-                        isdataForRead || !values?.subsidiaryId
+                        isdataForRead || !values?.subsidiaryId  || formData[0]?.Id
                       }
                       onChange={(e) => {
                         const selectedFY = dashboard?.budgetyearBySubList?.find(
@@ -250,7 +250,7 @@ export function FormEditForm({
                           Department<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isdataForRead}
+                      isDisabled={isdataForRead || formData[0]?.Id}
                       onChange={(e) => {
                         setFieldValue("departmentId", e.value || null);
                       }}
@@ -314,7 +314,7 @@ export function FormEditForm({
                     errors={errors}
                     touched={touched}
 
-                    isdataForRead={isdataForRead}
+                    isdataForRead={isdataForRead }
                   />
                 </div>
               </fieldset>

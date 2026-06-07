@@ -91,7 +91,7 @@ export function FormFIlter({ listLoading, user }) {
 
 
   {/* RIGHT: Search small */}
-  <div className="ml-auto w-44">
+  <div className="w-44 mr-2">
     <InputSearch
       values={values}
       fieldName="searchText"
