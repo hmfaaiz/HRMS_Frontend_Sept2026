@@ -660,8 +660,8 @@ const portal_department_wise_budget = lazy(() =>
   import("./modules/Portal_Department_Wise_Budget/pages/index"),
 
 
-);const budgetRequest = lazy(() =>
-  import("./modules/BudgetRequest/pages/index"),
+);const BudgetApproval = lazy(() =>
+  import("./modules/BudgetApproval/page/index"),
 );
 const ROUTES = {
   settings: SettingsPage,
@@ -882,7 +882,7 @@ const ROUTES = {
   policy_for_new_year_budget: policy_for_new_year_budget,
   department_wise_budget: department_wise_budget,
   portal_department_wise_budget: portal_department_wise_budget,
-  budgetRequest: budgetRequest,
+  department_wise_budget_approval: BudgetApproval,
 
 };
 
