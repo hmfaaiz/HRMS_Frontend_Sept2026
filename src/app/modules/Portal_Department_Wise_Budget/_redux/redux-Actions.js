@@ -36,8 +36,11 @@ export const fetchDepartmentWiseBudget = (body) => (dispatch) => {
     .then((response) => {
       const entities = response.data.data;
 
-   
-      dispatch(actions.departmentWiseBudgetFetchedForEdit({ userForEdit: entities }));
+ 
+   if(entities?.data?.length > 0){
+    dispatch(actions.departmentWiseBudgetFetchedForEdit({ userForEdit: entities }));
+   }
+    
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";

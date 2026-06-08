@@ -19,6 +19,7 @@ import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { fetchAllDepartmentBySubsidiaryIds, fetchAllBudgetYearDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
 import PatternListForm from "./PatternList";
+import { fetchDepartmentWiseBudget } from "../../../_redux/redux-Actions";
 
 // percentage: Yup.string().required("Required*"),
 const department_wise_budgetEditSchema = Yup.object().shape({
@@ -73,17 +74,35 @@ const department_wise_budgetEditSchema = Yup.object().shape({
         // request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
       })
     )
+    // .test(
+    //   "unique-designation",
+    //   "Duplicate designation is not allowed",
+    //   function (list) {
+    //     if (!list || !list.length) return true;
+
+    //     const designationIds = list
+    //       .map((item) => item.designationId)
+    //       .filter(Boolean);
+
+    //     return designationIds.length === new Set(designationIds).size;
+    //   }
+    // ),
     .test(
-      "unique-designation",
-      "Duplicate designation is not allowed",
+      "unique-designation-date",
+      "Duplicate designation with the same expected date is not allowed",
       function (list) {
         if (!list || !list.length) return true;
 
-        const designationIds = list
-          .map((item) => item.designationId)
-          .filter(Boolean);
+        const designationDateKeys = list
+          .filter(
+            (item) => item.designationId && item.expected_date_of_joining
+          )
+          .map(
+            (item) =>
+              `${item.designationId}_${item.expected_date_of_joining}`
+          );
 
-        return designationIds.length === new Set(designationIds).size;
+        return designationDateKeys.length === new Set(designationDateKeys).size;
       }
     ),
 });
@@ -131,7 +150,7 @@ export function FormEditForm({
   }, [dispatch, defaultSubsidiary?.value]);
 
 
-console.log("formData111",formData)
+
   return (
     <Formik
       enableReinitialize={true}
@@ -191,11 +210,14 @@ console.log("formData111",formData)
                       }
                       isDisabled={isdataForRead || formData[0]?.Id}
                       onChange={(e) => {
-                        setFieldValue("departmentId",  null);
+                        setFieldValue("departmentId", null);
                         setFieldValue("budgetYearId", null);
-                        setFieldValue("subsidiaryId", e.value );
+                        setFieldValue("subsidiaryId", e.value);
                         dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
                         dispatch(fetchAllBudgetYearDataBySubsidiaryId(e?.value));
+                        if (values.departmentId && values.budgetYearId && e.value) {
+                          dispatch(fetchDepartmentWiseBudget({ subsidiaryId: e.value, budgetYearId: values.budgetYearId, departmentId: values.departmentId }));
+                        }
                       }}
                       error={errors?.subsidiaryId}
                       touched={touched?.subsidiaryId}
@@ -212,7 +234,7 @@ console.log("formData111",formData)
                       name="budgetYearId"
                       label={<span>Budget Year</span>}
                       isDisabled={
-                        isdataForRead || !values?.subsidiaryId  || formData[0]?.Id
+                        isdataForRead || !values?.subsidiaryId || formData[0]?.Id
                       }
                       onChange={(e) => {
                         const selectedFY = dashboard?.budgetyearBySubList?.find(
@@ -220,7 +242,9 @@ console.log("formData111",formData)
                         );
 
                         setFieldValue("budgetYearId", e.value || null);
-
+                        if (values.departmentId && values.subsidiaryId && e.value) {
+                          dispatch(fetchDepartmentWiseBudget({ subsidiaryId: values.subsidiaryId, budgetYearId: e.value, departmentId: values.departmentId }));
+                        }
 
                       }}
                       value={
@@ -250,9 +274,13 @@ console.log("formData111",formData)
                           Department<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isdataForRead || formData[0]?.Id}
+                      isDisabled={isdataForRead || formData[0]?.Id || !values?.subsidiaryId || !values?.budgetYearId}
                       onChange={(e) => {
                         setFieldValue("departmentId", e.value || null);
+                        if (values.budgetYearId && values.subsidiaryId && e.value) {
+                          dispatch(fetchDepartmentWiseBudget({ subsidiaryId: values.subsidiaryId, budgetYearId: values.budgetYearId, departmentId: e.value }));
+                        }
+
                       }}
                       value={
                         dashboard?.departmentBySubIdsList?.find(
@@ -285,7 +313,7 @@ console.log("formData111",formData)
 
                   <div className="col-span-1">
                     <label>
-                    <span className="text-bold">
+                      <span className="text-bold">
                         Current Salary:  {currentState?.totalSalary?.toLocaleString("en-US")}
                       </span>
                     </label>
@@ -314,7 +342,7 @@ console.log("formData111",formData)
                     errors={errors}
                     touched={touched}
 
-                    isdataForRead={isdataForRead }
+                    isdataForRead={isdataForRead}
                   />
                 </div>
               </fieldset>
