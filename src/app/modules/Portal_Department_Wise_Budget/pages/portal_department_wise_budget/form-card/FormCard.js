@@ -93,7 +93,7 @@ export function FormCard() {
         </div>
 
         <div className="px-3 py-2 rounded-lg bg-white">
-          <div className=" d-flex  mb-3">
+          <div className=" d-flex  mb-3 justify-content-end ">
             <FormFIlter />
 
 

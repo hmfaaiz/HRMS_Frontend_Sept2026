@@ -82,12 +82,13 @@ function PatternListForm({
                                             <td className="w-[220px]">Designation</td>
                                             <td className="w-[5px]">Strength</td>
                                             {/* <td className="w-[100px]">Budget Amount</td> */}
-                                 
+
                                             <td className="w-[100px]">Expected Date of Joining</td>
                                             <td className="w-[300px]">Business need</td>
                                             <td className="w-[300px]">Impact of Position</td>
                                             {/* <td>Status</td> */}
-                                            <td className="text-right">Status</td>
+                                            <td className="text-left">Status</td>
+                                            <td className="text-right">Actions</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -121,7 +122,7 @@ function PatternListForm({
                                                                 ? "form-control is-invalid"
                                                                 : "form-control"
                                                         }
-                                                        disabled={isdataForRead}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
                                                         options={dashboard?.allDesignations || []}
                                                         value={
                                                             dashboard?.allDesignations?.find(
@@ -150,7 +151,7 @@ function PatternListForm({
                                                         name={`list[${index}].budgeted_strength`}
                                                         type="number"
                                                         className="form-control"
-                                                        disabled={isdataForRead}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_strength`} />
@@ -162,7 +163,7 @@ function PatternListForm({
                                                         name={`list[${index}].budgeted_salary`}
                                                         type="number"
                                                         className="form-control"
-                                                        disabled={isdataForRead}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_salary`} />
@@ -181,7 +182,7 @@ function PatternListForm({
                                                         onChange={(date) => {
                                                             setFieldValue(`list[${index}].request_date`, date);
                                                         }}
-                                                        disabled={isdataForRead}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].request_date`} />
@@ -200,7 +201,7 @@ function PatternListForm({
                                                         onChange={(date) => {
                                                             setFieldValue(`list[${index}].expected_date_of_joining`, date);
                                                         }}
-                                                        disabled={isdataForRead}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].expected_date_of_joining`} />
@@ -212,7 +213,7 @@ function PatternListForm({
                                                         rows={2}
                                                         name={`list[${index}].business_need`}
                                                         className="form-control"
-                                                        disabled={isdataForRead}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].business_need`} />
@@ -226,43 +227,48 @@ function PatternListForm({
                                                         rows={2}
                                                         name={`list[${index}].impact_of_position`}
                                                         className="form-control"
-                                                        disabled={isdataForRead}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].impact_of_position`} />
                                                     </div>
                                                 </td>
 
-                                                {/* <td>
-                                                    <Field
-                                                        as="select"
-                                                        name={`list[${index}].request_status`}
-                                                        className="form-control"
-                                                        disabled={isdataForRead}
+                                                <td>
+                                                    <span
+                                                        className={`font-bold ${values?.list?.[index]?.request_status === "A"
+                                                                ? "text-approved"
+                                                                : values?.list?.[index]?.request_status === "R"
+                                                                    ? "text-rejected"
+                                                                    : "text-pending"
+                                                            }`}
                                                     >
-                                                        <option value="P">Pending</option>
-                                                        <option value="A">Approved</option>
-                                                        <option value="R">Rejected</option>
-                                                    </Field>
-                                                </td> */}
-
+                                                        {values?.list?.[index]?.request_status === "A"
+                                                            ? "Approved"
+                                                            : values?.list?.[index]?.request_status === "R"
+                                                                ? "Rejected"
+                                                                : "Pending"}
+                                                    </span>
+                                                </td>
                                                 {/* Delete Button Starts */}
                                                 {/* {!values?.list[index]?.isPresent && ( */}
-                                                {isdataForRead ? null : (
-                                                           <td className="text-right">
-                                                    <button
-                                                        disabled={isdataForRead}
-                                                        className="border-none bg-transparent"
-                                                        type="button"
-                                                        onClick={() => {
-                                                            remove(index);
-                                                        }}
-                                                    >
-                                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                                    </button>
-                                                </td>
+                                                {values?.list?.[index]?.Id ?   <td className="text-center">
+    _
+  </td>: (
+                                                    <td className="text-right">
+                                                        <button
+                                                            disabled={isdataForRead || values?.list?.[index]?.Id}
+                                                            className="border-none bg-transparent"
+                                                            type="button"
+                                                            onClick={() => {
+                                                                remove(index);
+                                                            }}
+                                                        >
+                                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                                        </button>
+                                                    </td>
                                                 )}
-                                         
+
                                                 {/* )} */}
 
 
