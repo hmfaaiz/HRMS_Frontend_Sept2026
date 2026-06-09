@@ -380,7 +380,15 @@ function PatternLoanDetailListForm({
                     </>
                 )}
             </FieldArray>
-
+        
+        <div className="space-y-1 mt-1">
+            <h3 className="text-sm text-black">Cash Payment</h3>
+            {values?.cash_detail?.length > 0 ? values?.cash_detail?.map((el)=>{
+                return (
+                    <span className="text-xs text-black">Date : {el?.payment_date} Amount : {el?.payment_amount} Ref no : {el?.payment_reference_no || "-"}</span>
+                )
+            }) : null}
+        </div>
 
             {typeof errors?.details === "string" && (
                 <div className="text-danger mt-3 font-bold">
