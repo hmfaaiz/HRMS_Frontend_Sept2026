@@ -289,7 +289,6 @@ export function MasterEditForm({
                             setDefaultEndDate(endDate);
                           }}
                           dateFormat="dd-MMM-yyyy"
-                          showTimeInput
                           name="startDate"
                           // Disabled in read mode OR when editing an existing record
                           disabled={isUserForRead || isEdit}
@@ -315,7 +314,6 @@ export function MasterEditForm({
                             setDefaultEndDate(date);
                           }}
                           dateFormat="dd-MMM-yyyy"
-                          showTimeInput
                           name="endDate"
                           disabled={true}
                           autoComplete="off"
