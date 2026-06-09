@@ -208,9 +208,23 @@ export function WorkflowTable({ onHide, show }) {
                     Budget Request
                   </h6>
                   <div className="text-sm text-black">
+
+                        <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Buget Code
+
+                      </div>
+                      <div className="col-span-1">
+                        {
+                          formUIProps?.currentData?.parentData
+                            ?.budgetCode
+
+                        }
+                      </div>
+                    </div>
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">Budget Year</div>
-                      <div className="col-span-1">
+                      <div className="col-span-2">
                         {formUIProps?.currentData?.parentData?.BudgetYear ? (() => {
                           const startDate = format(
                             new Date(formUIProps.currentData.parentData.BudgetYear.startDate),

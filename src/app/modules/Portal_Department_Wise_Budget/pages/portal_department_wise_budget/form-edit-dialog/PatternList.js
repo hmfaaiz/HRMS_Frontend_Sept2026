@@ -46,7 +46,7 @@ function PatternListForm({
     );
 
     useEffect(() => {
-   
+
         dispatch(fetchBudgetWorkflow(workflowId));
     }, [workflowId]);
 
@@ -58,117 +58,117 @@ function PatternListForm({
         shallowEqual
     );
 
-      const columns = [
+    const columns = [
         {
-          dataField: "approvalAuthorityEmp.employeeCode", // Reference the parent object (department)
-          text: "Emp Code", // Column heading
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "120px",
-            maxWidth: "120px",
-          },
+            dataField: "approvalAuthorityEmp.employeeCode", // Reference the parent object (department)
+            text: "Emp Code", // Column heading
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "120px",
+                maxWidth: "120px",
+            },
         },
         {
-          dataField: "approvalAuthorityEmp",
-          text: "Name",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-            maxWidth: "160px",
-          },
-          formatter: (cell) => {
-            return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
-          },
+            dataField: "approvalAuthorityEmp",
+            text: "Name",
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "160px",
+                maxWidth: "160px",
+            },
+            formatter: (cell) => {
+                return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+            },
         },
         {
-          dataField: "approvalAuthorityEmp.department.deptName",
-          text: "Department",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-            maxWidth: "160px",
-          },
+            dataField: "approvalAuthorityEmp.department.deptName",
+            text: "Department",
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "160px",
+                maxWidth: "160px",
+            },
         },
         {
-          dataField: "approvalAuthorityEmp.designation.formName",
-          text: "Designation",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-            maxWidth: "160px",
-          },
+            dataField: "approvalAuthorityEmp.designation.formName",
+            text: "Designation",
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "160px",
+                maxWidth: "160px",
+            },
         },
         {
-          dataField: "approvalAuthorityEmp.employeeType.formName",
-          text: "Employee Type",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-            maxWidth: "160px",
-          },
+            dataField: "approvalAuthorityEmp.employeeType.formName",
+            text: "Employee Type",
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "160px",
+                maxWidth: "160px",
+            },
         },
         {
-          dataField: "authorityStatus",
-          text: "Self status",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-            maxWidth: "160px",
-          },
-          formatter: (cell) => {
-            let text = "";
-            let classname = "";
-            if (cell === "P") {
-              text = "Pending";
-              classname = "text-pending font-bold";
-            } else if (cell === "A") {
-              text = "Approved";
-              classname = "text-approved font-bold";
-            } else if (cell === "R") {
-              text = "Rejected";
-              classname = "text-rejected font-bold";
-            }
-            return <span className={classname}>{text}</span>;
-          },
+            dataField: "authorityStatus",
+            text: "Self status",
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "160px",
+                maxWidth: "160px",
+            },
+            formatter: (cell) => {
+                let text = "";
+                let classname = "";
+                if (cell === "P") {
+                    text = "Pending";
+                    classname = "text-pending font-bold";
+                } else if (cell === "A") {
+                    text = "Approved";
+                    classname = "text-approved font-bold";
+                } else if (cell === "R") {
+                    text = "Rejected";
+                    classname = "text-rejected font-bold";
+                }
+                return <span className={classname}>{text}</span>;
+            },
         },
         {
-          dataField: "processDate",
-          text: "Process Date",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-            maxWidth: "160px",
-          },
-          formatter: (cell) => {
-            return cell ? format(new Date(cell), "dd-MMM-yyyy:HH:mm:ss") : "";
-          },
+            dataField: "processDate",
+            text: "Process Date",
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "160px",
+                maxWidth: "160px",
+            },
+            formatter: (cell) => {
+                return cell ? format(new Date(cell), "dd-MMM-yyyy:HH:mm:ss") : "";
+            },
         },
         {
-          dataField: "authorityRemarks",
-          text: "Remarks",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-            maxWidth: "160px",
-          },
+            dataField: "authorityRemarks",
+            text: "Remarks",
+            sort: false,
+            sortCaret: sortCaret,
+            headerSortingClasses,
+            style: {
+                minWidth: "160px",
+                maxWidth: "160px",
+            },
         },
-      ];
+    ];
     return (
         <>
             <FieldArray name="list">
@@ -443,6 +443,9 @@ function PatternListForm({
                                 </table>
                             </div>
                         </div>
+
+                        <br />
+                        <h6 className="font-bold mb-0 text-primary">Workflow Authorties</h6>
 
                         <div className="mt-2">
                             <BootstrapTable
