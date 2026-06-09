@@ -119,9 +119,9 @@ export const updateDepartmentWiseBudget = (user, disbaleLoading, onHide) => (dis
     .updateDepartmentWiseBudget(user)
     .then((response) => {
   
-      const updatedHoliday = response?.config?.data; // response.data?.data;
+      const updatedDepartmentWiseBudget = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.departmentWiseBudgetUpdated({ updatedHoliday }));
+      dispatch(actions.departmentWiseBudgetUpdated({ updatedDepartmentWiseBudget }));
     
       disbaleLoading();
       onHide();

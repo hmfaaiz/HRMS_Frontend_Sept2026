@@ -46,6 +46,7 @@ function PatternListForm({
     );
 
     useEffect(() => {
+   
         dispatch(fetchBudgetWorkflow(workflowId));
     }, [workflowId]);
 
@@ -389,6 +390,7 @@ function PatternListForm({
                                                         className="border-none bg-transparent"
                                                         type="button"
                                                         onClick={() => {
+                                                            console.log("click111111")
                                                             setWorkflowId(values?.list?.[index]?.Id);
                                                         }}
                                                     >

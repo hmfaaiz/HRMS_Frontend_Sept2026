@@ -2,7 +2,7 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
-import { FormCard } from "../page/form/form-card/FormCard";
+import { FormCard } from "./form/form-card/FormCard";
 export function BudgetApprovalPage() {
   return (
     <FormUIProvider FormUIEvents={{}}>
