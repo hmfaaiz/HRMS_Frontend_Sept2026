@@ -205,7 +205,13 @@ function PatternListForm({
                             </button>
                             {/* )} */}
                         </div>
-                        <div className="w-full overflow-x-auto">
+                        <div className="w-full overflow-x-auto"
+                            style={{
+                                backgroundColor: "#ffffff",
+                                height: "350px",
+                                padding: "10px",
+                                overflow: "scroll",
+                            }}>
                             <div className="react-bootstrap-table table-responsive">
                                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                                     <thead>
@@ -325,6 +331,7 @@ function PatternListForm({
                                                         className="form-control"
                                                         name={`list[${index}].expected_date_of_joining`}
                                                         value={values?.list?.[index]?.expected_date_of_joining || ""}
+                                                        dateFormat="dd-MMM-yyyy"
                                                         selected={
                                                             values?.list?.[index]?.expected_date_of_joining
                                                                 ? new Date(values?.list?.[index]?.expected_date_of_joining)

@@ -61,8 +61,8 @@ const department_wise_budgetEditSchema = Yup.object().shape({
           .required(VALIDATION_MESSAGES.required),
         sno: Yup.number().required(VALIDATION_MESSAGES.required),
 
-        business_need: Yup.string().required(VALIDATION_MESSAGES.required),
-        impact_of_position: Yup.string().required(VALIDATION_MESSAGES.required),
+        business_need: Yup.string().nullable(),
+        impact_of_position: Yup.string().nullable(),
         expected_date_of_joining: Yup.date()
           .nullable()
           .required(VALIDATION_MESSAGES.required)
