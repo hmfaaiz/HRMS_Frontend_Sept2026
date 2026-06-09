@@ -658,6 +658,10 @@ const department_wise_budget = lazy(() =>
 );
 const portal_department_wise_budget = lazy(() =>
   import("./modules/Portal_Department_Wise_Budget/pages/index"),
+
+
+);const budgetRequest = lazy(() =>
+  import("./modules/BudgetRequest/pages/index"),
 );
 const budget_year_setup = lazy(() =>
   import("./modules/Budget_Year_Setup/pages/index"),
@@ -882,6 +886,7 @@ const ROUTES = {
   department_wise_budget: department_wise_budget,
   portal_department_wise_budget: portal_department_wise_budget,
   budget_setup_year: budget_year_setup
+  budgetRequest: budgetRequest,
 
 };
 
