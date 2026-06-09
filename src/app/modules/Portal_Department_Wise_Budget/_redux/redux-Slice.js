@@ -134,7 +134,12 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
         },
 
 
-
+        BudgetWorkflowStatusFetched: (state, action) => {
+            const data = action.payload;
+            state.actionsLoading = false;
+            state.error = null;
+            state.workflowStatusList = data;
+        },
 
 
     },

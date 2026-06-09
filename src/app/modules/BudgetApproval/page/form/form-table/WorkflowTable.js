@@ -17,8 +17,8 @@ export function WorkflowTable({ onHide, show }) {
   const FormUIContext = useFormUIContext();
   const { workflowStatusList, actionsLoading } = useSelector(
     (state) => ({
-      workflowStatusList: state?.loan_approval?.workflowStatusList,
-      actionsLoading: state?.loan_approval?.actionsLoading,
+      workflowStatusList: state?.department_wise_budget_approval?.workflowStatusList,
+      actionsLoading: state?.department_wise_budget_approval?.actionsLoading,
     }),
     shallowEqual
   );
@@ -28,6 +28,8 @@ export function WorkflowTable({ onHide, show }) {
       currentData: FormUIContext?.currentData,
     };
   });
+
+  console.log("formUIProps11111", formUIProps)
   const columns = [
     {
       dataField: "approvalAuthorityEmp.employeeCode", // Reference the parent object (department)
@@ -203,65 +205,100 @@ export function WorkflowTable({ onHide, show }) {
               <div className="grid grid-cols-12">
                 <div className="col-span-12">
                   <h6 className="font-bold mb-0 text-primary my-2">
-                    Loan Request
+                    Budget Request
                   </h6>
                   <div className="text-sm text-black">
                     <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">Applied Date</div>
+                      <div className="font-medium col-span-1">Budget Year</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.applied_date
+                        {formUIProps?.currentData?.parentData?.BudgetYear.startDate
                           ? format(
-                              new Date(
-                                formUIProps?.currentData?.parentData?.applied_date
-                              ),
-                              "dd-MMM-yyyy"
-                            )
+                            new Date(
+                              formUIProps?.currentData?.parentData?.BudgetYear?.startDate
+                            ),
+                            "dd-MMM-yyyy"
+                          )
                           : ""}
                       </div>
                     </div>
                     <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">Loan Type</div>
+                      <div className="font-medium col-span-1">Department</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.LoanType?.name}
+                        {formUIProps?.currentData?.parentData?.Department.deptName
+                        }
                       </div>
-                    </div>
-                    <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">
-                        Total Loan Amount
-                      </div>
+                    </div> 
+                    
+                    
+                     <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Subsidiary</div>
                       <div className="col-span-1">
-                        {
-                          formUIProps?.currentData?.parentData
-                            ?.total_loan_amount
+                        {formUIProps?.currentData?.parentData?.Subsidiary?.name
                         }
                       </div>
                     </div>
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
-                        Monthly Installment
+                        Designation
                       </div>
                       <div className="col-span-1">
                         {
                           formUIProps?.currentData?.parentData
-                            ?.monthly_installment
+                            ?.Designation.formName
+                        }
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Business Need
+
+                      </div>
+                      <div className="col-span-1">
+                        {
+                          formUIProps?.currentData?.parentData
+                            ?.business_need
+
                         }
                       </div>
                     </div>
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
-                        Total Installment
+                        Impact Of Position
                       </div>
                       <div className="col-span-1">
                         {
                           formUIProps?.currentData?.parentData
-                            ?.total_installment
+                            ?.impact_of_position
                         }
                       </div>
                     </div>
                     <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">Reason</div>
+                      <div className="font-medium col-span-1">Expected Date Of Joining</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.reason}
+                        {formUIProps?.currentData?.parentData?.expected_date_of_joining
+                          ? format(
+                            new Date(
+                              formUIProps?.currentData?.parentData?.expected_date_of_joining
+                            ),
+                            "dd-MMM-yyyy"
+                          )
+                          : ""}
+                      </div>
+                    </div>
+                    
+                    
+                     <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Request Date</div>
+                      <div className="col-span-1">
+                        {formUIProps?.currentData?.parentData?.request_date
+                          ? format(
+                            new Date(
+                              formUIProps?.currentData?.parentData?.request_date
+                            ),
+                            "dd-MMM-yyyy"
+                          )
+                          : ""}
                       </div>
                     </div>
                   </div>

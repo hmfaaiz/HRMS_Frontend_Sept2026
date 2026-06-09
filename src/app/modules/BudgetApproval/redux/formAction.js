@@ -79,7 +79,7 @@ export const handleLoanRequest = (body, resetForm) => () => {
       return res;
     })
     .catch((error) => {
-      error.clientMessage = "Can't Handle Loan Request";
+      error.clientMessage = "Can't Handle Budget Request";
       toast.error(SERVER_MESSAGES.updatedFail);
     });
 };

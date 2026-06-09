@@ -17,11 +17,12 @@ import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePort
 export const FormCard = () => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { listLoading, user, loan } = useSelector(
+  const { listLoading, user, budget } = useSelector(
     (state) => ({
       listLoading: state?.loan_approval?.listLoading,
       user: state?.auth?.user,
       loan: state?.auth?.userAccess["Payroll"],
+      budget: state?.auth?.userAccess["Budget"],
     }),
     shallowEqual
   );
@@ -51,32 +52,14 @@ export const FormCard = () => {
             name={CurrentModuleName()}
             isBackButton={true}
             menuOptions={[
-              // {
-              //   name: "Request",
-              //   link: "/loan_request/read-all-loan-request",
-              //   isShow: loan?.find(
-              //     (el) =>
-              //       el?.componentName === "ReadAllLoanRequest" &&
-              //       el?.isResourceShow
-              //   ),
-              // },
-              // {
-              //   name: "Workflow Status",
-              //   link: "/loan-workflow-status/read-all-loan-workflow-status",
-              //   isShow: loan?.find(
-              //     (el) =>
-              //       el?.componentName === "ReadAllLoanWorkflowStatus" &&
-              //       el?.isResourceShow
-              //   ),
-              // },
-              // {
-              //   name: "Payslip",
-              //   link: "/payslip/read-payslip",
-              //   isShow: loan?.find(
-              //     (el) =>
-              //       el?.componentName === "ReadPayslip" && el?.isResourceShow
-              //   ),
-              // },
+             {
+                name: "Department Wise Budget",
+                link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
+                isShow: budget?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllPortalDepartmentWiseBudget"
+                ),
+              },
             ]}
             isDashboardIcon={true}
           />
@@ -89,6 +72,15 @@ export const FormCard = () => {
             name={CurrentModuleName()}
             isBackButton={true}
             menuOptions={[
+
+               {
+                name: "Department Wise Budget",
+                link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
+                isShow: budget?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllPortalDepartmentWiseBudget"
+                ),
+              },
               // {
               //   name: "Request",
               //   link: "/loan_request/read-all-loan-request",
