@@ -10,6 +10,7 @@ import {
   PanelsTopLeft,
   FolderCheck,
   ListChecks,
+  BanknoteArrowUp,
 } from "lucide-react";
 import { useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
@@ -31,8 +32,9 @@ export const MenuOption = () => {
     projectMgt,
     portalInfo,
     company_doc_portal,
-    employee_task,
+    employee_task,budget,
   } = useSelector((state) => {
+
     return {
       moduleRights: state?.dashboard?.moduleRights,
       attendance: state?.auth?.userAccess["Attendance Management"],
@@ -49,6 +51,7 @@ export const MenuOption = () => {
       company_doc_portal: state?.auth?.userAccess.company_doc_portal,
       portalInfo: state?.dashboard?.portalInfo,
       employee_task: state?.auth?.userAccess["Employee_Task"],
+      budget: state?.auth?.userAccess["Budget"],
     };
   }, shallowEqual);
 
@@ -163,6 +166,13 @@ export const MenuOption = () => {
       el?.portalType == 2,
   );
 
+  const portalDepartmentWiseBudget = budget?.find(
+    (el) =>
+      el?.componentName === "ReadAllPortalDepartmentWiseBudget" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+ 
 
   const MENUOPTION = [
     {
@@ -329,6 +339,18 @@ export const MenuOption = () => {
           link: "/employee_task/read-all-employee-task",
           show: employeeTaskItem,
           name: "Checklist Task",
+        },
+      ],
+    },
+      {
+      icon: <BanknoteArrowUp  className="w-6 h-6 text-black" />,
+      name: "Department Wise Budget",
+      isShow: portalDepartmentWiseBudget,
+      linkList: [
+        {
+          link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
+          show: portalDepartmentWiseBudget,
+          name: "Department Wise Budget",
         },
       ],
     },

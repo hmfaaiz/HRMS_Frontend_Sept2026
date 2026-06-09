@@ -2,16 +2,18 @@ import React from "react";
 import { useSelector, shallowEqual } from "react-redux";
 
 export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
-  const { leave, payroll, attendance, resignation, roster } = useSelector(
+  const { leave, payroll, attendance, resignation, roster,budget } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
       attendance: state?.auth?.userAccess["Attendance"],
       roster: state?.auth?.userAccess["Attendance Management"],
       payroll: state?.auth?.userAccess["Payroll"],
       resignation: state?.auth?.userAccess["Resignation"],
+      budget: state?.auth?.userAccess["Budget"],
     }),
     shallowEqual,
   );
+
 
   const PENDINGAPPROVALWORKFLOWLIST = [
     {
@@ -154,6 +156,26 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       workflowUrl:
         "/resignation_workflow_status/read-all-resignation-workflow-status",
       isModuleAllow: moduleRights?.find((e) => e?.value == "separation")?.allow,
+    },
+    {
+      name: "Budget",
+      count: data?.budetApproval || 0,
+      isApproval: budget?.find(
+        (el) =>
+          el?.componentName == "ReadAllBudgetApproval" &&
+          el?.isResourceShow &&
+          el?.portalType == 2,
+      ),
+      approvalUrl: "/department_wise_budget_approval/read-all-budget-approval",
+      isWorkflow: budget?.find(
+        (el) =>
+          el?.componentName == "" &&
+          el?.isResourceShow &&
+          el?.portalType == 2,
+      ),
+      workflowUrl:
+        "/",
+      isModuleAllow: moduleRights?.find((el) => el?.value ==8)?.allow,
     },
   ];
 

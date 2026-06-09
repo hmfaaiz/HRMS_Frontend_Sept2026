@@ -254,7 +254,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
     ticket_setup_portal,
     reimbursement_claim,
     roster,
-    recruitment,
+    recruitment,budget,
   } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
@@ -269,6 +269,8 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       portal_ticket_creation: state?.auth?.userAccess.portal_ticket_creation,
       ticket_setup_portal: state?.auth?.userAccess["ticket_setup_portal"],
       reimbursement_claim: state?.auth?.userAccess["Payroll"],
+      reimbursement_claim: state?.auth?.userAccess["Payroll"],
+      budget: state?.auth?.userAccess["Budget"],
     }),
     shallowEqual,
   );
@@ -406,6 +408,14 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       el?.isResourceShow &&
       el?.portalType == 2,
   );
+
+    const portalDepartmentWiseBudget = budget?.find(
+    (el) =>
+      el?.componentName === "ReadAllPortalDepartmentWiseBudget" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+ 
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 ">
@@ -584,6 +594,17 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
           showCount={false}
           count={0}
           link={"/company_doc_portal/read-all-company-doc-portal"}
+        />
+      ) : null}
+
+            {/* Department wise Budget  */}
+      {moduleRights?.find((e) => e?.value == 8)?.allow && portalDepartmentWiseBudget ? (
+        <CompactViewCard
+          Icon={HeartHandshake}
+          isTeamExists={isTeamExists}
+          name={"Department Wise Budget"}
+          count={0}
+          link={"/portal_department_wise_budget/read-all-portal-department-wise-budget"}
         />
       ) : null}
     </div>

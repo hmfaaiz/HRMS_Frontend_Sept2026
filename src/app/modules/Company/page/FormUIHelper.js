@@ -94,6 +94,11 @@ export const moduleList = [
     key: "task",
     value: false,
   },
+   {
+    label: "Budget",
+    key: "budget",
+    value: false,
+  },
 ];
 
 export const initialFilter = {
