@@ -89,6 +89,7 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
 
   return (
     <Modal
+
       size="xl"
       show={show}
       onHide={onHide}

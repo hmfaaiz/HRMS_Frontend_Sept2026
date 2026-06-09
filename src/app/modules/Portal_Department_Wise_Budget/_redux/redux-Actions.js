@@ -119,9 +119,9 @@ export const updateDepartmentWiseBudget = (user, disbaleLoading, onHide) => (dis
     .updateDepartmentWiseBudget(user)
     .then((response) => {
   
-      const updatedHoliday = response?.config?.data; // response.data?.data;
+      const updatedDepartmentWiseBudget = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.departmentWiseBudgetUpdated({ updatedHoliday }));
+      dispatch(actions.departmentWiseBudgetUpdated({ updatedDepartmentWiseBudget }));
     
       disbaleLoading();
       onHide();
@@ -168,4 +168,21 @@ export const getEmployeeAuthorities = (empId) => (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't Get Employee Authorities";
     });
+};
+
+export const fetchBudgetWorkflow = (Id) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  if (Id) {
+    return requestFromServer
+      .getAllWorkflowStatusById(Id)
+      .then((response) => {
+        dispatch(actions.BudgetWorkflowStatusFetched(response.data?.data));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Workflow";
+        dispatch(actions.catchError({ error, callType: callTypes.action }));
+      });
+  } else {
+    dispatch(actions.BudgetWorkflowStatusFetched([]));
+  }
 };

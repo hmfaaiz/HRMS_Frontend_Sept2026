@@ -159,7 +159,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
     },
     {
       name: "Budget",
-      count: data?.budetApproval || 0,
+      count: data?.BudgetApproval || 0,
       isApproval: budget?.find(
         (el) =>
           el?.componentName == "ReadAllBudgetApproval" &&
@@ -167,14 +167,14 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
           el?.portalType == 2,
       ),
       approvalUrl: "/department_wise_budget_approval/read-all-budget-approval",
-      isWorkflow: budget?.find(
-        (el) =>
-          el?.componentName == "" &&
-          el?.isResourceShow &&
-          el?.portalType == 2,
-      ),
-      workflowUrl:
-        "/",
+      // isWorkflow: budget?.find(
+      //   (el) =>
+      //     el?.componentName == "" &&
+      //     el?.isResourceShow &&
+      //     el?.portalType == 2,
+      // ),
+      // workflowUrl:
+      //   "/",
       isModuleAllow: moduleRights?.find((el) => el?.value ==8)?.allow,
     },
   ];
