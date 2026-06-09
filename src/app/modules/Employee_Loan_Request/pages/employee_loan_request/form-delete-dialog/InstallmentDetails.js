@@ -127,11 +127,10 @@ export function InstallmentDetails({ id, status, show, onHide }) {
                     "remaining-check",
                     "Installment exceeds remaining loan amount",
                     function (details) {
-
                         const { total_loan_amount } = this.parent;
 
                         if (!Array.isArray(details)) return true;
-
+                    
                         let remaining = Number(total_loan_amount || 0);
 
                         for (let i = 0; i < details.length; i++) {
@@ -159,12 +158,14 @@ export function InstallmentDetails({ id, status, show, onHide }) {
                     function (details) {
 
                         const { total_loan_amount } = this.parent;
-
                         if (!Array.isArray(details)) return true;
+                        const cash_pay_amounts = this.parent?.cash_detail?.length > 0 ? this.parent?.cash_detail.reduce((sum, item) => {
+                            return sum + Number(item?.payment_amount || 0);
+                        }, 0) : 0
 
                         const totalLoan = Number(total_loan_amount || 0);
 
-                        const totalPaid = details.reduce((sum, item) => {
+                        const totalPaid = cash_pay_amounts + details.reduce((sum, item) => {
                             return sum + Number(item?.amount_received || 0);
                         }, 0);
 
@@ -242,7 +243,6 @@ export function InstallmentDetails({ id, status, show, onHide }) {
             }
         }
         setMonthlyInstallmentsLimit(monthlyInstallment);
-        console.log("monthlyInstallmen777777", userForEdit?.loan_typeId, loan_config_details_permission, monthlyInstallment)
     }, [userForEdit, loan_config_details_permission]);
 
 
