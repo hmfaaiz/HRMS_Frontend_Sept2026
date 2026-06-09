@@ -19,9 +19,8 @@ export const FormCard = () => {
   const FormUIContext = useFormUIContext();
   const { listLoading, user, budget } = useSelector(
     (state) => ({
-      listLoading: state?.loan_approval?.listLoading,
+      listLoading: state?.department_wise_budget_approval?.listLoading,
       user: state?.auth?.user,
-      loan: state?.auth?.userAccess["Payroll"],
       budget: state?.auth?.userAccess["Budget"],
     }),
     shallowEqual
@@ -37,7 +36,7 @@ export const FormCard = () => {
   });
   useEffect(() => {
     dispatch(
-      action.fetchLoanApprovalApplication(
+      action.fetchBudgetApprovalApplication(
         formUIProps?.queryParams,
         user?.employeeIdMapping
       )
@@ -81,32 +80,7 @@ export const FormCard = () => {
                     el?.componentName === "ReadAllPortalDepartmentWiseBudget"
                 ),
               },
-              // {
-              //   name: "Request",
-              //   link: "/loan_request/read-all-loan-request",
-              //   isShow: loan?.find(
-              //     (el) =>
-              //       el?.componentName === "ReadAllLoanRequest" &&
-              //       el?.isResourceShow
-              //   ),
-              // },
-              // {
-              //   name: "Workflow Status",
-              //   link: "/loan-workflow-status/read-all-loan-workflow-status",
-              //   isShow: loan?.find(
-              //     (el) =>
-              //       el?.componentName === "ReadAllLoanWorkflowStatus" &&
-              //       el?.isResourceShow
-              //   ),
-              // },
-              // {
-              //   name: "Payslip",
-              //   link: "/payslip/read-payslip",
-              //   isShow: loan?.find(
-              //     (el) =>
-              //       el?.componentName === "ReadPayslip" && el?.isResourceShow
-              //   ),
-              // },
+ 
             ]}
             isDashboardIcon={true}
           />

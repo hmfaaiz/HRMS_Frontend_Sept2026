@@ -142,7 +142,7 @@ export function WorkflowTable({ onHide, show }) {
     },
   ];
   useEffect(() => {
-    dispatch(actions.fetchLoanWorkflow(formUIProps?.workflowId));
+    dispatch(actions.fetchBudgetWorkflow(formUIProps?.workflowId));
   }, [formUIProps.workflowId]);
   return (
     <Modal
@@ -211,14 +211,23 @@ export function WorkflowTable({ onHide, show }) {
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">Budget Year</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.BudgetYear.startDate
-                          ? format(
-                            new Date(
-                              formUIProps?.currentData?.parentData?.BudgetYear?.startDate
-                            ),
+                        {formUIProps?.currentData?.parentData?.BudgetYear ? (() => {
+                          const startDate = format(
+                            new Date(formUIProps.currentData.parentData.BudgetYear.startDate),
                             "dd-MMM-yyyy"
-                          )
-                          : ""}
+                          );
+
+                          const endDate = format(
+                            new Date(formUIProps.currentData.parentData.BudgetYear.endDate),
+                            "dd-MMM-yyyy"
+                          );
+
+                          const year = new Date(
+                            formUIProps.currentData.parentData.BudgetYear.endDate
+                          ).getFullYear();
+
+                          return `Year - ${year} (${startDate} to ${endDate})`;
+                        })() : ""}
                       </div>
                     </div>
                     <div className="grid grid-cols-4">
@@ -227,10 +236,10 @@ export function WorkflowTable({ onHide, show }) {
                         {formUIProps?.currentData?.parentData?.Department.deptName
                         }
                       </div>
-                    </div> 
-                    
-                    
-                     <div className="grid grid-cols-4">
+                    </div>
+
+
+                    <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">Subsidiary</div>
                       <div className="col-span-1">
                         {formUIProps?.currentData?.parentData?.Subsidiary?.name
@@ -286,9 +295,9 @@ export function WorkflowTable({ onHide, show }) {
                           : ""}
                       </div>
                     </div>
-                    
-                    
-                     <div className="grid grid-cols-4">
+
+
+                    <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">Request Date</div>
                       <div className="col-span-1">
                         {formUIProps?.currentData?.parentData?.request_date

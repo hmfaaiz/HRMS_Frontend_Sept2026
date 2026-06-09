@@ -26,9 +26,7 @@ export const FormFilter = ({ loading, queryParams }) => {
     dispatch(getEmployeeHierarchy(currentLevel));
   }, [currentLevel]);
 
-  useEffect(() => {
-    dispatch(actions.getPayrollMonth(user?.employeeIdMapping));
-  }, []);
+
   const prepareFilter = (queryParams, values) => {
     const newQueryParams = { ...queryParams };
     newQueryParams.filter = { ...values };

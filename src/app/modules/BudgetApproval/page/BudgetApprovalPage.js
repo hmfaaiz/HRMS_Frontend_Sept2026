@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
 import { FormCard } from "../page/form/form-card/FormCard";
-export function LoanApprovalPage() {
+export function BudgetApprovalPage() {
   return (
     <FormUIProvider FormUIEvents={{}}>
       <FormCard />

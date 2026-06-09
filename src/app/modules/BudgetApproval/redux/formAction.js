@@ -4,42 +4,27 @@ import { BudgetApprovalSlice, callTypes } from "./formSlice";
 import { toast } from "react-toastify";
 const { actions } = BudgetApprovalSlice;
 
-export const fetchLoanApprovalApplication = (
+export const fetchBudgetApprovalApplication = (
   queryparm,
   employeeId
 ) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.list }));
   if (employeeId) {
     return requestFromServer
-      .getAllLoanApproval({ ...queryparm, employeeId })
+      .getAllBudgetApproval({ ...queryparm, employeeId })
       .then((response) => {
-        dispatch(actions.LoanApprovalApplicationFetched(response));
+        dispatch(actions.BudgetApprovalApplicationFetched(response));
       })
       .catch((error) => {
-        error.clientMessage = "Can't find Loan Data";
+        error.clientMessage = "Can't find Budget Data";
         dispatch(actions.catchError({ error, callType: callTypes.list }));
       });
   } else {
-    dispatch(actions.LoanApprovalApplicationFetched({}));
+    dispatch(actions.BudgetApprovalApplicationFetched({}));
   }
 };
 
-export const getPayrollMonth = (employeeId) => (dispatch) => {
-  if (!employeeId) {
-    dispatch(actions.PayrollMonthFetched({ payrollData: null }));
-  } else {
-    return requestFromServer
-      .getPayrollMonth({ employeeId })
-      .then((res) => {
-        const payrollData = res.data?.data;
-        dispatch(actions.PayrollMonthFetched({ payrollData }));
-      })
-      .catch((error) => {
-        dispatch(actions.PayrollMonthFetched({ payrollData: null }));
-        error.clientMessage = "Can't Get Payroll Data";
-      });
-  }
-};
+
 
 export const getEmployeeAuthorities = (empId) => (dispatch) => {
   return requestFromServer
@@ -53,26 +38,26 @@ export const getEmployeeAuthorities = (empId) => (dispatch) => {
     });
 };
 
-export const fetchLoanWorkflow = (Id) => async (dispatch) => {
+export const fetchBudgetWorkflow = (Id) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   if (Id) {
     return requestFromServer
       .getAllWorkflowStatusById(Id)
       .then((response) => {
-        dispatch(actions.LoanWorkflowStatusFetched(response.data?.data));
+        dispatch(actions.BudgetWorkflowStatusFetched(response.data?.data));
       })
       .catch((error) => {
         error.clientMessage = "Can't find Workflow";
         dispatch(actions.catchError({ error, callType: callTypes.action }));
       });
   } else {
-    dispatch(actions.LoanWorkflowStatusFetched([]));
+    dispatch(actions.BudgetWorkflowStatusFetched([]));
   }
 };
 
-export const handleLoanRequest = (body, resetForm) => () => {
+export const handleBudgetRequest = (body, resetForm) => () => {
   return requestFromServer
-    .handleLoanRequest(body)
+    .handleBudgetRequest(body)
     .then((res) => {
       toast.success(SERVER_MESSAGES.processSuccessful);
       resetForm();

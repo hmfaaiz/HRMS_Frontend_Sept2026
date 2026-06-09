@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
 import { Redirect, Switch } from "react-router-dom";
 import { ContentRoute, LayoutSplashScreen } from "../../../../_metronic/layout";
-import { LoanApprovalPage } from "./LoanApprovalPage";
+import { BudgetApprovalPage } from "./BudgetApprovalPage";
 
-export default function LoanApprovalManagement() {
+export default function BudgetApprovalManagement() {
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
@@ -16,7 +16,7 @@ export default function LoanApprovalManagement() {
         }
         <ContentRoute
           path="/department_wise_budget_approval/read-all-budget-approval"
-          component={LoanApprovalPage}
+          component={BudgetApprovalPage}
         />
       </Switch>
     </Suspense>

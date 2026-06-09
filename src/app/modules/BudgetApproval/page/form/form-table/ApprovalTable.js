@@ -48,7 +48,7 @@ export function ApprovalFormTable() {
 
   useEffect(() => {
     dispatch(
-      actions.fetchLoanApprovalApplication(
+      actions.fetchBudgetApprovalApplication(
         FormUIProps.queryParams,
         user?.employeeIdMapping
       )

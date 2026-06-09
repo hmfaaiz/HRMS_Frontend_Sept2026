@@ -43,12 +43,12 @@ export const FormApproval = () => {
   const handleRequestSubmit = async (values, resetForm) => {
     try {
       setLoading(true);
-      await dispatch(actions.handleLoanRequest(values, resetForm));
+      await dispatch(actions.handleBudgetRequest(values, resetForm));
       // setLoading(false);
       formUIProps.setIds([]);
       formUIProps.setCurrentData(null);
       await dispatch(
-        actions.fetchLoanApprovalApplication(
+        actions.fetchBudgetApprovalApplication(
           initialFilter,
           user?.employeeIdMapping
         )

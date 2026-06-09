@@ -15,7 +15,7 @@ export const callTypes = {
 };
 
 export const BudgetApprovalSlice = createSlice({
-  name: "loan_approval",
+  name: "department_wise_budget_approval",
   initialState: initialState,
   reducers: {
     catchError: (state, action) => {
@@ -34,7 +34,7 @@ export const BudgetApprovalSlice = createSlice({
         state.actionsLoading = true;
       }
     },
-    LoanApprovalApplicationFetched: (state, action) => {
+    BudgetApprovalApplicationFetched: (state, action) => {
       const entities = action.payload.data?.data?.rows || [];
       const totalResult = action.payload.data?.data?.totalResults || 0;
       state.listLoading = false;
@@ -47,7 +47,7 @@ export const BudgetApprovalSlice = createSlice({
       state.error = null;
       state.payrollData = payrollData;
     },
-    LoanWorkflowStatusFetched: (state, action) => {
+    BudgetWorkflowStatusFetched: (state, action) => {
       const data = action.payload;
       state.actionsLoading = false;
       state.error = null;
