@@ -659,6 +659,9 @@ const department_wise_budget = lazy(() =>
 const portal_department_wise_budget = lazy(() =>
   import("./modules/Portal_Department_Wise_Budget/pages/index"),
 );
+const budget_year_setup = lazy(() =>
+  import("./modules/Budget_Year_Setup/pages/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -871,13 +874,14 @@ const ROUTES = {
   interview_recommendations: interview_recommendations,
   job_requestion_approval: job_requestion_approval,
   travel_request_reports: TravelRequestReportsModule,
-  job_requestion_workflow : JobRequestionWorkflowStatus,
-  job_requestion_workflow_approval : JobRequestionWorkflowStatusApproval,
+  job_requestion_workflow: JobRequestionWorkflowStatus,
+  job_requestion_workflow_approval: JobRequestionWorkflowStatusApproval,
   close_payroll_month: ClosePayrollMonthSetupModule,
   employee_task: employee_task_portal,
   policy_for_new_year_budget: policy_for_new_year_budget,
   department_wise_budget: department_wise_budget,
   portal_department_wise_budget: portal_department_wise_budget,
+  budget_setup_year: budget_year_setup
 
 };
 

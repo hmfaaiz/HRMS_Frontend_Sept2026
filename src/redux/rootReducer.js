@@ -46,6 +46,7 @@ import { employee_transfer_slice } from "../app/modules/Employee_Transfer/_redux
 // import { SalaryRevisionSlice } from "../app/modules/Employee_Salary_Revision/_redux/SalaryRevisionSlice";
 
 import { fiscalSetupSlice } from "../app/modules/Fiscal_Setup/_redux/fiscalSetupSlice";
+import { budgetYearSetupSlice } from "../app/modules/Budget_Year_Setup/_redux/budgetYearSetupSlice";
 import { PayrollMonthSlice } from "../app/modules/Payroll_Month_Setup/_redux/PayrollMonthSlice";
 import { ArrearSetupSlice } from "../app/modules/ArrearPolicy/_redux/arrearPolicySlice";
 import { SalaryRoundingPolicySlice } from "../app/modules/SalaryRoundingPolicy/_redux/salaryRoundingPolicySlice";
@@ -275,6 +276,7 @@ export const rootReducer = combineReducers({
   // salary_revision: SalaryRevisionSlice.reducer,
   tax_setup: taxSetupSlice.reducer,
   fiscal_setup: fiscalSetupSlice.reducer,
+  budget_year_setup: budgetYearSetupSlice.reducer,
   payroll_month: PayrollMonthSlice.reducer,
   arrear_policy: ArrearSetupSlice.reducer,
   salary_rounding_policy: SalaryRoundingPolicySlice.reducer,
