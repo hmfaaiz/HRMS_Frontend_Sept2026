@@ -73,7 +73,7 @@ export function FormCard() {
 
   const handleEditFromTable = (row) => {
     FormUIProps.setemployeeId(row.employeeId);
-    FormUIProps.setLoanTypeId(row.loan_typeId);
+    FormUIProps.setLoanTypeId(row.employee_loan_requestId);
     const selectedEmp = dashboard.allEmployees?.find((e) => e.value === row.employeeId);
     dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
     FormUIProps.setIsViewMode(false);
@@ -89,8 +89,9 @@ export function FormCard() {
   };
 
   const handleViewFromTable = (row) => {
+    
     FormUIProps.setemployeeId(row.employeeId);
-    FormUIProps.setLoanTypeId(row.loan_typeId);
+    FormUIProps.setLoanTypeId(row.employee_loan_requestId);
     const selectedEmp = dashboard.allEmployees?.find((e) => e.value === row.employeeId);
     dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
     FormUIProps.setIsViewMode(true);

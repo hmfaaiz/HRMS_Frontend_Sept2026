@@ -1245,7 +1245,7 @@ export function MasterEditForm({
                     </button>
                   )}
 
-                  {!isUserForRead && !values.isFinalize && (
+                  {id && !isUserForRead && !values.isFinalize && (
                     <button
                       type="button"
                       className="btn btn-primary btn-elevate"

@@ -274,6 +274,11 @@ const EmailConfiguration = lazy(() =>
   import("./modules/EmailConfiguration/pages/index"),
 );
 
+const AiApiConfiguration = lazy(() =>
+  import("./modules/Ai_Api_Configuration/pages/index"),
+);
+
+
 const DesignationMapping = lazy(() =>
   import("./modules/DesignationMapping/pages/index"),
 );
@@ -340,6 +345,10 @@ const DesignationWiseGoalSetup = lazy(() =>
 
 const EmployeeGoalSetup = lazy(() =>
   import("./modules/EmployeeGoalSetup/pages/index"),
+);
+
+const EmployeeGoalSetupPortal = lazy(() =>
+  import("./modules/EmployeeGoalSetupPortal/pages/index"),
 );
 
 const ContributionReport = lazy(() =>
@@ -639,6 +648,21 @@ const JobRequestionWorkflowStatusApproval = lazy(() =>
 const employee_task_portal = lazy(() =>
   import("./modules/employee_task_portal/pages/index"),
 );
+
+const policy_for_new_year_budget = lazy(() =>
+  import("./modules/PolicyforNewYearBudget/pages/index"),
+);
+
+const department_wise_budget = lazy(() =>
+  import("./modules/Department_Wise_Budget/pages/index"),
+);
+const portal_department_wise_budget = lazy(() =>
+  import("./modules/Portal_Department_Wise_Budget/pages/index"),
+
+
+);const budgetRequest = lazy(() =>
+  import("./modules/BudgetRequest/pages/index"),
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -745,6 +769,7 @@ const ROUTES = {
   career: RecruitmentConfiguration,
   configuration: DashboardAlertConfig,
   email_configuration: EmailConfiguration,
+  ai_api_configuration: AiApiConfiguration,
   exit_type_exit_reason: ExitTypeExitReasonModule,
   separation: SeparationModule,
   email_configuration: EmailConfiguration,
@@ -766,6 +791,7 @@ const ROUTES = {
   appraisal_evaluation: AppraisalEvaluationManagement,
   designation_wise_goal_setup: DesignationWiseGoalSetup,
   employee_goal_setup: EmployeeGoalSetup,
+  employee_goal_setup_portal: EmployeeGoalSetupPortal,
   contribution_report: ContributionReport,
   release_payslip: ReleasePayslip,
   employee_resignation: ResignationRequest,
@@ -840,7 +866,7 @@ const ROUTES = {
   attendance_roster_workflow_status: attendance_roster_workflow_status,
   attendance_roster_workflow_status_portal: attendance_roster_workflow_status_portal,
   post_approval_travel_request: post_approval_travel_request,
-  post_travel_request_portal: post_travel_request,
+  post_travel_request: post_travel_request,
   roster_calendar_team: roster_calendar_team,
   travel_request_workflow_status: travel_request_workflow_status,
   travel_request_workflow_status_approval: travel_request_workflow_status_approval,
@@ -853,6 +879,10 @@ const ROUTES = {
   job_requestion_workflow_approval : JobRequestionWorkflowStatusApproval,
   close_payroll_month: ClosePayrollMonthSetupModule,
   employee_task: employee_task_portal,
+  policy_for_new_year_budget: policy_for_new_year_budget,
+  department_wise_budget: department_wise_budget,
+  portal_department_wise_budget: portal_department_wise_budget,
+  budgetRequest: budgetRequest,
 
 };
 

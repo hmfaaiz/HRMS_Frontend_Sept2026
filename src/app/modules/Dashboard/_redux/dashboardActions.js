@@ -951,3 +951,16 @@ export const fetchAttLogsByDate = (body) => async (dispatch) => {
     });
 };
 
+export const fetchAllBudgetYearDataBySubsidiaryId = (subsidiaryId) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllBudgetYearBySubsidiaryId({ subsidiaryId })
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllBudgetYearBySubListFetch(entities));
+    })
+    .catch((error) => {
+      // toast.error("Something went wrong");
+    });
+};

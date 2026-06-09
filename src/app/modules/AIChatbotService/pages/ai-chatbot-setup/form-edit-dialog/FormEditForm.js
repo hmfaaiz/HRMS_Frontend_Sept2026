@@ -62,9 +62,9 @@ export function FormEditForm({
   }, [currentChat]);
 
   return (
-    <div className="grid grid-cols-12 min-h-[80dvh] gap-x-2 overflow-hidden">
+    <div className="grid grid-cols-12  gap-x-2 overflow-hidden">
       <ChatListComp chatData={chatList} id={id} />
-      <div className="col-span-12 md:col-span-8 lg:col-span-10 flex flex-col bg-white min-w-0 rounded-2xl">
+      <div className="col-span-12 md:col-span-8 lg:col-span-10 flex flex-col max-h-[80dvh] bg-white min-w-0 rounded-2xl">
         {/* Header */}
         {/* <div className="flex-shrink-0 text-gray-800 text-xl font-semibold py-4 border-b border-gray-200 px-4">
           <span>AI HR Assistant</span>
@@ -335,7 +335,7 @@ const ChatListComp = ({ chatData = [], id }) => {
   };
 
   return (
-    <div className="col-span-12 md:col-span-4 space-y-3 rounded-2xl lg:col-span-2 bg-tprimary border-r px-4 border-gray-200 flex flex-col h-full md:max-h-none max-h-[220px] overflow-hidden">
+    <div className="col-span-12 max-h-[80dvh] md:col-span-4 space-y-3 rounded-2xl lg:col-span-2 bg-tprimary px-4 flex flex-col">
       {/* New Chat Button */}
       <div className="pt-4 border-b border-gray-200">
         <button
@@ -349,11 +349,11 @@ const ChatListComp = ({ chatData = [], id }) => {
       </div>
       <div />
       {/* Chat List */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-track-tprimary">
         {chatData.length === 0 ? (
           <div className="text-center text-black py-6">No chats available</div>
         ) : (
-          <div className="divide-y divide-gray-200 space-y-3">
+          <div className=" space-y-3">
             {chatData.map((chat) => (
               <div
                 key={chat.sessionId}

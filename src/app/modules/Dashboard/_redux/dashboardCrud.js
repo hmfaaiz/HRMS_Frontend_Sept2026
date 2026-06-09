@@ -305,3 +305,7 @@ export const getAllCurrentParentTask = async () => {
 export const getAttLogsByDate = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-date-att-logs`, body);
 };
+
+export const getAllBudgetYearBySubsidiaryId = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-budget-year-by-SubsidiaryId`,body);
+};

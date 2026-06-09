@@ -54,6 +54,9 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.request_status",
       text: "Request Status",
+      sort: true,
+      sortCaret: sortCaret,
+      headerSortingClasses,
       style: { minWidth: "60px", maxWidth: "60px" },
       formatter: (cell) => {
         const map = {
@@ -177,7 +180,7 @@ export function ApprovalFormTable() {
         wrapperClasses="table-responsive"
         bordered={false}
         classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}  
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}  
         bootstrap4
         selectRow={{
           mode: "checkbox",
@@ -199,7 +202,7 @@ export function ApprovalFormTable() {
             FormUIProps.setIds(isSelect ? selectable.map((r) => r.Id) : []);
           },
         }}
-        remote
+        // remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}

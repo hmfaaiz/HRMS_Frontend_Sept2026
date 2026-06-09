@@ -380,6 +380,7 @@ export function FormEditForm({
                       <div className="flex justify-start items-center border-none">
                         <input
                           className="mr-1"
+                          disabled={checkPayroll_EmployeesExist?.revert}
                           name="employeeId"
                           type="checkbox"
                           value={option.Id}
@@ -423,6 +424,7 @@ export function FormEditForm({
                           <input
                             className="mr-1 form-control"
                             name="reason"
+                            disabled={checkPayroll_EmployeesExist?.revert}
                             type="text"
                             value={selectedItem?.reason || ""}
                             placeholder="Reason"
@@ -471,7 +473,7 @@ export function FormEditForm({
         {currentState?.payroll_group_details?.employees_list.length > 0 && (
           <Button
             variant="primary"
-            disabled={!selectedEmployees?.length}
+            disabled={checkPayroll_EmployeesExist?.revert}
             onClick={() => {
               const cleanSelectedEmployees = selectedEmployees.filter(
                 (item) => typeof item === "object"
@@ -543,6 +545,7 @@ export function FormEditForm({
                       <div className="flex justify-start items-center border-none">
                         <input
                           className="mr-1"
+                          disabled={checkPayroll_EmployeesExist?.revert}
                           name="employeeId"
                           type="checkbox"
                           value={option.Id}
@@ -576,6 +579,7 @@ export function FormEditForm({
                           <input
                             className={`mr-1 form-control ${isReasonEmpty ? 'is-invalid' : ''}`}
                             name="reason"
+                            disabled={checkPayroll_EmployeesExist?.revert}
                             type="text"
                             value={selectedItem?.reason || ""}
                             placeholder="Reason (Required)"
@@ -622,7 +626,7 @@ export function FormEditForm({
           ?.for_loan_employees_list.length > 0 && (
           <Button
             variant="primary"
-            disabled={!selectedLoans?.length}
+            disabled={checkPayroll_EmployeesExist?.revert}
             onClick={() => {
               // Validate all checked items have reason
               const invalidItems = selectedLoans.filter(

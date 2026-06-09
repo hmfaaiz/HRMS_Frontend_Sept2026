@@ -60,7 +60,7 @@ export function ApprovalFormTable() {
     {
       dataField: "authorityStatus",
       text: "status",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -175,7 +175,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.LoanType.name",
       text: "Loan Type",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -186,7 +186,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.total_loan_amount",
       text: "Total Loan Amount",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -197,7 +197,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.monthly_installment",
       text: "Monthly Installment",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -208,7 +208,7 @@ export function ApprovalFormTable() {
     {
       dataField: "parentData.total_installment",
       text: "Total Installments",
-      sort: false,
+      sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
@@ -294,12 +294,12 @@ export function ApprovalFormTable() {
             }
           },
         }}
-        remote
+        // remote
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
       >
         <PleaseWaitMessage entities={entities} />
         <NoRecordsFoundMessage entities={entities} />
