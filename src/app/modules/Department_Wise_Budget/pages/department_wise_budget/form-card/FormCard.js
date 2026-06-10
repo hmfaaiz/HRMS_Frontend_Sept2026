@@ -26,19 +26,19 @@ export function FormCard() {
 
   const { userAccess } = useSelector(
     (state) => ({
-      userAccess: state.auth.userAccess.holidays,
+      userAccess: state.auth.userAccess.department_wise_budget,
     }),
     shallowEqual
   );
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateHolidays"
+    (item) => item.componentName === "CreateDepartmentWiseBudget"
   );
 
   const { currentState } = useSelector((state) => {
     return {
-      currentState: state.holidays,
-      userAccess: state?.auth?.userAccess["holidays"],
+      currentState: state.department_wise_budget,
+      userAccess: state?.auth?.userAccess["department_wise_budget"],
     };
   }, shallowEqual);
 
@@ -53,27 +53,27 @@ export function FormCard() {
 
 
 
-      <div className="grid items-center justify-end ">
-        {/* <CardHeaderToolbar> */}
-        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+      <div className="grid md:grid-cols-7 justify-between  items-center gap-2 ">
+        <div className="grid md:col-span-5">
           <FormFIlter />
 
-
-          {accessUser && (
-            <>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={FormUIProps.newFormButtonClick}
-              >
-
-                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                Add
-              </button>
-            </>
-          )}
-
+       
         </div>
+           <div className="flex md:col-span-2 items-center gap-2 justify-end ">
+            {accessUser && (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={FormUIProps.newFormButtonClick}
+                >
+
+                  <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                  Add
+                </button>
+              </>
+            )}
+          </div>
 
 
       </div>

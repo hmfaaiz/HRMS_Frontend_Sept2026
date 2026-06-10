@@ -3,7 +3,7 @@ import { Redirect, Switch } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./department_wise_budget/FormPage";
 
-export default function HolidaysManagement() {
+export default function DepartmentWiseBudgetManagement() {
 
   return (
     <Suspense fallback={<LayoutSplashScreen />}>

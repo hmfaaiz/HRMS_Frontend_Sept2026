@@ -38,7 +38,7 @@ export function ActionsColumnFormatter(
         </a>
       </OverlayTrigger>
       )}
-      {isAccessForEdit  && (
+      {isAccessForEdit  && row?.BudgetYear?.isEditable && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
