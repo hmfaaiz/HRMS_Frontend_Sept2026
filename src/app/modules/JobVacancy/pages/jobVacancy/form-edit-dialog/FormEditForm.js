@@ -861,7 +861,13 @@ export function FormEditForm({
                           (item) => item.value === Number(values.departmentWiseBudgetId)
                         ) || { label: "Select", value: "" }
                       }
-                      options={dashboard?.budgetRequestList}
+             
+                      options={[
+                        { label: "Select", value: null },
+                        ...(Array.isArray(dashboard?.budgetRequestList)
+                          ? dashboard.budgetRequestList
+                          : []),
+                      ]}
                       error={errors.departmentWiseBudgetId}
                       touched={touched.departmentWiseBudgetId}
                     />
