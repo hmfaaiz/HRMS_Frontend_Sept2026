@@ -31,7 +31,9 @@ export const fetchAttendanceWorkflow = (Id) => async (dispatch) => {
     return requestFromServer
       .getAllWorkflowStatusById(Id)
       .then((response) => {
-        dispatch(actions.LeaveWorkflowStatusFetched(response.data?.data));
+        const data = response.data?.data;
+        const workflowList = Array.isArray(data) ? data : data?.workflowList || [];
+        dispatch(actions.LeaveWorkflowStatusFetched(workflowList));
       })
       .catch((error) => {
         error.clientMessage = "Can't find Workflow";
