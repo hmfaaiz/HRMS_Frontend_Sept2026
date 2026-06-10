@@ -21,10 +21,8 @@ export function ApprovalFormTable() {
     () => ({
       queryParams:    formUIContext?.queryParams,
       setQueryParams: formUIContext?.setQueryParams,
-      setIds:         formUIContext?.setIds,
       setCurrentData: formUIContext?.setCurrentData,
       setWorkflowId:  formUIContext?.setWorkflowId,
-      Ids:            formUIContext?.Ids,
     }),
     [formUIContext]
   );
@@ -75,32 +73,18 @@ export function ApprovalFormTable() {
       sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "90px", maxWidth: "90px" },
+      style: { minWidth: "120px", maxWidth: "120px" },
       formatter: statusFormatter,
     },
     {
-      dataField: "requestBelongToEmp",
-      text: "Employee",
+      dataField: "parentData.budgetCode",
+      text: "Budget Code",
       sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "200px", maxWidth: "200px" },
-      formatter: (cell) => {
-        const code = cell?.employeeCode || "";
-        const name = `${cell?.firstName || ""} ${
-          cell?.middleName ? cell.middleName + " " : ""
-        }${cell?.lastName || ""}`.trim();
-        return code && name ? `${code} - ${name}` : code || name || "";
-      },
+      style: { minWidth: "130px", maxWidth: "130px" },
+      formatter: (cell) => cell || "—",
     },
-    // {
-    //   dataField: "parentData.Subsidiary.name",
-    //   text: "Subsidiary",
-    //   sort: true,
-    //   sortCaret,
-    //   headerSortingClasses,
-    //   style: { minWidth: "140px", maxWidth: "140px" },
-    // },
     {
       dataField: "parentData.Department.deptName",
       text: "Department",
@@ -118,6 +102,20 @@ export function ApprovalFormTable() {
       style: { minWidth: "160px", maxWidth: "160px" },
     },
     {
+      dataField: "parentData.BudgetYear",
+      text: "Budget Year",
+      sort: true,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "160px", maxWidth: "160px" },
+      formatter: (cell) => {
+        if (!cell) return "—";
+        const from = cell.startDate ? format(new Date(cell.startDate), "dd-MMM-yyyy") : "";
+        const to   = cell.endDate   ? format(new Date(cell.endDate),   "dd-MMM-yyyy") : "";
+        return from && to ? `${from} - ${to}` : from || to || "—";
+      },
+    },
+    {
       dataField: "parentData.budgeted_strength",
       text: "Strength",
       sort: true,
@@ -125,16 +123,6 @@ export function ApprovalFormTable() {
       headerSortingClasses,
       style: { minWidth: "80px", maxWidth: "80px" },
     },
-    // {
-    //   dataField: "parentData.budgeted_salary",
-    //   text: "Budget Salary",
-    //   sort: true,
-    //   sortCaret,
-    //   headerSortingClasses,
-    //   style: { minWidth: "120px", maxWidth: "120px" },
-    //   formatter: (cell) =>
-    //     cell != null ? Number(cell).toLocaleString() : "",
-    // },
     {
       dataField: "parentData.request_date",
       text: "Request Date",
@@ -165,40 +153,18 @@ export function ApprovalFormTable() {
         setCurrentData: FormUIProps.setCurrentData,
       },
       headerClasses: "text-right",
-      style: { minWidth: "80px" },
+      style: { minWidth: "20px" },
     },
   ];
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto mt-4">
       <BootstrapTable
         noDataIndication={NoRecordsFoundMessage({ entities })}
         wrapperClasses="table-responsive"
         bordered={false}
         classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
         bootstrap4
-        selectRow={{
-          mode: "checkbox",
-          clickToSelect: false,
-          style: { backgroundColor: "#E6F8FF" },
-          selected: FormUIProps.Ids,
-          selectable: (row) => row?.authorityStatus === "P",
-          selectionRenderer: ({ checked, disabled }) => (
-            <input type="checkbox" checked={checked} disabled={disabled} />
-          ),
-          onSelect: (row, isSelect) => {
-            if (row.authorityStatus !== "P") return false;
-            FormUIProps.setIds((prev) =>
-              isSelect
-                ? [...prev, row.Id]
-                : prev.filter((id) => id !== row.Id)
-            );
-          },
-          onSelectAll: (isSelect, rows) => {
-            const selectable = rows.filter((r) => r.authorityStatus === "P");
-            FormUIProps.setIds(isSelect ? selectable.map((r) => r.Id) : []);
-          },
-        }}
         keyField="Id"
         data={entities === null ? [] : entities}
         columns={columns}

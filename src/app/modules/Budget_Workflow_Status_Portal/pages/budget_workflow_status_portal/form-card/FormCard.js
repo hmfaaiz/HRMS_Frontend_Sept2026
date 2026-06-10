@@ -6,7 +6,6 @@ import { useFormUIContext } from "../FormUIContext";
 import * as actions from "../../../_redux/redux-Actions";
 import { ApprovalFormTable } from "../form-table/ApprovalFormTable";
 import { WorkflowTable } from "../form-table/FormWorkflowTable";
-import { FormApproval } from "../form-approval/FormApproval";
 import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 
@@ -23,24 +22,22 @@ export const FormCard = () => {
     shallowEqual
   );
 
-  const formUIProps = useMemo(
-    () => ({
-      queryParams:    FormUIContext?.queryParams,
-      setQueryParams: FormUIContext?.setQueryParams,
-      workflowId:     FormUIContext?.workflowId,
-      setWorkflowId:  FormUIContext?.setWorkflowId,
-    }),
-    [FormUIContext]
-  );
+  const formUIProps = useMemo(() => ({
+    queryParams:    FormUIContext?.queryParams,
+    setQueryParams: FormUIContext?.setQueryParams,
+    workflowId:     FormUIContext?.workflowId,
+    setWorkflowId:  FormUIContext?.setWorkflowId,
+  }), [FormUIContext]);
 
   useEffect(() => {
-    dispatch(
-      actions.fetchBudgetApprovalApplication(
-        formUIProps?.queryParams,
-        user?.employeeIdMapping
-      )
-    );
-  }, [formUIProps?.queryParams, dispatch]);
+  if (!user?.employeeIdMapping) return;
+  dispatch(
+    actions.fetchBudgetApprovalApplication(
+      formUIProps?.queryParams,
+      user?.employeeIdMapping
+    )
+  );
+}, [formUIProps?.queryParams, dispatch, user?.employeeIdMapping]);
 
   const menuOptions = [
     {
@@ -53,10 +50,10 @@ export const FormCard = () => {
     },
     {
       name: "Approval",
-      link: "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
+      link: "/department_wise_budget_approval/read-all-budget-approval",
       isShow: access?.find(
         (el) =>
-          el?.componentName === "ReadAllBudgetWorkflowStatusPortal" &&
+          el?.componentName === "ReadAllBudgetApproval" &&
           el?.isResourceShow
       ),
     },
@@ -94,7 +91,6 @@ export const FormCard = () => {
             loading={listLoading}
             queryParams={formUIProps.queryParams}
           />
-          <FormApproval />
           <ApprovalFormTable />
         </div>
 

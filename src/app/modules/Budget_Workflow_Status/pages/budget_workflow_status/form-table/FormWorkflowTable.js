@@ -35,7 +35,6 @@ export function WorkflowTable({ onHide, show }) {
     dispatch(actions.fetchBudgetWorkflowById(formUIProps?.workflowId));
   }, [formUIProps.workflowId, dispatch]);
 
-  // ── Approval flow columns ──────────────────────────────────────────────────
   const approvalColumns = [
     {
       dataField: "approvalAuthorityEmp.employeeCode",
@@ -119,24 +118,19 @@ export function WorkflowTable({ onHide, show }) {
               <h6 className="font-bold mb-0 text-primary my-2">
                 Requested By
               </h6>
-              <div className="grid grid-cols-2 text-sm text-black gap-y-1">
-                <div className="font-medium">Employee Code</div>
-                <div>{emp?.employeeCode || "N/A"}</div>
-
-                <div className="font-medium">Name</div>
-                <div>
-                  {emp?.firstName || ""} {emp?.middleName || ""}{" "}
-                  {emp?.lastName || ""}
-                </div>
-
-                <div className="font-medium">Department</div>
-                <div>{emp?.department?.deptName || "N/A"}</div>
-
-                <div className="font-medium">Designation</div>
-                <div>{emp?.designation?.formName || "N/A"}</div>
-
-                <div className="font-medium">Employee Type</div>
-                <div>{emp?.employeeType?.formName || "N/A"}</div>
+              <div className="text-sm text-black">
+                {[
+                  ["Employee Code", emp?.employeeCode],
+                  ["Name", [emp?.firstName, emp?.middleName, emp?.lastName].filter(Boolean).join(" ")],
+                  ["Department",    emp?.department?.deptName],
+                  ["Designation",   emp?.designation?.formName],
+                  ["Employee Type", emp?.employeeType?.formName],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
+                    <div style={{ minWidth: "110px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                    <div>{value || "N/A"}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -145,49 +139,45 @@ export function WorkflowTable({ onHide, show }) {
               <h6 className="font-bold mb-0 text-primary my-2">
                 Budget Request Detail
               </h6>
-              <div className="grid grid-cols-2 text-sm text-black gap-y-1">
+              <div style={{ display: "flex", gap: "16px" }} className="text-sm text-black">
 
-                <div className="font-medium">Subsidiary</div>
-                <div>{parentData?.Subsidiary?.name || "N/A"}</div>
-
-                <div className="font-medium">Department</div>
-                <div>{parentData?.Department?.deptName || "N/A"}</div>
-
-                <div className="font-medium">Designation</div>
-                <div>{parentData?.Designation?.formName || "N/A"}</div>
-
-                <div className="font-medium">Budgeted Strength</div>
-                <div>{parentData?.budgeted_strength ?? "N/A"}</div>
-
-                <div className="font-medium">Budgeted Salary</div>
-                <div>
-                  {parentData?.budgeted_salary != null
-                    ? Number(parentData.budgeted_salary).toLocaleString()
-                    : "N/A"}
+                {/* Left column */}
+                <div style={{ flex: 1 }}>
+                  {[
+                    ["Subsidiary",        parentData?.Subsidiary?.name],
+                    ["Department",        parentData?.Department?.deptName],
+                    ["Designation",       parentData?.Designation?.formName],
+                    ["Budgeted Strength", parentData?.budgeted_strength],
+                    ["Budgeted Salary",   parentData?.budgeted_salary != null
+                      ? Number(parentData.budgeted_salary).toLocaleString()
+                      : null],
+                  ].map(([label, value]) => (
+                    <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
+                      <div style={{ minWidth: "140px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                      <div>{value ?? "N/A"}</div>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="font-medium">Request Date</div>
-                <div>
-                  {parentData?.request_date
-                    ? format(new Date(parentData.request_date), "dd-MMM-yyyy")
-                    : "N/A"}
+                {/* Right column */}
+                <div style={{ flex: 1 }}>
+                  {[
+                    ["Request Date",          parentData?.request_date
+                      ? format(new Date(parentData.request_date), "dd-MMM-yyyy")
+                      : null],
+                    ["Expected Joining Date", parentData?.expected_date_of_joining
+                      ? format(new Date(parentData.expected_date_of_joining), "dd-MMM-yyyy")
+                      : null],
+                    ["Business Need",         parentData?.business_need],
+                    ["Impact of Position",    parentData?.impact_of_position],
+                    ["Request Status",        statusLabel(parentData?.request_status)],
+                  ].map(([label, value]) => (
+                    <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
+                      <div style={{ minWidth: "150px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                      <div>{value ?? "N/A"}</div>
+                    </div>
+                  ))}
                 </div>
-
-                <div className="font-medium">Expected Joining Date</div>
-                <div>
-                  {parentData?.expected_date_of_joining
-                    ? format(new Date(parentData.expected_date_of_joining), "dd-MMM-yyyy")
-                    : "N/A"}
-                </div>
-
-                <div className="font-medium">Business Need</div>
-                <div>{parentData?.business_need || "N/A"}</div>
-
-                <div className="font-medium">Impact of Position</div>
-                <div>{parentData?.impact_of_position || "N/A"}</div>
-
-                <div className="font-medium">Request Status</div>
-                <div>{statusLabel(parentData?.request_status)}</div>
 
               </div>
             </div>

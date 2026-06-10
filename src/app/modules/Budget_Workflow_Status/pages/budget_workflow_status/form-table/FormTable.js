@@ -73,20 +73,14 @@ export function ApprovalFormTable() {
       },
     },
     {
-      dataField: "requestBelongToEmp",
-      text: "Employee",
-      sort: true,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "200px", maxWidth: "200px" },
-      formatter: (cell) => {
-        const code = cell?.employeeCode || "";
-        const name = `${cell?.firstName || ""} ${
-          cell?.middleName ? cell.middleName + " " : ""
-        }${cell?.lastName || ""}`.trim();
-        return code && name ? `${code} - ${name}` : code || name || "";
-      },
-    },
+          dataField: "parentData.budgetCode",
+          text: "Budget Code",
+          sort: true,
+          sortCaret,
+          headerSortingClasses,
+          style: { minWidth: "130px", maxWidth: "130px" },
+          formatter: (cell) => cell || "—",
+        },
     // {
     //   dataField: "requestBelongToEmp.department.deptName",
     //   text: "Department",
@@ -113,7 +107,7 @@ export function ApprovalFormTable() {
     // },
     {
       dataField: "parentData.Department.deptName",
-      text: "Budget Dept.",
+      text: "Department",
       sort: true,
       sortCaret,
       headerSortingClasses,
@@ -121,12 +115,26 @@ export function ApprovalFormTable() {
     },
     {
       dataField: "parentData.Designation.formName",
-      text: "Designation (Budget)",
+      text: "Designation",
       sort: true,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "160px", maxWidth: "160px" },
     },
+    {
+          dataField: "parentData.BudgetYear",
+          text: "Budget Year",
+          sort: true,
+          sortCaret,
+          headerSortingClasses,
+          style: { minWidth: "160px", maxWidth: "160px" },
+          formatter: (cell) => {
+            if (!cell) return "—";
+            const from = cell.startDate ? format(new Date(cell.startDate), "dd-MMM-yyyy") : "";
+            const to   = cell.endDate   ? format(new Date(cell.endDate),   "dd-MMM-yyyy") : "";
+            return from && to ? `${from} - ${to}` : from || to || "—";
+          },
+        },
     {
       dataField: "parentData.budgeted_strength",
       text: "Strength",

@@ -159,7 +159,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
     },
     {
       name: "Budget",
-      count: data?.BudgetApproval || 0,
+      count: data?.budgetApproval || 0,
       isApproval: budget?.find(
         (el) =>
           el?.componentName == "ReadAllBudgetApproval" &&

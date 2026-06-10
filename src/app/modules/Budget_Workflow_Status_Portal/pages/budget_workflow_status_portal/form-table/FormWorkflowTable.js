@@ -154,24 +154,19 @@ export function WorkflowTable({ onHide, show }) {
               <h6 className="font-bold mb-0 text-primary my-2">
                 Requested By
               </h6>
-              <div className="grid grid-cols-2 text-sm text-black gap-y-1">
-                <div className="font-medium">Employee Code</div>
-                <div>{emp?.employeeCode || "N/A"}</div>
-
-                <div className="font-medium">Name</div>
-                <div>
-                  {emp?.firstName || ""} {emp?.middleName || ""}{" "}
-                  {emp?.lastName || ""}
-                </div>
-
-                <div className="font-medium">Department</div>
-                <div>{emp?.department?.deptName || "N/A"}</div>
-
-                <div className="font-medium">Designation</div>
-                <div>{emp?.designation?.formName || "N/A"}</div>
-
-                <div className="font-medium">Employee Type</div>
-                <div>{emp?.employeeType?.formName || "N/A"}</div>
+              <div className="text-sm text-black">
+                {[
+                  ["Employee Code", emp?.employeeCode],
+                  ["Name", [emp?.firstName, emp?.middleName, emp?.lastName].filter(Boolean).join(" ")],
+                  ["Department",    emp?.department?.deptName],
+                  ["Designation",   emp?.designation?.formName],
+                  ["Employee Type", emp?.employeeType?.formName],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
+                    <div style={{ minWidth: "110px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                    <div>{value || "N/A"}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -180,68 +175,48 @@ export function WorkflowTable({ onHide, show }) {
               <h6 className="font-bold mb-0 text-primary my-2">
                 Budget Request Detail
               </h6>
-              <div className="grid grid-cols-4 gap-y-1 text-sm text-black">
+              <div style={{ display: "flex", gap: "16px" }} className="text-sm text-black">
 
-                <div className="font-medium col-span-1">Subsidiary</div>
-                <div className="col-span-3">
-                  {parentData?.Subsidiary?.name || "N/A"}
+                {/* Left column */}
+                <div style={{ flex: 1 }}>
+                  {[
+                    ["Subsidiary",        parentData?.Subsidiary?.name],
+                    ["Department",        parentData?.Department?.deptName],
+                    ["Designation",       parentData?.Designation?.formName],
+                    ["Budgeted Strength", parentData?.budgeted_strength],
+                    ["Budgeted Salary",   parentData?.budgeted_salary != null
+                      ? Number(parentData.budgeted_salary).toLocaleString()
+                      : null],
+                  ].map(([label, value]) => (
+                    <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
+                      <div style={{ minWidth: "140px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                      <div>{value ?? "N/A"}</div>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="font-medium col-span-1">Department</div>
-                <div className="col-span-3">
-                  {parentData?.Department?.deptName || "N/A"}
-                </div>
-
-                <div className="font-medium col-span-1">Designation</div>
-                <div className="col-span-3">
-                  {parentData?.Designation?.formName || "N/A"}
-                </div>
-
-                <div className="font-medium col-span-1">Budgeted Strength</div>
-                <div className="col-span-3">
-                  {parentData?.budgeted_strength ?? "N/A"}
-                </div>
-
-                <div className="font-medium col-span-1">Budgeted Salary</div>
-                <div className="col-span-3">
-                  {parentData?.budgeted_salary != null
-                    ? Number(parentData.budgeted_salary).toLocaleString()
-                    : "N/A"}
-                </div>
-                <div className="font-medium col-span-1">Request Date</div>
-                <div className="col-span-3">
-                  {parentData?.request_date
-                    ? format(new Date(parentData.request_date), "dd-MMM-yyyy")
-                    : "N/A"}
-                </div>
-
-                <div className="font-medium col-span-1">Expected Joining</div>
-                <div className="col-span-3">
-                  {parentData?.expected_date_of_joining
-                    ? format(
-                        new Date(parentData.expected_date_of_joining),
-                        "dd-MMM-yyyy"
-                      )
-                    : "N/A"}
-                </div>
-
-                {parentData?.business_need && (
-                  <>
-                    <div className="font-medium col-span-1">Business Need</div>
-                    <div className="col-span-3">{parentData.business_need}</div>
-                  </>
-                )}
-
-                {parentData?.impact_of_position && (
-                  <>
-                    <div className="font-medium col-span-1">Impact of Position</div>
-                    <div className="col-span-3">{parentData.impact_of_position}</div>
-                  </>
-                )}
-
-                <div className="font-medium col-span-1">Request Status</div>
-                <div className="col-span-3">
-                  {statusLabel(parentData?.request_status)}
+                {/* Right column */}
+                <div style={{ flex: 1 }}>
+                  {[
+                    ["Request Date",     parentData?.request_date
+                      ? format(new Date(parentData.request_date), "dd-MMM-yyyy")
+                      : null],
+                    ["Expected Joining", parentData?.expected_date_of_joining
+                      ? format(new Date(parentData.expected_date_of_joining), "dd-MMM-yyyy")
+                      : null],
+                    ["Request Status",   statusLabel(parentData?.request_status)],
+                    ...(parentData?.business_need
+                      ? [["Business Need", parentData.business_need]]
+                      : []),
+                    ...(parentData?.impact_of_position
+                      ? [["Impact of Position", parentData.impact_of_position]]
+                      : []),
+                  ].map(([label, value]) => (
+                    <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
+                      <div style={{ minWidth: "140px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                      <div>{value ?? "N/A"}</div>
+                    </div>
+                  ))}
                 </div>
 
               </div>

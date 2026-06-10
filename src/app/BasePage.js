@@ -890,7 +890,6 @@ const ROUTES = {
   policy_for_new_year_budget: policy_for_new_year_budget,
   department_wise_budget: department_wise_budget,
   portal_department_wise_budget: portal_department_wise_budget,
-  budgetRequest: budgetRequest,
   budget_workflow_status : budget_workflow_status,
   budget_workflow_status_portal : budget_workflow_status_portal,
   department_wise_budget_approval: BudgetApproval,
