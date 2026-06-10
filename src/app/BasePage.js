@@ -887,7 +887,7 @@ const ROUTES = {
   portal_department_wise_budget: portal_department_wise_budget,
   department_wise_budget_approval: BudgetApproval,
   budget_setup_year: budget_year_setup,
-  budgetRequest: budgetRequest,
+
 
 };
 
