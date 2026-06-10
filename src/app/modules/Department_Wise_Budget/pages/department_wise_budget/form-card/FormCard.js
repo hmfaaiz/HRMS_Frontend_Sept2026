@@ -32,7 +32,7 @@ export function FormCard() {
   );
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "createDepartmentWiseBudget"
+    (item) => item.componentName === "CreateDepartmentWiseBudget"
   );
 
   const { currentState } = useSelector((state) => {
