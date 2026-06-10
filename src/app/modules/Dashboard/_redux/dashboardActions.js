@@ -964,3 +964,16 @@ export const fetchAllBudgetYearDataBySubsidiaryId = (subsidiaryId) => async (
       // toast.error("Something went wrong");
     });
 };
+export const fetchAllBudgetRequest = (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllBudgetRequest(body)
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllBudgetRequestFetch(entities));
+    })
+    .catch((error) => {
+      // toast.error("Something went wrong");
+    });
+};
