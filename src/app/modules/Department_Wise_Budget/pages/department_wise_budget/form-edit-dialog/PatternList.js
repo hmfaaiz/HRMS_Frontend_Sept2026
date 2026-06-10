@@ -134,7 +134,7 @@ function PatternListForm({
                                                                 ? "form-control is-invalid"
                                                                 : "form-control"
                                                         }
-                                                        isDisabled={isdataForRead || values?.list?.[index]?.Id}
+                                                        isDisabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
                                                         options={dashboard?.allDesignations || []}
                                                         value={
                                                             dashboard?.allDesignations?.find(
@@ -163,7 +163,7 @@ function PatternListForm({
                                                         name={`list[${index}].budgeted_strength`}
                                                         type="number"
                                                         className="form-control"
-                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_strength`} />
@@ -175,7 +175,7 @@ function PatternListForm({
                                                         name={`list[${index}].budgeted_salary`}
                                                         type="number"
                                                         className="form-control"
-                                                         disabled={isdataForRead}
+                                                         disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_salary`} />
@@ -214,7 +214,7 @@ function PatternListForm({
                                                         onChange={(date) => {
                                                             setFieldValue(`list[${index}].expected_date_of_joining`, date);
                                                         }}
-                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].expected_date_of_joining`} />
@@ -226,7 +226,7 @@ function PatternListForm({
                                                         rows={2}
                                                         name={`list[${index}].business_need`}
                                                         className="form-control"
-                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].business_need`} />
@@ -240,7 +240,7 @@ function PatternListForm({
                                                         rows={2}
                                                         name={`list[${index}].impact_of_position`}
                                                         className="form-control"
-                                                        disabled={isdataForRead || values?.list?.[index]?.Id}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].impact_of_position`} />

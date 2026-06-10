@@ -9,7 +9,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       roster: state?.auth?.userAccess["Attendance Management"],
       payroll: state?.auth?.userAccess["Payroll"],
       resignation: state?.auth?.userAccess["Resignation"],
-      budget: state?.auth?.userAccess["Budget"],
+      budget: state?.auth?.userAccess["Manpower Budget"],
     }),
     shallowEqual,
   );
@@ -158,7 +158,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       isModuleAllow: moduleRights?.find((e) => e?.value == "separation")?.allow,
     },
     {
-      name: "Budget",
+      name: "Manpower Budget",
       count: data?.budgetApproval || 0,
       isApproval: budget?.find(
         (el) =>
