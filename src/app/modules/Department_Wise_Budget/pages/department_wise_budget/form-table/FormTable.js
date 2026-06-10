@@ -102,6 +102,16 @@ export function FormTable() {
       },
     },
     {
+          dataField: "BudgetYear.label",
+          text: "Budget Year",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "160px",
+          },
+        },
+    {
       dataField: "totalStrength",
       text: "Budgeted Strength",
       sort: false,

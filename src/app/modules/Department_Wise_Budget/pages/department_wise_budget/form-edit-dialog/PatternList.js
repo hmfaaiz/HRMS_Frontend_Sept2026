@@ -265,13 +265,13 @@ function PatternListForm({
                                                 </td>
                                                 {/* Delete Button Starts */}
                                                 {/* {!values?.list[index]?.isPresent && ( */}
-                                                {values?.list?.[index]?.Id ? 
+                                                {values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal? 
                                                 <td className="text-center">
                                                    -
                                                 </td> : (
                                                     <td className="text-right">
                                                         <button
-                                                            disabled={isdataForRead || values?.list?.[index]?.Id}
+                                                            disabled={isdataForRead }
                                                             className="border-none bg-transparent"
                                                             type="button"
                                                             onClick={() => {

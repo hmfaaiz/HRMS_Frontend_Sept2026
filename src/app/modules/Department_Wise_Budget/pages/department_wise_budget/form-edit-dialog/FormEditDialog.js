@@ -70,10 +70,10 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
 
   const saveForm = async (data) => {
 
-    if (data?.subsidiaryId && data?.budgetYearId && data?.departmentId && empAuthorityList.length > 0) {
+    if (data?.subsidiaryId && data?.budgetYearId && data?.departmentId) {
       let body = {
         ...data,
-        empAuthorityList
+      
       }
 
       dispatch(actions.createDepartmentWiseBudget(body, disbaleLoading, onHide)).then(async () => {
