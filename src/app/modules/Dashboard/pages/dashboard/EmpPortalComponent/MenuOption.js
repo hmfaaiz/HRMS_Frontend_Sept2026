@@ -35,7 +35,7 @@ export const MenuOption = () => {
     portalInfo,
     company_doc_portal,
     employee_task,
-    budget,
+    budget,useracc1111,
   } = useSelector((state) => {
     return {
       moduleRights: state?.dashboard?.moduleRights,
@@ -53,10 +53,11 @@ export const MenuOption = () => {
       company_doc_portal: state?.auth?.userAccess.company_doc_portal,
       portalInfo: state?.dashboard?.portalInfo,
       employee_task: state?.auth?.userAccess["Employee_Task"],
-      budget: state?.auth?.userAccess["Budget"],
+      budget: state?.auth?.userAccess["Manpower Budget"],
+      useracc1111: state?.auth?.userAccess,
     };
   }, shallowEqual);
-
+console.log("useracc1111111111",useracc1111)
   useEffect(() => {
     dispatch(fetchModuleRights());
   }, []);
@@ -355,7 +356,7 @@ export const MenuOption = () => {
       },
       {
         icon: <BanknoteArrowUp className="w-6 h-6 text-black" />,
-        name: "Department Wise Budget",
+        name: "Manpower Budget",
         isShow: portalDepartmentWiseBudget,
         linkList: [
           {

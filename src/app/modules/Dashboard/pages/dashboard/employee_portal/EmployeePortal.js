@@ -270,11 +270,12 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ticket_setup_portal: state?.auth?.userAccess["ticket_setup_portal"],
       reimbursement_claim: state?.auth?.userAccess["Payroll"],
       reimbursement_claim: state?.auth?.userAccess["Payroll"],
-      budget: state?.auth?.userAccess["Budget"],
+      budget: state?.auth?.userAccess["Manpower Budget"],
+      userAccess: state?.auth?.userAccess,
     }),
     shallowEqual,
   );
-  console.log("recruitmentrecruitment", recruitment);
+  console.log("recruitmentrecruitment", userAccess);
   /// leave
   const isLeaveRequest = leave?.find(
     (el) =>

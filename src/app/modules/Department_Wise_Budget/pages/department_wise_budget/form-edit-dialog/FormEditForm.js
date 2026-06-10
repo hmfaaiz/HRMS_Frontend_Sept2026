@@ -377,7 +377,7 @@ useEffect(() => {
                 onClick={() => handleSubmit()}
                 className="btn btn-primary btn-elevate"
               >
-                Submit Request
+                Save
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
