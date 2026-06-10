@@ -46,6 +46,8 @@ export function FormTable() {
       employeeId: formUIContext?.employeeId,
       panelMode: formUIContext.panelMode,
       currentLevel: formUIContext.currentLevel,
+      setWorkflowId: formUIContext.setWorkflowId,
+      setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
   const { currentState } = useSelector((state) => {
@@ -296,6 +298,8 @@ export function FormTable() {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         viewttendanceLogs: FormUIProps?.viewttendanceLogs,
+        setWorkflowId: FormUIProps?.setWorkflowId,
+        setCurrentData: FormUIProps?.setCurrentData,
 
       },
       classes: "text-right pr-0",

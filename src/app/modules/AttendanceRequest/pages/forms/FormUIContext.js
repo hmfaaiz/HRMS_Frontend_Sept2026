@@ -13,6 +13,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [employeeId, setemployeeId] = useState("");
   const [panelMode, setPanelMode] = useState(false);
+  const [workflowId, setWorkflowId] = useState(null);
+  const [currentData, setCurrentData] = useState(null);
 
   const initFilters = {
     employeeId: "",
@@ -72,6 +74,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setemployeeId,
     panelMode,
     setPanelMode,
+    workflowId,
+    setWorkflowId,
+    currentData,
+    setCurrentData,
     ...FormUIEvents,
   };
   return (
