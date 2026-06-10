@@ -144,20 +144,20 @@ export function FormTable() {
   
 
 
-    {
-      dataField: "isApproved",
-      text: "Approved",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
-      formatter: (cell) => {
-        return cell ? "Yes" : "No";
-      },
+    // {
+    //   dataField: "isApproved",
+    //   text: "Approved",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "10px",
+    //   },
+    //   formatter: (cell) => {
+    //     return cell ? "Yes" : "No";
+    //   },
 
-    },
+    // },
 
     {
       dataField: "action",
