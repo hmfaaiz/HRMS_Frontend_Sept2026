@@ -663,6 +663,11 @@ const portal_department_wise_budget = lazy(() =>
 );const budgetRequest = lazy(() =>
   import("./modules/BudgetRequest/pages/index"),
 );
+const budget_workflow_status = lazy (() =>
+ import("./modules/Budget_Workflow_Status/pages/index")
+);
+const budget_workflow_status_portal = lazy (() =>
+import ("./modules/Budget_Workflow_Status_Portal/pages/index"))
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -883,7 +888,8 @@ const ROUTES = {
   department_wise_budget: department_wise_budget,
   portal_department_wise_budget: portal_department_wise_budget,
   budgetRequest: budgetRequest,
-
+  budget_workflow_status : budget_workflow_status,
+  budget_workflow_status_portal : budget_workflow_status_portal,
 };
 
 export default function BasePage() {

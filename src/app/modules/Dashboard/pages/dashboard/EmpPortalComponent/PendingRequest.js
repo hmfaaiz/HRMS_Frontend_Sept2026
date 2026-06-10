@@ -169,12 +169,12 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       approvalUrl: "/department_wise_budget_approval/read-all-budget-approval",
       isWorkflow: budget?.find(
         (el) =>
-          el?.componentName == "" &&
+          el?.componentName == "ReadAllBudgetWorkflowStatusPortal" &&
           el?.isResourceShow &&
           el?.portalType == 2,
       ),
       workflowUrl:
-        "/",
+        "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
       isModuleAllow: moduleRights?.find((el) => el?.value ==8)?.allow,
     },
   ];
