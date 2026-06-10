@@ -171,6 +171,16 @@ export function FormTable() {
           : false,
         setYearId: formUIProps.setYearId,
         setAppraisalCategoryId: formUIProps.setAppraisalCategoryId,
+        onDownloadReport: (row) => {
+          dispatch(
+            actions.getAppraisalPublishReportAction({
+              employeeId: row?.Id,
+              yearId: row?.yearId,
+              appraisalCategoryId: row?.appraisalCategoryId,
+              Id: row?.Id,
+            })
+          );
+        },
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",

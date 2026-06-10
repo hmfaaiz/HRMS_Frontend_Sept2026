@@ -7,6 +7,9 @@ import {
   Eye,
   Trash2,
   Users,
+  Download,
+  File,
+  FileText,
 } from "lucide-react";
 
 export function ActionsColumnFormatter(
@@ -25,10 +28,24 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     setYearId,
     setAppraisalCategoryId,
+    onDownloadReport,
   }
 ) {
   return (
     <div className="space-x-2">
+      <OverlayTrigger
+        overlay={<Tooltip id="products-download-tooltip">Download Report</Tooltip>}
+      >
+        <a
+          title=""
+          className=""
+          onClick={() => {
+            if (onDownloadReport) onDownloadReport(row);
+          }}
+        >
+          <FileText className="w-4 h-4 text-black cursor-pointer" />
+        </a>
+      </OverlayTrigger>
       {isAccessForPublish && row?.isActive && !row?.isPublish && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Publish</Tooltip>}
@@ -109,6 +126,7 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       )}
+     
       {isAccessForDelete && row?.isPublish && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Delete</Tooltip>}

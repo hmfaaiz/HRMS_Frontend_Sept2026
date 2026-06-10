@@ -125,3 +125,26 @@ export const viewAppraisalDetail = (body) => (dispatch) => {
 export const clearBulkPublishResult = (body) => (dispatch) => {
   dispatch(actions.clearErrorState());
 };
+
+export const getAppraisalPublishReportAction = (payload) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+
+  try {
+    const res = await requestFromServer.getAppraisalPublishReport(payload);
+    
+    const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    
+    const link = document.createElement("a");
+    link.href = pdfUrl;
+    link.setAttribute("download", "Appraisal_Publish_Report.pdf");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(pdfUrl);
+
+    dispatch(actions.AppraisalPublishReportFetched());
+  } catch (error) {
+    dispatch(actions.catchError({ error, callType: callTypes.action }));
+  }
+};

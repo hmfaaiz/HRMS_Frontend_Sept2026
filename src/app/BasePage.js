@@ -660,8 +660,11 @@ const portal_department_wise_budget = lazy(() =>
   import("./modules/Portal_Department_Wise_Budget/pages/index"),
 
 
-);const budgetRequest = lazy(() =>
-  import("./modules/BudgetRequest/pages/index"),
+); const BudgetApproval = lazy(() =>
+  import("./modules/BudgetApproval/page/index"),
+);
+const budget_year_setup = lazy(() =>
+  import("./modules/Budget_Year_Setup/pages/index"),
 );
 const budget_workflow_status = lazy (() =>
  import("./modules/Budget_Workflow_Status/pages/index")
@@ -880,8 +883,8 @@ const ROUTES = {
   interview_recommendations: interview_recommendations,
   job_requestion_approval: job_requestion_approval,
   travel_request_reports: TravelRequestReportsModule,
-  job_requestion_workflow : JobRequestionWorkflowStatus,
-  job_requestion_workflow_approval : JobRequestionWorkflowStatusApproval,
+  job_requestion_workflow: JobRequestionWorkflowStatus,
+  job_requestion_workflow_approval: JobRequestionWorkflowStatusApproval,
   close_payroll_month: ClosePayrollMonthSetupModule,
   employee_task: employee_task_portal,
   policy_for_new_year_budget: policy_for_new_year_budget,
@@ -890,6 +893,10 @@ const ROUTES = {
   budgetRequest: budgetRequest,
   budget_workflow_status : budget_workflow_status,
   budget_workflow_status_portal : budget_workflow_status_portal,
+  department_wise_budget_approval: BudgetApproval,
+  budget_setup_year: budget_year_setup,
+
+
 };
 
 export default function BasePage() {
