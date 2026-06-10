@@ -70,13 +70,13 @@ export const deleteDepartmentWiseBudget = (body) => (dispatch) => {
 
 
 
-export const createDepartmentWiseBudget = (holidayForCreation, disbaleLoading, onHide) => (
+export const createDepartmentWiseBudget = (budgetForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createDepartmentWiseBudget(holidayForCreation)
+    .createDepartmentWiseBudget(budgetForCreation)
     .then((res) => {
    
       const user = res.data?.data;
@@ -116,9 +116,9 @@ export const updateDepartmentWiseBudget = (user, disbaleLoading, onHide) => (dis
     .updateDepartmentWiseBudget(user)
     .then((response) => {
   
-      const updatedHoliday = response?.config?.data; // response.data?.data;
+      const updatedDepartmentWiseBudget = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.departmentWiseBudgetUpdated({ updatedHoliday }));
+      dispatch(actions.departmentWiseBudgetUpdated({ updatedDepartmentWiseBudget }));
     
       disbaleLoading();
       onHide();

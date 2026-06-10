@@ -26,19 +26,19 @@ export function FormCard() {
 
   const { userAccess } = useSelector(
     (state) => ({
-      userAccess: state.auth.userAccess.holidays,
+      userAccess: state.auth.userAccess.department_wise_budget,
     }),
     shallowEqual
   );
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateHolidays"
+    (item) => item.componentName === "createDepartmentWiseBudget"
   );
 
   const { currentState } = useSelector((state) => {
     return {
-      currentState: state.holidays,
-      userAccess: state?.auth?.userAccess["holidays"],
+      currentState: state.department_wise_budget,
+      userAccess: state?.auth?.userAccess["department_wise_budget"],
     };
   }, shallowEqual);
 
