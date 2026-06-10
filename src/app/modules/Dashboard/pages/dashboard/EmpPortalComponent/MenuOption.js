@@ -182,6 +182,18 @@ export const MenuOption = () => {
   const MENUOPTION = useMemo(() => {
     return [
       {
+        icon: <ListChecks className="w-6 h-6 text-black" />,
+        name: "Employee",
+        isShow: employeeTaskItem,
+        linkList: [
+          {
+            link: "/employee_task/read-all-employee-task",
+            show: employeeTaskItem,
+            name: "Checklist Task",
+          },
+        ],
+      },
+      {
         icon: <NotebookTabs className="w-6 h-6 text-black" />,
         name: "Roster",
         isShow:
@@ -342,18 +354,6 @@ export const MenuOption = () => {
         ],
       },
       {
-        icon: <ListChecks className="w-6 h-6 text-black" />,
-        name: "Employee",
-        isShow: employeeTaskItem,
-        linkList: [
-          {
-            link: "/employee_task/read-all-employee-task",
-            show: employeeTaskItem,
-            name: "Checklist Task",
-          },
-        ],
-      },
-      {
         icon: <BanknoteArrowUp className="w-6 h-6 text-black" />,
         name: "Department Wise Budget",
         isShow: portalDepartmentWiseBudget,
@@ -390,16 +390,19 @@ export const MenuOption = () => {
       <div
         className={`absolute left-0  w-full overflow-hidden transition-all duration-300 ease-in-out z-20 ${
           isExpanded
-            ? "h-[30rem] opacity-100"
+            ? "h-[28rem] opacity-100"
             : "h-0 opacity-0 pointer-events-none"
         }`}
         style={{ top: "calc(100% - 8px)" }}
       >
         <div className="bg-tprimary space-y-2 shadow-md rounded-lg p-4 mx-5 h-full overflow-y-auto scrollbar-fancy ">
           {/* Your content here */}
-          {MENUOPTION?.filter((e) => e.isShow)?.map((el , i) => {
+          {MENUOPTION?.filter((e) => e.isShow)?.map((el, i) => {
             return (
-              <div key={i} className="bg-tsecondary shadow-md px-6 py-4 rounded-lg">
+              <div
+                key={i}
+                className="bg-tsecondary shadow-md px-6 py-4 rounded-lg"
+              >
                 <div className="flex items-center gap-3">
                   {el?.icon}
                   <div>
