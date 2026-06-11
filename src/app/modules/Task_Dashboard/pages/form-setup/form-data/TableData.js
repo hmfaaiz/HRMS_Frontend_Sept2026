@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import {
@@ -8,13 +9,18 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import { format } from "date-fns";
 
+const TICKET_CODE_KEYS = new Set(["ticket_Code", "Ticket_Code"]);
+const TICKET_DESC_KEYS = new Set(["ticket_Description", "Ticket_Description"]);
+
 export function TableData({
   data,
   name,
   handleClick,
   columnColorRules = {},
   completeData,
+  ticketCodeRoute,
 }) {
+  const history = useHistory();
   const columnData = data?.length > 0 ? data[0] : {};
 
   let columns = Object.keys(columnData).map((key) => {
@@ -48,6 +54,73 @@ export function TableData({
       let isDate =
         typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
       let isAmount = typeof value === "number" || !isNaN(Number(value));
+
+      // Ticket code column — always a clickable link
+      if (TICKET_CODE_KEYS.has(key)) {
+        return {
+          dataField: key,
+          text: key.split("_").join(" "),
+          sort: true,
+          formatter: (cell) => (
+            <span
+              style={{
+                color: "#0093DD",
+                fontWeight: "600",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              title={`Go to timeline for ${cell}`}
+              onClick={() =>
+                cell &&
+                ticketCodeRoute &&
+                window.open(`${ticketCodeRoute}/${encodeURIComponent(cell)}`, "_blank", "noopener,noreferrer")
+              }
+            >
+              {cell || ""}
+            </span>
+          ),
+        };
+      }
+
+      // Ticket description column clickable; navigates using ticket_Code from
+      // the same row when available, otherwise uses the description text itself.
+      // Only activated when no dedicated ticket_Code column exists in this table.
+      const tableHasTicketCode =
+        "ticket_Code" in columnData || "Ticket_Code" in columnData;
+      if (TICKET_DESC_KEYS.has(key) && !tableHasTicketCode) {
+        return {
+          dataField: key,
+          text: key.split("_").join(" "),
+          sort: true,
+          formatter: (cell, row) => {
+            const codeToNavigate =
+              row?.ticket_Code || row?.Ticket_Code || cell;
+            return (
+              <span
+                style={{
+                  color: "#0093DD",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
+                className={cell?.length > 25 ? "truncate w-36" : "truncate"}
+                title={cell}
+                onClick={() =>
+                  codeToNavigate &&
+                  ticketCodeRoute &&
+                  window.open(
+                    `${ticketCodeRoute}/${encodeURIComponent(codeToNavigate)}`,
+                    "_blank",
+                    "noopener,noreferrer"
+                  )
+                }
+              >
+                {cell || ""}
+              </span>
+            );
+          },
+        };
+      }
 
       return {
         dataField: key,
