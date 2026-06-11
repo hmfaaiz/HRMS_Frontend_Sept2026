@@ -52,6 +52,7 @@ export function BigTable({ data, setBigTableModalData, expand }) {
       let isAmount = typeof value === "number" || !isNaN(Number(value));
       return {
         dataField: key,
+        headerClasses: "text-xs",
         text: key.split("_").join(" "),
         sort: true,
         formatter: (cell) => {

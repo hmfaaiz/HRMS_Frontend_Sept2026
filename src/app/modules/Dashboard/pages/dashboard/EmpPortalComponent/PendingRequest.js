@@ -33,7 +33,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
           el?.portalType == 2,
       ),
       workflowUrl:
-        "/attendance-workflow-status/read-all-attendance-workflow-status",
+        "/leave-workflow-status/read-all-leave-workflow-status",
       isModuleAllow: moduleRights?.find((el) => el?.value == 2)?.allow,
     },
     {
