@@ -453,7 +453,7 @@ function PatternListForm({
                         {workflowStatusList?.length > 0 && 
                         <>
                          <br />
-                        <h6 className="font-bold mb-0 text-primary">Workflow Authorties</h6>
+                        <h6 className="font-bold mb-0 text-primary">Workflow Authorities</h6>
 
                         <div className="mt-2">
                             <BootstrapTable
