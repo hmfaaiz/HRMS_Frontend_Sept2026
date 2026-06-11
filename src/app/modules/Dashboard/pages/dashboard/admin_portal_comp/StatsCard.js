@@ -6,6 +6,7 @@ const StatsCard = ({
   name,
   value,
   summaryFilter,
+  isAmountFormat,
   keyName,
   setSummaryModalHeading,
 }) => {
@@ -31,7 +32,13 @@ const StatsCard = ({
       <span className="bg-tprimary p-2 rounded-full flex items-center justify-center w-8 h-8">
         {icon}
       </span>
-      <p className="m-0 text-tprimary font-bold text-lg">{value || 0}</p>
+      <p className="m-0 text-tprimary font-bold text-lg">
+        {isAmountFormat
+          ? new Intl.NumberFormat("en-US").format(
+              Number(value),
+            )
+          : value || 0}
+      </p>
       <p className="m-0 text-tprimary font-bold text-sm">{name}</p>
 
       {value > 0 ? (

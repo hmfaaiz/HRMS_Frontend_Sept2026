@@ -1799,7 +1799,7 @@ export function FormEditForm({
                         placeholder="example@gmail.com"
                         // label="Personal Email"
                         autoComplete="off"
-                        maxLength="30"
+                        maxLength="50"
                       />
                     </div>
                   </div>
@@ -2186,7 +2186,7 @@ export function FormEditForm({
                       name="email"
                       component={Input}
                       placeholder="example@gmail.com"
-                      maxLength="30"
+                      maxLength="50"
                       autoComplete="off" // Add this to prevent autofill
                     />
                   </div>

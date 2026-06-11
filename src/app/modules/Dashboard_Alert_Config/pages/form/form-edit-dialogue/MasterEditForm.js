@@ -4,6 +4,7 @@ import { Form } from "react-bootstrap";
 import {
   chartTypes,
   dashletType,
+  doubleChartTypes,
   PeriodType,
   smallTableTheme,
 } from "../FormUIHelper";
@@ -21,7 +22,7 @@ const validationSchema = Yup.array().of(
     PeriodType: Yup.number().nullable(),
     days: Yup.number()
       .transform((value, originalValue) =>
-        originalValue === "" || originalValue === null ? undefined : value
+        originalValue === "" || originalValue === null ? undefined : value,
       )
       .when(["isPeriodType", "PeriodType"], {
         is: (isPeriodType, periodType) =>
@@ -33,7 +34,7 @@ const validationSchema = Yup.array().of(
             .required("Day is required"),
         otherwise: (schema) => schema.notRequired(),
       }),
-  })
+  }),
 );
 
 const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
@@ -96,7 +97,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                     {values?.length > 0 &&
                       values
                         ?.filter((row) =>
-                          moduleRights?.some((el) => el?.value == row?.tab_key)
+                          moduleRights?.some((el) => el?.value == row?.tab_key),
                         )
                         ?.map((row, index) => (
                           <tr key={index}>
@@ -120,16 +121,26 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                                   onChange={(e) => {
                                     setFieldValue(
                                       `[${index}].graph_type`,
-                                      e.value
+                                      e.value,
                                     );
                                   }}
                                   isDisabled={row?.dashlet_type !== "chart"}
                                   value={
-                                    chartTypes?.find(
-                                      (item) => item?.value === row?.graph_type
-                                    ) || ""
+                                    row?.twoLineChart
+                                      ? doubleChartTypes?.find(
+                                          (item) =>
+                                            item?.value === row?.graph_type,
+                                        ) || ""
+                                      : chartTypes?.find(
+                                          (item) =>
+                                            item?.value === row?.graph_type,
+                                        ) || ""
                                   }
-                                  options={chartTypes || []}
+                                  options={
+                                    row?.twoLineChart
+                                      ? doubleChartTypes
+                                      : chartTypes || []
+                                  }
                                 />
                               ) : (
                                 "-"
@@ -144,7 +155,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                                   onChange={(e) => {
                                     setFieldValue(
                                       `[${index}].theme_class`,
-                                      e.value
+                                      e.value,
                                     );
                                   }}
                                   isDisabled={
@@ -152,7 +163,8 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                                   }
                                   value={
                                     smallTableTheme?.find(
-                                      (item) => item?.value === row?.theme_class
+                                      (item) =>
+                                        item?.value === row?.theme_class,
                                     ) || ""
                                   }
                                   options={smallTableTheme || []}
@@ -170,7 +182,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                                   onChange={(e) => {
                                     setFieldValue(
                                       `[${index}].PeriodType`,
-                                      e.value
+                                      e.value,
                                     );
                                     if (e?.value === 0) {
                                       setFieldValue(`[${index}].days`, 1);
@@ -181,7 +193,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                                   isDisabled={row?.dashlet_type === "chart"}
                                   value={
                                     PeriodType?.find(
-                                      (item) => item?.value === row?.PeriodType
+                                      (item) => item?.value === row?.PeriodType,
                                     ) || ""
                                   }
                                   options={PeriodType || []}
@@ -237,11 +249,11 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                             <td>
                               <Checkbox
                                 isSelected={values[index]?.is_fav} // or === true depending on backend
-                                disabled={row?.tab_key == "6"}
+                                disabled={row?.tab_key == "6" || row?.tab_key == "8"}
                                 onChange={(e) => {
                                   setFieldValue(
                                     `[${index}].is_fav`,
-                                    e?.target?.checked ? 1 : 0
+                                    e?.target?.checked ? 1 : 0,
                                   );
                                 }}
                               />
@@ -252,7 +264,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                                 onChange={(e) => {
                                   setFieldValue(
                                     `[${index}].isActive`,
-                                    e?.target?.checked ? 1 : 0
+                                    e?.target?.checked ? 1 : 0,
                                   );
                                 }}
                               />
