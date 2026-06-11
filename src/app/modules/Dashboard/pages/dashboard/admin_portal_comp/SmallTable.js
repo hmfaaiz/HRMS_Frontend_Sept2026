@@ -78,7 +78,7 @@ const SingleCard = ({ data, setSmallTableModalData, expand }) => {
                     >
                       <div className="flex items-center gap-2">
                         <img
-                          src={person?.profile_image}
+                          src={person?.profile_image || "/media/users/profileImage.png"}
                           alt={person?.Employee_Name}
                           className="object-cover rounded-sm w-10 h-10"
                           onError={(e) => {

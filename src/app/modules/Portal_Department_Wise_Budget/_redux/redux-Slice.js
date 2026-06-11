@@ -116,9 +116,9 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
-                let finalObj = JSON.parse(payloadObj.updatedHoliday);
+                let finalObj = JSON.parse(payloadObj.updatedDepartmentWiseBudget);
                 if (entity.Id === finalObj.Id) {
-                    return finalObj; //action.payload.updatedHoliday;
+                    return finalObj; //action.payload.updatedDepartmentWiseBudget;
                 }
                 return entity;
             });
@@ -134,7 +134,12 @@ export const PortalDepartmentWiseBudgetSlice = createSlice({
         },
 
 
-
+        BudgetWorkflowStatusFetched: (state, action) => {
+            const data = action.payload;
+            state.actionsLoading = false;
+            state.error = null;
+            state.workflowStatusList = data;
+        },
 
 
     },

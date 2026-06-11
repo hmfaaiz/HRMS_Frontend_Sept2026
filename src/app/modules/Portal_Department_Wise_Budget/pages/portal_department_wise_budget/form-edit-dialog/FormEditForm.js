@@ -62,8 +62,8 @@ const department_wise_budgetEditSchema = Yup.object().shape({
           .required(VALIDATION_MESSAGES.required),
         sno: Yup.number().required(VALIDATION_MESSAGES.required),
 
-        business_need: Yup.string().required(VALIDATION_MESSAGES.required),
-        impact_of_position: Yup.string().required(VALIDATION_MESSAGES.required),
+        business_need: Yup.string().nullable(),
+        impact_of_position: Yup.string().nullable(),
         expected_date_of_joining: Yup.date()
           .nullable()
           .required(VALIDATION_MESSAGES.required)
@@ -121,11 +121,11 @@ export function FormEditForm({
 
 
 
-  const { currentState, userAccess, roles, } = useSelector((state) => {
+  const { currentState, userAccess, currentUser } = useSelector((state) => {
     return {
       currentState: state.portal_department_wise_budget,
       userAccess: state?.auth?.userAccess["portal_department_wise_budget"],
-      roles: state.users?.roles?.allRoles || []
+      currentUser: state?.auth?.user,
     };
   }, shallowEqual);
 
@@ -160,9 +160,9 @@ export function FormEditForm({
       // }}
       initialValues={{
         subsidiaryId:
-          formData?.[0]?.subsidiaryId || defaultSubsidiary?.value || null,
+          formData?.[0]?.subsidiaryId || currentUser.EmployeeMapping?.subsidiaryId || null,
 
-        departmentId: formData?.[0]?.departmentId || null,
+        departmentId: formData?.[0]?.departmentId || currentUser.EmployeeMapping?.departmentId || null,
 
         budgetYearId: formData?.[0]?.budgetYearId || null,
 
@@ -208,7 +208,8 @@ export function FormEditForm({
                           Subsidiary<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isdataForRead || formData[0]?.Id}
+                      // isDisabled={isdataForRead || formData[0]?.Id}
+                      isDisabled={true}
                       onChange={(e) => {
                         setFieldValue("departmentId", null);
                         setFieldValue("budgetYearId", null);
@@ -274,7 +275,8 @@ export function FormEditForm({
                           Department<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isdataForRead || formData[0]?.Id || !values?.subsidiaryId || !values?.budgetYearId}
+                      // isDisabled={isdataForRead || formData[0]?.Id || !values?.subsidiaryId || !values?.budgetYearId}
+                      isDisabled={true}
                       onChange={(e) => {
                         setFieldValue("departmentId", e.value || null);
                         if (values.budgetYearId && values.subsidiaryId && e.value) {
@@ -293,28 +295,22 @@ export function FormEditForm({
                       touched={touched.departmentId}
                     />
                   </div>
-
-
+                  <br />
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-1">
                     <label>
                       <span className="text-bold">
-                        Current Strength:  {currentState?.totalEmployees?.toLocaleString("en-US")}
+                        Current Strength:  {currentState?.totalEmployees?.toLocaleString("en-US") || 0}
                       </span>
                     </label>
-                    {/* <Field
-                      name=""
-                      component={Input}
-                      disabled={true}
-                      type="number"
-                      value={Number(currentState?.totalEmployees || 0)}
 
-                    /> */}
                   </div>
 
                   <div className="col-span-1">
                     <label>
                       <span className="text-bold">
-                        Current Salary:  {currentState?.totalSalary?.toLocaleString("en-US")}
+                        Current Salary:  {currentState?.totalSalary?.toLocaleString("en-US") || 0}
                       </span>
                     </label>
                     {/* <Field
@@ -327,15 +323,15 @@ export function FormEditForm({
 
                     /> */}
                   </div>
-
-
-
-
-
-
                 </div>
 
-                <div>
+
+
+
+
+
+
+                <div >
                   <PatternListForm
                     values={values}
                     setFieldValue={setFieldValue}

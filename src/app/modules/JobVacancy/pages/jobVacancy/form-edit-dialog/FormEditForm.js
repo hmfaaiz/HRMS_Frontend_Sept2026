@@ -29,6 +29,8 @@ import DatePicker from "react-datepicker";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { RichTextInput } from "../../../../../../_metronic/_partials/controls/forms/RichTextInput";
+import { fetchAllBudgetRequest } from "../../../../Dashboard/_redux/dashboardActions";
+import { designationSlice } from "../../../../Designation/_redux/designationSlice";
 
 const jobVacancyEditSchema = Yup.object().shape({
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -289,6 +291,7 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
       dispatch(fetchAllFormsMenu(416, "allJobIndustryList"));
       dispatch(fetchAllParentDept());
+
     }
   }, [dispatch, formData.Id]);
 
@@ -300,7 +303,6 @@ export function FormEditForm({
     };
   }, shallowEqual);
 
-  const { dataForEdit } = currentState;
 
   const filteredCities = (countryId) => {
     return dashboard?.allCity?.filter((city) => city.code === countryId) || [];
@@ -325,10 +327,18 @@ export function FormEditForm({
     return formData;
   }, [formData]);
 
+
+  useEffect(() => {
+    const subsidiaryId =
+      formData?.subsidiaryId ?? 0;
+    dispatch(fetchAllBudgetRequest({ subsidiaryId: subsidiaryId, departmentId: formData?.departmentId, designation: formData?.designationId }));
+  }, [dispatch, formData]);
+
+
   // const fetchData = async (setJobCode) => {
-    
+
   //   if (!formData.Id || formData.Id && !isdataForRead && formData.jobPostingStatus == 3) {
-     
+
   //     dispatch(
   //       getLatestTableId(
   //         "r_jobvacancy",
@@ -340,7 +350,7 @@ export function FormEditForm({
   //   }
   // };
   // useEffect(() => {
-   
+
   //   fetchData(setJobCode);
   // }, [!formData.Id,isdataForRead]);
 
@@ -357,10 +367,10 @@ export function FormEditForm({
         ...cleanedFormData,
         // jobCode: cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
         jobCode:
-  (!isdataForRead && formData.jobPostingStatus == 3)
-    ? jobCode
-    : (cleanedFormData.jobCode ? cleanedFormData.jobCode : jobCode)
-,
+          (!isdataForRead && formData.jobPostingStatus == 3)
+            ? jobCode
+            : (cleanedFormData.jobCode ? cleanedFormData.jobCode : jobCode)
+        ,
         jobDate: cleanedFormData?.jobDate
           ? cleanedFormData?.jobDate
           : formatDates(new Date(), "yyyy-MM-dd"),
@@ -515,6 +525,8 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue("designationId", e.value || null);
                           setFieldValue("jobTitle", e.label || ""); // Set job title based on designation
+                          setFieldValue("departmentWiseBudgetId", "");
+                          dispatch(fetchAllBudgetRequest({ designationId: e.value, subsidiaryId: values.subsidiaryId, departmentId: values.departmentId }));
                         }}
                         value={
                           dashboard?.allDesignationByGrade?.find(
@@ -573,6 +585,8 @@ export function FormEditForm({
                         isDisabled={isdataForRead}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          setFieldValue("departmentWiseBudgetId", "");
+                          dispatch(fetchAllBudgetRequest({ designationId: values.designationId, subsidiaryId: e.value, departmentId: values.departmentId }));
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
@@ -683,6 +697,8 @@ export function FormEditForm({
                             isDisabled={isdataForRead}
                             onChange={(e) => {
                               setFieldValue("departmentId", e.value || null);
+                              setFieldValue("departmentWiseBudgetId", "");
+                              dispatch(fetchAllBudgetRequest({ designationId: values.designationId, subsidiaryId: values.subsidiaryId, departmentId: e.value }));
                             }}
                             value={
                               dashboard?.allParentDept?.find(
@@ -694,6 +710,8 @@ export function FormEditForm({
                             touched={touched.departmentId}
                           />
                         </div>
+
+
                       </div>
                     </div>
 
@@ -814,6 +832,49 @@ export function FormEditForm({
                   </div>
                 </div>
 
+                <hr></hr>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  Manpower Budget Request
+                </h6>
+                <div className="grid md:grid-cols-6 gap-x-3 gap-y-1">
+
+
+                  <div className="">
+                    <SearchSelect
+                      name="departmentWiseBudgetId"
+                      label={
+                        <span>
+                          Budget Code{" "}
+
+                        </span>
+                      }
+                      isDisabled={isdataForRead}
+                      onChange={(e) => {
+                        setFieldValue("departmentWiseBudgetId", Number(e.value));
+                      }}
+
+
+
+                      value={
+                        (dashboard?.budgetRequestList || []).find(
+                          (item) => item.value === Number(values.departmentWiseBudgetId)
+                        ) || { label: "Select", value: "" }
+                      }
+             
+                      options={[
+                        { label: "Select", value: null },
+                        ...(Array.isArray(dashboard?.budgetRequestList)
+                          ? dashboard.budgetRequestList
+                          : []),
+                      ]}
+                      error={errors.departmentWiseBudgetId}
+                      touched={touched.departmentWiseBudgetId}
+                    />
+                  </div>
+
+                </div>
+
                 {/* Position Detail */}
                 <hr></hr>
 
@@ -834,6 +895,7 @@ export function FormEditForm({
                       isDisabled={isdataForRead}
                       onChange={(e) => {
                         setFieldValue("reportToDesignationId", e.value || null);
+
                       }}
                       value={
                         dashboard?.allDesignations?.find(

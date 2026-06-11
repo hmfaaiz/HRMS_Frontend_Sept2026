@@ -680,7 +680,7 @@ export const getAllPayrollAccount = (body) => async (dispatch) => {
 
       if (!Array.isArray(bankInfoList)) {
         console.error("tran_payroll_policy_bank_infos is not an array", bankInfoList);
-        toast.error("Unexpected response format");
+        toast.error("Please configure the bank in payroll configuration");
         return;
       }
 

@@ -3828,7 +3828,7 @@ export function DesignationEditForm({
                         placeholder="example@gmail.com"
                         label="Official Email"
                         autoComplete="off"
-                        maxLength="30"
+                        maxLength="50"
 
                       />
                     </div>
@@ -3840,7 +3840,7 @@ export function DesignationEditForm({
                         placeholder="example@gmail.com"
                         label="Personal Email"
                         autoComplete="off"
-                        maxLength="30"
+                        maxLength="50"
 
                       />
                     </div>

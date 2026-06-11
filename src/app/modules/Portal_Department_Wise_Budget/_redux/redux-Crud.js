@@ -38,3 +38,7 @@ export function getEmployeeAuthorties(empId, workflowTypeId) {
     `${USERS_URL}/workflow_policy/get-employee-authorties/${empId}/${workflowTypeId}`
   );
 }
+
+export async function getAllWorkflowStatusById(id) {
+  return axios.get(`${USERS_URL}/portal_department_wise_budget/read-budget-approval/${id}`);
+}

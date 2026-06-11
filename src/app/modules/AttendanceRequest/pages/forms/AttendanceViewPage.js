@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FormUIProvider } from "./FormUIContext";
+import { FormUIProvider, useFormUIContext } from "./FormUIContext"; 
 import { FormTable } from "./form-table/FormTable";
 import { FormFilter } from "./form-filter/FormFilter";
 import { Route } from "react-router-dom";
@@ -12,6 +12,18 @@ import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalCompone
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import { useSelector, shallowEqual } from "react-redux";
 import { LogsDialog } from "./log/LogsDialog";
+import { AttendanceWorkflowModal } from "./form-table/AttendanceWorkflowModal"; 
+
+function AttendanceWorkflowModalWrapper() {
+  const { workflowId, setWorkflowId } = useFormUIContext();
+  if (!workflowId) return null;
+  return (
+    <AttendanceWorkflowModal
+      show={!!workflowId}
+      onHide={() => setWorkflowId(null)}
+    />
+  );
+}
 
 export function AttendanceViewPage({ history }) {
   const FormUIEvents = {
@@ -21,7 +33,7 @@ export function AttendanceViewPage({ history }) {
       );
     },
 
-     viewttendanceLogs: (attDate) => {
+    viewttendanceLogs: (attDate) => {
       return history.push(
         `/attendance_request/read-all-attendance-request/${attDate}/logs`
       );
@@ -46,18 +58,18 @@ export function AttendanceViewPage({ history }) {
           />
         )}
       </Route>
-      
+
       <Route path="/attendance_request/read-all-attendance-request/:attDate/logs">
-  {({ history, match, location }) => (
-    <LogsDialog
-      show={!!match}
+        {({ history, match, location }) => (
+          <LogsDialog
+            show={!!match}
     
-      onHide={() => {
-        history.push("/attendance_request/read-all-attendance-request");
-      }}
-    />
-  )}
-</Route>
+            onHide={() => {
+              history.push("/attendance_request/read-all-attendance-request");
+            }}
+          />
+        )}
+      </Route>
       {/* <Card>
         <CardHeader title={CurrentModuleName()}></CardHeader>
         <FormFilter />
@@ -167,6 +179,7 @@ export function AttendanceViewPage({ history }) {
           <WorkflowAuthortiesTable />
         </div>
       </div>
+      <AttendanceWorkflowModalWrapper />
 
       <ToastContainer
         position="top-right"

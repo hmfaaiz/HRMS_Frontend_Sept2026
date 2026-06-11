@@ -232,7 +232,9 @@ import { EmployeeTaskSlice } from "../app/modules/employee_task_portal/_redux/re
 import { PolicyforNewYearBudgetSlice } from "../app/modules/PolicyforNewYearBudget/_redux/redux-Slice";
 import { DepartmentWiseBudgetSlice } from "../app/modules/Department_Wise_Budget/_redux/redux-Slice";
 import { PortalDepartmentWiseBudgetSlice } from "../app/modules/Portal_Department_Wise_Budget/_redux/redux-Slice";
-import { BudgetRequestSlice } from "../app/modules/BudgetRequest/_redux/BudgetApplicationSlice";
+import { BudgetWorkflowHrmsSlice } from "../app/modules/Budget_Workflow_Status/_redux/redux-Slice";
+import { BudgetWorkflowPortalSlice } from "../app/modules/Budget_Workflow_Status_Portal/_redux/redux-Slice"
+import { BudgetApprovalSlice } from "../app/modules/BudgetApproval/redux/formSlice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -464,7 +466,9 @@ export const rootReducer = combineReducers({
   policy_for_new_year_budget: PolicyforNewYearBudgetSlice.reducer,
   department_wise_budget: DepartmentWiseBudgetSlice.reducer,
   portal_department_wise_budget: PortalDepartmentWiseBudgetSlice.reducer,
-  budgetRequest: BudgetRequestSlice.reducer,
+  budget_workflow_status: BudgetWorkflowHrmsSlice.reducer,
+  budget_workflow_status_portal: BudgetWorkflowPortalSlice.reducer,
+  department_wise_budget_approval: BudgetApprovalSlice.reducer,
 
 });
 
