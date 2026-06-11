@@ -78,8 +78,8 @@ export function FormCard() {
   return (
 
     <TCard name={CurrentModuleName()}>
-      <div className="grid md:grid-cols-7 justify-between  items-center gap-2 ">
-        <div className="grid md:col-span-5">
+      <div className="grid md:grid-cols-12 justify-between  items-center gap-2 ">
+        <div className="grid md:col-span-10">
           <FormFIlter />
         </div>
 

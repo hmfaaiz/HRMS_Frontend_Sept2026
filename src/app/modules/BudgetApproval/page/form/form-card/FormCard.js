@@ -21,7 +21,7 @@ export const FormCard = () => {
     (state) => ({
       listLoading: state?.department_wise_budget_approval?.listLoading,
       user: state?.auth?.user,
-      budget: state?.auth?.userAccess["Budget"],
+      budget: state?.auth?.userAccess["Manpower Budget"],
     }),
     shallowEqual
   );
@@ -51,12 +51,23 @@ export const FormCard = () => {
             name={CurrentModuleName()}
             isBackButton={true}
             menuOptions={[
-             {
-                name: "Department Wise Budget",
+           
+
+              {
+                name: "Request",
                 link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
                 isShow: budget?.find(
                   (el) =>
-                    el?.componentName === "ReadAllPortalDepartmentWiseBudget"
+                    el?.componentName === "ReadAllPortalDepartmentWiseBudget" && el?.isResourceShow
+                ),
+              }, 
+              
+              {
+                name: "Workflow Status",
+                link: "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
+                isShow: budget?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
                 ),
               },
             ]}
@@ -72,15 +83,24 @@ export const FormCard = () => {
             isBackButton={true}
             menuOptions={[
 
-               {
-                name: "Department Wise Budget",
+                {
+                name: "Request",
                 link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
                 isShow: budget?.find(
                   (el) =>
-                    el?.componentName === "ReadAllPortalDepartmentWiseBudget"
+                    el?.componentName === "ReadAllPortalDepartmentWiseBudget" && el?.isResourceShow
+                ),
+              }, 
+              
+              {
+                name: "Workflow Status",
+                link: "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
+                isShow: budget?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
                 ),
               },
- 
+
             ]}
             isDashboardIcon={true}
           />

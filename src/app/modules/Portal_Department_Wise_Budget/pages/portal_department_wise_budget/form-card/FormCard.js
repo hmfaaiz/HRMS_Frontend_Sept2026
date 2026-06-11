@@ -35,7 +35,7 @@ export function FormCard() {
     return {
       currentState: state.portal_department_wise_budget,
       userAccess: state?.auth?.userAccess["portal_department_wise_budget"],
-      department_wise_budget_approval: state?.auth?.userAccess["Budget"],
+      department_wise_budget_approval: state?.auth?.userAccess["Manpower Budget"],
       currentUser: state.auth?.user,
     };
   }, shallowEqual);
@@ -69,11 +69,21 @@ console.log("department_wise_budget_approval11111",department_wise_budget_approv
             isDashboardRedirect={true}
             menuOptions={[
               {
-                name: "Work Flow Approval",
+                name: "Approval",
                 link: "/department_wise_budget_approval/read-all-budget-approval",
                 isShow: department_wise_budget_approval?.find(
                   (el) =>
                     el?.componentName === "ReadAllBudgetApproval"
+                ),
+              },
+              
+              
+              {
+                name: "Workflow Status",
+                link: "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
                 ),
               },
 
@@ -91,7 +101,7 @@ console.log("department_wise_budget_approval11111",department_wise_budget_approv
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
+             menuOptions={[
               {
                 name: "Approval",
                 link: "/department_wise_budget_approval/read-all-budget-approval",
@@ -100,7 +110,16 @@ console.log("department_wise_budget_approval11111",department_wise_budget_approv
                     el?.componentName === "ReadAllBudgetApproval"
                 ),
               },
-
+              
+              
+              {
+                name: "Workflow Status",
+                link: "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
+                ),
+              },
 
 
             ]}

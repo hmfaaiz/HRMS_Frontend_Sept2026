@@ -450,8 +450,9 @@ function PatternListForm({
                                 </table>
                             </div>
                         </div>
-
-                        <br />
+                        {workflowStatusList?.length > 0 && 
+                        <>
+                         <br />
                         <h6 className="font-bold mb-0 text-primary">Workflow Authorties</h6>
 
                         <div className="mt-2">
@@ -472,6 +473,11 @@ function PatternListForm({
                                 <NoRecordsFoundMessage entities={workflowStatusList || []} />
                             </BootstrapTable>
                         </div>
+                        </>
+                        
+                        }
+
+                       
                     </>
                 )}
             </FieldArray>

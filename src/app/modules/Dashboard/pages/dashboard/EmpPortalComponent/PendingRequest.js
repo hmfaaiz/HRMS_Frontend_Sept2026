@@ -9,7 +9,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       roster: state?.auth?.userAccess["Attendance Management"],
       payroll: state?.auth?.userAccess["Payroll"],
       resignation: state?.auth?.userAccess["Resignation"],
-      budget: state?.auth?.userAccess["Budget"],
+      budget: state?.auth?.userAccess["Manpower Budget"],
     }),
     shallowEqual,
   );
@@ -158,8 +158,8 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       isModuleAllow: moduleRights?.find((e) => e?.value == "separation")?.allow,
     },
     {
-      name: "Budget",
-      count: data?.BudgetApproval || 0,
+      name: "Manpower Budget",
+      count: data?.budgetApproval || 0,
       isApproval: budget?.find(
         (el) =>
           el?.componentName == "ReadAllBudgetApproval" &&
@@ -167,6 +167,14 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
           el?.portalType == 2,
       ),
       approvalUrl: "/department_wise_budget_approval/read-all-budget-approval",
+      isWorkflow: budget?.find(
+        (el) =>
+          el?.componentName == "ReadAllBudgetWorkflowStatusPortal" &&
+          el?.isResourceShow &&
+          el?.portalType == 2,
+      ),
+      workflowUrl:
+        "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
       // isWorkflow: budget?.find(
       //   (el) =>
       //     el?.componentName == "" &&
