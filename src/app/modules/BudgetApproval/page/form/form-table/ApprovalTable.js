@@ -160,9 +160,9 @@ export function ApprovalFormTable() {
       sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
+        style: {
         minWidth: "10px",
-        maxWidth: "10px",
+        textAlign: "right",
       },
     },
     {
