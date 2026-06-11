@@ -102,56 +102,62 @@ export function FormTable() {
       },
     },
     {
-          dataField: "BudgetYear.label",
-          text: "Budget Year",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "160px",
-          },
-        },
-    {
-      dataField: "totalStrength",
-      text: "Budgeted Strength",
+      dataField: "BudgetYear.label",
+      text: "Budget Year",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "160px",
       },
-       formatter: (cell) => formatNumberWithCommas(cell),
+    },
+    {
+      dataField: "totalStrength",
+      text: "Approved Budgeted Strength",
+      sort: false,
+      headerAlign: "center",
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+        textAlign: "right",
+      },
+      formatter: (cell) => formatNumberWithCommas(cell),
     },
 
 
     {
       dataField: "totalSalary",
-      text: "Budgeted Salary",
+      text: "Approved Budgeted Salary",
       sort: false,
+      headerAlign: "center",
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "10px",
+        textAlign: "right",
       },
-       formatter: (cell) => formatNumberWithCommas(cell),
+      formatter: (cell) => formatNumberWithCommas(cell),
 
     },
-    
+
     {
       dataField: "totalPositions",
       text: "Total Positions",
       sort: false,
+      headerAlign: "center",
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
+       style: {
         minWidth: "10px",
+        textAlign: "right",
       },
-       formatter: (cell) => formatNumberWithCommas(cell),
+      formatter: (cell) => formatNumberWithCommas(cell),
 
     },
-  
 
-  
+
+
 
 
     // {

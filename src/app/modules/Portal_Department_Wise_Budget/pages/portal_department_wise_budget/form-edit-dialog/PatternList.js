@@ -288,7 +288,7 @@ function PatternListForm({
                                                     <Field
                                                         name={`list[${index}].budgeted_strength`}
                                                         type="number"
-                                                        className="form-control"
+                                                        className="form-control text-right"
                                                         disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
@@ -397,7 +397,7 @@ function PatternListForm({
                                                         className="border-none bg-transparent"
                                                         type="button"
                                                         onClick={() => {
-                                                            console.log("click111111")
+                                                            
                                                             setWorkflowId(values?.list?.[index]?.Id);
                                                         }}
                                                     >
@@ -429,7 +429,7 @@ function PatternListForm({
                                                 Total:
                                             </td>
 
-                                            <td>
+                                            <td colSpan="1" className="text-right">
                                                 {totalStrength.toLocaleString("en-US")}
                                             </td>
 

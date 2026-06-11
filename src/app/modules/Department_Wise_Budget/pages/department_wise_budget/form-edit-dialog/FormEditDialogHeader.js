@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id,isUserForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Department Wise Budget ";
+    let _title = id ? "" : "Add Department Wise Manpower Budget ";
     if (id) {
-      _title = `Edit Department Wise Budget `;
+      _title = `Edit Department Wise Manpower Budget `;
     }
     setTitle(_title);
   }, [userForEdit, actionsLoading]);
@@ -29,7 +29,7 @@ export function FormEditDialogHeader({ id,isUserForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View Department Wise Budget "}
+          {!isUserForRead ? title : "View Department Wise Manpower Budget "}
         </Modal.Title>
       </Modal.Header>
     </>

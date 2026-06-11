@@ -100,8 +100,8 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-    },  
-     {
+    },
+    {
       dataField: "BudgetYear.label",
       text: "Budget Year",
       sort: false,
@@ -119,8 +119,9 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "10px",
+        textAlign: "right",
       },
-       formatter: (cell) => formatNumberWithCommas(cell),
+      formatter: (cell) => formatNumberWithCommas(cell),
     },
 
 
@@ -136,7 +137,7 @@ export function FormTable() {
     //    formatter: (cell) => formatNumberWithCommas(cell),
 
     // },
-    
+
     {
       dataField: "totalPositions",
       text: "Total Positions",
@@ -145,13 +146,14 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "10px",
+        textAlign: "right",
       },
-       formatter: (cell) => formatNumberWithCommas(cell),
+      formatter: (cell) => formatNumberWithCommas(cell),
 
     },
-  
 
-  
+
+
 
 
 

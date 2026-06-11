@@ -363,7 +363,7 @@ console.log("useracc1111111111",useracc1111)
             link:
               "/portal_department_wise_budget/read-all-portal-department-wise-budget",
             show: portalDepartmentWiseBudget,
-            name: "Department Wise Budget",
+            name: "Department Wise Manpower Budget",
           },
         ],
       },
