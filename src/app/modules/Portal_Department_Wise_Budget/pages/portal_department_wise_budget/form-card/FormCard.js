@@ -35,7 +35,7 @@ export function FormCard() {
     return {
       currentState: state.portal_department_wise_budget,
       userAccess: state?.auth?.userAccess["portal_department_wise_budget"],
-      department_wise_budget_approval: state?.auth?.userAccess["Budget"],
+      department_wise_budget_approval: state?.auth?.userAccess["Manpower Budget"],
       currentUser: state.auth?.user,
     };
   }, shallowEqual);

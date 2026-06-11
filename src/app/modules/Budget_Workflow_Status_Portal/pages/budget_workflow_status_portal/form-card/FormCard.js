@@ -17,7 +17,7 @@ export const FormCard = () => {
     (state) => ({
       listLoading: state?.budget_workflow_status_portal?.listLoading,
       user:        state?.auth?.user,
-      access:      state?.auth?.userAccess?.["Budget"],
+      access:      state?.auth?.userAccess?.["Manpower Budget"],
     }),
     shallowEqual
   );
