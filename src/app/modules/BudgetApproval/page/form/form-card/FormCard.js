@@ -21,7 +21,7 @@ export const FormCard = () => {
     (state) => ({
       listLoading: state?.department_wise_budget_approval?.listLoading,
       user: state?.auth?.user,
-      budget: state?.auth?.userAccess["Budget"],
+      budget: state?.auth?.userAccess["Manpower Budget"],
     }),
     shallowEqual
   );
