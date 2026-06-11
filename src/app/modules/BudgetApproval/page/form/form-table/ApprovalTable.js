@@ -144,7 +144,7 @@ export function ApprovalFormTable() {
     },
     {
       dataField: "parentData.expected_date_of_joining",
-      text: "Expected Date Of Joiningt",
+      text: "Expected Date Of Joining",
       sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -161,8 +161,8 @@ export function ApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "130px",
-        maxWidth: "130px",
+        minWidth: "10px",
+        maxWidth: "10px",
       },
     },
     {
