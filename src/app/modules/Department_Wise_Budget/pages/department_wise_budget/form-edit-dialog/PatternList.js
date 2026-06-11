@@ -162,7 +162,7 @@ function PatternListForm({
                                                     <Field
                                                         name={`list[${index}].budgeted_strength`}
                                                         type="number"
-                                                        className="form-control"
+                                                        className="form-control text-right"
                                                         disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
@@ -174,8 +174,8 @@ function PatternListForm({
                                                     <Field
                                                         name={`list[${index}].budgeted_salary`}
                                                         type="number"
-                                                        className="form-control"
-                                                         disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
+                                                        className="form-control text-right"
+                                                         disabled={isdataForRead }
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_salary`} />
@@ -294,11 +294,11 @@ function PatternListForm({
                                                 Total:
                                             </td>
 
-                                            <td>
+                                            <td colSpan="1" className="text-right">
                                                 {totalStrength.toLocaleString("en-US")}
                                             </td>
 
-                                            <td>
+                                            <td colSpan="1" className="text-right">
                                                 {totalSalary.toLocaleString("en-US")}
                                             </td>
 
