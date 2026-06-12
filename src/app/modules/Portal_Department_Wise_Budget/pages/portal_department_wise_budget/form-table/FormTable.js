@@ -119,7 +119,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "10px",
-        textAlign: "right",
+        textAlign: "center",
       },
       formatter: (cell) => formatNumberWithCommas(cell),
     },
@@ -146,7 +146,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "10px",
-        textAlign: "right",
+        textAlign: "center",
       },
       formatter: (cell) => formatNumberWithCommas(cell),
 

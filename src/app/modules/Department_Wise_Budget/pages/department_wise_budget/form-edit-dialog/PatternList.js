@@ -187,6 +187,7 @@ function PatternListForm({
                                                     <DatePicker
                                                         className="form-control"
                                                         name={`list[${index}].request_date`}
+                                                        dateFormat="dd-MMM-yyyy"
                                                         value={values?.list?.[index]?.request_date || ""}
                                                         selected={
                                                             values?.list?.[index]?.request_date

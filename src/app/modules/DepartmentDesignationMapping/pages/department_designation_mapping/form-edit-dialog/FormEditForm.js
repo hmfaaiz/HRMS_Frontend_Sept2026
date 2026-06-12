@@ -74,7 +74,7 @@ export function FormEditForm({
       dispatch(actions.fetchDesigMapping(departmentId));
     }
   }, [departmentId]);
-  console.log("dashboard?.allCompDeptList11111", dashboard?.allCompDeptList)
+
   return (
     <Formik
       enableReinitialize={true}
@@ -179,14 +179,9 @@ export function FormEditForm({
                                         <SearchSelect
                                           name={`designationList.[${rightindex}].designationId`}
                                           isDisabled={
-                                            isUserForRead 
-                                            // || isNew
-                                            //   ? values.designationList?.[
-                                            //       rightindex
-                                            //     ]?.isDelete
-                                            //   : !values.designationList?.[
-                                            //       rightindex
-                                            //     ]?.isDelete
+                                            isUserForRead ||
+                                            (values.designationList?.[rightindex]?.designationId &&
+                                              values.designationList?.[rightindex]?.isDelete === false)
                                           }
                                           onChange={(e) => {
                                             setFieldValue(
