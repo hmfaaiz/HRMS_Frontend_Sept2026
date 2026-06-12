@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useRef } from "react";
 import { Formik, Form, Field } from "formik";
 import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
@@ -13,6 +13,7 @@ export function FormFilter({
   ticketStatuses = [],
   loading,
   onPrint,
+  ticketCodeFromUrl,
 }) {
   const uiContext = useProjectTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
@@ -53,8 +54,44 @@ export function FormFilter({
     onPrint(type);
   };
 
+  const formikRef = useRef(null);
+
+  // When navigated from the Task Dashboard with a ticketCode in the URL,
+  // auto-populate the Ticket Description field, clear date filters,
+  // clear Ticket Statuses, and immediately run the filter.
+  useEffect(() => {
+    if (!ticketCodeFromUrl || !formikRef.current) return;
+
+    const formik = formikRef.current;
+
+    // Construct the exact values we want to filter by
+    const newValues = {
+      ...formik.values,
+      ticketDescription: ticketCodeFromUrl,
+      startFrom: null,
+      startTo: null,
+      dueFrom: null,
+      dueTo: null,
+      ticketStatusIds: []
+    };
+
+    // Update the UI fields
+    formik.setFieldValue("ticketDescription", ticketCodeFromUrl);
+    formik.setFieldValue("startFrom", null);
+    formik.setFieldValue("startTo", null);
+    formik.setFieldValue("dueFrom", null);
+    formik.setFieldValue("dueTo", null);
+    formik.setFieldValue("ticketStatusIds", []);
+
+    // Run the filter synchronously with the new values
+    applyFilter(newValues);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ticketCodeFromUrl]);
+
   return (
     <Formik
+      innerRef={formikRef}
       enableReinitialize
       initialValues={{
         projectId: uiProps.queryParams?.filter?.projectId || null,

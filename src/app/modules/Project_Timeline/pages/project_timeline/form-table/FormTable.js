@@ -88,8 +88,8 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
   useEffect(() => {
     uiContext.setHasRecords(
       uiProps.queryParams.isFiltered &&
-        Array.isArray(entities) &&
-        entities.length > 0,
+      Array.isArray(entities) &&
+      entities.length > 0,
     );
   }, [entities, uiProps.queryParams.isFiltered]);
 
@@ -255,7 +255,63 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
   // };
 
 
-   const getFlattenedData = (tickets) => {
+  //  const getFlattenedData = (tickets) => {
+  //   if (!tickets || !tickets.length) return [];
+
+  //   const filter = uiProps.queryParams?.filter || {};
+  //   const hasTicketTypeFilter = filter.ticketTypeIds?.length > 0;
+  //   const includesEpic = filter.ticketTypeIds?.includes(1);
+
+  //   const hasSpecificFilter = !!(
+  //     filter.ticketDescription ||
+  //     filter.ticketNumber ||
+  //     filter.searchQuery ||
+  //     filter.ticketStatusIds?.length > 0 ||
+  //     filter.assignToEmpId ||
+  //     filter.reportToEmpId ||
+  //     filter.startFrom || filter.dueFrom
+  //   );
+
+  //   if (hasSpecificFilter || (hasTicketTypeFilter && !includesEpic)) {
+  //     return tickets;
+  //   }
+
+  //   const { epicMap, taskMap } = buildHierarchicalData(tickets);
+  //   const flattened = [];
+  //   const addedIds = new Set();
+
+  //   Object.values(epicMap)
+  //     .sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0))
+  //     .forEach((epic) => {
+  //       flattened.push(epic);
+  //       addedIds.add(epic.Id);
+
+  //       if (expandedEpics[epic.Id] || hasTicketTypeFilter) {
+  //         epic.children.forEach((child) => {
+  //           flattened.push(child);
+  //           addedIds.add(child.Id);
+
+  //           if (child.children && child.children.length) {
+  //             child.children.forEach((subTask) => {
+  //               flattened.push(subTask);
+  //               addedIds.add(subTask.Id);
+  //             });
+  //           }
+  //         });
+  //       }
+  //     });
+
+  //   tickets.forEach((t) => {
+  //     if (!addedIds.has(t.Id)) {
+  //       flattened.push(t);
+  //       addedIds.add(t.Id);
+  //     }
+  //   });
+
+  //   return flattened;
+  // };
+
+  const getFlattenedData = (tickets) => {
     if (!tickets || !tickets.length) return [];
 
     // Get the applied ticket type filter from query params
@@ -282,13 +338,34 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
           });
         });
 
+      // Append orphaned tasks
+      Object.values(taskMap).forEach((task) => {
+        if (!task.parentEpicId || !epicMap[task.parentEpicId]) {
+          flattened.push(task);
+          if (task.children && task.children.length) {
+            task.children.forEach((subTask) => {
+              flattened.push(subTask);
+            });
+          }
+        }
+      });
+
+      // Append orphaned subtasks
+      tickets.forEach((t) => {
+        if (t.ticketTypeId === 5) {
+          if (!t.parentTaskId || !taskMap[t.parentTaskId]) {
+            flattened.push(t);
+          }
+        }
+      });
+
       return flattened;
     } else if (hasTicketTypeFilter && !includesEpic) {
       // Filter excludes Epic: Only show matching child types (flattened, no hierarchy)
       return tickets.filter((ticket) => appliedTicketTypeIds.includes(ticket.ticketTypeId));
     } else {
       // No filter or "All": Show full hierarchy as before
-      const { epicMap } = buildHierarchicalData(tickets);
+      const { epicMap, taskMap } = buildHierarchicalData(tickets);
       const flattened = [];
 
       Object.values(epicMap)
@@ -308,6 +385,27 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
             });
           }
         });
+
+      // Append orphaned tasks
+      Object.values(taskMap).forEach((task) => {
+        if (!task.parentEpicId || !epicMap[task.parentEpicId]) {
+          flattened.push(task);
+          if (task.children && task.children.length) {
+            task.children.forEach((subTask) => {
+              flattened.push(subTask);
+            });
+          }
+        }
+      });
+
+      // Append orphaned subtasks
+      tickets.forEach((t) => {
+        if (t.ticketTypeId === 5) {
+          if (!t.parentTaskId || !taskMap[t.parentTaskId]) {
+            flattened.push(t);
+          }
+        }
+      });
 
       return flattened;
     }
@@ -445,12 +543,22 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
         const typeLabel = getTicketTypeLabel(cell);
         const isEpic = row.ticketTypeId === 1;
 
-        // Check if hierarchy is active (no filter or "All" selected)
-        const appliedTicketTypeIds = uiProps.queryParams?.filter?.ticketTypeIds || [];
-        const hasTicketTypeFilter = appliedTicketTypeIds.length > 0;
-        const includesEpic = appliedTicketTypeIds.includes(1);
-        const isHierarchyActive = !hasTicketTypeFilter || !includesEpic; // Hierarchy active when no filter or epic not in filter
+        const filter = uiProps.queryParams?.filter || {};
+        const hasTicketTypeFilter = filter.ticketTypeIds?.length > 0;
+        const includesEpic = filter.ticketTypeIds?.includes(1);
 
+        const hasSpecificFilter = !!(
+          filter.ticketDescription ||
+          filter.ticketNumber ||
+          filter.searchQuery ||
+          filter.ticketStatusIds?.length > 0 ||
+          filter.assignToEmpId ||
+          filter.reportToEmpId ||
+          filter.startFrom || filter.dueFrom
+        );
+
+        // Hierarchy active when no specific search filter or epic not in filter
+        const isHierarchyActive = !hasSpecificFilter && (!hasTicketTypeFilter || !includesEpic);
         return (
           <div
             style={{
@@ -472,7 +580,7 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
                   flexShrink: 0,
                 }}
               >
-                {expandedEpics[row.Id] ? "▶" : "▶"}
+                {expandedEpics[row.Id] ? "▼" : "▶"}
               </button>
             )}
             {isEditableType(row) ? (
@@ -530,33 +638,33 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
       headerSortingClasses,
       headerStyle,
     },
-     {
-    dataField: "parentTaskId",
-    text: "Linked Task",  
-    sort: false,
-    headerSortingClasses,
-    headerStyle,
-    style: { minWidth: "100px" },
-    formatter: (cell, row) => {
-      if (row.ticketTypeId === 1) {
-        // For epics, show project name
-        return row.Project?.projectName || "";
-      } else if (row.ticketTypeId === 4) {
-        // For linked tasks, show the existing logic
-        const linkedTask = entities.find(
-          (t) =>
-            t.ticketTypeId === 3 &&
-            t.parentEpicId === row.parentEpicId &&
-            t.Id === row.parentTaskId,
-        );
-        return linkedTask
-          ? `${linkedTask.ticketCode} ${linkedTask.ticketDescription}`
-          : "";
-      } else {
-        return "";
-      }
+    {
+      dataField: "parentTaskId",
+      text: "Linked Task",
+      sort: false,
+      headerSortingClasses,
+      headerStyle,
+      style: { minWidth: "100px" },
+      formatter: (cell, row) => {
+        if (row.ticketTypeId === 1) {
+          // For epics, show project name
+          return row.Project?.projectName || "";
+        } else if (row.ticketTypeId === 4) {
+          // For linked tasks, show the existing logic
+          const linkedTask = entities.find(
+            (t) =>
+              t.ticketTypeId === 3 &&
+              t.parentEpicId === row.parentEpicId &&
+              t.Id === row.parentTaskId,
+          );
+          return linkedTask
+            ? `${linkedTask.ticketCode} ${linkedTask.ticketDescription}`
+            : "";
+        } else {
+          return "";
+        }
+      },
     },
-  },
 
     {
       dataField: "priority",

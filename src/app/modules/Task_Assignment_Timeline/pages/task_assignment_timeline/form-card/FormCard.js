@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useLocation } from "react-router-dom";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { FormFilter } from "../form-filter/FormFilter";
 import { FormTable } from "../form-table/FormTable";
@@ -11,6 +12,16 @@ import {  fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardAc
 export function FormCard() {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  // Extract a bare ticket-code segment from the URL, e.g. /read-all-.../TK-001
+  // Must NOT match sub-modal routes like /TK-001/detail, /TK-001/timelog, etc.
+  const ticketCodeMatch = location.pathname.match(
+    /^\/task_assignment_timeline\/read-all-task-assignment-timeline\/([^/]+)$/,
+  );
+  const ticketCodeFromUrl = ticketCodeMatch
+    ? decodeURIComponent(ticketCodeMatch[1])
+    : null;
 
   const [showTicketDetails, setShowTicketDetails] = useState(false);
 
@@ -77,6 +88,7 @@ export function FormCard() {
         onPrint={print}
         showTicketDetails={showTicketDetails}
         onTicketDetailsChange={setShowTicketDetails}
+        ticketCodeFromUrl={ticketCodeFromUrl}
       />
       <FormTable
         ticketStatuses={ticketStatuses}
