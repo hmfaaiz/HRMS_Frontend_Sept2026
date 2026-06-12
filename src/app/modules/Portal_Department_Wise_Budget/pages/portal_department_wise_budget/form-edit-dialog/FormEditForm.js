@@ -162,7 +162,7 @@ export function FormEditForm({
         subsidiaryId:
           formData?.[0]?.subsidiaryId || currentUser.EmployeeMapping?.subsidiaryId || null,
 
-        departmentId: formData?.[0]?.departmentId || currentUser.EmployeeMapping?.departmentId || null,
+        departmentId: formData?.[0]?.departmentId || currentUser.EmployeeMapping?.parentDepartmentId || null,
 
         budgetYearId: formData?.[0]?.budgetYearId || null,
 

@@ -671,6 +671,11 @@ const budget_workflow_status = lazy (() =>
 );
 const budget_workflow_status_portal = lazy (() =>
 import ("./modules/Budget_Workflow_Status_Portal/pages/index"))
+
+const department_designation_mapping = lazy (() =>
+import ("./modules/DepartmentDesignationMapping/pages/index"))
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -894,6 +899,7 @@ const ROUTES = {
   budget_workflow_status_portal : budget_workflow_status_portal,
   department_wise_budget_approval: BudgetApproval,
   budget_setup_year: budget_year_setup,
+  department_designation_map: department_designation_mapping,
 
 
 };
