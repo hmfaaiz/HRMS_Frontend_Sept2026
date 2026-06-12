@@ -11,6 +11,7 @@ import { fetchBudgetWorkflow } from "../../../_redux/redux-Actions";
 import { headerSortingClasses, NoRecordsFoundMessage, PleaseWaitMessage, sortCaret } from "../../../../../../_metronic/_helpers";
 import BootstrapTable from "react-bootstrap-table-next";
 import { format } from "date-fns";
+import { fetchAllDesignationByDepId } from "../../../../Dashboard/_redux/dashboardActions";
 
 function PatternListForm({
     values,
@@ -23,10 +24,10 @@ function PatternListForm({
     const dispatch = useDispatch();
     const [workflowId, setWorkflowId] = useState(null);
     const { dashboard } = useSelector((state) => state);
-    useEffect(() => {
-
-        dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    }, [dispatch]);
+        useEffect(() => {
+    
+            dispatch(fetchAllDesignationByDepId({departmentId : values?.departmentId}));
+        }, [dispatch,values?.departmentId]);
 
 
     useEffect(() => {
@@ -261,9 +262,9 @@ function PatternListForm({
                                                                 : "form-control"
                                                         }
                                                         isDisabled={isdataForRead || values?.list?.[index]?.Id}
-                                                        options={dashboard?.allDesignations || []}
+                                                        options={dashboard?.allDesignationByDeptList || []}
                                                         value={
-                                                            dashboard?.allDesignations?.find(
+                                                            dashboard?.allDesignationByDeptList?.find(
                                                                 (option) => option?.value === values?.list?.[index]?.designationId
                                                             ) || null
                                                         }

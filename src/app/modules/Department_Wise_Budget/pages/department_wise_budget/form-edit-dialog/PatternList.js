@@ -7,6 +7,8 @@ import { CirclePlus, Eye, Trash2, View } from "lucide-react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
+import { fetchDesigMapping } from "../../../../DesignationMapping/_redux/redux-Actions";
+import { fetchAllDesignationByDepId } from "../../../../Dashboard/_redux/dashboardActions";
 
 
 function PatternListForm({
@@ -22,8 +24,8 @@ function PatternListForm({
     const { dashboard } = useSelector((state) => state);
     useEffect(() => {
 
-        dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    }, [dispatch]);
+        dispatch(fetchAllDesignationByDepId({departmentId : values?.departmentId}));
+    }, [dispatch,values?.departmentId]);
 
 
     useEffect(() => {
@@ -135,9 +137,9 @@ function PatternListForm({
                                                                 : "form-control"
                                                         }
                                                         isDisabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
-                                                        options={dashboard?.allDesignations || []}
+                                                        options={dashboard?.allDesignationByDeptList || []}
                                                         value={
-                                                            dashboard?.allDesignations?.find(
+                                                            dashboard?.allDesignationByDeptList?.find(
                                                                 (option) => option?.value === values?.list?.[index]?.designationId
                                                             ) || null
                                                         }
@@ -185,6 +187,7 @@ function PatternListForm({
                                                     <DatePicker
                                                         className="form-control"
                                                         name={`list[${index}].request_date`}
+                                                        dateFormat="dd-MMM-yyyy"
                                                         value={values?.list?.[index]?.request_date || ""}
                                                         selected={
                                                             values?.list?.[index]?.request_date
