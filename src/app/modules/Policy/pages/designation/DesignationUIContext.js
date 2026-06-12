@@ -51,6 +51,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     contractualPolicyInMonth: "",
     codePrefix:"",
     salaryMethod:"",
+    allowEmployeeToSubmit: true,
   
 
 
