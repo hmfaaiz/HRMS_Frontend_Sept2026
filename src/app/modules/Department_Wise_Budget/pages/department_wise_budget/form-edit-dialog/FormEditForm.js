@@ -12,6 +12,7 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 import {
 
+  fetchAllParentDept,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -248,7 +249,7 @@ export function FormEditForm({
                         setFieldValue("departmentId", null);
                         setFieldValue("budgetYearId", null);
                         setFieldValue("subsidiaryId", e.value);
-                        dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
+                        dispatch(fetchAllParentDept([e.value] || [0]));
                         dispatch(fetchAllBudgetYearDataBySubsidiaryId(e?.value));
                         if (values.departmentId && values.budgetYearId && e.value) {
                           dispatch(fetchDepartmentWiseBudget({ subsidiaryId: e.value, budgetYearId: values.budgetYearId, departmentId: values.departmentId }));
@@ -326,11 +327,11 @@ export function FormEditForm({
 
                       }}
                       value={
-                        dashboard?.departmentBySubIdsList?.find(
+                        dashboard?.allParentDept?.find(
                           (option) => option.value === values.departmentId
                         ) || null
                       }
-                      options={dashboard?.departmentBySubIdsList}
+                      options={dashboard?.allParentDept}
 
                       error={errors.departmentId}
                       touched={touched.departmentId}

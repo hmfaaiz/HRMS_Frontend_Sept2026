@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
-import { fetchAllCity, fetchAllCountry, fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllCity, fetchAllCountry, fetchAllDept, fetchAllFormsMenu, fetchAllParentDept, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 import { fetchDepartmentWiseBudget, fetchDepartmentWiseBudgets } from "../../../_redux/redux-Actions";
@@ -101,7 +101,8 @@ export function FormFIlter({ listLoading, user }) {
 
     dispatch(fetchDepartmentWiseBudgets(formUIProps.queryParams));
 
-    dispatch(fetchAllDept(findDefaultSubs.value));
+    // dispatch(fetchAllDept(findDefaultSubs.value));
+    dispatch(fetchAllParentDept(findDefaultSubs.value));
   }, [dashboard?.allSubsidiaryList]);
 
 
@@ -230,7 +231,7 @@ export function FormFIlter({ listLoading, user }) {
                       </span>
                     }
                     value={
-                      (dashboard?.departmentBySubIdsList || []).find(
+                      (dashboard?.allParentDept || []).find(
                         (item) => item.value === formUIProps?.queryParams?.departmentId
                       ) || { label: "All", value: "" }
                     }
@@ -250,7 +251,7 @@ export function FormFIlter({ listLoading, user }) {
 
                     options={[
                       { label: "All", value: "" },
-                      ...(dashboard?.departmentBySubIdsList || []),
+                      ...(dashboard?.allParentDept || []),
                     ]}
                   />
                 </div>
