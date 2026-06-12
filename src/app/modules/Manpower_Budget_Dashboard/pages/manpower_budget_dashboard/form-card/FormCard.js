@@ -9,10 +9,7 @@ import { FormData } from "../form-data/FormData";
 
 export function FormCard() {
   const dispatch = useDispatch();
-  const {
-    department_wise_budget_approval,
-    user,
-  } = useSelector((state) => {
+  const { department_wise_budget_approval, user } = useSelector((state) => {
     return {
       department_wise_budget_approval:
         state?.auth?.userAccess["Manpower Budget"],
@@ -118,9 +115,7 @@ export function FormCard() {
             isDashboardIcon={true}
           />
         </div>
-        <div className="px-3 py-2 rounded-lg bg-white">
-          <FormData />
-        </div>
+        <FormData />
       </div>
     </div>
   );
