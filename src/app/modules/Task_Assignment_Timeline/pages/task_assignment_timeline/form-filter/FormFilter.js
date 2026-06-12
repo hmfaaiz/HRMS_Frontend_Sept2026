@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Formik, Form, Field } from "formik";
 import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
@@ -18,10 +18,12 @@ export function FormFilter({
   onPrint,
   showTicketDetails,
   onTicketDetailsChange,
+  ticketCodeFromUrl,
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
   const dispatch = useDispatch();
+  const formikRef = useRef(null);
   const uiProps = useMemo(
     () => ({
       queryParams: uiContext.queryParams || {},
@@ -88,19 +90,56 @@ export function FormFilter({
   const allEmployeesMap = useMemo(() => {
     return new Map(allEmployeesWithNoPermissionList?.map((item) => [item.value, item]));
   }, [allEmployeesWithNoPermissionList]);
+
+  // When navigated from the Task Dashboard with a ticketCode in the URL,
+  // auto-populate the Ticket Description field, clear date filters,
+  // set Ticket Status to "All", and immediately run the filter.
+  useEffect(() => {
+    if (!ticketCodeFromUrl || !formikRef.current) return;
+
+    const formik = formikRef.current;
+
+    // Construct exact values we want to filter by
+    const newValues = {
+      ...formik.values,
+      ticketDescription: ticketCodeFromUrl,
+      ticketDateFrom: null,
+      ticketDateTo: null,
+      ticketStatus: null // null = "All"
+    };
+
+    // Update the UI fields
+    formik.setFieldValue("ticketDescription", ticketCodeFromUrl);
+    formik.setFieldValue("ticketDateFrom", null);
+    formik.setFieldValue("ticketDateTo", null);
+    formik.setFieldValue("ticketStatus", null);
+
+    // Run the filter synchronously with the new values
+    applyFilter(newValues);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ticketCodeFromUrl]);
+
   return (
     <Formik
+      innerRef={formikRef}
       enableReinitialize
       initialValues={{
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
         // ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
         employeeId: uiProps.queryParams?.filter?.employeeId || "",
-        ticketStatus: 1,
+        ticketStatus: uiProps.queryParams?.isFiltered
+          ? uiProps.queryParams.filter.ticketStatus ?? null
+          : 1,
         priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
         ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
 
-         ticketDateFrom:formatDates(getFirstDayOfCurrentMonth(), "dd-MMM-yyyy")  || "",
-          ticketDateTo:formatDates( getLastDayOfCurrentMonth(), "dd-MMM-yyyy")  || "",
+        ticketDateFrom: uiProps.queryParams?.isFiltered
+          ? uiProps.queryParams.filter.ticketDateFrom ?? null
+          : formatDates(getFirstDayOfCurrentMonth(), "dd-MMM-yyyy") || "",
+        ticketDateTo: uiProps.queryParams?.isFiltered
+          ? uiProps.queryParams.filter.ticketDateTo ?? null
+          : formatDates(getLastDayOfCurrentMonth(), "dd-MMM-yyyy") || "",
         // ticketDateFrom: uiProps.queryParams?.filter?.ticketDateFrom || null,
         // ticketDateTo: uiProps.queryParams?.filter?.ticketDateTo || null,
 

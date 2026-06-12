@@ -275,7 +275,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
     }),
     shallowEqual,
   );
-  console.log("recruitmentrecruitment", userAccess);
+
   /// leave
   const isLeaveRequest = leave?.find(
     (el) =>

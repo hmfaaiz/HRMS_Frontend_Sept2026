@@ -27,6 +27,21 @@ export const chartTypes = [
   },
 ];
 
+export const doubleChartTypes = [
+  {
+    value: "bar",
+    label: "Bar",
+  },
+  {
+    value: "line",
+    label: "Line",
+  },
+  {
+    value: "horizontalBar",
+    label: "Horizontal Bar",
+  },
+];
+
 export const smallTableTheme = [
   {
     value: "success-card",
