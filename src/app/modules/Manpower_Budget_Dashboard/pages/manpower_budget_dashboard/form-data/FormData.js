@@ -46,17 +46,19 @@ export function FormData() {
   useEffect(() => {
     if (!budgetyearBySubList?.length) return;
 
-    // Don't auto-set any value, keep it empty for "All"
-    // Only set if budgetYearId is empty and we want to show something
-    // But per requirements, we keep it empty
+    // Set the first budget year (index 0 after "All" option) as default
+    if (!budgetYearId || budgetYearId === "") {
+      const firstBudgetYear = budgetyearBySubList?.[0]?.value;
+      if (firstBudgetYear) {
+        setBudgetYearId(firstBudgetYear);
+      }
+    }
   }, [budgetyearBySubList]);
 
   useEffect(() => {
-    // Only call API when a specific budget year is selected (not empty string)
-    if (budgetYearId && budgetYearId !== "") {
+    // Call API with budgetYearId (will be called when budgetYearId is set)
+    if (budgetYearId !== undefined) {
       dispatch(actions?.fetchDasboardData({ budgetYearId }));
-    } else {
-      dispatch(actions?.fetchDasboardData({ budgetYearId })); // Uncomment if needed
     }
   }, [budgetYearId, dispatch]);
 
@@ -74,7 +76,9 @@ export function FormData() {
             value={
               budgetYearOptions?.find(
                 (option) => option.value === budgetYearId,
-              ) || ""
+              ) ||
+              budgetYearOptions?.[1] ||
+              ""
             }
             options={budgetYearOptions}
           />
