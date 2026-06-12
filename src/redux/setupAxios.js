@@ -45,7 +45,7 @@ export default function setupAxios(axios, store) {
 
             // Delay toast slightly so the global ToastContainer in App.js has settled
             setTimeout(() => {
-              toast.error('Session expired due to inactivity');
+              toast.error('Your session is no longer active. Please log in again to continue.');
               // Reset flag after logout is complete so future logins work normally
               isLoggingOut = false;
             }, 300);
