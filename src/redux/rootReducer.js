@@ -235,6 +235,7 @@ import { PortalDepartmentWiseBudgetSlice } from "../app/modules/Portal_Departmen
 import { BudgetWorkflowHrmsSlice } from "../app/modules/Budget_Workflow_Status/_redux/redux-Slice";
 import { BudgetWorkflowPortalSlice } from "../app/modules/Budget_Workflow_Status_Portal/_redux/redux-Slice"
 import { BudgetApprovalSlice } from "../app/modules/BudgetApproval/redux/formSlice";
+import { manpowerBudgetDashboardSlice } from "../app/modules/Manpower_Budget_Dashboard/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -469,7 +470,7 @@ export const rootReducer = combineReducers({
   budget_workflow_status: BudgetWorkflowHrmsSlice.reducer,
   budget_workflow_status_portal: BudgetWorkflowPortalSlice.reducer,
   department_wise_budget_approval: BudgetApprovalSlice.reducer,
-
+  manpower_budget_dashboard : manpowerBudgetDashboardSlice.reducer,
 });
 
 export function* rootSaga() {
