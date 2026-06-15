@@ -31,6 +31,8 @@ export function ApprovalFormTable() {
       setIds: formUIContext?.setIds,
       setCurrentData: formUIContext?.setCurrentData,
       setWorkflowId: formUIContext?.setWorkflowId,
+      setEditableWorkflowId: formUIContext?.setEditableWorkflowId,
+      workflowId: formUIContext?.workflowId,
       Ids: formUIContext?.Ids,
     };
   }, [formUIContext]);
@@ -171,6 +173,7 @@ export function ApprovalFormTable() {
       isDummyField: true,
       formatter: ActionsColumnFormatter,
       formatExtraData: {
+        setEditableWorkflowId: FormUIProps.setEditableWorkflowId,
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps?.setCurrentData,
       },

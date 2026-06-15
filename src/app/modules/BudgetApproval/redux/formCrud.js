@@ -29,3 +29,13 @@ export function getEmployeeAuthorties(empId, workflowTypeId) {
     `${USERS_URL}/workflow_policy/get-employee-authorties/${empId}/${workflowTypeId}`
   );
 }
+export function updateBudgetAmountById(body) {
+  return axios.put(
+    `${USERS_URL}/department_wise_budget_approval/update-budget-approval-amount/`,body
+  );
+}
+export function getBudgetAmountById(Id) {
+  return axios.get(
+    `${USERS_URL}/department_wise_budget_approval/get-budget-approval-amount/${Id}`
+  );
+}

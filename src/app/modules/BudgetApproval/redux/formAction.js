@@ -68,3 +68,27 @@ export const handleBudgetRequest = (body, resetForm) => () => {
       toast.error(SERVER_MESSAGES.updatedFail);
     });
 };
+export const updateBudgetAmountById = (body, onHide) => () => {
+  return requestFromServer
+    .updateBudgetAmountById(body)
+    .then((res) => {
+      toast.success(SERVER_MESSAGES.processSuccessful);
+      onHide();
+
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Handle Budget Request";
+      toast.error(SERVER_MESSAGES.updatedFail);
+    });
+};
+export const getBudgetAmountById = (Id) => (dispatch) => {
+  return requestFromServer
+    .getBudgetAmountById(Id)
+     .then((response) => {
+        dispatch(actions.BudgetAmountDataFetched(response.data?.data));
+      })
+    .catch((error) => {
+      error.clientMessage = "Can't Handle Budget Data";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
