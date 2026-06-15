@@ -13,6 +13,7 @@ import {
 } from "../../../../../../_metronic/_helpers";
 
 import { format } from "date-fns";
+import { initialFilter } from "../../FormUIHelper";
 
 export function EditWorkflowTable({ onHide, show }) {
     const dispatch = useDispatch();
@@ -20,13 +21,14 @@ export function EditWorkflowTable({ onHide, show }) {
 
     const [tableData, setTableData] = useState([]);
 
-    const {  actionsLoading ,budgetAmountData} = useSelector(
+    const { actionsLoading, budgetAmountData, user } = useSelector(
         (state) => ({
-           
+
             actionsLoading:
                 state?.department_wise_budget_approval?.actionsLoading,
             budgetAmountData:
                 state?.department_wise_budget_approval?.budgetAmountData,
+            user: state?.auth?.user,
         }),
         shallowEqual
     );
@@ -39,6 +41,12 @@ export function EditWorkflowTable({ onHide, show }) {
 
 
         dispatch(actions.updateBudgetAmountById(payload, onHide));
+        dispatch(
+            actions.fetchBudgetApprovalApplication(
+                initialFilter,
+                user?.employeeIdMapping
+            )
+        );
     };
 
     useEffect(() => {
@@ -100,32 +108,44 @@ export function EditWorkflowTable({ onHide, show }) {
                     type="text"
                     className="form-control"
                     defaultValue={cell || ""}
+
                     onKeyDown={(e) => {
-                        if (
-                            !/[0-9]/.test(e.key) &&
-                            ![
-                                "Backspace",
-                                "Delete",
-                                "ArrowLeft",
-                                "ArrowRight",
-                                "Tab",
-                            ].includes(e.key)
-                        ) {
+                        const allowedKeys = [
+                            "Backspace",
+                            "Delete",
+                            "ArrowLeft",
+                            "ArrowRight",
+                            "Tab",
+                        ];
+
+                        // allow control keys
+                        if (allowedKeys.includes(e.key)) return;
+
+                        // allow only numbers
+                        if (!/[0-9]/.test(e.key)) {
+                            e.preventDefault();
+                            return;
+                        }
+
+                        // prevent more than 9 digits
+                        const currentValue = e.target.value;
+                        if (currentValue.length >= 9) {
                             e.preventDefault();
                         }
                     }}
+
                     onBlur={(e) => {
                         const updatedData = [...tableData];
 
                         updatedData[rowIndex] = {
                             ...updatedData[rowIndex],
-                            budgeted_salary: e.target.value,
+                            budgeted_salary: e.target.value.slice(0, 9), // safety fallback
                         };
 
                         setTableData(updatedData);
                     }}
                 />
-            ),
+            )
         },
         {
             dataField: "budgeted_strength",
@@ -192,7 +212,7 @@ export function EditWorkflowTable({ onHide, show }) {
             {actionsLoading && <div className="p-2">Loading...</div>}
 
             <Modal.Header closeButton>
-                <Modal.Title>Budget Approval Flow</Modal.Title>
+                <Modal.Title>Update Budget Approval</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>

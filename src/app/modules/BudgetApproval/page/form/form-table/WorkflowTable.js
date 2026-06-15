@@ -155,7 +155,7 @@ export function WorkflowTable({ onHide, show }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          <h5 className="font-bold mb-0 text-black">Update Budget Approval Amount</h5>
+          <h5 className="font-bold mb-0 text-black">Budget Approval Flow</h5>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="">
@@ -413,24 +413,24 @@ export function WorkflowTable({ onHide, show }) {
                 <div className="text-sm text-black space-y-2">
 
                   <div className="grid grid-cols-4">
-                    <div className="font-medium col-span-1">Business Need</div>
-                    <div className="col-span-3">
+                    <div className="font-medium col-span-2">Business Need</div>
+                    <div className="col-span-2">
                       {formUIProps?.currentData?.parentData?.business_need}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-4">
-                    <div className="font-medium col-span-1">Impact Of Position</div>
-                    <div className="col-span-3">
+                    <div className="font-medium col-span-2">Impact Of Position</div>
+                    <div className="col-span-2">
                       {formUIProps?.currentData?.parentData?.impact_of_position}
                     </div>
                   </div>
 
-                 
+
 
                   <div className="grid grid-cols-4">
-                    <div className="font-medium col-span-1">Expected DOJ</div>
-                    <div className="col-span-3">
+                    <div className="font-medium col-span-2">Expected DOJ</div>
+                    <div className="col-span-2">
                       {formUIProps?.currentData?.parentData?.expected_date_of_joining
                         ? format(
                           new Date(
@@ -443,8 +443,19 @@ export function WorkflowTable({ onHide, show }) {
                   </div>
 
                   <div className="grid grid-cols-4">
-                    <div className="font-medium col-span-1">Budgeted Amount</div>
-                    <div className="col-span-3">
+                    <div className="font-medium col-span-2">Budgeted Strength</div>
+                    <div className="col-span-2">
+                      {formUIProps?.currentData?.parentData?.budgeted_strength
+                        ? Number(
+                          formUIProps.currentData.parentData.budgeted_strength
+                        ).toLocaleString("en-US")
+                        : ""}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-2">Budgeted Amount</div>
+                    <div className="col-span-2">
                       {formUIProps?.currentData?.parentData?.budgeted_salary
                         ? Number(
                           formUIProps.currentData.parentData.budgeted_salary
@@ -453,16 +464,7 @@ export function WorkflowTable({ onHide, show }) {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-4">
-                    <div className="font-medium col-span-1">Budgeted Strength</div>
-                    <div className="col-span-3">
-                      {formUIProps?.currentData?.parentData?.budgeted_strength
-                        ? Number(
-                          formUIProps.currentData.parentData.budgeted_strength
-                        ).toLocaleString("en-US")
-                        : ""}
-                    </div>
-                  </div>
+
 
                 </div>
 
