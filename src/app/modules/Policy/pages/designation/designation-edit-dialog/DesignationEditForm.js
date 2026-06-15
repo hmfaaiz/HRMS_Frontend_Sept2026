@@ -6,6 +6,7 @@ import {
   Input,
   Select,
   TextArea,
+  Checkbox,
 } from "../../../../../../_metronic/_partials/controls";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
@@ -188,9 +189,9 @@ export function DesignationEditForm({
       : user.currencyId;
     setDefualtCurrencyCodeList(
       dashboard.allCurrencyCodeList &&
-        dashboard.allCurrencyCodeList.filter((item) => {
-          return item.value === currencyId;
-        })
+      dashboard.allCurrencyCodeList.filter((item) => {
+        return item.value === currencyId;
+      })
     );
   }, [user.currencyId]);
 
@@ -201,9 +202,9 @@ export function DesignationEditForm({
 
     setDefualtSubsidiaryList(
       dashboard.allSubsidiaryList &&
-        dashboard.allSubsidiaryList.filter((item) => {
-          return item.value === subsidiaryId;
-        })
+      dashboard.allSubsidiaryList.filter((item) => {
+        return item.value === subsidiaryId;
+      })
     );
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
 
@@ -402,14 +403,14 @@ export function DesignationEditForm({
                               subsidiary.value === values.subsidiaryId
                           )?.currencyId
                             ? // Then find the corresponding currency in allCurrencyCodeList
-                              dashboard.allCurrencyCodeList?.find(
-                                (currency) =>
-                                  currency.value ===
-                                  dashboard.allSubsidiaryList?.find(
-                                    (subsidiary) =>
-                                      subsidiary.value === values.subsidiaryId
-                                  )?.currencyId
-                              )?.label
+                            dashboard.allCurrencyCodeList?.find(
+                              (currency) =>
+                                currency.value ===
+                                dashboard.allSubsidiaryList?.find(
+                                  (subsidiary) =>
+                                    subsidiary.value === values.subsidiaryId
+                                )?.currencyId
+                            )?.label
                             : values.subsidiaryId
                         }
                         error={errors.currencyId}
@@ -460,8 +461,8 @@ export function DesignationEditForm({
                         name="codePrefix"
                         component={Input}
                         placeholder="Enter code prefix"
-                        // label="Male"
-                        //value="50"
+                      // label="Male"
+                      //value="50"
                       />
                     </div>
 
@@ -526,8 +527,8 @@ export function DesignationEditForm({
                               name="retirementAgeMale"
                               component={Input}
                               placeholder="60"
-                              // label="Male"
-                              //value="50"
+                            // label="Male"
+                            //value="50"
                             />
                           </div>
                         }
@@ -547,8 +548,8 @@ export function DesignationEditForm({
                               name="retirementAgeFemale"
                               component={Input}
                               placeholder="60"
-                              // label="Female"
-                              //  value="55"
+                            // label="Female"
+                            //  value="55"
                             />
                           </div>
                         }
@@ -578,9 +579,9 @@ export function DesignationEditForm({
                               component={Input}
                               placeholder="Enter minimum age"
                               value={values.minimumAge || (id ? undefined : "")}
-                              // label="Minimum Age"
-                              //  value="18"
-                              //
+                            // label="Minimum Age"
+                            //  value="18"
+                            //
                             />
                           </div>
                         }
@@ -603,8 +604,8 @@ export function DesignationEditForm({
                                 values.maximumAge ||
                                 (id ? undefined : initialMinAgeLimit)
                               }
-                              // label="Maximum Age"
-                              // value="60"
+                            // label="Maximum Age"
+                            // value="60"
                             />
                           </div>
                         }
@@ -708,9 +709,9 @@ export function DesignationEditForm({
                             name="probationPolicyInMonth"
                             component={Input}
                             placeholder="12"
-                            // label="Probation in Months"
+                          // label="Probation in Months"
 
-                            //
+                          //
                           />
                         </div>
                         <div className="col-span-1">
@@ -730,7 +731,7 @@ export function DesignationEditForm({
                             name="contractualPolicyInMonth"
                             component={Input}
                             placeholder="12"
-                            // label="Contract Months"
+                          // label="Contract Months"
                           />
                         </div>
                         <div className="col-span-1">
@@ -763,31 +764,40 @@ export function DesignationEditForm({
                               </div>
                             )}
                         </div>
-                          <div className="col-span-1">
-                      <SearchSelect
-                        name="defaultRoleId"
-                        label={
-                          <span>
-                            {" "}
-                            Default Role Mobile App User<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isUserForRead && true}
-                        onBlur={() => {
-                        }}
-                        onChange={(e) => {
-                          setFieldValue("defaultRoleId", e.value || null);
-                        }}
-                        value={
-                          users?.roles?.allRoles?.find(
-                            (option) => option.value === values.defaultRoleId
-                          ) || null
-                        }
-                        error={errors.defaultRoleId}
-                        touched={touched.defaultRoleId}
-                        options={users?.roles?.allRoles}
-                      />
-                    </div>
+                        <div className="col-span-1">
+                          <SearchSelect
+                            name="defaultRoleId"
+                            label={
+                              <span>
+                                {" "}
+                                Default Role Mobile App User<span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            isDisabled={isUserForRead && true}
+                            onBlur={() => {
+                            }}
+                            onChange={(e) => {
+                              setFieldValue("defaultRoleId", e.value || null);
+                            }}
+                            value={
+                              users?.roles?.allRoles?.find(
+                                (option) => option.value === values.defaultRoleId
+                              ) || null
+                            }
+                            error={errors.defaultRoleId}
+                            touched={touched.defaultRoleId}
+                            options={users?.roles?.allRoles}
+                          />
+                        </div>
+                        <div className="col-span-1 flex items-center" style={{ marginTop: '25px' }}>
+                          <Checkbox
+                            isSelected={values.allowEmployeeToSubmit || false}
+                            onChange={(e) => setFieldValue("allowEmployeeToSubmit", e.target.checked)}
+                            disabled={isUserForRead}
+                          >
+                            Allow Employee to Submit Resignation Request
+                          </Checkbox>
+                        </div>
                       </div>
                     </div>
                   </div>
