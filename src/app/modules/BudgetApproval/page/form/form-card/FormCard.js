@@ -70,6 +70,17 @@ export const FormCard = () => {
                     el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
                 ),
               },
+              {
+                name: "Dashboard",
+                link:
+                  "/manpower_budget_dashboard/read-manpower-budget-dashboard",
+                isShow: budget?.find(
+                  (el) =>
+                    el?.componentName === "ReadManpowerBudgetDashboard" &&
+                    el?.portalType == 2 &&
+                    el?.isResourceShow,
+                ),
+              },
             ]}
             isDashboardIcon={true}
           />
@@ -98,6 +109,17 @@ export const FormCard = () => {
                 isShow: budget?.find(
                   (el) =>
                     el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
+                ),
+              },
+                            {
+                name: "Dashboard",
+                link:
+                  "/manpower_budget_dashboard/read-manpower-budget-dashboard",
+                isShow: budget?.find(
+                  (el) =>
+                    el?.componentName === "ReadManpowerBudgetDashboard" &&
+                    el?.portalType == 2 &&
+                    el?.isResourceShow,
                 ),
               },
 

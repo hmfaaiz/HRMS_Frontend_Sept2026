@@ -57,6 +57,17 @@ export const FormCard = () => {
           el?.isResourceShow
       ),
     },
+                {
+                name: "Dashboard",
+                link:
+                  "/manpower_budget_dashboard/read-manpower-budget-dashboard",
+                isShow: access?.find(
+                  (el) =>
+                    el?.componentName === "ReadManpowerBudgetDashboard" &&
+                    el?.portalType == 2 &&
+                    el?.isResourceShow,
+                ),
+              },
   ];
 
   return (

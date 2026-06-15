@@ -35,9 +35,8 @@ export function FormCard() {
             isDashboardRedirect={true}
             menuOptions={[
               {
-                name: "Department Budget Request",
-                link:
-                  "/manpower_budget_dashboard/read-manpower-budget-dashboard",
+                name: "Request",
+                link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
                 isShow: department_wise_budget_approval?.find(
                   (el) =>
                     el?.componentName === "ReadAllPortalDepartmentWiseBudget" &&
@@ -82,9 +81,8 @@ export function FormCard() {
             isBackButton={true}
             menuOptions={[
               {
-                name: "Department Budget Request",
-                link:
-                  "/manpower_budget_dashboard/read-manpower-budget-dashboard",
+                name: "Request",
+                link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
                 isShow: department_wise_budget_approval?.find(
                   (el) =>
                     el?.componentName === "ReadManpowerBudgetDashboard" &&
