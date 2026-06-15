@@ -13,6 +13,7 @@ import { WorkflowTable } from "../form-table/WorkflowTable";
 import { FormApproval } from "../form-approval/FormApproval";
 import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
+import { EditWorkflowTable } from "../form-table/EditWorkFlowTable";
 
 export const FormCard = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,8 @@ export const FormCard = () => {
       setQueryParams: FormUIContext?.setQueryParams,
       workflowId: FormUIContext?.workflowId,
       setWorkflowId: FormUIContext?.setWorkflowId,
+      editableWorkflowId: FormUIContext?.editableWorkflowId,
+      setEditableWorkflowId: FormUIContext?.setEditableWorkflowId,
     };
   });
   useEffect(() => {
@@ -41,7 +44,16 @@ export const FormCard = () => {
         user?.employeeIdMapping
       )
     );
-  }, [formUIProps?.queryParams]);
+  }, [formUIProps?.queryParams]); 
+  
+  
+  useEffect(() => {
+    dispatch(
+      action.getBudgetAmountById(
+        formUIProps.editableWorkflowId
+      )
+    );
+  }, [formUIProps.editableWorkflowId]);
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
@@ -115,6 +127,15 @@ export const FormCard = () => {
               formUIProps.setWorkflowId(null);
             }}
             show={formUIProps.workflowId !== null}
+          />
+        )} 
+        
+        {formUIProps.editableWorkflowId && (
+          <EditWorkflowTable
+            onHide={() => {
+              formUIProps.setEditableWorkflowId(null);
+            }}
+            show={formUIProps.editableWorkflowId !== null}
           />
         )}
       </div>

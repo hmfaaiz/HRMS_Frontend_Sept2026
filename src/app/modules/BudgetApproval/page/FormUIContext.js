@@ -11,6 +11,7 @@ export function useFormUIContext() {
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParams] = useState(initialFilter);
   const [workflowId, setWorkflowId] = useState(null);
+  const [editableWorkflowId, setEditableWorkflowId] = useState(null);
   const [currentData, setCurrentData] = useState(null);
   const [Ids, setIds] = useState([]);
   const setQueryParamsLeaveApproval = useCallback((nextQueryParams) => {
@@ -34,7 +35,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setWorkflowId,
     currentData,
     setCurrentData,
-    setQueryParams,
+    setQueryParams,setEditableWorkflowId,editableWorkflowId,
     Ids,
     setIds,
     ...FormUIEvents,

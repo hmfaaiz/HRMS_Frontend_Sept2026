@@ -155,7 +155,7 @@ export function WorkflowTable({ onHide, show }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          <h5 className="font-bold mb-0 text-black">Budget Approval Flow</h5>
+          <h5 className="font-bold mb-0 text-black">Update Budget Approval Amount</h5>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="">
@@ -201,15 +201,15 @@ export function WorkflowTable({ onHide, show }) {
                 </div>
               </div>
             </div>
-            <div className="col-span-9 bg-tsecondary p-2 rounded-lg">
+            {/* <div className="col-span-9 bg-tsecondary p-2 rounded-lg">
               <div className="grid grid-cols-12">
                 <div className="col-span-12">
                   <h6 className="font-bold mb-0 text-primary my-2">
                     Budget Request
                   </h6>
-                  <div className="text-sm text-black">
+                  <div className="text-sm text-black col-span-6">
 
-                        <div className="grid grid-cols-4">
+                    <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
                         Buget Code
 
@@ -285,6 +285,11 @@ export function WorkflowTable({ onHide, show }) {
                         }
                       </div>
                     </div>
+                  </div>
+
+
+                  <div className="text-sm text-black col-span-6">
+
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">
                         Impact Of Position
@@ -312,20 +317,155 @@ export function WorkflowTable({ onHide, show }) {
 
 
                     <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">Request Date</div>
+                      <div className="font-medium col-span-1">Budgeted Amount</div>
+
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.request_date
-                          ? format(
-                            new Date(
-                              formUIProps?.currentData?.parentData?.request_date
-                            ),
-                            "dd-MMM-yyyy"
-                          )
+                        {formUIProps?.currentData?.parentData?.budgeted_salary
+                          ? Number(
+                            formUIProps.currentData.parentData.budgeted_salary
+                          ).toLocaleString("en-US")
+                          : ""}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Budgeted Strength</div>
+
+                      <div className="col-span-1">
+                        {formUIProps?.currentData?.parentData?.budgeted_strength
+                          ? Number(
+                            formUIProps.currentData.parentData.budgeted_strength
+                          ).toLocaleString("en-US")
                           : ""}
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div> */}
+
+            <div className="col-span-9 bg-tsecondary p-2 rounded-lg">
+              <h6 className="font-bold mb-2 text-primary my-2">
+                Budget Request
+              </h6>
+
+              {/* MAIN 2-COLUMN LAYOUT */}
+              <div className="grid grid-cols-2 gap-4">
+
+                {/* LEFT SIDE - 6 FIELDS */}
+                <div className="text-sm text-black space-y-2">
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Buget Code</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.budgetCode}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Budget Year</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.BudgetYear ? (() => {
+                        const startDate = format(
+                          new Date(formUIProps.currentData.parentData.BudgetYear.startDate),
+                          "dd-MMM-yyyy"
+                        );
+
+                        const endDate = format(
+                          new Date(formUIProps.currentData.parentData.BudgetYear.endDate),
+                          "dd-MMM-yyyy"
+                        );
+
+                        const year = new Date(
+                          formUIProps.currentData.parentData.BudgetYear.endDate
+                        ).getFullYear();
+
+                        return `Year - ${year} (${startDate} to ${endDate})`;
+                      })() : ""}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Department</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.Department?.deptName}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Subsidiary</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.Subsidiary?.name}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Designation</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.Designation?.formName}
+                    </div>
+                  </div>
+
+
+
+                </div>
+
+                {/* RIGHT SIDE - 5 FIELDS */}
+                <div className="text-sm text-black space-y-2">
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Business Need</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.business_need}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Impact Of Position</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.impact_of_position}
+                    </div>
+                  </div>
+
+                 
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Expected DOJ</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.expected_date_of_joining
+                        ? format(
+                          new Date(
+                            formUIProps.currentData.parentData.expected_date_of_joining
+                          ),
+                          "dd-MMM-yyyy"
+                        )
+                        : ""}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Budgeted Amount</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.budgeted_salary
+                        ? Number(
+                          formUIProps.currentData.parentData.budgeted_salary
+                        ).toLocaleString("en-US")
+                        : ""}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-4">
+                    <div className="font-medium col-span-1">Budgeted Strength</div>
+                    <div className="col-span-3">
+                      {formUIProps?.currentData?.parentData?.budgeted_strength
+                        ? Number(
+                          formUIProps.currentData.parentData.budgeted_strength
+                        ).toLocaleString("en-US")
+                        : ""}
+                    </div>
+                  </div>
+
+                </div>
+
               </div>
             </div>
           </div>
