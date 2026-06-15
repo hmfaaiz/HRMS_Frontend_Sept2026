@@ -28,10 +28,12 @@ export const initialFilter = {
 }
 
 export const groupByOptions = [
-  {label: 'No Grouping', value: ''},
-  {label: 'Location Wise', value: 'locationName'},
-  {label: 'Department Wise', value: 'departmentName'},
-  {label: 'Grade Wise', value: 'gradeName'},
-  {label: 'Payroll Group Wise', value: 'payrollGroup'},
-  {label: 'Payment Mode Wise', value: 'paymentModeName'},
+  { label: 'Company bank', value: '' },
+  // {label: 'Location Wise', value: 'locationName'},
+  // {label: 'Department Wise', value: 'departmentName'},
+  // {label: 'Grade Wise', value: 'gradeName'},
+  // {label: 'Payroll Group Wise', value: 'payrollGroup'},
+  // {label: 'Payment Mode Wise', value: 'paymentModeName'},
+  { label: 'Employee bank', value: 'bankName' },
+
 ]

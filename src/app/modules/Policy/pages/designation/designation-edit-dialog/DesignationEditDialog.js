@@ -94,6 +94,7 @@ export function DesignationEditDialog({ id, show, onHide, userForRead }) {
         contractualPolicyInMonth: user.contractualPolicyInMonth,
         codePrefix:user.codePrefix,
         salaryMethod:user.salaryMethod,
+        allowEmployeeToSubmit: user.allowEmployeeToSubmit,
        
       };
 

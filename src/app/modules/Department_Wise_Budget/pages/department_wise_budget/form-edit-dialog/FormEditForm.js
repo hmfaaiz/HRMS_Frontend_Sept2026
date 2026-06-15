@@ -57,7 +57,25 @@ const department_wise_budgetEditSchema = Yup.object().shape({
         //       return Number(value) > Number(budgeted_strength);
         //     }
         //   ),
+        budgeted_salary: Yup.number()
+          .typeError(VALIDATION_MESSAGES.required)
+          .transform((value, originalValue) => {
+            return originalValue === "" ? null : value;
+          })
+          .nullable()
+          .required(VALIDATION_MESSAGES.required)
+          .max(999999999, "Maximum 9 digits allowed")
+          .test(
+            "salary-greater-than-strength",
+            "Budgeted Salary must be greater than Budgeted Strength",
+            function (value) {
+              const { budgeted_strength } = this.parent;
 
+              if (value == null || budgeted_strength == null) return true;
+
+              return Number(value) > Number(budgeted_strength);
+            }
+          ),
         designationId: Yup.number()
           .nullable()
           .required(VALIDATION_MESSAGES.required),
@@ -65,14 +83,46 @@ const department_wise_budgetEditSchema = Yup.object().shape({
 
         business_need: Yup.string().nullable(),
         impact_of_position: Yup.string().nullable(),
+        request_date: Yup.date()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+
         expected_date_of_joining: Yup.date()
           .nullable()
           .required(VALIDATION_MESSAGES.required)
-          .min(
-            new Date(new Date().setHours(0, 0, 0, 0)),
-            "Expected Date of Joining cannot be in the past"
+          .test(
+            "date-validation",
+            "Expected Date must be greater than or equal to Request Date",
+            function (value) {
+              const { request_date } = this.parent;
+
+              if (!value || !request_date) return true;
+
+              const expected = new Date(value);
+              const request = new Date(request_date);
+
+              // normalize time
+              expected.setHours(0, 0, 0, 0);
+              request.setHours(0, 0, 0, 0);
+
+              return expected >= request;
+            }
+          )
+          .test(
+            "not-past-date",
+            "Expected Date of Joining cannot be in the past",
+            function (value) {
+              if (!value) return true;
+
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+
+              const expected = new Date(value);
+              expected.setHours(0, 0, 0, 0);
+
+              return expected >= today;
+            }
           ),
-        // request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
       })
     )
     // .test(
@@ -420,6 +470,7 @@ export function FormEditForm({
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
+                disabled={values?.list.length === 0}
                 className="btn btn-primary btn-elevate"
               >
                 Save
