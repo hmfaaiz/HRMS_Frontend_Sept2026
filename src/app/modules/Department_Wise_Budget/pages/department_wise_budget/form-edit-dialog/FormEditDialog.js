@@ -70,7 +70,7 @@ export function FormEditDialog({ subsidiaryId, budgetYearId, departmentId, show,
 
   const saveForm = async (data) => {
 
-    if (data?.subsidiaryId && data?.budgetYearId && data?.departmentId) {
+    if (data?.subsidiaryId && data?.budgetYearId && data?.departmentId && data?.list.length > 0) {
       let body = {
         ...data,
       
