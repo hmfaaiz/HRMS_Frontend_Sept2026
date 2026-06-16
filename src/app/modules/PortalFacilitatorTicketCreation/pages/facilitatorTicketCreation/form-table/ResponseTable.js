@@ -319,7 +319,11 @@ formatter: (cell) => {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-        const createdDate = new Date(row.createdAt);
+        // const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -480,7 +484,11 @@ formatter: (cell) => {
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(row.createdAt);
+        // const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -530,7 +538,11 @@ formatter: (cell) => {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-        const createdDate = new Date(row.createdAt);
+        // const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 

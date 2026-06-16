@@ -99,16 +99,16 @@ export function FormFIlter({ listLoading, user }) {
       return;
     }
 
-    const updatedQueryParams = {
-      ...formUIProps.queryParams,
-      subsidiaryId: findDefaultSubs.value,
-      type: "notCreated",
-      subsidiaryLabel:
-        findDefaultSubs.value !== "" ? findDefaultSubs.label : "",
-      pageNumber: 1,
-    };
-
-    formUIProps.setQueryParams(updatedQueryParams);
+    // const updatedQueryParams = {
+    //   ...formUIProps.queryParams,
+    //   subsidiaryId: findDefaultSubs.value,
+    //   type: "notCreated",
+    //   subsidiaryLabel:
+    //     findDefaultSubs.value !== "" ? findDefaultSubs.label : "",
+    //   pageNumber: 1,
+    // };
+  
+    // formUIProps.setQueryParams(updatedQueryParams);
     dispatch(fetchAllDept(findDefaultSubs.value));
   }, [dashboard?.allSubsidiaryList]);
 

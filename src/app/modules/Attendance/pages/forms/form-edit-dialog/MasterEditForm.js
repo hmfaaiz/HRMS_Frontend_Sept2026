@@ -23,7 +23,8 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 import { TimeInput } from "../../../../../../_metronic/_partials/controls/forms/TimeInput";
 import { ClockFading, Eye, XCircle } from "lucide-react";
-import { LogsDialog } from "../log/LogsDialog";
+import { LogsDialog } from "../../../../../utils/common-modules/LogsDialog";
+// import { LogsDialog } from "../log/LogsDialog";
 
 //Validations for Form
 const formValidation = Yup.object().shape({
