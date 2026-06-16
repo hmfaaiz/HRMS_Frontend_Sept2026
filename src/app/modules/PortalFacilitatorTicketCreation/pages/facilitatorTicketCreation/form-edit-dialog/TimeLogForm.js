@@ -173,7 +173,7 @@ export function TimeLogForm({ onHide }) {
     //     const totalHours = diffHours + diffMinutes / 60;
 
     //     // Prevent negative hours
-    //     console.log("totalHours1111", totalHours)
+  
     //     return totalHours > 0 ? totalHours : 0;
     // };
 

@@ -361,7 +361,7 @@ export function FormEditForm({
                         dispatch(FetchAllFacilitatorEmployee(e.value));
                         // setAssignTo(setFieldValue)
                         // if (facilitatorEmployeeList?.length === 1) {
-                        //   console.log("Auto-assigning:", facilitatorEmployeeList[0].value);
+                  
                         //   setFieldValue("assignTo", facilitatorEmployeeList[0].value);
                         // }
                       }}
