@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { Plus, Search, Trash2 } from "lucide-react";
+import { Plus, Search, Trash2, Globe } from "lucide-react";
 import { formatDate } from "../../../../../utils/common";
 import { useFormUIContext } from "../FormUIContext";
 import { useDispatch } from "react-redux";
@@ -23,6 +23,7 @@ export function FormEditForm({
   id,
 }) {
   const [question, setQuestion] = useState(value);
+  const [isGeneral, setIsGeneral] = useState(false);
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -33,6 +34,7 @@ export function FormEditForm({
     saveForm({
       question,
       sessionId: currentChat?.length ? currentChat[0]?.sessionId : null,
+      isGeneral, // Pass isGeneral value to the backend
     });
     setQuestion("");
   };
@@ -44,11 +46,14 @@ export function FormEditForm({
     }
   };
 
+  const handleGeneralClick = () => {
+    setIsGeneral(!isGeneral);
+  };
+
   // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      // textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [question]);
 
@@ -62,15 +67,9 @@ export function FormEditForm({
   }, [currentChat]);
 
   return (
-    <div className="grid grid-cols-12  gap-x-2 overflow-hidden">
+    <div className="grid grid-cols-12 gap-x-2 overflow-hidden">
       <ChatListComp chatData={chatList} id={id} />
       <div className="col-span-12 md:col-span-8 lg:col-span-10 flex flex-col max-h-[80dvh] bg-white min-w-0 rounded-2xl">
-        {/* Header */}
-        {/* <div className="flex-shrink-0 text-gray-800 text-xl font-semibold py-4 border-b border-gray-200 px-4">
-          <span>AI HR Assistant</span>
-        </div> */}
-        {/* <hr /> */}
-
         {/* Messages Container - Scrollable area */}
         <div
           ref={messagesContainerRef}
@@ -158,36 +157,41 @@ export function FormEditForm({
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="AI Assistant: How can I assist you today?"
+                        placeholder={
+                          !isGeneral
+                            ? "AI Assistant: How can I assist you today in discovering BasharOne AI Analytics."
+                            : "AI Assistant: How can I assist you today for searching General Question from AI."
+                        }
                         rows={1}
                         disabled={actionsLoading}
                         style={{
                           border: "1.5px solid #0093DD",
                           height: "auto",
                         }}
-                        className={` w-full  resize-none shadow-[0_0_15px_#0093DD]   rounded-full 
-                          bg-transparent px-5 py-4 pl-14 text-gray-800 text-sm leading-6  
+                        className={`w-full resize-none shadow-[0_0_15px_#0093DD] rounded-full 
+                          bg-transparent px-5 py-4 pl-14 pr-14 text-gray-800 text-sm leading-6  
                           placeholder:text-gray-500
                           ${
                             actionsLoading
                               ? "opacity-60 cursor-not-allowed"
                               : "opacity-100 cursor-text"
                           }
-                            `}
+                        `}
                       />
+                      {/* Send Button (Left side) */}
                       <button
                         type="submit"
                         onClick={handleSend}
                         disabled={actionsLoading || !question.trim()}
                         className={`
-                              absolute bottom-[1.25rem] left-3 w-9 h-9 rounded-full bg-tprimary text-white 
-                              border-none outline-none flex items-center justify-center transition-all 
-                              ${
-                                actionsLoading || !question.trim()
-                                  ? "opacity-50 cursor-not-allowed"
-                                  : "opacity-100 cursor-pointer hover:scale-105 hover:bg-tprimary/90"
-                              }
-                            `}
+                          absolute bottom-[1.25rem] left-3 w-9 h-9 rounded-full bg-tprimary text-white 
+                          border-none outline-none flex items-center justify-center transition-all 
+                          ${
+                            actionsLoading || !question.trim()
+                              ? "opacity-50 cursor-not-allowed"
+                              : "opacity-100 cursor-pointer hover:scale-105 hover:bg-tprimary/90"
+                          }
+                        `}
                         title={
                           actionsLoading
                             ? "Waiting for response..."
@@ -195,6 +199,36 @@ export function FormEditForm({
                         }
                       >
                         <Search className="w-6 h-6" />
+                      </button>
+
+                      {/* World Map Icon Button (Right side) */}
+                      <button
+                        type="button"
+                        onClick={handleGeneralClick}
+                        disabled={actionsLoading}
+                        className={`
+                          absolute bottom-[1.25rem] right-3 w-9 h-9 rounded-full 
+                          border-none outline-none flex items-center justify-center transition-all 
+                          hover:scale-105
+                          ${
+                            isGeneral
+                              ? "bg-tprimary text-white"
+                              : "bg-tsecondary text-gray-600"
+                          }
+                          ${
+                            actionsLoading
+                              ? "opacity-50 cursor-not-allowed"
+                              : "opacity-100 cursor-pointer"
+                          }
+                        `}
+                        title={isGeneral ? "General Mode Active" : "Switch to General Mode"}
+                        style={{
+                          boxShadow: isGeneral 
+                            ? "0 0 10px rgba(0, 147, 221, 0.5)" 
+                            : "0 0 5px rgba(0, 0, 0, 0.1)"
+                        }}
+                      >
+                        <Globe className="w-5 h-5" />
                       </button>
                     </div>
                     <div className="text-center text-gray-400 text-xs mt-2">
@@ -341,7 +375,7 @@ const ChatListComp = ({ chatData = [], id }) => {
         <button
           onClick={handleNewChat}
           style={{ border: "1.5px solid #0093dd" }}
-          className="w-full bg-white border-none text-tprimary font-medium py-2 px-4 rounded-3xl transition duration-200 flex items-center justify-center gap-2  shadow-[0_0_10px_#FFFFFF] hover:shadow-[0_0_15px_#e6f8ff]  relative"
+          className="w-full bg-white border-none text-tprimary font-medium py-2 px-4 rounded-3xl transition duration-200 flex items-center justify-center gap-2 shadow-[0_0_10px_#FFFFFF] hover:shadow-[0_0_15px_#e6f8ff] relative"
         >
           <Plus className="w-5 h-5 text-white bg-tprimary rounded-full p-1 absolute left-4" />
           New Chat
@@ -353,7 +387,7 @@ const ChatListComp = ({ chatData = [], id }) => {
         {chatData.length === 0 ? (
           <div className="text-center text-black py-6">No chats available</div>
         ) : (
-          <div className=" space-y-3">
+          <div className="space-y-3">
             {chatData.map((chat) => (
               <div
                 key={chat.sessionId}
@@ -387,20 +421,6 @@ const ChatListComp = ({ chatData = [], id }) => {
                     </div>
                   </div>
                 </div>
-
-                {/* Delete Icon - positioned absolute on right side */}
-                {/* <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <button
-                    title="Delete Chat"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      FormUIProps.setDeleteId(chat?.sessionId);
-                    }}
-                    className="px-2 py-1 rounded-full bg-red-200  shadow-sm border border-red-500"
-                  >
-                    <Trash2 className="w-4 h-4 text-red-600" />
-                  </button>
-                </div> */}
               </div>
             ))}
           </div>
