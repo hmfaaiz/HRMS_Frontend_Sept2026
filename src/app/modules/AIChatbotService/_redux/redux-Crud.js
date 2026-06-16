@@ -17,3 +17,14 @@ export function getChatHistory() {
 export function deleteChat(payload) {
   return axios.post(`${USERS_URL}/ai_chatbot/delete-chat-history`, payload);
 }
+
+export function downloadMessageAsPdf(payload) {
+  const config = {
+    responseType: "arraybuffer",
+  };
+  return axios.post(
+    `${USERS_URL}/ai_chatbot/download-chat-pdf`,
+    payload,
+    config,
+  );
+}

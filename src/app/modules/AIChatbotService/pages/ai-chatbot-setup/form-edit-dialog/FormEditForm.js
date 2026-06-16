@@ -1,18 +1,31 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { Plus, Search, Trash2, Globe } from "lucide-react";
+import { Plus, Search, Trash2, Globe, Download } from "lucide-react";
 import { formatDate } from "../../../../../utils/common";
 import { useFormUIContext } from "../FormUIContext";
 import { useDispatch } from "react-redux";
-import { newQuestionClick } from "../../../_redux/redux-Actions";
+import {
+  downloadMessageAsPdf,
+  newQuestionClick,
+} from "../../../_redux/redux-Actions";
 
 const schema = Yup.object().shape({
   question: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 });
+
+const generatePdfFromHtml = async (html, fileName, dispatch) => {
+  dispatch(downloadMessageAsPdf({ html, fileName }));
+};
 
 export function FormEditForm({
   saveForm,
@@ -24,17 +37,18 @@ export function FormEditForm({
 }) {
   const [question, setQuestion] = useState(value);
   const [isGeneral, setIsGeneral] = useState(false);
+  const [downloadingIndex, setDownloadingIndex] = useState(null);
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handleSend = () => {
     if (!question.trim() || actionsLoading) return;
-    // Call your send function here
     saveForm({
       question,
       sessionId: currentChat?.length ? currentChat[0]?.sessionId : null,
-      isGeneral, // Pass isGeneral value to the backend
+      isGeneral,
     });
     setQuestion("");
   };
@@ -46,9 +60,40 @@ export function FormEditForm({
     }
   };
 
-  const handleGeneralClick = () => {
-    setIsGeneral(!isGeneral);
-  };
+  const handleGeneralClick = () => setIsGeneral((p) => !p);
+
+  // ─── PDF Download using html2canvas ────────────────────────────────────
+  const downloadMessageAsPdf = useCallback(
+    async (index, msg) => {
+      const questionText = msg?.question || "";
+      const responseHtml = msg?.content || "";
+
+      if (!responseHtml) {
+        console.warn("No response content found for index", index);
+        return;
+      }
+
+      try {
+        setDownloadingIndex(index);
+
+        const fileSafeQuestion = (questionText || "response")
+          .replace(/[^a-z0-9]/gi, "_")
+          .substring(0, 30);
+
+        await generatePdfFromHtml(
+          responseHtml,
+          `AI-${fileSafeQuestion}-${Date.now()}.pdf`,
+          dispatch,
+        );
+      } catch (err) {
+        console.error("PDF download error:", err);
+        alert("Failed to generate PDF. Please try again.");
+      } finally {
+        setDownloadingIndex(null);
+      }
+    },
+    [isGeneral],
+  );
 
   // Auto-resize textarea
   useEffect(() => {
@@ -59,26 +104,22 @@ export function FormEditForm({
 
   useEffect(() => {
     if (!messagesEndRef.current) return;
-
-    messagesEndRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [currentChat]);
 
   return (
     <div className="grid grid-cols-12 gap-x-2 overflow-hidden">
       <ChatListComp chatData={chatList} id={id} />
       <div className="col-span-12 md:col-span-8 lg:col-span-10 flex flex-col max-h-[80dvh] bg-white min-w-0 rounded-2xl">
-        {/* Messages Container - Scrollable area */}
+        {/* Messages Container */}
         <div
           ref={messagesContainerRef}
           className="flex-1 overflow-y-auto pt-2 px-4 scrollbar-fancy"
         >
-          <div className="h-[66dvh] md:max-h-[66dvh] border-b-2 border-b-black overflow-auto scrollbar-fancy scroll-smooth">
+          <div className="h-[64dvh] md:max-h-[64dvh] border-b-2 border-b-black overflow-auto scrollbar-fancy scroll-smooth">
             {currentChat.map((msg, index) => (
               <div key={index} className="mb-3 flex flex-col gap-3">
-                {/* QUESTION (right side - 40%) */}
+                {/* QUESTION */}
                 {msg.question && (
                   <div className="flex justify-end">
                     <div className="max-w-[85%] sm:max-w-[70%] md:max-w-[50%] lg:max-w-[40%] text-sm bg-tprimary text-white px-4 py-2 rounded-xl rounded-br-none leading-6 whitespace-pre-wrap break-words">
@@ -87,14 +128,19 @@ export function FormEditForm({
                   </div>
                 )}
 
+                {/* ASSISTANT RESPONSE */}
                 {(msg.content || msg.processText || msg.isStreaming) && (
                   <div className="flex justify-start">
                     <div
                       className={`
-        p-2 w-fit min-w-[80%] max-w-[95%] sm:max-w-[90%] md:max-w-[82%]
-        rounded-xl text-sm rounded-bl-none leading-6
-        ${msg.isError ? "bg-red-400 text-white" : "bg-tsecondary text-black"}
-      `}
+                        p-2 w-fit min-w-[80%] max-w-[95%] sm:max-w-[90%] md:max-w-[82%]
+                        rounded-xl text-sm rounded-bl-none leading-6
+                        ${
+                          msg.isError
+                            ? "bg-red-400 text-white"
+                            : "bg-tsecondary text-black"
+                        }
+                      `}
                     >
                       {msg.isStreaming && msg.processText && (
                         <div className="flex items-center gap-2 p-1">
@@ -127,6 +173,31 @@ export function FormEditForm({
                           {msg.content}
                         </div>
                       )}
+
+                      {/* Download Button */}
+                      {msg.content && !msg.isStreaming && !msg.isError && (
+                        <div className="flex justify-end mt-2 pt-1 border-t border-gray-200">
+                          <button
+                            onClick={() => downloadMessageAsPdf(index, msg)}
+                            disabled={
+                              downloadingIndex === index || actionsLoading
+                            }
+                            title="Download this response as PDF"
+                            className={`flex items-center gap-1 text-xs transition-colors bg-transparent border-none duration-150 cursor-pointer
+                              ${
+                                downloadingIndex === index
+                                  ? "text-tprimary opacity-60 cursor-wait"
+                                  : "text-black hover:text-tprimary"
+                              }`}
+                          >
+                            {downloadingIndex === index ? (
+                              <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-tprimary border-t-transparent"></span>
+                            ) : (
+                              <Download className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -136,14 +207,14 @@ export function FormEditForm({
           </div>
         </div>
 
-        {/* Input Area - Fixed at bottom */}
+        {/* Input Area */}
         <div className="flex-shrink-0 rounded-2xl bg-white px-4 py-3">
           <div className="w-full">
             <Formik
               enableReinitialize={true}
               initialValues={{ question: value || "" }}
               validationSchema={schema}
-              onSubmit={(values) => {
+              onSubmit={() => {
                 if (!question.trim() || actionsLoading) return;
                 handleSend();
               }}
@@ -175,23 +246,21 @@ export function FormEditForm({
                             actionsLoading
                               ? "opacity-60 cursor-not-allowed"
                               : "opacity-100 cursor-text"
-                          }
-                        `}
+                          }`}
                       />
-                      {/* Send Button (Left side) */}
+
+                      {/* Send Button */}
                       <button
                         type="submit"
                         onClick={handleSend}
                         disabled={actionsLoading || !question.trim()}
-                        className={`
-                          absolute bottom-[1.25rem] left-3 w-9 h-9 rounded-full bg-tprimary text-white 
+                        className={`absolute bottom-[1.25rem] left-3 w-9 h-9 rounded-full bg-tprimary text-white 
                           border-none outline-none flex items-center justify-center transition-all 
                           ${
                             actionsLoading || !question.trim()
                               ? "opacity-50 cursor-not-allowed"
                               : "opacity-100 cursor-pointer hover:scale-105 hover:bg-tprimary/90"
-                          }
-                        `}
+                          }`}
                         title={
                           actionsLoading
                             ? "Waiting for response..."
@@ -201,15 +270,13 @@ export function FormEditForm({
                         <Search className="w-6 h-6" />
                       </button>
 
-                      {/* World Map Icon Button (Right side) */}
+                      {/* Globe Button */}
                       <button
                         type="button"
                         onClick={handleGeneralClick}
                         disabled={actionsLoading}
-                        className={`
-                          absolute bottom-[1.25rem] right-3 w-9 h-9 rounded-full 
-                          border-none outline-none flex items-center justify-center transition-all 
-                          hover:scale-105
+                        className={`absolute bottom-[1.25rem] right-3 w-9 h-9 rounded-full 
+                          border-none outline-none flex items-center justify-center transition-all hover:scale-105
                           ${
                             isGeneral
                               ? "bg-tprimary text-white"
@@ -219,22 +286,38 @@ export function FormEditForm({
                             actionsLoading
                               ? "opacity-50 cursor-not-allowed"
                               : "opacity-100 cursor-pointer"
-                          }
-                        `}
-                        title={isGeneral ? "General Mode Active" : "Switch to General Mode"}
+                          }`}
+                        title={
+                          isGeneral
+                            ? "General Mode Active"
+                            : "Switch to General Mode"
+                        }
                         style={{
-                          boxShadow: isGeneral 
-                            ? "0 0 10px rgba(0, 147, 221, 0.5)" 
-                            : "0 0 5px rgba(0, 0, 0, 0.1)"
+                          boxShadow: isGeneral
+                            ? "0 0 10px rgba(0, 147, 221, 0.5)"
+                            : "0 0 5px rgba(0, 0, 0, 0.1)",
                         }}
                       >
                         <Globe className="w-5 h-5" />
                       </button>
                     </div>
-                    <div className="text-center text-gray-400 text-xs mt-2">
-                      Information generated by AI may occasionally be incomplete
-                      or outdated; please verify critical details using
-                      BasharOne HRMS data or reports.
+
+                    {/* Footer */}
+                    <div className="text-center mt-1 px-1 gap-2 flex flex-col">
+                      <span className="text-gray-400 text-xs">
+                        Information generated by AI may occasionally be
+                        incomplete or outdated; please verify critical details
+                        using BasharOne HRMS data or reports.
+                      </span>
+                      <span
+                        className={`text-xs font-bold whitespace-nowrap ${
+                          isGeneral ? "text-green-600" : "text-blue-600"
+                        }`}
+                      >
+                        {isGeneral
+                          ? "🟢 General Mode is Activated"
+                          : "🔵 AI Analysis Mode Activated"}
+                      </span>
                     </div>
                   </fieldset>
                 </Form>
@@ -257,52 +340,43 @@ export function FormEditForm({
             opacity: 1;
           }
         }
-
         .animate-bounce {
           animation: bounce 1.4s infinite ease-in-out both;
         }
 
-        /* HTML content styling for assistant messages */
         .assistant-html table {
           width: 100%;
           border-collapse: collapse;
           margin: 8px 0;
         }
-
         .assistant-html table th,
         .assistant-html table td {
           padding: 8px;
           text-align: left;
           border-bottom: 1px solid #e5e7eb;
         }
-
         .assistant-html table th {
           background: #f3f4f6;
           font-weight: 600;
         }
-
         .assistant-html h1,
         .assistant-html h2,
         .assistant-html h3 {
           margin: 12px 0 8px 0;
           color: #2563eb;
         }
-
         .assistant-html p {
           margin: 6px 0;
         }
-
         .assistant-html canvas {
           max-width: 100%;
           height: auto;
         }
-
         .assistant-html ul,
         .assistant-html ol {
           margin: 6px 0;
           padding-left: 20px;
         }
-
         .assistant-html code {
           background: #f3f4f6;
           padding: 2px 4px;
@@ -310,32 +384,27 @@ export function FormEditForm({
           font-size: 0.9em;
           color: #dc2626;
         }
-
         .assistant-html pre {
           background: #f3f4f6;
           padding: 8px;
           border-radius: 6px;
           overflow-x: auto;
         }
-
         .assistant-html pre code {
           background: transparent;
           padding: 0;
           color: inherit;
         }
-
         .assistant-html blockquote {
           border-left: 4px solid #e5e7eb;
           padding-left: 16px;
           margin: 8px 0;
           color: #6b7280;
         }
-
         .assistant-html a {
           color: #2563eb;
           text-decoration: underline;
         }
-
         .assistant-html img {
           max-width: 100%;
           height: auto;
@@ -346,31 +415,30 @@ export function FormEditForm({
   );
 }
 
+// ─── ChatListComp ─────────────────────────────────────────────────────────────
 const ChatListComp = ({ chatData = [], id }) => {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
 
-  const FormUIProps = useMemo(() => {
-    return {
+  const FormUIProps = useMemo(
+    () => ({
       newFormButtonClick: FormUIContext.newFormButtonClick,
       existingButtonClick: FormUIContext.existingButtonClick,
       setDeleteId: FormUIContext.setDeleteId,
-    };
-  }, [FormUIContext]);
+    }),
+    [FormUIContext],
+  );
 
   const handleNewChat = () => {
-    // Handle new chat creation
     FormUIProps.newFormButtonClick();
     dispatch(newQuestionClick());
   };
 
-  const handleChatSelect = (sessionId) => {
+  const handleChatSelect = (sessionId) =>
     FormUIProps.existingButtonClick(sessionId);
-  };
 
   return (
     <div className="col-span-12 max-h-[80dvh] md:col-span-4 space-y-3 rounded-2xl lg:col-span-2 bg-tprimary px-4 flex flex-col">
-      {/* New Chat Button */}
       <div className="pt-4 border-b border-gray-200">
         <button
           onClick={handleNewChat}
@@ -382,7 +450,6 @@ const ChatListComp = ({ chatData = [], id }) => {
         </button>
       </div>
       <div />
-      {/* Chat List */}
       <div className="flex-1 overflow-y-auto scrollbar-track-tprimary">
         {chatData.length === 0 ? (
           <div className="text-center text-black py-6">No chats available</div>
@@ -430,19 +497,17 @@ const ChatListComp = ({ chatData = [], id }) => {
   );
 };
 
+// ─── loadScriptOnce ───────────────────────────────────────────────────────────
 const loadScriptOnce = (src) =>
   new Promise((resolve, reject) => {
     if (window.Chart) return resolve(window.Chart);
-
     const existing = document.querySelector(`script[src="${src}"]`);
-
     if (existing) {
       existing.addEventListener("load", () => resolve(window.Chart));
       existing.addEventListener("error", reject);
       if (window.Chart) resolve(window.Chart);
       return;
     }
-
     const script = document.createElement("script");
     script.src = src;
     script.async = true;
@@ -454,6 +519,7 @@ const loadScriptOnce = (src) =>
     document.body.appendChild(script);
   });
 
+// ─── AssistantHtml ────────────────────────────────────────────────────────────
 const AssistantHtml = ({ html, uid }) => {
   const ref = useRef(null);
 
@@ -466,7 +532,6 @@ const AssistantHtml = ({ html, uid }) => {
     const run = async () => {
       try {
         await loadScriptOnce("https://cdn.jsdelivr.net/npm/chart.js");
-
         if (cancelled || !window.Chart) return;
 
         const scripts = Array.from(container.querySelectorAll("script"));
@@ -474,10 +539,8 @@ const AssistantHtml = ({ html, uid }) => {
 
         scripts.forEach((oldScript) => {
           if (oldScript.src) return;
-
           const code = oldScript.innerHTML;
           if (!code?.trim()) return;
-
           try {
             new Function("Chart", code)(window.Chart);
           } catch (err) {
@@ -490,11 +553,11 @@ const AssistantHtml = ({ html, uid }) => {
     };
 
     run();
-
     return () => {
       cancelled = true;
     };
   }, [html, uid]);
+
   return (
     <div
       ref={ref}
