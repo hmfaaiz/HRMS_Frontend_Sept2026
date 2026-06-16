@@ -1,122 +1,77 @@
-// import React, { useEffect, useState } from 'react';
+
+// import React from 'react';
 // import { Accordion, Card, Row, Col } from 'react-bootstrap';
 // import './form.css';
-// import { getSeparatedAttSummaryEmpById } from '../../modules/Dashboard/_redux/dashboardCrud';
 
-// const SeparatedAttendanceSummary = ({ employeeId, panelMode,hitAttSummary,data }) => {
-
-//     // const [data, setData] = useState(presentData || {});
-
-
-
-
-// // useEffect(() => {
-// //     if (employeeId) {
-// //         getSeparatedAttSummaryEmpById(employeeId)
-// //             .then((res) => {
-// //                 const result = res?.data?.data;
-
-// //                 // if false -> set empty object
-// //                 if (!result || result === false) {
-// //                     setData({});
-// //                 } else {
-// //                     setData( result);
-// //                 }
-// //             })
-// //             .catch(() => setData({}));
-// //     } else {
-// //         setData({});
-// //     }
-// // }, [employeeId,hitAttSummary]);
+// const SeparatedAttendanceSummary = ({ data, panelMode }) => {
 //   if (!panelMode) return null;
-//     return (
-//         <Accordion defaultActiveKey="0">
-//             <Card>
-//                 <Accordion.Collapse eventKey="0">
-//                     <Card.Body className="bg-tsecondary">
-//                         {Object.keys(data).length === 0 ? (
-//                             <p>No attendance summary available</p>
-//                         ) : (
-//                             <>
-//                                 <div className="mb-4 flex items-center gap-4">
-//                                     <h6 className="font-bold mb-0 text-primary my-2">
-//                                         Attendance Summary
-//                                     </h6>
-//                                 </div>
 
-//                                 {/* Attendance Summary Fields */}
-//                                 <div className="mb-4 text-sm">
-//                                     <Row className="mb-2">
-//                                         <Col md={3} className="font-medium">Paid Days</Col>
-//                                         <Col md={3}>{data?.PresentDays || '0'}</Col>
+//   return (
+//     <Accordion defaultActiveKey="0">
+//       <Card>
+//         <Accordion.Collapse eventKey="0">
+//           <Card.Body className="bg-tsecondary">
+//             {Object.keys(data).length === 0 ? (
+//               <p>No attendance summary available</p>
+//             ) : (
+//               <>
+//                 <div className="mb-4 flex items-center gap-4">
+//                   <h6 className="font-bold mb-0 text-primary my-2">
+//                     Attendance Summary
+//                   </h6>
+//                 </div>
 
-//                                          <Col md={3} className="font-medium">Total Working Hours</Col>
-//                                         <Col md={3}>{data?.TotalWorkingHours || '0'}</Col>
+//                 <div className="mb-4 text-sm">
+//                   <Row className="mb-2">
+//                     <Col md={3} className="font-medium">From Date</Col>
+//                     <Col md={3}>{data?.DateFrom || '0'}</Col>
 
+//                     <Col md={3} className="font-medium">To Date</Col>
+//                     <Col md={3}>{data?.DateTo || '0'}</Col>
+//                   </Row>
 
-//                                     </Row>
+//                   <Row className="mb-2">
+//                     <Col md={3} className="font-medium">Paid Days</Col>
+//                     <Col md={3}>{data?.PresentDays || '0'}</Col>
 
-//                                     <Row className="mb-2">
-
-
-//                                         {/* <Col md={3} className="font-medium">Holidays</Col>
-//                                         <Col md={3}>{data?.Holidays || '0'}</Col> */}
-
-
-//                                     </Row>
-
-//                                     {/* <Row className="mb-2">
-//                                         <Col md={3} className="font-medium">Absent (Half Day)</Col>
-//                                         <Col md={3}>{data?.AbsentDays_Halfday || '0'}</Col>
-
-//                                         <Col md={3} className="font-medium">Absent (Late Count)</Col>
-//                                         <Col md={3}>{data?.AbsentDays_LateCount || '0'}</Col>
-//                                     </Row> */}
-
-//                                     <Row className="mb-2">
-//                                          <Col md={3} className="font-medium">Absent Days</Col>
-//                                         <Col md={3}>{data?.AbsentDays || '0'}</Col>
+//                     <Col md={3} className="font-medium">Absent Days</Col>
+//                     <Col md={3}>{data?.AbsentDays || '0'}</Col>
 
 
-//                                          <Col md={3} className="font-medium">Final Settlement Applicable</Col>
-//                                         <Col md={3}>{data?.forFinalSettlement === 1 ? "Yes" : "No"}</Col>
+//                   </Row>
 
-//                                         {/* <Col md={3} className="font-medium">Total Short Hours</Col>
-//                                         <Col md={3}>{data?.TotalShortHours || '0'}</Col> */}
-//                                     </Row>
+//                   <Row className="mb-2">
 
-//                                     <Row className="mb-2">
-//                                         {/* <Col md={3} className="font-medium">Late Per Day Amount</Col>
-//                                         <Col md={3}>
-//                                             {data?.LatePerDayAmount
-//                                                 ? Number(data?.LatePerDayAmount).toLocaleString()
-//                                                 : '0'}
-//                                         </Col> */}
-
-//                                         {/* <Col md={3} className="font-medium">Late Days Count</Col>
-//                                         <Col md={3}>{data?.LateDaysCount || '0'}</Col> */}   
-
-//                                           {/* <Col md={3} className="font-medium">Total Days</Col>
-//                                         <Col md={3}>{data?.Total_Days || '0'}</Col> */}
-//                                     </Row>
-
-//                                     <Row className="mb-2">
+//                     <Col md={3} className="font-medium">Leave Days</Col>
+//                     <Col md={3}>{data?.LeaveDays || '0'}</Col>
 
 
-//                                           <Col md={3} className="font-medium">Leave Days</Col>
-//                                         <Col md={3}>{data?.LeaveDays || '0'}</Col>
-//                                     </Row>
-//                                 </div>
-//                             </>
-//                         )}
-//                     </Card.Body>
-//                 </Accordion.Collapse>
-//             </Card>
-//         </Accordion>
-//     );
+//                     <Col md={3} className="font-medium">Encashment Days</Col>
+//                     <Col md={3}>{data?.EncashmentDays || '0'}</Col>
+//                   </Row>
+
+//                   <Row className="mb-2">
+
+//                     <Col md={3} className="font-medium">OT Hours</Col>
+//                     <Col md={3}>{data?.OTHours || '0'}</Col>
+
+//                     <Col md={3} className="font-medium">Total Working Hours</Col>
+//                     <Col md={3}>{data?.TotalWorkingHours || '0'}</Col>
+
+
+//                   </Row>
+//                 </div>
+//               </>
+//             )}
+//           </Card.Body>
+//         </Accordion.Collapse>
+//       </Card>
+//     </Accordion>
+//   );
 // };
 
 // export default SeparatedAttendanceSummary;
+
 import React from 'react';
 import { Accordion, Card, Row, Col } from 'react-bootstrap';
 import './form.css';
@@ -129,56 +84,79 @@ const SeparatedAttendanceSummary = ({ data, panelMode }) => {
       <Card>
         <Accordion.Collapse eventKey="0">
           <Card.Body className="bg-tsecondary">
-            {Object.keys(data).length === 0 ? (
-              <p>No attendance summary available</p>
+            {!data?.length ? (
+              <div>No attendance summary available</div>
             ) : (
               <>
-                <div className="mb-4 flex items-center gap-4">
-                  <h6 className="font-bold mb-0 text-primary my-2">
-                    Attendance Summary
-                  </h6>
-                </div>
+                <h5 className="mb-4">Attendance Summary</h5>
 
-                <div className="mb-4 text-sm">
-                  <Row className="mb-2">
-                    <Col md={3} className="font-medium">From Date</Col>
-                    <Col md={3}>{data?.DateFrom || '0'}</Col>
+                {data.map((item, index) => (
+                  <Card
+                    key={item.Id}
+                    className="mb-4 border shadow-sm"
+                  >
+                    <Card.Header
+                      className="d-flex justify-content-between align-items-center"
+                    >
+                      {/* <span>
+              <strong>Settlement #{item.forFinalSettlement}</strong>
+            </span> */}
 
-                    <Col md={3} className="font-medium">To Date</Col>
-                    <Col md={3}>{data?.DateTo || '0'}</Col>
-                  </Row>
+                      <span className="badge bg-primary text-white">
+                        {item.DateFrom} - {item.DateTo}
+                      </span>
+                    </Card.Header>
 
-                  <Row className="mb-2">
-                    <Col md={3} className="font-medium">Paid Days</Col>
-                    <Col md={3}>{data?.PresentDays || '0'}</Col>
+                    <Card.Body>
+                      <Row className="mb-3">
+                        <Col md={2}>
+                          <strong>Paid Days</strong>
+                          <div>{item.PresentDays || 0}</div>
+                        </Col>
 
-                    <Col md={3} className="font-medium">Absent Days</Col>
-                    <Col md={3}>{data?.AbsentDays || '0'}</Col>
+                        <Col md={2}>
+                          <strong>Absent Days</strong>
+                          <div>{item.AbsentDays || 0}</div>
+                        </Col>
 
+                        <Col md={2}>
+                          <strong>Leave Days</strong>
+                          <div>{item.LeaveDays || 0}</div>
+                        </Col>
 
-                  </Row>
-
-                  <Row className="mb-2">
-
-                    <Col md={3} className="font-medium">Leave Days</Col>
-                    <Col md={3}>{data?.LeaveDays || '0'}</Col>
-
-
-                    <Col md={3} className="font-medium">Encashment Days</Col>
-                    <Col md={3}>{data?.EncashmentDays || '0'}</Col>
-                  </Row>
-
-                  <Row className="mb-2">
-
-                    <Col md={3} className="font-medium">OT Hours</Col>
-                    <Col md={3}>{data?.OTHours || '0'}</Col>
-
-                    <Col md={3} className="font-medium">Total Working Hours</Col>
-                    <Col md={3}>{data?.TotalWorkingHours || '0'}</Col>
+                        <Col md={2}>
+                          <strong>Encashment Days</strong>
+                          <div>{item.EncashmentDays || 0}</div>
+                        </Col>
 
 
-                  </Row>
-                </div>
+                        <Col md={2}>
+                          <strong>OT Hours</strong>
+                          <div>{item.OTHours || 0}</div>
+                        </Col>
+
+                        <Col md={2}>
+                          <strong>Total Working Hours</strong>
+                          <div>{item.TotalWorkingHours || 0}</div>
+                        </Col>
+                      </Row>
+
+                      <Row className="mb-3">
+
+
+                        {/* <Col md={3}>
+                <strong>Late Days</strong>
+                <div>{item.LateDaysCount || 0}</div>
+              </Col>
+
+              <Col md={3}>
+                <strong>Late Amount</strong>
+                <div>{item.LatePerDayAmount || 0}</div>
+              </Col> */}
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                ))}
               </>
             )}
           </Card.Body>
