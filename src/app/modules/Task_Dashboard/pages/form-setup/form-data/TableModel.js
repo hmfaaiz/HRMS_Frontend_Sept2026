@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { format } from "date-fns";
 import { Eye } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   NoRecordsFoundMessage,
   PleaseWaitMessage,
@@ -11,6 +11,9 @@ import {
 } from "../../../../../../_metronic/_helpers";
 
 const DEFAULT_IMAGE = toAbsoluteUrl("/media/users/profileImage.png");
+
+const TICKET_CODE_KEYS = new Set(["ticket_Code", "Ticket_Code"]);
+const TICKET_DESC_KEYS = new Set(["ticket_Description", "Ticket_Description"]);
 
 const formatCell = (cell, key, sampleValue, columnColorRules = {}, row) => {
   // Apply custom style from rules
@@ -29,7 +32,7 @@ const formatCell = (cell, key, sampleValue, columnColorRules = {}, row) => {
     typeof sampleValue === "string" && /^\d{4}-\d{2}-\d{2}$/.test(sampleValue);
   if (isDate && typeof cell === "string") {
     return (
-      <div style={customStyle}>
+      <div style={{ whiteSpace: "nowrap", ...customStyle }}>
         {cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}
       </div>
     );
@@ -46,7 +49,14 @@ const formatCell = (cell, key, sampleValue, columnColorRules = {}, row) => {
   return <div style={customStyle}>{cell || ""}</div>;
 };
 
-const generateColumns = (sampleRow, action, onHide, columnColorRules = {}) => {
+const generateColumns = (
+  sampleRow,
+  action,
+  onHide,
+  columnColorRules = {},
+  history,
+  ticketCodeRoute,
+) => {
   if (!sampleRow) return [];
 
   let columns = Object.keys(sampleRow)
@@ -70,6 +80,80 @@ const generateColumns = (sampleRow, action, onHide, columnColorRules = {}) => {
               }}
             />
           ),
+        };
+      }
+
+      // Ticket code column — always a clickable link
+      if (TICKET_CODE_KEYS.has(key)) {
+        return {
+          dataField: key,
+          text: key.replace(/_/g, " "),
+          sort: true,
+          style: { whiteSpace: "nowrap" },
+          formatter: (cell) => (
+            <span
+              style={{
+                color: "#0093DD",
+                fontWeight: "600",
+                cursor: "pointer",
+                textDecoration: "underline",
+                whiteSpace: "nowrap",
+              }}
+              title={`Go to timeline for ${cell}`}
+              onClick={() => {
+                if (cell && ticketCodeRoute) {
+                  onHide();
+                  window.open(
+                    `${ticketCodeRoute}/${encodeURIComponent(cell)}`,
+                    "_blank",
+                    "noopener,noreferrer"
+                  );
+                }
+              }}
+            >
+              {cell || ""}
+            </span>
+          ),
+        };
+      }
+
+      // Ticket description column — clickable; navigates using ticket_Code from
+      // the same row when available, otherwise uses the description text itself.
+      // Only activated when no dedicated ticket_Code column exists in this table.
+      const tableHasTicketCode =
+        "ticket_Code" in sampleRow || "Ticket_Code" in sampleRow;
+      if (TICKET_DESC_KEYS.has(key) && !tableHasTicketCode) {
+        return {
+          dataField: key,
+          text: key.replace(/_/g, " "),
+          sort: true,
+          formatter: (cell, row) => {
+            const codeToNavigate =
+              row?.ticket_Code || row?.Ticket_Code || cell;
+            return (
+              <span
+                style={{
+                  color: "#0093DD",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
+                title={cell}
+                onClick={() => {
+                  if (codeToNavigate && ticketCodeRoute) {
+                    onHide();
+                    window.open(
+                      `${ticketCodeRoute}/${encodeURIComponent(codeToNavigate)}`,
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }
+                }}
+              >
+                {cell || ""}
+              </span>
+            );
+          },
         };
       }
 
@@ -106,11 +190,28 @@ const generateColumns = (sampleRow, action, onHide, columnColorRules = {}) => {
   return columns;
 };
 
-const TableModel = ({ onHide, show, data, heading, columnColorRules = {} }) => {
+const TableModel = ({
+  onHide,
+  show,
+  data,
+  heading,
+  columnColorRules = {},
+  ticketCodeRoute,
+}) => {
+  const history = useHistory();
   const sampleRow = data?.result?.[0];
   const columns = useMemo(
-    () => generateColumns(sampleRow, data?.action, onHide, columnColorRules),
-    [sampleRow, data?.action, onHide, columnColorRules],
+    () =>
+      generateColumns(
+        sampleRow,
+        data?.action,
+        onHide,
+        columnColorRules,
+        history,
+        ticketCodeRoute,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sampleRow, data?.action, onHide, columnColorRules, ticketCodeRoute],
   );
 
   return (

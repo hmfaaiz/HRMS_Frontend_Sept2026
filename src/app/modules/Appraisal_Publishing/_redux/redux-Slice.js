@@ -63,5 +63,9 @@ export const appraisalPublishSlice = createSlice({
       state.actionsLoading = false;
       state.appraisal_detail = action.payload;
     },
+    AppraisalPublishReportFetched: (state, action) => {
+      state.error = null;
+      state.actionsLoading = false;
+    },
   },
 });

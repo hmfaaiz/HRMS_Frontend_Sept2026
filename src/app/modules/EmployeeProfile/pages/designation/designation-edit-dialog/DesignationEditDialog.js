@@ -164,6 +164,7 @@ export function DesignationEditDialog({
             skillsList,
             incidentList,
             profile_image: image,
+            allowResignationRequest: !!user?.allowResignationRequest,
           },
           disbaleLoading,
           onHide
@@ -243,7 +244,7 @@ export function DesignationEditDialog({
         hod: user?.hod,
         geoLocationIds: user?.geoLocationIds,
         allowedAnywhere: user?.allowedAnywhere,
-        allowResignationRequest: user?.allowResignationRequest,
+        allowResignationRequest: !!user?.allowResignationRequest,
         isForMachineAtt: user?.isForMachineAtt,
         empMachineAttId: user?.empMachineAttId,
       };

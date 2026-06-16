@@ -4,7 +4,7 @@ import React, { useEffect, useMemo } from "react";
 import { FormTable } from "../form-table/FormTable";
 import { useFormUIContext } from "../FormUIContext";
 import { FormFIlter } from "../form-filter/FormFIlter";
-import { useSelector, shallowEqual ,useDispatch} from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus } from "lucide-react";
@@ -25,24 +25,26 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-  const { userAccess } = useSelector(
-    (state) => ({
-      userAccess: state.auth.userAccess.portal_department_wise_budget,
-    }),
-    shallowEqual
-  );
+  // const { userAccess } = useSelector(
+  //   (state) => ({
+  //     userAccess: state.auth.userAccess.portal_department_wise_budget,
+  //   }),
+  //   shallowEqual
+  // );
+  const { currentState, currentUser, userAccess, department_wise_budget_approval } = useSelector((state) => {
+    return {
+      currentState: state.portal_department_wise_budget,
+      userAccess: state?.auth?.userAccess["portal_department_wise_budget"],
+      department_wise_budget_approval: state?.auth?.userAccess["Manpower Budget"],
+      currentUser: state.auth?.user,
+    };
+  }, shallowEqual);
 
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreatePortalDepartmentWiseBudget"
   );
 
-  const { currentState, currentUser } = useSelector((state) => {
-    return {
-      currentState: state.portal_department_wise_budget,
-      userAccess: state?.auth?.userAccess["portal_department_wise_budget"],
-      currentUser: state.auth?.user,
-    };
-  }, shallowEqual);
+
 
   console.log("currentUser11111", currentUser?.employeeIdMapping)
 
@@ -55,7 +57,7 @@ export function FormCard() {
 
 
   }, [currentUser?.employeeIdMapping]);
-
+console.log("department_wise_budget_approval11111",department_wise_budget_approval)
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
@@ -66,7 +68,32 @@ export function FormCard() {
             isBackButton={true}
             isDashboardRedirect={true}
             menuOptions={[
-
+              {
+                name: "Dashboard",
+                link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadManpowerBudgetDashboard" && el?.portalType == 2 && el?.isResourceShow
+                ),
+              },
+              {
+                name: "Approval",
+                link: "/department_wise_budget_approval/read-all-budget-approval",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetApproval"
+                ),
+              },
+              
+              
+              {
+                name: "Workflow Status",
+                link: "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
+                ),
+              },
 
 
             ]}
@@ -82,7 +109,33 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
+             menuOptions={[
+              {
+                name: "Dashboard",
+                link: "/manpower_budget_dashboard/read-manpower-budget-dashboard",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadManpowerBudgetDashboard" && el?.portalType == 2 && el?.isResourceShow
+                ),
+              },
+              {
+                name: "Approval",
+                link: "/department_wise_budget_approval/read-all-budget-approval",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetApproval"
+                ),
+              },
+              
+              
+              {
+                name: "Workflow Status",
+                link: "/budget_workflow_status_portal/read-all-budget-workflow-status-portal",
+                isShow: department_wise_budget_approval?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllBudgetWorkflowStatusPortal" && el?.isResourceShow
+                ),
+              },
 
 
             ]}

@@ -964,3 +964,44 @@ export const fetchAllBudgetYearDataBySubsidiaryId = (subsidiaryId) => async (
       // toast.error("Something went wrong");
     });
 };
+export const fetchAllBudgetRequest = (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllBudgetRequest(body)
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllBudgetRequestFetch(entities));
+    })
+    .catch((error) => {
+      // toast.error("Something went wrong");
+    });
+};
+
+export const fetchAllCompanyDepartment = (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllComDept()
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllCompDeptFetch(entities));
+    })
+    .catch((error) => {
+      // toast.error("Something went wrong");
+    });
+};
+
+export const fetchAllDesignationByDepId = (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllDesignationByDepId(body)
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllDesignationByhDeptFetch(entities));
+    })
+    .catch((error) => {
+      // toast.error("Something went wrong");
+    });
+};

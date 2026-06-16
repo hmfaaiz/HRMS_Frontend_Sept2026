@@ -37,3 +37,8 @@ export function getPayrollMonth(body) {
     body
   );
 }
+export async function getWorkflowStatusByAttendanceId(id) {
+  return axios.get(
+    `${USERS_URL}/attendance_workflow/read-attendance-approval-workflow/${id}`
+  );
+}

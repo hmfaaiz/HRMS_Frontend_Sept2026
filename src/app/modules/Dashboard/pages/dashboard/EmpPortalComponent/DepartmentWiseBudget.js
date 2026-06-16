@@ -26,8 +26,8 @@ export const DepartmentWiseBudget = () => {
             {portal_department_wise_budget?.length > 0 && (
               <div className="font-size-xs text-black font-bold">
                 <p className="m-0 underline">
-                  <Link to="/portal_department_wise_budget/read-all-facilitator-ticket-creation">
-                   Budget
+                  <Link to="/portal_department_wise_budget/read-all-portal-department-wise-budget">
+              Manpower Budget
                   </Link>
                 </p>
               </div>

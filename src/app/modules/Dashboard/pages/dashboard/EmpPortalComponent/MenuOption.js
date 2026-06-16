@@ -12,11 +12,13 @@ import {
   ListChecks,
   BanknoteArrowUp,
 } from "lucide-react";
-import { useState } from "react";
-import { useSelector, shallowEqual } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchModuleRights } from "../../../_redux/dashboardActions";
 
 export const MenuOption = () => {
+  const dispatch = useDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const {
@@ -32,9 +34,9 @@ export const MenuOption = () => {
     projectMgt,
     portalInfo,
     company_doc_portal,
-    employee_task,budget,
+    employee_task,
+    budget,useracc1111,
   } = useSelector((state) => {
-
     return {
       moduleRights: state?.dashboard?.moduleRights,
       attendance: state?.auth?.userAccess["Attendance Management"],
@@ -51,9 +53,14 @@ export const MenuOption = () => {
       company_doc_portal: state?.auth?.userAccess.company_doc_portal,
       portalInfo: state?.dashboard?.portalInfo,
       employee_task: state?.auth?.userAccess["Employee_Task"],
-      budget: state?.auth?.userAccess["Budget"],
+      budget: state?.auth?.userAccess["Manpower Budget"],
+      useracc1111: state?.auth?.userAccess,
     };
   }, shallowEqual);
+console.log("useracc1111111111",useracc1111)
+  useEffect(() => {
+    dispatch(fetchModuleRights());
+  }, []);
 
   const AttendanceRosterRequest = attendance?.find(
     (el) =>
@@ -172,189 +179,197 @@ export const MenuOption = () => {
       el?.isResourceShow &&
       el?.portalType == 2,
   );
- 
 
-  const MENUOPTION = [
-    {
-      icon: <NotebookTabs className="w-6 h-6 text-black" />,
-      name: "Roster",
-      isShow:
-        moduleRights?.find((e) => e?.value == 3)?.allow &&
-        AttendanceRosterRequest,
-      linkList: [
-        {
-          link: "/attendance_roster_request/read-all-attendance-roster-request",
-          show: AttendanceRosterRequest,
-          name: "Attendance Roster Request",
-        },
-      ],
-    },
-    {
-      icon: <Luggage className="w-6 h-6 text-black" />,
-      name: "Travel",
-      isShow:
-        moduleRights?.find((e) => e?.value == 4)?.allow &&
-        (TravelRequest || PostTravelRequest),
-      linkList: [
-        {
-          link: "/travel_request/read-all-travel-request",
-          show: TravelRequest,
-          name: "Travel Request",
-        },
-        {
-          link: "/post_travel_request/read-all-post-travel-request",
-          show: PostTravelRequest,
-          name: "Post Travel Request",
-        },
-      ],
-    },
-    {
-      icon: <Receipt className="w-6 h-6 text-black" />,
-      name: "Reimbursement",
-      isShow: moduleRights?.find((e) => e?.value == 4)?.allow && claimRequest,
-      linkList: [
-        {
-          link:
-            "/reimbursement_claim_request/read-all-reimbursement-claim-request",
-          show: claimRequest,
-          name: "Reimbursement Claim",
-        },
-      ],
-    },
-    {
-      icon: <BriefcaseBusiness className="w-6 h-6 text-black" />,
-      name: "Recruitement",
-      isShow:
-        moduleRights?.find((e) => e?.value == 5)?.allow &&
-        (jobRequest || interviewRecomendation),
-      linkList: [
-        {
-          link: "/requisition_job_vacancy/read-all-requisition-job-vacancy",
-          show: jobRequest,
-          name: "Job Vacancy Request",
-        },
-        {
-          link: "/interview_recommendations/read-all-interview-recommendations",
-          show: interviewRecomendation,
-          name: "Interview Recommendations",
-        },
-      ],
-    },
-    {
-      icon: <TrendingUpDown className="w-6 h-6 text-black" />,
-      name: "Appraisal",
-      isShow:
-        moduleRights?.find((e) => e?.value == 6)?.allow &&
-        (appraisalGoalSetup || appraisalFeedbackSubmission || appraisalRatingFinal),
-      linkList: [
-        {
-          link: "/employee_goal_setup_portal/read-all-employee-goal-setup",
-          show: appraisalGoalSetup,
-          name: "Employee Goal Setup",
-        },
-        {
-          link: "/appraisal_evaluation/read-all-appraisal-evaluation",
-          show: appraisalFeedbackSubmission,
-          name: "Submit Feedback",
-        },
-        {
-          link: "/emp_appraisal/appraisal-review-finalization",
-          show: appraisalRatingFinal,
-          name: "Rating Finalization",
-        },
-      ],
-    },
-    {
-      icon: <FileUser className="w-6 h-6 text-black" />,
-      name: "Resignation",
-      isShow:
-        moduleRights?.find((e) => e?.value == "separation")?.allow &&
-        resignRequest &&
-        portalInfo?.allowResignationRequest,
-      linkList: [
-        {
-          link: "/employee_resignation/read-all-resignation",
-          show: resignRequest,
-          name: "Request Resignation",
-        },
-      ],
-    },
-    {
-      icon: <HeartHandshake className="w-6 h-6 text-black" />,
-      name: "Help Desk",
-      isShow:
-        moduleRights?.find((e) => e?.value == 7)?.allow &&
-        (taskCreation || taskAssignmentTimeLine),
-      linkList: [
-        {
-          link: "/portal_ticket_creation/read-all-facilitator-ticket-creation",
-          show: taskCreation,
-          name: "Task Assignment",
-        },
-        {
-          link:
-            "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
-          show: taskAssignmentTimeLine,
-          name: "Task Assignment Timeline",
-        },
-      ],
-    },
-    {
-      icon: <PanelsTopLeft className="w-6 h-6 text-black" />,
-      name: "Project Management",
-      isShow:
-        moduleRights?.find((e) => e?.value == 7)?.allow &&
-        (ticketCreation || ticketTimeLog),
-      linkList: [
-        {
-          link: "/ticket_setup_portal/read-all-ticket-setup",
-          show: ticketCreation,
-          name: "Ticket Creation",
-        },
-        {
-          link: "/time_logging_portal/read-all-time-log",
-          show: ticketTimeLog,
-          name: "Time Logging",
-        },
-      ],
-    },
-    {
-      icon: <FolderCheck className="w-6 h-6 text-black" />,
-      name: "Documents",
-      isShow: moduleRights?.find((e) => e?.value == 1)?.allow && docSection,
-      linkList: [
-        {
-          link: "/company_doc_portal/read-all-company-doc-portal",
-          show: docSection,
-          name: "Company / My Documents",
-        },
-      ],
-    },
-    {
-      icon: <ListChecks className="w-6 h-6 text-black" />,
-      name: "Employee",
-      isShow: employeeTaskItem,
-      linkList: [
-        {
-          link: "/employee_task/read-all-employee-task",
-          show: employeeTaskItem,
-          name: "Checklist Task",
-        },
-      ],
-    },
+  const MENUOPTION = useMemo(() => {
+    return [
       {
-      icon: <BanknoteArrowUp  className="w-6 h-6 text-black" />,
-      name: "Department Wise Budget",
-      isShow: portalDepartmentWiseBudget,
-      linkList: [
-        {
-          link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
-          show: portalDepartmentWiseBudget,
-          name: "Department Wise Budget",
-        },
-      ],
-    },
-  ];
+        icon: <ListChecks className="w-6 h-6 text-black" />,
+        name: "Employee",
+        isShow: employeeTaskItem,
+        linkList: [
+          {
+            link: "/employee_task/read-all-employee-task",
+            show: employeeTaskItem,
+            name: "Checklist Task",
+          },
+        ],
+      },
+      {
+        icon: <NotebookTabs className="w-6 h-6 text-black" />,
+        name: "Roster",
+        isShow:
+          moduleRights?.find((e) => e?.value == 3)?.allow &&
+          AttendanceRosterRequest,
+        linkList: [
+          {
+            link:
+              "/attendance_roster_request/read-all-attendance-roster-request",
+            show: AttendanceRosterRequest,
+            name: "Attendance Roster Request",
+          },
+        ],
+      },
+      {
+        icon: <Luggage className="w-6 h-6 text-black" />,
+        name: "Travel",
+        isShow:
+          moduleRights?.find((e) => e?.value == 4)?.allow &&
+          (TravelRequest || PostTravelRequest),
+        linkList: [
+          {
+            link: "/travel_request/read-all-travel-request",
+            show: TravelRequest,
+            name: "Travel Request",
+          },
+          {
+            link: "/post_travel_request/read-all-post-travel-request",
+            show: PostTravelRequest,
+            name: "Post Travel Request",
+          },
+        ],
+      },
+      {
+        icon: <Receipt className="w-6 h-6 text-black" />,
+        name: "Reimbursement",
+        isShow: moduleRights?.find((e) => e?.value == 4)?.allow && claimRequest,
+        linkList: [
+          {
+            link:
+              "/reimbursement_claim_request/read-all-reimbursement-claim-request",
+            show: claimRequest,
+            name: "Reimbursement Claim",
+          },
+        ],
+      },
+      {
+        icon: <BriefcaseBusiness className="w-6 h-6 text-black" />,
+        name: "Recruitement",
+        isShow:
+          moduleRights?.find((e) => e?.value == 5)?.allow &&
+          (jobRequest || interviewRecomendation),
+        linkList: [
+          {
+            link: "/requisition_job_vacancy/read-all-requisition-job-vacancy",
+            show: jobRequest,
+            name: "Job Vacancy Request",
+          },
+          {
+            link:
+              "/interview_recommendations/read-all-interview-recommendations",
+            show: interviewRecomendation,
+            name: "Interview Recommendations",
+          },
+        ],
+      },
+      {
+        icon: <TrendingUpDown className="w-6 h-6 text-black" />,
+        name: "Appraisal",
+        isShow:
+          moduleRights?.find((e) => e?.value == 6)?.allow &&
+          (appraisalGoalSetup ||
+            appraisalFeedbackSubmission ||
+            appraisalRatingFinal),
+        linkList: [
+          {
+            link: "/employee_goal_setup_portal/read-all-employee-goal-setup",
+            show: appraisalGoalSetup,
+            name: "Employee Goal Setup",
+          },
+          {
+            link: "/appraisal_evaluation/read-all-appraisal-evaluation",
+            show: appraisalFeedbackSubmission,
+            name: "Submit Feedback",
+          },
+          {
+            link: "/emp_appraisal/appraisal-review-finalization",
+            show: appraisalRatingFinal,
+            name: "Rating Finalization",
+          },
+        ],
+      },
+      {
+        icon: <FileUser className="w-6 h-6 text-black" />,
+        name: "Resignation",
+        isShow:
+          moduleRights?.find((e) => e?.value == "separation")?.allow &&
+          resignRequest &&
+          portalInfo?.allowResignationRequest,
+        linkList: [
+          {
+            link: "/employee_resignation/read-all-resignation",
+            show: resignRequest,
+            name: "Request Resignation",
+          },
+        ],
+      },
+      {
+        icon: <HeartHandshake className="w-6 h-6 text-black" />,
+        name: "Help Desk",
+        isShow:
+          moduleRights?.find((e) => e?.value == 7)?.allow &&
+          (taskCreation || taskAssignmentTimeLine),
+        linkList: [
+          {
+            link:
+              "/portal_ticket_creation/read-all-facilitator-ticket-creation",
+            show: taskCreation,
+            name: "Task Assignment",
+          },
+          {
+            link:
+              "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
+            show: taskAssignmentTimeLine,
+            name: "Task Assignment Timeline",
+          },
+        ],
+      },
+      {
+        icon: <PanelsTopLeft className="w-6 h-6 text-black" />,
+        name: "Project Management",
+        isShow:
+          moduleRights?.find((e) => e?.value == 7)?.allow &&
+          (ticketCreation || ticketTimeLog),
+        linkList: [
+          {
+            link: "/ticket_setup_portal/read-all-ticket-setup",
+            show: ticketCreation,
+            name: "Ticket Creation",
+          },
+          {
+            link: "/time_logging_portal/read-all-time-log",
+            show: ticketTimeLog,
+            name: "Time Logging",
+          },
+        ],
+      },
+      {
+        icon: <FolderCheck className="w-6 h-6 text-black" />,
+        name: "Documents",
+        isShow: moduleRights?.find((e) => e?.value == 1)?.allow && docSection,
+        linkList: [
+          {
+            link: "/company_doc_portal/read-all-company-doc-portal",
+            show: docSection,
+            name: "Company / My Documents",
+          },
+        ],
+      },
+      {
+        icon: <BanknoteArrowUp className="w-6 h-6 text-black" />,
+        name: "Manpower Budget",
+        isShow: portalDepartmentWiseBudget,
+        linkList: [
+          {
+            link:
+              "/portal_department_wise_budget/read-all-portal-department-wise-budget",
+            show: portalDepartmentWiseBudget,
+            name: "Department Wise Manpower Budget",
+          },
+        ],
+      },
+    ];
+  }, [moduleRights]);
+
   return (
     <div className="px-5 py-4 rounded-lg bg-white w-full relative">
       {/* Header section - clickable */}
@@ -362,24 +377,33 @@ export const MenuOption = () => {
         className="bg-tprimary px-4 py-2 flex justify-between items-center rounded-lg cursor-pointer transition-all duration-300 relative z-10"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <h5 className="font-weight-bolder m-0 text-white py-1">Associated Modules</h5>
+        <h5 className="font-weight-bolder m-0 text-white py-1">
+          Associated Modules
+        </h5>
         <Plus
-          className={`w-5 h-5 font-bold text-white transition-transform duration-300 ${isExpanded ? "rotate-45" : ""
-            }`}
+          className={`w-5 h-5 font-bold text-white transition-transform duration-300 ${
+            isExpanded ? "rotate-45" : ""
+          }`}
         />
       </div>
 
       {/* Expandable content section - absolute positioned */}
       <div
-        className={`absolute left-0  w-full overflow-hidden transition-all duration-300 ease-in-out z-20 ${isExpanded ? "h-72 opacity-100" : "h-0 opacity-0 pointer-events-none"
-          }`}
+        className={`absolute left-0  w-full overflow-hidden transition-all duration-300 ease-in-out z-20 ${
+          isExpanded
+            ? "h-[28rem] opacity-100"
+            : "h-0 opacity-0 pointer-events-none"
+        }`}
         style={{ top: "calc(100% - 8px)" }}
       >
-        <div className="bg-tprimary space-y-3 shadow-md rounded-lg p-4 mx-5 h-full overflow-y-auto scrollbar-fancy ">
+        <div className="bg-tprimary space-y-2 shadow-md rounded-lg p-4 mx-5 h-full overflow-y-auto scrollbar-fancy ">
           {/* Your content here */}
-          {MENUOPTION.filter((e) => e.isShow)?.map((el) => {
+          {MENUOPTION?.filter((e) => e.isShow)?.map((el, i) => {
             return (
-              <div className="bg-tsecondary shadow-md px-6 py-4 rounded-lg">
+              <div
+                key={i}
+                className="bg-tsecondary shadow-md px-6 py-4 rounded-lg"
+              >
                 <div className="flex items-center gap-3">
                   {el?.icon}
                   <div>

@@ -19,6 +19,9 @@ const initialState = {
   empAuthorityList: [],
   isPolicyExists: false,
   attendanceSummary: null,
+  workflowStatusList: [],
+  workflowParentData: null,   
+  workflowRequestData: null
 };
 
 export const callTypes = {
@@ -103,5 +106,13 @@ export const AttendanceRequestSlice = createSlice({
       state.empAuthorityList = data;
       state.isPolicyExists = isPolicyExists;
     },
+
+    WorkflowStatusFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.error = null;
+      state.workflowStatusList  = action.payload?.workflowList  || [];
+      state.workflowParentData  = action.payload?.parentData    || null;
+      state.workflowRequestData = action.payload?.requestData   || null;
+},
   },
 });

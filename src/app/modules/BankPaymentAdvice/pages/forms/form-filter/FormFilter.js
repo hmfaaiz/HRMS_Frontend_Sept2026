@@ -118,19 +118,19 @@ export function FormFilter({
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
       groupWiseLabel: allGroupByMap?.get(values.groupBy || "")?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || "")?.label,
-    groupByLabel: values?.groupByEmployee
-  ? "Employee"
-  : [
-      values?.groupByDepartment && "Department",
-      values?.groupByLocation && "Location"
-    ]
-      .filter(Boolean)
-      .join(" & ")
-      ? `${[
+      groupByLabel: values?.groupByEmployee
+        ? "Employee"
+        : [
           values?.groupByDepartment && "Department",
           values?.groupByLocation && "Location"
-        ].filter(Boolean).join(" & ")}`
-      : ""
+        ]
+          .filter(Boolean)
+          .join(" & ")
+          ? `${[
+            values?.groupByDepartment && "Department",
+            values?.groupByLocation && "Location"
+          ].filter(Boolean).join(" & ")}`
+          : ""
 
     };
   };
@@ -222,13 +222,13 @@ export function FormFilter({
         initialValues={{
           ...initialFilter.filter,
           subsidiaryId:
-              initialFilter.filter?.subsidiaryId ||
-              allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
-              "",
+            initialFilter.filter?.subsidiaryId ||
+            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+            "",
           monthId:
-              initialFilter.filter?.subsidiaryId ||
-              allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth?.Id ||
-              "",
+            initialFilter.filter?.subsidiaryId ||
+            allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth?.Id ||
+            "",
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -248,8 +248,9 @@ export function FormFilter({
             <Modal.Body className="overlay overlay-block cursor-default">
               <Form className="form form-label-right">
                 <fieldset>
-               
-     <h6 className="font-bold mb-0 text-primary">Employee</h6>
+
+                  <h6 className="font-bold mb-0 text-primary">Employee</h6>
+
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
                     <div className="">
@@ -292,13 +293,13 @@ export function FormFilter({
                         name="subsidiaryId"
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          console.log("obeeeeject" , e)
+                          console.log("obeeeeject", e)
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
-                           if(e?.payrollMonth){
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
+                          if (e?.payrollMonth) {
+                            setFieldValue("monthId", Number(e?.payrollMonth?.Id))
+                          }
                           dispatch(
                             fetchAllPayrollMonthYearList(
                               { subsidiaryId: value },
@@ -318,12 +319,12 @@ export function FormFilter({
                         }
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
-                         value={
-                            allSubsidiaryList?.find(
-                              (el) => el?.value === values?.subsidiaryId
-                            ) || null
-                          }
-                      options={allSubsidiaryList}
+                        value={
+                          allSubsidiaryList?.find(
+                            (el) => el?.value === values?.subsidiaryId
+                          ) || null
+                        }
+                        options={allSubsidiaryList}
                       />
                     </div>
 
@@ -396,16 +397,43 @@ export function FormFilter({
                         options={allPayrollMonthYearList}
                       />
                     </div>
+
+
+
+
                     {/* Payroll Month Field End */}
                   </div>
 
+                  <h6 className="font-bold mb-0 text-primary mt-4">
+                    Bank Payment Advice
+                  </h6>
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+                    {/* Group By Field Start */}
+
+
+                    <div className="md:col-start-1 md:col-end-2">
+                      <Field
+                        name="groupBy"
+                        component={Select}
+                        placeholder=""
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFieldValue("groupBy", value);
+                        }}
+                        label={<span> Group By</span>}
+                        value={values.groupBy}
+                        autoComplete="off"
+                        children={CustomDropdown({ data: groupByOptions })}
+                      />
+                    </div>
+                  </div>
                   <hr></hr>
 
-             
+
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     <div className="col-start-3 col-end-5 flex justify-end gap-2">
-                     
-                       <button
+
+                      <button
                         onClick={() => {
                           getNewBankAdvice(values);
                         }}
@@ -417,7 +445,7 @@ export function FormFilter({
                         className="btn btn-primary btn-elevate"
                       >
                         Bank Payment Advice (Dynasoft)
-              
+
                         <Download className="w-4 h-4 ml-2" />
                         {/* </span> */}
                         {adviceLoading && (
@@ -436,14 +464,14 @@ export function FormFilter({
                         className="btn btn-primary btn-elevate"
                       >
                         Bank Payment Advice
-              
+
                         <Download className="w-4 h-4 ml-2" />
                         {/* </span> */}
                         {adviceLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
-                        <button
+                      <button
                         onClick={() => {
                           generateDubaiBankAdviceCSV(values);
                         }}
@@ -454,8 +482,8 @@ export function FormFilter({
                         }
                         className="btn btn-primary btn-elevate"
                       >
-                         SIF
-                 
+                        SIF
+
                         <Download className="w-4 h-4 ml-2" />
                         {/* </span> */}
                         {adviceLoading && (
@@ -483,7 +511,7 @@ export function FormFilter({
                 Cancel
               </button>
 
- 
+
             </Modal.Footer>
           </>
         )}

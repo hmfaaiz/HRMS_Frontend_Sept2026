@@ -309,3 +309,12 @@ export const getAttLogsByDate = async (body) => {
 export const getAllBudgetYearBySubsidiaryId = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-budget-year-by-SubsidiaryId`,body);
 };
+export const getAllBudgetRequest = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-active-budget-request`,body);
+};
+export const getAllComDept = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-comp-dept`,);
+};
+export const getAllDesignationByDepId = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-designation-by-depId`,body);
+};

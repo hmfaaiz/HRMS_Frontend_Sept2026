@@ -15,6 +15,11 @@ export default FormData = ({
   taskVisibleSections = [],
 }) => {
   const [modalData, setModalData] = useState(null);
+
+  // Determines which module to navigate to when a ticket code is clicked
+  const ticketCodeRoute = isProject
+    ? "/project_timeline/read-all-project-timeline"
+    : "/task_assignment_timeline/read-all-task-assignment-timeline";
   const projectSectionSet = useMemo(() => new Set(projectVisibleSections), [
     projectVisibleSections,
   ]);
@@ -122,6 +127,7 @@ export default FormData = ({
                       Assign_To: el?.["AssignToEmp.name"] || "-",
                     }))}
                     name={"Recent Activity - Date Wise"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Recent Activity - Date Wise",
@@ -157,6 +163,7 @@ export default FormData = ({
                       Done: el?.Done || "-",
                     }))}
                     name={"Employee Wise Ticket Status Wise Overview"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Ticket Status Wise Overview",
@@ -173,6 +180,7 @@ export default FormData = ({
                       ...el,
                     }))}
                     name={"Overdue Tickets"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Overdue Tickets",
@@ -203,6 +211,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Tickets Wise Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Tickets Wise Time Log",
@@ -241,6 +250,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Employee Wise Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Time Log",
@@ -259,6 +269,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Employee Ticket Wise Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Ticket Wise Time Log",
@@ -297,6 +308,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Pending In Progress Ticket Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Pending In Progress Ticket Time Log",
@@ -335,6 +347,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Completed Ticket Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Completed Ticket Time Log",
@@ -482,6 +495,7 @@ export default FormData = ({
                       },
                     }}
                     name={"Recent Activity - Date Wise"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Recent Activity - Date Wise",
@@ -502,6 +516,7 @@ export default FormData = ({
                       No_of_Tasks: el?.No_of_Tasks || "-",
                     }))}
                     name={"Employee Wise Task Status Overview"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Task Status Overview",
@@ -530,6 +545,7 @@ export default FormData = ({
                       },
                     }}
                     name={"Overdue Task"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Overdue Task",
@@ -557,6 +573,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Task Wise Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Task Wise Time Log",
@@ -588,6 +605,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Employee Wise Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     handleClick={(e, completeData) =>
                       setModalData({
                         name: "Employee Wise Time Log",
@@ -606,6 +624,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Employee Task Wise Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     columnColorRules={{
                       Logged_Hours: (value, row) => {
                         if (Number(value) > Number(row?.Estimated_Hours))
@@ -640,6 +659,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Pending In Progress Task Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     columnColorRules={{
                       Logged_Hours: (value, row) => {
                         if (Number(value) > Number(row?.Estimated_Hours))
@@ -680,6 +700,7 @@ export default FormData = ({
                       }),
                     )}
                     name={"Completed Task Time Log"}
+                    ticketCodeRoute={ticketCodeRoute}
                     columnColorRules={{
                       Logged_Hours: (value, row) => {
                         if (Number(value) > Number(row?.Estimated_Hours))
@@ -723,6 +744,7 @@ export default FormData = ({
               heading={modalData?.name || ""}
               show={!!modalData}
               onHide={() => setModalData(null)}
+              ticketCodeRoute={ticketCodeRoute}
               columnColorRules={{
                 Logged_Hours: (value, row) => {
                   if (Number(value) > Number(row?.Estimated_Hours)) {
