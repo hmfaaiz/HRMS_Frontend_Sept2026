@@ -23,8 +23,8 @@ const schema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 });
 
-const generatePdfFromHtml = async (html, fileName, dispatch) => {
-  dispatch(downloadMessageAsPdf({ html, fileName }));
+const generatePdfFromHtml = async (html, fileName, questionText, dispatch) => {
+  dispatch(downloadMessageAsPdf({ html, fileName , questionText }));
 };
 
 export function FormEditForm({
@@ -83,6 +83,7 @@ export function FormEditForm({
         await generatePdfFromHtml(
           responseHtml,
           `AI-${fileSafeQuestion}-${Date.now()}.pdf`,
+          questionText,
           dispatch,
         );
       } catch (err) {
