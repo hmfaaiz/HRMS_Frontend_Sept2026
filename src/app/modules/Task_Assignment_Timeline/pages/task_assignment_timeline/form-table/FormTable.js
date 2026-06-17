@@ -86,7 +86,8 @@ function DetailSubTable({ masterId }) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             if (dueDate) dueDate.setHours(0, 0, 0, 0);
-            const isOverdue = dueDate && dueDate < today;
+            // const isOverdue = dueDate && dueDate < today;
+            const isOverdue = false;
 
             return (
               <tr key={detail.Id || idx}>
@@ -442,7 +443,11 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         const today = new Date();
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(lastDetail.createdAt);
+        // const createdDate = new Date(lastDetail.createdAt);
+             const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -520,16 +525,19 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
 
         const dueDate = new Date(lastDetail.dueDate);
         const today = new Date();
-        const createdDate = new Date(lastDetail.createdAt);
+        // const createdDate = new Date(lastDetail.createdAt);
+             const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
+
 
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
         createdDate.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday =
-          ((dueDate < today && dueDate < createdDate) ||
-            (dueDate < today && row.ticketStatus != 0));
-
+       const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && lastDetail.ticketStatus != 0;
+console.log("isExpiredOrToday1111",isExpiredOrToday, row?.completionDate)
         // const statusLabel =
         //   ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
 
@@ -595,7 +603,11 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(lastDetail.createdAt);
+        // const createdDate = new Date(lastDetail.createdAt);
+          const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -638,7 +650,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     ? {
       renderer: (row) => <DetailSubTable masterId={row.Id} />,
       expanded: expandedRows,
-      expandByColumnOnly: true,
+      expandByColumnOnly: false,
       onExpand: handleExpand,
       showExpandColumn: true,
       expandColumnPosition: "left",
@@ -675,7 +687,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     sizePerPage: uiProps.queryParams.pageSize,
     page: uiProps.queryParams.pageNumber,
   };
-  console.log("tableData111111", tableData)
+
   return (
     <div className="timeline-scroll-wrapper">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
