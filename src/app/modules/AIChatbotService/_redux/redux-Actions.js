@@ -186,3 +186,42 @@ export const deleteRecord = (sessionId) => async (dispatch) => {
 export const newQuestionClick = () => async (dispatch) => {
   dispatch(actions.newQuestion());
 };
+
+// Fetch all tickets
+export const downloadMessageAsPdf = (payload) => async (dispatch) => {
+  // PDF Export
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .downloadMessageAsPdf(payload)
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger file download
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.setAttribute("download", payload?.fileName || "Chat"); // Updated filename
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.pdfFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(
+        error?.response?.status == 400
+          ? "File not generated"
+          : error.clientMessage,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined, // Fixed typo
+        },
+      );
+    });
+};
