@@ -7,6 +7,7 @@ const initialState = {
   entities: null,
   payrollData: null,
   workflowStatusList: [],
+  budgetAmountData: null,
 };
 
 export const callTypes = {
@@ -52,6 +53,14 @@ export const BudgetApprovalSlice = createSlice({
       state.actionsLoading = false;
       state.error = null;
       state.workflowStatusList = data;
+    },
+    
+    
+    BudgetAmountDataFetched: (state, action) => {
+      state.budgetAmountData =  action.payload;
+      state.actionsLoading = false;
+      state.error = null;
+ 
     },
   },
 });

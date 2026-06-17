@@ -46,6 +46,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     recruitment : false,
     appraisal : false,
     task : false,
+    "Manpower Budget" : false,
     policyToShowNameOnReport: "",
     policyForCalWorkingHours: "",
   };

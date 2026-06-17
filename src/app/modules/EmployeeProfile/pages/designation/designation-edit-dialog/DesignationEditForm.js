@@ -1307,6 +1307,10 @@ export function DesignationEditForm({
 
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
+      
+      if (!id) {
+        setFieldValue("allowResignationRequest", response?.data?.data[0]?.allowEmployeeToSubmit ?? false);
+      }
       // setLocalizationId(response?.data?.data[0]?.localizationId);
 
       // setDefaultProbationPolicyMonth(new Date(newDate));
@@ -3828,7 +3832,7 @@ export function DesignationEditForm({
                         placeholder="example@gmail.com"
                         label="Official Email"
                         autoComplete="off"
-                        maxLength="30"
+                        maxLength="50"
 
                       />
                     </div>
@@ -3840,7 +3844,7 @@ export function DesignationEditForm({
                         placeholder="example@gmail.com"
                         label="Personal Email"
                         autoComplete="off"
-                        maxLength="30"
+                        maxLength="50"
 
                       />
                     </div>

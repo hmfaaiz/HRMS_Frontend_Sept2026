@@ -160,7 +160,7 @@ export function FormEditForm({
                       component={Input}
                       placeholder="example@gmail.com"
                       autoComplete="off"
-                      maxLength="30"
+                      maxLength="50"
                     />
                   </div>
 

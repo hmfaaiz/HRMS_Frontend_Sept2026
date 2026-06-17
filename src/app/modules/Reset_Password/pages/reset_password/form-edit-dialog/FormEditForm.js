@@ -69,7 +69,7 @@ export function FormEditForm({
                     placeholder="example@gmail.com"
                     value={currentUser.email}
                     autoComplete="off"
-                    maxLength="30"
+                    maxLength="50"
                   />
                 </div>
 

@@ -275,7 +275,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
     }),
     shallowEqual,
   );
-  console.log("recruitmentrecruitment", userAccess);
+
   /// leave
   const isLeaveRequest = leave?.find(
     (el) =>
@@ -603,7 +603,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
         <CompactViewCard
           Icon={HeartHandshake}
           isTeamExists={isTeamExists}
-          name={"Department Wise Budget"}
+          name={"Department Wise Manpower Budget"}
           count={0}
           link={"/portal_department_wise_budget/read-all-portal-department-wise-budget"}
         />

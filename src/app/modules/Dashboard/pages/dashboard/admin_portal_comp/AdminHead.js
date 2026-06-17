@@ -121,7 +121,7 @@ const AdminHead = ({
                 </div>
               </div>
               {/* Announcements - moves on top for mobile */}
-              {activeTab != "6" && (
+              {activeTab != "6" && activeTab != "8" && (
                 <div className="px-2 py-1 bg-tlight w-full col-span-3 rounded-md flex items-center gap-1">
                   <Megaphone className="text-black w-4 h-4 lg:mr-1 stroke-3" />
                   <h6 className="font-bold max-lg:hidden mb-0 text-primary">
@@ -202,6 +202,34 @@ const AdminHead = ({
                         null
                       }
                       options={dashboard?.allAppraisalCategory}
+                    />
+                  </div>
+                </div>
+              )}
+              {/* budget Period id */}
+              {activeTab == "8" && (
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                  <label class="whitespace-nowrap">Budget Period : </label>
+                  <div className="w-full">
+                    <SearchSelect
+                      name="budgetPeriodId"
+                      isDisabled={!allSubsidiaryList}
+                      onChange={(e) =>
+                        setSummaryFilter({
+                          ...summaryFilter,
+                          budgetPeriodId: e.value,
+                        })
+                      }
+                      value={
+                        (dashboard?.budgetyearBySubList?.length > 0 &&
+                          dashboard?.budgetyearBySubList?.find(
+                            (option) =>
+                              option.value === summaryFilter?.budgetPeriodId,
+                          )) ||
+                        dashboard?.budgetyearBySubList?.[0] ||
+                        null
+                      }
+                      options={dashboard?.budgetyearBySubList}
                     />
                   </div>
                 </div>

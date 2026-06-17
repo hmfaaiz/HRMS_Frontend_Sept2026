@@ -123,7 +123,7 @@ export function WorkflowAuthortiesTable() {
 
   return (
     <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-56 overflow-y-auto">
-      <h6 className="font-bold mb-0 text-primary my-2">Workflow Authorties</h6>
+      <h6 className="font-bold mb-0 text-primary my-2">Workflow Authorities</h6>
       <BootstrapTable
         noDataIndication={NoRecordsFoundMessage({
           entities: empAuthorityList || [],

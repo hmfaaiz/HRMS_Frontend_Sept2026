@@ -11,6 +11,7 @@ import { fetchBudgetWorkflow } from "../../../_redux/redux-Actions";
 import { headerSortingClasses, NoRecordsFoundMessage, PleaseWaitMessage, sortCaret } from "../../../../../../_metronic/_helpers";
 import BootstrapTable from "react-bootstrap-table-next";
 import { format } from "date-fns";
+import { fetchAllDesignationByDepId } from "../../../../Dashboard/_redux/dashboardActions";
 
 function PatternListForm({
     values,
@@ -23,10 +24,10 @@ function PatternListForm({
     const dispatch = useDispatch();
     const [workflowId, setWorkflowId] = useState(null);
     const { dashboard } = useSelector((state) => state);
-    useEffect(() => {
-
-        dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    }, [dispatch]);
+        useEffect(() => {
+    
+            dispatch(fetchAllDesignationByDepId({departmentId : values?.departmentId}));
+        }, [dispatch,values?.departmentId]);
 
 
     useEffect(() => {
@@ -261,9 +262,9 @@ function PatternListForm({
                                                                 : "form-control"
                                                         }
                                                         isDisabled={isdataForRead || values?.list?.[index]?.Id}
-                                                        options={dashboard?.allDesignations || []}
+                                                        options={dashboard?.allDesignationByDeptList || []}
                                                         value={
-                                                            dashboard?.allDesignations?.find(
+                                                            dashboard?.allDesignationByDeptList?.find(
                                                                 (option) => option?.value === values?.list?.[index]?.designationId
                                                             ) || null
                                                         }
@@ -288,7 +289,7 @@ function PatternListForm({
                                                     <Field
                                                         name={`list[${index}].budgeted_strength`}
                                                         type="number"
-                                                        className="form-control"
+                                                        className="form-control text-right"
                                                         disabled={isdataForRead || values?.list?.[index]?.Id}
                                                     />
                                                     <div className="text-danger">
@@ -397,7 +398,7 @@ function PatternListForm({
                                                         className="border-none bg-transparent"
                                                         type="button"
                                                         onClick={() => {
-                                                            console.log("click111111")
+                                                            
                                                             setWorkflowId(values?.list?.[index]?.Id);
                                                         }}
                                                     >
@@ -429,7 +430,7 @@ function PatternListForm({
                                                 Total:
                                             </td>
 
-                                            <td>
+                                            <td colSpan="1" className="text-right">
                                                 {totalStrength.toLocaleString("en-US")}
                                             </td>
 
@@ -450,9 +451,10 @@ function PatternListForm({
                                 </table>
                             </div>
                         </div>
-
-                        <br />
-                        <h6 className="font-bold mb-0 text-primary">Workflow Authorties</h6>
+                        {workflowStatusList?.length > 0 && 
+                        <>
+                         <br />
+                        <h6 className="font-bold mb-0 text-primary">Workflow Authorities</h6>
 
                         <div className="mt-2">
                             <BootstrapTable
@@ -472,6 +474,11 @@ function PatternListForm({
                                 <NoRecordsFoundMessage entities={workflowStatusList || []} />
                             </BootstrapTable>
                         </div>
+                        </>
+                        
+                        }
+
+                       
                     </>
                 )}
             </FieldArray>

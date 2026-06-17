@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
-import { fetchAllCity, fetchAllCountry, fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllCity, fetchAllCountry, fetchAllDept, fetchAllFormsMenu, fetchAllParentDept, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 import { fetchDepartmentWiseBudget, fetchDepartmentWiseBudgets } from "../../../_redux/redux-Actions";
@@ -101,7 +101,8 @@ export function FormFIlter({ listLoading, user }) {
 
     dispatch(fetchDepartmentWiseBudgets(formUIProps.queryParams));
 
-    dispatch(fetchAllDept(findDefaultSubs.value));
+    // dispatch(fetchAllDept(findDefaultSubs.value));
+    dispatch(fetchAllParentDept(findDefaultSubs.value));
   }, [dashboard?.allSubsidiaryList]);
 
 
@@ -128,7 +129,7 @@ export function FormFIlter({ listLoading, user }) {
           touched,
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right ">
-            <div className="grid md:grid-cols-7 gap-3 mb-2 ">
+            <div className="grid md:grid-cols-4 gap-3 mb-2 ">
 
 
 
@@ -225,12 +226,12 @@ export function FormFIlter({ listLoading, user }) {
                     label={
                       <span>
                         {" "}
-                       Department
+                        Department
 
                       </span>
                     }
                     value={
-                      (dashboard?.departmentBySubIdsList || []).find(
+                      (dashboard?.allParentDept || []).find(
                         (item) => item.value === formUIProps?.queryParams?.departmentId
                       ) || { label: "All", value: "" }
                     }
@@ -248,44 +249,13 @@ export function FormFIlter({ listLoading, user }) {
                     }}
 
 
-                     options={dashboard?.departmentBySubIdsList}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(dashboard?.allParentDept || []),
+                    ]}
                   />
                 </div>
               </div>
-
-
-
-
-
-              {/* <div className="col-span-1">
-                <SearchSelect
-                  name="departmentId"
-                  label={
-                    <span>
-                      Department<span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-              
-                  onChange={(e) => {
-                    setFieldValue("departmentId", e.value || null);
-                  
-
-                  }}
-                  value={
-                    dashboard?.departmentBySubIdsList?.find(
-                      (option) => option.value === values.departmentId
-                    ) || null
-                  }
-                  options={dashboard?.departmentBySubIdsList}
-
-                  error={errors.departmentId}
-                  touched={touched.departmentId}
-                />
-              </div> */}
-
-
-
-
 
 
 

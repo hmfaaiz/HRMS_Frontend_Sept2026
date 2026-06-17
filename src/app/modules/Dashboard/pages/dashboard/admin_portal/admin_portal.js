@@ -20,6 +20,7 @@ import SmallTableModal from "../admin_portal_comp/ExpandViews/SmallTableModal";
 import StatsCardModal from "../admin_portal_comp/ExpandViews/StatsCardModal";
 import SeparationArea from "../admin_portal_comp/Views/SeparationArea";
 import AppraisalArea from "../admin_portal_comp/Views/AppraisalArea";
+import BudgetArea from "../admin_portal_comp/Views/BudgetArea";
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ export const AdminPortal = () => {
     locationId: "",
     appraisalPeriodId: "",
     appraisalCategoryId: "",
+    budgetPeriodId: "",
   });
 
   const {
@@ -50,6 +52,7 @@ export const AdminPortal = () => {
     announcement,
     holidayList,
     appraisalPeriodBySubList,
+    budgetyearBySubList,
     allAppraisalCategory,
     moduleRights,
   } = dashboard;
@@ -102,6 +105,22 @@ export const AdminPortal = () => {
     }));
   }, [activeTab, appraisalPeriodBySubList, allAppraisalCategory]);
 
+  /* ===============================
+     3️ BUDGET DEFAULTS
+     Set budgetPeriodId  before fetching alerts
+  ================================ */
+  useEffect(() => {
+    if (activeTab != "8") return;
+
+    setSummaryFilter((prev) => ({
+      ...prev,
+      budgetPeriodId:
+        budgetyearBySubList?.find((e) => e?.isActive)?.value ??
+        budgetyearBySubList?.[0]?.value ??
+        "",
+    }));
+  }, [activeTab, budgetyearBySubList]);
+
   useEffect(() => {
     if (!summaryFilter?.subsidiaryId || summaryFilter?.subsidiaryId === "all")
       return;
@@ -111,6 +130,7 @@ export const AdminPortal = () => {
     dispatch(fetchAllParentDept(subId));
     dispatch(getActiveFiscalYear("activeFiscalYear", subId));
     dispatch(actions.fetchAllAppraisalPeriodDataBySubsidiaryId(subId));
+    dispatch(actions.fetchAllBudgetYearDataBySubsidiaryId(subId));
   }, [dispatch, summaryFilter?.subsidiaryId]);
 
   /* ===============================
@@ -126,6 +146,7 @@ export const AdminPortal = () => {
             : summaryFilter?.subsidiaryId,
         activeTab,
         appraisalPeriodId: summaryFilter?.appraisalPeriodId,
+        budgetPeriodId: summaryFilter?.budgetPeriodId,
         appraisalCategoryId: summaryFilter?.appraisalCategoryId,
       }),
     );
@@ -146,6 +167,7 @@ export const AdminPortal = () => {
     summaryFilter?.designationId,
     summaryFilter?.locationId,
     summaryFilter?.appraisalPeriodId,
+    summaryFilter?.budgetPeriodId,
     summaryFilter?.appraisalCategoryId,
     activeTab,
   ]);
@@ -289,6 +311,22 @@ export const AdminPortal = () => {
         <AppraisalArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab == "8" ? (
+        <BudgetArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          allDesignations={allDesignations}
           summaryFilter={summaryFilter}
           allParentDept={allParentDept}
           setSummaryFilter={setSummaryFilter}

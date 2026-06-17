@@ -12,6 +12,7 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 import {
 
+  fetchAllParentDept,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -56,7 +57,25 @@ const department_wise_budgetEditSchema = Yup.object().shape({
         //       return Number(value) > Number(budgeted_strength);
         //     }
         //   ),
+        budgeted_salary: Yup.number()
+          .typeError(VALIDATION_MESSAGES.required)
+          .transform((value, originalValue) => {
+            return originalValue === "" ? null : value;
+          })
+          .nullable()
+          .required(VALIDATION_MESSAGES.required)
+          .max(999999999, "Maximum 9 digits allowed")
+          .test(
+            "salary-greater-than-strength",
+            "Budgeted Salary must be greater than Budgeted Strength",
+            function (value) {
+              const { budgeted_strength } = this.parent;
 
+              if (value == null || budgeted_strength == null) return true;
+
+              return Number(value) > Number(budgeted_strength);
+            }
+          ),
         designationId: Yup.number()
           .nullable()
           .required(VALIDATION_MESSAGES.required),
@@ -64,14 +83,46 @@ const department_wise_budgetEditSchema = Yup.object().shape({
 
         business_need: Yup.string().nullable(),
         impact_of_position: Yup.string().nullable(),
+        request_date: Yup.date()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+
         expected_date_of_joining: Yup.date()
           .nullable()
           .required(VALIDATION_MESSAGES.required)
-          .min(
-            new Date(new Date().setHours(0, 0, 0, 0)),
-            "Expected Date of Joining cannot be in the past"
+          .test(
+            "date-validation",
+            "Expected Date must be greater than or equal to Request Date",
+            function (value) {
+              const { request_date } = this.parent;
+
+              if (!value || !request_date) return true;
+
+              const expected = new Date(value);
+              const request = new Date(request_date);
+
+              // normalize time
+              expected.setHours(0, 0, 0, 0);
+              request.setHours(0, 0, 0, 0);
+
+              return expected >= request;
+            }
+          )
+          .test(
+            "not-past-date",
+            "Expected Date of Joining cannot be in the past",
+            function (value) {
+              if (!value) return true;
+
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+
+              const expected = new Date(value);
+              expected.setHours(0, 0, 0, 0);
+
+              return expected >= today;
+            }
           ),
-        // request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
       })
     )
     // .test(
@@ -118,7 +169,11 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-
+  const [selectedValues, setSelectedValues] = useState({
+    subsidiaryId: null,
+    departmentId: null,
+    budgetYearId: null,
+  });
 
 
   const { currentState, userAccess, currentUser } = useSelector((state) => {
@@ -134,20 +189,28 @@ export function FormEditForm({
     (item) => item.isDefault
   );
 
-useEffect(() => {
-  const subsidiaryId =
-    formData?.[0]?.subsidiaryId ??
-    defaultSubsidiary?.value ??
-    0;
+  useEffect(() => {
+    const subsidiaryId =
+      formData?.[0]?.subsidiaryId ??
+      defaultSubsidiary?.value ??
+      0;
 
-  dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-  dispatch(fetchAllDepartmentBySubsidiaryIds([subsidiaryId]));
-  dispatch(fetchAllBudgetYearDataBySubsidiaryId(subsidiaryId));
-}, [dispatch, formData, defaultSubsidiary?.value]);
-
-
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    dispatch(fetchAllDepartmentBySubsidiaryIds([subsidiaryId]));
+    dispatch(fetchAllBudgetYearDataBySubsidiaryId(subsidiaryId));
+  }, [dispatch, formData, defaultSubsidiary?.value]);
 
 
+
+  useEffect(() => {
+    if (formData?.length) {
+      setSelectedValues({
+        subsidiaryId: formData?.[0]?.subsidiaryId || null,
+        departmentId: formData?.[0]?.departmentId || null,
+        budgetYearId: formData?.[0]?.budgetYearId || null,
+      });
+    }
+  }, [formData]);
 
 
   return (
@@ -157,20 +220,44 @@ useEffect(() => {
       //   ...formData,
       //   subsidiaryId: defaultSubsidiary?.value || null
       // }}
+      // initialValues={{
+      //   subsidiaryId:
+      //     formData?.[0]?.subsidiaryId || defaultSubsidiary?.value || null,
+
+      //   departmentId: formData?.[0]?.departmentId || null,
+
+      //   budgetYearId: formData?.[0]?.budgetYearId || null,
+
+      //   list: formData?.length
+      //     ? formData.map((item, index) => ({
+      //       ...item,
+      //       sno: index + 1,
+
+
+      //     }))
+      //     : [],
+      // }}
       initialValues={{
         subsidiaryId:
-          formData?.[0]?.subsidiaryId || defaultSubsidiary?.value || null,
+          formData?.[0]?.subsidiaryId ||
+          selectedValues?.subsidiaryId ||
+          defaultSubsidiary?.value ||
+          null,
 
-        departmentId: formData?.[0]?.departmentId || null,
+        departmentId:
+          formData?.[0]?.departmentId ||
+          selectedValues?.departmentId ||
+          null,
 
-        budgetYearId: formData?.[0]?.budgetYearId || null,
+        budgetYearId:
+          formData?.[0]?.budgetYearId ||
+          selectedValues?.budgetYearId ||
+          null,
 
         list: formData?.length
           ? formData.map((item, index) => ({
             ...item,
             sno: index + 1,
-
-
           }))
           : [],
       }}
@@ -212,7 +299,7 @@ useEffect(() => {
                         setFieldValue("departmentId", null);
                         setFieldValue("budgetYearId", null);
                         setFieldValue("subsidiaryId", e.value);
-                        dispatch(fetchAllDepartmentBySubsidiaryIds([e.value] || [0]));
+                        dispatch(fetchAllParentDept([e.value] || [0]));
                         dispatch(fetchAllBudgetYearDataBySubsidiaryId(e?.value));
                         if (values.departmentId && values.budgetYearId && e.value) {
                           dispatch(fetchDepartmentWiseBudget({ subsidiaryId: e.value, budgetYearId: values.budgetYearId, departmentId: values.departmentId }));
@@ -244,6 +331,10 @@ useEffect(() => {
                         if (values.departmentId && values.subsidiaryId && e.value) {
                           dispatch(fetchDepartmentWiseBudget({ subsidiaryId: values.subsidiaryId, budgetYearId: e.value, departmentId: values.departmentId }));
                         }
+                        setSelectedValues((prev) => ({
+                          ...prev,
+                          budgetYearId: e.value || null,
+                        }));
 
                       }}
                       value={
@@ -279,14 +370,18 @@ useEffect(() => {
                         if (values.budgetYearId && values.subsidiaryId && e.value) {
                           dispatch(fetchDepartmentWiseBudget({ subsidiaryId: values.subsidiaryId, budgetYearId: values.budgetYearId, departmentId: e.value }));
                         }
+                        setSelectedValues((prev) => ({
+                          ...prev,
+                          departmentId: e.value || null,
+                        }));
 
                       }}
                       value={
-                        dashboard?.departmentBySubIdsList?.find(
+                        dashboard?.allParentDept?.find(
                           (option) => option.value === values.departmentId
                         ) || null
                       }
-                      options={dashboard?.departmentBySubIdsList}
+                      options={dashboard?.allParentDept}
 
                       error={errors.departmentId}
                       touched={touched.departmentId}
@@ -375,6 +470,7 @@ useEffect(() => {
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
+                disabled={values?.list.length === 0}
                 className="btn btn-primary btn-elevate"
               >
                 Save

@@ -32,7 +32,9 @@ export const AIChatbotSlice = createSlice({
         state.actionsLoading = true;
       }
     },
-
+    pdfFetched: (state, action) => {
+      state.actionsLoading = false;
+    },
     AskQuestionStarted: (state, action) => {
       const { question, assistantMessageId } = action.payload;
 

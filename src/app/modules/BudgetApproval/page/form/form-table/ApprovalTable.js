@@ -31,6 +31,8 @@ export function ApprovalFormTable() {
       setIds: formUIContext?.setIds,
       setCurrentData: formUIContext?.setCurrentData,
       setWorkflowId: formUIContext?.setWorkflowId,
+      setEditableWorkflowId: formUIContext?.setEditableWorkflowId,
+      workflowId: formUIContext?.workflowId,
       Ids: formUIContext?.Ids,
     };
   }, [formUIContext]);
@@ -144,7 +146,7 @@ export function ApprovalFormTable() {
     },
     {
       dataField: "parentData.expected_date_of_joining",
-      text: "Expected Date Of Joiningt",
+      text: "Expected Date Of Joining",
       sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -160,9 +162,9 @@ export function ApprovalFormTable() {
       sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "130px",
-        maxWidth: "130px",
+        style: {
+        minWidth: "10px",
+        textAlign: "right",
       },
     },
     {
@@ -171,6 +173,7 @@ export function ApprovalFormTable() {
       isDummyField: true,
       formatter: ActionsColumnFormatter,
       formatExtraData: {
+        setEditableWorkflowId: FormUIProps.setEditableWorkflowId,
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps?.setCurrentData,
       },

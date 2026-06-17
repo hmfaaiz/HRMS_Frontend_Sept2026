@@ -7,6 +7,8 @@ import { CirclePlus, Eye, Trash2, View } from "lucide-react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
+import { fetchDesigMapping } from "../../../../DesignationMapping/_redux/redux-Actions";
+import { fetchAllDesignationByDepId } from "../../../../Dashboard/_redux/dashboardActions";
 
 
 function PatternListForm({
@@ -18,12 +20,12 @@ function PatternListForm({
     isdataForRead,
 }) {
     const dispatch = useDispatch();
-   
+
     const { dashboard } = useSelector((state) => state);
     useEffect(() => {
 
-        dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    }, [dispatch]);
+        dispatch(fetchAllDesignationByDepId({ departmentId: values?.departmentId }));
+    }, [dispatch, values?.departmentId]);
 
 
     useEffect(() => {
@@ -42,7 +44,7 @@ function PatternListForm({
         0
     );
 
-  
+
     return (
         <>
             <FieldArray name="list">
@@ -134,10 +136,10 @@ function PatternListForm({
                                                                 ? "form-control is-invalid"
                                                                 : "form-control"
                                                         }
-                                                        isDisabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
-                                                        options={dashboard?.allDesignations || []}
+                                                        isDisabled={isdataForRead || values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal}
+                                                        options={dashboard?.allDesignationByDeptList || []}
                                                         value={
-                                                            dashboard?.allDesignations?.find(
+                                                            dashboard?.allDesignationByDeptList?.find(
                                                                 (option) => option?.value === values?.list?.[index]?.designationId
                                                             ) || null
                                                         }
@@ -162,8 +164,8 @@ function PatternListForm({
                                                     <Field
                                                         name={`list[${index}].budgeted_strength`}
                                                         type="number"
-                                                        className="form-control"
-                                                        disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
+                                                        className="form-control text-right"
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_strength`} />
@@ -174,8 +176,15 @@ function PatternListForm({
                                                     <Field
                                                         name={`list[${index}].budgeted_salary`}
                                                         type="number"
-                                                        className="form-control"
-                                                         disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
+                                                        className="form-control text-right"
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+
+                                                            setFieldValue(
+                                                                `list[${index}].budgeted_salary`,
+                                                                value === "" ? null : value
+                                                            );
+                                                        }}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].budgeted_salary`} />
@@ -185,6 +194,7 @@ function PatternListForm({
                                                     <DatePicker
                                                         className="form-control"
                                                         name={`list[${index}].request_date`}
+                                                        dateFormat="dd-MMM-yyyy"
                                                         value={values?.list?.[index]?.request_date || ""}
                                                         selected={
                                                             values?.list?.[index]?.request_date
@@ -194,12 +204,12 @@ function PatternListForm({
                                                         onChange={(date) => {
                                                             setFieldValue(`list[${index}].request_date`, date);
                                                         }}
-                                                         disabled={isdataForRead || values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].request_date`} />
                                                     </div>
-                                                </td> 
+                                                </td>
                                                 <td>
                                                     <DatePicker
                                                         className="form-control"
@@ -214,7 +224,7 @@ function PatternListForm({
                                                         onChange={(date) => {
                                                             setFieldValue(`list[${index}].expected_date_of_joining`, date);
                                                         }}
-                                                        disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].expected_date_of_joining`} />
@@ -240,7 +250,7 @@ function PatternListForm({
                                                         rows={2}
                                                         name={`list[${index}].impact_of_position`}
                                                         className="form-control"
-                                                        disabled={isdataForRead || values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal}
+                                                        disabled={isdataForRead || values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal}
                                                     />
                                                     <div className="text-danger">
                                                         <ErrorMessage name={`list[${index}].impact_of_position`} />
@@ -265,23 +275,23 @@ function PatternListForm({
                                                 </td>
                                                 {/* Delete Button Starts */}
                                                 {/* {!values?.list[index]?.isPresent && ( */}
-                                                {values?.list?.[index]?.Id  && values?.list?.[index]?.isFromPortal? 
-                                                <td className="text-center">
-                                                   -
-                                                </td> : (
-                                                    <td className="text-right">
-                                                        <button
-                                                            disabled={isdataForRead }
-                                                            className="border-none bg-transparent"
-                                                            type="button"
-                                                            onClick={() => {
-                                                                remove(index);
-                                                            }}
-                                                        >
-                                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                                        </button>
-                                                    </td>
-                                                )}
+                                                {values?.list?.[index]?.Id && values?.list?.[index]?.isFromPortal ?
+                                                    <td className="text-center">
+                                                        -
+                                                    </td> : (
+                                                        <td className="text-right">
+                                                            <button
+                                                                disabled={isdataForRead}
+                                                                className="border-none bg-transparent"
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    remove(index);
+                                                                }}
+                                                            >
+                                                                <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                                            </button>
+                                                        </td>
+                                                    )}
 
                                                 {/* )} */}
 
@@ -294,11 +304,11 @@ function PatternListForm({
                                                 Total:
                                             </td>
 
-                                            <td>
+                                            <td colSpan="1" className="text-right">
                                                 {totalStrength.toLocaleString("en-US")}
                                             </td>
 
-                                            <td>
+                                            <td colSpan="1" className="text-right">
                                                 {totalSalary.toLocaleString("en-US")}
                                             </td>
 
@@ -315,7 +325,7 @@ function PatternListForm({
                                 </table>
                             </div>
                         </div>
-                    
+
                     </>
                 )}
             </FieldArray>
