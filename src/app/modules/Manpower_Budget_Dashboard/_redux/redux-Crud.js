@@ -9,3 +9,12 @@ export function getDashboardData(body) {
     body,
   );
 }
+
+// Designation-Wise Budget Report, scoped server-side to the logged-in user
+export function getDesignationWiseBudgetReport(body) {
+  return axios.post(
+    `${API_URL}/manpower_budget_dashboard/designation-wise-budget-report`,
+    body,
+    { responseType: "blob" },
+  );
+}

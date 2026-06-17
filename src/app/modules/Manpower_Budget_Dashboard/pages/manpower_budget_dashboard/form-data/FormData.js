@@ -9,9 +9,11 @@ import {
   ClipboardCheck,
   ClipboardCopy,
   ClipboardPaste,
+  FileText,
   PiggyBank,
   WalletCards,
 } from "lucide-react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import StatsCard from "./StatsCard";
 import { BigTable } from "./FormTable";
 import FormTableModal from "./FormTableModal";
@@ -22,6 +24,8 @@ export function FormData() {
   const [budgetYearId, setBudgetYearId] = useState("");
   const [modalData, setModalData] = useState(null);
   const [modalHeading, setModalHeading] = useState(null);
+  const [desigReportLoading, setDesigReportLoading] = useState(false);
+
   const { data, loading, budgetyearBySubList } = useSelector(
     (state) => ({
       data: state.manpower_budget_dashboard?.data,
@@ -62,26 +66,54 @@ export function FormData() {
     }
   }, [budgetYearId, dispatch]);
 
+  const handleDesigReport = async () => {
+    setDesigReportLoading(true);
+    await dispatch(
+      actions.downloadDesignationWiseBudgetReport({ budgetYearId }),
+    );
+    setDesigReportLoading(false);
+  };
+
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-8 gap-2 bg-white rounded-lg px-3 py-2">
-        <div className="col-span-6"></div>
+        <div className="col-span-8 flex items-end justify-end gap-2">
+           <div className="w-80">
+            <SearchSelect
+              name="budgetPeriodId"
+              isDisabled={loading}
+              label={<span>Budget Year</span>}
+              onChange={(e) => setBudgetYearId(e?.value || "")}
+              value={
+                budgetYearOptions?.find(
+                  (option) => option.value === budgetYearId,
+                ) ||
+                budgetYearOptions?.[1] ||
+                ""
+              }
+              options={budgetYearOptions}
+            />
+          </div>
+          <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="manpower-dashboard-desig-report-tooltip">
+                  Designation Wise Budget Report
+                </Tooltip>
+              }
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={desigReportLoading}
+                onClick={handleDesigReport}
+              >
+                <FileText className="w-4 h-4 text-black cursor-pointer" />
+              </button>
+            </OverlayTrigger>
+          </div>
 
-        <div className="col-span-2">
-          <SearchSelect
-            name="budgetPeriodId"
-            isDisabled={loading}
-            label={<span>Budget Year</span>}
-            onChange={(e) => setBudgetYearId(e?.value || "")}
-            value={
-              budgetYearOptions?.find(
-                (option) => option.value === budgetYearId,
-              ) ||
-              budgetYearOptions?.[1] ||
-              ""
-            }
-            options={budgetYearOptions}
-          />
+         
         </div>
         <StatsCard
           name={"Total Request"}

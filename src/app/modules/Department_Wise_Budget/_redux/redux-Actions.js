@@ -150,3 +150,78 @@ export const updateDepartmentWiseBudget = (user, disbaleLoading, onHide) => (dis
       });
     });
 };
+export const downloadDepartmentWiseBudgetReport =
+  (queryParams) => async (dispatch) => {
+    const { subsidiaryId, budgetYearId, departmentId } = queryParams || {};
+
+    if (!subsidiaryId && !budgetYearId) {
+      toast.warning(
+        "Please select a Subsidiary and Budget Year before generating the report.",
+        { position: "top-right", autoClose: 5000 }
+      );
+      return;
+    }
+
+    return requestFromServer
+      .getDepartmentWiseBudgetReport({
+        filter: {
+          subsidiaryId: subsidiaryId || null,
+          budgetYearId: budgetYearId || null,
+          departmentId: departmentId || null,
+        },
+      })
+      .then((response) => {
+        const url = URL.createObjectURL(response.data);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Department_Wise_Budget_Report.pdf"; 
+        document.body.appendChild(a);               
+        a.click();
+        document.body.removeChild(a);             
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      })
+      .catch((error) => {
+        toast.error(
+          error?.response?.data?.message || "Failed to generate department-wise report",
+          { position: "top-right", autoClose: 5000 }
+        );
+      });
+  };
+
+export const downloadDesignationWiseBudgetReport =
+  (queryParams) => async (dispatch) => {
+    const { subsidiaryId, budgetYearId, departmentId } = queryParams || {};
+
+    if (!subsidiaryId && !budgetYearId) {
+      toast.warning(
+        "Please select a Subsidiary and Budget Year before generating the report.",
+        { position: "top-right", autoClose: 5000 }
+      );
+      return;
+    }
+
+    return requestFromServer
+      .getDesignationWiseBudgetReport({
+        filter: {
+          subsidiaryId: subsidiaryId || null,
+          budgetYearId: budgetYearId || null,
+          departmentId: departmentId || null,
+        },
+      })
+      .then((response) => {
+        const url = URL.createObjectURL(response.data);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Designation_Wise_Budget_Report.pdf"; 
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      })
+      .catch((error) => {
+        toast.error(
+          error?.response?.data?.message || "Failed to generate designation-wise report",
+          { position: "top-right", autoClose: 5000 }
+        );
+      });
+  };
