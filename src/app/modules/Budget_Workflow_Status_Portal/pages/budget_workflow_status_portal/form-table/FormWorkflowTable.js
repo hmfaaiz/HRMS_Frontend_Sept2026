@@ -139,31 +139,42 @@ export function WorkflowTable({ onHide, show }) {
 
       <Modal.Header closeButton>
         <Modal.Title id="budget-workflow-portal-modal">
-          <h5 className="font-bold mb-0 text-black">
-            Budget Approval Flow
-          </h5>
+          <h5 className="font-bold mb-0 text-black">Manpower Budget Approval Flow</h5>
         </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         {formUIProps?.currentData && (
           <div className="w-full grid grid-cols-12 text-sm text-black gap-x-2 mb-4">
-
             {/* Requester detail */}
             <div className="col-span-4 bg-tsecondary p-2 rounded-lg">
-              <h6 className="font-bold mb-0 text-primary my-2">
-                Requested By
-              </h6>
+              <h6 className="font-bold mb-0 text-primary my-2">Requested By</h6>
               <div className="text-sm text-black">
                 {[
                   ["Employee Code", emp?.employeeCode],
-                  ["Name", [emp?.firstName, emp?.middleName, emp?.lastName].filter(Boolean).join(" ")],
-                  ["Department",    emp?.department?.deptName],
-                  ["Designation",   emp?.designation?.formName],
+                  [
+                    "Name",
+                    [emp?.firstName, emp?.middleName, emp?.lastName]
+                      .filter(Boolean)
+                      .join(" "),
+                  ],
+                  ["Department", emp?.department?.deptName],
+                  ["Designation", emp?.designation?.formName],
                   ["Employee Type", emp?.employeeType?.formName],
                 ].map(([label, value]) => (
-                  <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
-                    <div style={{ minWidth: "110px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                  <div
+                    key={label}
+                    style={{ display: "flex", gap: "8px", marginBottom: "4px" }}
+                  >
+                    <div
+                      style={{
+                        minWidth: "110px",
+                        fontWeight: 600,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {label}
+                    </div>
                     <div>{value || "N/A"}</div>
                   </div>
                 ))}
@@ -175,21 +186,42 @@ export function WorkflowTable({ onHide, show }) {
               <h6 className="font-bold mb-0 text-primary my-2">
                 Budget Request Detail
               </h6>
-              <div style={{ display: "flex", gap: "16px" }} className="text-sm text-black">
-
+              <div
+                style={{ display: "flex", gap: "16px" }}
+                className="text-sm text-black"
+              >
                 {/* Left column */}
                 <div style={{ flex: 1 }}>
                   {[
-                    ["Subsidiary",        parentData?.Subsidiary?.name],
-                    ["Department",        parentData?.Department?.deptName],
-                    ["Designation",       parentData?.Designation?.formName],
+                    ["Manpower Budget Code", parentData?.budgetCode],
+                    ["Subsidiary", parentData?.Subsidiary?.name],
+                    ["Department", parentData?.Department?.deptName],
+                    ["Designation", parentData?.Designation?.formName],
                     ["Budgeted Strength", parentData?.budgeted_strength],
-                    ["Budgeted Salary",   parentData?.budgeted_salary != null
-                      ? Number(parentData.budgeted_salary).toLocaleString()
-                      : null],
+                    [
+                      "Budgeted Salary",
+                      parentData?.budgeted_salary != null
+                        ? Number(parentData.budgeted_salary).toLocaleString()
+                        : null,
+                    ],
                   ].map(([label, value]) => (
-                    <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
-                      <div style={{ minWidth: "140px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                    <div
+                      key={label}
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          minWidth: "140px",
+                          fontWeight: 600,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {label}
+                      </div>
                       <div>{value ?? "N/A"}</div>
                     </div>
                   ))}
@@ -198,13 +230,25 @@ export function WorkflowTable({ onHide, show }) {
                 {/* Right column */}
                 <div style={{ flex: 1 }}>
                   {[
-                    ["Request Date",     parentData?.request_date
-                      ? format(new Date(parentData.request_date), "dd-MMM-yyyy")
-                      : null],
-                    ["Expected Joining", parentData?.expected_date_of_joining
-                      ? format(new Date(parentData.expected_date_of_joining), "dd-MMM-yyyy")
-                      : null],
-                    ["Request Status",   statusLabel(parentData?.request_status)],
+                    [
+                      "Request Date",
+                      parentData?.request_date
+                        ? format(
+                            new Date(parentData.request_date),
+                            "dd-MMM-yyyy",
+                          )
+                        : null,
+                    ],
+                    [
+                      "Expected Joining",
+                      parentData?.expected_date_of_joining
+                        ? format(
+                            new Date(parentData.expected_date_of_joining),
+                            "dd-MMM-yyyy",
+                          )
+                        : null,
+                    ],
+                    ["Request Status", statusLabel(parentData?.request_status)],
                     ...(parentData?.business_need
                       ? [["Business Need", parentData.business_need]]
                       : []),
@@ -212,13 +256,27 @@ export function WorkflowTable({ onHide, show }) {
                       ? [["Impact of Position", parentData.impact_of_position]]
                       : []),
                   ].map(([label, value]) => (
-                    <div key={label} style={{ display: "flex", gap: "8px", marginBottom: "4px" }}>
-                      <div style={{ minWidth: "140px", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</div>
+                    <div
+                      key={label}
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          minWidth: "140px",
+                          fontWeight: 600,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {label}
+                      </div>
                       <div>{value ?? "N/A"}</div>
                     </div>
                   ))}
                 </div>
-
               </div>
             </div>
           </div>

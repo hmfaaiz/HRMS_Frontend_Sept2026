@@ -74,7 +74,7 @@ export function ApprovalFormTable() {
     },
     {
           dataField: "parentData.budgetCode",
-          text: "Budget Code",
+          text: "Manpower Budget Code",
           sort: true,
           sortCaret,
           headerSortingClasses,
@@ -135,13 +135,21 @@ export function ApprovalFormTable() {
             return from && to ? `${from} - ${to}` : from || to || "—";
           },
         },
-    {
+     {
       dataField: "parentData.budgeted_strength",
       text: "Strength",
       sort: true,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "80px", maxWidth: "80px" },
+      style: {
+        minWidth: "80px",
+        maxWidth: "80px",
+      },
+      formatter: (cell) => (
+      <div style={{ textAlign: "right", paddingRight: "30px" }}>
+        {cell}
+      </div>
+    )
     },
     // {
     //   dataField: "parentData.budgeted_salary",
