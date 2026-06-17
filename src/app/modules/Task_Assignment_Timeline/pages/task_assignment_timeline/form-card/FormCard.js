@@ -23,7 +23,7 @@ export function FormCard() {
     ? decodeURIComponent(ticketCodeMatch[1])
     : null;
 
-  const [showTicketDetails, setShowTicketDetails] = useState(false);
+  const [showTicketDetails, setShowTicketDetails] = useState(true);
 
   const [expandedMasterIds, setExpandedMasterIds] = useState([]);
 

@@ -127,6 +127,8 @@ export const createTicketCreation = (ticketCreationForCreation, disbaleLoading,c
 
       dispatch(actions.ticketCreationCreated(user));
       disbaleLoading();
+      clear();
+      onHide();
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -136,8 +138,7 @@ export const createTicketCreation = (ticketCreationForCreation, disbaleLoading,c
         draggable: true,
         progress: undefined,
       });
-      clear();
-      onHide();
+  
     })
     .catch((error) => {
       error.clientMessage = "Can't create user";
