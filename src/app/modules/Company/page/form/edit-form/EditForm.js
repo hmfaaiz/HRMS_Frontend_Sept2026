@@ -66,6 +66,10 @@ const formSchema = Yup.object().shape({
   TIN: Yup.string()
     .nullable()
     .matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
+hrms_portal_link: Yup.string()
+  .nullable()
+  .notRequired()
+  .url('Invalid URL format')
 });
 
 export const EditForm = ({
@@ -405,6 +409,18 @@ export const EditForm = ({
                       label="SSN OR TIN (Social Security, Tax Id)"
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 20);
+                      }}
+                    />
+                  </div> 
+                  
+                   <div>
+                    <Field
+                      name="hrms_portal_link"
+                      component={Input}
+                      placeholder="Enter emloyee portal link"
+                      label="Portal Link"
+                      onInput={(e) => {
+                        e.target.value = amountLimitDynamic(e.target.value, 200);
                       }}
                     />
                   </div>
