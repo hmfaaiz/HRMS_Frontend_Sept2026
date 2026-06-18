@@ -290,6 +290,10 @@ export function FormTable() {
 
   return (
     <div className="w-full overflow-x-auto scrollbar-fancy">
+       <BulkPublishSummary
+        bulkResult={errorState}
+        onClose={handleCloseBulkResult}
+      />
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -339,10 +343,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-      <BulkPublishSummary
-        bulkResult={errorState}
-        onClose={handleCloseBulkResult}
-      />
     </div>
   );
 }
