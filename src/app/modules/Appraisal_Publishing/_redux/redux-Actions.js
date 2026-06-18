@@ -49,7 +49,7 @@ export const publishAppraisal = (body) => (dispatch) => {
       } else {
         dispatch(actions.AppraisalPublishUpdated());
       }
-      toast.success(SERVER_MESSAGES.updatedSuccess, {
+      toast.success(SERVER_MESSAGES.processSuccessful, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
