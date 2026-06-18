@@ -21,7 +21,8 @@ import { format } from "date-fns";
 import { formatDates, formatTime } from "../../../../../utils/common";
 import { fetchAttLogsByDate } from "../../../../Dashboard/_redux/dashboardActions";
 import { ClockFading } from "lucide-react";
-import { LogsDialog } from "../log/LogsDialog";
+import { LogsDialog } from "../../../../../utils/common-modules/LogsDialog";
+// import { LogsDialog } from "../log/LogsDialog";
 
 export function FormTable() {
   //Users UI Context

@@ -86,19 +86,19 @@ export function ResponseTable() {
     { value: 3, label: "Re-opened" },
     { value: 2, label: "In Review" },
   ];
-const rowClasses = (row) => {
-  const dueDate = new Date(row?.dueDate);
-  const today = new Date();
+  const rowClasses = (row) => {
+    const dueDate = new Date(row?.dueDate);
+    const today = new Date();
 
-  dueDate.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
-  const isBlue =
-    dueDate.getTime() === today.getTime() &&
-    row.ticketStatus !== 0;
+    const isBlue =
+      dueDate.getTime() === today.getTime() &&
+      row.ticketStatus !== 0;
 
-  return isBlue ? "row-blue" : "";
-};
+    return isBlue ? "row-blue" : "";
+  };
 
   const columns = [
     {
@@ -152,35 +152,6 @@ const rowClasses = (row) => {
     },
 
 
-    // {
-    //   dataField: "ticketType.formName",
-    //   text: "Ticket Type",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "30px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-    //   },
-    // },
-
-    // {
-    //   dataField: "priorityLevel.formName",
-    //   text: "Priority",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "30px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-    //   },
-    // },
 
     {
       dataField: "desc",
@@ -196,28 +167,28 @@ const rowClasses = (row) => {
       //   return cell.length > 160 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 160) + "..."}</span> : cell;
       // },
 
-formatter: (cell) => {
-  if (!cell) return "";
+      formatter: (cell) => {
+        if (!cell) return "";
 
-  const maxLength = 670;
-  const wrapLength = 170;
+        const maxLength = 670;
+        const wrapLength = 170;
 
-  // truncate after 500
-  let text = cell.length > maxLength ? cell.substring(0, maxLength) + "..." : cell;
+        // truncate after 500
+        let text = cell.length > maxLength ? cell.substring(0, maxLength) + "..." : cell;
 
-  // insert line breaks every 160 chars
-  const formattedText = text.match(new RegExp(`.{1,${wrapLength}}`, "g"))?.join("\n");
+        // insert line breaks every 160 chars
+        const formattedText = text.match(new RegExp(`.{1,${wrapLength}}`, "g"))?.join("\n");
 
-  return (
-    <span
-      data-bs-toggle="tooltip"
-      title={cell}
-      style={{ whiteSpace: "pre-wrap", cursor: "pointer" }}
-    >
-      {formattedText}
-    </span>
-  );
-}
+        return (
+          <span
+            data-bs-toggle="tooltip"
+            title={cell}
+            style={{ whiteSpace: "pre-wrap", cursor: "pointer" }}
+          >
+            {formattedText}
+          </span>
+        );
+      }
 
 
     },
@@ -239,37 +210,6 @@ formatter: (cell) => {
         return cell.length > 30 ? <span title={cell}>{cell.substring(0, 30) + "..."}</span> : cell;
       },
     },
-    // {
-    //   dataField: "AssignByProfile.department.deptName",
-    //   text: "Department",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "100px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-    //   },
-    // },
-
-    // {
-    //   dataField: "AssignByProfile.designation.formName",
-    //   text: "Designation",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "100px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-    //   },
-    // },
-
-
 
     // {
     //   dataField: "dueDate",
@@ -278,15 +218,32 @@ formatter: (cell) => {
     //   sortCaret: sortCaret,
     //   headerSortingClasses,
     //   style: {
-    //     minWidth: "30px",
+    //     minWidth: "10px",
     //   },
-    //   formatter: (cell) => {
-    //     // Only format if cell has a valid date
+    //   formatter: (cell, row) => {
     //     if (!cell) return "";
-    //     return format(new Date(cell), "dd-MMM-yyyy");
-    //   },
-    // },
 
+    //     const dueDate = new Date(cell);
+    //     const today = new Date();
+
+
+    //     dueDate.setHours(0, 0, 0, 0);
+    //     today.setHours(0, 0, 0, 0);
+
+    //     // const isExpiredOrToday = dueDate < today;
+    //     const createdDate = new Date(row.createdAt);
+    //     createdDate.setHours(0, 0, 0, 0);
+
+
+    //     const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
+
+    //     return (
+    //       <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
+    //         {format(dueDate, "dd-MMM-yyyy")}
+    //       </span>
+    //     );
+    //   },
+    // }, 
     {
       dataField: "dueDate",
       text: "Due Date",
@@ -302,12 +259,15 @@ formatter: (cell) => {
         const dueDate = new Date(cell);
         const today = new Date();
 
-        // time reset (sirf date compare karni hai)
+
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
 
-        // const isExpiredOrToday = dueDate < today;
-        const createdDate = new Date(row.createdAt);
+        // const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -322,62 +282,6 @@ formatter: (cell) => {
     },
 
 
-    // {
-    //   dataField: "timeRangeFrom",
-    //   text: "Time From",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "50px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-    //   },
-
-
-
-    // },
-
-    // {
-    //   dataField: "timeRangeTo",
-    //   text: "Time To",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "50px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-    //   },
-
-
-
-
-    // },
-
-
-    // {
-    //   dataField: "noOfHours",
-    //   text: "Estimated Hours",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "5px",
-    //     textAlign: "right",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-    //   },
-
-
-
-    // },
     {
       dataField: "noOfHours",
       text: "Estimated Hours",
@@ -391,24 +295,7 @@ formatter: (cell) => {
         textAlign: "right",
       },
     },
-    // {
-    //   dataField: "totalTimeLogHours",
-    //   text: "Logged Hours",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "5px",
-    //     textAlign: "right",
-    //   },
-    //   formatter: (cell) => {
-    //     if (!cell) return "";
-    //     return cell.length > 15 ? <span data-bs-toggle="tooltip" title={cell} style={{ cursor: "pointer" }}>{cell.substring(0, 15) + "..."}</span> : cell;
-    //   },
 
-
-
-    // },
     {
       dataField: "totalTimeLogHours",
       text: "Logged Hours",
@@ -423,28 +310,6 @@ formatter: (cell) => {
       },
     },
 
-    // {
-    //   dataField: "ticketStatus",
-    //   text: "Status",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "20px",
-    //   },
-    //   formatter: (cell) => {
-    //     if (cell === null || cell === undefined) return "";
-
-    //     // Agar aapko cell value ko label me convert karna hai
-    //     const status = ticketStatusOptions.find(opt => opt.value === cell);
-    //     const displayText = status ? status.label : cell;
-
-    //     // Agar text lamba ho, truncate karo
-    //     return displayText.length > 30
-    //       ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span>
-    //       : displayText;
-    //   },
-    // },
 
     {
       dataField: "ticketStatus",
@@ -468,7 +333,11 @@ formatter: (cell) => {
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(row.createdAt);
+        // const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -491,7 +360,7 @@ formatter: (cell) => {
         return (
           <span
             title={displayText}
-              style={{ color: color, fontWeight: 600, marginLeft: "5px" }}
+            style={{ color: color, fontWeight: 600, marginLeft: "5px" }}
           >
             {text}
           </span>
@@ -518,9 +387,13 @@ formatter: (cell) => {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-        const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
+       
 
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
 
@@ -591,7 +464,7 @@ formatter: (cell) => {
                 keyField="Id"
                 data={receiveEntities === null ? [] : receiveEntities}
                 columns={columns}
-                rowClasses={rowClasses} 
+                rowClasses={rowClasses}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams

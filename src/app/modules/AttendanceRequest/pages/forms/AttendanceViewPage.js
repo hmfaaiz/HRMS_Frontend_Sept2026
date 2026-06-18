@@ -11,8 +11,9 @@ import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import { useSelector, shallowEqual } from "react-redux";
-import { LogsDialog } from "./log/LogsDialog";
+
 import { AttendanceWorkflowModal } from "./form-table/AttendanceWorkflowModal"; 
+import { LogsDialog } from "../../../../utils/common-modules/LogsDialog";
 
 function AttendanceWorkflowModalWrapper() {
   const { workflowId, setWorkflowId } = useFormUIContext();

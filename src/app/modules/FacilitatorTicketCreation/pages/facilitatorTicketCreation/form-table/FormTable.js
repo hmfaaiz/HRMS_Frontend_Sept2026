@@ -298,8 +298,12 @@ export function FormTable() {
         today.setHours(0, 0, 0, 0);
 
         // const isExpiredOrToday = dueDate < today;
-        const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
+       
 
 
         const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && row.ticketStatus != 0;
@@ -437,7 +441,10 @@ export function FormTable() {
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -486,7 +493,11 @@ export function FormTable() {
         // Reset time (compare only the date)
         dueDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        const createdDate = new Date(row.createdAt);
+        // const createdDate = new Date(row.createdAt);
+        const completedDate = row?.completionDate
+          ? new Date(row.completionDate)
+          : null;
+        const createdDate = new Date(completedDate);
         createdDate.setHours(0, 0, 0, 0);
 
 
@@ -544,7 +555,7 @@ export function FormTable() {
   ];
 
   //Table pagination properties
- 
+
   const paginationOptions = {
     custom: true,
     totalSize: totalCount,
