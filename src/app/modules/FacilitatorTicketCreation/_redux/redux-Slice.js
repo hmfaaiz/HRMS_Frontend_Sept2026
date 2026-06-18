@@ -121,6 +121,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
                     desc: parent.ticketDescription,
                     totalTimeLogHours: parent.totalTimeLogHours,
                     ticketCode: parent.ticketCode,
+                    completionDate: parent.completionDate,
                 }))
             );
             state.listLoading = false;
@@ -143,7 +144,8 @@ export const FacilitatorTicketCreationSlice = createSlice({
                     desc: parent.ticketDescription,
                     totalTimeLogHours: parent.totalTimeLogHours,
                     ticketCode: parent.ticketCode,
-                    isPermanent: parent.ticketStatus == 0
+                    isPermanent: parent.ticketStatus == 0,
+                    completionDate: parent.completionDate,
                 })));
 
             state.listLoading = false;

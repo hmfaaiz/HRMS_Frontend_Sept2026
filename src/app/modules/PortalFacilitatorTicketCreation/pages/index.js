@@ -4,7 +4,7 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./facilitatorTicketCreation/FormPage";
 
 export default function PortalTicketManagementManagement() {
-console.log("hdsahsdhdshsd")
+
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
     

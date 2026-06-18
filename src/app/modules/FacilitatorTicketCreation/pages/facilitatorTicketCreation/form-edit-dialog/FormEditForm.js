@@ -361,7 +361,7 @@ export function FormEditForm({
                         dispatch(FetchAllFacilitatorEmployee(e.value));
                         // setAssignTo(setFieldValue)
                         // if (facilitatorEmployeeList?.length === 1) {
-                        //   console.log("Auto-assigning:", facilitatorEmployeeList[0].value);
+                  
                         //   setFieldValue("assignTo", facilitatorEmployeeList[0].value);
                         // }
                       }}
@@ -1034,6 +1034,34 @@ export function FormEditForm({
 
                   </>
                 )}
+
+                   {editMode && (
+                                  <>
+                                    <hr />
+                                         <div className="col-span-3">
+                                        <Field
+                                          name="remarks"
+                                          component={TextArea}
+                                          disabled={true}
+                                          placeholder="Enter remarks"
+                                          className="form-control" // Force full height
+                                          value={ formData?.remarks || ""}
+                                          label={
+                                            <span>
+                                              {" "}
+                                              Previous Remarks
+                
+                                            </span>
+                                          }
+                                          autoComplete="off"
+                                        />
+                                        <div>
+                
+                                        </div>
+                                      </div>
+                                    
+                                  </>)
+                                }
 
 
                 <div className="grid grid-cols-4 gap-x-3 gap-y-1">

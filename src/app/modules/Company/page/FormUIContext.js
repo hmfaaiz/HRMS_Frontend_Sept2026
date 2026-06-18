@@ -49,6 +49,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     "Manpower Budget" : false,
     policyToShowNameOnReport: "",
     policyForCalWorkingHours: "",
+    hrms_portal_link: "",
   };
 
   const value = {

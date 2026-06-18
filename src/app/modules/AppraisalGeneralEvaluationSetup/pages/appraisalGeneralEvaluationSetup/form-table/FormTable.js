@@ -108,6 +108,16 @@ console.log("userAccess1111",userAccess)
       },
      formatter: (cell) => (cell ? "Yes" : "No"), 
     },
+    {
+      dataField: "weightage",
+      text: "Weightage",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "90px",
+      },
+    },
 
 
 

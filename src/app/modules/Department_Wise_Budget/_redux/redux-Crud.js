@@ -33,3 +33,22 @@ export function deleteDepartmentWiseBudget(body) {
   return axios.patch(`${USERS_URL}/department_wise_budget/delete-department-wise-budget`, body);
 }
 
+export function getDepartmentWiseBudgetReport(body) {
+  return axios.post(
+    `${USERS_URL}/department_wise_budget/department-wise-budget-report`,
+    body,
+    {
+      responseType: "blob"
+    }
+  );
+}
+
+export function getDesignationWiseBudgetReport(body) {
+  return axios.post(
+    `${USERS_URL}/department_wise_budget/designation-wise-budget-report`,
+    body,
+    {
+      responseType: "blob"
+    }
+  );
+}

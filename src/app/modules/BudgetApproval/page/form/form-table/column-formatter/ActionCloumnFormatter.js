@@ -3,13 +3,13 @@ import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useFormUIContext } from "../../../FormUIContext";
-import { Eye } from "lucide-react";
+import { Eye, Pencil } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
   row,
   rowIndex,
-  { setWorkflowId, setCurrentData }
+  { setWorkflowId, setCurrentData ,setEditableWorkflowId}
 ) {
   return (
     <>
@@ -28,6 +28,21 @@ export function ActionsColumnFormatter(
           <Eye className="w-4 h-4" />
         </a>
       </OverlayTrigger>
+
+        { row.isAccessToUpdate && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+        >
+          <a title="" className="" onClick={() => {
+             setCurrentData(row);
+             setEditableWorkflowId(row?.parentRecordId);
+          
+          }}>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+
       </div>
     </>
   );

@@ -24,7 +24,7 @@ export function FormDetailDialog({ id, show, onHide }) {
       isLoading: state.appraisal_publish.actionsLoading,
       question: state.appraisal_publish.appraisal_detail?.question || [],
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function FormDetailDialog({ id, show, onHide }) {
           Id: id,
           yearId: usersUIProps?.yearId,
           appraisalCategoryId: usersUIProps?.appraisalCategoryId,
-        })
+        }),
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,9 +77,29 @@ export function FormDetailDialog({ id, show, onHide }) {
           ) : (
             Object.keys(groupedData).map((type, idx) => (
               <div key={idx} className="mb-4">
-                <h5 className="text-primary mb-2 fw-bold border-bottom pb-`1">
-                  {type}
-                </h5>
+                <div className=" flex gap-3">
+                  <h5
+                    className={`text-primary mb-1 fw-bold border-bottom pb-1`}
+                  >
+                    {type}
+                  </h5>
+                  <span
+                    className={`text-sm font-bold ${
+                      groupedData[type]?.reduce(
+                        (prev, curr) => prev + parseFloat(curr.weightage || 0),
+                        0,
+                      ) === 100
+                        ? "text-approved"
+                        : "text-rejected"
+                    }`}
+                  >
+                    : Total Weightage:{" "}
+                    {groupedData[type]?.reduce(
+                      (prev, curr) => prev + parseFloat(curr.weightage || 0),
+                      0,
+                    )}
+                  </span>
+                </div>
 
                 {groupedData[type].map((q, i) => (
                   <div
@@ -91,6 +111,12 @@ export function FormDetailDialog({ id, show, onHide }) {
                         <h6 className="fw-bold mb-0 text-black">
                           {q.questionName}
                         </h6>
+                        {q?.weightage ? (
+                          <span className="text-xs font-bold ms-1">
+                            {" "}
+                            (Weightage : {q?.weightage})
+                          </span>
+                        ) : null}
                         <span className="badge badge-light-info text-uppercase">
                           {q.CompetencyName}
                         </span>
