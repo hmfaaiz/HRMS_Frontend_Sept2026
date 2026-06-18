@@ -136,15 +136,14 @@ function calculateWeightedScore(setupArray = [], weight = 0) {
   }
 
   const totalRating = setupArray.reduce(
-    (sum, item) => sum + Number(item.finalizedRating || 0),
+    (sum, item) => sum + Number(item.weightage || 0),
     0,
   );
 
-  const avg = totalRating / setupArray.length;
+  const avg = totalRating;
   const weighted = (avg * weight) / 100;
   return { avg: avg.toFixed(2), weighted: weighted.toFixed(2) };
 }
-
 function truncateText(text = "", maxLength = 90) {
   if (!text) return "-";
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
@@ -190,6 +189,12 @@ export function MasterEditForm({
   const handleSubmitWithFinalize = (isFinalize, handleSubmit, values) => {
     // handleSubmit(); // trigger Formik validation
     const valuesWithFlag = { ...values, isFinalize };
+    saveFrom(valuesWithFlag);
+  };
+
+    const handleSubmitWithConsent = (sendConsent, handleSubmit, values) => {
+    // handleSubmit(); // trigger Formik validation
+    const valuesWithFlag = { ...values, sendConsent };
     saveFrom(valuesWithFlag);
   };
 
@@ -329,12 +334,16 @@ export function MasterEditForm({
                                           <th className="w-3/12">
                                             Description
                                           </th>
+                                          <th className="w-1/12">Weightage</th>
                                           <th className="w-1/12">HR Rating</th>
-                                          <th className="w-3/12">Comments</th>
+                                          <th className="w-2/12">Comments</th>
                                           <th className="w-1/12">
                                             Finalize Rating
                                           </th>
-                                          <th className="w-3/12">Comments</th>
+                                          <th className="w-1/12">
+                                            Finalize W.R
+                                          </th>
+                                          <th className="w-2/12">Comments</th>
                                         </tr>
                                       </thead>
                                       <tbody>
@@ -350,6 +359,9 @@ export function MasterEditForm({
                                                   140,
                                                 )}
                                               </td>
+                                              <td>
+                                                {e?.questionWeightage || 0}
+                                              </td>
                                               <td>{e?.rating || 0}</td>
                                               <td title={e?.comments}>
                                                 {truncateText(e?.comments, 140)}
@@ -363,6 +375,26 @@ export function MasterEditForm({
                                                       field={field}
                                                       form={form}
                                                       disabled={isUserForRead}
+                                                      onChange={(el) => {
+                                                        const numericValue =
+                                                          Number(el) || 0;
+                                                        setFieldValue(
+                                                          `hrSetup[${i}].finalizedRating`,
+                                                          numericValue,
+                                                        );
+
+                                                        setFieldValue(
+                                                          `hrSetup[${i}].weightage`,
+                                                          Number(
+                                                            (Number(
+                                                              e?.questionWeightage ||
+                                                                0,
+                                                            ) /
+                                                              100) *
+                                                              numericValue,
+                                                          ).toFixed(2),
+                                                        );
+                                                      }}
                                                     />
                                                   )}
                                                 </Field>
@@ -372,6 +404,7 @@ export function MasterEditForm({
                                                   className="invalid-feedback d-block"
                                                 />
                                               </td>
+                                              <td>{e?.weightage}</td>
                                               <td>
                                                 <Field
                                                   name={`hrSetup[${i}].finalizedComments`}
@@ -434,6 +467,7 @@ export function MasterEditForm({
                                           <th className="w-2/12">
                                             Description
                                           </th>
+                                          <th className="w-1/12">Weightage</th>
                                           <th className="w-1/12">
                                             Self Rating
                                           </th>
@@ -443,13 +477,16 @@ export function MasterEditForm({
                                           <th className="w-1/12">
                                             Manager Rating
                                           </th>
-                                          <th className="w-2/12">
+                                          <th className="w-1/12">
                                             Manager Comments
                                           </th>
                                           <th className="w-1/12">
                                             Finalize Rating
                                           </th>
-                                          <th className="w-2/12">Comments</th>
+                                          <th className="w-1/12">
+                                            Finalize W.R
+                                          </th>
+                                          <th className="w-1/12">Comments</th>
                                         </tr>
                                       </thead>
                                       <tbody>
@@ -464,6 +501,9 @@ export function MasterEditForm({
                                                   e?.questionDescription,
                                                   80,
                                                 )}
+                                              </td>
+                                              <td>
+                                                {e?.questionWeightage || 0}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
@@ -488,6 +528,26 @@ export function MasterEditForm({
                                                       field={field}
                                                       form={form}
                                                       disabled={isUserForRead}
+                                                      onChange={(el) => {
+                                                        const numericValue =
+                                                          Number(el) || 0;
+                                                        setFieldValue(
+                                                          `generalSetup[${i}].finalizedRating`,
+                                                          numericValue,
+                                                        );
+
+                                                        setFieldValue(
+                                                          `generalSetup[${i}].weightage`,
+                                                          Number(
+                                                            (Number(
+                                                              e?.questionWeightage ||
+                                                                0,
+                                                            ) /
+                                                              100) *
+                                                              numericValue,
+                                                          ).toFixed(2),
+                                                        );
+                                                      }}
                                                     />
                                                   )}
                                                 </Field>
@@ -497,6 +557,7 @@ export function MasterEditForm({
                                                   className="invalid-feedback d-block"
                                                 />
                                               </td>
+                                              <td>{e?.weightage || 0}</td>
                                               <td>
                                                 <Field
                                                   name={`generalSetup[${i}].finalizedComments`}
@@ -560,6 +621,7 @@ export function MasterEditForm({
                                           <th className="w-2/12">
                                             Description
                                           </th>
+                                          <th className="w-1/12">Weightage</th>
                                           <th className="w-1/12">
                                             Self Rating
                                           </th>
@@ -569,13 +631,16 @@ export function MasterEditForm({
                                           <th className="w-1/12">
                                             Manager Rating
                                           </th>
-                                          <th className="w-2/12">
+                                          <th className="w-1/12">
                                             Manager Comments
                                           </th>
                                           <th className="w-1/12">
                                             Finalize Rating
                                           </th>
-                                          <th className="w-2/12">Comments</th>
+                                          <th className="w-1/12">
+                                            Finalize W.R
+                                          </th>
+                                          <th className="w-1/12">Comments</th>
                                         </tr>
                                       </thead>
                                       <tbody>
@@ -590,6 +655,9 @@ export function MasterEditForm({
                                                   e?.questionDescription,
                                                   80,
                                                 )}
+                                              </td>
+                                              <td>
+                                                {e?.questionWeightage || 0}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
@@ -614,6 +682,26 @@ export function MasterEditForm({
                                                       field={field}
                                                       form={form}
                                                       disabled={isUserForRead}
+                                                      onChange={(el) => {
+                                                        const numericValue =
+                                                          Number(el) || 0;
+                                                        setFieldValue(
+                                                          `goalSetup[${i}].finalizedRating`,
+                                                          numericValue,
+                                                        );
+
+                                                        setFieldValue(
+                                                          `goalSetup[${i}].weightage`,
+                                                          Number(
+                                                            (Number(
+                                                              e?.questionWeightage ||
+                                                                0,
+                                                            ) /
+                                                              100) *
+                                                              numericValue,
+                                                          ).toFixed(2),
+                                                        );
+                                                      }}
                                                     />
                                                   )}
                                                 </Field>
@@ -623,6 +711,7 @@ export function MasterEditForm({
                                                   className="invalid-feedback d-block"
                                                 />
                                               </td>
+                                              <td>{e?.weightage || 0}</td>
                                               <td>
                                                 <Field
                                                   name={`goalSetup[${i}].finalizedComments`}
@@ -1191,6 +1280,7 @@ export function MasterEditForm({
                         </div>
                       </>
                     ) : null}
+                    {/* )} */}
                     {values?.employeeId && values?.consentComment ? (
                       <>
                         <hr />
@@ -1233,6 +1323,26 @@ export function MasterEditForm({
                       disabled={loading || !isValid || !values?.employeeId}
                     >
                       Save
+                      {loading && (
+                        <span className="ml-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+                  )}
+                  {id && !isUserForRead && !values.isFinalize && (
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-elevate"
+                      onClick={() =>
+                        handleSubmitWithConsent(true, handleSubmit, values)
+                      }
+                      disabled={
+                        loading ||
+                        !isValid ||
+                        !values?.employeeId ||
+                        values?.sendConsent
+                      }
+                    >
+                      {values?.sendConsent ? "Consent Sended" : "Send Consent"}
                       {loading && (
                         <span className="ml-3 spinner spinner-white"></span>
                       )}

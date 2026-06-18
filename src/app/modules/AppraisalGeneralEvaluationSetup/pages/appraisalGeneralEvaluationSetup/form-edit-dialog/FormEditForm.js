@@ -11,7 +11,6 @@ import {
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
-
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
@@ -25,7 +24,6 @@ const appraisalForCreation = Yup.object().shape({
   // from_amount: Yup.string().required("Required*"),
 
   competencyId: Yup.number().required(VALIDATION_MESSAGES.required),
-
 
   name: Yup.string()
     .nullable()
@@ -42,8 +40,15 @@ const appraisalForCreation = Yup.object().shape({
   designationId: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
-
-
+  weightage: Yup.number()
+    .typeError("Only numbers are allowed")
+    .transform((value, originalValue) => {
+      return originalValue === "" ? null : value;
+    })
+    .min(1, VALIDATION_MESSAGES.minOneValue)
+    .max(100, VALIDATION_MESSAGES.maxHundredValue)
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 });
 
 export function FormEditForm({
@@ -59,44 +64,40 @@ export function FormEditForm({
   const { dashboard } = useSelector((state) => state);
 
   useEffect(() => {
-
-
-
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-    dispatch(fetchAllFormsMenu(543, "allAppraisalCompetencySetupList", null, true));
+    dispatch(
+      fetchAllFormsMenu(543, "allAppraisalCompetencySetupList", null, true),
+    );
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     // if (data?.subsidiaryId) {
     dispatch(fetchAllDepartmentBySubsidiaryIds(data?.subsidiaryId || [0]));
     // }
 
     // departmentBySubIdsList
-
-
   }, [dispatch, data?.Id]);
-
-
-
 
   return (
     <Formik
       enableReinitialize={true}
-
       initialValues={data}
       validationSchema={appraisalForCreation}
       onSubmit={(values) => {
         enableLoading();
 
-
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleBlur }) => {
-
-
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        handleChange,
+        handleBlur,
+      }) => {
         return (
-
           <>
-
             <Modal.Body className="overlay overlay-block cursor-default">
               {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
@@ -104,17 +105,15 @@ export function FormEditForm({
                 </div>
               )}
               <Form className="form form-label-right">
-
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-1">
-
                     <div className="col-span-1">
-
                       <SearchSelect
                         name="competencyId"
                         label={
                           <span>
-                            Appraisal Competency<span style={{ color: "red" }}>*</span>
+                            Appraisal Competency
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead || data.competencyId}
@@ -125,32 +124,30 @@ export function FormEditForm({
                         // }
                         value={
                           dashboard?.allAppraisalCompetencySetupList
-                            ?.filter((option) => option.value === values.competencyId)
+                            ?.filter(
+                              (option) => option.value === values.competencyId,
+                            )
                             ?.map((option) => ({
                               label: option.onlyLabel, //  onlyLabel will be displayed
                               value: option.value,
                             }))[0] || null
                         }
-
                         onChange={(e) => {
                           setFieldValue("competencyId", e.value || null);
-
-
                         }}
                         error={errors?.competencyId}
                         touched={touched?.competencyId}
                         // options={dashboard?.allAppraisalCompetencySetupList}
                         options={
-                          dashboard?.allAppraisalCompetencySetupList?.map((option) => ({
-                            label: option.onlyLabel, // show only this field as label
-                            value: option.value,     // keep value for Formik binding
-                          })) || []
+                          dashboard?.allAppraisalCompetencySetupList?.map(
+                            (option) => ({
+                              label: option.onlyLabel, // show only this field as label
+                              value: option.value, // keep value for Formik binding
+                            }),
+                          ) || []
                         }
-
-
                       />
                     </div>
-
 
                     <div className="col-span-1">
                       <Field
@@ -167,62 +164,48 @@ export function FormEditForm({
                         autoComplete="off"
                       />
                     </div>
-                    <div className="col-span-1">
-
-                      <Checkbox
-                        isSelected={values.isActive}
-                        name="isActive"
-                        checked={!!values.isActive}
-                        disabled={isUserForRead}
-                        // onChange={(e) => {
-                        //   setFieldValue(`isActive`, e.target.checked ? 1 : 0);
-                        // }}
-                        onChange={(e) => {
-                          setFieldValue("isActive", e.target.checked); //  boolean true/false
-                        }}
-                        className={
-                          errors.isActive && touched.isActive
-                            ? "form-check-input is-invalid"
-                            : "form-check-input"
+                    <div>
+                      <Field
+                        name={`weightage`}
+                        component={Input}
+                        label={
+                          <span>
+                            {" "}
+                            Weightage
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
                         }
                       />
-                      <label
-                        htmlFor="isActive"
-
-                      >
-                        Active
-                      </label>
-
-                      {/* Error message */}
-                      {errors?.isActive && touched?.isActive && (
-                        <div className="invalid-feedback">
-                          {errors.isActive}
-                        </div>
-                      )}
                     </div>
 
-
-                    <div className="col-span-4">
+                    <div className="col-span-3">
                       <Field
                         name="description"
                         component={TextArea}
                         placeholder="Enter description"
-                        label={<span>Description<span style={{ color: "red" }}>*</span></span>}
+                        label={
+                          <span>
+                            Description<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         className="form-control " // Force full height
                         autoComplete="off"
                       />
                     </div>
-
                   </div>
                   <hr></hr>
                   <h6 className="font-bold mb-0 text-primary my-2">
                     General Evaluation Rating eligibility
-
                   </h6>
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1 text-black mt-1 scrollbar-fancy">
-                      <label>Subsidiary<span style={{ color: "red" }}>*</span></label>
-                      <div className="overflow-auto scrollbar-fancy" style={{ maxHeight: "150px" }}>
+                      <label>
+                        Subsidiary<span style={{ color: "red" }}>*</span>
+                      </label>
+                      <div
+                        className="overflow-auto scrollbar-fancy"
+                        style={{ maxHeight: "150px" }}
+                      >
                         <div className="multi-select">
                           <div
                             className="p-0 m-0 "
@@ -244,21 +227,25 @@ export function FormEditForm({
                                   value={option.value}
                                   checked={Boolean(
                                     values?.subsidiaryId?.includes(
-                                      option?.value?.toString()
-                                    )
+                                      option?.value?.toString(),
+                                    ),
                                   )}
                                   // onChange={handleChange}
                                   //  dispatch(fetchAllDepartmentBySubsidiaryIds(values?.subsidiaryId));
 
                                   onChange={(e) => {
-                                    let newValues = [...(values.subsidiaryId || [])];
+                                    let newValues = [
+                                      ...(values.subsidiaryId || []),
+                                    ];
 
                                     if (e.target.checked) {
                                       // add subsidiary if checked
                                       newValues.push(option.value.toString());
                                     } else {
                                       // remove subsidiary if unchecked
-                                      newValues = newValues.filter((id) => id !== option.value.toString());
+                                      newValues = newValues.filter(
+                                        (id) => id !== option.value.toString(),
+                                      );
                                     }
 
                                     // Update Formik state
@@ -266,7 +253,11 @@ export function FormEditForm({
                                     setFieldValue("departmentId", null);
 
                                     // Call API with updated IDs
-                                    dispatch(fetchAllDepartmentBySubsidiaryIds(newValues));
+                                    dispatch(
+                                      fetchAllDepartmentBySubsidiaryIds(
+                                        newValues,
+                                      ),
+                                    );
                                   }}
                                 />
                                 {option.label}
@@ -369,11 +360,15 @@ export function FormEditForm({
                       </div>
                     </div> */}
 
-
                     {/* Department */}
                     <div className="col-span-1 text-black mt-1">
-                      <label>Department<span style={{ color: "red" }}>*</span></label>
-                      <div className="overflow-auto scrollbar-fancy" style={{ maxHeight: "150px" }}>
+                      <label>
+                        Department<span style={{ color: "red" }}>*</span>
+                      </label>
+                      <div
+                        className="overflow-auto scrollbar-fancy"
+                        style={{ maxHeight: "150px" }}
+                      >
                         <div className="p-0 m-0" style={{ fontSize: "10.2px" }}>
                           {/* Select All Option */}
                           {dashboard?.departmentBySubIdsList.length > 0 && (
@@ -382,13 +377,14 @@ export function FormEditForm({
                                 type="checkbox"
                                 className="mr-1"
                                 checked={
-                                  values?.departmentId?.length === dashboard?.departmentBySubIdsList?.length
+                                  values?.departmentId?.length ===
+                                  dashboard?.departmentBySubIdsList?.length
                                 }
                                 onChange={(e) => {
                                   if (e.target.checked) {
                                     // Sab select
-                                    const allValues = dashboard?.departmentBySubIdsList?.map((opt) =>
-                                      opt.value.toString()
+                                    const allValues = dashboard?.departmentBySubIdsList?.map(
+                                      (opt) => opt.value.toString(),
                                     );
                                     setFieldValue("departmentId", allValues);
                                   } else {
@@ -399,35 +395,47 @@ export function FormEditForm({
                               />
                               Select All
                             </div>
-
                           )}
 
                           {/* Department list */}
                           {dashboard?.departmentBySubIdsList?.map((option) => (
-                            <div key={option.value} className="flex justify-start items-center">
+                            <div
+                              key={option.value}
+                              className="flex justify-start items-center"
+                            >
                               <input
                                 className="mr-1"
                                 name="departmentId"
                                 type="checkbox"
                                 value={option.value}
-                                checked={Boolean(values?.departmentId?.includes(option?.value?.toString()))}
+                                checked={Boolean(
+                                  values?.departmentId?.includes(
+                                    option?.value?.toString(),
+                                  ),
+                                )}
                                 onChange={handleChange}
                               />
                               {option.label}
                             </div>
                           ))}
-
                         </div>
                       </div>
                       {errors.departmentId && touched.departmentId && (
-                        <div className="invalid-feedback">{errors.departmentId}</div>
+                        <div className="invalid-feedback">
+                          {errors.departmentId}
+                        </div>
                       )}
                     </div>
 
                     {/* Designation */}
                     <div className="col-span-1 text-black mt-1">
-                      <label>Designation<span style={{ color: "red" }}>*</span></label>
-                      <div className="overflow-auto scrollbar-fancy" style={{ maxHeight: "150px" }}>
+                      <label>
+                        Designation<span style={{ color: "red" }}>*</span>
+                      </label>
+                      <div
+                        className="overflow-auto scrollbar-fancy"
+                        style={{ maxHeight: "150px" }}
+                      >
                         <div className="p-0 m-0" style={{ fontSize: "10.2px" }}>
                           {/* Select All Option */}
                           <div className="flex justify-start items-center font-semibold">
@@ -435,13 +443,14 @@ export function FormEditForm({
                               type="checkbox"
                               className="mr-1"
                               checked={
-                                values?.designationId?.length === dashboard?.allDesignations?.length
+                                values?.designationId?.length ===
+                                dashboard?.allDesignations?.length
                               }
                               onChange={(e) => {
                                 if (e.target.checked) {
                                   // Sab select
-                                  const allValues = dashboard?.allDesignations?.map((opt) =>
-                                    opt.value.toString()
+                                  const allValues = dashboard?.allDesignations?.map(
+                                    (opt) => opt.value.toString(),
                                   );
                                   setFieldValue("designationId", allValues);
                                 } else {
@@ -455,32 +464,37 @@ export function FormEditForm({
 
                           {/* Designation list */}
                           {dashboard?.allDesignations?.map((option) => (
-                            <div key={option.value} className="flex justify-start items-center">
+                            <div
+                              key={option.value}
+                              className="flex justify-start items-center"
+                            >
                               <input
                                 className="mr-1"
                                 name="designationId"
                                 type="checkbox"
                                 value={option.value}
-                                checked={Boolean(values?.designationId?.includes(option?.value?.toString()))}
+                                checked={Boolean(
+                                  values?.designationId?.includes(
+                                    option?.value?.toString(),
+                                  ),
+                                )}
                                 onChange={handleChange}
                               />
                               {option.label}
                             </div>
                           ))}
-
                         </div>
-
                       </div>
                       {errors.designationId && touched.designationId && (
-                        <div className="invalid-feedback">{errors.designationId}</div>
+                        <div className="invalid-feedback">
+                          {errors.designationId}
+                        </div>
                       )}
                     </div>
-
                   </div>
                   <hr></hr>
 
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
-
                     {/* <div className="flex items-center gap-1 mt-1">
 
                       <input
@@ -506,17 +520,15 @@ export function FormEditForm({
                       />
                     </div> */}
 
-
                     <div className="flex items-center gap-1 mt-1">
-
                       <input
                         name="isMarkCommentAsMandatory"
                         type="checkbox"
                         // onChange={handleChange}
                         onChange={(e) =>
                           setFieldValue(
-                            "isMarkCommentAsMandatory", e.target.checked
-
+                            "isMarkCommentAsMandatory",
+                            e.target.checked,
                           )
                         }
                         onBlur={handleBlur}
@@ -531,12 +543,27 @@ export function FormEditForm({
                         component="div"
                       />
                     </div>
+                    <div className="flex items-center gap-1 mt-1">
+                      <input
+                        name="isActive"
+                        type="checkbox"
+                        onChange={(e) =>
+                          setFieldValue("isActive", e.target.checked)
+                        }
+                        onBlur={handleBlur}
+                        value={values.isActive}
+                        checked={values.isActive}
+                        label="Active"
+                      />
+                      <label>Active</label>
+                      {/* Error message */}
+                      <ErrorMessage
+                        className="form-feedBack"
+                        name="isActive"
+                        component="div"
+                      />
+                    </div>
                   </div>
-
-
-
-
-
                 </fieldset>
               </Form>
             </Modal.Body>
@@ -559,8 +586,6 @@ export function FormEditForm({
                 </button>
               )}
 
-
-
               {!isUserForRead && (
                 <button
                   type="submit"
@@ -575,7 +600,7 @@ export function FormEditForm({
               )}
             </Modal.Footer>
           </>
-        )
+        );
       }}
     </Formik>
   );
