@@ -662,7 +662,6 @@ export function MasterEditForm({
                 onClick={() => {
                   setId();
                   handleReset();
-                  setQueryParams(initialFilter);
                 }}
                 className="btn btn-light"
               >

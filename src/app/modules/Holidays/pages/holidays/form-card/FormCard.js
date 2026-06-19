@@ -49,31 +49,22 @@ export function FormCard() {
   return (
 
     <TCard name={CurrentModuleName()}>
-      <div className="grid grid-cols-12 items-center ">
-        <div className="col-span-11">
+      <div className="flex items-center">
+        <div className="flex-1">
           <FormFIlter />
         </div>
 
-
-        <div className="grid items-center  col-span-1 justify-end">
-          {/* <CardHeaderToolbar> */}
-          <div>
-            {accessUser && (
-              <>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={FormUIProps.newFormButtonClick}
-                >
-
-                  <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                  Add
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* </CardHeaderToolbar> */}
+        <div className="ml-2">
+          {accessUser && (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={FormUIProps.newFormButtonClick}
+            >
+              <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" />
+              Add
+            </button>
+          )}
         </div>
       </div>
       <FormTable />
