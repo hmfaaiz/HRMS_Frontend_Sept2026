@@ -1,18 +1,12 @@
 import React, { useMemo } from "react";
 
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  CardHeaderToolbar,
-} from "../../../../../../_metronic/_partials/controls";
+
 import { FormTable } from "../form-table/FormTable";
 import { useFormUIContext } from "../FormUIContext";
 import { FormFIlter } from "../form-filter/FormFIlter";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
-import { CirclePlus, FileSpreadsheet, FileText, Sheet } from "lucide-react";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { CirclePlus } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 
 export function FormCard({ showApplicantDetails, onApplicantDetailsChange }) {
@@ -31,9 +25,6 @@ export function FormCard({ showApplicantDetails, onApplicantDetailsChange }) {
 
     return {
       userAccess: state.auth.userAccess?.employee_transfer || [],
-      pdfLoading: state?.employee_transfer?.pdfLoading,
-      csvLoading: state?.employee_transfer?.csvLoading,
-      excelLoading: state?.employee_transfer?.excelLoading,
     };
   }, shallowEqual);
 
@@ -54,31 +45,7 @@ export function FormCard({ showApplicantDetails, onApplicantDetailsChange }) {
 
   // const { currentState } = useSelector();
 
-  const { entities } = currentState || {};
 
-  const print = async (value) => {
-    let updatedQueryParams = {
-      ...FormUIProps.queryParams,
-      csv: false,
-      excel: false,
-      pdf: false,
-      [value]: true,
-    };
-
-    // Set the updated queryParams
-    FormUIProps.setQueryParams(updatedQueryParams);
-
-    await dispatch(actions.fetchEmployeeTransfer(FormUIProps.queryParams));
-    updatedQueryParams = {
-      ...FormUIProps.queryParams,
-      csv: false,
-      excel: false,
-      pdf: false,
-      [value]: false,
-    };
-
-    FormUIProps.setQueryParams(updatedQueryParams);
-  };
 
   return (
     <>

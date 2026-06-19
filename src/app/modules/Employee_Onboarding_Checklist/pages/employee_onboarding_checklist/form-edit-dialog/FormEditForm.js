@@ -291,7 +291,7 @@ export function FormEditForm({
                   isdataForRead ||
                   loading ||
                   !values.list?.length ||
-                  values.list?.some((item) => item?.taskStatus !== "Completed")
+                  values.list?.some((item) => item?.taskStatus !== "Completed" || item?.taskStatus === "Not Needed")
                 }
                 onClick={async (e) => {
                   e.preventDefault();

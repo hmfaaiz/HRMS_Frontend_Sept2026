@@ -88,9 +88,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
     openActiveFormDialog: FormUIEvents.openActiveFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
-    openPostingFormDialog:FormUIEvents.openPostingFormDialog,
-    openHoldFormDialog:FormUIEvents.openHoldFormDialog,
-    openCloseFormDialog:FormUIEvents.openCloseFormDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

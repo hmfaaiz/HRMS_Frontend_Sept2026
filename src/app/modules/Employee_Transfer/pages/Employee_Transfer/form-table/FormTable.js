@@ -34,9 +34,6 @@ export function FormTable({ showApplicantDetails }) {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
-      openPostingFormDialog: formUIContext.openPostingFormDialog,
-      openHoldFormDialog: formUIContext.openHoldFormDialog,
-      openCloseFormDialog: formUIContext.openCloseFormDialog,
     };
   }, [formUIContext]);
 
@@ -81,44 +78,12 @@ export function FormTable({ showApplicantDetails }) {
     (item) => item.componentName === "DeleteEmployeeTransfer"
   );
 
-  // Posting
-
-  const isAccessForPost = userAccess?.find(
-    (item) => item.componentName === "PostEmployeeTransfer"
-  );
-  const isAccessForHold = userAccess?.find(
-    (item) => item.componentName === "HoldEmployeeTransfer"
-  );
-  const isAccessForClose = userAccess?.find(
-    (item) => item.componentName === "CloseEmployeeTransfer"
-  );
   const isAccessForReport = userAccess?.find(
     (item) => item.componentName === "ReportEmployeeTransfer"
   );
   // Table columns
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case 0:
-        return "Vacancy not posted";
-      case 1:
-        return "Currently Posted";
-      case 2:
-        return "On Hold";
-      case 3:
-        return "Closed / Expired Jobsed";
-      default:
-        return "----";
-    }
-  };
 
-  const vacancyStatusOptions = [
-    { value: null, label: "All" },
-    { value: 0, label: "Vacancy not posted" },
-    { value: 1, label: "Currently Posted" },
-    { value: 2, label: "On Hold" },
-    { value: 3, label: "Closed / Expired Job" },
-  ];
 
   // ── Expand row handlers ──
   const handleExpand = (row, isExpand) => {

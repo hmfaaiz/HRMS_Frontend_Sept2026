@@ -1,9 +1,6 @@
 import React from "react";
-import SVG from "react-inlinesvg";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { ArrowUpRight, CirclePause, CirclePower, CircleX, Eye, Pencil, ScreenShare, Trash2 ,FileText} from "lucide-react";
+import { CirclePower, Eye, Pencil, Trash2 ,FileText} from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -20,20 +17,14 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     openReadFormDialog,
 
-    isAccessForPosting,
-    isAccessForHold,
-    isAccessForClose,
     dispatch,
     reportPdfLoading,
     downloadEmployeeTransferReport,
-    openPostingFormDialog,
-    openHoldFormDialog,
-    openCloseFormDialog,
     isAccessForReport,
     latestRequests,
   }
 ) {
-  const isUserRead = false;
+
   const isLatestForEmployee = latestRequests && latestRequests[row.employeeId] === row.Id;
 
   // Hide Edit & Delete once the transfer's from-date has been reached
@@ -60,70 +51,7 @@ export function ActionsColumnFormatter(
         </a> 
       </OverlayTrigger>
        )}
-      {/* Post */}
-      {isAccessForPosting && !row.isRequisitionForm &&
-        (row?.jobPostingStatus == 0 || row?.jobPostingStatus == 2) && (
-          <OverlayTrigger
-            overlay={<Tooltip id="post-tooltip">Post Employee Transfer</Tooltip>}
-          >
-            <a
-              className=""
-              onClick={() => openPostingFormDialog(row.Id)}
-            >
-              <span className="">
-                {/* <SVG
-                  src={toAbsoluteUrl(
-                    "/media/svg/icons/Communication/vacancyPost.svg"
-                  )}
-                /> */}
-                <ArrowUpRight className="w-5 h-5"/>
-              </span>
-            </a>
-          </OverlayTrigger>
-        )}
 
-      {/* Hold */}
-      {isAccessForHold && !row.isRequisitionForm  && row?.jobPostingStatus == 1 && (
-        <OverlayTrigger
-          overlay={<Tooltip id="hold-tooltip">Hold Employee Transfer</Tooltip>}
-        >
-          <a
-            className=" "
-            onClick={() => openHoldFormDialog(row.Id)}
-          >
-            <span className="">
-              {/* <SVG
-                src={toAbsoluteUrl(
-                  "/media/svg/icons/Communication/vacancyHold.svg"
-                )}
-              /> */}
-              <CirclePause className="w-4 h-4"/>
-            </span>
-          </a>
-        </OverlayTrigger>
-      )}
-
-      {/* Close */}
-      {isAccessForClose  && !row.isRequisitionForm &&
-        (row?.jobPostingStatus == 1 || row?.jobPostingStatus == 2) && (
-          <OverlayTrigger
-            overlay={<Tooltip id="close-tooltip">Close Employee Transfer</Tooltip>}
-          >
-            <a
-              className=""
-              onClick={() => openCloseFormDialog(row.Id)}
-            >
-              <span className="">
-                {/* <SVG
-                  src={toAbsoluteUrl(
-                    "/media/svg/icons/Communication/vacancyClose.svg"
-                  )}
-                /> */}
-                <CircleX className="w-4 h-4"/>
-              </span>
-            </a>
-          </OverlayTrigger>
-        )}
 
       {/* View */}
       {isAccessForView &&(
@@ -172,26 +100,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {/* Reopening */}
-      {isAccessForEdit && row?.jobPostingStatus == 3 && (
-        <OverlayTrigger
-          overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}
-        >
-          {/* <a
-            className="btn btn-icon posting-button"
-            onClick={() => openEditFormDialog(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
-          </a> */}
-             <a className="" onClick={() => openEditFormDialog(row.Id)}>
-            <Pencil className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
-      )}
+
     </div>
   );
 }

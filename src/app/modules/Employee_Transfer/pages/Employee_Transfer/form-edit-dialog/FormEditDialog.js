@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { FormEditForm } from "./FormEditForm";
-import { FormEditDialogHeader } from "./FormEditDialogHeader";
+
 import { EmployeeSelect } from "./EmployeeSelect";
 
 import * as actions from "../../../_redux/redux-Actions";
@@ -33,11 +33,10 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
   const dispatch = useDispatch();
 
-  const { actionsLoading, dataForEdit, isdataForRead } = useSelector(
+  const { actionsLoading, dataForEdit } = useSelector(
     (state) => ({
       actionsLoading: state.users.actionsLoading,
       dataForEdit: state.employee_transfer.dataForEdit,
-      isdataForRead: state.employee_transfer.dataForRead,
     }),
     shallowEqual
   );

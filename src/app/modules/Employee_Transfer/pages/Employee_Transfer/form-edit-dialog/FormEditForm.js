@@ -4,9 +4,8 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
   DatePickerField,
-  Input,
 } from "../../../../../../_metronic/_partials/controls";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { formatDates } from "../../../../../utils/common";

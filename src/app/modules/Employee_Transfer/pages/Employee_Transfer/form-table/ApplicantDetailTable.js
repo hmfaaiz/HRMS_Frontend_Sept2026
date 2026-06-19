@@ -125,7 +125,7 @@ export function ApplicantsDetailTable({ row }) {
                 applicant.details_applicant_vacancy || []
               ).find((v) => v.EmployeeTransferId === parseInt(row.Id));
 
-              const isActive = vacancyRecord?.activeCV;
+
               const applicationStatus =
                 vacancyRecord?.ApplicationStatus?.formName || "N/A";
               const applicationDate = vacancyRecord?.applicationDate || "";

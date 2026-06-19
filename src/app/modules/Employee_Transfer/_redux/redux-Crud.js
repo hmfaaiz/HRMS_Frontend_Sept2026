@@ -41,42 +41,6 @@ export function deleteEmployeeTransfer(body) {
   return axios.patch(`${USERS_URL}/employee_transfer/delete-employee-transfer`, body);
 }
 
-//Post
-export function postEmployeeTransfer(body) {
-
-  return axios.patch(`${USERS_URL}/employee_transfer/post-employee-transfer`, body);
-}
-
-
-//Hold
-export function holdEmployeeTransfer(body) {
-
-  return axios.patch(`${USERS_URL}/employee_transfer/hold-employee-transfer`, body);
-}
-
-
-//Close
-export function closeEmployeeTransfer(body) {
-
-  return axios.patch(`${USERS_URL}/employee_transfer/close-employee-transfer`, body);
-}
-export function fetchApplicantsForVacancy(EmployeeTransferId) {
-  return axios
-    .post(`${USERS_URL}/applicant_profile/read-all-applicant-profile`, {
-      pageSize: 1000,
-      pageNumber: 1,
-      filter: {},
-    })
-    .then((res) => {
-      const all = res.data?.data?.rows || [];
-      return all.filter((applicant) =>
-        (applicant.details_applicant_vacancy || []).some(
-          (v) => v.EmployeeTransferId === parseInt(EmployeeTransferId)
-        )
-      );
-    });
-}
-
 export function generateEmployeeTransferReportRequest(EmployeeTransferId) {
   return axios.post(
     `${USERS_URL}/employee_transfer/generate-employee-transfer-report`,

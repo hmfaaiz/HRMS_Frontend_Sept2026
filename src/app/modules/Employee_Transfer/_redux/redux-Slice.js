@@ -88,13 +88,6 @@ export const EmployeeTransferSlice = createSlice({
             );
         },
 
-        JobPostedStatus: (state, action) => {
-
-            state.error = null;
-            state.actionsLoading = false;
-
-        },
-
 
 
 

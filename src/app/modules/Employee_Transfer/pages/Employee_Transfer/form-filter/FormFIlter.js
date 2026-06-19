@@ -1,29 +1,23 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react"
+import React, { useMemo, useState, useEffect } from "react"
 import { Field, Formik } from "formik"
 import { isEqual } from "lodash"
 import { useFormUIContext } from "../FormUIContext"
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-import axios from "axios";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+
+
+
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import * as actions from "../../../../Dashboard/_redux/dashboardActions";
+
 import DatePicker from "react-datepicker";
 import { fetchAllDept, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
-import { debounce } from "redux-saga/effects";
-import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
-import { Form, Modal } from "react-bootstrap";
+
+
+import { Modal } from "react-bootstrap";
 import {
-  Card,
-  CardHeader,
+
   Input,
 } from "../../../../../../_metronic/_partials/controls"
 import { formatDates } from "../../../../../utils/common";
-
-
-
-const API_URL = process.env.REACT_APP_API_URL;
 
 
 // const prepareFilter = (queryParams, values) => {
@@ -97,7 +91,6 @@ export function FormFIlter({ listLoading, user }) {
 
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext()
-  const [Loading, setLoading] = useState(false)
 
 
 
@@ -111,17 +104,7 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-  function addCommas(nStr) {
-    nStr += '';
-    var x = nStr.split('.');
-    var x1 = x[0];
-    var x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-  }
+
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
