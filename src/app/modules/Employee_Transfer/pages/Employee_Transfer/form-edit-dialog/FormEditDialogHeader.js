@@ -3,37 +3,38 @@ import { shallowEqual, useSelector } from "react-redux";
 import { Modal } from "react-bootstrap";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 
-export function EmpHistDialogHeader({ id, isUserForRead }) {
-  //const userForEdit = false
+export function FormEditDialogHeader({ id, isdataForRead }) {
+  //const dataForEdit = false
   const [title, setTitle] = useState("");
  
-  const { userForEdit, actionsLoading } = useSelector(
+  const { dataForEdit, actionsLoading } = useSelector(
     
     (state) => ({
-      userForEdit: state.compensation.userForEdit,
+      dataForEdit: state.employee_transfer.dataForEdit,
       actionsLoading: state.users.actionsLoading,
     }),
     shallowEqual
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Edit Transfer Info";
+    let _title = id ? "" : "Add Employee Transfer";
     if (id) {
-      _title = `View History`;
-    } //else if (isUserForRead) {
+      _title = `Edit Add Employee Transfer`;
+    } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }
     setTitle(_title);
-  }, [userForEdit, actionsLoading]);
+  }, [dataForEdit, actionsLoading]);
 
   return (
     <>
-      {actionsLoading && <ModalProgressBar />}
+      {/* {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View Transfer Info"}
+          {!isdataForRead ? title : "View Employee Transfer"}
         </Modal.Title>
-      </Modal.Header>
+      </Modal.Header> */}
     </>
   );
 }
+
