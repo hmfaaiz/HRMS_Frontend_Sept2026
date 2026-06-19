@@ -19,6 +19,11 @@ function LeaveTypePolicyTable({
   handleDelete,
   allLeaveTypeMap,
 }) {
+  const ALLOCATION_TYPE_OPTIONS = [
+    { label: "Yearly", value: false },
+    { label: "Monthly", value: true },
+  ];
+
   return (
     <>
       <FieldArray name="leavetypePolicies">
@@ -36,6 +41,7 @@ function LeaveTypePolicyTable({
                     push({
                       leaveType: "",
                       gender: null,
+                      allocationType: false,
                       entitledAt: null,
                       minExp: "",
                       maxAllowed: "",
@@ -44,8 +50,8 @@ function LeaveTypePolicyTable({
                       encashableCount: "",
                       carryForwardable: false,
                       carryForwardableCount: "",
-                      allowNegative : false,
-                      negativeCount : "",
+                      allowNegative: false,
+                      negativeCount: "",
                       maritalStatus: null,
                     })
                   }
@@ -69,6 +75,7 @@ function LeaveTypePolicyTable({
                       <td title="Allow Negative Leave Balance" >Allow Negative Leave</td>
                       <td>Attachment Required</td>
                       <td>Gender</td>
+                      <td>Allocation Type</td>
                       <td className="text-right">Action</td>
                       {/* <td>Minimum Experience (Years)</td> */}
                       {/* <td>Marital Status</td> */}
@@ -85,7 +92,7 @@ function LeaveTypePolicyTable({
                             component={Select}
                             className={
                               errors.leavetypePolicies?.[index]?.leaveType &&
-                              touched.leavetypePolicies?.[index]?.leaveType
+                                touched.leavetypePolicies?.[index]?.leaveType
                                 ? "form-control is-invalid"
                                 : "form-control"
                             }
@@ -142,7 +149,7 @@ function LeaveTypePolicyTable({
                             min="0"
                             className={
                               errors.leavetypePolicies?.[index]?.maxAllowed &&
-                              touched.leavetypePolicies?.[index]?.maxAllowed
+                                touched.leavetypePolicies?.[index]?.maxAllowed
                                 ? "form-control is-invalid"
                                 : "form-control"
                             }
@@ -169,49 +176,49 @@ function LeaveTypePolicyTable({
                         {/* Entitle At Field Starts */}
                         <td className="max-w-48">
                           {allLeaveTypeMap?.get(row?.leaveType || "")
-                                  ?.type == 1 && row?.leaveType ? <> <Field
-                            name={`leavetypePolicies[${index}].entitledAt`}
-                            component={Select}
-                            className={
-                              errors.leavetypePolicies?.[index]?.entitledAt &&
-                              touched.leavetypePolicies?.[index]?.entitledAt
-                                ? "form-control is-invalid"
-                                : "form-control"
-                            }
-                            onChange={(e) => {
-                              const value =
-                                e.target.value == "Select"
-                                  ? ""
-                                  : Number(e.target.value);
-                              setFieldValue(
-                                `leavetypePolicies[${index}].entitledAt`,
-                                value
-                              );
-                            }}
-                            value={row.entitledAt}
-                            children={CustomDropdown({
-                              data: dropdownData.allEntitlementEvents,
-                              firstElement: {
-                                label: "Select",
-                                value: null,
-                              },
-                            })}
-                            disabled={
-                              !Boolean(
-                                allLeaveTypeMap?.get(row?.leaveType || "")
-                                  ?.type == 1
-                              )
-                            }
-                          />
-                          {errors.leavetypePolicies?.[index]?.entitledAt &&
-                            touched.leavetypePolicies?.[index]?.entitledAt && (
-                              <CustomErrorLabel
-                                touched={true}
-                                error={
-                                  errors.leavetypePolicies?.[index]?.entitledAt
-                                }
-                              />
-                            )} </>
+                            ?.type == 1 && row?.leaveType ? <> <Field
+                              name={`leavetypePolicies[${index}].entitledAt`}
+                              component={Select}
+                              className={
+                                errors.leavetypePolicies?.[index]?.entitledAt &&
+                                  touched.leavetypePolicies?.[index]?.entitledAt
+                                  ? "form-control is-invalid"
+                                  : "form-control"
+                              }
+                              onChange={(e) => {
+                                const value =
+                                  e.target.value == "Select"
+                                    ? ""
+                                    : Number(e.target.value);
+                                setFieldValue(
+                                  `leavetypePolicies[${index}].entitledAt`,
+                                  value
+                                );
+                              }}
+                              value={row.entitledAt}
+                              children={CustomDropdown({
+                                data: dropdownData.allEntitlementEvents,
+                                firstElement: {
+                                  label: "Select",
+                                  value: null,
+                                },
+                              })}
+                              disabled={
+                                !Boolean(
+                                  allLeaveTypeMap?.get(row?.leaveType || "")
+                                    ?.type == 1
+                                )
+                              }
+                            />
+                            {errors.leavetypePolicies?.[index]?.entitledAt &&
+                              touched.leavetypePolicies?.[index]?.entitledAt && (
+                                <CustomErrorLabel
+                                  touched={true}
+                                  error={
+                                    errors.leavetypePolicies?.[index]?.entitledAt
+                                  }
+                                />
+                              )} </>
                             : row?.leaveType && "Special Leave"}
                         </td>
                         {/* Entitle At Field Ends */}
@@ -248,8 +255,8 @@ function LeaveTypePolicyTable({
                                 className={
                                   errors.leavetypePolicies?.[index]
                                     ?.encashableCount &&
-                                  touched.leavetypePolicies?.[index]
-                                    ?.encashableCount
+                                    touched.leavetypePolicies?.[index]
+                                      ?.encashableCount
                                     ? "form-control is-invalid"
                                     : "form-control"
                                 }
@@ -315,8 +322,8 @@ function LeaveTypePolicyTable({
                                 className={
                                   errors.leavetypePolicies?.[index]
                                     ?.carryForwardableCount &&
-                                  touched.leavetypePolicies?.[index]
-                                    ?.carryForwardableCount
+                                    touched.leavetypePolicies?.[index]
+                                      ?.carryForwardableCount
                                     ? "form-control is-invalid"
                                     : "form-control"
                                 }
@@ -350,7 +357,7 @@ function LeaveTypePolicyTable({
                         </td>
                         {/* Carry Forwardable Field End */}
                         {/* Negative count field start  */}
-                                                <td>
+                        <td>
                           <div className="d-flex align-items-center">
                             <div className="mr-3">
                               <input
@@ -381,8 +388,8 @@ function LeaveTypePolicyTable({
                                 className={
                                   errors.leavetypePolicies?.[index]
                                     ?.negativeCount &&
-                                  touched.leavetypePolicies?.[index]
-                                    ?.negativeCount
+                                    touched.leavetypePolicies?.[index]
+                                      ?.negativeCount
                                     ? "form-control is-invalid"
                                     : "form-control"
                                 }
@@ -414,7 +421,7 @@ function LeaveTypePolicyTable({
                               )}
                           </div>
                         </td>
-{/* negative count field end */}
+                        {/* negative count field end */}
                         {/* Attachement Required Field Starts */}
                         <td>
                           <input
@@ -446,7 +453,7 @@ function LeaveTypePolicyTable({
                             component={Select}
                             className={
                               errors.leavetypePolicies?.[index]?.gender &&
-                              touched.leavetypePolicies?.[index]?.gender
+                                touched.leavetypePolicies?.[index]?.gender
                                 ? "form-control is-invalid"
                                 : "form-control"
                             }
@@ -477,6 +484,41 @@ function LeaveTypePolicyTable({
                             )}
                         </td>
                         {/* Gender Field Ends */}
+
+                        {/* Allocation type Field Starts */}
+                        <td>
+                          <Field
+                            name={`leavetypePolicies[${index}].allocationType`}
+                            component={Select}
+                            className={
+                              errors.leavetypePolicies?.[index]?.allocationType &&
+                                touched.leavetypePolicies?.[index]?.allocationType
+                                ? "form-control is-invalid"
+                                : "form-control"
+                            }
+                            onChange={(e) => {
+                              const value = e.target.value === "true";
+                              setFieldValue(
+                                `leavetypePolicies[${index}].allocationType`,
+                                value
+                              );
+                            }}
+                            value={row.allocationType ?? false}
+                            children={CustomDropdown({
+                              data: ALLOCATION_TYPE_OPTIONS,
+                            })}
+                          />
+                          {errors.leavetypePolicies?.[index]?.allocationType &&
+                            touched.leavetypePolicies?.[index]?.allocationType && (
+                              <CustomErrorLabel
+                                touched={true}
+                                error={
+                                  errors.leavetypePolicies?.[index]?.allocationType
+                                }
+                              />
+                            )}
+                        </td>
+                        {/* Allocation type Field Ends */}
 
                         {/* This field will be used later that's why disabled for now */}
                         {/* Min Experience Field Starts */}

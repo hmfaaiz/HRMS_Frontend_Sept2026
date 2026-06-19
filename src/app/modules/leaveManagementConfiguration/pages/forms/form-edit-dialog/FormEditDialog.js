@@ -50,6 +50,8 @@ export function FormEditDialog({ id, show, onHide, userForRead, isEdit }) {
 
     if (!dashboard?.allGenderList || !dashboard?.allGenderList?.length)
       dispatch(fetchAllFormsMenu(187, "allGenderList", 'All'));
+    if (!dashboard?.allAllocationTypList || !dashboard?.allAllocationTypList?.length)
+      dispatch(fetchAllFormsMenu(557, "allAllocationTypList", 'All'));
     if (!dashboard?.allLeaveStatus || !dashboard?.allLeaveStatus?.length)
       dispatch(fetchAllFormsMenu(191, "allLeaveStatus", 'All'));
     if (!dashboard?.allMaritalStatus || !dashboard?.allMaritalStatus?.length)
