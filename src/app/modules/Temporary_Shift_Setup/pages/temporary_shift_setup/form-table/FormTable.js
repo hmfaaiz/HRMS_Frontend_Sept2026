@@ -108,7 +108,7 @@ export function FormTable() {
       formatter: (cell) => formatTime(cell),
     },
     {
-      dataField: "fromDate",
+      dataField: "startDate",
       text: "From Date",
       sort: false,
       sortCaret: sortCaret,
@@ -117,7 +117,7 @@ export function FormTable() {
       formatter: (c) => c && format(new Date(c), "dd-MMM-yyyy"),
     },
     {
-      dataField: "toDate",
+      dataField: "endDate",
       text: "To Date",
       sort: false,
       sortCaret: sortCaret,

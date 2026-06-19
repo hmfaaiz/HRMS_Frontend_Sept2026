@@ -45,8 +45,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     isIncludeInterShifGap: false,
     markAbsent: "",
     markHalfDay: "",
-    fromDate: "",  
-    toDate: "",     
+    startDate: "",  
+    endDate: "",     
   };
 
   const value = {

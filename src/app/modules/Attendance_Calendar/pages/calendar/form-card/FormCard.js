@@ -425,7 +425,8 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                           onChange={handleSubsidiaryChange} // Call the dynamic reset handler
                           value={
                             dashboard?.allSubsidiaryList?.find(
-                              (option) => option?.value === values?.subsidiaryId
+                              (option) =>
+                                option?.value === values?.subsidiaryId,
                             ) || null
                           }
                           options={dashboard?.allSubsidiaryList}
@@ -454,19 +455,20 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("departmentId", value);
+                            setFieldValue("departmentId", e?.value || "");
                           }}
                           label={<span> Department</span>}
                           value={
-                            dashboard?.allDept?.find(
-                              (option) => option?.value === values?.departmentId
-                            ) || null
+                            values?.departmentId
+                              ? dashboard?.allDept?.find(
+                                  (option) =>
+                                    option?.value === values?.departmentId,
+                                )
+                              : { label: "All", value: "" }
                           }
                           // options={dashboard?.allDept}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(dashboard?.allDept)
                               ? dashboard?.allDept
                               : []),
@@ -480,22 +482,25 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                           name="employeeId"
                           label={<span>Employee</span>}
                           onChange={(e) => {
-                            setFieldValue("employeeId", e.value || null);
+                            setFieldValue("employeeId", e?.value || "");
                           }}
                           value={
-                            dashboard?.allEmployees?.find(
-                              (option) => option?.value === values?.employeeId
-                            ) || null
+                            values?.employeeId
+                              ? dashboard?.allEmployees?.find(
+                                  (option) =>
+                                    option?.value === values?.employeeId,
+                                )
+                              : { label: "All", value: "" }
                           }
                           // options={dashboard?.allEmployees}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(values?.departmentId
                               ? dashboard?.allEmployees?.filter(
                                   (emp) =>
-                                    emp?.departmentId === values.departmentId
+                                    emp?.departmentId === values.departmentId,
                                 )
-                              : dashboard?.allEmployees),
+                              : dashboard?.allEmployees || []),
                           ]}
                           error={errors.employeeId}
                           touched={touched.employeeId}
@@ -504,7 +509,7 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
 
                       <div>
                         <label>
-                          From<span style={{ color: "red" }}>*</span>
+                          From Date<span style={{ color: "red" }}>*</span>
                         </label>
                         <DatePicker
                           className="form-control"
@@ -529,7 +534,7 @@ const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
                       {/* Date To Selector */}
                       <div>
                         <label>
-                          Date To<span style={{ color: "red" }}>*</span>
+                          To Date<span style={{ color: "red" }}>*</span>
                         </label>
                         <DatePicker
                           className="form-control"

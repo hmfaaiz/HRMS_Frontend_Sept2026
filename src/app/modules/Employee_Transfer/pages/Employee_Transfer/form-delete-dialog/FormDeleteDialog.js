@@ -2,14 +2,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
-import * as actions from "../../../_redux/bankActions";
-import { useBanksUIContext } from "../BanksUIContext";
+import * as actions from "../../../_redux/redux-Actions";
+import { useFormUIContext } from "../FormUIContext";
 
-export function BankDeleteDialog({ id, status, show, onHide }) {
-  // console.log("Status", status);
+export function FormDeleteDialog({ id, status, show, onHide }) {
+
   const [loading, setLoading] = useState(false);
   // Customers UI Context
-  const usersUIContext = useBanksUIContext();
+  const usersUIContext = useFormUIContext();
   const usersUIProps = useMemo(() => {
     return {
       queryParams: usersUIContext.queryParams,
@@ -48,14 +48,12 @@ export function BankDeleteDialog({ id, status, show, onHide }) {
     dispatch(actions.deleteEmployeeTransfer(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchUsers(usersUIProps.queryParams));
-      // clear selections list
-      // usersUIProps.setIds([]);
-      // closing delete modal
+      dispatch(actions.fetchEmployeeTransfer(usersUIProps.queryParams));
+   
       disableLoading();
     });
   };
-  //console.log("status", status, id);
+
   return (
     <Modal
       show={show}
@@ -67,12 +65,12 @@ export function BankDeleteDialog({ id, status, show, onHide }) {
       {/*end::Loading*/}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-         Record Deleting
+          Delete Record
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isLoading && <span>Are you sure to delete this record?</span>}
-        {isLoading && <span>record is deleting...</span>}
+        {!isLoading && <span>Are you sure want to delete this record?</span>}
+        {isLoading && <span>user is deactivating...</span>}
       </Modal.Body>
       <Modal.Footer>
         <div>
@@ -87,9 +85,9 @@ export function BankDeleteDialog({ id, status, show, onHide }) {
           <button
             type="button"
             onClick={deleteEmployeeTransfer}
-            className="btn btn-danger btn-elevate"
+            className="btn btn-primary btn-elevate"
           >
-            Delete
+            Delete Record
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}

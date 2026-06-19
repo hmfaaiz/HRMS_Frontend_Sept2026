@@ -3,6 +3,18 @@ import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Eye, Pencil, Trash2 } from "lucide-react";
+import { startOfDay, endOfDay, endOfMonth } from "date-fns";
+
+
+function isWithinPayrollMonth(row, payroll) {
+  if (!payroll?.startDate || !row?.from) return false;
+
+  const rosterFrom = new Date(row.from).getTime();
+  const payrollStart = startOfDay(new Date(payroll.startDate)).getTime();
+  const payrollEnd = endOfDay(endOfMonth(new Date(payroll.startDate))).getTime();
+
+  return rosterFrom >= payrollStart && rosterFrom <= payrollEnd;
+}
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -16,28 +28,23 @@ export function ActionsColumnFormatter(
     payrollData,
   }
 ) {
-  //Function to check if the date doesn't lie before the payroll month date
-  const checkPayrolMonth = (row, payroll) => {
-    return (
-      payroll &&
-      payroll.startDate &&
-      new Date(payroll.startDate).getTime() <= new Date(row.from).getTime()
-    );
-  };
+  const editable = isWithinPayrollMonth(row, payrollData);
 
   return (
     <div className="space-x-2">
-      {!checkPayrolMonth(row, payrollData) && (
-        <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
-        >
-          <a onClick={() => setId(row.Id)}>
-            <Eye className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
-      )}
+      {/* Every request can be viewed, regardless of payroll month */}
+      <OverlayTrigger
+        overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
+      >
+        <a onClick={() => setId(row.Id)}>
+          <Eye className="w-4 h-4 text-black cursor-pointer" />
+        </a>
+      </OverlayTrigger>
 
-     {isAccessForEdit && checkPayrolMonth(row, payrollData) && row.isFromPortal !== 1 && row.isFromPortal !== true && (
+      {isAccessForEdit &&
+        editable &&
+        row.isFromPortal !== 1 &&
+        row.isFromPortal !== true && (
           <OverlayTrigger
             overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
           >
@@ -47,15 +54,13 @@ export function ActionsColumnFormatter(
           </OverlayTrigger>
         )}
 
-      {isAccessForDelete && checkPayrolMonth(row, payrollData) && (
+      {isAccessForDelete && editable && (
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Delete</Tooltip>}
+          overlay={<Tooltip id="products-delete-tooltip">Delete</Tooltip>}
         >
-          {
-            <a onClick={() => openDeleteFormDialog(row.Id)}>
-              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          }
+          <a onClick={() => openDeleteFormDialog(row.Id)}>
+            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+          </a>
         </OverlayTrigger>
       )}
     </div>

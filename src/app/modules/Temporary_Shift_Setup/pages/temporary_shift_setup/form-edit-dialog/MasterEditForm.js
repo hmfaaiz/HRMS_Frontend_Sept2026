@@ -36,15 +36,15 @@ const formValidation = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   name: Yup.string().required(VALIDATION_MESSAGES.required),
   shiftCode: Yup.string().required(VALIDATION_MESSAGES.required),
-  fromDate: Yup.date()
+  startDate: Yup.date()
     .nullable()
     .transform((value, originalValue) => (originalValue === "" ? null : value))
     .required("From Date is required"),
-  toDate: Yup.date()
+  endDate: Yup.date()
     .nullable()
     .transform((value, originalValue) => (originalValue === "" ? null : value))
     .required("To Date is required")
-    .min(Yup.ref("fromDate"), "To Date cannot be before From Date"),
+    .min(Yup.ref("startDate"), "To Date cannot be before From Date"),
   startTime: Yup.string()
     .required("Required*")
     .matches(
@@ -410,7 +410,7 @@ export function MasterEditForm({
                           From Date<span style={{ color: "red" }}>*</span>
                         </label>
                         <Field
-                          name="fromDate"
+                          name="startDate"
                           component={DatePickerField}
                           placeholder="Select From Date"
                           dateFormat="dd-MMM-yyyy"
@@ -423,7 +423,7 @@ export function MasterEditForm({
                           To Date<span style={{ color: "red" }}>*</span>
                         </label>
                         <Field
-                          name="toDate"
+                          name="endDate"
                           component={DatePickerField}
                           placeholder="Select To Date"
                           dateFormat="dd-MMM-yyyy"
