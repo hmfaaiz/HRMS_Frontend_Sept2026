@@ -45,14 +45,18 @@ export const employeeTempShiftSlice = createSlice({
             state.totalCount = totalResult;
         },
         TempShiftFetchedForEdit: (state, action) => {
-            const entity = action?.payload?.userForEdit;
-            state.actionsLoading = false;
-            if (entity) {
-                entity.workingdays = entity.workingdays?.split(",") || [];
-            }
-            state.userForEdit = entity;
-            state.error = null;
-        },
+  const entity = action?.payload?.userForEdit;
+  state.actionsLoading = false;
+  if (entity) {
+    entity.workingdays = entity.workingdays?.split(",") || [];
+    entity.interShiftGap =
+      entity.interShiftGap !== null && entity.interShiftGap !== undefined
+        ? String(entity.interShiftGap)
+        : "";
+  }
+  state.userForEdit = entity;
+  state.error = null;
+},
         TempShiftDeleted: (state, action) => {
             state.error = null;
             state.actionsLoading = false;

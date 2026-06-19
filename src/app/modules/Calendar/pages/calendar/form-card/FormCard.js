@@ -394,7 +394,7 @@ export function FormCard() {
 
                       <div>
                         <label>
-                          From<span style={{ color: "red" }}>*</span>
+                          From Date<span style={{ color: "red" }}>*</span>
                         </label>
                         <DatePicker
                           className="form-control"
@@ -419,7 +419,7 @@ export function FormCard() {
                       {/* Date To Selector */}
                       <div>
                         <label>
-                          Date To<span style={{ color: "red" }}>*</span>
+                          To Date<span style={{ color: "red" }}>*</span>
                         </label>
                         <DatePicker
                           className="form-control"
