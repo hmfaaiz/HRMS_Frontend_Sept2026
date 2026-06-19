@@ -89,7 +89,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         isAllowRatingSelection: data.isAllowRatingSelection,
         isMarkCommentAsMandatory: data.isMarkCommentAsMandatory,
         isActive: data.isActive,
-
+        weightage : data?.weightage,
 
       };
 
