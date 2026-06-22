@@ -40,7 +40,6 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
     endDate: "",
   };
 
-  console.log("acadenuc ui events", BanksUIEvents);
 
   const value = {
     queryParams,

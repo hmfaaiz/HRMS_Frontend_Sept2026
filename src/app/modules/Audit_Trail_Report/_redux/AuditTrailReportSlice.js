@@ -69,7 +69,7 @@ export const AuditTrailReportSlice = createSlice({
         EmployeeRegisterFetched: (state, action) => {
             state.entities = null;
             state.totalCount = 0;
-        console.log("action.payload.data11111",action.payload.data)
+ 
             const entities = action.payload.data?.data.rows;
             const totalResult = action.payload.data?.data.totalResults;
             state.listLoading = false;

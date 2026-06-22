@@ -49,9 +49,9 @@ export function IncidentCreateDialog({
   subCenter,
   setVehicle,
 }) {
-  // console.log("city", city);
-  // console.log("center", center);
-  // console.log("subCenter", subCenter);
+ 
+ 
+ 
   const title = "UserEditDialog";
   // const classes = useStyles();
   const [centerId, setCenter] = useState("");
@@ -61,9 +61,9 @@ export function IncidentCreateDialog({
 
   const { dashboard } = useSelector((state) => state);
 
-  //console.log("dashboard", dashboard);
+ 
 
-  //console.log("incidentsUIContext", incidentsUIContext);
+ 
   // const incidentsUIProps = useMemo(() => {
   //   return {
   //     initIncident: incidentsUIContext.initIncident,

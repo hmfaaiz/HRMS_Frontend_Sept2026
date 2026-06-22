@@ -175,16 +175,6 @@ export function FormTable(user) {
 
 
 
-  useEffect(() => {
-    const eobiAllowance = currentState.userForEdit?.tran_payroll_policy_eobiAllowances?.map((x) => {
-      return x.earningId
-    }) || [];
-
-
-    (
-      [...eobiAllowance]
-    );
-  }, [currentState.userForEdit?.tran_payroll_policy_eobiAllowances]);
 
 
   // FOR SESSI List Configuration
@@ -222,16 +212,6 @@ export function FormTable(user) {
 
 
 
-  useEffect(() => {
-    const eobiAllowance = currentState.userForEdit?.tran_payroll_policy_providentFundAllowances?.map((x) => {
-      return x.earningId
-    }) || [];
-
-
-    (
-      [...eobiAllowance]
-    );
-  }, [currentState.userForEdit?.tran_payroll_policy_providentFundAllowances]);
 
 
 
@@ -784,7 +764,6 @@ export function FormTable(user) {
   };
 
   const SavePayrollPolicy = async (user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances,pensionAllowances) => {
-console.log("pensionAllowances11111",pensionAllowances)
     if (!user.Id) {
 
       await dispatch(actions.create_Payroll_Policy(user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances,pensionAllowances));
@@ -902,7 +881,6 @@ console.log("pensionAllowances11111",pensionAllowances)
        
 
       };
-console.log("update_Payroll_Policy8888888888",pensionAllowances)
 
       await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList,providentFundAllowances,pensionAllowances));
       // await dispatch(actions.fetchUsers(usersUIProps.queryParams));
@@ -1085,7 +1063,7 @@ console.log("update_Payroll_Policy8888888888",pensionAllowances)
             formik,
           }) => (
             <>  <Form className="form form-label-right">
-              {console.log("errors11111",errors)}
+              
               <fieldset disabled={user?.readOnly || false} >
 
                 <div className="flex justify-between">

@@ -64,7 +64,6 @@ function PatternListForm({
         );
 
         if (hodEmployee) {
-          console.log(`Auto-populating HOD for department ${row.departmentId}:`, hodEmployee.label);
           hasChanges = true;
           return {
             ...row,

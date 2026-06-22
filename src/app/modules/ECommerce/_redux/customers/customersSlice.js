@@ -42,7 +42,6 @@ export const customersSlice = createSlice({
     // findCustomers
     customersFetched: (state, action) => {
       const { totalCount, entities } = action.payload
-      console.log("cutomerSlice", action.payload)
       state.listLoading = false
       state.error = null
       state.entities = entities
@@ -56,12 +55,6 @@ export const customersSlice = createSlice({
     },
     // updateCustomer
     customerUpdated: (state, action) => {
-      console.log(
-        "customerUpdated",
-        state.entities.map((entity) => {
-          return entity
-        })
-      )
       state.error = null
       state.actionsLoading = false
       state.entities = state.entities.map((entity) => {

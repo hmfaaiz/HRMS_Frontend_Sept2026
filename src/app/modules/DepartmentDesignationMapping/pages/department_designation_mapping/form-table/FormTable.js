@@ -61,7 +61,6 @@ export function FormTable() {
   );
 
   // Table columns
-console.log("entities11111",entities)
   const columns = [
     {
       dataField: "Department.deptName",

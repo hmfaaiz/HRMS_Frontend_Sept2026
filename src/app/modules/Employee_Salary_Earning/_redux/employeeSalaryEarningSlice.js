@@ -77,7 +77,6 @@ export const employeeSalaryEarningSlice = createSlice({
             );
         },
         employee_salary_Created: (state, action) => {
-             console.log("action payload for employee_salary_", action.payload);
             state.actionsLoading = false;
             state.error = null;
             state.entities.unshift(action.payload);

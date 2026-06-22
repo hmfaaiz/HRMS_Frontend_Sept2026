@@ -2,130 +2,130 @@ import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
 import { EmployeeTransferSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
-import {generateEmployeeTransferReportRequest} from "./redux-Crud"
+import { generateEmployeeTransferReportRequest } from "./redux-Crud"
 const { actions } = EmployeeTransferSlice;
 
 export const fetchEmployeeTransfer = (queryparm) => async (dispatch) => {
 
-    if (queryparm.pdf) {
-      dispatch(actions.startCall({ callType: callTypes.pdf }));
-      return requestFromServer.getAllEmployeeTransfer(queryparm)
-  
-        .then((res) => {
-         
-          const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-          const pdfUrl = URL.createObjectURL(pdfBlob);
-  
-          // Trigger file download
-          const link = document.createElement('a');
-          link.href = pdfUrl;
-          link.setAttribute('download', 'EmployeeTransfer.pdf');
-          document.body.appendChild(link);
-          link.click();
-          dispatch(actions.pdfFetched({}));
-          document.body.removeChild(link);
-        })
-  
-        .catch((error) => {
-          dispatch(actions.catchError({ error, callType: callTypes.pdf }));
-          toast.error( SERVER_MESSAGES.pdfFail, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+  if (queryparm.pdf) {
+    dispatch(actions.startCall({ callType: callTypes.pdf }));
+    return requestFromServer.getAllEmployeeTransfer(queryparm)
+
+      .then((res) => {
+
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 'EmployeeTransfer.pdf');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+
+      .catch((error) => {
+        dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+        toast.error(SERVER_MESSAGES.pdfFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
-  
-    }
-  
-   else if (queryparm.csv) {
-  
-      dispatch(actions.startCall({ callType: callTypes.csv }));
-      return requestFromServer.getAllEmployeeTransfer(queryparm)
-  
-     .then((res) => {
-          const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-          const pdfUrl = URL.createObjectURL(pdfBlob);
-    
-          // Trigger file download
-          const link = document.createElement('a');
-          link.href = pdfUrl;
-          link.setAttribute('download', 'EmployeeTransfer.csv');
-          document.body.appendChild(link);
-          link.click();
-          dispatch(actions.csvFetched({}));
-          dispatch(actions.pdfFetched({}));
-          document.body.removeChild(link);
-        })
-        .catch((error) => {
-          const decodedData = new TextDecoder().decode(error?.response?.data);
-          const jsonData = JSON.parse(decodedData);
-       
-          toast.error( SERVER_MESSAGES?.csvFail, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+      });
+
+  }
+
+  else if (queryparm.csv) {
+
+    dispatch(actions.startCall({ callType: callTypes.csv }));
+    return requestFromServer.getAllEmployeeTransfer(queryparm)
+
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 'EmployeeTransfer.csv');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.csvFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+
+        toast.error(SERVER_MESSAGES?.csvFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
-  
-    }
-  
-    else if (queryparm.excel) {
-   
-      dispatch(actions.startCall({ callType: callTypes.xlsx }));
-      return requestFromServer.getAllEmployeeTransfer(queryparm)
-  
-     .then((res) => {
-          const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-          const pdfUrl = URL.createObjectURL(pdfBlob);
-    
-          // Trigger file download
-          const link = document.createElement('a');
-          link.href = pdfUrl;
-          link.setAttribute('download', 'EmployeeTransfer.xlsx');
-          document.body.appendChild(link);
-          link.click();
-          dispatch(actions.excelFetched({}));
-          dispatch(actions.pdfFetched({}));
-          document.body.removeChild(link);
-        })
-        .catch((error) => {
-          const decodedData = new TextDecoder().decode(error?.response?.data);
-          const jsonData = JSON.parse(decodedData);
-          toast.error(SERVER_MESSAGES.excelFail, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+      });
+
+  }
+
+  else if (queryparm.excel) {
+
+    dispatch(actions.startCall({ callType: callTypes.xlsx }));
+    return requestFromServer.getAllEmployeeTransfer(queryparm)
+
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 'EmployeeTransfer.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.excelFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+        toast.error(SERVER_MESSAGES.excelFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
-  
-    }
-  else{
+      });
 
-  return requestFromServer.getAllEmployeeTransfer(queryparm)
+  }
+  else {
 
-    .then((response) => {
+    return requestFromServer.getAllEmployeeTransfer(queryparm)
+
+      .then((response) => {
 
 
-      dispatch(actions.EmployeeTransferFetched(response));
-    })
-    .catch((error) => {
+        dispatch(actions.EmployeeTransferFetched(response));
+      })
+      .catch((error) => {
 
-      error.clientMessage = "Can't find";
-      dispatch(actions.catchError({ error, callType: callTypes.list }));
-    });
-};
+        error.clientMessage = "Can't find";
+        dispatch(actions.catchError({ error, callType: callTypes.list }));
+      });
+  };
 };
 
 export const fetchEmployeeTransferById = (id) => (dispatch) => {
@@ -266,10 +266,6 @@ export const updateEmployeeTransfer = (user, disbaleLoading, onHide) => (dispatc
     });
 };
 
-
-export const fetchApplicantsForVacancy = (EmployeeTransferId) => () => {
-  return requestFromServer.fetchApplicantsForVacancy(EmployeeTransferId);
-};
 
 export const downloadEmployeeTransferReport = (EmployeeTransferId) => (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.reportPdf }));

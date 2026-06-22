@@ -27,7 +27,6 @@ export const fetchLoanManagConfig = (id) => (dispatch) => {
 
 
   if (!id) {
-    console.log("come on this condition")
     return dispatch(actions.LoanManagConfigForEdit({ userForEdit: null }));
   }
 

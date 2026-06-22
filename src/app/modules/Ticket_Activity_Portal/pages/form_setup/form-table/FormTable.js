@@ -47,7 +47,6 @@ export function FormTable() {
     }),
     shallowEqual,
   );
-  console.log("currentState", currentState);
   const { totalCount, entities, listLoading } = currentState || {};
 
   const dispatch = useDispatch();

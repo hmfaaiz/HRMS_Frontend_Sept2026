@@ -5,7 +5,6 @@ import { FormPage } from "./Designation_Dep_Map_for_Exit_Clearance/FormPage";
 
 export default function designation_dep_map_for_exit_clearance_Management() {
 
- console.log("index111")
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

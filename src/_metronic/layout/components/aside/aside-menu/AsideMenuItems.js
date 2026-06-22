@@ -4,13 +4,13 @@ import { useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
 
 export default function AsideMenuItem(props) {
-  // console.log("Asidemenu item", props)
-  // console.log("Props Aside menu", props.element.isResourceShow)
+ 
+ 
   const {
     element: { isResourceShow },
   } = props;
   
-  //console.log("isResourceShow", isResourceShow)
+ 
   const location = useLocation();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)

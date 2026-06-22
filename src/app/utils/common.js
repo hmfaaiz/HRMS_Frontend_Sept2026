@@ -192,7 +192,6 @@ export const setDefaultSubsidiary = (value, allSubsidiaryList, defaultValue, cal
 
 export const calculateServicePeriod = (start, end) => {
   if (!start || !end) return "";
-console.log("calculateServicePeriod1111")
   const startDate = new Date(start);
   const endDate = new Date(end);
 
@@ -225,7 +224,6 @@ console.log("calculateServicePeriod1111")
       years += 1;
     }
   }
-console.log("aaaaaaa1",`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
   return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
 };
 

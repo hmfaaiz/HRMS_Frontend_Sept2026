@@ -24,7 +24,7 @@ export default function AsideparentList(props) {
   // Function to handle the blur event
   const handleBlur = (event) => {
     setIsVisible(false);
-    console.log("2")
+ 
 
   };
 

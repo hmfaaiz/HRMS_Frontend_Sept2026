@@ -103,7 +103,7 @@ export function BankEditForm({
 
    //===== Date Of startDate
    useEffect(() => {
-    console.log("starty date", user.startDate)
+ 
     if (user.startDate) {
       setStartDate(new Date(user.startDate));
     }
@@ -111,7 +111,7 @@ export function BankEditForm({
 
    //===== Date Of End Date
    useEffect(() => {
-    console.log("end date", user.endDate)
+ 
     if (user.endDate) {
       setEndDate(new Date(user.endDate));
     }
@@ -123,7 +123,7 @@ export function BankEditForm({
   // Status Dropdown Binding
   useEffect(() => {
     const statusId = defStatus?.value ? defStatus.value : user.statusId;
-    console.log("statusId", statusId);
+ 
     setStatus(
       dashboard.allStatus &&
       dashboard.allStatus.filter((item) => {
@@ -136,7 +136,7 @@ export function BankEditForm({
   // Insitition Dropdown Binding
   useEffect(() => {
     const institutionId = defInstitution?.value ? defInstitution.value : user.institutionId;
-    console.log("institutionId", institutionId);
+ 
     setInstitution(
       dashboard.allInstitution &&
       dashboard.allInstitution.filter((item) => {
@@ -149,7 +149,7 @@ export function BankEditForm({
   // City Dropdown Binding
   useEffect(() => {
     const cityId = defCity?.value ? defCity.value : user.cityId;
-    console.log("institutionId", cityId);
+ 
     setDefaultCity(
       dashboard.allCity &&
       dashboard.allCity.filter((item) => {
@@ -162,7 +162,7 @@ export function BankEditForm({
    // Country Dropdown Binding
    useEffect(() => {
     const countryId = defCountry?.value ? defCountry.value : user.countryId;
-    console.log("countryId", countryId);
+ 
     setDefaultCountry(
       dashboard.allCountry &&
       dashboard.allCountry.filter((item) => {
@@ -175,7 +175,7 @@ export function BankEditForm({
   // Country Dropdown Binding
   useEffect(() => {
     const degreeId = defDegreeTitle?.value ? defDegreeTitle.value : user.degreeId;
-    console.log("degreeId", degreeId);
+ 
     setDefaultDegreeTitle(
       dashboard.allDegreeTitle &&
       dashboard.allDegreeTitle.filter((item) => {
@@ -188,7 +188,7 @@ export function BankEditForm({
   // EMployee Dropdown Binding
   useEffect(() => {
     const employeeId = defEmployee?.value ? defEmployee.value : user.employeeId;
-    console.log("employeeId", employeeId);
+ 
     setEmployeeDefault(
       dashboard.allEmployees &&
       dashboard.allEmployees.filter((item) => {
@@ -205,7 +205,7 @@ export function BankEditForm({
     if (event.target.files && event.target.files[0]) {
       let pdf = event.target.files[0];
       setFile(pdf);
-      console.log("pdf", URL.createObjectURL(pdf));
+ 
       setPDFAttached(URL.createObjectURL(pdf));
     }
   };
@@ -217,7 +217,7 @@ export function BankEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
+ 
           enableLoading();
           saveAcademic(values);
         }}

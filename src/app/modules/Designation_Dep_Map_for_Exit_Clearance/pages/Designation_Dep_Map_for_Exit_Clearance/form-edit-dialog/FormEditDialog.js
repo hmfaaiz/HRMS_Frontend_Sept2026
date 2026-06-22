@@ -16,7 +16,6 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
- console.log("aaaaaa111111111")
   const usersUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
@@ -48,7 +47,6 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
     isdataForRead,
   } = useSelector((state) => {
    
-  console.log("designation_dep_map_for_exit_clearance1111111",state)
     return {
       actionsLoading: state.users.actionsLoading,
       dataForEdit: state.designation_dep_map_for_exit_clearance.dataForEdit,

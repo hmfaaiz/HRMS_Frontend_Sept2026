@@ -16,7 +16,7 @@ function AuthInit(props) {
   //   shallowEqual
   // )
   const user = useSelector(({ auth }) => auth, shallowEqual)
-  //console.log("Authinit", user)
+ 
 
   //const user = useSelector(({ auth }) => auth, shallowEqual)
 
@@ -24,7 +24,7 @@ function AuthInit(props) {
     return () => {}
   }, [user])
   // const authToken = user.tokens
-  // console.log("Authinit User", authToken)
+ 
   // We should request user by authToken before rendering the application
   useEffect(() => {
     setTimeout(() => {

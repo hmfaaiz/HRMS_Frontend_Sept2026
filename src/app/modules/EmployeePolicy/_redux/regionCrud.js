@@ -4,7 +4,6 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 
 //Create user
 export function createRegion(body) {
-  console.log("create Region step 1", body)
   
   // body.Name = body.txtbankName;
   // delete body.txtbankName
@@ -14,7 +13,6 @@ export function createRegion(body) {
 }
 // Read
 export function getAllRegion(body) {
-  console.log("body",body);
   return axios.post(`${USERS_URL}/region/read-all-region`, body);
 }
 
@@ -26,20 +24,16 @@ let authSMSSend =  async ()=> {
   
 
 export function getRegionById(id) {
-   console.log("Region id", id)
   return axios.post(`${USERS_URL}/region/read-region`, id);
 }
 
 //Update
 export function updateRegion(Region) {
-   console.log("updateUser 12", Region)
   return axios.put(`${USERS_URL}/region/update-region`, Region);
 }
 
 //Delete
 export function deleteRegion(body) {
-  console.log("body")
-  console.log(body);
   return axios.patch(`${USERS_URL}/region/delete-region`, body);
 }
 

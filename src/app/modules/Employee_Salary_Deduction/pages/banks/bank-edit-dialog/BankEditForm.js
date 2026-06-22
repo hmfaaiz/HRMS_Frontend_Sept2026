@@ -83,7 +83,6 @@ export function BankEditForm({
       try {
        
           const response = await axios.post(`${USERS_URL}/employee_salary_earning/read-all-emp-earning_byId`, { id: user.employeeId, transactionType: 'Deduction' });
-          console.log('emp salary deduction', user.employeeId,response);
           setDefaultMapDeductionList(response?.data?.data);
         
       } catch (error) {
@@ -98,7 +97,6 @@ export function BankEditForm({
 
   useEffect(() => {
     const employeeId = defEmployee?.value ? defEmployee.value : user.employeeId;
-    console.log("employeeId", employeeId);
     setEmployeeDefault(
       dashboard.allEmployees &&
       dashboard.allEmployees.filter((item) => {
@@ -111,7 +109,6 @@ export function BankEditForm({
 
   useEffect(() => {
     const currencyId = defCurrencyCodeList?.value ? defCurrencyCodeList.value : user.currencyId;
-    console.log("currencyId", currencyId);
     setDefualtCurrencyCodeList(
       dashboard.allCurrencyCodeList &&
       dashboard.allCurrencyCodeList.filter((item) => {
@@ -152,7 +149,6 @@ export function BankEditForm({
         initialValues={user}
         //validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           values.transactionType = 'Deduction'
           // values.subsidiaryId = 135;

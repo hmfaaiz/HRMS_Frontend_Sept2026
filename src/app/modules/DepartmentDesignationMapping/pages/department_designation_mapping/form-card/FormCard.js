@@ -27,7 +27,6 @@ export function FormCard() {
   const accessUser = userAccess.find(
     (item) => item.componentName === "UpdateDepartmentDesignationMap"
   );
-console.log("userAccess11111",userAccess)
   return (
     <>
       <TCard name={CurrentModuleName()}>

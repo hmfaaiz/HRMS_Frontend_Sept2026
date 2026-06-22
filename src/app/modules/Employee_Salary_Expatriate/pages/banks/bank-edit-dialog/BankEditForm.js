@@ -108,7 +108,6 @@ export function BankEditForm({
 
   useEffect(() => {
     const employeeId = defEmployee?.value ? defEmployee.value : user.employeeId;
-    console.log("employeeId3333", employeeId);
     setEmployeeDefault(
       dashboard.allEmployees &&
       dashboard.allEmployees.filter((item) => {
@@ -125,7 +124,6 @@ export function BankEditForm({
     try {
 
       const response = await axios.post(`${USERS_URL}/salary_expatriate/read-all-compensation-employee-expatriate`, { employeeId: empId });
-      console.log("coms sal exp", response?.data?.data[0]?.totalCost);
       //values.totalCost = response?.data?.data[0]?.totalCost;
       setTotalCost(response?.data?.data[0]?.totalCost);
       setVisaSponsorshipStatus(response?.data?.data[0]?.visaSponsorshipStatus)
@@ -143,7 +141,6 @@ export function BankEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
 
           // values.subsidiaryId = 135;

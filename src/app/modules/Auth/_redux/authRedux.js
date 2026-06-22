@@ -29,7 +29,7 @@ export const reducer = persistReducer(
   (state = initialAuthState, action) => {
     switch (action.type) {
       case actionTypes.Login: {
-        //console.log("AuthRedux login action")
+ 
         // const { authToken } = action.payload
         const { data } = action.payload;
 
@@ -85,7 +85,7 @@ export const actions = {
 
 export function* saga() {
   yield takeLatest(actionTypes.Login, function* loginSaga() {
-    //console.log("function* saga()");
+ 
     //yield put(actions.requestUser())
   });
 
@@ -94,7 +94,7 @@ export function* saga() {
   });
 
   // yield takeLatest(actionTypes.UserRequested, function* userRequested() {
-  //   //   console.log("here is data error")
+ 
   //   //   const { user } = yield getUserByToken()
   //   //   yield put(actions.fulfillUser(user))
   // })

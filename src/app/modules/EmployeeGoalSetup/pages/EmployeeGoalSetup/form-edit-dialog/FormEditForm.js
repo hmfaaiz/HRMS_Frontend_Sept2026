@@ -122,7 +122,6 @@ export function FormEditForm({
       );
 
       setAppraisalPeriod(selected || null);
-      console.log("setting111 fixed", selected);
     }
   }, [data?.appraisalPeriodId, dashboard?.appraisalPeriodList]);
 
@@ -158,7 +157,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
         <>
-          {console.log("erros111", errors)}
+          
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">

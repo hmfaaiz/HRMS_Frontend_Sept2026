@@ -8,7 +8,6 @@ const { actions } = stoppageAllowanceSlice;
 export const fetchUsers = (queryparm) => async (dispatch) => {
   // console.log("Receive QPsss", queryparm)
   dispatch(actions.startCall({ callType: callTypes.list }));
-  console.log("test query param", queryparm)
   return requestFromServer.getAllStoppageAllowance({...queryparm,id:'null'})
     // .getAllReceipts({
     //   filter: {
@@ -20,7 +19,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
     // })
     .then((response) => {
       //  console.log("user action receipt fetched 321")
-      console.log("response", response)
       dispatch(actions.stoppage_allowanceFetched(response));
     })
     .catch((error) => {
@@ -32,7 +30,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-  console.log("User Action id " + id)
   if (!id) {
     return dispatch(actions.stoppage_allowanceFetchedForEdit({ userForEdit: undefined }));
   }
@@ -43,7 +40,6 @@ export const fetchUser = (id) => (dispatch) => {
     .then((response) => {
       const entities = response.data?.data;
 
-      console.log("User fetched for search " ,entities)
       dispatch(actions.stoppage_allowanceFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -104,15 +100,11 @@ export const createStoppageAllowance = (bankForCreation, disbaleLoading, onHide)
   // bankForCreation.phNo = bankForCreation.phNo.toString();
   // bankForCreation.cnic = bankForCreation.cnic.toString();
 
-  console.log("stoppage_allowance for creation", bankForCreation);
   return requestFromServer
     .createStoppageAllowance(bankForCreation)
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-      console.log("mira",user);
-      console.log("academic data");
-      console.log(user);
       dispatch(actions.stoppage_allowanceCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
@@ -146,9 +138,7 @@ export const updatedstoppage_allowance = (user, disbaleLoading, onHide) => (disp
   return requestFromServer
     .updateStoppageAllowance(user)
     .then((response) => {
-      console.log("my response",response?.config?.data);
       const updated_Stoppage_Allowance = response?.config?.data; // response.data?.data;
-      console.log("stoppage_allowanceUpdated Res", response)
       dispatch(actions.stoppage_allowanceUpdated({ updated_Stoppage_Allowance }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();

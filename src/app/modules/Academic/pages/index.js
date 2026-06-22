@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { AcademicPage } from "./banks/BanksPage";
 
 export default function AcademicManagement() {
-  console.log('academic mein aya')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

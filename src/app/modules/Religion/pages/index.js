@@ -5,7 +5,6 @@ import { ReligionPage } from "./religion/ReligionPage";
  //import { ReligionPage } from "./Religion/ReligionPage";
 
 export default function ReligionManagement() {
-  console.log('religion')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

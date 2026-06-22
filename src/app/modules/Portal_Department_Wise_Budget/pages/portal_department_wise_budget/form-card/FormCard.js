@@ -46,7 +46,6 @@ export function FormCard() {
 
 
 
-  console.log("currentUser11111", currentUser?.employeeIdMapping)
 
   useEffect(() => {
 
@@ -57,7 +56,6 @@ export function FormCard() {
 
 
   }, [currentUser?.employeeIdMapping]);
-console.log("department_wise_budget_approval11111",department_wise_budget_approval)
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">

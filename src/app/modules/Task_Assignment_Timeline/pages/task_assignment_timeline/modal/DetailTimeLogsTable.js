@@ -194,7 +194,6 @@ export function DetailTimeLogsTable() {
       style: { minWidth: "10px" },
     },
   ];
-console.log("v455555",timeLogsTotalCount)
   // Table pagination
   const paginationOptions = {
     custom: true,

@@ -204,7 +204,6 @@ export function InstallmentDetails({ id, status, show, onHide }) {
 
     useEffect(() => {
         dispatch(actions.fetchmoduledata(id));
-        console.log('fetchmoduledata11111')
 
     }, [id, dispatch, show])
 
@@ -216,7 +215,6 @@ export function InstallmentDetails({ id, status, show, onHide }) {
     }), shallowEqual);
 
     const { userForEdit, loan_config_details_permission } = currentState;
-    console.log("currentState1111", currentState)
     useEffect(() => {
         if (!id) {
             onHide();

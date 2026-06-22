@@ -83,7 +83,6 @@ export function BankEditForm({
 
   useEffect(() => {
     const nationalityId = defNationalList?.value ? defNationalList.value : user.nationalityId || 155;
-    console.log("nationalityId", nationalityId);
     setDefualtNationalList(
       dashboard.allNationalities &&
       dashboard.allNationalities.filter((item) => {
@@ -131,7 +130,6 @@ export function BankEditForm({
   }, [user?.currencyId, dashboard.currencyId]);
 
 
-  console.log("ooop2", user);
 
 
   return (
@@ -141,7 +139,6 @@ export function BankEditForm({
         initialValues={user.gradeId ? user : {  employeeTypeId: 148, gradeId: 144, currencyId: 130, nationalityId: 155 }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
         
               saveEarningDeductionTran(values);

@@ -405,7 +405,6 @@ export function BankEditForm({
     );
 
     fetchEmployeeSalaryEarningList(employeeId, 0, null);
-    console.log("add1111", employeeId, user?.employeeId, dashboard.employeeId)
     setPanelMode(false)
   }, [user?.employeeId, dashboard.employeeId]);
 
@@ -942,7 +941,6 @@ export function BankEditForm({
 
   }
   useEffect(() => {
-    console.log("user?.bankId1111",user)
     applySwiftCode(user?.emp_bankId)
 
   }, [user?.emp_bankId]);

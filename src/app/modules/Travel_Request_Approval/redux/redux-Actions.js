@@ -40,13 +40,13 @@ export const fetchTravelApprovalRequest = (parentRecordId) => async (
   return requestFromServer
     .getTravelRequestApprovalById(parentRecordId) // Send parentRecordId
     .then((response) => {
-      console.log("📡 Full API Response:", response); // Add this debug
+       // Add this debug
 
       const rawData =
         response.data?.data?.requestData || response.data?.requestData;
-      console.log("📦 RawData:", rawData); // Add this debug
-      console.log("🆔 RawData Id:", rawData?.Id); // Add this debug
-      console.log("🔄 Workflow Id:", rawData?.Workflow?.Id); // Add this debug
+       // Add this debug
+       // Add this debug
+       // Add this debug
       const approvalTimeline =
         response.data?.data?.approvalTimeline ||
         response.data?.approvalTimeline ||
@@ -63,8 +63,8 @@ export const fetchTravelApprovalRequest = (parentRecordId) => async (
         workflowId: rawData?.Workflow?.Id, // Keep workflow status Id for approval submission
       };
 
-      console.log("✅ Final data with correct Id:", data); // Add this debug
-      console.log("🆔 Final data.Id:", data.Id); // Add this debug
+       // Add this debug
+       // Add this debug
 
       dispatch(actions.travelRequestFetched({ userForEdit: data }));
     })
@@ -86,11 +86,9 @@ export const fetchTravelApprovalRequestWorkflow = (workflowId) => async (
   return requestFromServer
     .getTravelRequestApprovalWorkflowById(workflowId) // Use the new workflow-based fetch
     .then((response) => {
-      console.log("📡 Full API Response (Workflow):", response);
 
       const rawData =
         response.data?.data?.requestData || response.data?.requestData;
-      console.log("📦 RawData (Workflow):", rawData);
       
       const approvalTimeline =
         response.data?.data?.approvalTimeline ||
@@ -108,7 +106,6 @@ export const fetchTravelApprovalRequestWorkflow = (workflowId) => async (
         workflowId: rawData?.Workflow?.Id,
       };
 
-      console.log("✅ Final data (Workflow):", data);
 
       dispatch(actions.travelRequestFetched({ userForEdit: data }));
     })

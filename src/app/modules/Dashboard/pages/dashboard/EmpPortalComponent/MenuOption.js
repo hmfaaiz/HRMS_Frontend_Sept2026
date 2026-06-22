@@ -57,7 +57,6 @@ export const MenuOption = () => {
       useracc1111: state?.auth?.userAccess,
     };
   }, shallowEqual);
-console.log("useracc1111111111",useracc1111)
   useEffect(() => {
     dispatch(fetchModuleRights());
   }, []);

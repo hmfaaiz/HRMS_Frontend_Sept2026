@@ -50,7 +50,6 @@ export function BankReadForm({
         initialValues={user}
         validationSchema={bankEditSchema}
         onSubmit={(values) => {
-          console.log("Bank form Values", values)
           saveBank(values)
         }}
       >

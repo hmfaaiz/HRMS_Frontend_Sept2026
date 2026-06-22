@@ -82,7 +82,7 @@ export const getPages = (page, pagesCount, paginationSize) => {
 };
 
 export function getHandlerTableChange(setQueryParams) {
-  //console.log("setQueryParams", setQueryParams);
+ 
   return (type, { page, sizePerPage, sortField, sortOrder, data }) => {
     const pageNumber = page || 1;
     setQueryParams((prev) =>

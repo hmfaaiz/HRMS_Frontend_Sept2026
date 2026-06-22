@@ -115,15 +115,15 @@ import userTableMock from "./userTableMock"
 export default function mockAuth(mock) {
   mock.onPost(LOGIN_URL).reply(({ data }) => {
     const { email, password } = JSON.parse(data)
-    console.log("email : password from login form", email, password)
+ 
     if (email && password) {
       const getUserdata = [userTableMock[0].data.user]
-      console.log("user boleen", getUserdata)
+ 
 
       const user = getUserdata.find(
         (x) => x.email.toLocaleLowerCase() === email.toLocaleLowerCase()
       )
-      console.log("user res", user)
+ 
       // getUserdata.email.toLocaleLowerCase() === email.toLocaleLowerCase() &&
       // getUserdata.password === password
 
@@ -134,7 +134,7 @@ export default function mockAuth(mock) {
       // )
 
       if (user) {
-        console.log("user data", { ...user })
+ 
         return [200, { ...user, password: undefined }]
       }
     }
@@ -188,7 +188,7 @@ export default function mockAuth(mock) {
 
   // mock.onGet(ME_URL).reply(({ headers: { Authorization } }) => {
   //   // const getUserToken = userTableMock[0].data.tokens
-  //   console.log("ME-Params: ", { Authorization })
+ 
   //   const authToken = Authorization
   //   // &&
   //   // Authorization.startsWith("Bearer ") &&

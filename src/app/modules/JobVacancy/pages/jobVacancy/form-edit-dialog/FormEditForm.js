@@ -424,7 +424,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
                 {/* Job */}
-                {console.log("errors111", errors)}
+                
                 <div>
                   {/* <h6>Job</h6> */}
                   <div className="grid md:grid-cols-6 gap-x-3">
@@ -1106,7 +1106,6 @@ export function FormEditForm({
                           }
                           onChange={(date) => {
                             let selectedDate = formatDates(date, "yyyy-MM-dd");
-                            console.log("selectedDate111", selectedDate);
                             setFieldValue("desireDateOfApp", selectedDate);
                           }}
                           dateFormat="dd-MMM-yyyy"

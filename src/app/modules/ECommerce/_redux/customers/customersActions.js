@@ -4,13 +4,10 @@ import { customersSlice, callTypes } from "./customersSlice"
 const { actions } = customersSlice
 
 export const fetchCustomers = (queryParams) => (dispatch) => {
-  console.log("QueryParams: ", queryParams)
   dispatch(actions.startCall({ callType: callTypes.list }))
-  console.log("requestFromServer", requestFromServer)
   return requestFromServer
     .findCustomers(queryParams)
     .then((response) => {
-      console.log("User Fecth response", response)
       const { totalCount, entities } = response.data
       dispatch(actions.customersFetched({ totalCount, entities }))
     })

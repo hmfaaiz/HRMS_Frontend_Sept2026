@@ -307,7 +307,6 @@ export function FormEditForm({
     };
   }, [FormUIContext]);
 
-  console.log("qqqqqqqqqqqqq", dashboard?.allPayrollConfigApproverPermissionList)
 
 
   useEffect(() => {
@@ -316,7 +315,6 @@ export function FormEditForm({
       (entity) => entity.subsidiaryId === Number(formData?.subsidiaryId)
     );
 
-    console.log("Filtered Permission:", formData.subsidiaryId, filteredPermission);
 
     if (filteredPermission?.length > 0) {
       const permission = filteredPermission[0]; // Access the first matching permission
@@ -329,13 +327,10 @@ export function FormEditForm({
       // Check if the roleId exists in separationApproverId
       setIsRoleSeparationApprover(separationApproverIds?.includes(roleId));
 
-      console.log("separationApproverId:", isRoleSeparationApprover);
     } else {
-      console.log("No permissions found for the given subsidiaryId.");
     }
 
   }, [formData?.subsidiaryId]); // Re-run this effect if formData.subsidiaryId changes
-  console.log("aaaaa11111", formData?.isFromPortal, isRoleSeparationApprover)
 
   return (
     <Formik

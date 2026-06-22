@@ -132,7 +132,6 @@ export function SalarypolicyFIlter({ listLoading,user }) {
         enableReinitialize={true}
 
         onSubmit={(values) => {
-           console.log("va");
 
         }}
       >

@@ -82,8 +82,6 @@ export function ReligionEditDialog({ id, show, onHide, userForRead }) {
   const saveReligion = (user) => {
 
     if (!id) {
-      console.log("relegion save");
-      console.log(user);
 
       // const getUserStatus = userStatusTypes.filter((item) => {
       //   return item.value === +user.status;
@@ -104,7 +102,6 @@ export function ReligionEditDialog({ id, show, onHide, userForRead }) {
       //   return item.value === +user.status;
       // });
      
-      console.log("getUserStatus", user);
 
       const religionUpdatedFields = {
         Id: user.Id,
@@ -112,7 +109,6 @@ export function ReligionEditDialog({ id, show, onHide, userForRead }) {
         regionCode: user.regionCode
       };
 
-      console.log("religionUpdatedFields", religionUpdatedFields);
       dispatch(actions.updateRegion(religionUpdatedFields, disbaleLoading, onHide));
       dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }

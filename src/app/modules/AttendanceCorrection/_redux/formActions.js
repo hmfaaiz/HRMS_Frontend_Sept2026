@@ -134,7 +134,7 @@ export const fetchAttendance = (queryparm) => async (dispatch) => {
 //    }
  
 //    else {
-//  console.log("hit111",queryparm.pdf)
+ 
   dispatch(actions.startCall({ callType: callTypes.list }));
   dispatch(actions.startLoader({ callType: callTypes.list }));
   
@@ -469,7 +469,7 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
 export const fetchAttendanceSheetConsolidated = (filters, document, labels = {},group_by_emp) => async (dispatch) => {
 
   // if (!(filters.employeeId && filters.attDateIn)) {
-  //   console.log("filter2222",filters)
+ 
   //   return dispatch(actions.AttendanceFetchedForEdit(null));
   // }
 if(group_by_emp){

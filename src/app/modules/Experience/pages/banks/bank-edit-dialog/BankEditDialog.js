@@ -73,8 +73,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
   const saveExperience = async (user) => {
 
     if (!id) {
-      console.log("Experience edit dialog");
-      console.log(user);
 
       // const getUserStatus = userStatusTypes.filter((item) => {
       //   return item.value === +user.status;
@@ -95,7 +93,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
       //   return item.value === +user.status;
       // });
 
-      console.log("getUserStatus", user);
 
       // This object set for Edit Fields in DB
       const experienceUpdatedFields = {
@@ -110,7 +107,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         endDate: user.endDate
       };
 
-      console.log("acaedmic updated", experienceUpdatedFields);
      await dispatch(actions.updatedExperience(experienceUpdatedFields, disbaleLoading, onHide));
      await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }

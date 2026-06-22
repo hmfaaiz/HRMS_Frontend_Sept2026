@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { ContactPage } from "./banks/BanksPage";
 
 export default function ContactManagement() {
-  console.log('contact page')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

@@ -48,8 +48,6 @@ export function SubsidiaryOnboardingCard() {
     }),
     shallowEqual
   );
-  console.log("accessUser", accessUser)
-  console.log("userAccess",userAccess)
   return (
     <TCard name={CurrentModuleName()}>
       {/* Filter & Add Button */}

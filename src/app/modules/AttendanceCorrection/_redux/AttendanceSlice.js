@@ -203,9 +203,9 @@ export const AttendanceCorrectionSlice = createSlice({
                 if (entities.attDateOut) {
                     entities.attDateOut = new Date(entities.attDateOut);
                 }
-                //    console.log("fetching upcoming date ",entities.attDateIn)
+ 
                 //     entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
-                //     console.log("fetching entities.attDateIn date ",entities.attDateIn)
+ 
                 //     entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
 
 

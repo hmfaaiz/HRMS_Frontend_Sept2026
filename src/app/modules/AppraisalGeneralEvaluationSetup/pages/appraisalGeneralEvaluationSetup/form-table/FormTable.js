@@ -49,7 +49,7 @@ export function FormTable() {
     shallowEqual
   );
 
-console.log("userAccess1111",userAccess)
+ 
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10

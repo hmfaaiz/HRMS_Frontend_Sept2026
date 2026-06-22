@@ -44,7 +44,6 @@ export function FormEditDialog({ show, Id, onHide, dataForRead }) {
     try {
       enableLoading();
 
-      console.log('Data before upload:', data);
 
       // Upload all file attachments first
       const updatedList = await Promise.all(
@@ -54,10 +53,8 @@ export function FormEditDialog({ show, Id, onHide, dataForRead }) {
           // If there's a new file to upload
           if (item.attachment && item.attachment instanceof File) {
             try {
-              console.log(`Uploading file for task: ${item.taskName}`, item.attachment.name);
               const res = await actions.uploadImage(item.attachment);
               attachmentPath = res.data.filename;
-              console.log(`Upload successful:`, attachmentPath);
             } catch (error) {
               console.error(`Failed to upload file for ${item.taskName}:`, error);
               // Keep existing attachmentPath if upload fails
@@ -78,7 +75,6 @@ export function FormEditDialog({ show, Id, onHide, dataForRead }) {
         list: updatedList,
       };
 
-      console.log('Final data being sent:', finalData);
 
       // Save the data
       if (!Id) {

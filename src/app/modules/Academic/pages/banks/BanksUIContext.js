@@ -42,8 +42,6 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
       institutionId:""
   };
 
-  console.log("acadenuc ui events",BanksUIEvents);
-
   const value = {
     queryParams,
     setQueryParamsBase,

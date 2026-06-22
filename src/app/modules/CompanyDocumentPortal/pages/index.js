@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./companyDocument/FormPage";
 
 export default function CompanyDocManagement() {
-  console.log("ggggg")
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
     

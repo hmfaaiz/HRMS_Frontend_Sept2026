@@ -101,7 +101,6 @@ let formattedString;
   
     // Create the final formatted string
     formattedString = `${monthName} ${year} (${formattedStartDate} - ${formattedEndDate})`;
-    console.log("formattedString month set",formattedString)
   
   }else{
     formattedString="Payroll month not available"
@@ -121,7 +120,6 @@ let formattedString;
       initialValues={user}
       validationSchema={salarypolicyEditSchema}
       onSubmit={(values) => {
-        console.log("values", values);
         enableLoading();
         saveSalarypolicy(values);
       }}

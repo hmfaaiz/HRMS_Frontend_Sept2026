@@ -12,7 +12,6 @@ export function createfinalSettlementPolicy(body, earningObjList) {
 
 // Read
 export function getAllfinalSettlementPolicy(body) {
-  console.log("body", body);
   return axios.post(`${USERS_URL}/final_settlement_policy/read-all-final-settlement-policy`, body);
 }
 
@@ -30,8 +29,6 @@ export function updatefinalSettlementPolicy(body) {
 
 //Delete
 export function deletefinalSettlementPolicy(body) {
-  console.log("body")
-  console.log(body);
   return axios.patch(`${USERS_URL}/final_settlement_policy/delete-final-settlement-policy`, body);
 }
 

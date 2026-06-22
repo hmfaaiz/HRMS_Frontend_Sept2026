@@ -39,7 +39,6 @@ export const usersSlice = createSlice({
       }
     },
     usersFetched: (state, action) => {
-      console.log("user management slice")
       const entities = action.payload.data?.data.rows;
       const totalResult = action.payload.data?.data.totalResults;
       
@@ -78,7 +77,6 @@ export const usersSlice = createSlice({
         if (entity.id === action.payload.updatedUser.id) {
           
                 
-                console.log('slice 1', JSON.stringify(state.entities),JSON.stringify(action.payload));
 
           return action.payload.updatedUser;
         }

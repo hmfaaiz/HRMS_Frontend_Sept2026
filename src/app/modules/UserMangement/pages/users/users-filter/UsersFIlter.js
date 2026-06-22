@@ -36,8 +36,6 @@ export function UsersFilter({ listLoading }) {
     if (!isEqual(newQueryParams, usersUIProps.queryParams)) {
       newQueryParams.pageNumber = 1
       // update list by queryParams
-      console.log("search users ");
-      console.log(newQueryParams);
       usersUIProps.setQueryParams(newQueryParams)
     }
   }

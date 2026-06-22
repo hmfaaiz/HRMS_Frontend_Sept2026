@@ -17,7 +17,6 @@ const getFieldCSSClasses = (touched, errors) => {
 };
 
 export function CustumSelect({ name, value, label, ...props }) {
-  console.log("custum Select props", name, value, label);
   const [field, meta] = useField(props);
   //   const { touched, error } = meta;
   return (

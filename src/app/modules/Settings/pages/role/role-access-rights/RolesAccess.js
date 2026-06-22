@@ -86,7 +86,6 @@ export function RolesAccess({
 
   // }
 
-
   // const [isChecked, setIsChecked] = useState()
 
   const onCheckboxChange = async (event) => {
@@ -110,7 +109,6 @@ export function RolesAccess({
         },
       ]),
     );
-
   };
 
   const customMappings = {
@@ -226,7 +224,6 @@ export function RolesAccess({
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 gap-y-2 mt-2">
         {/* Add a check for currentState existence */}
         {currentState &&
-          
           Object.entries(currentState)?.map((dd, index) => {
             if (dd[0] === "Settings") return null;
 
@@ -260,9 +257,10 @@ export function RolesAccess({
                 key={index}
               >
                 <div className="space-y-3">
-                  <div>
+                  <EachSectionCheckbox name={name} record={filteredRights} />
+                  {/* <div>
                     <h6 className="font-bold mb-0 text-primary my-2">{name}</h6>
-                  </div>
+                  </div> */}
 
                   <div className="overflow-auto min-h-44 max-h-44 border-none scrollbar-fancy">
                     {filteredRights.map((right, rightindex) => (
@@ -275,7 +273,7 @@ export function RolesAccess({
                           id={right.resourceId}
                           name={right.roleId}
                           label={right.name}
-                          defaultChecked={right.isAccess}
+                          checked={right.isAccess}
                           onChange={onCheckboxChange}
                         />
                         <label>{right.name}</label>
@@ -310,7 +308,7 @@ const EachSectionCheckbox = ({ name, record }) => {
     if (checkboxRef.current) {
       const allChecked = record?.every((e) => e?.isAccess);
       const someChecked = record?.some((e) => e?.isAccess);
-      
+
       if (someChecked && !allChecked) {
         checkboxRef.current.indeterminate = true;
       } else {
@@ -322,12 +320,12 @@ const EachSectionCheckbox = ({ name, record }) => {
   const handleSelectAll = (e) => {
     const isChecked = e.target.checked;
     // Create updates for all resources in this section
-    const updates = record.map(item => ({
+    const updates = record.map((item) => ({
       roleId: item.roleId,
       resourceId: item.resourceId,
-      isAccess: isChecked
+      isAccess: isChecked,
     }));
-    
+
     // Dispatch bulk update
     dispatch(actions.updateAccessRightByRoleAndResourceId(updates));
   };

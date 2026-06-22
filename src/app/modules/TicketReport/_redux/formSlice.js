@@ -54,7 +54,6 @@ export const TicketTimeReportSlice = createSlice({
             state.pdfLoading = false;
         },
         previewDataFetched: (state, action) => {
-            console.log("aaasassws1111",action.payload?.data?.data)
             state.listLoading = false;
             state.error = null;
             state.previewData =  action.payload?.data?.data;

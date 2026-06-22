@@ -65,7 +65,6 @@ export function FormEditForm({
       validationSchema={news_event_tickerEditSchema}
       onSubmit={(values) => {
         enableLoading();
-        console.log("aaaaa1111", values);
         saveForm(values);
       }}
     >

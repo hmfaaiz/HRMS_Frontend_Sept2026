@@ -66,7 +66,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
   //   }
   // }, [actionsLoading === true]);
 
-  //console.log("action", action);
+ 
 
   useEffect(() => {
     dispatch(actions.fetchUser(id));
@@ -75,24 +75,24 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
   }, [id, dispatch]);
 
   // useEffect(() => {
-  //   console.log("UseEffect call");
+ 
   //   if (actionsLoading === false) {
-  //     console.log("UseEffect call inside function");
+ 
   //     disbaleLoading();
   //   }
   // }, [actionsLoading]);
-  //console.log("userForEdit", userForEdit);
+ 
 
   const saveAcademic = async (user) => {
 
     if (!id) {
-      console.log("academic edit dialog");
-      console.log(user);
+ 
+ 
 
       // const getUserStatus = userStatusTypes.filter((item) => {
       //   return item.value === +user.status;
       // });
-      // //console.log("getUserStatus", getUserStatus);
+ 
       // const { status = getUserStatus[0].label, ...rest } = user;
       // const finalObject = {
       //   status: getUserStatus[0].label,
@@ -108,7 +108,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
       //   return item.value === +user.status;
       // });
 
-      console.log("getUserStatus", user);
+ 
 
       // This object set for Edit Fields in DB
       const academicUpdatedFields = {
@@ -122,7 +122,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         statusId: user.statusId
       };
 
-      console.log("acaedmic updated", academicUpdatedFields);
+ 
       await dispatch(actions.updatedAcademic(academicUpdatedFields, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }

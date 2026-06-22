@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { ContributionReportPage } from "./forms/ContributionReportPage";
 
 export default function IncomeTaxReportrManagement() {
-  console.log("IncomeTaxReportrManagement11111")
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

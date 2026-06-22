@@ -617,7 +617,6 @@ export function FormEditForm({
                                               ? null
                                               : e.target.value
                                           );
-                                         console.log("aaaa1111", e.target.value, values.details[index].basis);
 
 
                                           if (e.target.value == "N/A") {

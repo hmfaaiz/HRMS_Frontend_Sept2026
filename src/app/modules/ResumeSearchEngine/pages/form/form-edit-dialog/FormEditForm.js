@@ -1296,7 +1296,6 @@ export function FormEditForm({
                                         }
                                         onChange={(date) => {
                                           const selectedDate = formatDates(date, 'yyyy-MM-dd'); // or use date.toISOString().split('T')[0]
-                                          console.log("selectedDate1111", selectedDate)
                                           setFieldValue(`details_applicant_academic_info[${index}].endDate`, selectedDate);
                                         }}
                                         dateFormat="dd-MMM-yyyy"

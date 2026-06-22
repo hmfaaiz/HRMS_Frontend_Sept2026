@@ -109,7 +109,6 @@ export function MasterEditForm({
 
     const index = el.target.id.split('-')[1]
     const key = el.target.id.split('-')[0]
-    console.log("::d::", index, key);
     setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((val, ind) => {
       if (ind == index) {
         if (!(key == "factorValue" && Number(el.target.value) > 100)) {
@@ -122,7 +121,6 @@ export function MasterEditForm({
 
 
   const addRow = (element) => {
-    console.log("tes", element.target.id);
     if (element.target.id == "Earning")
       setDefaultMapEarningDeductionList([...defMapEarningDeductionList, { transactionType: element.target.id, month: '', amount: '', remarks: '' }])
     else
@@ -150,7 +148,6 @@ export function MasterEditForm({
       }
     
      
-      console.log("amount::", objValidate.amount)
       // Check if factorValue is required
       if (!objValidate.amount) {
         newErrors[`amount-${index}`] = 'Required*';
@@ -167,7 +164,6 @@ export function MasterEditForm({
     return newErrors;
   };
 
-  console.log(":1:", defMapEarningDeductionList)
   return (
     <>
       <Formik
@@ -175,10 +171,8 @@ export function MasterEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           
           const validationErrors = validate();
-          console.log("ppp", validationErrors)
           if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
           } else {
@@ -406,7 +400,6 @@ export function MasterEditForm({
                         </>
                       ))}
                       {
-                        console.log("::temp::", defMapEarningDeductionList)
                       }
 
                     </table>

@@ -142,15 +142,12 @@ export function MasterEditForm({
   const fnEditRecord = async () => {
 
     const response = await axios.post(`${USERS_URL}/final_settlement_policy/read-all-final-settlement-policy`);
-    console.log("::test::", response)
     setDefaultMapEarningDeductionList(...[response?.data?.data]);
   }
 
   const addRow = (element) => {
-    console.log("tes", element.target.earning_Id);
     setDefaultMapEarningDeductionList([...defMapEarningDeductionList, { transactionType: "Earning", isPartOfGrossSalary: 0 }])
   }
-  console.log(":1:", user)
   return (
     <>
       <Formik
@@ -158,7 +155,6 @@ export function MasterEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           // if (values.type == "month_days")
           //   values.value = 1;
