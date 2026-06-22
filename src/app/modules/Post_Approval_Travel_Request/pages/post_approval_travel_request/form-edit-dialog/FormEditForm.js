@@ -185,14 +185,17 @@ export function FormEditForm({
 
   const defaultTravelDays = useMemo(() => {
     if (!preApprovalRecord?.Master?.length) return 0;
-    const first = preApprovalRecord.Master[0];
-    const last = preApprovalRecord.Master[preApprovalRecord.Master.length - 1];
-    if (!first?.fromDate || !last?.toDate) return 0;
-    const start = new Date(first.fromDate);
-    const end = new Date(last.toDate);
-    start.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
-    return Math.max(0, Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1);
+
+    return preApprovalRecord.dailyAllowanceDay || 0
+    // const first = preApprovalRecord.Master[0];
+    // const last = preApprovalRecord.Master[preApprovalRecord.Master.length - 1];
+    // if (!first?.fromDate || !last?.toDate) return 0;
+    // console.log(preApprovalRecord,"preapprval")
+    // const start = new Date(first.fromDate);
+    // const end = new Date(last.toDate);
+    // start.setHours(0, 0, 0, 0);
+    // end.setHours(0, 0, 0, 0);
+    // return Math.max(0, Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1);
   }, [preApprovalRecord]);
 
   const initialValues = useMemo(() => {
@@ -389,6 +392,8 @@ function FormInner({
       (parseFloat(values.perDayRate) || 0) *
       (parseFloat(values.eligibleDays) || 0);
     setFieldValue("totalDaAmount", da);
+    console.log(values, "123")
+
   }, [values.perDayRate, values.eligibleDays, setFieldValue]);
 
   // ── Expense row total ──
@@ -401,6 +406,7 @@ function FormInner({
 
   // ── Final calculation ──
   useEffect(() => {
+    console.log(values, "advance")
     const total = (parseFloat(values.totalDaAmount) || 0) + expenseTotal;
     const net = total - (parseFloat(values.advanceReceived) || 0);
     setFieldValue("totalClaimAmount", total);
@@ -816,11 +822,10 @@ function FormInner({
           <div className="col-span-12 md:col-span-2">
             <label className="block mb-1">Net Payable / Recoverable</label>
             <NumericFormat
-              className={`form-control bg-light font-bold ${
-                values.netPayableRecoverable < 0
-                  ? "text-danger"
-                  : "text-success"
-              }`}
+              className={`form-control bg-light font-bold ${values.netPayableRecoverable < 0
+                ? "text-danger"
+                : "text-success"
+                }`}
               value={values.netPayableRecoverable}
               thousandSeparator
               displayType="input"
@@ -897,18 +902,17 @@ function FormInner({
           {!isReadOnly && Number(user?.approved_status) === 0 && (
             <button
               type="button"
-              className={`btn btn-sm px-8 ${
-                values.fullySettled && canApprove
-                  ? "btn-success"
-                  : "btn-secondary"
-              }`}
+              className={`btn btn-sm px-8 ${values.fullySettled && canApprove
+                ? "btn-success"
+                : "btn-secondary"
+                }`}
               disabled={isSubmitting || !values.fullySettled || !canApprove}
               title={
                 !values.fullySettled
                   ? "Mark as 'Fully Settled' to enable approval"
                   : !canApprove
-                  ? "You are not authorized to approve this request"
-                  : "Approve this request"
+                    ? "You are not authorized to approve this request"
+                    : "Approve this request"
               }
               onClick={() => {
                 if (!values.fullySettled || !canApprove) return;
