@@ -27,12 +27,12 @@ const employeeEditSchema = Yup.object().shape({
         goalName: Yup.string()
           .trim()
           .nullable()
-          .max(50, "Maximum 50 characters allowed")
+          .max(100, "Maximum 50 characters allowed")
           .required(VALIDATION_MESSAGES.required),
 
         goalDescription: Yup.string()
           .trim()
-          .max(100, "Maximum 100 characters allowed")
+          .max(500, "Maximum 100 characters allowed")
           .nullable()
           .required(VALIDATION_MESSAGES.required),
 
