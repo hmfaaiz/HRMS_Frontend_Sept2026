@@ -226,7 +226,7 @@ export function FormEditForm({
               </fieldset>
             </Form>
           </Modal.Body>
-          {console.log("errror", errors)}
+          
           <Modal.Footer>
             <button onClick={onHide} className="btn btn-light">
               {isUserForRead ? "OK" : "Cancel"}

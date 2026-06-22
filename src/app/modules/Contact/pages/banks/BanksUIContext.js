@@ -39,7 +39,6 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
   
   };
 
-  console.log("contact ui events",BanksUIEvents);
 
   const value = {
     queryParams,

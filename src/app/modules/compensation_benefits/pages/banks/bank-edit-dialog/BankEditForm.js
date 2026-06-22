@@ -386,7 +386,7 @@ export function BankEditForm({
         validationSchema={formValidation}
         onSubmit={(values) => {
           const validationErrors = validate();
-           {console.log("aaaaaaa22222",validationErrors)}
+           
           if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
           } else {
@@ -447,7 +447,7 @@ export function BankEditForm({
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
-              {console.log("aaaaaaa1111",errors)}
+              
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">

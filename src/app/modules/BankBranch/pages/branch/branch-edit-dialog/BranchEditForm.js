@@ -111,7 +111,7 @@ export function BranchEditForm({
 
   useEffect(() => {
     if (user.Id && user?.accOpeningDate) {
-      console.log("hit11", user?.accOpeningDate);
+ 
       setAccountOpeningDate(new Date(user?.accOpeningDate));
     }
   }, [user.accOpeningDate]);
@@ -143,7 +143,7 @@ export function BranchEditForm({
   //   useEffect(() => {
 
   //     const cityId = defCity?.value ? defCity.value : user.cityId;
-  // console.log("checking",defCity?.value, user.cityId)
+ 
   //     setDefaultCity(
   //       dashboard.allCity &&
   //       dashboard.allCity.filter((item) => {

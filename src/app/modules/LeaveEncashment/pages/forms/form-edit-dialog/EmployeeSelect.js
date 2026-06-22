@@ -146,7 +146,6 @@ export function EmployeeSelect({
                       placeholder=""
                       onBlur={handleBlur}
                       onChange={(e) => {
-                        console.log("ee" , e)
                         const value = e?.value;
                         setFieldValue("yearId", value);
                         setyearId(value); //Set Employee Id in context for server

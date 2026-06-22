@@ -105,7 +105,6 @@ export function FormEditForm({
       );
 
       setAppraisalPeriod(selected || null);
-      console.log("setting111 fixed", selected);
     }
   }, [data?.appraisalPeriodId, dashboard?.appraisalPeriodList]);
 

@@ -80,10 +80,6 @@ export default function HRRecomendation() {
     (s) => s.label === "Finalized for Hiring"
   )?.value;
 
-  console.log(
-    "finalizeForHiringValuefinalizeForHiringValue",
-    finalizeForHiringValue
-  );
   const validationSchema = Yup.object().shape({
     applicationStatusId: Yup.string()
       .nullable()

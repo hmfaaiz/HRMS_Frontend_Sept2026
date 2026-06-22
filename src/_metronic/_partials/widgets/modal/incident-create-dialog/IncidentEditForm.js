@@ -75,9 +75,9 @@ export function IncidentEditForm({
 
   const { dashboard } = useSelector((state) => state);
 
-  //console.log("dashboard time", dashboard);
+ 
 
-  // console.log("alaramTime option in form", alaramTime);
+ 
 
 
 
@@ -92,11 +92,11 @@ export function IncidentEditForm({
     // pageNumber: 1,
     centerId: incident?.centerId,
   };
-  // console.log("incident", incident);
+ 
 
   // useEffect(() => {
   //   // dispatch(actions.fetchVehicleById({ ...queryParamsOnLoad }));
-  //   console.log(queryParamsOnLoad);
+ 
   //   dispatch(actions.fetchVehicleByDropdown({ ...queryParamsOnLoad }));
   // }, [incident?.centerId]);
   // This code os

@@ -26,7 +26,6 @@ export function FormExcuteDialog({ id, show, onHide, type }) {
 
   useEffect(() => {
     dispatch(actions?.fetchSprintTickets(id)).then((e) => {
-      console.log("Connected tickets:", e);
       setConnectedTickets(e || []);
     });
   }, [id]);

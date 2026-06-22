@@ -63,14 +63,11 @@ export const academicSlice = createSlice({
         academicDeleted: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
-            console.log("academic deleted ")
-            console.log(state.entities);
             state.entities = state.entities.filter(
                 (el) => el.Id !== action.payload.Id
             );
         },
         academicCreated: (state, action) => {
-             console.log("action payload for academic", action.payload);
             state.actionsLoading = false;
             state.error = null;
             state.entities.unshift(action.payload);

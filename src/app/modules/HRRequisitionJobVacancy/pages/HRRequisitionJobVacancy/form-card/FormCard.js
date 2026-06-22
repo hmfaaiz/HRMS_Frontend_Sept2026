@@ -24,7 +24,6 @@ export function FormCard() {
   }, [FormUIContext]);
 
   const { userAccess } = useSelector((state) => {
-    console.log("aaaa", state.auth.userAccess);
     return {
       userAccess: state.auth.userAccess.hr_requisition_job_vacancy,
     };

@@ -6,7 +6,7 @@ const { actions } = bankSlice;
 // const { roleActions } = getAllrolesSlice
 
 export const fetchUsers = (queryparm) => async (dispatch) => {
-  // console.log("Receive QPsss", queryparm)
+ 
 
  
   if (queryparm.pdf) {
@@ -138,7 +138,7 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 
       .catch((error) => {
-        //console.log("Can't find user", error)
+ 
         error.clientMessage = "Can't find receipts";
         dispatch(actions.catchError({ error, callType: callTypes.list }));
       });
@@ -171,7 +171,7 @@ export const deleteBank = (id) => (dispatch) => {
   return requestFromServer
     .deleteBank({ Id: id })
     .then((response) => {
-      //console.log("response from delete user ", response.data.message)
+ 
       dispatch(actions.BankDeleted({ Id: id }));
       toast.success("Successfully Deleted", {
         position: "top-right",
@@ -194,7 +194,7 @@ export const activeUser = (id) => (dispatch) => {
   return requestFromServer
     .deleteBank({ receiptId: id })
     .then((response) => {
-      //console.log("response from delete user ", response.data.message)
+ 
       dispatch(actions.userDeleted({ id: id }));
       toast.success("Successfully Activated", {
         position: "top-right",
@@ -254,9 +254,9 @@ export const updateBank = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
     .updateBank(user)
     .then((response) => {
-      console.log("my response", response?.config?.data);
+ 
       const updatedBank = response?.config?.data; // response.data?.data;
-      console.log("bnkAction Res", response)
+ 
       dispatch(actions.bankUpdated({ updatedBank }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();
@@ -274,7 +274,7 @@ export const updateBank = (user, disbaleLoading, onHide) => (dispatch) => {
 
     })
     .catch((error) => {
-      // console.log("error User update", error)
+ 
       //error.clientMessage = "Can't update User"
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();

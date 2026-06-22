@@ -82,8 +82,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
   const saveContact = async (user)  => {
 
     if (!id) {
-      console.log("bank edit dialog");
-      console.log(user);
 
       // const getUserStatus = userStatusTypes.filter((item) => {
       //   return item.value === +user.status;
@@ -104,7 +102,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
       //   return item.value === +user.status;
       // });
      
-      console.log("getUserStatus", user);
 
       const contactUpdatedFields = {
         Id: user.Id,
@@ -114,7 +111,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         contactNo:user.contactNo
       };
 
-      console.log("contactUpdatedFields", contactUpdatedFields);
     await  dispatch(actions.updateContact(contactUpdatedFields, disbaleLoading, onHide));
     await  dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }

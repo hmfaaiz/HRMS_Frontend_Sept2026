@@ -120,6 +120,10 @@ function LeaveTypePolicyTable({
                                   `leavetypePolicies[${index}].allowNegative`,
                                   false
                                 );
+                                setFieldValue(
+                                  `leavetypePolicies[${index}].allocationType`,
+                                  false
+                                );
                               }
                             }}
                             value={row.leaveType}
@@ -507,6 +511,12 @@ function LeaveTypePolicyTable({
                             children={CustomDropdown({
                               data: ALLOCATION_TYPE_OPTIONS,
                             })}
+                            disabled={
+                              !Boolean(
+                                allLeaveTypeMap?.get(row?.leaveType || "")
+                                  ?.type == 1
+                              )
+                            }
                           />
                           {errors.leavetypePolicies?.[index]?.allocationType &&
                             touched.leavetypePolicies?.[index]?.allocationType && (

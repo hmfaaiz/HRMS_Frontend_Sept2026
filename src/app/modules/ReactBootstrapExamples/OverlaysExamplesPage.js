@@ -121,7 +121,6 @@ class Example4 extends React.Component {
 class UpdatingPopover extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.children !== this.props.children) {
-      console.log("updating!");
       this.props.scheduleUpdate();
     }
   }

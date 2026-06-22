@@ -175,7 +175,6 @@ export default function MasterEditForm({
     applicantStatusList: state?.interview_schedule?.applicantStatusList,
   }));
 
-  console.log("applicantStatusListapplicantStatusList" , applicantStatusList)
 
   useEffect(() => {
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // for all location
@@ -241,7 +240,7 @@ export default function MasterEditForm({
         setFieldTouched,
       }) => (
         <>
-          {console.log("errors1111", errors)}
+          
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">

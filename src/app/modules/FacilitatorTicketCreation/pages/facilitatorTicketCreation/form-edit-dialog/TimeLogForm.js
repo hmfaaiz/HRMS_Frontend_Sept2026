@@ -272,7 +272,7 @@ export function TimeLogForm({ onHide }) {
         >
             {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
                 <>
-                   {console.log("errors111", errors, values)}
+                   
                     <Modal.Body className="overlay overlay-block cursor-default">
 
                         <Form className="form form-label-right">

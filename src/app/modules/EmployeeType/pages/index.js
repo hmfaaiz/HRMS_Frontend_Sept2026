@@ -6,7 +6,6 @@ import { EmpTypePage } from "./emptype/EmpTypePage";
  //import { ReligionPage } from "./Religion/ReligionPage";
 
 export default function EmployeeTypeManagement() {
-  console.log('EmployeeType mein aya')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

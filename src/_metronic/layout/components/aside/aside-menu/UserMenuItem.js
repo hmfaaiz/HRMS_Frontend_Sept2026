@@ -13,7 +13,6 @@ export function UserMenuItem() {
     return () => {}
   }, [user])
 
-  console.log("Auth User", user)
   const location = useLocation()
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)

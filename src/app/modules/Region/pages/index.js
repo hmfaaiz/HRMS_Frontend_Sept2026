@@ -5,7 +5,6 @@ import { RegionPage } from "./region/RegionPage";
  //import { ReligionPage } from "./Religion/ReligionPage";
 
 export default function EmpPolicyManagement() {
-  console.log('ttt mein aya')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

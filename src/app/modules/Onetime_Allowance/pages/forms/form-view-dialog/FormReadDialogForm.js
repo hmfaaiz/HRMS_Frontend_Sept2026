@@ -50,7 +50,6 @@ export function FormReadForm({
         initialValues={user}
         validationSchema={FormEditSchema}
         onSubmit={(values) => {
-          console.log("SaveOntimeAllowance form Values", values)
           SaveOntimeAllowance(values)
         }}
       >

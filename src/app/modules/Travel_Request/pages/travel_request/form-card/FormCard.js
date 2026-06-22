@@ -186,7 +186,6 @@ export function FormCard() {
     },
   ];
 
-  console.log("wow", travel)
   const hasPolicy = !!employeeEntitlement;
 
   return (

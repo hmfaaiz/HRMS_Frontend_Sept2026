@@ -27,7 +27,6 @@ export function BanksCard() {
     }),
     shallowEqual
   )
-  console.log("userAccess Temp",userAccess)
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateEarningTransaction"
   )

@@ -88,12 +88,10 @@ export const designationSlice = createSlice({
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
-          console.log("designationUpdated");
             state.entities = state.entities.map((entity) => {
                
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
-                console.log("::payload",payload)
                 let payloadObj = JSON.parse(payload);
                 let finalObj = JSON.parse(payloadObj.updateddesignation);
 

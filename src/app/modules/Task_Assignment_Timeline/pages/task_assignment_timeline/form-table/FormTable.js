@@ -519,7 +519,6 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       style: { minWidth: "20px" },
 
       formatter: (cell, row) => {
-        console.log("cellll11111",cell)
         const lastDetail = row?.Details?.[0];
         if (!lastDetail) return "";
 
@@ -537,7 +536,6 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         createdDate.setHours(0, 0, 0, 0);
 
        const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && lastDetail.ticketStatus != 0;
-console.log("isExpiredOrToday1111",isExpiredOrToday, row?.completionDate)
         // const statusLabel =
         //   ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
 

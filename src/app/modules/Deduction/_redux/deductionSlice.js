@@ -56,7 +56,6 @@ export const deductionSlice = createSlice({
             else if (action.payload.callType === callTypes.pdf) {
       
                 state.pdfLoading = true;
-console.log("pdf22",state.pdfLoading)
             }
 
             else if (action.payload.callType === callTypes.csv) {

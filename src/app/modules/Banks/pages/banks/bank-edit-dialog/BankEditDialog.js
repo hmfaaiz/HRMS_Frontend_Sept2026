@@ -82,8 +82,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
   const saveBank = async (user) => {
 
     if (!id) {
-      console.log("bank edit dialog");
-      console.log(user);
 
       // const getUserStatus = userStatusTypes.filter((item) => {
       //   return item.value === +user.status;
@@ -112,7 +110,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         swiftCode : user.swiftCode,
       };
 
-      console.log("bankUpdatedFields", bankUpdatedFields);
     await  dispatch(actions.updateBank(bankUpdatedFields, disbaleLoading, onHide));
      await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }

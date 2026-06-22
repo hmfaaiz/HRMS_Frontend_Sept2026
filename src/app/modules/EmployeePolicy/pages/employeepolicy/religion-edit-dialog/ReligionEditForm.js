@@ -55,7 +55,6 @@ export function BankEditForm({
         initialValues={user}
         validationSchema={RegionEditSchema}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           saveReligion(values);
         }}

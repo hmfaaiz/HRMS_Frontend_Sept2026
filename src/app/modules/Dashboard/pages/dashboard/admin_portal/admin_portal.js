@@ -176,7 +176,6 @@ export const AdminPortal = () => {
      TAB CHANGE HANDLER
   ================================ */
   const handleTabChange = (e) => {
-    console.log(e);
     setActiveTab(e.value);
     setSummaryFilter((prev) => ({
       ...prev,

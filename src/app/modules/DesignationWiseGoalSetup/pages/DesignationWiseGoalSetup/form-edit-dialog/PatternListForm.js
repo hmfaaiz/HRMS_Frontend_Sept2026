@@ -29,7 +29,6 @@ function PatternListForm({
   }, [values.list, setFieldValue]);
 
 
-  console.log("allAppraisalCompetencySetupList1111", dashboard.allAppraisalCompetencySetupList)
   return (
     <>
       <FieldArray name="list">

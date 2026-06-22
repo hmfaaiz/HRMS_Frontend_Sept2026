@@ -42,7 +42,6 @@ export function FormCard() {
     };
   }, shallowEqual);
 
-  console.log("accessUser111", accessUser);
 
   return (
     // <>

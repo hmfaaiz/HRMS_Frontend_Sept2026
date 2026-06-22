@@ -8,12 +8,10 @@ const { actions } = regionSlice;
 export const fetchUsers = (queryparm) => async (dispatch) => {
   // console.log("Receive QPsss", queryparm)
   dispatch(actions.startCall({ callType: callTypes.list }));
-  console.log("test query param region", queryparm)
   return requestFromServer.getAllRegion(queryparm)
     
     .then((response) => {
       //  console.log("user action receipt fetched 321")
-      console.log("response", response)
       dispatch(actions.regionFetched(response));
     })
     .catch((error) => {
@@ -25,7 +23,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-  console.log("User Action id " + id)
   if (!id) {
     return dispatch(actions.regionFetchedForEdit({ userForEdit: undefined }));
   }
@@ -35,7 +32,6 @@ export const fetchUser = (id) => (dispatch) => {
     .getRegionById({ Id: id })
     .then((response) => {
       const entities = response.data?.data;
-      console.log("entities " + entities)
       dispatch(actions.regionFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -96,14 +92,11 @@ export const createRegion = (RegionForCreation, disbaleLoading, onHide) => (
   // RegionForCreation.phNo = RegionForCreation.phNo.toString();
   // RegionForCreation.cnic = RegionForCreation.cnic.toString();
 
-  console.log("region for creation", RegionForCreation);
   return requestFromServer
     .createRegion(RegionForCreation)
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-      console.log("Region data");
-      console.log(user);
       dispatch(actions.regionCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
@@ -137,9 +130,7 @@ export const updateRegion = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
     .updateRegion(user)
     .then((response) => {
-      console.log("my response",response?.config?.data);
       const updatedRegion = response?.config?.data; // response.data?.data;
-      console.log("Region Res", response,updatedRegion)
       dispatch(actions.regionUpdated({ updatedRegion }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();
@@ -204,7 +195,6 @@ export const fetchDonationReport = (body) => async (dispatch) => {
   return await requestFromServer
     .donationReport(body)
     .then((response) => {
-      console.log("Res", response);
       const entities = response?.data?.data;
       dispatch(actions.donationReportFetch(entities));
     })

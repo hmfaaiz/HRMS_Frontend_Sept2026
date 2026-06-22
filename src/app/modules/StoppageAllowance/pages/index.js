@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { StoppageAllowancePage } from "./banks/BanksPage";
 
 export default function StoppageManagement() {
-  console.log('stoppage mein aya')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

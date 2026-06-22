@@ -102,7 +102,6 @@ export function TilesWidget10({
                         let payload = {};
 
                         if (action === "clear") {
-                          console.log("Clear called");
                           setCenter([]);
                           setSubcenter([]);
                           setAlarmTime([]);

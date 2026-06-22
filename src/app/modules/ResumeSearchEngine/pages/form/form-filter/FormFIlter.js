@@ -548,7 +548,6 @@ export function FormFIlter({ listLoading, user }) {
                               const selectedValue = e?.value ?? null;
                               setFieldValue("countryId", selectedValue);
 
-                              console.log("selectedCountryId1111", selectedValue);
 
                               // Reset city on country change
                               setFieldValue("cityId", null);
@@ -1077,7 +1076,6 @@ export function FormFIlter({ listLoading, user }) {
                                   type="number"
                                   onChange={(e) => {
                                     const selectedValue = e.target.value;
-                                    console.log("selectedValue111", e.target.value)
                                     setFieldValue("expectedSalaryRangeFrom", selectedValue);
                                     //  handleSubmit();
 
@@ -1627,7 +1625,6 @@ export function FormFIlter({ listLoading, user }) {
                             type="number"
                             onChange={(selectedOption) => {
                               setFieldValue("applicantCanJoin", selectedOption.target.value);
-                              console.log("applicantCanJoin1111", selectedOption.target.value)
                               // handleSubmit();
                             }}
                           />

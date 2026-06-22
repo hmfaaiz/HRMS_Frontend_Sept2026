@@ -44,7 +44,6 @@ const prepareFilter = (queryParams, values) => {
 
 export function FormFilter({ loading, dispatch, pdfLoading,garuityReport, gratuityMonththPdf, gratuityAccrualPdf }) {
   const FormUIContext = useFormUIContext();
-console.log("ccccc",gratuityAccrualPdf)
   //Get All dropdown data from state
   const {
     allEmployees,
@@ -54,7 +53,6 @@ console.log("ccccc",gratuityAccrualPdf)
     allLocationChildMenus,
     allDesignations, allPayrollMonthYearList, allTaxYearSetupList
   } = useSelector((state) => state.dashboard);
-  console.log("allTaxYearSetupList11", allTaxYearSetupList)
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
   const allEmployeesMap = useMemo(() => {
     return new Map(allEmployees?.map((item) => [item.value, item]));

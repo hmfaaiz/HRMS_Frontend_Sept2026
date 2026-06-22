@@ -82,7 +82,6 @@ export function FormEditForm({
   }, [auth?.user?.roleId, employeeEntitlement?.preApprover]);
 
   const effectiveEmployeeId = employeeId || user?.employeeId;
-  console.log("emp", employeeId, user?.employeeId);
 
   React.useEffect(() => {
     if (effectiveEmployeeId) {

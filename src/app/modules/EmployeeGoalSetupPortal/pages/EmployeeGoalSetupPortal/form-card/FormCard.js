@@ -39,7 +39,6 @@ export function FormCard() {
     };
   }, shallowEqual);
 
-  console.log(userAccess, "q123")
 
   const menuOptions = [];
 

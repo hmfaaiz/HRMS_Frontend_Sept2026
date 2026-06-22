@@ -13,7 +13,6 @@ import { } from "../../_redux/redux-Actions";
 
 
 export function FormPage({ history }) {
-console.log("hit11111")
   const dispatch = useDispatch();
   const FormUIEvents = {
     newFormButtonClick: () => {

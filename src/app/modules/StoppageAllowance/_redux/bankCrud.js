@@ -4,7 +4,6 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 
 //Create user
 export function createStoppageAllowance(body) {
-  console.log("create StoppageAllowance step 1", body)
   
   // body.Name = body.txtStoppageAllowanceName;
   // delete body.txtStoppageAllowanceName
@@ -15,27 +14,22 @@ export function createStoppageAllowance(body) {
 
 // Read
 export function getAllStoppageAllowance(body) {
-  console.log("body",body);
   return axios.post(`${USERS_URL}/stoppage/read-all-stoppage`, body);
 }
 
 
 
 export function getStoppageAllowanceById(id) {
-   console.log(" StoppageAllowance id", id)
   return axios.post(`${USERS_URL}/stoppage/read-stoppage`, id);
 }
 
 //Update
 export function updateStoppageAllowance(StoppageAllowance) {
-   console.log("StoppageAllowance 12", StoppageAllowance)
   return axios.put(`${USERS_URL}/stoppage/update-stoppage`, StoppageAllowance);
 }
 
 //Delete
 export function deleteStoppageAllowance(body) {
-  console.log("body")
-  console.log(body);
   return axios.patch(`${USERS_URL}/stoppage/delete-stoppage`, body);
 }
 

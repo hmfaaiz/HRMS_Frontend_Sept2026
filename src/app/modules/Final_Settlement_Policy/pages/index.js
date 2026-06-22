@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FinalSettlementPolicyPage } from "./forms/FinalSettlementPolicyPage";
 
 export default function FiscalSetupManagement() {
-  console.log('Final settlement policy')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

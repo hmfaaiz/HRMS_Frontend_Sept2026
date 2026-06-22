@@ -50,7 +50,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
       })
 
       .catch((error) => {
-        console.log("error1", error)
         error.clientMessage = "Can't Generate PDF";
         dispatch(actions.catchError({ error, callType: callTypes.pdf }));
         toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {

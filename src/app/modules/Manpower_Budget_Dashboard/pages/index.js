@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./manpower_budget_dashboard/FormCard";
 
 export default function ManpowerBudgetDashboard() {
-  console.log("w0rfgfgdf")
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

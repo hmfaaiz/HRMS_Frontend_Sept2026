@@ -7,7 +7,6 @@ import {
 } from "../../../_metronic/_partials/controls"
 
 export function CreateResource() {
-  console.log("calling Create Resource pahge")
   return (
     <Card>
       <CardHeader title="list">

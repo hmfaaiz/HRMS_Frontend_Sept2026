@@ -159,7 +159,7 @@ export const updateAccessRightByRoleAndResourceId = (role) => (dispatch) => {
     .updateAccessRightByRoleAndResourceId(role)
     .then((response) => {
       const updatedRole = response.data?.data;
-      console.log("Updated data received:", updatedRole); // Debug log
+       // Debug log
 
       dispatch(actions.accessRightsUpdated(updatedRole));
       toast.success(SERVER_MESSAGES.updatedSuccess, {
@@ -173,7 +173,6 @@ export const updateAccessRightByRoleAndResourceId = (role) => (dispatch) => {
       });
     })
     .catch((error) => {
-      console.log("error in update", error);
       const errorMessage =
         error.response?.data?.message || error.message || "Update failed";
       toast.error(errorMessage, {

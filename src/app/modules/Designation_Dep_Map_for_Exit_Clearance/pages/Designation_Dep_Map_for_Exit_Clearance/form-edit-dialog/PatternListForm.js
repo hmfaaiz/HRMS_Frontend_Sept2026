@@ -28,7 +28,6 @@ function PatternListForm({
     });
   }, [values.list, setFieldValue]);
 
-  console.log("dashboard?.allDept1111",dashboard?.allDept)
   return (
     <>
       <FieldArray name="list">

@@ -6,7 +6,6 @@ import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
 export function FormDeleteDialog({ Id,status, show, onHide }) {
-console.log("iD1111",Id)
   const [loading, setLoading] = useState(false);
   // Customers UI Context
   const usersUIContext = useFormUIContext();

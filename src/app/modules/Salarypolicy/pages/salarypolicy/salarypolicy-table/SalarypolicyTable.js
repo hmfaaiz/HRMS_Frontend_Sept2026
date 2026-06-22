@@ -36,7 +36,7 @@ export function SalarypolicyTable() {
   }, [salarypolicyUIContext]);
 
   const { currentState, userAccess } = useSelector(
-    (state) => {  console.log("s "); return {
+    (state) => {   return {
       
       currentState: state.salary_policy,
       userAccess: state?.auth?.userAccess["salary_policy"],

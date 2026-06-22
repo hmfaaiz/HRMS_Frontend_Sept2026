@@ -49,7 +49,7 @@ export function Filter({ listLoading }) {
           searchText: "",
         }}
         onSubmit={(values) => {
-          //console.log("Filter Value", values)
+ 
           applyFilter(values);
         }}
       >

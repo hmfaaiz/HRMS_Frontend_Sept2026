@@ -43,8 +43,7 @@ export function FormTable({ showApplicantDetails }) {
   }, shallowEqual);
 
   const { totalCount, entities, listLoading, reportPdfLoading } = currentState || {};
-  // DEBUG
-  console.log("[Employee Transfer FormTable] userAccess:", userAccess);
+  
 
   const dispatch = useDispatch();
 

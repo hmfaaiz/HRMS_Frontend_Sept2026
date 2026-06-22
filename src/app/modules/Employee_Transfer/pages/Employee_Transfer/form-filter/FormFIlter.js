@@ -178,7 +178,6 @@ export function FormFIlter({ listLoading, user }) {
                     name="vacancyStatusId"
                     label="Vacancy Status"
                     onChange={(e) => {
-                      console.log("Selected value:", e.value);
                       setFieldValue("vacancyStatusId", e.value !== undefined ? e.value : null);
                       handleSubmit();
                     }}

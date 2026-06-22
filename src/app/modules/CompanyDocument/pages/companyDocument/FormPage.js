@@ -14,7 +14,6 @@ import {} from "../../_redux/redux-Actions";
 
 export function FormPage({ history }) {
 
-  console.log("yes111")
 
   const dispatch = useDispatch();
   const FormUIEvents = {

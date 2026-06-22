@@ -36,7 +36,6 @@ export function SubsidiaryOnboardingEditDialog({
     shallowEqual,
   );
 
-  console.log("dataforEdit", dataForEdit);
 
   const transformedData = useMemo(() => {
     if (!dataForEdit) return { list: [], subsidiaryId: "", dataIsExist: false };

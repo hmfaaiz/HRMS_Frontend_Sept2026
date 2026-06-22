@@ -24,7 +24,6 @@ export const fetchExitTypeExitReason = (queryparm) => async (dispatch) => {
 
 export const fetchExitTypeExitReasonDataForEdit = (Id) => (dispatch) => {
 
-  console.log("fetchExitTypeExitReasonDataForEdit1111", Id)
   if (!Id) {
     return dispatch(actions.AccrueGratuityConfigFetchedForEdit({ dataForEdit: undefined }));
   }

@@ -4,7 +4,7 @@ import {PaginationTotalStandalone} from "react-bootstrap-table2-paginator";
 
 export function PaginationToolbar(props) {
 
-  //console.log("PaginationToolbar props", props)
+ 
   const { isLoading, paginationProps } = props;
   const {
     sizePerPageList,

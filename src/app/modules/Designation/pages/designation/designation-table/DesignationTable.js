@@ -21,7 +21,6 @@ import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/l
 export function DesignationTable() {
   //Users UI Context
   const designationUIContext = useDesignationUIContext();
-console.log("designation in")
   const religionUIProps = useMemo(() => {
     return {
       ids: designationUIContext.ids,
@@ -37,14 +36,13 @@ console.log("designation in")
 
   //console.log("queryparms", usersUIProps.queryparms)
   const { currentState, userAccess } = useSelector(
-    (state) => {  console.log("state ",state); return {
+    (state) => {   return {
       
       currentState: state.designation,
       userAccess: state?.auth?.userAccess["Designation"],
     }},
     shallowEqual
   );
-  console.log("currentState", currentState);
   
   const { totalCount, entities, listLoading } = currentState;
 
@@ -54,7 +52,6 @@ console.log("designation in")
 
   useEffect(() => {
     religionUIProps.setIds([]);
-    console.log("test 2",religionUIProps.queryParams)
     dispatch(actions.fetchUsers(religionUIProps.queryParams));
   }, [religionUIProps.queryParams, dispatch, totalCount]);
 

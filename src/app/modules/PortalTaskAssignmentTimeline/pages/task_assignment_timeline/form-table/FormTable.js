@@ -539,7 +539,6 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     sizePerPage: uiProps.queryParams.pageSize,
     page: uiProps.queryParams.pageNumber,
   };
-  console.log("tableData111111", tableData)
   return (
     <div className="timeline-scroll-wrapper">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
