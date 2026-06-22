@@ -330,7 +330,6 @@ export function FormEditForm({
 
   useEffect(() => {
     if (data) {
-console.log("grossSalary111111",data)
       setUser(data);
       setPrevGrossSalary(data.grossSalary)
       setPrevBasicSalary(data.basicSalary)
@@ -1161,7 +1160,6 @@ console.log("grossSalary111111",data)
 
   }
   useEffect(() => {
-    console.log("user?.bankId1111",user?.emp_bankId)
     applySwiftCode(user?.emp_bankId)
 
   }, [user]);
@@ -1246,7 +1244,7 @@ console.log("grossSalary111111",data)
                   <div className="spinner spinner-lg spinner-success" />
                 </div>
               )} */}
-            {console.log("errr111", errors)}
+            
             <Form className="form form-label-right">
               {dataForSalaryComparison && (<div className="mt-5 flex justify-end">
 
@@ -1500,7 +1498,7 @@ console.log("grossSalary111111",data)
                             values?.Employee?.gradeId,
                             values?.Employee?.employeeTypeId,
                           );
-                           setFieldValue("isPulse",1),
+                           setFieldValue("isPulse",1);
                           setConfirmationModal(false);
                         }}
                         className="btn btn-primary btn-elevate"

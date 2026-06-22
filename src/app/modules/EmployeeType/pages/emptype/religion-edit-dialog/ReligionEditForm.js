@@ -53,7 +53,6 @@ export function BankEditForm({
         initialValues={user}
         //validationSchema={bankEditSchema}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           saveReligion(values);
         }}

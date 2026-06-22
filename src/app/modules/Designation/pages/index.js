@@ -5,7 +5,6 @@ import { DesignationPage } from "./designation/DesignationPage";
  //import { ReligionPage } from "./Religion/ReligionPage";
 
 export default function DesignationManagement() {
-  console.log('religion mein aya')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

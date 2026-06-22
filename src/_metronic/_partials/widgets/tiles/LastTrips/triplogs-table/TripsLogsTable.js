@@ -40,14 +40,12 @@ export function LastTripLogsTable(lastTrips) {
   }, [triplogsUIContext]);
 
   const { totalResults, rows } = lastTrips;
-  // console.log("triplogsUIProps", triplogsUIProps)
+ 
 
   const dispatch = useDispatch();
-  console.log("totalResults", totalResults);
-  console.log("rows", rows);
   // useEffect(() => {
   //   // triplogsUIProps.setIds([])
-  //   //console.log("triplogsUIProps.queryParams", triplogsUIProps.queryParams);
+ 
   //   dispatch(getLastTrips(triplogsUIProps.queryParams));
   // }, [triplogsUIProps.queryParams, dispatch]);
 

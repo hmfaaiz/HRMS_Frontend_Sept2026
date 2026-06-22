@@ -29,7 +29,6 @@ export function ActionsColumnFormatter(
   }
 ) {
   const isUserRead = false;
-  console.log("row111111",row.jobPostingStatus)
   return (
 
     <div className="space-x-2">

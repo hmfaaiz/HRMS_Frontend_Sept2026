@@ -27,19 +27,14 @@ export function BankEditDialog({ id, show, onHide }) {
     }),
     shallowEqual
   )
-  console.log("user RealDialogs" + userForEdit)
-  //console.log(title, roles)
 
   useEffect(() => {
-    console.log("user read dialog.js")
     dispatch(actions.fetchUser(id))
     dispatch(actions.fetchRoles())
     dispatch(actions.fetchCenters())
     // dispatch(actions.fetchUser(usersUIProps.queryParams))
   }, [id, dispatch])
-  console.log("userForEdit", userForEdit)
   const saveBank = (user) => {
-     console.log("CreateUserResponse", user)
     if (!id) {
       dispatch(actions.createUser(user)).then((res) => {
         onHide()

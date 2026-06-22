@@ -29,7 +29,6 @@ export function WorkflowTable({ onHide, show }) {
     };
   });
 
-  console.log("formUIProps11111", formUIProps)
   const columns = [
     {
       dataField: "approvalAuthorityEmp.employeeCode", // Reference the parent object (department)

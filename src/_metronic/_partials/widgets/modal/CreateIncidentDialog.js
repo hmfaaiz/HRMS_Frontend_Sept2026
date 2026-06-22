@@ -129,7 +129,6 @@ export default function CreateIncidentDialog({
             //initialValues={NewIncidentForEdit}
             validationSchema={incidentEditSchema}
             onSubmit={(values) => {
-              console.log("Values", values);
               //saveIncident(values);
             }}
           >

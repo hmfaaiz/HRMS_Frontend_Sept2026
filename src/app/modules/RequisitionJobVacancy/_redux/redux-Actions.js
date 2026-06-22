@@ -81,9 +81,6 @@ export const createJobVacancy = (
     });
     onHide();
   } catch (error) {
-    console.log("Full error object:", error);
-    console.log("Error response:", error?.response);
-    console.log("Error message:", error?.message);
 
     error.clientMessage = "Can't create job vacancy";
     dispatch(actions.catchError({ error, callType: callTypes.action }));

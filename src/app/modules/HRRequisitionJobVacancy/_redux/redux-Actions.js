@@ -25,7 +25,6 @@ export const fetchJobVacancy = (queryparm) => async (dispatch) => {
 };
 
 export const fetchJobVacancyById = (id) => (dispatch) => {
-console.log("1111id111111",id)
 
   if (!id) {
     return dispatch(actions.JobVacancyFetchedForEdit({ dataForEdit: undefined }));

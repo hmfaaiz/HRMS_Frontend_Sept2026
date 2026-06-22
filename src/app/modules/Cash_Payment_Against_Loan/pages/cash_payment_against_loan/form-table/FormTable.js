@@ -60,8 +60,6 @@ export function FormTable({ onEditRow, onViewRow, openDeleteFormDialog }) {
     : null;
 
   // ── DEBUG — remove after confirming it works ──────────────────────────────
-  console.log("[FormTable] activeFiscalYear:", JSON.stringify(activeFiscalYear));
-  console.log("[FormTable] activePayrollMonthId:", activePayrollMonthId);
 
   // ── If no employee selected, show nothing ─────────────────────────────────
   const entities = formUIProps.employeeId ? reduxEntities : [];

@@ -26,14 +26,13 @@ export const PayrollGratuityReportSlice = createSlice({
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
-            state.pdfLoading = false,
-                state.garuityReport = false,
-                state.gratuityMonththPdf = false,
-                state.gratuityAccrualPdf = false
+            state.pdfLoading = false;
+            state.garuityReport = false;
+            state.gratuityMonththPdf = false;
+            state.gratuityAccrualPdf = false;
            
         },
         startCall: (state, action) => {
-            console.log("gratuityAccrualPdf222222",action.payload.callType)
             state.error = null;
              state.pdfLoading = true
             if (action.payload.callType === callTypes.garuityReport) {
@@ -50,7 +49,6 @@ export const PayrollGratuityReportSlice = createSlice({
               else if (action.payload.callType === callTypes.gratuityAccrualPdf) {
                 state.garuityReport = false;
                 state.gratuityMonththPdf = false;
-                console.log("gratuityAccrualPdf11111")
                 state.gratuityAccrualPdf = true;
             }
             else {

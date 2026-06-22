@@ -73,8 +73,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
    const saveEarningDeductionTran = async (user) => {
 
     if (!id) {
-      console.log("skill edit dialog");
-      console.log(user);
 
            const finalObject = { user }
       await dispatch(actions.createEmployee_Salary(user, disbaleLoading, onHide));

@@ -4,7 +4,6 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 
 //Create user
 export function createReligion(body) {
-  console.log("create religion step 1", body)
   
   // body.Name = body.txtbankName;
   // delete body.txtbankName
@@ -14,7 +13,6 @@ export function createReligion(body) {
 }
 // Read
 export function getAllReligion(body) {
-  console.log("body",body);
   return axios.post(`${USERS_URL}/religion/read-all-religion`, body);
 }
 
@@ -26,20 +24,16 @@ let authSMSSend =  async ()=> {
   
 
 export function getReligionById(id) {
-   console.log("Religion id", id)
   return axios.post(`${USERS_URL}/religion/read-religion`, id);
 }
 
 //Update
 export function updateReligion(religion) {
-   console.log("updateUser 12", religion)
   return axios.put(`${USERS_URL}/religion/update-religion`, religion);
 }
 
 //Delete
 export function deleteReligion(body) {
-  console.log("body")
-  console.log(body);
   return axios.patch(`${USERS_URL}/religion/delete-religion`, body);
 }
 

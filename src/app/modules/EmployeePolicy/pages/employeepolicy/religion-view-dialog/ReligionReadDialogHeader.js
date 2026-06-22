@@ -16,7 +16,6 @@ export function BankReadDialogHeader({ id }) {
   )
 
   useEffect(() => {
-    console.log("User Read Dialog Header")
     let _title = id ? "Edit Employee Policy" : "Add Employee Policy"
     if (userForEdit && id) {
       _title = `Edit Employee Policy '${userForEdit.firstName} ${userForEdit.lastName}'`

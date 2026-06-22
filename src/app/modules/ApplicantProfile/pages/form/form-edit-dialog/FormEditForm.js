@@ -616,7 +616,6 @@ export function FormEditForm({
 
   const printSkills = async (formData, vacancyArray, forDelete = null) => {
     const collected = [];
-    console.log("printSkills called with vacancyArray:", vacancyArray.length);
     vacancyArray.forEach((item) => {
       const selectedVacancy = dashboard?.allJobVacancyList?.find(
         (x) => x.value === item.jobVacancyId
@@ -763,7 +762,6 @@ export function FormEditForm({
       }) => (
         <>
           {" "}
-          {console.log("eeeee1111", errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">

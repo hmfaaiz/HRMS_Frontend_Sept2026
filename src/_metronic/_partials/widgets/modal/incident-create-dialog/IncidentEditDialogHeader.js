@@ -14,7 +14,7 @@ export function IncidentEditDialogHeader({ id, isUserForRead }) {
   //   }),
   //   shallowEqual
   // );
-  // console.log(";current state for incident", incidentForEdit)
+ 
   // useEffect(() => {
   //   let _title = id ? "" : "Add Incident";
   //   if (incidentForEdit?.incident && id) {

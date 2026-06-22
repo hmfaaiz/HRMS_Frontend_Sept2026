@@ -6,18 +6,13 @@ const { actions } = employeeSalaryExpSlice;
 // const { roleActions } = getAllrolesSlice
 
 export const fetchUsers = (queryparm) => async (dispatch) => {
-  // console.log("Receive QPsss", queryparm)
   dispatch(actions.startCall({ callType: callTypes.list }));
-  console.log("test query param", queryparm)
   return requestFromServer.getAllEmployee_Salary_Expatriate({...queryparm,id:'null',transactionType:'Earning'})
     
     .then((response) => {
-      //  console.log("user action receipt fetched 321")
-      console.log("response employee salary", response)
       dispatch(actions.employee_salary_exp_Fetched(response));
     })
     .catch((error) => {
-      //console.log("Can't find user", error)
       error.clientMessage = "Can't find receipts";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
@@ -25,7 +20,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-  console.log("User Action id " + id)
   if (!id) {
     return dispatch(actions.employee_salary_exp_FetchedForEdit({ userForEdit: undefined }));
   }
@@ -36,7 +30,6 @@ export const fetchUser = (id) => (dispatch) => {
     .then((response) => {
       const entities = response.data?.data;
 
-      console.log("User fetched for search " ,entities)
       dispatch(actions.employee_salary_exp_FetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -50,7 +43,6 @@ export const deleteEmployee_Salary_Expatriate = (id) => (dispatch) => {
   return requestFromServer
     .deleteEmployee_Salary_Expatriate({ Id: id })
     .then((response) => {
-      //console.log("response from delete user ", response.data.message)
       dispatch(actions.employee_salary_exp_Deleted({ Id: id }));
       toast.success("Successfully Deleted", {
         position: "top-right",
@@ -97,15 +89,11 @@ export const createemployee_salary_exp_Expatriate = (bankForCreation, disbaleLoa
   // bankForCreation.phNo = bankForCreation.phNo.toString();
   // bankForCreation.cnic = bankForCreation.cnic.toString();
 
-  console.log("Academic for creation", bankForCreation);
   return requestFromServer
     .createEmployee_Salary_Expatriate(bankForCreation)
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-      console.log("mira",user);
-      console.log("academic data");
-      console.log(user);
       dispatch(actions.employee_salary_exp_Created(user));
       disbaleLoading();
       toast.success("Successfully Created", {
@@ -139,9 +127,7 @@ export const updateEmployee_Salary_Expatriate = (user, disbaleLoading, onHide) =
   return requestFromServer
     .updateEmployee_Salary_Expatriate(user)
     .then((response) => {
-      console.log("my response",response?.config?.data);
       const updatedEarning = response?.config?.data; // response.data?.data;
-      console.log("earningUpdated Res", response)
       dispatch(actions.employee_salary_exp_Updated({ updatedEarning }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();
@@ -159,7 +145,6 @@ export const updateEmployee_Salary_Expatriate = (user, disbaleLoading, onHide) =
 
     })
     .catch((error) => {
-      // console.log("error User update", error)
       //error.clientMessage = "Can't update User"
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();

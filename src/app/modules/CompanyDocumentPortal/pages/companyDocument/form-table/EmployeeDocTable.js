@@ -42,7 +42,6 @@ export function EmployeeDocTable() {
   }, shallowEqual);
 
   const { emptotalCount, empentities, emplistLoading } = currentState;
-  console.log("data111", currentState)
   //totalCount = 10
 
   const dispatch = useDispatch();

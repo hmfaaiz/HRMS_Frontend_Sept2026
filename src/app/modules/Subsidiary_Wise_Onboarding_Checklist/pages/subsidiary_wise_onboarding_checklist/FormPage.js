@@ -10,7 +10,6 @@ import { SubsidiaryOnboardingDeleteDialog } from "./form-delete-dialog/FormDelet
 import { SubsidiaryOnboardingCard } from "./form-card/FormCard";
 
 export function FormPage({ history }) {
-  console.log("page1111");
   const dispatch = useDispatch();
 
   const FormUIEvents = {

@@ -27,7 +27,6 @@ export function ReligionCard() {
     }),
     shallowEqual
   )
-  console.log("userAccess Temp",userAccess)
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateReligion"
   )

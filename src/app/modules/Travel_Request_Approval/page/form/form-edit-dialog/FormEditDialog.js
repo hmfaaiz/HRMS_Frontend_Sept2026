@@ -34,15 +34,12 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
   const workflowId = userForEdit?.workflowId; // This should be 584
 
-  console.log("🔍 workflowRecord:", workflowRecord);
-  console.log("🔍 Workflow ID to send:", workflowId);
 
   useEffect(() => {
     dispatch(actions.fetchTravelApprovalRequestWorkflow(id));
   }, [id, dispatch]);
 
   const saveForm = async (values) => {
-    console.log("🚀 Submitting with ID:", id);
 
     enableLoading();
 
@@ -86,7 +83,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       },
     };
 
-    console.log("📦 FINAL PAYLOAD TO SEND:", payload);
 
     await dispatch(actions.handleTravelRequestApproval(payload));
     await dispatch(

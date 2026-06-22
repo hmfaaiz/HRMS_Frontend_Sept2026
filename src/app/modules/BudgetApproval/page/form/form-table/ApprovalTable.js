@@ -45,7 +45,6 @@ export function ApprovalFormTable() {
   }, shallowEqual);
 
   const { entities } = currentState;
-  console.log("entitie11111", entities)
   const dispatch = useDispatch();
 
   useEffect(() => {

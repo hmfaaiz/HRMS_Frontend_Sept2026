@@ -4,7 +4,6 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 
 //Create user
 export function createincident(body) {
-  console.log("create incident step 1", body)
   
   // body.Name = body.txtincidentName;
   // delete body.txtincidentName
@@ -15,27 +14,22 @@ export function createincident(body) {
 
 // Read
 export function getAllincident(body) {
-  console.log("body",body);
   return axios.post(`${USERS_URL}/incident/read-all-incident`, body);
 }
 
 
 
 export function getincidentById(id) {
-   console.log(" incident id", id)
   return axios.post(`${USERS_URL}/incident/read-incident`, id);
 }
 
 //Update
 export function updateincident(incident) {
-   console.log("incident 12", incident)
   return axios.put(`${USERS_URL}/incident/update-incident`, incident);
 }
 
 //Delete
 export function deleteincident(body) {
-  console.log("body")
-  console.log(body);
   return axios.patch(`${USERS_URL}/incident/delete-incident`, body);
 }
 

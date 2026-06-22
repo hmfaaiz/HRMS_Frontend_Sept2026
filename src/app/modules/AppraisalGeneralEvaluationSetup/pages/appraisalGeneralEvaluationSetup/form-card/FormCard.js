@@ -45,7 +45,7 @@ export function FormCard() {
   // const { currentState } = useSelector();
 
   const { entities } = currentState;
-console.log("CurrentModuleName1110",CurrentModuleName())
+ 
   return (
   
       <TCard name={CurrentModuleName()}>

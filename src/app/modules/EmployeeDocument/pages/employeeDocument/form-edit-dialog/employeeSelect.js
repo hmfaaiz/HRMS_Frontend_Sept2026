@@ -13,6 +13,7 @@ import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboard
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Eye, X, XCircle, CircleX } from "lucide-react";
 import { useFormUIContext } from "../FormUIContext";
+import { fetchEmployeeDocs } from "../../../_redux/redux-Actions";
 
 
 export function EmployeeSelect({
@@ -130,7 +131,6 @@ console.log("Selected Employee ID:", updatedQueryParams);
                         };
 
                         formUIProps.setQueryParams(updatedQueryParams);
-                        console.log("Selected Employee ID:", updatedQueryParams);
                         dispatch(fetchEmployeeDocs(updatedQueryParams));
                       }}
                       label={<span>Employee</span>}

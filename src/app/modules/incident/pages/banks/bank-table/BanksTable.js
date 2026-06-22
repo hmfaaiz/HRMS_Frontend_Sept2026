@@ -37,14 +37,13 @@ export function BanksTable() {
 
   //console.log("queryparms", usersUIProps.queryparms)
   const { currentState, userAccess } = useSelector(
-    (state) => {  console.log("academic state ",state); return {
+    (state) => {   return {
       
       currentState: state.incident,
       userAccess: state?.auth?.userAccess["Incident"],
     }},
     shallowEqual
   );
-  console.log("currentState", currentState);
   
   const { totalCount, entities, listLoading } = currentState;
 
@@ -54,7 +53,6 @@ export function BanksTable() {
 
   useEffect(() => {
     bankUIProps.setIds([]);
-    console.log("test 2",bankUIProps.queryParams)
     dispatch(actions.fetchUsers(bankUIProps.queryParams));
   }, [bankUIProps.queryParams, dispatch, totalCount]);
 

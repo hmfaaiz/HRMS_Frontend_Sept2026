@@ -20,7 +20,6 @@ const getFieldCSSClasses = (touched, errors) => {
 export function DateTimePickerField({ ...props }) {
   const { setFieldValue, errors, touched } = useFormikContext();
   const [field, { setValue }] = useField(props);
-  console.log("field", field);
   return (
     <>
       {props.label && <label>{props.label}</label>}
@@ -31,7 +30,6 @@ export function DateTimePickerField({ ...props }) {
         {...props}
         selected={(field.value && new Date(field.value)) || null}
         onChange={(val) => {
-          console.log("val", val);
           // val.preventdefault();
           //setFieldValue(field.name, val);
           setValue(val);

@@ -50,7 +50,6 @@ export function FormReadForm({
         initialValues={user}
         validationSchema={FormEditSchema}
         onSubmit={(values) => {
-          console.log("Save_FinalSettlementPolicy form Values", values)
           Save_FinalSettlementPolicy(values)
         }}
       >

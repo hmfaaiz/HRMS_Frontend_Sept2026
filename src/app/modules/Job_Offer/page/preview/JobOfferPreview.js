@@ -95,7 +95,6 @@ const JobOfferPreview = () => {
         hrName,
         hrDesignation, locationName
     } = data;
-    console.log("jobOfferLetter1111", `${UPLOAD_URL}/${companyLogo}`);
     return (
         <>
             <ToastContainer />

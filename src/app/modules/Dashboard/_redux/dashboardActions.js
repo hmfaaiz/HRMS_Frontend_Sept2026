@@ -623,7 +623,6 @@ export const fetchGeoLocationBySubsidiary = (subsidiaryId) => async (
       dispatch(actions.AllGeoLocationFetchedFetch(entities));
     })
     .catch((error) => {
-      console.log("Something went wrong", error);
     });
 };
 
@@ -635,7 +634,6 @@ export const fetchEmpDeviceId = (employeeId) => async (dispatch) => {
       return entities;
     })
     .catch((error) => {
-      console.log("Something went wrong", error);
     });
 };
 

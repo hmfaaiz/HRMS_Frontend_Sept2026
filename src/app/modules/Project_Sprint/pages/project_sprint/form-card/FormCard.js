@@ -59,7 +59,6 @@ export function FormCard() {
 
     formUIProps.setQueryParams(updatedQueryParams);
   };
-console.log("userAccessuserAccessuserAccess" , userAccess)
   return (
     <TCard name={CurrentModuleName()}>
       <div className="flex justify-start sm:justify-end items-end flex-wrap gap-2">

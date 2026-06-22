@@ -27,7 +27,7 @@ export function ActionsColumnFormatter(
   // const isAccessForEdit = userAccess.find(
   //   (item) => item.componentName === "UpdateUser"
   // )
-  //console.log("userAccess", userAccess)
+ 
   return (
     <>
       <OverlayTrigger

@@ -63,7 +63,7 @@ export function TilesWidget1({
 
   const actionFormater = (cell, row) => {
     const standToOff = () => {
-      //console.log("city", seletedCity);
+ 
       const body = {
         id: row.vehicleid,
         available: false,
@@ -82,7 +82,7 @@ export function TilesWidget1({
       };
 
       // dispatch(updateVehicelStatus(body)).then(() => {
-      //   // console.log("seletedCity", seletedCity);
+ 
       //   //dispatch(fetchDashboardVehicles({ cityId: 0 }));
       // });
       dispatch(updateVehicelStatus(body)).then(() => {
@@ -253,10 +253,10 @@ export function TilesWidget1({
     onSelect: (row, isSelect, rowIndex, e) => {
       if (isSelect) {
         let vehicleId;
-        // console.log("row", row);
+ 
         if (row.status === "Available") {
           vehicleId = row.vehicleid;
-          // console.log("row", row);
+ 
           setVehicle((item) => [...item, vehicleId]);
           setRegNo((item) => [...item, row.regNo]);
         } else {
@@ -264,14 +264,14 @@ export function TilesWidget1({
           setVehicle([row.tripLogId]);
         }
       } else if (!isSelect) {
-        //console.log("seleted vehicel", vehicle);
+ 
         const index = vehicle && vehicle.indexOf(row.vehicleid);
-        //  console.log("index", index);
+ 
         if (index > -1) {
           vehicle.splice(index, 1);
           setVehicle([...vehicle]);
           // if()
-          //console.log("Uncseleted called", row);
+ 
 
           setRegNo([row.regNo]);
           //setVehicle((item) => [...item, vehicle]);

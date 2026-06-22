@@ -32,9 +32,6 @@ export function FormCard({ showApplicantDetails, onApplicantDetailsChange }) {
     (item) => item.componentName === "CreateEmployeeTransfer"
   );
 
-  // DEBUG: log userAccess to get correct componentName values
-  console.log("[Employee Transfer] userAccess:", userAccess);
-  console.log("[Employee Transfer] accessUser (Create):", accessUser);
 
   const { currentState } = useSelector((state) => {
     return {

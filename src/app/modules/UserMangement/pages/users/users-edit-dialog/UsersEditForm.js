@@ -125,7 +125,6 @@ export function UserEditForm({
     );
   }, [user]);
 
-  console.log(':::::user::::::');
   
   return (
     <>
@@ -197,7 +196,6 @@ export function UserEditForm({
                       />
                     </div>
                     {
-                      console.log(':::::asdasda::::', errors)
                       
                     }
                     {/* <div className="col-12 col-md-4">

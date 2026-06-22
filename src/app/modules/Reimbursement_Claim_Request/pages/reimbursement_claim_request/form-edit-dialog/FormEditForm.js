@@ -268,7 +268,6 @@ const getMinDate = () => {
             formData.append("file", values.file);
 
             const res = await uploadImage(formData);
-            console.log("Upload response:", res);
 
             const rawPath =
               res?.data?.filePath ||
@@ -313,7 +312,6 @@ const getMinDate = () => {
           authortiesList: empAuthorityList,
         };
 
-        console.log("Final payload:", payload);
         saveForm(payload, finalAmountLimit, isFileReq, clearForm);
       }}
     >

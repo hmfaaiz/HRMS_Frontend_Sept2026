@@ -67,7 +67,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
   //console.log("action", action);
 
   useEffect(() => {
-    console.log("silk3",id)
     dispatch(actions.fetchUser(id));
 
     // dispatch(actions.fetchUser(banksUIProps.queryParams))
@@ -77,7 +76,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
 
     if (!id) {
      
-      console.log("sily 1",user);
 
       await dispatch(actions.createCompensation_Expatriate(user, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
@@ -85,8 +83,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
 
     } else {
 
- console.log("sily 2",user);
-      console.log("getUserStatus", user);
 
       // This object set for Edit/Save Fields in DB
       const earningUpdatedFields = {
@@ -105,14 +101,12 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
 
       };
 
-      console.log("exp updated", earningUpdatedFields);
       await dispatch(actions.updateCompensation_Expatriate(earningUpdatedFields, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }
   };
 
 
-  console.log("ooop", userForEdit);
 
   return (
     <Modal

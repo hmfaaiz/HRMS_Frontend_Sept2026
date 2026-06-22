@@ -20,7 +20,6 @@ import { CircleMinus } from "lucide-react";
 
 export function FormPage({ history }) {
   const dispatch = useDispatch();
-  console.log("hrform11111");
   const FormUIEvents = {
     newFormButtonClick: () => {
       history.push(
@@ -66,12 +65,6 @@ export function FormPage({ history }) {
     (item) => item.componentName === "DeleteHrRequisitionJobVacancy",
   );
 
-  console.log(
-    "isAccessForView1111",
-    isAccessForView,
-    isAccessForEdit,
-    isAccessForDelete,
-  );
   const [activeKey, setActiveKey] = useState(null);
   return (
     <FormUIProvider FormUIEvents={FormUIEvents}>

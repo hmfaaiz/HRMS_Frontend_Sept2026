@@ -38,7 +38,7 @@ export function FormTable() {
 
   const { currentState, userAccess } = useSelector(
     (state) => {
-      console.log("state11", state); // Log the entire state
+       // Log the entire state
       return {
 
 
@@ -67,7 +67,6 @@ export function FormTable() {
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateUser"
   );
-console.log("userAccess111",userAccess)
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteUser"
   );

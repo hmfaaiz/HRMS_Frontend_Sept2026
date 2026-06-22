@@ -37,14 +37,13 @@ export function EmpPolicyTable() {
 
   //console.log("queryparms", usersUIProps.queryparms)
   const { currentState, userAccess } = useSelector(
-    (state) => {  console.log("state ",state); return {
+    (state) => {   return {
       
       currentState: state.emppolicy,
       userAccess: state?.auth?.userAccess["Policy"],
     }},
     shallowEqual
   );
-  console.log("currentState", currentState);
   
   const { totalCount, entities, listLoading } = currentState;
 
@@ -54,7 +53,6 @@ export function EmpPolicyTable() {
 
   useEffect(() => {
     religionUIProps.setIds([]);
-    console.log("test 2",religionUIProps.queryParams)
     dispatch(actions.fetchUsers(religionUIProps.queryParams));
   }, [religionUIProps.queryParams, dispatch, totalCount]);
 

@@ -74,7 +74,6 @@ export function UsersEditDialog({ id, show, onHide, userForRead, isPasswordHide 
       const getUserStatus = userStatusTypes.filter((item) => {
         return item.value === +user.status;
       });
-      console.log("getUserStatus", getUserStatus);
       const { status = getUserStatus[0].label, ...rest } = user;
       const finalObject = {
         status: getUserStatus[0].label,
@@ -86,7 +85,6 @@ export function UsersEditDialog({ id, show, onHide, userForRead, isPasswordHide 
         return item.value === +user.status;
       });
 
-      console.log("getUserStatus", getUserStatus);
 
       const userUpdatedFields = {
         id: user.id,

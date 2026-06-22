@@ -69,7 +69,6 @@ export function ContactEditForm({
 
   useEffect(() => {
     const employeeId = defEmployee?.value ? defEmployee.value : user.employeeId;
-    console.log("employeeId", employeeId);
     setEmployeeDefault(
       dashboard.allEmployees &&
       dashboard.allEmployees.filter((item) => {
@@ -105,7 +104,6 @@ export function ContactEditForm({
         initialValues={user}
         validationSchema={contactValidationSchema}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           saveContact(values);
         }}

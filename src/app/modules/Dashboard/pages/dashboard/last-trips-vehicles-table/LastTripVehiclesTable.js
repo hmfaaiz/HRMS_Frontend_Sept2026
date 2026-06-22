@@ -130,7 +130,6 @@ export function LastTripVehcicleTable({ lastTrips }) {
     mode: "click",
     // blurToSave: true,
     afterSaveCell: (oldValue, newValue, row, column) => {
-      console.log("row", row);
       const updatedObj = {};
       const { id, destinationSubCenterId, status, logBookNo } = row;
       const { dataField } = column;
@@ -141,11 +140,9 @@ export function LastTripVehcicleTable({ lastTrips }) {
       updatedObj[dataField] = +newValue;
 
       //dispatch(updateTripLog(updatedObj));
-      console.log(`Saved cell ${column.dataField} for row ${row.id}`);
     },
     nonEditableRows: () => [],
     onStartEdit: (row, column, rowIndex, columnIndex) => {
-      console.log(`Editing cell ${column.dataField} for row ${row.id}`);
     },
     onTabCell: onTabCell,
   };
@@ -170,7 +167,6 @@ export function LastTripVehcicleTable({ lastTrips }) {
     updatedObj.status = status;
     updatedObj.logBookNo = +logBookNo;
     updatedObj[cellEdit.dataField] = +cellEdit.newValue;
-    console.log("updatedObj", updatedObj);
     //console.log("cellEdit", cellEdit);
     dispatch(updateTripLog(updatedObj));
   };

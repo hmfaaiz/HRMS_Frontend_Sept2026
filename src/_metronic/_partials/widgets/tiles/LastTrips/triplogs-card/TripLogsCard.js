@@ -17,10 +17,8 @@ export function LastTripsCard() {
   const lastTripUIContext = useLastTripsUIContext();
   const { lastTrips } = useSelector((state) => state?.dashboard);
 
-  console.log("lastTrips", lastTrips);
-
   //const { totalResults, rows } = lastTrips;
-  //console.log("incidentsUIContext", incidentsUIContext)
+ 
   // const incidentsUIProps = useMemo(() => {
   //   return {
   //     newUserButtonClick: incidentsUIContext.newUserButtonClick,

@@ -18,11 +18,9 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
-import { ApplicantsDetailTable } from "./ApplicantDetailTable";
 
 export function FormTable({ showApplicantDetails }) {
   const formUIContext = useFormUIContext();
-  const [expandedRows, setExpandedRows] = useState([]);
 
   const formUIProps = useMemo(() => {
     return {
@@ -45,21 +43,9 @@ export function FormTable({ showApplicantDetails }) {
   }, shallowEqual);
 
   const { totalCount, entities, listLoading, reportPdfLoading } = currentState || {};
-  // DEBUG
-  console.log("[Employee Transfer FormTable] userAccess:", userAccess);
+  
 
   const dispatch = useDispatch();
-
-  // Collapse all expanded rows when filters change
-  useEffect(() => {
-    setExpandedRows([]);
-  }, [formUIProps.queryParams]);
-
-  useEffect(() => {
-    if (!showApplicantDetails) {
-      setExpandedRows([]);
-    }
-  }, [showApplicantDetails]);
 
   useEffect(() => {
     formUIProps.setIds([]);
@@ -82,59 +68,6 @@ export function FormTable({ showApplicantDetails }) {
     (item) => item.componentName === "ReportEmployeeTransfer"
   );
   // Table columns
-
-
-
-  // ── Expand row handlers ──
-  const handleExpand = (row, isExpand) => {
-    setExpandedRows((prev) =>
-      isExpand
-        ? prev.includes(row.Id) ? prev : [...prev, row.Id]
-        : prev.filter((id) => id !== row.Id)
-    );
-  };
-
-  // Expand row config: only active when showApplicantDetails is true
-  const expandRow = showApplicantDetails
-    ? {
-      renderer: (row) => <ApplicantsDetailTable row={row} />,
-      expanded: expandedRows,
-      expandByColumnOnly: true,
-      onExpand: handleExpand,
-      showExpandColumn: true,
-      expandColumnPosition: "left",
-      expandHeaderColumnRenderer: () => null,
-      expandColumnRenderer: ({ expanded }) => (
-        <button
-          type="button"
-          title={expanded ? "Collapse applicants" : "View applicants"}
-          style={{
-            background: "none", border: "none", cursor: "pointer",
-            padding: "2px 4px", display: "inline-flex",
-            alignItems: "center", justifyContent: "center",
-          }}
-        >
-          <span
-            style={{
-              display: "inline-flex", alignItems: "center", justifyContent: "center",
-              width: 22, height: 22, borderRadius: "50%",
-              background: expanded ? "#3699FF" : "#e2eaf5",
-              color: expanded ? "#fff" : "#4a5568",
-              fontSize: 10, fontWeight: 700,
-              transition: "background 0.2s, transform 0.2s",
-              transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
-            }}
-          >
-            ▶
-          </span>
-        </button>
-      ),
-    }
-    : {
-      renderer: () => null,
-      showExpandColumn: false,
-      expandByColumnOnly: true,
-    };
 
 
   const latestRequests = useMemo(() => {
@@ -306,7 +239,6 @@ export function FormTable({ showApplicantDetails }) {
                 keyField="Id"
                 data={entities === null ? [] : entities}
                 columns={columns}
-                expandRow={expandRow}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams

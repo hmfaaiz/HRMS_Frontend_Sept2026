@@ -6,9 +6,8 @@ const { actions } = contactSlice;
 // const { roleActions } = getAllrolesSlice
 
 export const fetchUsers = (queryparm) => async (dispatch) => {
-  // console.log("Receive QPsss", queryparm)
+  
   dispatch(actions.startCall({ callType: callTypes.list }));
-  console.log("test query param", queryparm)
   return requestFromServer.getAllContacts(queryparm)
     // .getAllReceipts({
     //   filter: {
@@ -19,8 +18,7 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
     //   page: 1
     // })
     .then((response) => {
-      //  console.log("user action receipt fetched 321")
-      console.log("response", response)
+      
       dispatch(actions.ContactFetched(response));
     })
     .catch((error) => {
@@ -32,7 +30,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-  console.log("User Action id " + id)
   if (!id) {
     return dispatch(actions.ContactFetchedForEdit({ userForEdit: undefined }));
   }
@@ -43,7 +40,6 @@ export const fetchUser = (id) => (dispatch) => {
     .then((response) => {
       const entities = response.data?.data;
 
-      console.log("User fetched for search " + id)
       dispatch(actions.ContactFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -57,7 +53,7 @@ export const deleteContact = (id) => (dispatch) => {
   return requestFromServer
     .deleteContact({ Id: id })
     .then((response) => {
-      //console.log("response from delete user ", response.data.message)
+     
       dispatch(actions.ContactDeleted({ Id: id }));
       toast.success("Successfully Deleted", {
         position: "top-right",
@@ -80,7 +76,7 @@ export const activeUser = (id) => (dispatch) => {
   return requestFromServer
     .deleteContact({ receiptId: id })
     .then((response) => {
-      //console.log("response from delete user ", response.data.message)
+      
       dispatch(actions.userDeleted({ id: id }));
       toast.success("Successfully Activated", {
         position: "top-right",
@@ -104,14 +100,11 @@ export const createContact = (bankForCreation, disbaleLoading, onHide) => (
   // bankForCreation.phNo = bankForCreation.phNo.toString();
   // bankForCreation.cnic = bankForCreation.cnic.toString();
 
-  console.log("contact for creation", bankForCreation);
   return requestFromServer
     .createContact(bankForCreation)
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-      console.log("contact data");
-      console.log(user);
       dispatch(actions.ContactCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
@@ -145,9 +138,7 @@ export const updateContact = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
     .updateContact(user)
     .then((response) => {
-      console.log("my response",response?.config?.data);
       const updatedContact = response?.config?.data; // response.data?.data;
-      console.log("bnkAction Res", response)
       dispatch(actions.ContactUpdated({ updatedContact }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();
@@ -210,7 +201,6 @@ export const fetchDonationReport = (body) => async (dispatch) => {
   return await requestFromServer
     .donationReport(body)
     .then((response) => {
-      console.log("Res", response);
       const entities = response?.data?.data;
       dispatch(actions.donationReportFetch(entities));
     })

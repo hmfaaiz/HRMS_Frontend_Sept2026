@@ -55,7 +55,6 @@ export function DesignationEditForm({
         initialValues={user}
         validationSchema={ReligionEditSchema}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           saveReligion(values);
         }}

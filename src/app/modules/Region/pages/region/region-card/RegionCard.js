@@ -28,7 +28,6 @@ export function RegionCard() {
     }),
     shallowEqual
   )
-  console.log("userAccess Temp region",userAccess)
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateRegion"
   )

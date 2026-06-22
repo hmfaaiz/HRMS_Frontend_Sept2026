@@ -41,7 +41,6 @@ export const DepartmentDesignationMappingSlice = createSlice({
 
     desigMapFetched: (state, action) => {
       const entities = action.payload.data?.data;
-      console.log("entities111111",entities)
       state.listLoading = false;
       state.error = null;
       state.entities = entities;

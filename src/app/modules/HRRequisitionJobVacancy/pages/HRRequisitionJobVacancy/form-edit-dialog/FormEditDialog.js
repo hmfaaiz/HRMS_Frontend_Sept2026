@@ -69,7 +69,6 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
 
 
-console.log("id11111",id)
   useEffect(() => {
     dispatch(actions.fetchJobVacancyById(id));
 

@@ -101,7 +101,6 @@ export function BankEditForm({
 
   useEffect(() => {
     const employeeId = defEmployee?.value ? defEmployee.value : user.employeeId;
-    console.log("employeeId", employeeId);
     setEmployeeDefault(
       dashboard.allEmployees &&
       dashboard.allEmployees.filter((item) => {
@@ -114,7 +113,6 @@ export function BankEditForm({
 
   useEffect(() => {
     const currencyId = defCurrencyCodeList?.value ? defCurrencyCodeList.value : user.currencyId;
-    console.log("currencyId", currencyId);
     setDefualtCurrencyCodeList(
       dashboard.allCurrencyCodeList &&
       dashboard.allCurrencyCodeList.filter((item) => {
@@ -139,7 +137,6 @@ export function BankEditForm({
 
   const handleChanged = (e) => {
     const newValue = e.target.value;
-    console.log('Selected value:', newValue);
     if (newValue == 'Fixed Amount') {
       setDropdownValue(true);
       
@@ -154,7 +151,6 @@ export function BankEditForm({
         initialValues={user}
         //validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           values.transactionType = 'Earning'
           //values.subsidiaryId = 135;

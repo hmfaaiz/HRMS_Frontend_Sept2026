@@ -75,7 +75,6 @@ export const portalTaskAssignmentTimelineSlice = createSlice({
             state.error = null;
             state.timelogsEntities = data.rows || [];
             state.timeLogsTotalCount = data.totalResults || 0; // total number of details
-            console.log('data1111',data)
         },
     pdfFetched: (state) => { state.pdfLoading = false; },
     csvFetched: (state) => { state.csvLoading = false; },

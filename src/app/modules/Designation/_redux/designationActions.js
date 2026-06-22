@@ -8,12 +8,10 @@ const { actions } = designationSlice;
 export const fetchUsers = (queryparm) => async (dispatch) => {
   // console.log("Receive QPsss", queryparm)
   dispatch(actions.startCall({ callType: callTypes.list }));
-  console.log("test query param", queryparm)
   return requestFromServer.getAllDesignation(queryparm)
     
     .then((response) => {
       //  console.log("user action receipt fetched 321")
-      console.log("response", response)
       dispatch(actions.religionFetched(response));
     })
     .catch((error) => {
@@ -25,7 +23,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-  console.log("User Action id " + id)
   if (!id) {
     return dispatch(actions.designationFetchedForEdit({ userForEdit: undefined }));
   }
@@ -35,7 +32,6 @@ export const fetchUser = (id) => (dispatch) => {
     .getDesignationById({ Id: id })
     .then((response) => {
       const entities = response.data?.data;
-      console.log("entities " + entities)
       dispatch(actions.designationFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -96,14 +92,11 @@ export const createDesignation = (religionForCreation, disbaleLoading, onHide) =
   // religionForCreation.phNo = religionForCreation.phNo.toString();
   // religionForCreation.cnic = religionForCreation.cnic.toString();
 
-  console.log("bank for creation", religionForCreation);
   return requestFromServer
     .createDesignation(religionForCreation)
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-      console.log("religion data");
-      console.log(user);
       dispatch(actions.designationCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
@@ -137,9 +130,7 @@ export const updateDesignation = (user, disbaleLoading, onHide) => (dispatch) =>
   return requestFromServer
     .updateDesignation(user)
     .then((response) => {
-      console.log("my response",response?.config?.data);
       const updatedReligion = response?.config?.data; // response.data?.data;
-      console.log("religion Res", response,updatedReligion)
       dispatch(actions.designationUpdated({ updatedReligion }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();
@@ -204,7 +195,6 @@ export const fetchDonationReport = (body) => async (dispatch) => {
   return await requestFromServer
     .donationReport(body)
     .then((response) => {
-      console.log("Res", response);
       const entities = response?.data?.data;
       dispatch(actions.donationReportFetch(entities));
     })

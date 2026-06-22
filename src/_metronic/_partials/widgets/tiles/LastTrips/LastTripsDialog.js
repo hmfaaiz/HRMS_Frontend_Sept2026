@@ -183,20 +183,16 @@ export const initialFilter = {
 export default function LastTripsDialog({ open, handleClose, history }) {
   var { lastTrips } = useSelector((item) => item.dashboard);
 
-  //console.log("last trips", lastTrips);
+ 
   var [data, setData] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("UseEffect Called");
     if (lastTrips.rows) {
       setData(lastTrips.rows);
     }
   }, [lastTrips]);
   const handleCellEdit = (oldValue, newValue, row, column) => {
-    console.log(
-      `Cell edited: ${column.dataField}, row ID: ${row.id}, new value: ${newValue}`
-    );
     dispatch();
     // Dispatch your call here...
   };
@@ -204,7 +200,6 @@ export default function LastTripsDialog({ open, handleClose, history }) {
     mode: "click",
     //blurToSave: true,
     beforeSaveCell: (oldValue, newValue, row, column) => {
-      console.log("row", row);
       const { dataField } = column;
       const { id, sourceSubCenterId } = row;
 
@@ -215,8 +210,6 @@ export default function LastTripsDialog({ open, handleClose, history }) {
 
       payload[dataField] = newValue;
       // payload[subCenterId] = subCenterId;
-
-      console.log("payload", payload);
 
       dispatch(updateTripLog(payload));
     },

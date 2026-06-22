@@ -20,7 +20,7 @@ import ReportButton from "./AttendanceReportButton";
 import TCard from "../../../../utils/common-modules/TCard";
 
 export function AttendanceViewPage() {
-  console.log('aaaaa1111111')
+ 
   const [activeKey, setActiveKey] = useState("0");
   const dispatch = useDispatch();
   const {

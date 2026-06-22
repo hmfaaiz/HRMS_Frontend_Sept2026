@@ -60,7 +60,6 @@ export function BankEditForm({
   enableLoading,
   loading,
 }) {
-console.log("tree",values)
   const { dashboard } = useSelector((state) => state);
   // Get User Details
   const { auth } = useSelector((state) => state);
@@ -198,7 +197,6 @@ console.log("tree",values)
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           saveSkills(values);
         }}

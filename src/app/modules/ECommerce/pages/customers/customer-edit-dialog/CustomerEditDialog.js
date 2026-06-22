@@ -37,7 +37,6 @@ export function CustomerEditDialog({ id, show, onHide }) {
     if (!id) {
       // server request for creating customer
       dispatch(actions.createCustomer(customer)).then((res) => {
-        console.log("Customer response", res)
         onHide()
       })
     } else {

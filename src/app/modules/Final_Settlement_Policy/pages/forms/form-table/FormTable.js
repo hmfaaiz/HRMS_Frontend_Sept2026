@@ -37,14 +37,13 @@ export function FormTable() {
 
   //console.log("queryparms", usersUIProps.queryparms)
   const { currentState, userAccess } = useSelector(
-    (state) => {  console.log("state ",state); return {
+    (state) => {   return {
       
       currentState: state.final_settlement_policy,
       userAccess: state?.auth?.userAccess["Final_Settlement_Policy"],
     }},
     shallowEqual
   );
-  console.log("currentState", currentState);
   
   const { totalCount, entities, listLoading } = currentState;
 
@@ -54,7 +53,6 @@ export function FormTable() {
 
   useEffect(() => {
     FormUIProps.setIds([]);
-    console.log("test 2",FormUIProps.queryParams)
     dispatch(actions.fetchUsers(FormUIProps.queryParams));
   }, [FormUIProps.queryParams, dispatch, totalCount]);
 

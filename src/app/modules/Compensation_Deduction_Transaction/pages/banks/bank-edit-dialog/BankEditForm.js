@@ -109,7 +109,6 @@ export function BankEditForm({
         initialValues={user}
        //validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("values", values);
           enableLoading();
           values.transactionType = 'Deduction'
           values.subsidiaryId = 135;

@@ -70,7 +70,7 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
 
 
 export const generateRegisterExcel = (filter, document, labels = {}) => async (dispatch) => {
-  console.log("click2222")
+ 
   dispatch(actions.startCall({ callType: callTypes.registerExcel }));
   return requestFromServer.generateExcel({ ...filter, labels })
     .then((res) => {

@@ -138,7 +138,6 @@ export function FormCard() {
   ];
 
   const [activeKey, setActiveKey] = useState(null);
-  console.log("TicketType11111", TicketType)
   return (
     <>
       <TCard>

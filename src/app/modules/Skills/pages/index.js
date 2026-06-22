@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { SkillPage } from "./banks/BanksPage";
 
 export default function ExperienceManagement() {
-  console.log('skills mein aya')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

@@ -84,7 +84,6 @@ export const deleteRemarks = ids => dispatch => {
   return requestFromServer
     .deleteRemarks(ids)
     .then(() => {
-      console.log("delete return");
       dispatch(actions.remarksDeleted({ ids }));
     })
     .catch(error => {

@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { OnetimeAllowancePage } from "./forms/OnetimeAllowancePage"
 
 export default function OnetimeAllowanceManagement() {
-  console.log('onetime-earning page')
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

@@ -68,8 +68,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const Save_FinalSettlementPolicy = async (user, earningObjList) => {
 
     if (!id) {
-      console.log("damn", { earningObjList, user });
-      console.log(user);
 
       const finalObject = { user }
      // const response = await axios.post(`${USERS_URL}/final_settlement_policy/insert-final-settlement-policy`, { data: { emp_ed_Obj, user } });
@@ -81,7 +79,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     } else {
      
 
-      console.log("getUserStatus", user);
 
       const policyUpdatedFields = {
         Id: user.Id,
@@ -93,7 +90,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         earning_Id : user.earning_Id,
       };
 
-      console.log("policyUpdatedFields", policyUpdatedFields);
       
       await dispatch(actions.createfinalSettlementPolicy(user,earningObjList, disbaleLoading, onHide));
     //  await dispatch(actions.updatefinalSettlementPolicy(policyUpdatedFields, disbaleLoading, onHide));

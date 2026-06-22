@@ -173,7 +173,6 @@ export function FormEditForm({
     };
   }, shallowEqual);
 
-  console.log("currentUser1111", currentUser);
 
   // const fetchData = async (setJobCode) => {
   //   if (!formData.Id) {
@@ -249,7 +248,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
                 {/* Job */}
-                {console.log("errors111", errors)}
+                
                 <div>
                   {/* <h6>Job</h6> */}
                   <div className="grid md:grid-cols-6 gap-x-3">

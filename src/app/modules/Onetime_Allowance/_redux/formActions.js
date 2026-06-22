@@ -8,12 +8,10 @@ const { actions } = OnetimeAllowanceSlice;
 export const fetchUsers = (queryparm) => async (dispatch) => {
   // console.log("Receive QPsss", queryparm)
   dispatch(actions.startCall({ callType: callTypes.list }));
-  console.log("test query param", queryparm)
   return requestFromServer.getAll_onetime_earning(queryparm)
 
     .then((response) => {
      
-      console.log("responsettt", response)
       dispatch(actions.ontimeAllowanceFetched(response));
     })
     .catch((error) => {
@@ -25,7 +23,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-  console.log("User Action id " + id)
   if (!id) {
     return dispatch(actions.ontimeAllowanceFetchedForEdit({ userForEdit: undefined }));
   }
@@ -36,7 +33,6 @@ export const fetchUser = (id) => (dispatch) => {
     .then((response) => {
       const entities = response.data?.data;
 
-      console.log("User fetched for search " + id)
       dispatch(actions.ontimeAllowanceFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -95,14 +91,11 @@ export const create_onetime_earning = (formValues, earningObjList, disbaleLoadin
   dispatch
 ) => {
   
-  console.log("onetime_earning for creation", formValues);
   return requestFromServer
     .create_onetime_earning(formValues, earningObjList)
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-      console.log("onetime_earning data");
-      console.log(user);
       dispatch(actions.ontimeAllowanceCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
@@ -136,9 +129,7 @@ export const updateonetime_earning = (user, disbaleLoading, onHide) => (dispatch
   return requestFromServer
     .update_onetime_earning(user)
     .then((response) => {
-      console.log("my response", response?.config?.data);
       const updatedonetime_earning = response?.config?.data; // response.data?.data;
-      console.log("bnkAction Res", response)
       dispatch(actions.ontimeAllowanceUpdated({ updatedonetime_earning }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();

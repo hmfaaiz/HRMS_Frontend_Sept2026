@@ -719,7 +719,6 @@ export function DesignationEditForm({
     if (matchedSubsidiary) {
       setLocalizationId(matchedSubsidiary?.localizationId);
     }
-    console.log("ggggg44444", matchedSubsidiary)
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
 
   //===== Date Of Joining
@@ -2075,7 +2074,6 @@ export function DesignationEditForm({
       ...academicList[currentIndex],
       [field]: newValue
     };
-    console.log("currentObj2222", academicList);
     // Filter same degree wali entries
     const sameDegreeEntries = academicList.filter(
       (item, idx) =>
@@ -2231,7 +2229,7 @@ export function DesignationEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                {console.log("eeeee1111", errors)}
+                
                 <h6 className="font-bold mb-0 text-primary mt-2">
                   Basic Information
                 </h6>

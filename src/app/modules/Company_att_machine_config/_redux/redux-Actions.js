@@ -123,7 +123,6 @@ export const updateAttMachineConfig = (user, disbaleLoading, onHide) => (dispatc
     
       disbaleLoading();
 
-      console.log("closing1111111")
       onHide();
       toast.success(response.data.message , {
         position: "top-right",

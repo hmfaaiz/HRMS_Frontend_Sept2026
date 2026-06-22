@@ -73,8 +73,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
    const saveEarningDeductionTran = async (user) => {
 
     if (!id) {
-      console.log("skill edit dialog");
-      console.log(user);
 
            const finalObject = { user }
       await dispatch(actions.createEmployee_Salary(user, disbaleLoading, onHide));
@@ -84,7 +82,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
     } else {
       
 
-      console.log("getUserStatus", user);
 
       // This object set for Edit/Save Fields in DB
       const earningUpdatedFields = {
@@ -98,7 +95,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
 
       };
 
-      console.log("skill updated", earningUpdatedFields);
       await dispatch(actions.updateEmployee_Salary(earningUpdatedFields, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }

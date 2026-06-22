@@ -126,10 +126,10 @@ export function FormFilter({
   };
 
   const getExcel = (values) => {
-    console.log("click3333")
+ 
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
-    console.log("click34444")
+ 
     dispatch(
       actions.generateRegisterExcel(newQueryParams.filter, document, labels)
     );
@@ -251,7 +251,7 @@ export function FormFilter({
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value = e?.value === "Select" ? "" : e?.value;
-                            console.log("value111", value)
+ 
                             setFieldValue("changeModeId", value);
                           }}
                           label={<span> Change Mode</span>}
@@ -393,7 +393,7 @@ export function FormFilter({
                 >
                   <button
                     onClick={() => {
-                      console.log("click1111")
+ 
                       getExcel(values);
                     }}
                     disabled={
