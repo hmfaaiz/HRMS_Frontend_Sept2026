@@ -68,7 +68,7 @@ export function FormCard() {
             menuOptions={[
               {
                 name: "Dashboard",
-                link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
+                link: "/manpower_budget_dashboard/read-manpower-budget-dashboard",
                 isShow: department_wise_budget_approval?.find(
                   (el) =>
                     el?.componentName === "ReadManpowerBudgetDashboard" && el?.portalType == 2 && el?.isResourceShow

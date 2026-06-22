@@ -35,7 +35,8 @@ export const MenuOption = () => {
     portalInfo,
     company_doc_portal,
     employee_task,
-    budget,useracc1111,
+    budget,
+    useracc1111,
   } = useSelector((state) => {
     return {
       moduleRights: state?.dashboard?.moduleRights,
@@ -175,6 +176,13 @@ export const MenuOption = () => {
   const portalDepartmentWiseBudget = budget?.find(
     (el) =>
       el?.componentName === "ReadAllPortalDepartmentWiseBudget" &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
+  const budgetDashboard = budget?.find(
+    (el) =>
+      el?.componentName === "ReadManpowerBudgetDashboard" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
@@ -356,13 +364,21 @@ export const MenuOption = () => {
       {
         icon: <BanknoteArrowUp className="w-6 h-6 text-black" />,
         name: "Manpower Budget",
-        isShow: portalDepartmentWiseBudget,
+        isShow:
+          moduleRights?.find((e) => e?.value == 8)?.allow &&
+          (portalDepartmentWiseBudget || budgetDashboard),
         linkList: [
           {
             link:
               "/portal_department_wise_budget/read-all-portal-department-wise-budget",
             show: portalDepartmentWiseBudget,
             name: "Department Wise Manpower Budget",
+          },
+          {
+            link:
+              "/manpower_budget_dashboard/read-manpower-budget-dashboard",
+            show: budgetDashboard,
+            name: "Dashboard",
           },
         ],
       },
