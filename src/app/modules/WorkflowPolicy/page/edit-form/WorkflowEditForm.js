@@ -36,15 +36,9 @@ const validationSchema = Yup.object().shape({
       then: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
   enableHrRequestWorkflow: Yup.boolean(),
-  emailCreationEmpId: Yup.array().nullable()
-    .min(1, VALIDATION_MESSAGES.required)
-    .required(VALIDATION_MESSAGES.required),
-  emailApprovedEmpId: Yup.array().nullable()
-    .min(1, VALIDATION_MESSAGES.required)
-    .required(VALIDATION_MESSAGES.required),
-  emailRejectedEmpId: Yup.array().nullable()
-    .min(1, VALIDATION_MESSAGES.required)
-    .required(VALIDATION_MESSAGES.required),
+  emailCreationEmpId: Yup.array().nullable(),
+  emailApprovedEmpId: Yup.array().nullable(),
+  emailRejectedEmpId: Yup.array().nullable(),
   emailPendingToApprovers: Yup.boolean(),
   isMonday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
