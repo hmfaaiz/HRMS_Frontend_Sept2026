@@ -4,6 +4,7 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import * as action from "../../../_redux/dashboardActions";
 import { formatDates, formatTime } from "../../../../../utils/common";
 import { toast } from "react-toastify";
+import { Modal, Button } from "react-bootstrap";
 
 export const AttendanceMarking = () => {
   const { attRecord, currentDateTime } = useSelector(
@@ -22,6 +23,18 @@ export const AttendanceMarking = () => {
 
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState(null);
+
+  const reasons = [
+  "Late due to rain",
+  "Late due to traffic",
+  "Late due to bike / car issue",
+  "Others",
+];
+
+const [showLateModal, setShowLateModal] = useState(false);
+const [selectedReason, setSelectedReason] = useState("");
+const [otherReason, setOtherReason] = useState("");
+const [pendingAttendanceBody, setPendingAttendanceBody] = useState(null);
 
   // server/current time ko state me set karna
   useEffect(() => {
@@ -45,62 +58,176 @@ export const AttendanceMarking = () => {
     dispatch(action.getCurrentTimeAndAttendance(setLoading));
   }, [dispatch]);
 
-  const handleToggle = () => {
-    setLoading(true);
+   const defaultShift = attRecord?.defaultShift;
+  const shiftStartHour = defaultShift?.earlyIn;
+  const shiftEndHour = defaultShift?.earlyOut;
+
+ 
+
+    const isLateOrEarly = (
+    status,
+    shiftHour,
+  ) => {
+    if (!shiftHour) return false;
+
+    const shiftHourNum = parseInt(shiftHour.slice(0, 2));
+    const shiftMinNum = parseInt(shiftHour.slice(2, 4));
 
     const now = new Date();
-
-    const attendanceBody = {
-      AttDate: formatDates(now),
-      AttDateTesting: now,
-      Time: now,
-      Status: attendanceDetail?.Status === "01" ? "02" : "01",
-    };
-
-    const onSuccess = () => {
-      dispatch(action.getCurrentTimeAndAttendance(setLoading));
-    };
-
-    if (!allowedAnywhere) {
-      if (!navigator.geolocation) {
-        toast.error("Location is not supported on this device.");
-        setLoading(false);
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const body = {
-            ...attendanceBody,
-            lat: position.coords.latitude,
-            long: position.coords.longitude,
-          };
-
-          dispatch(action.createAttendance(body, setLoading)).then(onSuccess);
-        },
-        (error) => {
-          if (error.code === error.PERMISSION_DENIED) {
-            toast.error(
-              "Location is not enabled. Please enable location services.",
-            );
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            toast.error("Location information is unavailable.");
-          } else if (error.code === error.TIMEOUT) {
-            toast.error("Location request timed out.");
-          } else {
-            toast.error("An unknown error occurred while getting location.");
-          }
-
-          setLoading(false);
-        },
-      );
+    const shiftTime = new Date();
+    shiftTime.setHours(shiftHourNum, shiftMinNum, 0, 0);
+console.log("now",now,"shiftTime",shiftTime)
+    if (status === "01") {
+      return now > shiftTime;
     } else {
-      dispatch(action.createAttendance(attendanceBody, setLoading)).then(
-        onSuccess,
-      );
+      return now < shiftTime;
     }
   };
 
+  // const handleToggle = () => {
+  //   setLoading(true);
+
+  //   const now = new Date();
+
+  //   const attendanceBody = {
+  //     AttDate: formatDates(now),
+  //     AttDateTesting: now,
+  //     Time: now,
+  //     Status: attendanceDetail?.Status === "01" ? "02" : "01",
+  //   };
+
+  //   const onSuccess = () => {
+  //     dispatch(action.getCurrentTimeAndAttendance(setLoading));
+  //   };
+
+  //   if (!allowedAnywhere) {
+  //     if (!navigator.geolocation) {
+  //       toast.error("Location is not supported on this device.");
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const body = {
+  //           ...attendanceBody,
+  //           lat: position.coords.latitude,
+  //           long: position.coords.longitude,
+  //         };
+
+  //         dispatch(action.createAttendance(body, setLoading)).then(onSuccess);
+  //       },
+  //       (error) => {
+  //         if (error.code === error.PERMISSION_DENIED) {
+  //           toast.error(
+  //             "Location is not enabled. Please enable location services.",
+  //           );
+  //         } else if (error.code === error.POSITION_UNAVAILABLE) {
+  //           toast.error("Location information is unavailable.");
+  //         } else if (error.code === error.TIMEOUT) {
+  //           toast.error("Location request timed out.");
+  //         } else {
+  //           toast.error("An unknown error occurred while getting location.");
+  //         }
+
+  //         setLoading(false);
+  //       },
+  //     );
+  //   } else {
+  //     dispatch(action.createAttendance(attendanceBody, setLoading)).then(
+  //       onSuccess,
+  //     );
+  //   }
+  // };
+
+  const submitAttendance = (attendanceBody) => {
+  const onSuccess = () => {
+    dispatch(action.getCurrentTimeAndAttendance(setLoading));
+  };
+
+  if (!allowedAnywhere) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const body = {
+          ...attendanceBody,
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        };
+
+        dispatch(action.createAttendance(body, setLoading)).then(onSuccess);
+      },
+      () => {
+        toast.error("Unable to get location");
+        setLoading(false);
+      },
+    );
+  } else {
+    dispatch(action.createAttendance(attendanceBody, setLoading)).then(
+      onSuccess,
+    );
+  }
+};
+
+const handleToggle = () => {
+  setLoading(true);
+
+  const now = new Date();
+
+  const isLate = isLateOrEarly(
+    attendanceDetail?.Status === "01" ? "02" : "01",
+    shiftStartHour
+  );
+console.log("isLate1111111",isLate)
+  const attendanceBody = {
+    AttDate: formatDates(now),
+    AttDateTesting: now,
+    Time: now,
+    Status: attendanceDetail?.Status === "01" ? "02" : "01",
+    isLate,
+  };
+
+  if (isLate && attendanceBody.Status === "01") {
+    setPendingAttendanceBody(attendanceBody);
+    setShowLateModal(true);
+    setLoading(false);
+    return;
+  }
+
+  submitAttendance({
+    ...attendanceBody,
+    lateRemarks: "",
+    isForWorkFLow: false,
+  });
+};
+
+const handleLateReasonSubmit = () => {
+  if (!selectedReason) {
+    toast.error("Please select a reason");
+    return;
+  }
+
+  const finalReason =
+    selectedReason === "Others"
+      ? otherReason.trim()
+      : selectedReason;
+
+  if (!finalReason) {
+    toast.error("Please enter reason");
+    return;
+  }
+
+  setShowLateModal(false);
+
+  submitAttendance({
+    ...pendingAttendanceBody,
+    lateRemarks: finalReason,
+    isForWorkFLow: true,
+  });
+
+  setSelectedReason("");
+  setOtherReason("");
+  setPendingAttendanceBody(null);
+};
   const getShiftRangeDisplay = (currentShift) => {
     if (!currentShift?.shiftDetail || !currentShift?.date) return null;
 
@@ -139,7 +266,63 @@ export const AttendanceMarking = () => {
   const shiftInfo = getShiftRangeDisplay(currentShift);
 
   return (
-    <div className="mt-2 rounded-lg p-3 bg-tsecondary grid grid-cols-4 gap-2 relative">
+    <>
+    <Modal
+  show={showLateModal}
+  onHide={() => setShowLateModal(false)}
+  centered
+>
+  <Modal.Header closeButton>
+    <Modal.Title>Late Check In Reason</Modal.Title>
+  </Modal.Header>
+
+<Modal.Body>
+  <div>
+    <label className="form-label">Select Reason</label>
+
+    <select
+      className="form-control"
+      value={selectedReason}
+      onChange={(e) => setSelectedReason(e.target.value)}
+    >
+      <option value="">Select Reason</option>
+
+      {reasons.map((item) => (
+        <option key={item} value={item}>
+          {item}
+        </option>
+      ))}
+    </select>
+
+    {selectedReason === "Others" && (
+      <textarea
+        className="form-control mt-3"
+        rows={3}
+        placeholder="Enter reason..."
+        value={otherReason}
+        onChange={(e) => setOtherReason(e.target.value)}
+      />
+    )}
+  </div>
+</Modal.Body>
+
+  <Modal.Footer>
+    <Button
+      variant="secondary"
+      onClick={() => setShowLateModal(false)}
+    >
+      Cancel
+    </Button>
+
+    <Button
+      variant="primary"
+      onClick={handleLateReasonSubmit}
+    >
+      Submit
+    </Button>
+  </Modal.Footer>
+</Modal>
+      <div className="mt-2 rounded-lg p-3 bg-tsecondary grid grid-cols-4 gap-2 relative">
       <h6 className="font-bold mb-0 text-primary">Attendance</h6>
 
       <div className="inline-flex me-5 relative col-span-3">
@@ -213,5 +396,7 @@ export const AttendanceMarking = () => {
         )}
       </div>
     </div>
+    </>
+  
   );
 };
