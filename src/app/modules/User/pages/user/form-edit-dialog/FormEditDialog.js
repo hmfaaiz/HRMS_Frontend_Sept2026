@@ -121,6 +121,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         deactiveflag: user.deactiveflag,
         roleId: user.roleId,
         allowUserCreation: user.allowUserCreation,
+        allowMobileUserCreation: user.allowMobileUserCreation,
         password: user.password,
         email: user.email,
         supervisedbyId: user.supervisedbyId,
