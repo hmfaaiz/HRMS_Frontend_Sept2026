@@ -40,9 +40,6 @@ const userEditSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
-  allowMobileUserCreation: Yup.boolean()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
 
   password: Yup.string()
     .nullable()
@@ -449,31 +446,7 @@ export function FormEditForm({
                     )}
                     </div>  
                     
-                     <div>
-                    <label>
-                      Allow Mobile User Creation
-                      <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="allowMobileUserCreation"
-                      as="select"
-                      className="form-control"
-                      disabled={isUserForRead}
-                      value={values.allowMobileUserCreation}
-                    >
-                      <option value="">Select</option>
-                      {basisOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </Field>
-                    {errors.allowMobileUserCreation && touched.allowMobileUserCreation && (
-                      <span className="invalid-feedback">
-                        {errors.allowMobileUserCreation}
-                      </span>
-                    )}
-                    </div>
+                  
                     <div>
                     <label>
                       User Status<span style={{ color: "red" }}>*</span>

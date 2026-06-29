@@ -33,7 +33,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
     deactiveflag: "",
     roleId:"",
     allowUserCreation:"",
-    allowMobileUserCreation:"",
     password:"",
     email:"",
     supervisedbyId:"",

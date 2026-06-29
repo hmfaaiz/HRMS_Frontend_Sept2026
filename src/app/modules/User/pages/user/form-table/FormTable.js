@@ -112,20 +112,7 @@ export function FormTable() {
         return cell === true ? "Yes" : "No";
       }
     },
-    {
-      dataField: "allowMobileUserCreation",
-      text: "Allow Mobile User Creation ",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
 
-      formatter: (cell) => {  
-        return cell === true ? "Yes" : "No";
-      }
-    },
 
     {
       dataField: "action",
