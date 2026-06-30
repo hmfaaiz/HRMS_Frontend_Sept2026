@@ -116,6 +116,18 @@ export function LogsDialog({ onHide, show }) {
             </table>
           </div>
         </Modal.Body>
+          <Modal.Footer>
+                  
+                      <button
+                        type="button"
+                        onClick={onHide}
+                        className="btn btn-light btn-elevate"
+                      >
+                        Cancel
+                      </button>
+                 
+        
+                  </Modal.Footer>
       </Modal>
 
       <ToastContainer />
