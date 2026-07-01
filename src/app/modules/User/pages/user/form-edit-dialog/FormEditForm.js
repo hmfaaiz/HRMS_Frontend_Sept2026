@@ -40,6 +40,7 @@ const userEditSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
+
   password: Yup.string()
     .nullable()
     .min(5, "At least 5 characters are required")
@@ -418,7 +419,7 @@ export function FormEditForm({
                       touched={touched.employeeIdMapping}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-x-3">
+               
                     <div>
                     <label>
                       Allow User Creation
@@ -443,7 +444,9 @@ export function FormEditForm({
                         {errors.allowUserCreation}
                       </span>
                     )}
-                    </div>
+                    </div>  
+                    
+                  
                     <div>
                     <label>
                       User Status<span style={{ color: "red" }}>*</span>
@@ -466,7 +469,7 @@ export function FormEditForm({
                     )}
                     </div>
                   </div>
-                </div>
+              
               </fieldset>
             </Form>
           </Modal.Body>
