@@ -14,7 +14,7 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
-import { fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from "../../../Dashboard/_redux/dashboardActions";
+import { fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType, getEmployeeHierarchy } from "../../../Dashboard/_redux/dashboardActions";
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 
@@ -41,7 +41,9 @@ export function ReportPage() {
     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
     dispatch(fetchMasterTicketType());
 
+   dispatch(getEmployeeHierarchy(1));
   }, [dispatch]);
+   
 
   return (
     <FormUIProvider FormUIEvents={{}}>
