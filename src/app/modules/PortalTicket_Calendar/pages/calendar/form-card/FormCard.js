@@ -29,7 +29,7 @@ import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth, Ticke
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-import { FetchAllFacilitatorEmployee, fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { FetchAllFacilitatorEmployee, fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType, getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 
 const formValidation = Yup.object().shape({
@@ -92,6 +92,7 @@ export function FormCard() {
       from_date: getFirstDayOfCurrentMonth() || "",
       to_date: getLastDayOfCurrentMonth() || "",
       subsidiaryId: firstSubsidiary?.value || "",
+      employeeIds: dashboard?.employeeList?.map(e => e?.value) || [],
       isEnable_via_task_assignment: true || false,
       taskTicketTypeIds: dashboard?.allMasterTicketType?.length
         ? dashboard.allMasterTicketType.map(t => t.value)
@@ -115,7 +116,8 @@ export function FormCard() {
 
   useEffect(() => {
     // Automatically submit when data is loaded
-    if (isDataLoaded && bodyValues?.subsidiaryId) {
+
+    if (isDataLoaded && bodyValues?.subsidiaryId && dashboard?.employeeList.length?.length>0) {
       customSubmit(bodyValues);
     }
   }, [isDataLoaded, bodyValues]);
@@ -136,7 +138,11 @@ export function FormCard() {
     { value: 3, label: "Re-opened" },
     { value: 2, label: "Send for Review" },
   ];
+  useEffect(() => {
 
+    dispatch(getEmployeeHierarchy(1));
+
+  }, []);
   const [activeKey, setActiveKey] = useState(null);
   return (
     <>
@@ -154,6 +160,7 @@ export function FormCard() {
 
               isEnable_via_task_project: false,
               isEnable_via_task_assignment: true,
+              employeeIds: dashboard?.employeeList?.map(e => e?.value) || [],
               ticketTypeIds: [],
 
               ticketStatusIds: [],
@@ -547,30 +554,35 @@ export function FormCard() {
                                   value={
                                     values.employeeId === null
                                       ? { label: "All", value: null }
-                                      : dashboard?.facilitatorEmployeeList?.find(
+                                      : dashboard?.employeeList?.find(
                                         option => option?.value === values?.employeeId
                                       ) || null
                                   }
+                                  // employeeList
+                                  // options={[
+                                  //   { label: "All", value: "" },
+                                  //   ...(Array.isArray(
+                                  //     values?.departmentId
+                                  //       ? dashboard?.employeeList?.filter(
+                                  //         (emp) =>
+                                  //           emp?.departmentId ===
+                                  //           values.departmentId
+                                  //       )
+                                  //       : dashboard?.employeeList
+                                  //   )
+                                  //     ? values?.departmentId
+                                  //       ? dashboard?.employeeList?.filter(
+                                  //         (emp) =>
+                                  //           emp?.departmentId ===
+                                  //           values.departmentId
+                                  //       )
+                                  //       : dashboard?.employeeList
+                                  //     : []),
+                                  // ]}
 
                                   options={[
                                     { label: "All", value: "" },
-                                    ...(Array.isArray(
-                                      values?.departmentId
-                                        ? dashboard?.facilitatorEmployeeList?.filter(
-                                          (emp) =>
-                                            emp?.departmentId ===
-                                            values.departmentId
-                                        )
-                                        : dashboard?.facilitatorEmployeeList
-                                    )
-                                      ? values?.departmentId
-                                        ? dashboard?.facilitatorEmployeeList?.filter(
-                                          (emp) =>
-                                            emp?.departmentId ===
-                                            values.departmentId
-                                        )
-                                        : dashboard?.facilitatorEmployeeList
-                                      : []),
+                                    ...(dashboard?.employeeList)
                                   ]}
                                   error={errors.employeeId}
                                   touched={touched.employeeId}
@@ -585,10 +597,44 @@ export function FormCard() {
                         </div>
                       </fieldset>
                     </Form>
+                         <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1  align-items-start">
+                      <div className="d-flex align-items-center m-3 col-span-1">
+
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_1 me-2"></span>{" "}
+                          Assigned
+                        </div>
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_16 me-2"></span>{" "}
+                          Log Time
+                        </div>
+                      </div>
+
+                      <div className="d-flex align-items-center m-3 col-span-2">
+
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="me-2"></span>{" "}
+                          Assigned task status
+                        </div>
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_19 me-2"></span>{" "}
+                          Progress
+                        </div>
+
+                        <div className="d-flex align-items-center m-3">
+                          <span className="dot bg_custom_color_25 me-2"></span>{" "}
+                          Completed
+                        </div>
+
+                      </div>
+                    </div>
                   </Modal.Body >
 
                   <Modal.Footer className="relative">
-                    <div className="text-xs absolute left-0 d-flex justify-content-center ">
+                    {/* <div className="text-xs absolute left-0 d-flex justify-content-center ">
                       <div className="d-flex align-items-center m-3">
                         <span className="dot bg_custom_color_1 me-2"></span>{" "}
                         Assigned
@@ -597,7 +643,7 @@ export function FormCard() {
                         <span className="dot bg_custom_color_16 me-2"></span>{" "}
                         Log Time
                       </div>
-                    </div>
+                    </div> */}
                     <button
                       type="button"
                       onClick={() => {
