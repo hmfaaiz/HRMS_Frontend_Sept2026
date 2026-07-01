@@ -277,7 +277,7 @@ export function FormEditForm({
                   </div>
 
                   <hr className="col-span-5 lg:col-span-6" />
-                  <div className="col-span-3">
+                  <div className={ratingSelection ? "col-span-3" : "col-span-2"}>
                     {ratingSelection && (
                       <span className="font-medium text-tprimary">
                         Rating
@@ -342,15 +342,21 @@ export function FormEditForm({
                             }
                           }}
                           label={
-                            <span className="font-medium text-tprimary">
-                              Rating
-                              <span style={{ color: "red" }}>*</span>
+                            <span className="flex gap-24">
+                              <span className="font-medium text-tprimary">
+                                Rating
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                              <span className="font-medium text-black">
+                                ({ratingDetail?.minPoint} -{" "}
+                                {ratingDetail?.maxPoint})
+                              </span>
                             </span>
                           }
                         />
                       </div>
                     )}
-                  </div>
+                  </div> 
                   {employeeDetail?.showRating && values?.selfRating && (
                     <div className="col-span-3 justify-self-end">
                       <span className="badge badge-light-info text-uppercase text-sm text-tprimary text-right">
@@ -439,7 +445,7 @@ export function FormEditForm({
                     onClick={() => setAttSum(!attSum)}
                     className="btn btn-primary btn-elevate"
                   >
-                  View Attendance Summary
+                    View Attendance Summary
                   </button>
                 </div>
                 {attSum && (
