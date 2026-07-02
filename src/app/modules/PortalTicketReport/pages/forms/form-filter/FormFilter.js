@@ -26,7 +26,7 @@ import {
   Input,
 } from "../../../../../../_metronic/_partials/controls";
 import FormPreview from "../preview/FormPreview";
-import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
+import { FetchAllFacilitatorEmployee, getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 
 
 //Validation for date fields
@@ -52,6 +52,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   //Get All dropdown data from state
   useEffect(() => {
     dispatch(FetchAllFacilitatorEmployee());
+    dispatch(getEmployeeHierarchy(1));
 
   }, [dispatch]);
 
@@ -65,14 +66,13 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   });
   const {
     allEmployees,
-    allSubsidiaryList,facilitatorEmployeeList
+    allSubsidiaryList, employeeList
 
   } = useSelector((state) => state.dashboard);
 
-
   const allEmployeesMap = useMemo(() => {
-    return new Map(facilitatorEmployeeList?.map((item) => [item.value, item]));
-  }, [facilitatorEmployeeList]);
+    return new Map(employeeList?.map((item) => [item.value, item]));
+  }, [employeeList]);
 
 
   const allSubsidiaryMap = useMemo(() => {
@@ -152,6 +152,14 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
       setFieldValue(field, ""); // Set each field to an empty value
     });
   };
+
+  useEffect(() => {
+
+    dispatch(getEmployeeHierarchy(1));
+
+  }, []);
+
+  console.log(" dashboard?.employeeList11111", dashboard?.employeeList)
   return (
 
     <>
@@ -172,8 +180,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
             ? ticketStatusOptions?.map(t => t.value)
             : [],
 
-          employeeId: dashboard?.facilitatorEmployeeList?.length
-            ? dashboard?.facilitatorEmployeeList?.map(t => t.value)
+          employeeId: dashboard?.employeeList?.length
+            ? dashboard?.employeeList?.map(t => t.value)
             : [],
           // subsidiaryId:
           //   initialFilter.filter?.subsidiaryId ||
@@ -862,11 +870,15 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                             <MultiSelect
 
                               name="employeeId"
-                              label="Assignee"
-                              value={dashboard?.facilitatorEmployeeList.filter(t =>
-                                values.employeeId?.includes(t.value)
-                              )}
-                              options={dashboard?.facilitatorEmployeeList}
+                              label={
+                                <label>
+                                  Assignee <span style={{ color: "red" }}>*</span>
+                                </label>
+                              }
+                               value={dashboard.employeeList.filter(t =>
+                                      values.employeeId?.includes(t.value)
+                                    )}
+                              options={dashboard?.employeeList}
                               onChange={(items = []) =>
                                 setFieldValue(
                                   "employeeId",
@@ -1003,7 +1015,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                     getTicketReportByFilters(formattedValues);
                   }
                 }}
-                disabled={pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
+                disabled={values.employeeId.length == 0 || pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
                 className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
                   }`}
 
@@ -1031,7 +1043,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                     getPreviewReportByFilters(formattedValues);
                   }
                 }}
-                disabled={pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
+                disabled={values.employeeId.length == 0 || pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
                 className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
                   }`}
 

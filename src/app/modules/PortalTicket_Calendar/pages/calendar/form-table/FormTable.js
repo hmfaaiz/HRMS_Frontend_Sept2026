@@ -224,15 +224,24 @@ export function FormTable() {
               <>
 
                 <div className="custom-tooltip"  >
-                  <div style={{ display: "flex",alignItems: "center", gap: "5px"}}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
 
 
-                    {event?.ticketStatus == 0 && (
+                    {/* {event?.ticketStatus == 0 && (
                       <div style={{ display: "flex", alignItems: "center", }}>
                         <div
                         className="w-[10px] h-[10px] rounded-full bg-[#39FF14]"
                         ></div>
 
+                      </div>
+                    )} */}
+                    {event?.ticketStatus == 0 ? (
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <div className="w-[10px] h-[10px] rounded-full bg-[#39FF14]"></div>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <div className="w-[10px] h-[10px] rounded-full bg-[#eb052b]"></div>
                       </div>
                     )}
                     {event.title}  {event.profileImage && (
