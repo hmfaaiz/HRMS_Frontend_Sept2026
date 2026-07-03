@@ -6,6 +6,7 @@ import {
   Handshake,
   HeartHandshake,
   HouseWifi,
+  LogIn,
   NotepadText,
   User,
   User2Icon,
@@ -176,10 +177,18 @@ const DefaultArea = ({
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
+              name={"Present Today"}
+              value={summaryData?.presentToday || 0}
+              keyName={"presentToday"}
+              icon={<LogIn className="w-5 h-5 text-white" />}
+            />
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Today Employees On Leave"}
+              name={"Employees On Leave (Today)"}
               value={summaryData?.employeeOnLeave || 0}
               keyName={"employeeOnLeave"}
               icon={<HouseWifi className="w-5 h-5 text-white" />}
@@ -192,6 +201,8 @@ const DefaultArea = ({
               keyName={"openJobs"}
               icon={<BriefcaseBusiness className="w-5 h-5 text-white" />}
             /> */}
+          </div>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
@@ -200,16 +211,14 @@ const DefaultArea = ({
               keyName={"applicant"}
               icon={<Users className="w-5 h-5 text-white" />}
             />
-          </div>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-            <StatsCard
+            {/* <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
               name={"Applicants Hired"}
               value={summaryData?.applicantHiredThisYear || 0}
               keyName={"applicantHiredThisYear"}
               icon={<HeartHandshake className="w-5 h-5 text-white" />}
-            />
+            /> */}
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
