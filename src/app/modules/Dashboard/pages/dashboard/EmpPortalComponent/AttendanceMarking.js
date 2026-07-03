@@ -19,6 +19,8 @@ export const AttendanceMarking = () => {
   const currentShift = attRecord?.currentShift;
   const localDate = currentDateTime;
   const allowedAnywhere = attRecord?.allowedAnywhere;
+  const isLateReasonAllow = attRecord?.isLateReasonAllow;
+  const recordAlreadyExist = attRecord?.recordAlreadyExist;
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
@@ -177,7 +179,7 @@ const handleToggle = () => {
     attendanceDetail?.Status === "01" ? "02" : "01",
     shiftStartHour
   );
-console.log("isLate1111111",isLate)
+
   const attendanceBody = {
     AttDate: formatDates(now),
     AttDateTesting: now,
@@ -186,7 +188,7 @@ console.log("isLate1111111",isLate)
     isLate,
   };
 
-  if (isLate && attendanceBody.Status === "01") {
+  if (isLate && attendanceBody.Status === "01" && isLateReasonAllow && !recordAlreadyExist) {
     setPendingAttendanceBody(attendanceBody);
     setShowLateModal(true);
     setLoading(false);
