@@ -98,6 +98,12 @@ export const moduleList = [
     label: "Manpower Budget",
     key: "Manpower Budget",
     value: false,
+  }, 
+  
+  {
+    label: "Asset",
+    key: "asset",
+    value: false,
   },
 ];
 

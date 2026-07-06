@@ -678,6 +678,10 @@ const department_designation_mapping = lazy (() =>
 import ("./modules/DepartmentDesignationMapping/pages/index"))
 
 
+const asset_model = lazy (() =>
+import ("./modules/Asset_Model/pages/index"))
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -903,6 +907,7 @@ const ROUTES = {
   budget_setup_year: budget_year_setup,
   manpower_budget_dashboard : manpower_budget_dashboard,
   department_designation_map: department_designation_mapping,
+  asset_model: asset_model,
 
 
 };
