@@ -8,8 +8,10 @@ import * as actions from "../../../_redux/formActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 export function FormEditDialog({ id, show, onHide, userForRead }) {
+    const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -47,7 +49,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     isuserForRead,
   } = useSelector((state) => ({
 
-    actionsLoading: state.users.actionsLoading,
+    actionsLoading: state.tax_setup.actionsLoading,
     user: state.users, // change for users to receipt
     userForEdit: state.tax_setup.userForEdit,
     roles: state.users.roles,
@@ -80,6 +82,16 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
  
 
   const SaveTaxSetup = async (user) => {
+    const isConfirmed = await confirm(
+      "Confirm Save",
+      `Are you sure you want to submit form?`,
+      "No",
+      "Yes",
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
 
     if (!id) {
 
@@ -126,7 +138,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         userStatusTypes={userStatusTypes}
         isUserForRead={userForRead}
         enableLoading={enableLoading}
-        loading={loading}
+        loading={actionsLoading}
       />
       <ToastContainer
         position="top-right"
@@ -139,6 +151,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         draggable
         pauseOnHover
       />
+            <ConfirmationComponent />
     </Modal>
   );
 }
