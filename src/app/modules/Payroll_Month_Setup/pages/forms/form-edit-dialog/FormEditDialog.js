@@ -9,13 +9,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 import { formatDates } from "../../../../../utils/common";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 export function FormEditDialog({ id, show, onHide, userForRead }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
-
+    const { confirm, ConfirmationComponent } = useConfirmationDialog();
 
   const usersUIProps = useMemo(() => {
     return {
@@ -48,7 +49,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     isuserForRead,
   } = useSelector((state) => ({
 
-    actionsLoading: state.users.actionsLoading,
+    actionsLoading: state.payroll_month.actionsLoading,
     user: state.users, // change for users to receipt
     userForEdit: state.payroll_month.userForEdit,
     roles: state.users.roles,
@@ -92,6 +93,16 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         toast.error("The year or month does not match the user's data.");
         return
       }
+    }
+    const isConfirmed = await confirm(
+      "Confirm Save",
+      `Are you sure you want to submit form?`,
+      "No",
+      "Yes",
+    );
+
+    if (!isConfirmed) {
+      return;
     }
 
     if (!id) {
@@ -161,7 +172,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         userStatusTypes={userStatusTypes}
         isUserForRead={userForRead}
         enableLoading={enableLoading}
-        loading={loading}
+        loading={actionsLoading}
       />
       <ToastContainer
         position="top-right"
@@ -174,6 +185,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         draggable
         pauseOnHover
       />
+                  <ConfirmationComponent />
     </Modal>
   );
 }
