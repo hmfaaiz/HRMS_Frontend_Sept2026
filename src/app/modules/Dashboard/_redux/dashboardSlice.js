@@ -121,6 +121,8 @@ const initialDashboardState = {
   allCompDeptList: [],
   allDesignationByDeptList: [],
   allAssetMakeList: [],
+  allAssetModelNameList: [],
+  allAssetCategoryList: [],
 };
 
 export const callTypes = {
@@ -503,6 +505,10 @@ export const dashboardSlice = createSlice({
     },
     AllDesignationByhDeptFetch: (state, action) => {
       state.allDesignationByDeptList = action.payload;
+    },
+
+    AllAssetModelNameFetch: (state, action) => {
+      state.allAssetModelNameList = action.payload;
     },
 
   }

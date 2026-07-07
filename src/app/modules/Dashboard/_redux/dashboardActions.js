@@ -1003,3 +1003,17 @@ export const fetchAllDesignationByDepId = (body) => async (
       // toast.error("Something went wrong");
     });
 };
+
+export const fetchAllAssetModelName = (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllAssetModelName(body)
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllAssetModelNameFetch(entities));
+    })
+    .catch((error) => {
+      // toast.error("Something went wrong");
+    });
+};

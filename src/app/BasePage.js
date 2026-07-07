@@ -681,6 +681,9 @@ import ("./modules/DepartmentDesignationMapping/pages/index"))
 const asset_model = lazy (() =>
 import ("./modules/Asset_Model/pages/index"))
 
+const asset_register = lazy (() =>
+import ("./modules/Asset_Register/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -908,6 +911,7 @@ const ROUTES = {
   manpower_budget_dashboard : manpower_budget_dashboard,
   department_designation_map: department_designation_mapping,
   asset_model: asset_model,
+  asset_register: asset_register,
 
 
 };

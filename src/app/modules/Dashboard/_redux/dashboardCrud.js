@@ -318,3 +318,6 @@ export const getAllComDept = async () => {
 export const getAllDesignationByDepId = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-designation-by-depId`,body);
 };
+export const getAllAssetModelName = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-model-name`);
+};
