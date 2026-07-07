@@ -32,7 +32,7 @@ export const AssetRegisterSlice = createSlice({
             }
         },
 
-        companyDocFetched: (state, action) => {
+        assetRegisterFetched: (state, action) => {
         
   
             const entities = action.payload.data?.data.rows;
@@ -57,7 +57,7 @@ export const AssetRegisterSlice = createSlice({
         },
 
          //get User By ID
-         CompanyDocFetchedForEdit: (state, action) => {
+         AssetRegisterFetchedForEdit: (state, action) => {
            
    
             state.actionsLoading = false;
@@ -66,7 +66,7 @@ export const AssetRegisterSlice = createSlice({
         },
 
       
-        CompanyDocDeleted: (state, action) => {
+        AssetRegisterDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -81,7 +81,7 @@ export const AssetRegisterSlice = createSlice({
 
 
 
-        // companyDocCreated: (state, action) => {
+        // assetRegisterCreated: (state, action) => {
            
         //     state.actionsLoading = false;
         //     state.error = null;
@@ -89,7 +89,7 @@ export const AssetRegisterSlice = createSlice({
         // },
 
 
-        companyDocCreated: (state, action) => {
+        assetRegisterCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
         
@@ -113,7 +113,7 @@ export const AssetRegisterSlice = createSlice({
 
 
 
-        companyDocUpdated: (state, action) => {
+        assetRegisterUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
@@ -124,9 +124,9 @@ export const AssetRegisterSlice = createSlice({
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
-                let finalObj = JSON.parse(payloadObj.updatedCompanyDoc);
+                let finalObj = JSON.parse(payloadObj.updatedAssetRegister);
                 if (entity.Id === finalObj.Id) {
-                    return finalObj; //action.payload.updatedCompanyDoc;
+                    return finalObj; //action.payload.updatedAssetRegister;
                 }
                 return entity;
             });

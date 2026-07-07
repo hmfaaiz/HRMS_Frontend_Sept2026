@@ -67,9 +67,12 @@ export function FormTable() {
     (item) => item.componentName === "ReadAssetRegister"
   );
 
-  // ReadCompanyDocr,CreateCompanyDocr
-  // Table columns
-console.log("entities",entities)
+  const statusOptions = [
+    { value: 0, label: "Unassigned" },
+    { value: 1, label: "Assigned" },
+    { value: 2, label: "Disposed" },
+  ];
+
  const columns = [
   {
     dataField: "asset_no",
@@ -100,14 +103,14 @@ console.log("entities",entities)
     formatter: (_, row) => row.AssetCategory?.formName || "",
   },
 
-  {
-    dataField: "asset_year",
-    text: "Asset Year",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "120px" },
-  },
+  // {
+  //   dataField: "asset_year",
+  //   text: "Asset Year",
+  //   sort: false,
+  //   sortCaret,
+  //   headerSortingClasses,
+  //   style: { minWidth: "120px" },
+  // },
 
   {
     dataField: "date_of_acquisition",
@@ -131,50 +134,52 @@ console.log("entities",entities)
       cell ? format(new Date(cell), "dd-MMM-yyyy") : "",
   },
 
-  {
-    dataField: "AssignedEmployee.fullName",
-    text: "Asset Assigned To",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "220px" },
-    formatter: (_, row) =>
-      row.AssignedEmployee?.fullName || "-",
-  },
+{
+  dataField: "AssignedEmployee.fullName",
+  text: "Asset Assigned To",
+  sort: false,
+  sortCaret,
+  headerSortingClasses,
+  style: { minWidth: "220px" },
+  formatter: (_, row) =>
+    row.AssignedEmployee?.fullName ||
+    statusOptions.find(item => item.value === row.status)?.label ||
+    "-",
+},
 
 
 
-  {
-    dataField: "purchase_price",
-    text: "Purchase Price",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "160px" },
-    formatter: (cell) =>
-      cell ? Number(cell).toLocaleString() : "",
-  },
+  // {
+  //   dataField: "purchase_price",
+  //   text: "Purchase Price",
+  //   sort: false,
+  //   sortCaret,
+  //   headerSortingClasses,
+  //   style: { minWidth: "160px" },
+  //   formatter: (cell) =>
+  //     cell ? Number(cell).toLocaleString() : "",
+  // },
 
-  {
-    dataField: "color",
-    text: "Color",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "120px" },
-    formatter: (cell) => (
-      <div
-        style={{
-          width: 20,
-          height: 20,
-          borderRadius: 4,
-          background: cell,
-          border: "1px solid #ccc",
-        }}
-        title={cell}
-      />
-    ),
-  },
+  // {
+  //   dataField: "color",
+  //   text: "Color",
+  //   sort: false,
+  //   sortCaret,
+  //   headerSortingClasses,
+  //   style: { minWidth: "120px" },
+  //   formatter: (cell) => (
+  //     <div
+  //       style={{
+  //         width: 20,
+  //         height: 20,
+  //         borderRadius: 4,
+  //         background: cell,
+  //         border: "1px solid #ccc",
+  //       }}
+  //       title={cell}
+  //     />
+  //   ),
+  // },
 
   {
     dataField: "action",

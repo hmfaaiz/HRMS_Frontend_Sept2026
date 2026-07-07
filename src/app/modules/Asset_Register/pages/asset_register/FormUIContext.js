@@ -34,6 +34,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   asset_no: "",
   asset_modelId: "",
   asset_categoryId: "",
+  locationId: "",
 
   asset_year: "",
 

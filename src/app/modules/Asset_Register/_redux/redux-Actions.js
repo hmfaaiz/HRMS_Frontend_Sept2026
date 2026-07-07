@@ -9,12 +9,12 @@ export const fetchAssetRegisters = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllCompanyDoc(queryparm)
+  return requestFromServer.getAllAssetRegister(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.companyDocFetched(response));
+      dispatch(actions.assetRegisterFetched(response));
     })
     .catch((error) => {
     
@@ -23,20 +23,20 @@ export const fetchAssetRegisters = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchCompanyDoc = (id) => (dispatch) => {
+export const fetchAssetRegister = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.CompanyDocFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.AssetRegisterFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getCompanyDocById(id)
+    .getAssetRegisterById(id)
     .then((response) => {
       const entities = response.data?.data;
 
    
-      dispatch(actions.CompanyDocFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.AssetRegisterFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -44,13 +44,13 @@ export const fetchCompanyDoc = (id) => (dispatch) => {
     });
 };
 
-export const deleteCompanyDoc = (id) => (dispatch) => {
+export const deleteAssetRegister = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteCompanyDoc( id)
+    .deleteAssetRegister( id)
     .then((response) => {
     
-      dispatch(actions.CompanyDocDeleted({ Id: id }));
+      dispatch(actions.AssetRegisterDeleted({ Id: id }));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -69,19 +69,19 @@ export const deleteCompanyDoc = (id) => (dispatch) => {
 
 
 
-export const createAssetRegister = (companyDocForCreation, disbaleLoading, onHide) => (
+export const createAssetRegister = (assetRegisterForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createCompanyDoc(companyDocForCreation)
+    .createAssetRegister(assetRegisterForCreation)
     .then((res) => {
    
       const user = res.data?.data;
      
   
-      dispatch(actions.companyDocCreated(user));
+      dispatch(actions.assetRegisterCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
@@ -112,12 +112,12 @@ export const createAssetRegister = (companyDocForCreation, disbaleLoading, onHid
 
 export const updateAssetRegister = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateCompanyDoc(user)
+    .updateAssetRegister(user)
     .then((response) => {
   
-      const updatedCompanyDoc = response?.config?.data; // response.data?.data;
+      const updatedAssetRegister = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.companyDocUpdated({ updatedCompanyDoc }));
+      dispatch(actions.assetRegisterUpdated({ updatedAssetRegister }));
     
       disbaleLoading();
       onHide();

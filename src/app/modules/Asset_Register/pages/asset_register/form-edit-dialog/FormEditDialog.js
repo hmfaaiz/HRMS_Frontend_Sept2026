@@ -62,9 +62,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchCompanyDoc(id));
+    dispatch(actions.fetchAssetRegister(id));
 
-    // dispatch(actions.fetchCompanyDoc(formUIProps .queryParams))
+    // dispatch(actions.fetchAssetRegister(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
@@ -88,6 +88,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       subsidiaryId: formData.subsidiaryId,
       asset_no: formData.asset_no,
       asset_modelId: formData.asset_modelId,
+      locationId: formData.locationId,
       asset_categoryId: formData.asset_categoryId,
       asset_year: formData.asset_year,
       date_of_acquisition: formData.date_of_acquisition,

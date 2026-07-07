@@ -9,9 +9,16 @@ import {
 } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllFormsMenu,
+  fetchAllSubsidiaryData,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { formatDates, getFileName, getUploadUrl } from "../../../../../utils/common";
+import {
+  formatDates,
+  getFileName,
+  getUploadUrl,
+} from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
@@ -35,6 +42,10 @@ const assetRegisterSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
+  locationId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
   asset_year: Yup.string()
     .matches(/^\d{4}$/, "Please select a valid year")
     .required(VALIDATION_MESSAGES.required),
@@ -51,16 +62,15 @@ const assetRegisterSchema = Yup.object().shape({
         if (!value || !asset_year) return true;
 
         return new Date(value).getFullYear() === Number(asset_year);
-      }
+      },
     ),
-
 
   date_of_expiry: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required)
     .min(
       Yup.ref("date_of_acquisition"),
-      "Date of expiry cannot be before acquisition date"
+      "Date of expiry cannot be before acquisition date",
     )
     .test(
       "expiry-year",
@@ -71,7 +81,7 @@ const assetRegisterSchema = Yup.object().shape({
         if (!value || !asset_year) return true;
 
         return new Date(value).getFullYear() >= Number(asset_year);
-      }
+      },
     ),
 
   description: Yup.string()
@@ -87,7 +97,7 @@ const assetRegisterSchema = Yup.object().shape({
 
   purchase_price: Yup.number()
     .transform((value, originalValue) =>
-      originalValue === "" ? undefined : value
+      originalValue === "" ? undefined : value,
     )
     .typeError("Purchase price must be a valid number")
     .positive("Purchase price must be greater than 0")
@@ -95,14 +105,12 @@ const assetRegisterSchema = Yup.object().shape({
     .test(
       "decimal-places",
       "Maximum 2 decimal places are allowed",
-      (value) =>
-        value == null || /^\d+(\.\d{1,2})?$/.test(value.toString())
+      (value) => value == null || /^\d+(\.\d{1,2})?$/.test(value.toString()),
     )
     .required(VALIDATION_MESSAGES.required),
 
-  remarks: Yup.string()
-    .trim()
-    .required(VALIDATION_MESSAGES.required),
+  remarks: Yup.string().trim(),
+  // .required(VALIDATION_MESSAGES.required),
 });
 
 export function FormEditForm({
@@ -123,6 +131,7 @@ export function FormEditForm({
       dispatch(fetchAllAssetModelName("allAssetModelNameList"));
 
       dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
+      dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     }
   }, [dispatch, formData.Id]);
 
@@ -133,10 +142,10 @@ export function FormEditForm({
     };
   }, shallowEqual);
 
-
-  const activeOptions = [
-    { value: false, label: "Inactive" },
-    { value: true, label: "Active" },
+  const statusOptions = [
+    { value: 0, label: "Unassigned" },
+    { value: 1, label: "Assigned" },
+    { value: 2, label: "Disposed" },
   ];
 
   return (
@@ -144,18 +153,27 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...formData,
-        Status: formData?.current_assigned_employeeId ? "Attached" : "Unattached",
+        Status: formData?.current_assigned_employeeId
+          ? "Attached"
+          : "Unattached",
       }}
       validationSchema={assetRegisterSchema}
       onSubmit={(values) => {
         enableLoading();
-        console.log("values111111", values)
+        console.log("values111111", values);
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => {
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        handleChange,
+      }) => {
         const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
-          (item) => Number(item.value) === Number(values.subsidiaryId)
+          (item) => Number(item.value) === Number(values.subsidiaryId),
         );
         return (
           <>
@@ -168,11 +186,7 @@ export function FormEditForm({
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-
-
-
                     <div className="col-span-1">
-
                       <SubsidiarySelect
                         name="subsidiaryId"
                         label={
@@ -183,49 +197,62 @@ export function FormEditForm({
                         isDisabled={isUserForRead}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         currentValue={values?.subsidiaryId}
                         initializeSubsidiary={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-
                         }}
                       />
                     </div>
 
 
                     <div className="">
-                      <label>
-                        Country
-                      </label>
+                      <label>City</label>
                       <input
                         type="text"
                         className="form-control"
-                        value={selectedSubsidiary?.country || ""}
+                        value={
+                          selectedSubsidiary?.city
+                            ? `${selectedSubsidiary.city} (${selectedSubsidiary.country || ""})`
+                            : ""
+                        }
                         disabled
                       />
                     </div>
 
                     <div className="">
-                      <label>
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={selectedSubsidiary?.city || ""}
-                        disabled
+                      <SearchSelect
+                        name="locationId"
+                        component={Input}
+                        placeholder="Select Location"
+                        className="form-control" // Force full height
+                        value={dashboard?.allLocationChildMenus?.find(
+                          (x) => Number(x.value) === Number(values.locationId),
+                        )}
+                        label={
+                          <span>
+                            {" "}
+                            Location
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("locationId", e.value || null);
+                        }}
+                        options={dashboard?.allLocationChildMenus}
+                        autoComplete="off"
+                      />
+                      <ErrorMessage
+                        name="locationId"
+                        component="div"
+                        className="invalid-feedback d-block"
                       />
                     </div>
-
-
                   </div>
 
-
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-
                     <div className="">
                       <Field
                         name="asset_no"
@@ -241,11 +268,8 @@ export function FormEditForm({
                         }
                         autoComplete="off"
                       />
-                      <div>
-
-                      </div>
+                      <div></div>
                     </div>
-
 
                     <div className="">
                       <label>
@@ -267,7 +291,7 @@ export function FormEditForm({
                                 {year}
                               </option>
                             );
-                          }
+                          },
                         )}
                       </Field>
 
@@ -278,10 +302,10 @@ export function FormEditForm({
                       />
                     </div>
 
-
                     <div className="col-span-1">
                       <label>
-                        Date of acquisition <span style={{ color: "red" }}>*</span>
+                        Date of Acquisition
+                        <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
                         name="date_of_acquisition"
@@ -291,15 +315,13 @@ export function FormEditForm({
                         type="date"
                         onChange={(e) => {
                           setFieldValue("date_of_acquisition", e);
-
                         }}
                       />
                     </div>
 
-
                     <div className="col-span-1">
                       <label>
-                        Date of expiry <span style={{ color: "red" }}>*</span>
+                        Date of Expiry <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
                         name="date_of_expiry"
@@ -309,13 +331,9 @@ export function FormEditForm({
                         type="date"
                         onChange={(e) => {
                           setFieldValue("date_of_expiry", e);
-
                         }}
                       />
                     </div>
-
-
-
 
                     <div className="">
                       <SearchSelect
@@ -323,26 +341,30 @@ export function FormEditForm({
                         component={Input}
                         placeholder="Asset Category"
                         className="form-control" // Force full height
+                        value={dashboard?.allAssetCategoryList?.find(
+                          (x) =>
+                            Number(x.value) === Number(values.asset_categoryId),
+                        )}
                         label={
                           <span>
                             {" "}
-                            Asset category
+                            Asset Category
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         onChange={(e) => {
                           setFieldValue("asset_categoryId", e.value || null);
-
                         }}
                         options={dashboard?.allAssetCategoryList}
                         autoComplete="off"
                       />
-                      <div>
+                      <ErrorMessage
+                        name="asset_categoryId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
 
-                      </div>
                     </div>
-
-
 
                     <div className="">
                       <SearchSelect
@@ -350,27 +372,30 @@ export function FormEditForm({
                         component={Input}
                         placeholder="Enter date of expiry"
                         className="form-control" // Force full height
+                        value={dashboard?.allAssetModelNameList?.find(
+                          (x) =>
+                            Number(x.value) === Number(values.asset_modelId),
+                        )}
                         label={
                           <span>
                             {" "}
-                            Asset model name
+                            Asset Model Name
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         onChange={(e) => {
                           setFieldValue("asset_modelId", e.value || null);
-
                         }}
                         options={dashboard?.allAssetModelNameList}
                         autoComplete="off"
                       />
-                      <div>
+                      <ErrorMessage
+                        name="asset_modelId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
 
-                      </div>
                     </div>
-
-
-
 
                     <div className="">
                       <label>
@@ -383,15 +408,15 @@ export function FormEditForm({
                           name="color"
                           className="form-control form-control-color"
                           style={{
-                            width: "170px",
+                            width: "280px",
                             height: "25px",
                             padding: "1px",
                           }}
                         />
 
-                        <span className="ml-3">
+                        {/* <span className="ml-3">
                           {values.color || "#000000"}
-                        </span>
+                        </span> */}
                       </div>
 
                       <ErrorMessage
@@ -401,10 +426,7 @@ export function FormEditForm({
                       />
                     </div>
 
-
-
-
-                    <div className="">
+                    {/* <div className="">
                       <label>
                         Status <span style={{ color: "red" }}>*</span>
                       </label>
@@ -414,42 +436,35 @@ export function FormEditForm({
                         className="form-control"
                         disabled
                       >
-                        <option value="Attached">Attached</option>
-                        <option value="Unattached">Unattached</option>
+                        options={statusOptions}
                       </Field>
-                    </div>
+                    </div> */}
                     <div className="">
                       <Field
                         name="current_assigned_employeeId"
                         component={Input}
                         disabled
-                        placeholder="Select employee"
-                        className="form-control" // Force full height
+                        className="form-control"
+                        placeholder={
+                          values.current_assigned_employeeId
+                            ? "Current Assigned Employee"
+                            : statusOptions.find(
+                              item => item.value === Number(values.status)
+                            )?.label || "Select employee"
+                        }
                         label={
                           <span>
-                            {" "}
                             Current Assigned Employee
-                            {/* <span style={{ color: "red" }}>*</span> */}
                           </span>
                         }
                         autoComplete="off"
                       />
-                      <div>
-
-                      </div>
+                      <div></div>
                     </div>
-
-
 
                     <div className="">
                       <Field
-                        label={
-                          <span>
-                            {" "}
-                            Purchase Price
-
-                          </span>
-                        }
+                        label={<span> Purchase Price</span>}
                         name="purchase_price"
                         component={Input}
                         value={values.purchase_price}
@@ -461,13 +476,10 @@ export function FormEditForm({
                         }}
                       />
 
-
-                      <div>
-
-                      </div>
+                      <div></div>
                     </div>
 
-                    <div className="col-span-2">
+                    <div className="col-span-3">
                       <Field
                         name="remarks"
                         component={TextArea}
@@ -477,19 +489,13 @@ export function FormEditForm({
                           <span>
                             {" "}
                             Remarks
-                            <span style={{ color: "red" }}>*</span>
+                            {/* <span style={{ color: "red" }}>*</span> */}
                           </span>
                         }
                         autoComplete="off"
                       />
-                      <div>
-
-                      </div>
+                      <div></div>
                     </div>
-
-
-
-
                   </div>
                   <div className="">
                     <Field
@@ -506,14 +512,8 @@ export function FormEditForm({
                       }
                       autoComplete="off"
                     />
-                    <div>
-
-                    </div>
+                    <div></div>
                   </div>
-
-
-
-
                 </fieldset>
               </Form>
             </Modal.Body>
@@ -554,7 +554,7 @@ export function FormEditForm({
               )}
             </Modal.Footer>
           </>
-        )
+        );
       }}
     </Formik>
   );

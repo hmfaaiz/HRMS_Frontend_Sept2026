@@ -41,10 +41,10 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteCompanyDoc = () => {
+  const deleteAssetRegister = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteCompanyDoc(id)).then(() => {
+    dispatch(actions.deleteAssetRegister(id)).then(() => {
       onHide();
       // refresh list after deletion
       dispatch(actions.fetchAssetRegisters(usersUIProps.queryParams));
@@ -79,7 +79,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteCompanyDoc}
+            onClick={deleteAssetRegister}
             className="btn btn-danger btn-elevate"
           >
             Delete
