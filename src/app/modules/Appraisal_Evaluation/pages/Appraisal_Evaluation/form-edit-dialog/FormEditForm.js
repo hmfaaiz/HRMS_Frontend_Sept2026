@@ -244,7 +244,7 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="grid grid-cols-5 lg:grid-cols-6 gap-x-3 gap-y-2 text-sm text-black">
+                <div className="grid grid-cols-5 lg:grid-cols-6 gap-x-3 gap-y-2 text-sm text-black max-h-[80svh] overflow-auto scrollbar-fancy">
                   {/* <div className="font-medium text-tprimary"> */}
                   <div className="col-span-5 lg:col-span-6">
                     {employeeDetail?.formName} for the employee:{" "}
@@ -277,7 +277,13 @@ export function FormEditForm({
                   </div>
 
                   <hr className="col-span-5 lg:col-span-6" />
-                  <div className={ratingSelection ? "col-span-3" : "col-span-2"}>
+                  <div
+                    className={
+                      ratingSelection
+                        ? "col-span-3"
+                        : "col-span-5 lg:col-span-6"
+                    }
+                  >
                     {ratingSelection && (
                       <span className="font-medium text-tprimary">
                         Rating
@@ -315,48 +321,58 @@ export function FormEditForm({
                         )}
                       </>
                     ) : (
-                      <div>
-                        <Field
-                          name="ratingValue"
-                          component={Input}
-                          type="number"
-                          onChange={(e) => {
-                            const value = Number(e?.target?.value);
-                            setFieldValue("ratingValue", e?.target?.value);
-                            if (ratingDetail?.ratingList?.length) {
-                              const nearest = ratingDetail.ratingList.reduce(
-                                (prev, curr) =>
-                                  Math.abs(curr.points - value) <
-                                  Math.abs(prev.points - value)
-                                    ? curr
-                                    : prev,
-                              );
-                              setFieldValue(
-                                "ratingName",
-                                nearest?.name || null,
-                              );
-                              setFieldValue(
-                                "ratingDescription",
-                                nearest?.description || null,
-                              );
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-0 md:gap-x-6 items-start">
+                        <div className="col-span-2 md:col-span-1">
+                          <Field
+                            name="ratingValue"
+                            component={Input}
+                            type="number"
+                            onChange={(e) => {
+                              const value = Number(e?.target?.value);
+                              setFieldValue("ratingValue", e?.target?.value);
+                              if (ratingDetail?.ratingList?.length) {
+                                const nearest = ratingDetail.ratingList.reduce(
+                                  (prev, curr) =>
+                                    Math.abs(curr.points - value) <
+                                    Math.abs(prev.points - value)
+                                      ? curr
+                                      : prev,
+                                );
+                                setFieldValue(
+                                  "ratingName",
+                                  nearest?.name || null,
+                                );
+                                setFieldValue(
+                                  "ratingDescription",
+                                  nearest?.description || null,
+                                );
+                              }
+                            }}
+                            label={
+                              <span className="flex gap-24">
+                                <span className="font-medium text-tprimary">
+                                  Rating
+                                  <span style={{ color: "red" }}>*</span>
+                                </span>
+                                <span className="font-medium text-black">
+                                  ({ratingDetail?.minPoint} -{" "}
+                                  {ratingDetail?.maxPoint})
+                                </span>
+                              </span>
                             }
-                          }}
-                          label={
-                            <span className="flex gap-24">
-                              <span className="font-medium text-tprimary">
-                                Rating
-                                <span style={{ color: "red" }}>*</span>
-                              </span>
-                              <span className="font-medium text-black">
-                                ({ratingDetail?.minPoint} -{" "}
-                                {ratingDetail?.maxPoint})
-                              </span>
-                            </span>
-                          }
-                        />
+                          />
+                        </div>
+                        <div className="col-span-2 md:col-span-3 grid-cols-3 grid gap-x-2 px-1 py-1.5 rounded-lg" style={{border : "1px solid"}}>
+                          {ratingDetail?.ratingList?.map((el, ind) => (
+                            <p key={ind} className="text-xs text-black mb-0.5">
+                              {" "}
+                              {el?.name} ({el?.points})
+                            </p>
+                          ))}
+                        </div>
                       </div>
                     )}
-                  </div> 
+                  </div>
                   {employeeDetail?.showRating && values?.selfRating && (
                     <div className="col-span-3 justify-self-end">
                       <span className="badge badge-light-info text-uppercase text-sm text-tprimary text-right">
