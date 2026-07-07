@@ -71,9 +71,8 @@ export function FormEditDialog() {
 
 
   const submitForm = (values) => {
-  const { subsidiaryId, departmentId, ...cleanFilters } =
+  const {  subsidiaryId, departmentId, ...cleanFilters } =
     formUIProps.filters;
-
   dispatch(
     actions.saveRecord(
       {
@@ -82,7 +81,10 @@ export function FormEditDialog() {
       },
       disbaleLoading
     )
-  );
+  ).then(()=>{
+    dispatch(actions.fetchLeaveBalances(cleanFilters?.employeeId));
+  })
+  
 };
 
   return (
