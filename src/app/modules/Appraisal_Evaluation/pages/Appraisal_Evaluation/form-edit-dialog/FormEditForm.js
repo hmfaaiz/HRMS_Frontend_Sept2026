@@ -362,7 +362,7 @@ export function FormEditForm({
                             }
                           />
                         </div>
-                        <div className="col-span-2 md:col-span-3 grid-cols-3 grid gap-x-2">
+                        <div className="col-span-2 md:col-span-3 grid-cols-3 grid gap-x-2 px-1 py-1.5 rounded-lg" style={{border : "1px solid"}}>
                           {ratingDetail?.ratingList?.map((el, ind) => (
                             <p key={ind} className="text-xs text-black mb-0.5">
                               {" "}
