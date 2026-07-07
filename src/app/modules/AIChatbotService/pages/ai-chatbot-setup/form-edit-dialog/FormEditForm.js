@@ -16,6 +16,11 @@ import {
   downloadMessageAsPdf,
   newQuestionClick,
 } from "../../../_redux/redux-Actions";
+import Chart from "chart.js/auto";
+
+if (typeof window !== "undefined" && !window.Chart) {
+  window.Chart = Chart;
+}
 
 const schema = Yup.object().shape({
   question: Yup.string()
@@ -24,7 +29,7 @@ const schema = Yup.object().shape({
 });
 
 const generatePdfFromHtml = async (html, fileName, questionText, dispatch) => {
-  dispatch(downloadMessageAsPdf({ html, fileName , questionText }));
+  dispatch(downloadMessageAsPdf({ html, fileName, questionText }));
 };
 
 export function FormEditForm({
@@ -498,28 +503,6 @@ const ChatListComp = ({ chatData = [], id }) => {
   );
 };
 
-// ─── loadScriptOnce ───────────────────────────────────────────────────────────
-const loadScriptOnce = (src) =>
-  new Promise((resolve, reject) => {
-    if (window.Chart) return resolve(window.Chart);
-    const existing = document.querySelector(`script[src="${src}"]`);
-    if (existing) {
-      existing.addEventListener("load", () => resolve(window.Chart));
-      existing.addEventListener("error", reject);
-      if (window.Chart) resolve(window.Chart);
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = src;
-    script.async = true;
-    script.onload = () => {
-      if (window.Chart) resolve(window.Chart);
-      else reject(new Error("Chart.js loaded but window.Chart missing"));
-    };
-    script.onerror = reject;
-    document.body.appendChild(script);
-  });
-
 // ─── AssistantHtml ────────────────────────────────────────────────────────────
 const AssistantHtml = ({ html, uid }) => {
   const ref = useRef(null);
@@ -528,35 +511,18 @@ const AssistantHtml = ({ html, uid }) => {
     const container = ref.current;
     if (!container || !html) return;
 
-    let cancelled = false;
-
-    const run = async () => {
+    // Chart ab npm bundle se aa raha hai, koi CDN wait ya race condition nahi
+    const scripts = Array.from(container.querySelectorAll("script"));
+    scripts.forEach((oldScript) => {
+      const code = oldScript.innerHTML;
+      oldScript.remove();
+      if (oldScript.src || !code?.trim()) return;
       try {
-        await loadScriptOnce("https://cdn.jsdelivr.net/npm/chart.js");
-        if (cancelled || !window.Chart) return;
-
-        const scripts = Array.from(container.querySelectorAll("script"));
-        scripts.forEach((s) => s.remove());
-
-        scripts.forEach((oldScript) => {
-          if (oldScript.src) return;
-          const code = oldScript.innerHTML;
-          if (!code?.trim()) return;
-          try {
-            new Function("Chart", code)(window.Chart);
-          } catch (err) {
-            console.error("Assistant script error:", err);
-          }
-        });
+        new Function("Chart", code)(Chart);
       } catch (err) {
-        console.error("Chart load error:", err);
+        console.log("Assistant script error:", err);
       }
-    };
-
-    run();
-    return () => {
-      cancelled = true;
-    };
+    });
   }, [html, uid]);
 
   return (
