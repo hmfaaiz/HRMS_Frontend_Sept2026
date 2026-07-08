@@ -128,7 +128,7 @@ export function FormEditForm({
   useEffect(() => {
     if (!formData.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllAssetModelName("allAssetModelNameList"));
+      dispatch(fetchAllAssetModelName());
 
       dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
