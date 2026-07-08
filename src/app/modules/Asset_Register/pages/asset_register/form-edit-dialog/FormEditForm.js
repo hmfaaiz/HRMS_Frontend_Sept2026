@@ -186,70 +186,43 @@ export function FormEditForm({
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+
                     <div className="col-span-1">
-                      <SubsidiarySelect
-                        name="subsidiaryId"
-                        label={
-                          <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isUserForRead}
-                        onChange={(e) => {
-                          setFieldValue("subsidiaryId", e.value || null);
-                        }}
-                        error={errors?.subsidiaryId}
-                        touched={touched?.subsidiaryId}
-                        currentValue={values?.subsidiaryId}
-                        initializeSubsidiary={(e) => {
-                          setFieldValue("subsidiaryId", e.value || null);
-                        }}
-                      />
-                    </div>
-
-
-                    <div className="">
-                      <label>City</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={
-                          selectedSubsidiary?.city
-                            ? `${selectedSubsidiary.city} (${selectedSubsidiary.country || ""})`
-                            : ""
-                        }
-                        disabled
-                      />
-                    </div>
-
-                    <div className="">
                       <SearchSelect
-                        name="locationId"
+                        name="asset_categoryId"
                         component={Input}
-                        placeholder="Select Location"
+                        placeholder="Asset Category"
                         className="form-control" // Force full height
-                        value={dashboard?.allLocationChildMenus?.find(
-                          (x) => Number(x.value) === Number(values.locationId),
+                        value={dashboard?.allAssetCategoryList?.find(
+                          (x) =>
+                            Number(x.value) === Number(values.asset_categoryId),
                         )}
                         label={
                           <span>
                             {" "}
-                            Location
+                            Asset Category
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         onChange={(e) => {
-                          setFieldValue("locationId", e.value || null);
+                          setFieldValue("asset_categoryId", e.value || null);
                         }}
-                        options={dashboard?.allLocationChildMenus}
+                        options={dashboard?.allAssetCategoryList}
                         autoComplete="off"
                       />
                       <ErrorMessage
-                        name="locationId"
+                        name="asset_categoryId"
                         component="div"
                         className="invalid-feedback d-block"
                       />
+
+
+
                     </div>
+                 
+
+
+                   
                   </div>
 
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
@@ -335,36 +308,6 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="">
-                      <SearchSelect
-                        name="asset_categoryId"
-                        component={Input}
-                        placeholder="Asset Category"
-                        className="form-control" // Force full height
-                        value={dashboard?.allAssetCategoryList?.find(
-                          (x) =>
-                            Number(x.value) === Number(values.asset_categoryId),
-                        )}
-                        label={
-                          <span>
-                            {" "}
-                            Asset Category
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(e) => {
-                          setFieldValue("asset_categoryId", e.value || null);
-                        }}
-                        options={dashboard?.allAssetCategoryList}
-                        autoComplete="off"
-                      />
-                      <ErrorMessage
-                        name="asset_categoryId"
-                        component="div"
-                        className="invalid-feedback d-block"
-                      />
-
-                    </div>
 
                     <div className="">
                       <SearchSelect
@@ -396,6 +339,24 @@ export function FormEditForm({
                       />
 
                     </div>
+
+                       <div className="">
+                    <Field
+                      name="description"
+                      component={TextArea}
+                      placeholder="Enter document description"
+                      className="form-control" // Force full height
+                      label={
+                        <span>
+                          {" "}
+                          Asset Description
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+               
+                  </div>
 
                     <div className="">
                       <label>
@@ -497,23 +458,72 @@ export function FormEditForm({
                       <div></div>
                     </div>
                   </div>
-                  <div className="">
-                    <Field
-                      name="description"
-                      component={TextArea}
-                      placeholder="Enter document description"
-                      className="form-control" // Force full height
-                      label={
-                        <span>
-                          {" "}
-                          Asset Description
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
-                    <div></div>
-                  </div>
+
+                     <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                     <div className="col-span-1">
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                      />
+                    </div>
+
+                     <div className="">
+                      <label>City</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={
+                          selectedSubsidiary?.city
+                            ? `${selectedSubsidiary.city} (${selectedSubsidiary.country || ""})`
+                            : ""
+                        }
+                        disabled
+                      />
+                    </div>
+
+                    <div className="">
+                      <SearchSelect
+                        name="locationId"
+                        component={Input}
+                        placeholder="Select Location"
+                        className="form-control" // Force full height
+                        value={dashboard?.allLocationChildMenus?.find(
+                          (x) => Number(x.value) === Number(values.locationId),
+                        )}
+                        label={
+                          <span>
+                            {" "}
+                            Location
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("locationId", e.value || null);
+                        }}
+                        options={dashboard?.allLocationChildMenus}
+                        autoComplete="off"
+                      />
+                      <ErrorMessage
+                        name="locationId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
+                    </div>
+               </div>
                 </fieldset>
               </Form>
             </Modal.Body>
