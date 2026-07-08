@@ -1017,3 +1017,18 @@ export const fetchAllAssetModelName = (body) => async (
       // toast.error("Something went wrong");
     });
 };
+
+
+export const fetchAllRegisterAssetName= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllRegisterAssetName(body)
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllRegisterAssetNameFetch(entities));
+    })
+    .catch((error) => {
+      // toast.error("Something went wrong");
+    });
+};

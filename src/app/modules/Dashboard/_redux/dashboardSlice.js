@@ -123,6 +123,7 @@ const initialDashboardState = {
   allAssetMakeList: [],
   allAssetModelNameList: [],
   allAssetCategoryList: [],
+  allRegisterAssetList: [],
 };
 
 export const callTypes = {
@@ -509,6 +510,9 @@ export const dashboardSlice = createSlice({
 
     AllAssetModelNameFetch: (state, action) => {
       state.allAssetModelNameList = action.payload;
+    },
+  AllRegisterAssetNameFetch: (state, action) => {
+      state.allRegisterAssetList = action.payload;
     },
 
   }

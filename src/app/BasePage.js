@@ -684,6 +684,9 @@ import ("./modules/Asset_Model/pages/index"))
 const asset_register = lazy (() =>
 import ("./modules/Asset_Register/pages/index"))
 
+const asset_assignment = lazy (() =>
+import ("./modules/Asset_Assignment/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -912,6 +915,7 @@ const ROUTES = {
   department_designation_map: department_designation_mapping,
   asset_model: asset_model,
   asset_register: asset_register,
+  asset_assignment: asset_assignment,
 
 
 };

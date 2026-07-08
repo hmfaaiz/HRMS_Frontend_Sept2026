@@ -318,6 +318,14 @@ export const getAllComDept = async () => {
 export const getAllDesignationByDepId = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-designation-by-depId`,body);
 };
-export const getAllAssetModelName = async () => {
-  return await axios.get(`${USERS_URL}/settings/read-all-model-name`);
+export const getAllAssetModelName = async (asset_makeId = null) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-model-name`, {
+    params: asset_makeId ? { asset_makeId } : {},
+  });
+};
+
+export const getAllRegisterAssetName = async (asset_modelId = null) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-register-asset`, {
+    params: asset_modelId ? { asset_modelId } : {},
+  });
 };
