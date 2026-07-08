@@ -610,7 +610,7 @@ if (!eligible) {
               <LeaveLinesTable
                 values={values}
                 setFieldValue={setFieldValue}
-                isEdit={false}
+                isEdit={isEdit}
               />
             </Form>
             {/* Form End */}
