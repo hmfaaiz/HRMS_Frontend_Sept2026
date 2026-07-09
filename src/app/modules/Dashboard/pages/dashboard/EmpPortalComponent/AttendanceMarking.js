@@ -182,8 +182,10 @@ const handleToggle = () => {
 
   const attendanceBody = {
     AttDate: formatDates(now),
-    AttDateTesting: now,
-    Time: now,
+    // AttDateTesting: now,
+    // Time: now,
+    AttDateTesting: format(now, "yyyy-MM-dd HH:mm:ss"),
+    Time: format(now, "HH:mm:ss"),
     Status: attendanceDetail?.Status === "01" ? "02" : "01",
     isLate,
   };
