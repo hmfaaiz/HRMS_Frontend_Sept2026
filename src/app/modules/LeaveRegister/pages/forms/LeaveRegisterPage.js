@@ -14,10 +14,11 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
+import { fetchTypeDropdownData } from "../../../LeaveType/_redux/formActions";
 
 export function LeaveRegisterPage() {
   const dispatch = useDispatch();
-    const [activeKey, setActiveKey] = useState("0");
+  const [activeKey, setActiveKey] = useState("0");
   const { dashboard, listLoading, pdfLoading } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.leave_register.listLoading,
@@ -43,6 +44,8 @@ export function LeaveRegisterPage() {
       !dashboard?.allLocationChildMenus?.length
     )
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+
+    dispatch(fetchTypeDropdownData());
   }, [dispatch]);
 
   return (
@@ -67,31 +70,31 @@ export function LeaveRegisterPage() {
       {/* Card Ends */}
       {/* </Card> */}
       <TCard name={CurrentModuleName()}>
-          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
-                  <Card>
-                    <Card.Header className="d-flex justify-content-center">
-                      <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
-                        <Accordion.Toggle
-                          as={Button}
-                          eventKey="0"
-                          className="flex justify-start text-bold"
-                        >
-                          {activeKey === "0" ? (
-                            <CircleMinus className="h-4 w-4 text-black mr-1" />
-                          ) : (
-                            <CirclePlus className="h-4 w-4 text-black mr-1" />
-                          )}
-                          <span className="text-black">Filters</span>
-                        </Accordion.Toggle>
-                      </div>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey="0">
-                      <>
-          <FormFilter
-            loading={listLoading}
-            pdfLoading={pdfLoading}
-            dispatch={dispatch}
-          />
+        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+          <Card>
+            <Card.Header className="d-flex justify-content-center">
+              <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                <Accordion.Toggle
+                  as={Button}
+                  eventKey="0"
+                  className="flex justify-start text-bold"
+                >
+                  {activeKey === "0" ? (
+                    <CircleMinus className="h-4 w-4 text-black mr-1" />
+                  ) : (
+                    <CirclePlus className="h-4 w-4 text-black mr-1" />
+                  )}
+                  <span className="text-black">Filters</span>
+                </Accordion.Toggle>
+              </div>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <>
+                <FormFilter
+                  loading={listLoading}
+                  pdfLoading={pdfLoading}
+                  dispatch={dispatch}
+                />
               </>
             </Accordion.Collapse>
           </Card>
