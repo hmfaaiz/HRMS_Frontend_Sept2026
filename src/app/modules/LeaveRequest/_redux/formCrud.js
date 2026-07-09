@@ -26,7 +26,7 @@ export async function getAllLeaveApplicationSetup(body) {
 
 export async function getAllLeaveBalances(body) {
   return axios.post(
-    `${USERS_URL}/leave_request/read-all-employee-leave-balance`,
+    `${USERS_URL}/leave_request/read-all-employee-leave-balance-with-unpaid`,
     body
   );
 }

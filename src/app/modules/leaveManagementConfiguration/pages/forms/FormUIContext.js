@@ -29,12 +29,13 @@ export function FormUIProvider({ FormUIEvents, children }) {
     subsidiaryId: "",
     // employeeTypeId: "",
     // gradeId: "",
-    weekend: [],
+    weekend: [6,7],
     isSandwich: 0,
     leavetypePolicies: [],
     leaveTypeSalaryDeductionPolicies: [],
-    leaveTypeSalaryDeductionPolicies: [],
+    // leaveTypeSalaryDeductionPolicies: [],
     allowEditLeaveLines: false, 
+    allowUnpaidLeaves : false,
   };
 
 
