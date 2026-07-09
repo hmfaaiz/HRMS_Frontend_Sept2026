@@ -32,3 +32,7 @@ export function deleteAssetRegister(Id) {
 
   return axios.delete(`${USERS_URL}/asset_register/delete-asset-register/${Id}`);
 }
+export function assetAssignmentHistory(Id) {
+
+  return axios.get(`${USERS_URL}/asset_register/read-asset-assignment-history/${Id}`);
+}

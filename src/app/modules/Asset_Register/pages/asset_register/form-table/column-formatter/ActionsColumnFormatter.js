@@ -45,7 +45,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForDelete && (
+      {isAccessForDelete && !row.isPresent && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">

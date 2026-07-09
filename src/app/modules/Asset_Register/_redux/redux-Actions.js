@@ -150,3 +150,20 @@ export const updateAssetRegister = (user, disbaleLoading, onHide) => (dispatch) 
     });
 };
 
+export const fetchAssetAssignmentHistory = (Id) => async (dispatch) => {
+
+
+  
+  return requestFromServer.assetAssignmentHistory(Id)
+   
+    .then((response) => {
+      const entities = response;
+
+      dispatch(actions.asssetAssignmentHistoryFetched(entities));
+    })
+    .catch((error) => {
+    
+      error.clientMessage = "Can't find";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};

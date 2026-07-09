@@ -47,31 +47,25 @@ export function ActionsColumnFormatter(
       <> </>
 
       {/* {isAccessForDelete && !row.isPresent &&( */}
-      {isAccessForDelete  &&(
+      {isAccessForDelete && !row.isPresent && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
+              {"Delete"}
             </Tooltip>
           }
         >
-          {row.isActive ? (
-            <a
-              title=""
-              className=""
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
-            >
-              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          ) : (
-            <a
-              title=""
-              className=""
-              onClick={() => openActiveFormDialog(row.Id, row.isActive)}
-            >
-              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          )}
+
+          <a
+            title=""
+            className=""
+            onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
+          >
+            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+
+
+
         </OverlayTrigger>
       )}
     </div>

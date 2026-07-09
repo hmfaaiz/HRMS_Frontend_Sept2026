@@ -23,6 +23,7 @@ import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { fetchAllAssetModelName } from "../../../../Dashboard/_redux/dashboardActions";
+import { AssetHistoryTable } from "../form-table/AssetHistoryTable";
 // percentage: Yup.string().required("Required*"),
 const assetRegisterSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
@@ -219,10 +220,10 @@ export function FormEditForm({
 
 
                     </div>
-                 
 
 
-                   
+
+
                   </div>
 
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
@@ -340,23 +341,23 @@ export function FormEditForm({
 
                     </div>
 
-                       <div className="">
-                    <Field
-                      name="description"
-                      component={TextArea}
-                      placeholder="Enter document description"
-                      className="form-control" // Force full height
-                      label={
-                        <span>
-                          {" "}
-                          Asset Description
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
-               
-                  </div>
+                    <div className="">
+                      <Field
+                        name="description"
+                        component={TextArea}
+                        placeholder="Enter document description"
+                        className="form-control" // Force full height
+                        label={
+                          <span>
+                            {" "}
+                            Asset Description
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        autoComplete="off"
+                      />
+
+                    </div>
 
                     <div className="">
                       <label>
@@ -459,8 +460,8 @@ export function FormEditForm({
                     </div>
                   </div>
 
-                     <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-                     <div className="col-span-1">
+                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="col-span-1">
                       <SubsidiarySelect
                         name="subsidiaryId"
                         label={
@@ -481,7 +482,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                     <div className="">
+                    <div className="">
                       <label>City</label>
                       <input
                         type="text"
@@ -523,9 +524,13 @@ export function FormEditForm({
                         className="invalid-feedback d-block"
                       />
                     </div>
-               </div>
+                  </div>
                 </fieldset>
               </Form>
+
+              <hr />
+              <h6 className="font-bold mb-0 text-primary">Asset Assignment History</h6>
+              <AssetHistoryTable Id={formData.Id} />
             </Modal.Body>
             <Modal.Footer>
               {!isUserForRead ? (
