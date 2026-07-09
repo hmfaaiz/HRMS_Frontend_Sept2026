@@ -35,6 +35,7 @@ export function EmployeeAssetTable({ employeeId }) {
             setQueryParams: formUIContext.setQueryParams,
             openEditFormDialog: formUIContext.openEditFormDialog,
             openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+            openUnassignFormDialog: formUIContext.openUnassignFormDialog,
             openActiveFormDialog: formUIContext.openActiveFormDialog,
             openReadFormDialog: formUIContext.openReadFormDialog,
         };
@@ -70,6 +71,17 @@ export function EmployeeAssetTable({ employeeId }) {
         { value: 1, label: "Assigned" },
         { value: 2, label: "Disposed" },
     ];
+ const isAccessForEdit = userAccess?.find(
+    (item) => item.componentName === "UpdateAssetAssignment"
+  );
+
+  const isAccessForDelete = userAccess?.find(
+    (item) => item.componentName === "DeleteAssetAssignment"
+  );
+
+  const isAccessForRead = userAccess?.find(
+    (item) => item.componentName === "ReadAssetAssignment"
+  );
 
     console.log("assignmentList1111", assignmentList)
     const columns = [
@@ -100,6 +112,29 @@ export function EmployeeAssetTable({ employeeId }) {
             formatter: (_, row) =>
                 row.AssignedByEmployee?.fullName || "-",
         },
+          {
+              dataField: "action",
+              text: "Actions",
+              isDummyField: true,
+              formatter: ActionsColumnFormatter,
+              formatExtraData: {
+                openEditFormDialog: formUIProps.openEditFormDialog,
+                openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+                openUnassignFormDialog: formUIProps.openUnassignFormDialog,
+                openActiveFormDialog: formUIProps.openActiveFormDialog,
+                openReadFormDialog: formUIProps.openReadFormDialog,
+                isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+                isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
+                isAccessForDelete: isAccessForDelete
+                  ? isAccessForDelete.isAccess
+                  : false,
+              },
+              classes: "text-right pr-0",
+              headerClasses: "text-right pr-3",
+              style: {
+                minWidth: "100px",
+              },
+            },
 
 
     ];

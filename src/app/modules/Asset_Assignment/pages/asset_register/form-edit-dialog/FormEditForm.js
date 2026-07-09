@@ -63,21 +63,21 @@ export function FormEditForm({
   const { dashboard } = useSelector((state) => state);
 
   useEffect(() => {
-   
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllAssetModelName());
 
-      dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
-      dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
-      dispatch(fetchAllFormsMenu(558, "allAssetMakeList"));
-      dispatch(fetchAllActiveEmployees());
-      dispatch(fetchAllRegisterAssetName());
-      dispatch(fetchAssetAssignmentList(formData?.employeeId));
-   
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    dispatch(fetchAllAssetModelName());
+
+    dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
+    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(558, "allAssetMakeList"));
+    dispatch(fetchAllActiveEmployees());
+    dispatch(fetchAllRegisterAssetName());
+    dispatch(fetchAssetAssignmentList(formData?.employeeId));
+
   }, [dispatch, formData.Id]);
 
 
-console.log("aaaaaaa2222",formData.assigned_by_employeeId);
+  console.log("aaaaaaa2222", formData.assigned_by_employeeId);
 
   return (
     <Formik
@@ -158,10 +158,10 @@ console.log("aaaaaaa2222",formData.assigned_by_employeeId);
 
                   </div>
 
-{values?.employeeId && (
-  <EmployeeAssetTable employeeId={values.employeeId} />
-)}
-                 
+
+                  <EmployeeAssetTable employeeId={values.employeeId} />
+
+
 
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
@@ -318,9 +318,9 @@ console.log("aaaaaaa2222",formData.assigned_by_employeeId);
 
 
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-                    
 
-                      <div className="col-span-1">
+
+                    <div className="col-span-1">
                       <SearchSelect
                         name="assigned_by_employeeId"
                         component={Input}
@@ -333,7 +333,7 @@ console.log("aaaaaaa2222",formData.assigned_by_employeeId);
                         label={
                           <span>
                             {" "}
-                           Assigned By Employee
+                            Assigned By Employee
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -391,7 +391,7 @@ console.log("aaaaaaa2222",formData.assigned_by_employeeId);
                   }}
                   className="btn btn-primary btn-elevate"
                 >
-                  Save
+                  Assign Asset
                   {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}

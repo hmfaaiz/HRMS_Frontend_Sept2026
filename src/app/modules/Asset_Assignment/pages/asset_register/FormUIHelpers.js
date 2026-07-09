@@ -43,4 +43,5 @@ export const initialFilter = {
     departmentId:"",
     designationId:"",
     employeeId:"",
+    status:1,
 }

@@ -56,6 +56,7 @@ const initUser = {
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
+    openUnassignFormDialog: FormUIEvents.openUnassignFormDialog,
     openActiveFormDialog: FormUIEvents.openActiveFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
   };

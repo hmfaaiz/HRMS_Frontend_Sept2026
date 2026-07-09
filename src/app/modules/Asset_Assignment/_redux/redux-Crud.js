@@ -36,3 +36,8 @@ export function assetAssignmentListByEmpId(Id) {
 
   return axios.get(`${USERS_URL}/asset_assignment/read-all-asset-assignment-list-by-empId/${Id}`);
 }
+
+export function unassignAssetRegister(Id) {
+
+  return axios.put(`${USERS_URL}/asset_assignment/unassign-asset-assignment/${Id}`);
+}

@@ -67,6 +67,29 @@ export const deleteAssetRegister = (id) => (dispatch) => {
     });
 };
 
+export const unassignAssetRegister = (id) => (dispatch) => {
+
+  return requestFromServer
+    .unassignAssetRegister( id)
+    .then((response) => {
+    
+      dispatch(actions.AssetRegisterDeleted({ Id: id }));
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error.response.data.message);
+    });
+};
+
 
 
 export const createAssetRegister = (assetRegisterForCreation, disbaleLoading, onHide) => (

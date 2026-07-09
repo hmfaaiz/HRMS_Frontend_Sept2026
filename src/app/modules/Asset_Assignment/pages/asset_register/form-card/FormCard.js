@@ -5,7 +5,7 @@ import { useFormUIContext } from "../FormUIContext";
 import { FormFIlter } from "../form-filter/FormFIlter";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, UserRoundCheck, UserRoundX } from "lucide-react";
 import { fetchAllActiveEmployees, fetchAllDept, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAssetRegisters } from "../../../_redux/redux-Actions";
@@ -14,7 +14,7 @@ export function FormCard() {
   const FormUIContext = useFormUIContext();
 
 
- const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const FormUIProps = useMemo(() => {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
@@ -143,7 +143,7 @@ export function FormCard() {
             </div>
           </div>
 
-            <div className="">
+          <div className="">
             <div>
               <SearchSelect
                 name="employeeId"
@@ -186,7 +186,76 @@ export function FormCard() {
             </div>
           </div>
 
+
+          <div className="flex items-center gap-2 mt-3">
+            <div className="">
+              <button
+                type="button"
+                className={`btn mr-2 rounded-xl ${FormUIProps?.queryParams?.status
+                  ? "bg-primary text-white"
+                  : "btn-secondary"
+                  }`}
+                onClick={
+                  () => {
+
+                    const updatedQueryParams = {
+                      ...FormUIProps.queryParams,
+                      status: 1,
+                      pageNumber: 1,
+                    };
+
+
+                    FormUIProps.setQueryParams(updatedQueryParams);
+
+
+                    dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+                  }}
+
+
+              >
+                Assigned  <UserRoundCheck size={12} />
+              </button>
+            </div>
+            <div className="">
+              <button
+                type="button"
+                className={`btn mr-2 rounded-xl ${!FormUIProps?.queryParams?.status
+                  ? "bg-primary text-white"
+                  : "btn-secondary"
+                  }`}
+                onClick={
+                  () => {
+
+                    const updatedQueryParams = {
+                      ...FormUIProps.queryParams,
+                      status: 0,
+                      pageNumber: 1,
+                    };
+
+
+                    FormUIProps.setQueryParams(updatedQueryParams);
+
+
+                    dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+                  }}
+              >
+                Unassigned <UserRoundX size={12} />
+              </button>
+            </div>
+
+          </div>
+
+
+
+
         </div>
+
+
+
+
+
+
+
 
         <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
           <FormFIlter />

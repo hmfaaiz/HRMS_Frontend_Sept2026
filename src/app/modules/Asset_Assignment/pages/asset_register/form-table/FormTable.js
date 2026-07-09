@@ -31,6 +31,7 @@ export function FormTable() {
       setQueryParams: formUIContext.setQueryParams,
       openEditFormDialog: formUIContext.openEditFormDialog,
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      openUnassignFormDialog: formUIContext.openUnassignFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
     };
@@ -55,17 +56,6 @@ export function FormTable() {
     dispatch(actions.fetchAssetRegisters(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateAssetAssignment"
-  );
-
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteAssetAssignment"
-  );
-
-  const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadAssetAssignment"
-  );
 
   const statusOptions = [
     { value: 0, label: "Unassigned" },
@@ -105,27 +95,40 @@ export function FormTable() {
     },
 
     {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        openEditFormDialog: formUIProps.openEditFormDialog,
-        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-        openActiveFormDialog: formUIProps.openActiveFormDialog,
-        openReadFormDialog: formUIProps.openReadFormDialog,
-        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
-      },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
-      style: {
-        minWidth: "100px",
+      dataField: "status",
+      text: "Status",
+      formatter: (_, row) => {
+        const status = statusOptions.find(
+          item => item.value === Number(row.status)
+        );
+        return status?.label || "-";
       },
     },
+{
+  dataField: "action",
+  text: "Actions",
+  isDummyField: true,
+  formatter: ActionsColumnFormatter,
+  formatExtraData: {
+    openEditFormDialog: formUIProps.openEditFormDialog,
+    openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+    openUnassignFormDialog: formUIProps.openUnassignFormDialog,
+    openReadFormDialog: formUIProps.openReadFormDialog,
+
+    isAccessForEdit: false,
+    isAccessForDelete: false,
+    isAccessForRead: false,
+
+    isAccessForUnassign: true,
+  },
+  classes: "text-right pr-0",
+  headerClasses: "text-right pr-3",
+  style: {
+    minWidth: "100px",
+  },
+}
+
+
   ];
 
   //Table pagination properties

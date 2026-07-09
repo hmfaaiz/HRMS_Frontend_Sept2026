@@ -5,10 +5,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
-import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
+import { FormDynamicDialogModal } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
-import {} from "../../_redux/redux-Actions";
+import { } from "../../_redux/redux-Actions";
 
 
 
@@ -27,6 +27,9 @@ export function FormPage({ history }) {
     openDeleteFormDialog: (id, status) => {
       history.push(`/asset_assignment/read-all-asset-assignment/${id}/${status}/delete`);
     },
+    openUnassignFormDialog: (id, status) => {
+      history.push(`/asset_assignment/read-all-asset-assignment/${id}/${status}/unassign`);
+    },
     openActiveFormDialog: (id) => {
       history.push(`/asset_assignment/read-all-asset-assignment/${id}/active`);
     },
@@ -36,7 +39,7 @@ export function FormPage({ history }) {
   };
   return (
 
-    
+
     <FormUIProvider FormUIEvents={FormUIEvents}>
       <Route exact path="/asset_assignment/read-all-asset-assignment/new">
         {({ history, match }) => (
@@ -73,17 +76,39 @@ export function FormPage({ history }) {
       </Route>
       <Route path="/asset_assignment/read-all-asset-assignment/:id/:status/delete">
         {({ history, match }) => (
-          <FormDeleteDialog
+      
+          <FormDynamicDialogModal
             show={match != null}
             id={match && match.params.id}
+
             status={match && match.params.status}
-            onHide={() => {
-              history.push("/asset_assignment/read-all-asset-assignment");
-            }}
+            title="Delete Record"
+            message="Are you sure you want to delete this record?"
+            confirmButtonText="Delete Record"
+            onHide={() => history.push("/asset_assignment/read-all-asset-assignment")}
+            actionName="deleteAssetRegister"
           />
         )}
       </Route>
-    
+
+
+ <Route path="/asset_assignment/read-all-asset-assignment/:id/:status/unassign">
+        {({ history, match }) => (
+      
+          <FormDynamicDialogModal
+            show={match != null}
+            id={match && match.params.id}
+
+            status={match && match.params.status}
+            title="Unassign Asset"
+            message="Are you sure you want to unassign this asset?"
+            confirmButtonText="Unassign"
+            onHide={() => history.push("/asset_assignment/read-all-asset-assignment")}
+            actionName="unassignAssetRegister"
+          />
+        )}
+      </Route>
+
       <FormCard />
       <ToastContainer
         position="top-right"
