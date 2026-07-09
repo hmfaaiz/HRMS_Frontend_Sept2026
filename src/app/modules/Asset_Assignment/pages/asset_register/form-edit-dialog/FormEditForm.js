@@ -18,6 +18,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { fetchAllAssetModelName, fetchAllRegisterAssetName } from "../../../../Dashboard/_redux/dashboardActions";
 import { EmployeeAssetTable } from "../form-table/EmployeeAssetTable";
+import { fetchAssetAssignmentList } from "../../../_redux/redux-Actions";
 
 const assetAssignmentSchema = Yup.object().shape({
   employeeId: Yup.number()
@@ -62,7 +63,7 @@ export function FormEditForm({
   const { dashboard } = useSelector((state) => state);
 
   useEffect(() => {
-    if (!formData.Id) {
+   
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllAssetModelName());
 
@@ -71,7 +72,8 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(558, "allAssetMakeList"));
       dispatch(fetchAllActiveEmployees());
       dispatch(fetchAllRegisterAssetName());
-    }
+      dispatch(fetchAssetAssignmentList(formData?.employeeId));
+   
   }, [dispatch, formData.Id]);
 
 
@@ -136,6 +138,7 @@ console.log("aaaaaaa2222",formData.assigned_by_employeeId);
                         }
                         onChange={(e) => {
                           setFieldValue("employeeId", e.value || null);
+                          dispatch(fetchAssetAssignmentList(e?.value));
                         }}
                         options={dashboard?.allEmployees}
                         autoComplete="off"
@@ -155,7 +158,10 @@ console.log("aaaaaaa2222",formData.assigned_by_employeeId);
 
                   </div>
 
-                  <EmployeeAssetTable />
+{values?.employeeId && (
+  <EmployeeAssetTable employeeId={values.employeeId} />
+)}
+                 
 
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">

@@ -20,7 +20,10 @@ import { format } from "date-fns";
 import { getUploadUrl } from "../../../../../utils/common";
 
 
-export function EmployeeAssetTable() {
+
+export function EmployeeAssetTable({ employeeId }) {
+
+    console.log("employeeId11111", employeeId)
     //Users UI Context
     const formUIContext = useFormUIContext();
 
@@ -44,29 +47,23 @@ export function EmployeeAssetTable() {
         };
     }, shallowEqual);
 
-    const { totalCount, entities, listLoading } = currentState;
-    console.log("entities11111", entities)
+    const { totalCount, assignmentList, listLoading } = currentState;
+
     //totalCount = 10
 
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (!employeeId) return;
+
         formUIProps.setIds([]);
 
-        dispatch(actions.fetchAssetRegisters(formUIProps.queryParams));
-    }, [formUIProps.queryParams, dispatch, totalCount]);
-
-    const isAccessForEdit = userAccess?.find(
-        (item) => item.componentName === "UpdateAssetRegister"
-    );
-
-    const isAccessForDelete = userAccess?.find(
-        (item) => item.componentName === "DeleteAssetRegister"
-    );
-
-    const isAccessForRead = userAccess?.find(
-        (item) => item.componentName === "ReadAssetRegister"
-    );
+        dispatch(
+            actions.fetchAssetAssignmentList(
+                employeeId
+            )
+        );
+    }, [employeeId, dispatch]);
 
     const statusOptions = [
         { value: 0, label: "Unassigned" },
@@ -74,99 +71,67 @@ export function EmployeeAssetTable() {
         { value: 2, label: "Disposed" },
     ];
 
+    console.log("assignmentList1111", assignmentList)
     const columns = [
         {
-            dataField: "asset_no",
+            dataField: "AssetRegister.asset_no",
             text: "Asset No.",
-            sort: false,
-            sortCaret,
-            headerSortingClasses,
-            style: { minWidth: "180px" },
+            formatter: (_, row) => row.AssetRegister?.asset_no || "",
         },
-
         {
-            dataField: "AssetModel.name",
+            dataField: "AssetRegister.AssetModel.name",
             text: "Model Name",
-            sort: false,
-            sortCaret,
-            headerSortingClasses,
-            style: { minWidth: "200px" },
-            formatter: (_, row) => row.AssetModel?.name || "",
+            formatter: (_, row) => row.AssetRegister?.AssetModel?.name || "",
         },
 
-
         {
-            dataField: "date_of_acquisition",
+            dataField: "date_of_assignment",
             text: "Date of Assignment",
-            sort: false,
-            sortCaret,
-            headerSortingClasses,
-            style: { minWidth: "180px" },
-            formatter: (cell) =>
-                cell ? format(new Date(cell), "dd-MMM-yyyy") : "",
-        },
-
-
-
-        {
-            dataField: "AssignedEmployee.fullName",
-            text: "Asset Assigned By",
-            sort: false,
-            sortCaret,
-            headerSortingClasses,
-            style: { minWidth: "220px" },
+            formatter: (_, row) => row.date_of_assignment || "",
             formatter: (_, row) =>
-                row.AssignedEmployee?.fullName ||
-                statusOptions.find(item => item.value === row.status)?.label ||
-                "-",
+                row.date_of_assignment
+                    ? format(new Date(row.date_of_assignment), "dd-MMM-yyyy")
+                    : "",
         },
+      
+        {
+            dataField: "AssignedByEmployee.fullName",
+            text: "Assigned To",
+            formatter: (_, row) =>
+                row.AssignedByEmployee?.fullName || "-",
+        },
+
 
     ];
 
-    //Table pagination properties
-    const paginationOptions = {
-        custom: true,
-        totalSize: totalCount,
-        sizePerPageList: uiHelpers.sizePerPageList,
-        sizePerPage: formUIProps.queryParams.pageSize,
-        page: formUIProps.queryParams.pageNumber,
-    };
 
     return (
-        <div className="w-full overflow-x-auto">
-            <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-                {({ paginationProps, paginationTableProps }) => {
-                    return (
-                        <Pagination
-                            isLoading={listLoading}
-                            paginationProps={paginationProps}
-                        >
-                            <BootstrapTable
-                                wrapperClasses="table-responsive"
-                                bordered={false}
-                                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                                bootstrap4
-                                remote
-                                keyField="Id"
-                                data={entities === null ? [] : entities}
-                                columns={columns}
-                                defaultSorted={uiHelpers.defaultSorted}
-                                onTableChange={getHandlerTableChange(
-                                    formUIProps.setQueryParams
-                                )}
-                                // selectRow={getSelectRow({
-                                //   entities,
 
-                                // })}
-                                {...paginationTableProps}
-                            >
-                                <PleaseWaitMessage entities={entities} />
-                                <NoRecordsFoundMessage entities={entities} />
-                            </BootstrapTable>
-                        </Pagination>
-                    );
-                }}
-            </PaginationProvider>
+        <div className="w-full overflow-x-auto">
+
+            <BootstrapTable
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={Array.isArray(assignmentList) ? assignmentList : []}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+            // onTableChange={getHandlerTableChange(
+            //     formUIProps.setQueryParams
+            // )}
+            // selectRow={getSelectRow({
+            //   assignmentList,
+
+            // })}
+            // {...paginationTableProps}
+            >
+                <PleaseWaitMessage assignmentList={assignmentList} />
+                <NoRecordsFoundMessage assignmentList={assignmentList} />
+            </BootstrapTable>
+
         </div>
     );
 }

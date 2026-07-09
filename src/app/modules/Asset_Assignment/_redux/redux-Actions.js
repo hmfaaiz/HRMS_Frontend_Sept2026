@@ -150,3 +150,23 @@ export const updateAssetRegister = (user, disbaleLoading, onHide) => (dispatch) 
     });
 };
 
+export const fetchAssetAssignmentList = (id) => (dispatch) => {
+
+
+  if (!id) {
+    return dispatch(actions.AssetAssignmentListFetched({ assignmentList: [] }));
+  }
+
+  return requestFromServer
+    .assetAssignmentListByEmpId(id)
+    .then((response) => {
+      const entities = response;
+
+   
+      dispatch(actions.AssetAssignmentListFetched( entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
