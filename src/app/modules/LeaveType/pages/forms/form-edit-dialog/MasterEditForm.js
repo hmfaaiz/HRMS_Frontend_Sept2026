@@ -45,6 +45,7 @@ export function MasterEditForm({
   enableLoading,
   loading,
   allSubsidiaryList,
+  id
 }) {
   const dropdown = (data) => {
     return [{ value: "", label: "Select" }, ...data].map((el) => {
@@ -134,6 +135,7 @@ export function MasterEditForm({
                         maxLength="3"
                         placeholder=""
                         onChange={handleChange}
+                        disabled={id}
                         onBlur={handleBlur}
                         label={
                           <span>
@@ -174,6 +176,7 @@ export function MasterEditForm({
                             : "form-control"
                         }
                         placeholder=""
+                        disabled={id}
                         onBlur={handleBlur}
                         onChange={(e) => {
                           setFieldValue("type", e.target.value);

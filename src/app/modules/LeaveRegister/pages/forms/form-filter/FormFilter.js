@@ -668,6 +668,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                 onClick={() => {
                   applyFilter(initialFilter.filter);
                   handleReset();
+                  dispatch(actions.clearState())
                 }}
                 className="btn btn-light"
               >
