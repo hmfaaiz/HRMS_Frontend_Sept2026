@@ -41,7 +41,7 @@ export function LeaveBalanceTable() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8  w-full md:w-7/12">
           {leaveBalances?.length > 0 &&
-            leaveBalances?.map((el, i) => {
+            leaveBalances?.filter((v)=> !v?.isUnpaid)?.map((el, i) => {
               return (
                 <div
                   className="grid grid-cols-2 gap-4 items-center text-sm"
