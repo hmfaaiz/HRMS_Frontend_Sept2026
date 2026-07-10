@@ -132,7 +132,7 @@ export function EmployeeOnboardingFilter() {
             </div>
 
             {/* Department */}
-            <div>
+            {/* <div>
               <SearchSelect
                 name="departmentId"
                 label="Department"
@@ -157,10 +157,10 @@ export function EmployeeOnboardingFilter() {
                   ...(dashboard?.allDept || []),
                 ]}
               />
-            </div>
+            </div> */}
 
             {/* Designation - Uncomment if needed */}
-            <div>
+            {/* <div>
               <SearchSelect
                 name="designationId"
                 label="Designation"
@@ -185,10 +185,10 @@ export function EmployeeOnboardingFilter() {
                   ...(dashboard?.allDesignations || []),
                 ]}
               />
-            </div>
+            </div> */}
 
             {/* Employee Type */}
-            <div>
+            {/* <div>
               <SearchSelect
                 name="employeeTypeId"
                 label="Employee Type"
@@ -210,7 +210,7 @@ export function EmployeeOnboardingFilter() {
                   dispatch(fetchEmployeeOnboardingChecklist(newQueryParams));
                 }}
               />
-            </div>
+            </div> */}
 
             {/* Search */}
             <div>
