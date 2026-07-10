@@ -23,7 +23,6 @@ function LeaveTypePolicyTable({
     { label: "Yearly", value: false },
     { label: "Monthly", value: true },
   ];
-
   return (
     <>
       <FieldArray name="leavetypePolicies">
@@ -128,7 +127,7 @@ function LeaveTypePolicyTable({
                             }}
                             value={row.leaveType}
                             children={createDropdown(
-                              dropdownData.allLeaveTypes || [],
+                              dropdownData.allLeaveTypes?.filter((el)=> el?.type !== 3) || [],
                               values?.leavetypePolicies
                             )}
                           />

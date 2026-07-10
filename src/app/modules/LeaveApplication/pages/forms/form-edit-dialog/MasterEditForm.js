@@ -313,7 +313,6 @@ if (!eligible) {
 </div> */}
                   {/* Leave Type Field Start */}
 
-
                   <div>
                     <Field
                       name="leaveType"

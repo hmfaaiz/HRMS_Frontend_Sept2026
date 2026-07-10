@@ -73,6 +73,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         enableLoading={enableLoading}
         loading={loading}
         allSubsidiaryList={dashboard?.allSubsidiaryList || []}
+        id={id}
       />
       <ToastContainer
         position="top-right"
