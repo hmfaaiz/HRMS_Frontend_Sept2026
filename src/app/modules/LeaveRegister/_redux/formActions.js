@@ -92,3 +92,8 @@ export const fetchLeaveBalancePdfData = (filter, document, labels = {}) => async
       });
     });
 };
+
+
+export const clearState = () =>  (dispatch) => {
+      dispatch(actions.clearState());
+};
