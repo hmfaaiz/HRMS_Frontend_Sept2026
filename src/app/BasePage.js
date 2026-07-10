@@ -676,7 +676,8 @@ const manpower_budget_dashboard = lazy (() =>
 import ("./modules/Manpower_Budget_Dashboard/pages/index"))
 const department_designation_mapping = lazy (() =>
 import ("./modules/DepartmentDesignationMapping/pages/index"))
-
+const ticket_escalation_policy = lazy (() =>
+import ("./modules/Ticket_Escalation_Policy/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -903,7 +904,7 @@ const ROUTES = {
   budget_setup_year: budget_year_setup,
   manpower_budget_dashboard : manpower_budget_dashboard,
   department_designation_map: department_designation_mapping,
-
+  ticket_escalation_policy: ticket_escalation_policy,
 
 };
 

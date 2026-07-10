@@ -17,7 +17,6 @@ import { toast } from "react-toastify";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Trash2 } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-
 // Define the validation schema for the main form and the policies
 const ReimbursementSchema = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -37,6 +36,14 @@ const ReimbursementSchema = Yup.object().shape({
        limit_type: Yup.number()
       .nullable()
        .required(VALIDATION_MESSAGES.required),
+       link_with_payroll: Yup.number().required(VALIDATION_MESSAGES.required),
+earningId: Yup.number()
+  .nullable()
+  .when("link_with_payroll", {
+    is: (val) => Number(val) === 1,
+    then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+    otherwise: (schema) => schema.nullable(),
+  }),
     })
   ),
 
@@ -198,13 +205,22 @@ export function FormEditForm({
                       isDisabled={isUserForRead}
                       onChange={(e) => {
                         setFieldValue("subsidiaryId", e.value || null);
-                        // check_Existed_Data(e.value);
+                        if (e.value) {
+                          dispatch(
+                            actions.fetchActiveEarningsBySubsidiary(e.value),
+                          );
+                        }
                       }}
                       error={errors?.subsidiaryId}
                       touched={touched?.subsidiaryId}
                       currentValue={values?.subsidiaryId}
                       initializeSubsidiary={(e) => {
                         setFieldValue("subsidiaryId", e.value || null);
+                        if (e.value) {
+                          dispatch(
+                            actions.fetchActiveEarningsBySubsidiary(e.value),
+                          );
+                        }
                       }}
                     />
                   </div>
@@ -224,7 +240,7 @@ export function FormEditForm({
                       }}
                       value={
                         dashboard?.allPayrolGroupList?.find(
-                          (option) => option?.value === values?.payroll_groupId
+                          (option) => option?.value === values?.payroll_groupId,
                         ) || null
                       }
                       // options={dashboard.allAccountList}
@@ -238,37 +254,37 @@ export function FormEditForm({
                   </div>
 
                   {/* Employee Loan Account Field */}
-                           {dashboard?.allSubsidiaryList?.find(
-  (option) => option.value === values.subsidiaryId
-)?.localizationId === 2 && (
-                  <div className="">
-                    <SearchSelect
-                      name="cycle_typeId"
-                      label={
-                        <span>
-                          Cycle Type
-                          {/* <span style={{ color: "red" }}>*</span> */}
-                        </span>
-                      }
-                      isDisabled={isUserForRead}
-                      onChange={(e) => {
-                        setFieldValue("cycle_typeId", e.value || null);
-                      }}
-                      value={
-                        dashboard?.allCycleTypeList?.find(
-                          (option) => option?.value === values?.cycle_typeId
-                        ) || null
-                      }
-                      // options={dashboard.allAccountList}
-                      options={dashboard?.allCycleTypeList?.map((option) => ({
-                        label: `${option.label}`, // Adding the value to the label
-                        value: option.value,
-                      }))}
-                      error={errors.cycle_typeId}
-                      touched={touched.cycle_typeId}
-                    />
-                  </div>
-)}
+                  {dashboard?.allSubsidiaryList?.find(
+                    (option) => option.value === values.subsidiaryId,
+                  )?.localizationId === 2 && (
+                    <div className="">
+                      <SearchSelect
+                        name="cycle_typeId"
+                        label={
+                          <span>
+                            Cycle Type
+                            {/* <span style={{ color: "red" }}>*</span> */}
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("cycle_typeId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allCycleTypeList?.find(
+                            (option) => option?.value === values?.cycle_typeId,
+                          ) || null
+                        }
+                        // options={dashboard.allAccountList}
+                        options={dashboard?.allCycleTypeList?.map((option) => ({
+                          label: `${option.label}`, // Adding the value to the label
+                          value: option.value,
+                        }))}
+                        error={errors.cycle_typeId}
+                        touched={touched.cycle_typeId}
+                      />
+                    </div>
+                  )}
                 </div>
               </fieldset>
 
@@ -282,7 +298,6 @@ export function FormEditForm({
                         </h6>
                         {!isUserForRead && (
                           <button
-                            
                             type="button"
                             onClick={() =>
                               push({
@@ -291,6 +306,8 @@ export function FormEditForm({
                                 attachment_required: "",
                                 grades: "",
                                 limit_type: "",
+                                link_with_payroll: 0,
+                                earningId: null,
                               })
                             }
                             className="btn btn-primary btn-sm mt-1"
@@ -309,6 +326,7 @@ export function FormEditForm({
                               <td className="min-w-32">Attachment Required</td>
                               <td className="min-w-32">Salary Grade</td>
                               <td className="min-w-32">Limit Type</td>
+                              <td className="min-w-32">Link with Payroll</td>
                               <td className="min-w-32 text-right">
                                 {" "}
                                 {!isUserForRead && <p> Action</p>}
@@ -340,7 +358,7 @@ export function FormEditForm({
                                                   values?.policies?.find(
                                                     (el) =>
                                                       el.reimbursement_typeId ==
-                                                      x.value
+                                                      x.value,
                                                   )
                                                     ? true
                                                     : false
@@ -351,7 +369,7 @@ export function FormEditForm({
                                                 {x.label}{" "}
                                               </option>
                                             );
-                                          }
+                                          },
                                         )}
                                       </Field>
                                       {errors.policies?.[index]
@@ -415,7 +433,7 @@ export function FormEditForm({
                                           onChange={(e) => {
                                             setFieldValue(
                                               `policies[${index}].attachment_required`,
-                                              e.target.value
+                                              e.target.value,
                                             ); // Use the raw value
                                           }}
                                         >
@@ -456,7 +474,7 @@ export function FormEditForm({
                                         <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                                           {dashboard.allEmployeeGradeList
                                             .filter(
-                                              (option) => option.value !== null
+                                              (option) => option.value !== null,
                                             ) // Filter out the unwanted option
                                             .map((option, i) => (
                                               <div key={i}>
@@ -467,7 +485,7 @@ export function FormEditForm({
                                                     checked={values.policies[
                                                       index
                                                     ].grades.includes(
-                                                      option.value
+                                                      option.value,
                                                     )}
                                                     onChange={(e) => {
                                                       const checked =
@@ -484,12 +502,12 @@ export function FormEditForm({
                                                         : currentGrades.filter(
                                                             (id) =>
                                                               id !==
-                                                              option.value
+                                                              option.value,
                                                           );
 
                                                       setFieldValue(
                                                         `policies[${index}].grades`,
-                                                        newGrades
+                                                        newGrades,
                                                       );
                                                     }}
                                                   />
@@ -508,7 +526,7 @@ export function FormEditForm({
                                         )}
                                     </td>
 
-                                        <td>
+                                    <td>
                                       <div className="">
                                         <Field
                                           name={`policies[${index}].limit_type`}
@@ -518,7 +536,7 @@ export function FormEditForm({
                                           onChange={(e) => {
                                             setFieldValue(
                                               `policies[${index}].limit_type`,
-                                              e.target.value
+                                              e.target.value,
                                             ); // Use the raw value
                                           }}
                                         >
@@ -540,8 +558,7 @@ export function FormEditForm({
                                       </div>
                                     )} */}
 
-                                        {errors.policies?.[index]
-                                          ?.limit_type &&
+                                        {errors.policies?.[index]?.limit_type &&
                                           touched.policies?.[index]
                                             ?.limit_type && (
                                             <div className="text-danger">
@@ -549,6 +566,86 @@ export function FormEditForm({
                                                 errors.policies[index]
                                                   .limit_type
                                               }
+                                            </div>
+                                          )}
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div className="w-52">
+                                        <SearchSelect
+                                          name={`policies[${index}].link_with_payroll`}
+                                          isDisabled={isUserForRead}
+                                          menuPlacement="bottom"
+                                          menuPosition="fixed"
+                                          onChange={(e) => {
+                                            if (!e || e.value === 0) {
+                                              setFieldValue(
+                                                `policies[${index}].link_with_payroll`,
+                                                0,
+                                              );
+                                              setFieldValue(
+                                                `policies[${index}].earningId`,
+                                                null,
+                                              );
+                                            } else {
+                                              setFieldValue(
+                                                `policies[${index}].link_with_payroll`,
+                                                1,
+                                              );
+                                              setFieldValue(
+                                                `policies[${index}].earningId`,
+                                                e.value,
+                                              );
+                                            }
+                                          }}
+                                          value={
+                                            Number(
+                                              values.policies[index]
+                                                .link_with_payroll,
+                                            ) === 1
+                                              ? currentState?.allEarnings?.find(
+                                                  (option) =>
+                                                    option?.value ===
+                                                    values.policies[index]
+                                                      .earningId,
+                                                ) || null
+                                              : {
+                                                  value: 0,
+                                                  label: "No Link with Payroll",
+                                                }
+                                          }
+                                          options={[
+                                            {
+                                              value: 0,
+                                              label: "No Link with Payroll",
+                                            },
+                                            ...(currentState?.allEarnings ||
+                                              []),
+                                          ]}
+                                          error={
+                                            errors.policies?.[index]
+                                              ?.link_with_payroll ||
+                                            errors.policies?.[index]?.earningId
+                                          }
+                                          touched={
+                                            touched.policies?.[index]
+                                              ?.link_with_payroll ||
+                                            touched.policies?.[index]?.earningId
+                                          }
+                                        />
+                                        {(errors.policies?.[index]
+                                          ?.link_with_payroll ||
+                                          errors.policies?.[index]
+                                            ?.earningId) &&
+                                          (touched.policies?.[index]
+                                            ?.link_with_payroll ||
+                                            touched.policies?.[index]
+                                              ?.earningId) && (
+                                            <div className="text-danger">
+                                              {errors.policies[index]
+                                                .link_with_payroll ||
+                                                errors.policies[index]
+                                                  .earningId}
                                             </div>
                                           )}
                                       </div>
@@ -569,7 +666,7 @@ export function FormEditForm({
                                                 values.policies[index]?.Id,
                                                 values.policies[index]
                                                   ?.reimbursement_typeId,
-                                                values.subsidiaryId
+                                                values.subsidiaryId,
                                               );
                                             } else if (
                                               values.policies[index]?.Id &&
@@ -625,11 +722,13 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-                            
                               <td className="min-w-32">Reimbursement Type</td>
                               <td className="min-w-32">Expense Account</td>
                               <td className="min-w-32">Bank Account</td>
-                              <td className="min-w-32"> {!isUserForRead && <p> Action</p>}</td>
+                              <td className="min-w-32">
+                                {" "}
+                                {!isUserForRead && <p> Action</p>}
+                              </td>
                             </tr>
 
                             <tbody>
@@ -643,7 +742,7 @@ export function FormEditForm({
                                         as="select"
                                         className="form-control"
                                         // disabled={isUserForRead}
-                                         disabled={
+                                        disabled={
                                           isUserForRead ||
                                           values.accounts[index]?.Id
                                         }
@@ -658,7 +757,7 @@ export function FormEditForm({
                                                   values.accounts.find(
                                                     (el) =>
                                                       el.reimbursement_typeId ==
-                                                      x.value
+                                                      x.value,
                                                   )
                                                     ? true
                                                     : false
@@ -669,7 +768,7 @@ export function FormEditForm({
                                                 {x.label}{" "}
                                               </option>
                                             );
-                                          }
+                                          },
                                         )}
                                       </Field>
                                       {errors.accounts?.[index]
@@ -694,25 +793,27 @@ export function FormEditForm({
                                       >
                                         <option value="">Select...</option>{" "}
                                         {/* Default "Select..." option */}
-                                        {dashboard.allExpenseAccountList?.map((x) => {
-                                          return (
-                                            <option
-                                              disabled={
-                                                values.accounts.find(
-                                                  (el) =>
-                                                    el.expense_accountId ==
-                                                    x.value
-                                                )
-                                                  ? true
-                                                  : false
-                                              }
-                                              value={x.value}
-                                            >
-                                              {" "}
-                                              {x.mergeLabel}{" "}
-                                            </option>
-                                          );
-                                        })}
+                                        {dashboard.allExpenseAccountList?.map(
+                                          (x) => {
+                                            return (
+                                              <option
+                                                disabled={
+                                                  values.accounts.find(
+                                                    (el) =>
+                                                      el.expense_accountId ==
+                                                      x.value,
+                                                  )
+                                                    ? true
+                                                    : false
+                                                }
+                                                value={x.value}
+                                              >
+                                                {" "}
+                                                {x.mergeLabel}{" "}
+                                              </option>
+                                            );
+                                          },
+                                        )}
                                       </Field>
                                       {errors.accounts?.[index]
                                         ?.expense_accountId &&
@@ -736,24 +837,27 @@ export function FormEditForm({
                                       >
                                         <option value="">Select...</option>{" "}
                                         {/* Default "Select..." option */}
-                                        {dashboard.allAssetsAccountList?.map((x) => {
-                                          return (
-                                            <option
-                                              disabled={
-                                                values.accounts.find(
-                                                  (el) =>
-                                                    el.bank_accountId == x.value
-                                                )
-                                                  ? true
-                                                  : false
-                                              }
-                                              value={x.value}
-                                            >
-                                              {" "}
-                                              {x.mergeLabel}{" "}
-                                            </option>
-                                          );
-                                        })}
+                                        {dashboard.allAssetsAccountList?.map(
+                                          (x) => {
+                                            return (
+                                              <option
+                                                disabled={
+                                                  values.accounts.find(
+                                                    (el) =>
+                                                      el.bank_accountId ==
+                                                      x.value,
+                                                  )
+                                                    ? true
+                                                    : false
+                                                }
+                                                value={x.value}
+                                              >
+                                                {" "}
+                                                {x.mergeLabel}{" "}
+                                              </option>
+                                            );
+                                          },
+                                        )}
                                       </Field>
                                       {errors.accounts?.[index]
                                         ?.bank_accountId &&

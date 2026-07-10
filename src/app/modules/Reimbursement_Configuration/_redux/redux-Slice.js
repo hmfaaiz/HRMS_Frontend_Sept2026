@@ -10,6 +10,7 @@ const initialReimbursementConfigState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    allEarnings: [],
 };
 
 
@@ -88,6 +89,11 @@ export const reimbursement_configurationSlice = createSlice({
             });
            
         },
+        reimbursementConfigEarningsFetched: (state, action) => {
+            state.actionsLoading = false;
+            state.allEarnings = action.payload;
+            state.error = null;
+},
 
 
     },
