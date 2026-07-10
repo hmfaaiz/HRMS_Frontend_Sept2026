@@ -87,16 +87,19 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       Id: formData.Id,
       subsidiaryId: formData.subsidiaryId,
       asset_no: formData.asset_no,
+      registration_no: formData.registration_no,
       asset_modelId: formData.asset_modelId,
       locationId: formData.locationId,
+      current_conditionId: formData.current_conditionId,
       asset_categoryId: formData.asset_categoryId,
       asset_year: formData.asset_year,
       date_of_acquisition: formData.date_of_acquisition,
       date_of_expiry: formData.date_of_expiry,
       description: formData.description,
       color: formData.color,
-      current_assigned_employeeId: formData.current_assigned_employeeId,
+
       purchase_price: formData.purchase_price,
+      current_price: formData.current_price,
       remarks: formData.remarks,
     };
 

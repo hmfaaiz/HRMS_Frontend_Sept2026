@@ -79,12 +79,22 @@ export function FormTable() {
       text: "Asset Category",
       formatter: (_, row) => row.AssetRegister?.AssetCategory?.formName || "",
     },
+    // {
+    //   dataField: "AssetRegister.date_of_acquisition",
+    //   text: "Date of Acquisition",
+    //   formatter: (_, row) =>
+    //     row.AssetRegister?.date_of_acquisition
+    //       ? format(new Date(row.AssetRegister.date_of_acquisition), "dd-MMM-yyyy")
+    //       : "",
+    // },
+
     {
-      dataField: "AssetRegister.date_of_acquisition",
-      text: "Date of Acquisition",
+      dataField: "date_of_assignment",
+      text: "Date of Assignment",
+      formatter: (_, row) => row.date_of_assignment || "",
       formatter: (_, row) =>
-        row.AssetRegister?.date_of_acquisition
-          ? format(new Date(row.AssetRegister.date_of_acquisition), "dd-MMM-yyyy")
+        row.date_of_assignment
+          ? format(new Date(row.date_of_assignment), "dd-MMM-yyyy")
           : "",
     },
     {
@@ -93,40 +103,49 @@ export function FormTable() {
       formatter: (_, row) =>
         row.AssignedEmployee?.fullName || "-",
     },
-
     {
-      dataField: "status",
-      text: "Status",
+      dataField: "AssetRegister.description",
+      text: "Description",
       formatter: (_, row) => {
-        const status = statusOptions.find(
-          item => item.value === Number(row.status)
+        const description = row.AssetRegister?.description || "-";
+
+        return description.length > 50 ? (
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>{description}</Tooltip>}
+          >
+            <span>{description.substring(0, 50)}...</span>
+          </OverlayTrigger>
+        ) : (
+          description
         );
-        return status?.label || "-";
       },
     },
-{
-  dataField: "action",
-  text: "Actions",
-  isDummyField: true,
-  formatter: ActionsColumnFormatter,
-  formatExtraData: {
-    openEditFormDialog: formUIProps.openEditFormDialog,
-    openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-    openUnassignFormDialog: formUIProps.openUnassignFormDialog,
-    openReadFormDialog: formUIProps.openReadFormDialog,
 
-    isAccessForEdit: false,
-    isAccessForDelete: false,
-    isAccessForRead: false,
 
-    isAccessForUnassign: true,
-  },
-  classes: "text-right pr-0",
-  headerClasses: "text-right pr-3",
-  style: {
-    minWidth: "100px",
-  },
-}
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        openEditFormDialog: formUIProps.openEditFormDialog,
+        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        openUnassignFormDialog: formUIProps.openUnassignFormDialog,
+        openReadFormDialog: formUIProps.openReadFormDialog,
+
+        isAccessForEdit: false,
+        isAccessForDelete: false,
+        isAccessForRead: false,
+
+        isAccessForUnassign: true,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "100px",
+      },
+    }
 
 
   ];

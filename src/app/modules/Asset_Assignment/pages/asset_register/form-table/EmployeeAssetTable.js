@@ -83,7 +83,7 @@ export function EmployeeAssetTable({ employeeId }) {
     (item) => item.componentName === "ReadAssetAssignment"
   );
 
-    console.log("assignmentList1111", assignmentList)
+
     const columns = [
         {
             dataField: "AssetRegister.asset_no",
@@ -108,7 +108,7 @@ export function EmployeeAssetTable({ employeeId }) {
       
         {
             dataField: "AssignedByEmployee.fullName",
-            text: "Assigned To",
+            text: "Assigned By",
             formatter: (_, row) =>
                 row.AssignedByEmployee?.fullName || "-",
         },

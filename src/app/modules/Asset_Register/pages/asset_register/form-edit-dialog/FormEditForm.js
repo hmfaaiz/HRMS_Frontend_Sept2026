@@ -10,6 +10,7 @@ import {
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
+  fetchAllActiveEmployees,
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
@@ -24,6 +25,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { fetchAllAssetModelName } from "../../../../Dashboard/_redux/dashboardActions";
 import { AssetHistoryTable } from "../form-table/AssetHistoryTable";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 // percentage: Yup.string().required("Required*"),
 const assetRegisterSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
@@ -35,6 +37,11 @@ const assetRegisterSchema = Yup.object().shape({
     .max(50, "Asset No cannot exceed 50 characters")
     .required(VALIDATION_MESSAGES.required),
 
+  registration_no: Yup.string()
+    .trim()
+    .max(30, "Asset No cannot exceed 50 characters")
+    .nullable(),
+
   asset_modelId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -44,6 +51,10 @@ const assetRegisterSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   locationId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+  current_conditionId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
@@ -110,6 +121,21 @@ const assetRegisterSchema = Yup.object().shape({
     )
     .required(VALIDATION_MESSAGES.required),
 
+  current_price: Yup.number()
+    .nullable()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value,
+    )
+    .typeError("Current price must be a valid number")
+    .positive("Current price must be greater than 0")
+    .max(999999999, "Current price is too large")
+    .test(
+      "decimal-places",
+      "Maximum 2 decimal places are allowed",
+      (value) => value == null || /^\d+(\.\d{1,2})?$/.test(value.toString()),
+    )
+  ,
+
   remarks: Yup.string().trim(),
   // .required(VALIDATION_MESSAGES.required),
 });
@@ -133,6 +159,7 @@ export function FormEditForm({
 
       dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+      dispatch(fetchAllActiveEmployees());
     }
   }, [dispatch, formData.Id]);
 
@@ -147,6 +174,16 @@ export function FormEditForm({
     { value: 0, label: "Unassigned" },
     { value: 1, label: "Assigned" },
     { value: 2, label: "Disposed" },
+  ];
+
+  const currentConditionOptions = [
+   
+    { value: 1, label: "New" },
+    { value: 2, label: "Excellent" },
+    { value: 3, label: "Fair" },
+    { value: 4, label: "Need Repair" },
+    { value: 5, label: "Non Functional" },
+
   ];
 
   return (
@@ -172,6 +209,7 @@ export function FormEditForm({
         values,
         setFieldValue,
         handleChange,
+        setFieldTouched,
       }) => {
         const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
           (item) => Number(item.value) === Number(values.subsidiaryId),
@@ -246,6 +284,56 @@ export function FormEditForm({
                     </div>
 
                     <div className="">
+                      <SearchSelect
+                        name="asset_modelId"
+                        component={Input}
+                        placeholder="Enter date of expiry"
+                        className="form-control" // Force full height
+                        value={dashboard?.allAssetModelNameList?.find(
+                          (x) =>
+                            Number(x.value) === Number(values.asset_modelId),
+                        )}
+                        label={
+                          <span>
+                            {" "}
+                            Asset Model Name
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("asset_modelId", e.value || null);
+                        }}
+                        options={dashboard?.allAssetModelNameList}
+                        autoComplete="off"
+                      />
+                      <ErrorMessage
+                        name="asset_modelId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
+
+                    </div>
+
+                    <div className="">
+                      <Field
+                        name="registration_no"
+                        component={Input}
+                        placeholder="Enter registration no"
+                        className="form-control" // Force full height
+                        label={
+                          <span>
+                            {" "}
+                            Registration No.
+
+                          </span>
+                        }
+                        autoComplete="off"
+                      />
+
+                    </div>
+
+
+                    <div className="">
                       <label>
                         Asset Year <span style={{ color: "red" }}>*</span>
                       </label>
@@ -310,38 +398,8 @@ export function FormEditForm({
                     </div>
 
 
-                    <div className="">
-                      <SearchSelect
-                        name="asset_modelId"
-                        component={Input}
-                        placeholder="Enter date of expiry"
-                        className="form-control" // Force full height
-                        value={dashboard?.allAssetModelNameList?.find(
-                          (x) =>
-                            Number(x.value) === Number(values.asset_modelId),
-                        )}
-                        label={
-                          <span>
-                            {" "}
-                            Asset Model Name
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(e) => {
-                          setFieldValue("asset_modelId", e.value || null);
-                        }}
-                        options={dashboard?.allAssetModelNameList}
-                        autoComplete="off"
-                      />
-                      <ErrorMessage
-                        name="asset_modelId"
-                        component="div"
-                        className="invalid-feedback d-block"
-                      />
 
-                    </div>
-
-                    <div className="">
+                    <div className="col-span-3">
                       <Field
                         name="description"
                         component={TextArea}
@@ -407,39 +465,120 @@ export function FormEditForm({
                         component={Input}
                         disabled
                         className="form-control"
-                        placeholder={
+                        value={
                           values.current_assigned_employeeId
-                            ? "Current Assigned Employee"
+                            ? dashboard?.allEmployees?.find(
+                              (x) =>
+                                Number(x.value) === Number(values.current_assigned_employeeId)
+                            )?.label
                             : statusOptions.find(
                               item => item.value === Number(values.status)
                             )?.label || "Select employee"
                         }
-                        label={
-                          <span>
-                            Current Assigned Employee
-                          </span>
-                        }
+                        label={<span>Current Assigned Employee</span>}
                         autoComplete="off"
                       />
-                      <div></div>
                     </div>
 
-                    <div className="">
-                      <Field
-                        label={<span> Purchase Price</span>}
-                        name="purchase_price"
+                     <div className="">
+
+
+                      <SearchSelect
+                        name="current_conditionId"
                         component={Input}
-                        value={values.purchase_price}
+                        placeholder="Select Current Condition"
+                        className="form-control" 
+                        value={currentConditionOptions?.find(
+                          (x) => Number(x.value) === Number(values.current_conditionId),
+                        )}
+                        label={
+                          <span>
+                            {" "}
+                            Current Condition
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         onChange={(e) => {
-                          const rawValue = e.target.value.replace(/,/g, "");
-                          if (!isNaN(rawValue) || rawValue === "") {
-                            setFieldValue("purchase_price", rawValue);
-                          }
+                          setFieldValue("current_conditionId", e.value || null);
+                        }}
+                        options={currentConditionOptions}
+                        autoComplete="off"
+                      />
+                      <ErrorMessage
+                        name="current_conditionId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
+                    </div>
+
+
+                    <div className="">
+
+                      <AmountInput
+                        field={{
+                          name: "purchase_price",
+                          value: values.purchase_price,
+                          onBlur: () => setFieldTouched("purchase_price", true),
+                          onChange: () => { },
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        label={
+                          <span>
+                            Purchase Price<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        placeholder="Enter Purchase Price"
+                        autoComplete="off"
+
+                        value={values.purchase_price}
+                        onChange={(value) => {
+
+                          setFieldValue("purchase_price", value);
                         }}
                       />
 
-                      <div></div>
                     </div>
+
+
+                    <div className="">
+
+                      <AmountInput
+                        field={{
+                          name: "current_price",
+                          value: values.current_price,
+                          onBlur: () => setFieldTouched("current_price", true),
+                          onChange: () => { },
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        label={
+                          <span>
+                            Current Price
+                          </span>
+                        }
+                        placeholder="Enter Current Price"
+                        autoComplete="off"
+
+                        value={values.current_price}
+                        onChange={(value) => {
+
+                          setFieldValue("current_price", value);
+                        }}
+                      />
+
+                    </div>
+                   
+
+
 
                     <div className="col-span-3">
                       <Field
@@ -459,6 +598,8 @@ export function FormEditForm({
                       <div></div>
                     </div>
                   </div>
+
+
 
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
@@ -528,9 +669,16 @@ export function FormEditForm({
                 </fieldset>
               </Form>
 
-              <hr />
-              <h6 className="font-bold mb-0 text-primary">Asset Assignment History</h6>
-              <AssetHistoryTable Id={formData.Id} />
+              {formData.Id && (
+                <div className="mt-3">
+                  <hr />
+                  <h6 className="font-bold mb-0 text-primary">Asset Assignment History</h6>
+                  <AssetHistoryTable Id={formData.Id} />
+                </div>
+              )}
+
+
+
             </Modal.Body>
             <Modal.Footer>
               {!isUserForRead ? (

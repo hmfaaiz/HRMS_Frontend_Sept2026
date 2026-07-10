@@ -32,9 +32,11 @@ export function FormUIProvider({ FormUIEvents, children }) {
   subsidiaryId: null,
 
   asset_no: "",
+  registration_no: "",
   asset_modelId: "",
   asset_categoryId: "",
   locationId: "",
+  current_conditionId: "",
 
   asset_year: "",
 
@@ -48,6 +50,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   current_assigned_employeeId: null,
 
   purchase_price: "",
+  current_price: "",
 
   remarks: "",
 

@@ -84,7 +84,7 @@ console.log("entities11111",entities)
     },
 {
       dataField: "assetCount",
-      text: "No. of Asset",
+      text: "No. of Asset Model",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

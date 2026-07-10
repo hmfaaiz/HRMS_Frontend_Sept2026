@@ -187,7 +187,7 @@ export function FormCard() {
           </div>
 
 
-          <div className="flex items-center gap-2 mt-3">
+          <div className="flex items-center gap-2 mt-3 col-span-12">
             <div className="">
               <button
                 type="button"
@@ -213,7 +213,7 @@ export function FormCard() {
 
 
               >
-                Assigned  <UserRoundCheck size={12} />
+                Assigned Asset  <UserRoundCheck size={12} />
               </button>
             </div>
             <div className="">
@@ -239,7 +239,7 @@ export function FormCard() {
                     dispatch(fetchAssetRegisters(FormUIProps.queryParams));
                   }}
               >
-                Unassigned <UserRoundX size={12} />
+                Unassigned Asset<UserRoundX size={12} />
               </button>
             </div>
 
