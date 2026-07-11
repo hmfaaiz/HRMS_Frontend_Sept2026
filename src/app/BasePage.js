@@ -688,6 +688,10 @@ const asset_assignment = lazy (() =>
 import ("./modules/Asset_Assignment/pages/index"))
 
 
+const asset_disposal = lazy (() =>
+import ("./modules/Asset_Disposal/pages/index"))
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -916,6 +920,7 @@ const ROUTES = {
   asset_model: asset_model,
   asset_register: asset_register,
   asset_assignment: asset_assignment,
+  asset_disposal: asset_disposal,
 
 
 };

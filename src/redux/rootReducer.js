@@ -240,6 +240,7 @@ import { DepartmentDesignationMappingSlice } from "../app/modules/DepartmentDesi
 import { AssetModelSlice } from "../app/modules/Asset_Model/_redux/redux-Slice";
 import { AssetRegisterSlice } from "../app/modules/Asset_Register/_redux/redux-Slice";
 import { AssetAssignmentSlice } from "../app/modules/Asset_Assignment/_redux/redux-Slice";
+import { AssetDisposalSlice } from "../app/modules/Asset_Disposal/_redux/redux-Slice";
 
 
 export const rootReducer = combineReducers({
@@ -480,6 +481,7 @@ export const rootReducer = combineReducers({
   asset_model: AssetModelSlice.reducer,
   asset_register: AssetRegisterSlice.reducer,
   asset_assignment: AssetAssignmentSlice.reducer,
+  asset_disposal: AssetDisposalSlice.reducer,
 
 });
 

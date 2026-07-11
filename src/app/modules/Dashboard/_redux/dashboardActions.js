@@ -1019,16 +1019,24 @@ export const fetchAllAssetModelName = (body) => async (
 };
 
 
-export const fetchAllRegisterAssetName= (body) => async (
-  dispatch,
-) => {
-  return await requestFromServer
-    .getAllRegisterAssetName(body)
-    .then((response) => {
-      const entities = [...response.data?.data];
-      dispatch(actions.AllRegisterAssetNameFetch(entities));
-    })
-    .catch((error) => {
-      // toast.error("Something went wrong");
+export const fetchAllRegisterAssetName =
+  (asset_modelId = null, asset_categoryId = null) =>
+  async (dispatch) => {
+    if (
+      asset_modelId &&
+      typeof asset_modelId === "object" &&
+      !Array.isArray(asset_modelId)
+    ) {
+      asset_categoryId = asset_modelId.asset_categoryId ?? null;
+      asset_modelId = asset_modelId.asset_modelId ?? null;
+    }
+
+    const response = await requestFromServer.getAllRegisterAssetName({
+      asset_modelId,
+      asset_categoryId,
     });
-};
+
+    dispatch(
+      actions.AllRegisterAssetNameFetch(response.data?.data || [])
+    );
+  };

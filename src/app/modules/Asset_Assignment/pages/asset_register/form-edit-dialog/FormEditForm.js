@@ -268,7 +268,7 @@ export function FormEditForm({
                         isDisabled={!values.asset_makeId}
                         onChange={(e) => {
                           setFieldValue("asset_modelId", e.value || null);
-                          dispatch(fetchAllRegisterAssetName(e?.value));
+                          dispatch(fetchAllRegisterAssetName({asset_modelId:e?.value}));
                         }}
                         options={dashboard?.allAssetModelNameList}
                         autoComplete="off"

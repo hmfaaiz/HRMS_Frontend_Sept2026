@@ -324,8 +324,8 @@ export const getAllAssetModelName = async (asset_makeId = null) => {
   });
 };
 
-export const getAllRegisterAssetName = async (asset_modelId = null) => {
+export const getAllRegisterAssetName = async (params = {}) => {
   return await axios.get(`${USERS_URL}/settings/read-all-register-asset`, {
-    params: asset_modelId ? { asset_modelId } : {},
+    params,
   });
 };
