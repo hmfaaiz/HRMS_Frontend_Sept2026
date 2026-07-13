@@ -83,6 +83,7 @@ export function FormTable() {
     style: { minWidth: "180px" },
   },
 
+
   {
     dataField: "AssetModel.name",
     text: "Model Name",

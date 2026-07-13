@@ -71,17 +71,17 @@ export function EmployeeAssetTable({ employeeId }) {
         { value: 1, label: "Assigned" },
         { value: 2, label: "Disposed" },
     ];
- const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateAssetAssignment"
-  );
+    const isAccessForEdit = userAccess?.find(
+        (item) => item.componentName === "UpdateAssetAssignment"
+    );
 
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteAssetAssignment"
-  );
+    const isAccessForDelete = userAccess?.find(
+        (item) => item.componentName === "DeleteAssetAssignment"
+    );
 
-  const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadAssetAssignment"
-  );
+    const isAccessForRead = userAccess?.find(
+        (item) => item.componentName === "ReadAssetAssignment"
+    );
 
 
     const columns = [
@@ -91,9 +91,23 @@ export function EmployeeAssetTable({ employeeId }) {
             formatter: (_, row) => row.AssetRegister?.asset_no || "",
         },
         {
+            dataField: "AssetRegister.AssetCategory.formName",
+            text: "Asset Category",
+            formatter: (_, row) =>
+                row.AssetRegister?.AssetCategory?.formName || "-",
+        },
+        {
             dataField: "AssetRegister.AssetModel.name",
             text: "Model Name",
-            formatter: (_, row) => row.AssetRegister?.AssetModel?.name || "",
+            formatter: (_, row) => {
+                const modelName = row.AssetRegister?.AssetModel?.name || "";
+                const makeName =
+                    row.AssetRegister?.AssetModel?.AssetMake?.formName || "";
+
+                return makeName
+                    ? `${modelName} (${makeName})`
+                    : modelName;
+            },
         },
 
         {
@@ -105,36 +119,36 @@ export function EmployeeAssetTable({ employeeId }) {
                     ? format(new Date(row.date_of_assignment), "dd-MMM-yyyy")
                     : "",
         },
-      
+
         {
             dataField: "AssignedByEmployee.fullName",
             text: "Assigned By",
             formatter: (_, row) =>
                 row.AssignedByEmployee?.fullName || "-",
         },
-          {
-              dataField: "action",
-              text: "Actions",
-              isDummyField: true,
-              formatter: ActionsColumnFormatter,
-              formatExtraData: {
-                openEditFormDialog: formUIProps.openEditFormDialog,
-                openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-                openUnassignFormDialog: formUIProps.openUnassignFormDialog,
-                openActiveFormDialog: formUIProps.openActiveFormDialog,
-                openReadFormDialog: formUIProps.openReadFormDialog,
-                isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-                isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
-                isAccessForDelete: isAccessForDelete
-                  ? isAccessForDelete.isAccess
-                  : false,
-              },
-              classes: "text-right pr-0",
-              headerClasses: "text-right pr-3",
-              style: {
-                minWidth: "100px",
-              },
-            },
+        // {
+        //     dataField: "action",
+        //     text: "Actions",
+        //     isDummyField: true,
+        //     formatter: ActionsColumnFormatter,
+        //     formatExtraData: {
+        //         openEditFormDialog: formUIProps.openEditFormDialog,
+        //         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        //         openUnassignFormDialog: formUIProps.openUnassignFormDialog,
+        //         openActiveFormDialog: formUIProps.openActiveFormDialog,
+        //         openReadFormDialog: formUIProps.openReadFormDialog,
+        //         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        //         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
+        //         isAccessForDelete: isAccessForDelete
+        //             ? isAccessForDelete.isAccess
+        //             : false,
+        //     },
+        //     classes: "text-right pr-0",
+        //     headerClasses: "text-right pr-3",
+        //     style: {
+        //         minWidth: "100px",
+        //     },
+        // },
 
 
     ];
