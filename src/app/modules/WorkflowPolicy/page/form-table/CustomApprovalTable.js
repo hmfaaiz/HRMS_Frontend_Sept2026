@@ -89,7 +89,7 @@ function CustomApprovalWorkflowTable({
                       <td>Location</td>
                       {values?.workflowTypeId == "565" ? (
                         <td>HR Evaluation</td>
-                      ) : values?.workflowTypeId == "628" || values?.workflowTypeId == "654" ? (
+                      ) : values?.workflowTypeId == "628" || values?.workflowTypeId == "654" || values?.workflowTypeId == "400" ? (
                         <td>Allow Request Editing</td>
                       ) : ""}
                       <td className="text-right">Action</td>
@@ -543,7 +543,7 @@ function CustomApprovalWorkflowTable({
                           </td>
                           {/* if is workglow type is employee performance evaluation
                            */}
-                          {( values?.workflowTypeId == "565" || values?.workflowTypeId == "628" || values?.workflowTypeId == "654") &&(
+                          {( values?.workflowTypeId == "565" || values?.workflowTypeId == "628" || values?.workflowTypeId == "654" || values?.workflowTypeId == "400") &&(
                             <td>
                               <>
                                 <Checkbox

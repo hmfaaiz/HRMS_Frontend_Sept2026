@@ -1,15 +1,27 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye } from "lucide-react";
+import { Eye, Pencil } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
   row,
   rowIndex,
-  { setWorkflowId, setCurrentData }
+  { setWorkflowId, setCurrentData, attendanceRequest },
 ) {
   return (
-    <div className="d-flex justify-content-end">
+    <div className="space-x-2">
+      {row?.isAccessToUpdate ? (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">View Detail</Tooltip>}
+        >
+          <span
+            onClick={() => attendanceRequest(row?.requestData?.Id)}
+            style={{ cursor: "pointer" }}
+          >
+            <Pencil className="w-4 h-4" />
+          </span>
+        </OverlayTrigger>
+      ) : null}
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View Detail</Tooltip>}
       >
