@@ -73,7 +73,15 @@ export function FormTable() {
     {
       dataField: "AssetRegister.AssetModel.name",
       text: "Model Name",
-      formatter: (_, row) => row.AssetRegister?.AssetModel?.name || "",
+      formatter: (_, row) => {
+        const modelName = row.AssetRegister?.AssetModel?.name || "";
+        const makeName =
+          row.AssetRegister?.AssetModel?.AssetMake?.formName || "";
+
+        return makeName
+          ? `${modelName} (${makeName})`
+          : modelName;
+      },
     },
     {
       dataField: "AssetRegister.AssetCategory.formName",

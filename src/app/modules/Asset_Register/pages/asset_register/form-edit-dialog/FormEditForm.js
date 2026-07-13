@@ -470,7 +470,7 @@ export function FormEditForm({
                               );
 
                               return employee
-                                ? `${employee.label} - ${employee.department}`
+                                ? `${employee.label} (${employee.department})`
                                 : "Select employee";
                             })()
                             : statusOptions.find(

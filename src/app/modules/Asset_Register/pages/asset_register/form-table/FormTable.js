@@ -73,138 +73,145 @@ export function FormTable() {
     { value: 2, label: "Disposed" },
   ];
 
- const columns = [
-  {
-    dataField: "asset_no",
-    text: "Asset No.",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "180px" },
-  },
-
-
-  {
-    dataField: "AssetModel.name",
-    text: "Model Name",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "200px" },
-    formatter: (_, row) => row.AssetModel?.name || "",
-  },
-
-  {
-    dataField: "AssetCategory.formName",
-    text: "Asset Category",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "200px" },
-    formatter: (_, row) => row.AssetCategory?.formName || "",
-  },
-
-  // {
-  //   dataField: "asset_year",
-  //   text: "Asset Year",
-  //   sort: false,
-  //   sortCaret,
-  //   headerSortingClasses,
-  //   style: { minWidth: "120px" },
-  // },
-
-  {
-    dataField: "date_of_acquisition",
-    text: "Date of Acquisition",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "180px" },
-    formatter: (cell) =>
-      cell ? format(new Date(cell), "dd-MMM-yyyy") : "",
-  },
-
-  {
-    dataField: "date_of_expiry",
-    text: "Date of Expiry",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "180px" },
-    formatter: (cell) =>
-      cell ? format(new Date(cell), "dd-MMM-yyyy") : "",
-  },
-
-{
-  dataField: "AssignedEmployee.fullName",
-  text: "Asset Assigned To",
-  sort: false,
-  sortCaret,
-  headerSortingClasses,
-  style: { minWidth: "220px" },
-  formatter: (_, row) =>
-    row.AssignedEmployee?.fullName ||
-    statusOptions.find(item => item.value === row.status)?.label ||
-    "-",
-},
-
-
-
-  // {
-  //   dataField: "purchase_price",
-  //   text: "Purchase Price",
-  //   sort: false,
-  //   sortCaret,
-  //   headerSortingClasses,
-  //   style: { minWidth: "160px" },
-  //   formatter: (cell) =>
-  //     cell ? Number(cell).toLocaleString() : "",
-  // },
-
-  // {
-  //   dataField: "color",
-  //   text: "Color",
-  //   sort: false,
-  //   sortCaret,
-  //   headerSortingClasses,
-  //   style: { minWidth: "120px" },
-  //   formatter: (cell) => (
-  //     <div
-  //       style={{
-  //         width: 20,
-  //         height: 20,
-  //         borderRadius: 4,
-  //         background: cell,
-  //         border: "1px solid #ccc",
-  //       }}
-  //       title={cell}
-  //     />
-  //   ),
-  // },
-
-  {
-    dataField: "action",
-    text: "Actions",
-    isDummyField: true,
-    formatter: ActionsColumnFormatter,
-    formatExtraData: {
-      openEditFormDialog: formUIProps.openEditFormDialog,
-      openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-      openActiveFormDialog: formUIProps.openActiveFormDialog,
-      openReadFormDialog: formUIProps.openReadFormDialog,
-      isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-      isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
-      isAccessForDelete: isAccessForDelete
-        ? isAccessForDelete.isAccess
-        : false,
+  const columns = [
+    {
+      dataField: "asset_no",
+      text: "Asset No.",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "180px" },
     },
-    classes: "text-right pr-0",
-    headerClasses: "text-right pr-3",
-    style: {
-      minWidth: "100px",
+
+
+    {
+      dataField: "AssetModel.name",
+      text: "Model Name",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "200px" },
+      formatter: (_, row) => {
+        const modelName = row.AssetModel?.name || "";
+        const makeName = row.AssetModel?.AssetMake?.formName || "";
+
+        return makeName
+          ? `${modelName} (${makeName})`
+          : modelName;
+      },
     },
-  },
-];
+
+    {
+      dataField: "AssetCategory.formName",
+      text: "Asset Category",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "200px" },
+      formatter: (_, row) => row.AssetCategory?.formName || "",
+    },
+
+    // {
+    //   dataField: "asset_year",
+    //   text: "Asset Year",
+    //   sort: false,
+    //   sortCaret,
+    //   headerSortingClasses,
+    //   style: { minWidth: "120px" },
+    // },
+
+    {
+      dataField: "date_of_acquisition",
+      text: "Date of Acquisition",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "180px" },
+      formatter: (cell) =>
+        cell ? format(new Date(cell), "dd-MMM-yyyy") : "",
+    },
+
+    {
+      dataField: "date_of_expiry",
+      text: "Date of Expiry",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "180px" },
+      formatter: (cell) =>
+        cell ? format(new Date(cell), "dd-MMM-yyyy") : "",
+    },
+
+    {
+      dataField: "AssignedEmployee.fullName",
+      text: "Asset Assigned To",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "220px" },
+      formatter: (_, row) =>
+        row.AssignedEmployee?.fullName ||
+        statusOptions.find(item => item.value === row.status)?.label ||
+        "-",
+    },
+
+
+
+    // {
+    //   dataField: "purchase_price",
+    //   text: "Purchase Price",
+    //   sort: false,
+    //   sortCaret,
+    //   headerSortingClasses,
+    //   style: { minWidth: "160px" },
+    //   formatter: (cell) =>
+    //     cell ? Number(cell).toLocaleString() : "",
+    // },
+
+    // {
+    //   dataField: "color",
+    //   text: "Color",
+    //   sort: false,
+    //   sortCaret,
+    //   headerSortingClasses,
+    //   style: { minWidth: "120px" },
+    //   formatter: (cell) => (
+    //     <div
+    //       style={{
+    //         width: 20,
+    //         height: 20,
+    //         borderRadius: 4,
+    //         background: cell,
+    //         border: "1px solid #ccc",
+    //       }}
+    //       title={cell}
+    //     />
+    //   ),
+    // },
+
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        openEditFormDialog: formUIProps.openEditFormDialog,
+        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        openActiveFormDialog: formUIProps.openActiveFormDialog,
+        openReadFormDialog: formUIProps.openReadFormDialog,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
+        isAccessForDelete: isAccessForDelete
+          ? isAccessForDelete.isAccess
+          : false,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "100px",
+      },
+    },
+  ];
 
   //Table pagination properties
   const paginationOptions = {
