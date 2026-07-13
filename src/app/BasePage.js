@@ -679,6 +679,20 @@ import ("./modules/DepartmentDesignationMapping/pages/index"))
 const ticket_escalation_policy = lazy (() =>
 import ("./modules/Ticket_Escalation_Policy/pages/index"))
 
+const asset_model = lazy (() =>
+import ("./modules/Asset_Model/pages/index"))
+
+const asset_register = lazy (() =>
+import ("./modules/Asset_Register/pages/index"))
+
+const asset_assignment = lazy (() =>
+import ("./modules/Asset_Assignment/pages/index"))
+
+
+const asset_disposal = lazy (() =>
+import ("./modules/Asset_Disposal/pages/index"))
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -904,6 +918,11 @@ const ROUTES = {
   budget_setup_year: budget_year_setup,
   manpower_budget_dashboard : manpower_budget_dashboard,
   department_designation_map: department_designation_mapping,
+  asset_model: asset_model,
+  asset_register: asset_register,
+  asset_assignment: asset_assignment,
+  asset_disposal: asset_disposal,
+
   ticket_escalation_policy: ticket_escalation_policy,
 
 };

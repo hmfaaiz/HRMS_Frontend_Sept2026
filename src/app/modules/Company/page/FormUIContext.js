@@ -47,6 +47,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     appraisal : false,
     task : false,
     "Manpower Budget" : false,
+    asset: false,
     policyToShowNameOnReport: "",
     policyForCalWorkingHours: "",
     hrms_portal_link: "",
