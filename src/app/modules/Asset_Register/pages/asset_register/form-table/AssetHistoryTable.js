@@ -82,13 +82,13 @@ export function AssetHistoryTable({ Id }) {
                 row.AssignedEmployee?.designation?.formName || "-",
         },
 
-        {
-            dataField: "AssignedEmployee.department.deptName",
-            text: "Department",
-             style: { minWidth: "100px" },
-            formatter: (_, row) =>
-                row.AssignedEmployee?.department?.deptName || "-",
-        },
+        // {
+        //     dataField: "AssignedEmployee.department.deptName",
+        //     text: "Department",
+        //      style: { minWidth: "100px" },
+        //     formatter: (_, row) =>
+        //         row.AssignedEmployee?.department?.deptName || "-",
+        // },
 
         {
             dataField: "date_of_assignment",

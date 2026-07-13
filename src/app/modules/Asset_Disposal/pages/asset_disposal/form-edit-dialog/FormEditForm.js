@@ -148,10 +148,8 @@ export function FormEditForm({
 
 
                     </div>
-                  </div>
 
 
-                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="">
                       <SearchSelect
                         name="asset_registerId"
@@ -185,10 +183,8 @@ export function FormEditForm({
                       />
 
                     </div>
-                  </div>
 
 
-                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
                       <SearchSelect
                         name="disposal_typeId"
@@ -223,7 +219,15 @@ export function FormEditForm({
 
 
                     </div>
+
+
+
+
                   </div>
+
+
+
+
 
 
 
@@ -247,12 +251,7 @@ export function FormEditForm({
                         maxDate={new Date()}
                       />
                     </div>
-                  </div>
 
-
-
-
-                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="">
                       <AmountInput
                         field={{
@@ -285,11 +284,18 @@ export function FormEditForm({
                   </div>
 
 
+
+
+                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+
+                  </div>
+
+
                   <div className="col-span-3">
                     <Field
                       name="remarks"
                       component={TextArea}
-                      placeholder="Enter document remarks"
+                      placeholder="Enter disposal remarks"
                       className="form-control" // Force full height
                       label={
                         <span>

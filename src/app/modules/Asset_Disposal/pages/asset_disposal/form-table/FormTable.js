@@ -49,7 +49,7 @@ export function FormTable() {
 
   const { totalCount, entities, listLoading } = currentState;
 
-console.log("userAccess11111",userAccess)
+  console.log("userAccess11111", userAccess)
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateAssetDisposal"
   );
@@ -88,7 +88,15 @@ console.log("userAccess11111",userAccess)
     {
       dataField: "AssetRegister.AssetModel.name",
       text: "Model Name",
-      formatter: (_, row) => row.AssetRegister?.AssetModel?.name || "",
+      formatter: (_, row) => {
+        const modelName = row.AssetRegister?.AssetModel?.name || "";
+        const companyName =
+          row.AssetRegister?.AssetModel?.AssetMake?.formName || "";
+
+        return companyName
+          ? `${modelName} (${companyName})`
+          : modelName;
+      },
     },
     {
       dataField: "AssetRegister.AssetCategory.formName",
