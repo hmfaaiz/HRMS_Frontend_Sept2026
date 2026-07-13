@@ -40,3 +40,6 @@ export function deleteReimbursementConfigPolicy(body) {
 
   return axios.patch(`${USERS_URL}/reimbursement_configuration/delete-reimbursement-configuration-policy`, body);
 }
+export function getActiveEarningsBySubsidiary(body) {
+  return axios.post(`${USERS_URL}/reimbursement_configuration/read-active-earnings-by-subsidiary`, body);
+}

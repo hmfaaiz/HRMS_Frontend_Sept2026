@@ -504,7 +504,7 @@ export function MasterEditForm({
 
                     </div>
                     {/* Allow Edit Leave Lines / Policy Field Start */}
-                    <div className="col-span-1 flex flex-col justify-end pb-2">
+                    <div className="col-span-2 sm:col-span-3 flex flex-col justify-end pb-2">
                       <label className="font-bold mb-1 text-primary">Policy</label>
                       <div className="flex items-center gap-2">
                         <input
@@ -521,10 +521,25 @@ export function MasterEditForm({
                         Allow user to edit leave lines on leave application and request form.
                       </label>
                       </div>
+                      <div className="flex items-center gap-2">
+                        <input
+                        type="checkbox"
+                        name="allowUnpaidLeaves"
+                        id="allowUnpaidLeaves"
+                        onChange={(e) => {
+                        setFieldValue("allowUnpaidLeaves", e.target.checked);
+                      }}
+                      checked={Boolean(values.allowUnpaidLeaves)}
+                      disabled={isUserForRead}
+                      />
+                      <label htmlFor="allowUnpaidLeaves" className="mb-0 text-sm">
+                        Allow Unpaid Leaves.
+                      </label>
+                      </div>
                     </div>
                     {/* Weekends Field Start */}
                     {/* {console.log("WEEK_DAYSWEEK_DAYS" , WEEK_DAYS)} */}
-                    <div className="col-span-3">
+                    {/* <div className="col-span-3">
                       <label>
                           <span>
                             {" "}
@@ -535,47 +550,7 @@ export function MasterEditForm({
                           </span>
                       </label>
                     <div className="grid-cols-4 grid lg:grid-cols-7 gap-x-3">
-                      {/* <Field
-                        name="weekend"
-                        component={Select}
-                        className={
-                          errors.weekend && touched.weekend
-                            ? "form-control is-invalid"
-                            : "form-control"
-                        }
-                        placeholder=""
-                        multiple={true}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const data = Array.from(
-                            e.target.selectedOptions,
-                            (option) => option.value
-                          );
-                          setFieldValue(
-                            "weekend",
-                            data.map((el) => Number(el))
-                          );
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Weekends
-                            {Boolean(values.isSandwich) && (
-                              <span style={{ color: "red" }}>*</span>
-                            )}
-                          </span>
-                        }
-                        value={values.weekend}
-                        autoComplete="off"
-                        children={createDropdown(WEEK_DAYS)}
-                      />
-                      {errors.weekend && touched.weekend && (
-                        <CustomErrorLabel
-                          touched={true}
-                          error={errors.weekend}
-                        />
-                      )} */}
-
+                 
                       {WEEK_DAYS?.map((el,ind)=>{
                         return (
                           <Checkbox 
@@ -591,7 +566,7 @@ export function MasterEditForm({
                         )
                       })}
                     </div>
-                    </div>
+                    </div> */}
                     {/* Weekends Field End */}
 
 

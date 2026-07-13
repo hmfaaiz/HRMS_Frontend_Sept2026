@@ -58,24 +58,24 @@ export function SubsidiaryOnboardingTable() {
 
   // Table columns
   const columns = [
-    {
-      dataField: "SubsidiaryDetail",
-      text: "Subsidiary",
-      formatter: (cell) => cell?.name || "-",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "150px" },
-    },
-    {
-      dataField: "DepartmentDetail",
-      text: "No. of Task",
-      formatter: (cell) => (Array.isArray(cell) ? cell.length : 0),
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "150px" },
-    },
+  {
+    dataField: "SubsidiaryDetail.name",
+    text: "Subsidiary",
+    formatter: (cell, row) => row["SubsidiaryDetail.name"] || "-",
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    style: { minWidth: "150px" },
+  },
+  {
+    dataField: "taskCount",
+    text: "No. of Task",
+    formatter: (cell) => cell || 0,
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    style: { minWidth: "150px" },
+  },
     {
       dataField: "action",
       text: "Actions",
@@ -94,7 +94,7 @@ export function SubsidiaryOnboardingTable() {
     },
   ];
 
-  // const safeEntities = Array.isArray(entities) ? entities : [];
+const safeEntities = Array.isArray(entities) ? entities : [];
   const groupedEntities = useMemo(() => {
     if (!Array.isArray(entities)) return [];
 
@@ -139,9 +139,9 @@ export function SubsidiaryOnboardingTable() {
             bootstrap4
             remote
             // keyField="Id"
-            // data={safeEntities}
+            data={safeEntities}
             keyField="subsidiaryId"
-            data={groupedEntities}
+            // data={groupedEntities}
             columns={columns}
             defaultSorted={uiHelpers.defaultSorted}
             onTableChange={getHandlerTableChange(uiProps.setQueryParams)}

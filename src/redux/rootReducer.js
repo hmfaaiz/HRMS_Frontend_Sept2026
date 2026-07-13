@@ -243,6 +243,7 @@ import { AssetAssignmentSlice } from "../app/modules/Asset_Assignment/_redux/red
 import { AssetDisposalSlice } from "../app/modules/Asset_Disposal/_redux/redux-Slice";
 
 
+import { ticketEscalationPolicySlice } from "../app/modules/Ticket_Escalation_Policy/_redux/redux-Slice"
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -482,6 +483,7 @@ export const rootReducer = combineReducers({
   asset_register: AssetRegisterSlice.reducer,
   asset_assignment: AssetAssignmentSlice.reducer,
   asset_disposal: AssetDisposalSlice.reducer,
+  ticket_escalation_policy: ticketEscalationPolicySlice.reducer,
 
 });
 

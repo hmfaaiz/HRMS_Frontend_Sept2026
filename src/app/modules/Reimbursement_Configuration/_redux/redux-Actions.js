@@ -172,3 +172,17 @@ export const deleteReimbursementConfigPolicy = (data) => (dispatch) => {
       toast.error(SERVER_MESSAGES.deletedFail);
     });
 };
+export const fetchActiveEarningsBySubsidiary = (subsidiaryId) => (dispatch) => {
+  return requestFromServer
+    .getActiveEarningsBySubsidiary({ subsidiaryId })
+    .then((response) => {
+      const entities = (response.data?.data || []).map((e) => ({
+        label: e.earningName,
+        value: e.Id,
+      }));
+      dispatch(actions.reimbursementConfigEarningsFetched(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};

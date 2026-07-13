@@ -46,7 +46,7 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       ) : null}
-      <OverlayTrigger
+      {/* <OverlayTrigger
         overlay={
           <Tooltip id="products-edit-tooltip">View Employee Analaytics</Tooltip>
         }
@@ -61,7 +61,7 @@ export function ActionsColumnFormatter(
         >
           <IdCardLanyard className="w-4 h-4 text-black cursor-pointer" />
         </a>
-      </OverlayTrigger>
+      </OverlayTrigger> */}
       {isAccessForRead && row?.isSubmitted && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}

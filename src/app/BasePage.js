@@ -676,7 +676,8 @@ const manpower_budget_dashboard = lazy (() =>
 import ("./modules/Manpower_Budget_Dashboard/pages/index"))
 const department_designation_mapping = lazy (() =>
 import ("./modules/DepartmentDesignationMapping/pages/index"))
-
+const ticket_escalation_policy = lazy (() =>
+import ("./modules/Ticket_Escalation_Policy/pages/index"))
 
 const asset_model = lazy (() =>
 import ("./modules/Asset_Model/pages/index"))
@@ -922,6 +923,7 @@ const ROUTES = {
   asset_assignment: asset_assignment,
   asset_disposal: asset_disposal,
 
+  ticket_escalation_policy: ticket_escalation_policy,
 
 };
 
