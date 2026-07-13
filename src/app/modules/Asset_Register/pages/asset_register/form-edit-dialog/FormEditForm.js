@@ -177,7 +177,7 @@ export function FormEditForm({
   ];
 
   const currentConditionOptions = [
-   
+
     { value: 1, label: "New" },
     { value: 2, label: "Excellent" },
     { value: 3, label: "Fair" },
@@ -467,10 +467,15 @@ export function FormEditForm({
                         className="form-control"
                         value={
                           values.current_assigned_employeeId
-                            ? dashboard?.allEmployees?.find(
-                              (x) =>
-                                Number(x.value) === Number(values.current_assigned_employeeId)
-                            )?.label
+                            ? (() => {
+                              const employee = dashboard?.allEmployees?.find(
+                                (x) => Number(x.value) === Number(values.current_assigned_employeeId)
+                              );
+
+                              return employee
+                                ? `${employee.label} - ${employee.department}`
+                                : "Select employee";
+                            })()
                             : statusOptions.find(
                               item => item.value === Number(values.status)
                             )?.label || "Select employee"
@@ -480,14 +485,14 @@ export function FormEditForm({
                       />
                     </div>
 
-                     <div className="">
+                    <div className="">
 
 
                       <SearchSelect
                         name="current_conditionId"
                         component={Input}
                         placeholder="Select Current Condition"
-                        className="form-control" 
+                        className="form-control"
                         value={currentConditionOptions?.find(
                           (x) => Number(x.value) === Number(values.current_conditionId),
                         )}
@@ -576,7 +581,7 @@ export function FormEditForm({
                       />
 
                     </div>
-                   
+
 
 
 
