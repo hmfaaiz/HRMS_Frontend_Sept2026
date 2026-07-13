@@ -6,14 +6,13 @@ const { actions } = AttendanceApprovalSlice;
 
 export const fetchAttendanceApprovalApplication = (
   queryparm,
-  employeeId
+  employeeId,
 ) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.list }));
   if (employeeId) {
     return requestFromServer
       .getAllAttendanceApproval({ ...queryparm, employeeId })
       .then((response) => {
- 
         dispatch(actions.LeaveApprovalApplicationFetched(response));
       })
       .catch((error) => {
@@ -82,5 +81,37 @@ export const handleAttendanceRequest = (body, resetForm) => () => {
     .catch((error) => {
       error.clientMessage = "Can't Handle Attendance Request";
       toast.error(SERVER_MESSAGES.updatedFail);
+    });
+};
+
+export const getAttendanceRequestData = (Id, onHide) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getAttendanceRequset(Id)
+    .then((res) => {
+      dispatch(actions.AttDetailFetched(res?.data?.data));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Fetch Attendance Request";
+      toast.error("Can't Fetch Attendance Request");
+      onHide();
+    });
+};
+
+export const updateAttendanceRequestData = (body, disbaleLoading, onHide) => (
+  dispatch,
+) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .updateAttendanceRequset(body)
+    .then((res) => {
+      dispatch(actions.AttDetailUpdate());
+      disbaleLoading(false);
+      onHide();
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Update Attendance Request";
+      toast.error(error?.message || "Can't Update Attendance Request");
+      disbaleLoading();
     });
 };

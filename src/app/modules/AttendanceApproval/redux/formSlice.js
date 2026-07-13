@@ -7,6 +7,7 @@ const initialState = {
   entities: null,
   payrollData: null,
   workflowStatusList: [],
+  attDetail: {},
 };
 
 export const callTypes = {
@@ -52,6 +53,14 @@ export const AttendanceApprovalSlice = createSlice({
       state.actionsLoading = false;
       state.error = null;
       state.workflowStatusList = data;
+    },
+    AttDetailFetched: (state, action) => {
+      state.attDetail = action.payload;
+      state.actionsLoading = false;
+    },
+    AttDetailUpdate: (state, action) => {
+      state.attDetail = {};
+      state.actionsLoading = false;
     },
   },
 });
