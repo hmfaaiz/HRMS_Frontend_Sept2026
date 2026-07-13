@@ -11,21 +11,42 @@ import PatternListForm from "./PatternListForm";
 const assetSchema = Yup.object().shape({
   asset_makeId: Yup.string().required(VALIDATION_MESSAGES.required),
 
-  list: Yup.array().of(
-    Yup.object().shape({
-      sno: Yup.number().required(VALIDATION_MESSAGES.required),
+  list: Yup.array()
+    .of(
+      Yup.object().shape({
+        sno: Yup.number().required(),
 
-      name: Yup.string()
-        .trim()
-        .max(50, "Maximum 50 characters allowed")
-        .required(VALIDATION_MESSAGES.required),
+        asset_categoryId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
 
-      description: Yup.string()
-        .trim()
-        .max(100, "Maximum 100 characters allowed")
-        .required(VALIDATION_MESSAGES.required),
-    })
-  ),
+        name: Yup.string()
+          .trim()
+          .max(50)
+          .required(VALIDATION_MESSAGES.required),
+
+        description: Yup.string()
+          .trim()
+          .max(100)
+          .required(VALIDATION_MESSAGES.required),
+      })
+    )
+    .test(
+      "unique-category-name",
+      "Same name is not allowed in the same category",
+      function (list) {
+        if (!list) return true;
+
+        const keys = list
+          .filter(item => item.name && item.asset_categoryId)
+          .map(
+            item =>
+              `${item.asset_categoryId}_${item.name.trim().toLowerCase()}`
+          );
+
+        return keys.length === new Set(keys).size;
+      }
+    ),
 });
 
 export function FormEditForm({
@@ -80,6 +101,7 @@ export function FormEditForm({
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
+
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
                 <div className="spinner spinner-lg spinner-success" />
@@ -87,6 +109,7 @@ export function FormEditForm({
             )}
 
             <Form className="form form-label-right">
+              {console.log("errors1111", errors)}
               <fieldset disabled={isdataForRead}>
                 <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                   <div>
