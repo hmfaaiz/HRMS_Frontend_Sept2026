@@ -23,14 +23,23 @@ function PatternListForm({
 
   }, [values?.list, setFieldValue]);
 
-
+const activeStatusOptions = [
+  {
+    label: "Active",
+    value: 1,
+  },
+  {
+    label: "Inactive",
+    value: 0,
+  },
+];
 
   return (
     <FieldArray name="list">
       {({ remove, push }) => (
         <>
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h6 className="font-bold mb-0 text-primary">Asset List</h6>
+            <h6 className="font-bold mb-0 text-primary">Asset Inspection List</h6>
 
             {!isdataForRead && (
               <button
@@ -43,7 +52,7 @@ function PatternListForm({
 
                     description: "",
                     sno: "",
-                    active_status: "",
+                    active_status:1,
 
 
                   })
@@ -60,13 +69,13 @@ function PatternListForm({
               <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                 <thead>
                   <tr className="custom-table-header">
-                    <td style={{ width: "50px" }}>S.No.</td>
+                    <td style={{ width: "80px" }}>S.No.</td>
 
 
 
 
-                    <td style={{ width: "320px" }}>Description</td>
-                    <td style={{ width: "320px" }}>Status</td>
+                    <td style={{ width: "520px" }}>Description</td>
+                    <td style={{ width: "80px" }}>Status</td>
 
                     {!isdataForRead && (
                       <td className="text-right" style={{ width: "90px" }}>
@@ -133,7 +142,7 @@ function PatternListForm({
 
                       {/* Status */}
                       {/* Status */}
-                      <td>
+                      {/* <td>
                         <Field
                           as="select"
                           name={`list[${index}].active_status`}
@@ -163,7 +172,48 @@ function PatternListForm({
                               {errors.list[index].active_status}
                             </div>
                           )}
-                      </td>
+                      </td> */}
+
+                      <td>
+                      
+                                              <SearchSelect
+                                                name={`list[${index}].active_status`}
+                                                className={
+                                                  errors?.list?.[index]?.active_status &&
+                                                    touched?.list?.[index]?.active_status
+                                                    ? "form-control is-invalid"
+                                                    : "form-control"
+                                                }
+                                                disabled={isdataForRead}
+                                                value={activeStatusOptions ?.find(
+                                                  (x) =>
+                                                    Number(x.value) ===
+                                                    Number(values?.list?.[index]?.active_status)
+                                                )}
+                                                onChange={(e) => {
+                                                  setFieldValue(
+                                                    `list[${index}].active_status`,
+                                                     e ? e.value : null
+                                                  );
+                                                }}
+                                                options={activeStatusOptions }
+                                                autoComplete="off"
+                                              />
+                                              {errors?.list?.[index]?.active_status &&
+                                                touched?.list?.[index]?.active_status && (
+                                                  <div className="invalid-feedback">
+                                                    {errors.list[index].active_status}
+                                                  </div>
+                                                )}
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                                            </td>
+                      
 
                       {/* Delete */}
                       {!isdataForRead && (

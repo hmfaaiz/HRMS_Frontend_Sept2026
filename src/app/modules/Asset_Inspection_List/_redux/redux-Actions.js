@@ -6,14 +6,14 @@ import { toast } from "react-toastify";
 const { actions } = AssetInspectionListSlice;
 
 
-export const fetchExitTypeExitReason = (queryparm) => async (dispatch) => {
+export const fetchAssetInspectionList = (queryparm) => async (dispatch) => {
   
-  return requestFromServer.getAllAccrueGratuityConfig(queryparm)
+  return requestFromServer.getAllAssetInspectionList(queryparm)
    
     .then((response) => {
     
    
-      dispatch(actions.accrueGratuityConfigFetched(response));
+      dispatch(actions.assetInspectionListFetched(response));
     })
     .catch((error) => {
       
@@ -22,20 +22,20 @@ export const fetchExitTypeExitReason = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchExitTypeExitReasonDataForEdit = (Id) => (dispatch) => {
+export const fetchAssetInspectionListDataForEdit = (Id) => (dispatch) => {
 
 
   if (!Id) {
-    return dispatch(actions.AccrueGratuityConfigFetchedForEdit({ dataForEdit: undefined }));
+    return dispatch(actions.AssetInspectionListFetchedForEdit({ dataForEdit: undefined }));
   }
 
   return requestFromServer
-    .getAccrueGratuityConfigById(Id)
+    .getAssetInspectionListById(Id)
     .then((response) => {
       const entities = response.data?.data;
 
     
-      dispatch(actions.AccrueGratuityConfigFetchedForEdit({ dataForEdit: entities }));
+      dispatch(actions.AssetInspectionListFetchedForEdit({ dataForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -43,12 +43,12 @@ export const fetchExitTypeExitReasonDataForEdit = (Id) => (dispatch) => {
     });
 };
 
-export const deleteExitTypeExitReason = (id) => (dispatch) => {
+export const deleteAssetInspectionList = (id) => (dispatch) => {
   return requestFromServer
-    .deleteExitTypeExitReason({ Id: id })
+    .deleteAssetInspectionList({ Id: id })
     .then((response) => {
 
-      dispatch(actions.AccrueGratuityConfigDeleted({ Id: id }));
+      dispatch(actions.AssetInspectionListDeleted({ Id: id }));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -66,18 +66,18 @@ export const deleteExitTypeExitReason = (id) => (dispatch) => {
 };
 
 
-export const createExitTypeExitReason = (accrueGratuityConfigForCreation, disbaleLoading, onHide) => (
+export const createAssetInspectionList = (assetInspectionListForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   return requestFromServer
-    .createExitTypeExitReason(accrueGratuityConfigForCreation)
+    .createAssetInspectionList(assetInspectionListForCreation)
     .then((res) => {
       
       const user = res.data?.data;
      
 
-      dispatch(actions.accrueGratuityConfigCreated(user));
+      dispatch(actions.assetInspectionListCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess,{
         position: "top-right",
@@ -106,16 +106,16 @@ export const createExitTypeExitReason = (accrueGratuityConfigForCreation, disbal
     });
 };
 
-export const updateExitTypeExitReason = (data, disbaleLoading, onHide) => (dispatch) => {
+export const updateAssetInspectionList = (data, disbaleLoading, onHide) => (dispatch) => {
 
   return requestFromServer
 
-    .updateExitTypeExitReason(data)
+    .updateAssetInspectionList(data)
     .then((response) => {
   
-      const updatedAccrueGratuityConfig = response?.config?.data; // response.data?.data;
+      const updatedAssetInspectionList = response?.config?.data; // response.data?.data;
     
-      dispatch(actions.accrueGratuityConfigUpdated({ updatedAccrueGratuityConfig }));
+      dispatch(actions.assetInspectionListUpdated({ updatedassetInspectionList }));
     
       disbaleLoading();
       onHide();

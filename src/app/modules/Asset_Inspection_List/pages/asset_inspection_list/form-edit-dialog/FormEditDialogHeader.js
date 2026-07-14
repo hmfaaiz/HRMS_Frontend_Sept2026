@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Asset Model";
+    let _title = id ? "" : "Add Asset Inspection List";
     if (id) {
-      _title = `Edit Asset Model`;
+      _title = `Edit Asset Inspection List`;
     } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }
@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isdataForRead ? title : "View Asset Model"}
+          {!isdataForRead ? title : "View Asset Inspection List"}
         </Modal.Title>
       </Modal.Header>
     </>

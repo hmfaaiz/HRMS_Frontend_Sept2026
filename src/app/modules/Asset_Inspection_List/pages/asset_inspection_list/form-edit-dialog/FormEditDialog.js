@@ -60,9 +60,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchExitTypeExitReasonDataForEdit(id));
+    dispatch(actions.fetchAssetInspectionListDataForEdit(id));
 
-    // dispatch(actions.fetchExitTypeExitReasonDataForEdit(formUIProps .queryParams))
+    // dispatch(actions.fetchAssetInspectionListDataForEdit(formUIProps .queryParams))
   }, [id, dispatch,show]);
 
 
@@ -74,8 +74,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
  
     
       const finalObject = { data }
-      await dispatch(actions.createExitTypeExitReason(data, disbaleLoading, onHide));
-      await dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
+      await dispatch(actions.createAssetInspectionList(data, disbaleLoading, onHide));
+      await dispatch(actions.fetchAssetInspectionList(usersUIProps.queryParams));
       
 
     } else {
@@ -90,8 +90,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
       
 
-     await dispatch(actions.updateExitTypeExitReason(formUpdatedFields, disbaleLoading, onHide));
-     await dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
+     await dispatch(actions.updateAssetInspectionList(formUpdatedFields, disbaleLoading, onHide));
+     await dispatch(actions.fetchAssetInspectionList(usersUIProps.queryParams));
     }
   };
 

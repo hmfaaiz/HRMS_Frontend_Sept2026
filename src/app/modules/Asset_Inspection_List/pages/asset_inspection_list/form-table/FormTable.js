@@ -58,7 +58,7 @@ console.log("entities11111",entities)
     formUIProps.setIds([]);
 
 
-    dispatch(actions.fetchExitTypeExitReason(formUIProps.queryParams));
+    dispatch(actions.fetchAssetInspectionList(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(

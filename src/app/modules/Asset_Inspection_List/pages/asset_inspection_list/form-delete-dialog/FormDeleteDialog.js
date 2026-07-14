@@ -42,13 +42,13 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteExitTypeExitReason = () => {
+  const deleteAssetInspectionList = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteExitTypeExitReason(id)).then(() => {
+    dispatch(actions.deleteAssetInspectionList(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
+      dispatch(actions.fetchAssetInspectionList(usersUIProps.queryParams));
    
       disableLoading();
     });
@@ -84,7 +84,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteExitTypeExitReason}
+            onClick={deleteAssetInspectionList}
             className="btn btn-danger btn-elevate"
           >
             Delete 

@@ -32,7 +32,7 @@ export const AssetInspectionListSlice = createSlice({
             }
         },
    
-        accrueGratuityConfigFetched: (state, action) => {
+        assetInspectionListFetched: (state, action) => {
         
     
             const entities = action.payload.data?.data.rows;
@@ -51,7 +51,7 @@ export const AssetInspectionListSlice = createSlice({
  
        
        
-         AccrueGratuityConfigFetchedForEdit: (state, action) => {
+         AssetInspectionListFetchedForEdit: (state, action) => {
            
  
             state.actionsLoading = false;
@@ -60,7 +60,7 @@ export const AssetInspectionListSlice = createSlice({
         },
 
       
-        AccrueGratuityConfigDeleted: (state, action) => {
+        AssetInspectionListDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -70,7 +70,7 @@ export const AssetInspectionListSlice = createSlice({
                 (el) => el.Id !== action.payload.Id
             );
         },
-        accrueGratuityConfigCreated: (state, action) => {
+        assetInspectionListCreated: (state, action) => {
            
             state.actionsLoading = false;
             state.error = null;
@@ -83,7 +83,7 @@ export const AssetInspectionListSlice = createSlice({
       
       
       
-        accrueGratuityConfigUpdated: (state, action) => {
+        assetInspectionListUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
@@ -93,9 +93,9 @@ export const AssetInspectionListSlice = createSlice({
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
-                let finalObj = JSON.parse(payloadObj.updatedAccrueGratuityConfig);
+                let finalObj = JSON.parse(payloadObj.updatedAssetInspectionList);
                 if (entity.Id === finalObj.Id) {
-                    return finalObj; //action.payload.updatedAccrueGratuityConfig;
+                    return finalObj; //action.payload.updatedAssetInspectionList;
                 }
                 return entity;
             });
