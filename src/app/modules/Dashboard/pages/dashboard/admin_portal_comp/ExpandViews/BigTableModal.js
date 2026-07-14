@@ -61,7 +61,7 @@ const BigTableModal = ({ onHide, show, data }) => {
           if (isAmount) {
             return (
               <div>
-                {cell || "0"}
+                {cell || "-"}
                 {/* {Number(cell).toLocaleString("en-US", {
                       minimumFractionDigits: 1,
                       maximumFractionDigits: 1,

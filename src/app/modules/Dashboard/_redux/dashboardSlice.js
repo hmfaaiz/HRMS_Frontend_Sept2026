@@ -120,6 +120,10 @@ const initialDashboardState = {
   budgetRequestList: [],
   allCompDeptList: [],
   allDesignationByDeptList: [],
+  allAssetMakeList: [],
+  allAssetModelNameList: [],
+  allAssetCategoryList: [],
+  allRegisterAssetList: [],
 };
 
 export const callTypes = {
@@ -347,9 +351,7 @@ export const dashboardSlice = createSlice({
     AllParentDeptFetch: (state, action) => {
       state.allParentDept = action.payload;
     },
-    AllParentDeptFetch: (state, action) => {
-      state.allParentDept = action.payload;
-    },
+  
     AllPayrollAccountListFetch: (state, action) => {
       state.allPayrollAccountList = action.payload;
     },
@@ -504,6 +506,13 @@ export const dashboardSlice = createSlice({
     },
     AllDesignationByhDeptFetch: (state, action) => {
       state.allDesignationByDeptList = action.payload;
+    },
+
+    AllAssetModelNameFetch: (state, action) => {
+      state.allAssetModelNameList = action.payload;
+    },
+  AllRegisterAssetNameFetch: (state, action) => {
+      state.allRegisterAssetList = action.payload;
     },
 
   }
