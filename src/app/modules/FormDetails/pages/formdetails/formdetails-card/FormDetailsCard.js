@@ -94,11 +94,10 @@ export function FormCard() {
             {/* {FormUIProps.queryParams.moduleType == 2 ? ( */}
             <button
               type="button"
-              className={`btn mr-2 rounded-xl ${
-                FormUIProps.queryParams.moduleType === 1
+              className={`btn mr-2 rounded-xl ${FormUIProps.queryParams.moduleType === 1
                   ? "bg-black text-white"
                   : "btn-secondary"
-              }`}
+                }`}
               onClick={() => switchModule(1)}
             >
               Employee
@@ -106,38 +105,45 @@ export function FormCard() {
             {/* ) : ( */}
             <button
               type="button"
-              className={`btn mr-2 rounded-xl ${
-                FormUIProps.queryParams.moduleType === 2
+              className={`btn mr-2 rounded-xl ${FormUIProps.queryParams.moduleType === 2
                   ? "bg-black text-white"
                   : "btn-secondary"
-              }`}
+                }`}
               onClick={() => switchModule(2)}
             >
               Recruitment
             </button>
 
-            
 
-               <button
+
+            <button
               type="button"
-              className={`btn mr-2 rounded-xl ${
-                FormUIProps.queryParams.moduleType === 3
+              className={`btn mr-2 rounded-xl ${FormUIProps.queryParams.moduleType === 3
                   ? "bg-black text-white"
                   : "btn-secondary"
-              }`}
+                }`}
               onClick={() => switchModule(3)}
             >
               Appraisal
             </button>
 
 
-
+            <button
+              type="button"
+              className={`btn mr-2 rounded-xl ${FormUIProps.queryParams.moduleType === 4
+                  ? "bg-black text-white"
+                  : "btn-secondary"
+                }`}
+              onClick={() => switchModule(4)}
+            >
+              Asset
+            </button>
 
 
             {/* )} */}
 
 
-            
+
           </div>
           {/* <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
             <div className="flex items-center gap-2">

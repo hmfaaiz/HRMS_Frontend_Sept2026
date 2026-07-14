@@ -189,7 +189,7 @@ const handleToggle = () => {
     Status: attendanceDetail?.Status === "01" ? "02" : "01",
     isLate,
   };
-
+console.log("attendanceBody11111",attendanceBody)
   if (isLate && attendanceBody.Status === "01" && isLateReasonAllow && !recordAlreadyExist) {
     setPendingAttendanceBody(attendanceBody);
     setShowLateModal(true);

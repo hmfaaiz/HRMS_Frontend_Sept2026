@@ -74,14 +74,15 @@ export function FormTable() {
       headerSortingClasses,
       style: { minWidth: "150px" },
     },
-    {
-      dataField: "department",
-      text: "department",
-      sort: true,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "120px" },
-    },
+   {
+    dataField: "departmentCount",
+    text: "Department",
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    formatter: (cell) => <span>{cell || 0}</span>,
+    style: { minWidth: "120px" },
+  },
  
     {
       dataField: "isApproved", 
@@ -115,30 +116,33 @@ export function FormTable() {
   ];
 
   const groupedData = useMemo(() => {
-    if (!entities?.results) return [];
+  if (!entities?.results) return [];
+  const employeeMap = {};
 
-    // Group tasks by employeeId
-    const employeeMap = {};
-    entities.results.forEach((task) => {
-      const empId = task.employeeId;
-      if (!employeeMap[empId]) {
-        employeeMap[empId] = {
-          Id: empId,
-          employeeId: empId, 
-          employeeName: task.employeeName,
-          department: task.department,
-          // optional: aggregate taskStatus ( 'Completed', 'Not Completed', etc.)
-          taskStatus: task.taskStatus,
-          isApproved: task.isApproved,  // Added: Include isApproved from backend
-          tasks: [task], // keep tasks array for edit/view
-        };
-      } else {
-        employeeMap[empId].tasks.push(task);
-      }
-    });
+  entities.results.forEach((task) => {
+    const empId = task.employeeId;
+    if (!employeeMap[empId]) {
+      employeeMap[empId] = {
+        Id: empId,
+        employeeId: empId,
+        employeeName: task.employeeName,
+        departmentSet: new Set(), // track distinct departments
+        isApproved: task.isApproved,
+        tasks: [task],
+      };
+    } else {
+      employeeMap[empId].tasks.push(task);
+    }
+    if (task.department) {
+      employeeMap[empId].departmentSet.add(task.department);
+    }
+  });
 
-    return Object.values(employeeMap);
-  }, [entities]);
+  return Object.values(employeeMap).map((emp) => ({
+    ...emp,
+    departmentCount: emp.departmentSet.size,
+  }));
+}, [entities]);
 
     const totalGroupedCount = groupedData.length;
     const paginationOptions = {

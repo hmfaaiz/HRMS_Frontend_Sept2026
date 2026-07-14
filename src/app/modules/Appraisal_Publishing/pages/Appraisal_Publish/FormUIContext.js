@@ -12,6 +12,9 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [yearId, setYearId] = useState(null);
   const [appraisalCategoryId, setAppraisalCategoryId] = useState(null);
+  const [appraisalPublishMasterId, setAppraisalPublishMasterId] = useState(
+    null,
+  );
 
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
@@ -33,6 +36,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setYearId,
     appraisalCategoryId,
     setAppraisalCategoryId,
+    appraisalPublishMasterId,
+    setAppraisalPublishMasterId,
     openPublishFormDialog: FormUIEvents.openPublishFormDialog,
     openAuthortiesFormDialog: FormUIEvents.openAuthortiesFormDialog,
     openDetailFormDialog: FormUIEvents.openDetailFormDialog,

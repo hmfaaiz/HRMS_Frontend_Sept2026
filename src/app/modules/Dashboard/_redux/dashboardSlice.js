@@ -111,7 +111,7 @@ const initialDashboardState = {
   allTicket: [],
   ticket: {},
   allMasterTicketType: [],
-  portalInfo : {},
+  portalInfo: {},
   allCompanyEmployeesData: [],
   allCurrentParentTask: [],
   allAlertTask: [],
@@ -120,6 +120,12 @@ const initialDashboardState = {
   budgetRequestList: [],
   allCompDeptList: [],
   allDesignationByDeptList: [],
+  allAssetMakeList: [],
+  allAssetModelNameList: [],
+  allAssetCategoryList: [],
+  allRegisterAssetList: [],
+  allPresentUnassignedCategoryList: [],
+  allPresentUnassignedMakeCompanyList: [],
 };
 
 export const callTypes = {
@@ -347,9 +353,7 @@ export const dashboardSlice = createSlice({
     AllParentDeptFetch: (state, action) => {
       state.allParentDept = action.payload;
     },
-    AllParentDeptFetch: (state, action) => {
-      state.allParentDept = action.payload;
-    },
+
     AllPayrollAccountListFetch: (state, action) => {
       state.allPayrollAccountList = action.payload;
     },
@@ -480,10 +484,10 @@ export const dashboardSlice = createSlice({
       state.allCompanyEmployeesData = action.payload;
     },
 
-   AllCurrentParentTaskFetched: (state, action) => {
+    AllCurrentParentTaskFetched: (state, action) => {
       state.allCurrentParentTask = action.payload;
-    },  
-    
+    },
+
     AllAlertTaskFetched: (state, action) => {
       state.allAlertTask = action.payload;
     },
@@ -492,10 +496,10 @@ export const dashboardSlice = createSlice({
       state.dateWiseAttLogs = action.payload;
     },
 
-      AllBudgetYearBySubListFetch: (state, action) => {
+    AllBudgetYearBySubListFetch: (state, action) => {
       state.budgetyearBySubList = action.payload;
-    }, 
-    
+    },
+
     AllBudgetRequestFetch: (state, action) => {
       state.budgetRequestList = action.payload;
     },
@@ -505,6 +509,23 @@ export const dashboardSlice = createSlice({
     AllDesignationByhDeptFetch: (state, action) => {
       state.allDesignationByDeptList = action.payload;
     },
+
+    AllAssetModelNameFetch: (state, action) => {
+      state.allAssetModelNameList = action.payload;
+    },
+    AllRegisterAssetNameFetch: (state, action) => {
+      state.allRegisterAssetList = action.payload;
+    },
+
+    AllPresentUnassignedCategoryFetch: (state, action) => {
+      state.allPresentUnassignedCategoryList = action.payload;
+    },
+
+
+    AllPresentUnassignedMakeCompanyFetch: (state, action) => {
+      state.allPresentUnassignedMakeCompanyList = action.payload;
+    },
+
 
   }
 });

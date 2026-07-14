@@ -254,7 +254,7 @@ const WorkflowEditForm = ({
                         <span>
                           {" "}
                           Subsidiary
-                          <span>*</span>
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       onChange={({ value }) => {
@@ -276,7 +276,7 @@ const WorkflowEditForm = ({
                         <span>
                           {" "}
                           Workflow Type
-                          <span>*</span>
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       onChange={({ value }) => {
@@ -376,7 +376,6 @@ const WorkflowEditForm = ({
                         <span>
                           Send Email to selected Employee, once request is
                           created
-                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       options={dashboard?.allEmployees || []}
@@ -424,7 +423,6 @@ const WorkflowEditForm = ({
                         <span>
                           Send Email to selected Employee, if request is
                           approved
-                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       options={dashboard?.allEmployees || []}
@@ -472,7 +470,6 @@ const WorkflowEditForm = ({
                         <span>
                           Send Email to selected Employee, if request is
                           rejected.
-                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       options={dashboard?.allEmployees || []}

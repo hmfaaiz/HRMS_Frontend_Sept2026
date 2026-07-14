@@ -37,15 +37,17 @@ export function FormTable() {
 
 
   const { currentState, userAccess } = useSelector(
-    (state) => { return {
-      
-      currentState: state.form,
-      userAccess: state?.auth?.userAccess["Form"],
-    }},
+    (state) => {
+      return {
+
+        currentState: state.form,
+        userAccess: state?.auth?.userAccess["Form"],
+      }
+    },
     shallowEqual
   );
 
-  
+
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -98,7 +100,7 @@ export function FormTable() {
       },
     },
 
-    
+
     {
       dataField: "isActive",
       text: "Visible",
@@ -110,8 +112,8 @@ export function FormTable() {
       },
       formatter: (cell) => (cell == true ? "Yes" : "No"),
     },
-   
-        {
+
+    {
       dataField: "moduleType",
       text: "Module Type",
       sort: false,
@@ -122,11 +124,12 @@ export function FormTable() {
       },
       // formatter: (cell) => (cell == 1 ? "Employee" : "Recuritment"),
       formatter: (cell) => {
-  if (cell == 1) return "Employee";
-  if (cell == 2) return "Recruitment";
-  if (cell == 3) return "Appraisal";
-  return "Unknown"; // agar koi aur value ho
-}
+        if (cell == 1) return "Employee";
+        if (cell == 2) return "Recruitment";
+        if (cell == 3) return "Appraisal";
+        if (cell == 4) return "Asset";
+        return "Unknown"; // agar koi aur value ho
+      }
     },
     // {
     //   dataField: "MenuName",
@@ -138,7 +141,7 @@ export function FormTable() {
     //     minWidth: "160px",
     //   },
     // },
-       {
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -170,7 +173,7 @@ export function FormTable() {
     page: formUIProps.queryParams.pageNumber,
   };
 
-    return (
+  return (
     <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
@@ -179,28 +182,28 @@ export function FormTable() {
             //   isLoading={listLoading}
             //   paginationProps={paginationProps}
             // >
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
+            <BootstrapTable
+              wrapperClasses="table-responsive"
+              bordered={false}
+              classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+              bootstrap4
+              remote
+              keyField="Id"
+              data={entities === null ? [] : entities}
+              columns={columns}
+              defaultSorted={uiHelpers.defaultSorted}
+              onTableChange={getHandlerTableChange(
+                formUIProps.setQueryParams
+              )}
+              // selectRow={getSelectRow({
+              //   entities,
 
-                // })}
-                {...paginationTableProps}
-              >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
+              // })}
+              {...paginationTableProps}
+            >
+              <PleaseWaitMessage entities={entities} />
+              <NoRecordsFoundMessage entities={entities} />
+            </BootstrapTable>
             // </Pagination>
           );
         }}
