@@ -124,12 +124,12 @@ export function FormSubmittedDetailDialog({ show, onHide }) {
                         {q.questionDescription}
                       </p>
                       <div>
-                        <small className={`font-semibold  "text-black`}>
+                        <small className={`font-semibold text-approved`}>
                           Rating: {q.ratingValue || "-"}
                         </small>
                       </div>
                       <div>
-                        <small className={`fw-bold  "text-black`}>
+                        <small className={`font-semibold text-black`}>
                           Comments: {q.comments || "-"}
                         </small>
                       </div>
