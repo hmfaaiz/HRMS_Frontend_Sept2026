@@ -101,6 +101,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       purchase_price: formData.purchase_price,
       current_price: formData.current_price,
       remarks: formData.remarks,
+      cityId: formData.cityId,
+      countryId: formData.countryId,
     };
 
     await dispatch(

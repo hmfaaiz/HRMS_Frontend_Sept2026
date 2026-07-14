@@ -6,7 +6,7 @@ import { FormFIlter } from "../form-filter/FormFIlter";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus, UserRoundCheck, UserRoundX } from "lucide-react";
-import { fetchAllActiveEmployees, fetchAllDept, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployees, fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAssetRegisters } from "../../../_redux/redux-Actions";
 
@@ -43,7 +43,7 @@ export function FormCard() {
   }, shallowEqual);
 
   useEffect(() => {
-
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllDept());
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllActiveEmployees());
@@ -54,31 +54,31 @@ export function FormCard() {
 
       <TCard name={CurrentModuleName()}>
 
-        <div className="grid md:grid-cols-6 gap-3 mb-2">
+        <div className="grid md:grid-cols-8 gap-3 mb-2">
 
 
           <div className="">
             <div>
               <SearchSelect
-                name="departmentId"
+                name="subsidiaryId"
                 label={
                   <span>
                     {" "}
-                    Department
+                    Subsidiary
 
                   </span>
                 }
 
                 value={
-                  (dashboard?.allDept || []).find(
-                    (item) => item.value === FormUIProps?.queryParams?.departmentId
+                  (dashboard?.allSubsidiaryList || []).find(
+                    (item) => item.value === FormUIProps?.queryParams?.subsidiaryId
                   ) || { label: "All", value: "" }
                 }
                 onChange={(e) => {
 
                   const updatedQueryParams = {
                     ...FormUIProps.queryParams,
-                    departmentId: e.value,
+                    subsidiaryId: e.value,
                     pageNumber: 1,
                   };
 
@@ -87,17 +87,59 @@ export function FormCard() {
 
 
                   dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+                  dispatch(fetchAllDept(e.value));
                 }}
 
-                // options={dashboard.allDept}
+                // options={dashboard.allSubsidiaryList}
                 options={[
                   { label: "All", value: "" },
-                  ...(Array.isArray(dashboard?.allDept)
-                    ? dashboard?.allDept
+                  ...(Array.isArray(dashboard?.allSubsidiaryList)
+                    ? dashboard.allSubsidiaryList
                     : []),
                 ]}
               />
             </div>
+
+          </div>
+          <div>
+            <SearchSelect
+              name="departmentId"
+              label={
+                <span>
+                  {" "}
+                  Department
+
+                </span>
+              }
+
+              value={
+                (dashboard?.allDept || []).find(
+                  (item) => item.value === FormUIProps?.queryParams?.departmentId
+                ) || { label: "All", value: "" }
+              }
+              onChange={(e) => {
+
+                const updatedQueryParams = {
+                  ...FormUIProps.queryParams,
+                  departmentId: e.value,
+                  pageNumber: 1,
+                };
+
+
+                FormUIProps.setQueryParams(updatedQueryParams);
+
+
+                dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+              }}
+
+              // options={dashboard.allDept}
+              options={[
+                { label: "All", value: "" },
+                ...(Array.isArray(dashboard?.allDept)
+                  ? dashboard?.allDept
+                  : []),
+              ]}
+            />
           </div>
           <div className="">
             <div>

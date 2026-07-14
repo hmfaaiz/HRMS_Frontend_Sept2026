@@ -12,6 +12,7 @@ import {
   sortCaret,
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
@@ -62,7 +63,7 @@ export function FormTable() {
     { value: 1, label: "Assigned" },
     { value: 2, label: "Disposed" },
   ];
-
+  const status = Number(formUIProps.queryParams.status);
   const columns = [
     {
       dataField: "AssetRegister.asset_no",
@@ -72,7 +73,15 @@ export function FormTable() {
     {
       dataField: "AssetRegister.AssetModel.name",
       text: "Model Name",
-      formatter: (_, row) => row.AssetRegister?.AssetModel?.name || "",
+      formatter: (_, row) => {
+        const modelName = row.AssetRegister?.AssetModel?.name || "";
+        const makeName =
+          row.AssetRegister?.AssetModel?.AssetMake?.formName || "";
+
+        return makeName
+          ? `${modelName} (${makeName})`
+          : modelName;
+      },
     },
     {
       dataField: "AssetRegister.AssetCategory.formName",
@@ -88,21 +97,33 @@ export function FormTable() {
     //       : "",
     // },
 
-    {
-      dataField: "date_of_assignment",
-      text: "Date of Assignment",
-      formatter: (_, row) => row.date_of_assignment || "",
-      formatter: (_, row) =>
-        row.date_of_assignment
-          ? format(new Date(row.date_of_assignment), "dd-MMM-yyyy")
-          : "",
-    },
-    {
-      dataField: "AssignedEmployee.fullName",
-      text: "Assigned To",
-      formatter: (_, row) =>
-        row.AssignedEmployee?.fullName || "-",
-    },
+
+    // {
+    //   dataField: "AssignedEmployee.fullName",
+    //   text: "Assigned To",
+    //   formatter: (_, row) =>
+    //     row.AssignedEmployee?.fullName || "-",
+    // },
+    ...(status === 1
+      ? [
+        {
+          dataField: "date_of_assignment",
+          text: "Date of Assignment",
+          formatter: (_, row) => row.date_of_assignment || "",
+          formatter: (_, row) =>
+            row.date_of_assignment
+              ? format(new Date(row.date_of_assignment), "dd-MMM-yyyy")
+              : "",
+        },
+        {
+          dataField: "AssignedEmployee.fullName",
+          text: "Assigned To",
+          formatter: (_, row) => row.AssignedEmployee?.fullName || "-",
+        },
+
+      ]
+      : []),
+
     {
       dataField: "AssetRegister.description",
       text: "Description",
@@ -121,7 +142,6 @@ export function FormTable() {
         );
       },
     },
-
 
     {
       dataField: "action",
