@@ -50,3 +50,11 @@ export function getAppraisalPublishReport(body) {
   );
 }
 
+export function viewAppraisalQuestionDetail(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_publish/view-appraisal-question-detail`,
+    body
+  );
+}
+
+
