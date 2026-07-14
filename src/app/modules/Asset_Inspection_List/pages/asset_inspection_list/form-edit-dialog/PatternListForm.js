@@ -184,7 +184,7 @@ const activeStatusOptions = [
                                                     ? "form-control is-invalid"
                                                     : "form-control"
                                                 }
-                                                disabled={isdataForRead}
+                                                isDisabled={isdataForRead}
                                                 value={activeStatusOptions ?.find(
                                                   (x) =>
                                                     Number(x.value) ===

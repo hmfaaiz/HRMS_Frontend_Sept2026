@@ -115,7 +115,7 @@ export const updateAssetInspectionList = (data, disbaleLoading, onHide) => (disp
   
       const updatedAssetInspectionList = response?.config?.data; // response.data?.data;
     
-      dispatch(actions.assetInspectionListUpdated({ updatedassetInspectionList }));
+      dispatch(actions.assetInspectionListUpdated({ updatedAssetInspectionList }));
     
       disbaleLoading();
       onHide();
