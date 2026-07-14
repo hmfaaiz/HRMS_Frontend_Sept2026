@@ -126,15 +126,17 @@ export const clearBulkPublishResult = (body) => (dispatch) => {
   dispatch(actions.clearErrorState());
 };
 
-export const getAppraisalPublishReportAction = (payload) => async (dispatch) => {
+export const getAppraisalPublishReportAction = (payload) => async (
+  dispatch,
+) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
 
   try {
     const res = await requestFromServer.getAppraisalPublishReport(payload);
-    
+
     const pdfBlob = new Blob([res.data], { type: "application/pdf" });
     const pdfUrl = URL.createObjectURL(pdfBlob);
-    
+
     const link = document.createElement("a");
     link.href = pdfUrl;
     link.setAttribute("download", "Appraisal_Publish_Report.pdf");
@@ -147,4 +149,16 @@ export const getAppraisalPublishReportAction = (payload) => async (dispatch) => 
   } catch (error) {
     dispatch(actions.catchError({ error, callType: callTypes.action }));
   }
+};
+
+export const viewAppraisalQuestionDetail = (body) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .viewAppraisalQuestionDetail(body)
+    .then((response) => {
+      dispatch(actions.AppraisalPublishSubmittedQuestionFetched(response?.data?.data));
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
 };
