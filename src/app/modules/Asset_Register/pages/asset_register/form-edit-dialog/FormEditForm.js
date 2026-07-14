@@ -23,7 +23,7 @@ import {
 import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
-import { fetchAllAssetModelName } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllAssetModelName, fetchAllCity } from "../../../../Dashboard/_redux/dashboardActions";
 import { AssetHistoryTable } from "../form-table/AssetHistoryTable";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 // percentage: Yup.string().required("Required*"),
@@ -51,6 +51,10 @@ const assetRegisterSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   locationId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+  cityId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
@@ -121,20 +125,20 @@ const assetRegisterSchema = Yup.object().shape({
     )
     .required(VALIDATION_MESSAGES.required),
 
-current_price: Yup.number()
-  .nullable()
-  .transform((value, originalValue) =>
-    originalValue === "" ? undefined : value
-  )
-  .typeError("Current price must be a valid number")
-  .min(0, "Current price cannot be negative")
-  .max(999999999, "Current price is too large")
-  .test(
-    "decimal-places",
-    "Maximum 2 decimal places are allowed",
-    (value) =>
-      value == null || /^\d+(\.\d{1,2})?$/.test(value.toString())
-  ),
+  current_price: Yup.number()
+    .nullable()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value
+    )
+    .typeError("Current price must be a valid number")
+    .min(0, "Current price cannot be negative")
+    .max(999999999, "Current price is too large")
+    .test(
+      "decimal-places",
+      "Maximum 2 decimal places are allowed",
+      (value) =>
+        value == null || /^\d+(\.\d{1,2})?$/.test(value.toString())
+    ),
 
   remarks: Yup.string().trim(),
   // .required(VALIDATION_MESSAGES.required),
@@ -161,9 +165,10 @@ export function FormEditForm({
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     dispatch(fetchAllActiveEmployees());
 
- 
+
     if (formData.asset_categoryId) {
       dispatch(fetchAllAssetModelName({ asset_categoryId: formData?.asset_categoryId }));
+      dispatch(fetchAllCity(formData?.countryId));
     }
   }, [dispatch, formData.Id]);
 
@@ -615,17 +620,25 @@ export function FormEditForm({
                         isDisabled={isUserForRead}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          setFieldValue("cityId", "");
+                          setFieldValue("locationId", "");
+                          setFieldValue("countryId",e.countryId);
+
+                        
+                          dispatch(fetchAllCity(e.countryId));
+
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         currentValue={values?.subsidiaryId}
                         initializeSubsidiary={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          dispatch(fetchAllCity(e.countryId));
                         }}
                       />
                     </div>
 
-                    <div className="">
+                    {/* <div className="">
                       <label>City</label>
                       <input
                         type="text"
@@ -637,11 +650,42 @@ export function FormEditForm({
                         }
                         disabled
                       />
+                    </div> */}
+
+                    <div className="">
+                      <SearchSelect
+                        name="cityId"
+                        component={Input}
+                        isDisabled={!values.subsidiaryId}
+                        placeholder="Select City"
+                        className="form-control" // Force full height
+                        value={dashboard?.allCity?.find(
+                          (x) => Number(x.value) === Number(values.cityId),
+                        )}
+                        label={
+                          <span>
+                            {" "}
+                            City
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("cityId", e.value || null);
+                        }}
+                        options={dashboard?.allCity}
+                        autoComplete="off"
+                      />
+                      <ErrorMessage
+                        name="cityId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
                     </div>
 
                     <div className="">
                       <SearchSelect
                         name="locationId"
+                        isDisabled={!values.cityId}
                         component={Input}
                         placeholder="Select Location"
                         className="form-control" // Force full height
