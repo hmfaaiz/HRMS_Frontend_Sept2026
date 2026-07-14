@@ -23,6 +23,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
       yearId: usersUIContext.yearId,
       appraisalCategoryId: usersUIContext.appraisalCategoryId,
       setAppraisalCategoryId: usersUIContext.setAppraisalCategoryId,
+      setAppraisalPublishMasterId: usersUIContext.setAppraisalPublishMasterId,
     };
   }, [usersUIContext]);
 
@@ -32,7 +33,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
       isLoading: state.appraisal_publish.actionsLoading,
       entities: state.appraisal_publish.appraisal_detail?.authorities || [],
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   // if !id we should close modal
@@ -45,7 +46,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
           Id: id,
           yearId: usersUIProps?.yearId,
           appraisalCategoryId: usersUIProps?.appraisalCategoryId,
-        })
+        }),
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,20 +135,35 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
       formatter: (cell, row) => {
         let text = "";
         let classname = "";
+        let link = false;
         if (cell === "noRecord") {
           text = "-";
           classname = "font-bold";
         } else if (cell) {
-          text =
-            row?.isHREvaluation ? row?.actionTakenBy
-              ? "Completed (Submitted By)" : "Completed"
-              : "Completed";
-          classname = "text-approved font-bold";
+          text = row?.isHREvaluation
+            ? row?.actionTakenBy
+              ? "Completed (Submitted By)"
+              : "Completed"
+            : "Completed";
+          classname = "text-approved font-bold cursor-pointer underline";
+          link = true;
         } else if (!cell) {
           text = "Pending";
           classname = "text-pending font-bold";
         }
-        return <span className={classname}>{text}</span>;
+        return (
+          <span
+            onClick={() => {
+              console.log("row" , row)
+              if (link) {
+                usersUIProps.setAppraisalPublishMasterId(row?.publishId)
+              }
+            }}
+            className={classname}
+          >
+            {text}
+          </span>
+        );
       },
     },
   ];

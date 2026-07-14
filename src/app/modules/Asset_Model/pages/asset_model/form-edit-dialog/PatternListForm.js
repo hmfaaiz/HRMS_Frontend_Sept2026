@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { Field, FieldArray } from "formik";
 import { CirclePlus, Trash2 } from "lucide-react";
+import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 function PatternListForm({
   values,
@@ -10,18 +13,24 @@ function PatternListForm({
   isdataForRead,
   isEditMode,
 }) {
+
+  const dispatch = useDispatch();
+  const { dashboard } = useSelector((state) => state);
   useEffect(() => {
     values?.list?.forEach((_, index) => {
       setFieldValue(`list[${index}].sno`, index + 1);
     });
+    dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
   }, [values?.list, setFieldValue]);
+
+
 
   return (
     <FieldArray name="list">
       {({ remove, push }) => (
         <>
           <div className="d-flex justify-content-between align-items-center mb-3">
-              <h6 className="font-bold mb-0 text-primary">Asset List</h6>
+            <h6 className="font-bold mb-0 text-primary">Asset List</h6>
 
             {!isdataForRead && (
               <button
@@ -34,6 +43,7 @@ function PatternListForm({
                     name: "",
                     description: "",
                     sno: "",
+                    asset_categoryId: "",
                   })
                 }
               >
@@ -48,12 +58,13 @@ function PatternListForm({
               <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                 <thead>
                   <tr className="custom-table-header">
-                    <td style={{ width: "80px" }}>S.No.</td>
+                    <td style={{ width: "50px" }}>S.No.</td>
 
-                    {isdataForRead && <td style={{ width: "140px" }}>Code</td>}
+                    {isdataForRead && <td style={{ width: "80px" }}>Code</td>}
+                    <td style={{ width: "200px" }}>Category</td>
+                    <td style={{ width: "200px" }}>Name</td>
 
-                    <td style={{ width: "220px" }}>Name</td>
-                    <td>Description</td>
+                    <td style={{ width: "320px" }}>Description</td>
 
                     {!isdataForRead && (
                       <td className="text-right" style={{ width: "90px" }}>
@@ -82,7 +93,6 @@ function PatternListForm({
                             </div>
                           )}
                       </td>
-
                       {/* Code */}
                       {isdataForRead && (
                         <td>
@@ -95,13 +105,55 @@ function PatternListForm({
                         </td>
                       )}
 
+                      <td>
+
+                        <SearchSelect
+                          name={`list[${index}].asset_categoryId`}
+                          className={
+                            errors?.list?.[index]?.asset_categoryId &&
+                              touched?.list?.[index]?.asset_categoryId
+                              ? "form-control is-invalid"
+                              : "form-control"
+                          }
+                          disabled={isdataForRead}
+                          value={dashboard?.allAssetCategoryList?.find(
+                            (x) =>
+                              Number(x.value) ===
+                              Number(values?.list?.[index]?.asset_categoryId)
+                          )}
+                          onChange={(e) => {
+                            setFieldValue(
+                              `list[${index}].asset_categoryId`,
+                              e?.value || null
+                            );
+                          }}
+                          options={dashboard?.allAssetCategoryList}
+                          autoComplete="off"
+                        />
+                        {errors?.list?.[index]?.asset_categoryId &&
+                          touched?.list?.[index]?.asset_categoryId && (
+                            <div className="invalid-feedback">
+                              {errors.list[index].asset_categoryId}
+                            </div>
+                          )}
+
+
+
+
+
+
+
+                      </td>
+
+
+
                       {/* Name */}
                       <td>
                         <Field
                           name={`list[${index}].name`}
                           className={
                             errors?.list?.[index]?.name &&
-                            touched?.list?.[index]?.name
+                              touched?.list?.[index]?.name
                               ? "form-control is-invalid"
                               : "form-control"
                           }
@@ -131,7 +183,7 @@ function PatternListForm({
                           name={`list[${index}].description`}
                           className={
                             errors?.list?.[index]?.description &&
-                            touched?.list?.[index]?.description
+                              touched?.list?.[index]?.description
                               ? "form-control is-invalid"
                               : "form-control"
                           }
@@ -171,6 +223,10 @@ function PatternListForm({
               </table>
             </div>
           </div>
+
+          {typeof errors.list === "string" && (
+            <div className="text-danger">{errors.list}</div>
+          )}
         </>
       )}
     </FieldArray>

@@ -318,9 +318,9 @@ export const getAllComDept = async () => {
 export const getAllDesignationByDepId = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-designation-by-depId`,body);
 };
-export const getAllAssetModelName = async (asset_makeId = null) => {
+export const getAllAssetModelName = async (params = {}) => {
   return await axios.get(`${USERS_URL}/settings/read-all-model-name`, {
-    params: asset_makeId ? { asset_makeId } : {},
+    params,
   });
 };
 
@@ -328,4 +328,11 @@ export const getAllRegisterAssetName = async (params = {}) => {
   return await axios.get(`${USERS_URL}/settings/read-all-register-asset`, {
     params,
   });
+};
+
+export const getAllPresentUnassignedCategory = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-unassigned-category`,body);
+};
+export const getAllPresentUnassignedMakeCompany = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-unassigned-make-company`,body);
 };
