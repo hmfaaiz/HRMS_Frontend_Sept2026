@@ -692,6 +692,9 @@ import ("./modules/Asset_Assignment/pages/index"))
 const asset_disposal = lazy (() =>
 import ("./modules/Asset_Disposal/pages/index"))
 
+const asset_inspection_list = lazy (() =>
+import ("./modules/Asset_Inspection_List/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -922,8 +925,7 @@ const ROUTES = {
   asset_register: asset_register,
   asset_assignment: asset_assignment,
   asset_disposal: asset_disposal,
-
-  ticket_escalation_policy: ticket_escalation_policy,
+  asset_inspection_list: asset_inspection_list,
 
 };
 
