@@ -622,9 +622,9 @@ export function FormEditForm({
                           setFieldValue("subsidiaryId", e.value || null);
                           setFieldValue("cityId", "");
                           setFieldValue("locationId", "");
-                          setFieldValue("countryId",e.countryId);
+                          setFieldValue("countryId", e.countryId);
 
-                        
+
                           dispatch(fetchAllCity(e.countryId));
 
                         }}
@@ -633,6 +633,8 @@ export function FormEditForm({
                         currentValue={values?.subsidiaryId}
                         initializeSubsidiary={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          setFieldValue("countryId", e.countryId);
+
                           dispatch(fetchAllCity(e.countryId));
                         }}
                       />
