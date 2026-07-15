@@ -153,6 +153,7 @@ export function FormEditForm({
                           setFieldValue("employeeId", e.value || null);
                           dispatch(fetchAssetAssignmentList(e?.value));
                           dispatch(fetchAllPresentUnassignedCategory({employeeId: e?.value}));
+                           setFieldValue("asset_categoryId", null);
                         }}
                         options={dashboard?.allEmployees}
                         autoComplete="off"
@@ -299,7 +300,7 @@ export function FormEditForm({
 
                     </div>
 
-                    <div className="">
+                   
                       <div className="">
                         <SearchSelect
                           name="asset_registerId"
@@ -334,13 +335,8 @@ export function FormEditForm({
                           className="invalid-feedback d-block"
                         />
                       </div>
-                      <ErrorMessage
-                        name="asset_registerId"
-                        component="div"
-                        className="invalid-feedback d-block"
-                      />
+                     
 
-                    </div>
 
                     <div className="col-span-1">
                       <SearchSelect
