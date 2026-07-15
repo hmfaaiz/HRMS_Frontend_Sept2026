@@ -696,6 +696,10 @@ const asset_inspection_list = lazy (() =>
 import ("./modules/Asset_Inspection_List/pages/index"))
 
 
+const asset_checklist = lazy (() =>
+import ("./modules/Asset_Checklist/pages/index"))
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -926,6 +930,7 @@ const ROUTES = {
   asset_assignment: asset_assignment,
   asset_disposal: asset_disposal,
   asset_inspection_list: asset_inspection_list,
+  asset_checklist: asset_checklist,
 
 };
 

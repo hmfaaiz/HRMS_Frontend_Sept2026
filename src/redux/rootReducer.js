@@ -242,6 +242,7 @@ import { AssetRegisterSlice } from "../app/modules/Asset_Register/_redux/redux-S
 import { AssetAssignmentSlice } from "../app/modules/Asset_Assignment/_redux/redux-Slice";
 import { AssetDisposalSlice } from "../app/modules/Asset_Disposal/_redux/redux-Slice";
 import { AssetInspectionListSlice } from "../app/modules/Asset_Inspection_List/_redux/redux-Slice";
+import { AssetChecklistSlice } from "../app/modules/Asset_Checklist/_redux/redux-Slice";
 
 
 import { ticketEscalationPolicySlice } from "../app/modules/Ticket_Escalation_Policy/_redux/redux-Slice"
@@ -486,6 +487,7 @@ export const rootReducer = combineReducers({
   asset_disposal: AssetDisposalSlice.reducer,
   ticket_escalation_policy: ticketEscalationPolicySlice.reducer,
   asset_inspection_list: AssetInspectionListSlice.reducer,
+  asset_checklist: AssetChecklistSlice.reducer,
 
 });
 
