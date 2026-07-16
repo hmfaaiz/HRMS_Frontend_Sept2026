@@ -22,7 +22,7 @@ export function ActionsColumnFormatter(
   return (
     <div className="space-x-2">
  
-      {row?.isFinalize && dispatch && downloadAppraisalFinalizationPdf && (
+      { dispatch && downloadAppraisalFinalizationPdf && (
         <OverlayTrigger
           overlay={
             <Tooltip id={`fin-pdf-tooltip-${row.Id}`}>

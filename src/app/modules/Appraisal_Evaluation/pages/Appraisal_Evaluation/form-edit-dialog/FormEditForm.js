@@ -28,7 +28,7 @@ const getFormSchema = ({
       : Yup.number()
           .typeError("Rating must be a number")
           .required(VALIDATION_MESSAGES.required)
-          .min(min, `Rating must be at least ${min}`)
+          .min(0, `Rating must be at least 0`)
           .max(max, `Rating cannot exceed ${max}`),
 
     comments: isComment
