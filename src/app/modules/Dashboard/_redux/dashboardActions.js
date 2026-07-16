@@ -1077,3 +1077,20 @@ export const fetchAllRegisterAssetName =
       // toast.error("Something went wrong");
     });
 };
+  
+
+export const fetchAllAssetInspectionListById= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAssetInspectionListById(body)
+    .then((response) => {
+      const entities = [...response.data?.data.list];
+      console.log("entities5555555555", entities);
+      dispatch(actions.AllAssetInspectionListFetch(entities));
+    })
+    .catch((error) => {
+      console.log("error111", error);
+      // toast.error("Something went wrong");
+    });
+};
