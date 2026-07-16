@@ -23,7 +23,7 @@ import {
 import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
-import { fetchAllAssetModelName } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllAssetModelName, fetchAllCity } from "../../../../Dashboard/_redux/dashboardActions";
 import { AssetHistoryTable } from "../form-table/AssetHistoryTable";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 // percentage: Yup.string().required("Required*"),
@@ -54,6 +54,10 @@ const assetRegisterSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
+  cityId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
   current_conditionId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -79,7 +83,7 @@ const assetRegisterSchema = Yup.object().shape({
 
   date_of_expiry: Yup.date()
     .nullable()
-    .required(VALIDATION_MESSAGES.required)
+    // .required(VALIDATION_MESSAGES.required)
     .min(
       Yup.ref("date_of_acquisition"),
       "Date of expiry cannot be before acquisition date",
@@ -124,17 +128,17 @@ const assetRegisterSchema = Yup.object().shape({
   current_price: Yup.number()
     .nullable()
     .transform((value, originalValue) =>
-      originalValue === "" ? undefined : value,
+      originalValue === "" ? undefined : value
     )
     .typeError("Current price must be a valid number")
-    .positive("Current price must be greater than 0")
+    .min(0, "Current price cannot be negative")
     .max(999999999, "Current price is too large")
     .test(
       "decimal-places",
       "Maximum 2 decimal places are allowed",
-      (value) => value == null || /^\d+(\.\d{1,2})?$/.test(value.toString()),
-    )
-  ,
+      (value) =>
+        value == null || /^\d+(\.\d{1,2})?$/.test(value.toString())
+    ),
 
   remarks: Yup.string().trim(),
   // .required(VALIDATION_MESSAGES.required),
@@ -153,13 +157,18 @@ export function FormEditForm({
   const { dashboard } = useSelector((state) => state);
   const inputFile = useRef(null);
   useEffect(() => {
-    if (!formData.Id) {
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllAssetModelName());
 
-      dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
-      dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
-      dispatch(fetchAllActiveEmployees());
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+
+
+    dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
+    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllActiveEmployees());
+
+
+    if (formData.asset_categoryId) {
+      dispatch(fetchAllAssetModelName({ asset_categoryId: formData?.asset_categoryId }));
+      dispatch(fetchAllCity(formData?.countryId));
     }
   }, [dispatch, formData.Id]);
 
@@ -245,6 +254,8 @@ export function FormEditForm({
                         }
                         onChange={(e) => {
                           setFieldValue("asset_categoryId", e.value || null);
+                          dispatch(fetchAllAssetModelName({ asset_categoryId: e?.value }));
+                          setFieldValue("asset_modelId", null);
                         }}
                         options={dashboard?.allAssetCategoryList}
                         autoComplete="off"
@@ -318,12 +329,12 @@ export function FormEditForm({
                       <Field
                         name="registration_no"
                         component={Input}
-                        placeholder="Enter registration no"
+                        placeholder="Enter 'serial / registration number"
                         className="form-control" // Force full height
                         label={
                           <span>
                             {" "}
-                            Registration No.
+                            'Serial / Registration Number
 
                           </span>
                         }
@@ -332,30 +343,21 @@ export function FormEditForm({
 
                     </div>
 
-
-                    <div className="">
+                    <div>
                       <label>
                         Asset Year <span style={{ color: "red" }}>*</span>
                       </label>
 
                       <Field
-                        as="select"
+                        type="text"
                         name="asset_year"
                         className="form-control"
-                      >
-                        <option value="">Select Year</option>
-                        {Array.from(
-                          { length: new Date().getFullYear() - 1900 },
-                          (_, index) => {
-                            const year = new Date().getFullYear() - index;
-                            return (
-                              <option key={year} value={year}>
-                                {year}
-                              </option>
-                            );
-                          },
-                        )}
-                      </Field>
+                        placeholder="YYYY"
+                        maxLength={4}
+                        onInput={(e) => {
+                          e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
+                        }}
+                      />
 
                       <ErrorMessage
                         name="asset_year"
@@ -383,7 +385,7 @@ export function FormEditForm({
 
                     <div className="col-span-1">
                       <label>
-                        Date of Expiry <span style={{ color: "red" }}>*</span>
+                        Date of Expiry
                       </label>
                       <Field
                         name="date_of_expiry"
@@ -473,7 +475,7 @@ export function FormEditForm({
                               );
 
                               return employee
-                                ? `${employee.label} - ${employee.department}`
+                                ? `${employee.label} (${employee.department})`
                                 : "Select employee";
                             })()
                             : statusOptions.find(
@@ -618,17 +620,27 @@ export function FormEditForm({
                         isDisabled={isUserForRead}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          setFieldValue("cityId", "");
+                          setFieldValue("locationId", "");
+                          setFieldValue("countryId", e.countryId);
+
+
+                          dispatch(fetchAllCity(e.countryId));
+
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         currentValue={values?.subsidiaryId}
                         initializeSubsidiary={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          setFieldValue("countryId", e.countryId);
+
+                          dispatch(fetchAllCity(e.countryId));
                         }}
                       />
                     </div>
 
-                    <div className="">
+                    {/* <div className="">
                       <label>City</label>
                       <input
                         type="text"
@@ -640,11 +652,42 @@ export function FormEditForm({
                         }
                         disabled
                       />
+                    </div> */}
+
+                    <div className="">
+                      <SearchSelect
+                        name="cityId"
+                        component={Input}
+                        isDisabled={!values.subsidiaryId}
+                        placeholder="Select City"
+                        className="form-control" // Force full height
+                        value={dashboard?.allCity?.find(
+                          (x) => Number(x.value) === Number(values.cityId),
+                        )}
+                        label={
+                          <span>
+                            {" "}
+                            City
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("cityId", e.value || null);
+                        }}
+                        options={dashboard?.allCity}
+                        autoComplete="off"
+                      />
+                      <ErrorMessage
+                        name="cityId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
                     </div>
 
                     <div className="">
                       <SearchSelect
                         name="locationId"
+                        isDisabled={!values.cityId}
                         component={Input}
                         placeholder="Select Location"
                         className="form-control" // Force full height
@@ -674,7 +717,7 @@ export function FormEditForm({
                 </fieldset>
               </Form>
 
-              {formData.Id && (
+              {formData.isPresent && (
                 <div className="mt-3">
                   <hr />
                   <h6 className="font-bold mb-0 text-primary">Asset Assignment History</h6>

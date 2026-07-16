@@ -8,6 +8,7 @@ const initialState = {
   lastError: null,
   appraisal_detail: null,
   errorState: null,
+  submitted_question: [],
 };
 
 export const callTypes = {
@@ -64,6 +65,11 @@ export const appraisalPublishSlice = createSlice({
       state.appraisal_detail = action.payload;
     },
     AppraisalPublishReportFetched: (state, action) => {
+      state.error = null;
+      state.actionsLoading = false;
+    },
+    AppraisalPublishSubmittedQuestionFetched: (state, action) => {
+      state.submitted_question = action.payload;
       state.error = null;
       state.actionsLoading = false;
     },
