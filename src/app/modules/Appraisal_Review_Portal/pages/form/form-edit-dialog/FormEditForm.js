@@ -31,7 +31,7 @@ const formValidation = (minPoint, maxPoint) =>
       Yup.object().shape({
         finalizedRating: Yup.number()
           .required(VALIDATION_MESSAGES.required)
-          .min(minPoint, `Rating cannot be less than ${minPoint}`)
+          .min(0, `Rating cannot be less than 0`)
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
@@ -42,7 +42,7 @@ const formValidation = (minPoint, maxPoint) =>
       Yup.object().shape({
         finalizedRating: Yup.number()
           .required(VALIDATION_MESSAGES.required)
-          .min(minPoint, `Rating cannot be less than ${minPoint}`)
+          .min(0, `Rating cannot be less than 0`)
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
@@ -53,7 +53,7 @@ const formValidation = (minPoint, maxPoint) =>
       Yup.object().shape({
         finalizedRating: Yup.number()
           .required(VALIDATION_MESSAGES.required)
-          .min(minPoint, `Rating cannot be less than ${minPoint}`)
+          .min(0, `Rating cannot be less than 0`)
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
