@@ -461,7 +461,35 @@ export function FormEditForm({
                         options={statusOptions}
                       </Field>
                     </div> */}
-                    <div className="">
+     <div className="">
+                    <Field
+                      name="current_assigned_employeeId"
+                      component={Input}
+                      disabled
+                      className="form-control"
+                      value={
+                        values.current_assigned_employeeId
+                          ? (() => {
+                            const employee = dashboard?.allEmployees?.find(
+                              (x) => Number(x.value) === Number(values.current_assigned_employeeId)
+                            );
+
+                            return employee
+                              ? `${employee.label} (${employee.department})`
+                              : "Select employee";
+                          })()
+                          : Number(values.status) === 2
+                            ? `Disposed${values.disposal_remarks ? ` - ${values.disposal_remarks}` : ""}`
+                            : statusOptions.find(
+                              (item) => item.value === Number(values.status)
+                            )?.label || "Unassigned"
+                      }
+                      label={<span>Current Assigned Employee</span>}
+                      autoComplete="off"
+                    />
+ </div>
+
+                    {/* <div className="">
                       <Field
                         name="current_assigned_employeeId"
                         component={Input}
@@ -485,7 +513,7 @@ export function FormEditForm({
                         label={<span>Current Assigned Employee</span>}
                         autoComplete="off"
                       />
-                    </div>
+                    </div> */}
 
                     <div className="">
 

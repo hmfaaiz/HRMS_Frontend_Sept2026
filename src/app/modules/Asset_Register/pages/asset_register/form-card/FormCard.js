@@ -270,30 +270,24 @@ export function FormCard() {
 
 
 
+<MultiSelect
+  name="assetStatus"
+  label="Asset Status"
+  value={assetStatusOptions.filter((o) =>
+    (FormUIProps.queryParams.assetStatus || []).includes(o.value)
+  )}
+  options={assetStatusOptions}
+  onChange={(items = []) => {
+    const updatedQueryParams = {
+      ...FormUIProps.queryParams,
+      assetStatus: items.map((i) => i.value), // [] when X is clicked
+      pageNumber: 1,
+    };
 
-          <MultiSelect
-            name="assetStatus"
-            label="Asset Status"
-            value={
-              (FormUIProps.queryParams.assetStatus || []).length === 0
-                ? assetStatusOptions.filter((o) => [0, 1].includes(o.value))
-                : assetStatusOptions.filter((o) =>
-                  FormUIProps.queryParams.assetStatus.includes(o.value)
-                )
-            }
-            options={assetStatusOptions}
-            onChange={(items = []) => {
-              const updatedQueryParams = {
-                ...FormUIProps.queryParams,
-                assetStatus: items.map((i) => i.value),
-                pageNumber: 1,
-              };
-
-              FormUIProps.setQueryParams(updatedQueryParams);
-              dispatch(fetchAssetRegisters(updatedQueryParams));
-            }}
-          />
-
+    FormUIProps.setQueryParams(updatedQueryParams);
+    dispatch(fetchAssetRegisters(updatedQueryParams));
+  }}
+/>
           <MultiSelect
             name="asset_registerId"
             label="Asset"
