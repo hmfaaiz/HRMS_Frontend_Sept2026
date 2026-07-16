@@ -10,19 +10,19 @@ export function getAppraisalEmployee(body) {
 //Create user
 export function getAllAppraisalReview(body) {
   return axios.post(
-    `${USERS_URL}/emp_appraisal/read-all-appraisal-review`,
+    `${USERS_URL}/emp_appraisal/read-all-emp-appraisal-review`,
     body
   );
 }
 
 export function getAppraisalReview(body) {
-  return axios.post(`${USERS_URL}/emp_appraisal/read-appraisal-review`, body);
+  return axios.post(`${USERS_URL}/emp_appraisal/read-emp-appraisal-review`, body);
 }
 
 export function createOrUpdateAppraisalReview(body) {
-  return axios.post(`${USERS_URL}/emp_appraisal/create-appraisal-review`, body);
+  return axios.post(`${USERS_URL}/emp_appraisal/create-emp-appraisal-review`, body);
 }
 
 export function deleteAppraisalReview(body) {
-  return axios.post(`${USERS_URL}/emp_appraisal/delete-appraisal-review`, body);
+  return axios.post(`${USERS_URL}/emp_appraisal/delete-emp-appraisal-review`, body);
 }
