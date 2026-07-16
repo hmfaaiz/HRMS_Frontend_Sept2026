@@ -218,6 +218,9 @@ export function FormEditForm({
                         }
                         onChange={(e) => {
                           setFieldValue("asset_categoryId", e.value || null);
+                          setFieldValue("asset_makeId", null);
+                          setFieldValue("asset_modelId", null);
+                          setFieldValue("asset_registerId", null);
                           dispatch(fetchAllPresentUnassignedMakeCompany({ asset_categoryId: e.value }));
                         }}
                         options={dashboard?.allPresentUnassignedCategoryList}
@@ -247,7 +250,11 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue("asset_makeId", e?.value || null);
 
-                          dispatch(fetchAllAssetModelName(e?.value));
+                        
+                          setFieldValue("asset_modelId", null);
+                          setFieldValue("asset_registerId", null);
+
+                          dispatch(fetchAllAssetModelName({ asset_categoryId: values?.asset_categoryId, asset_makeId: e?.value }));
                         }}
                         value={
                           dashboard?.allPresentUnassignedMakeCompanyList?.find(
@@ -289,6 +296,7 @@ export function FormEditForm({
                         isDisabled={!values.asset_makeId}
                         onChange={(e) => {
                           setFieldValue("asset_modelId", e.value || null);
+                          setFieldValue("asset_registerId", null);
                           dispatch(fetchAllRegisterAssetName({ asset_modelId: e?.value }));
                         }}
                         options={dashboard?.allAssetModelNameList}
@@ -366,9 +374,9 @@ export function FormEditForm({
                       )}
                     </div>
                   </div>
-                  <br/>
+                  <br />
                   <AssetDetails assetId={values?.asset_registerId} panelMode={assetDetailsPanel} />
-               
+
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
                       <SearchSelect
