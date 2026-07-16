@@ -85,6 +85,7 @@ export const EmployeePortal = () => {
               }}
               isCompactView={isCompactView}
               isAttMarkShow={true}
+              isDashboard={true}
             />
           </div>
           {/* Main Content: Dashboard, PendingRequestSelf, ReportingEmpTable, My Details, AttendanceSummary, LeaveApplicationTable, EmployeeLoanDetail */}

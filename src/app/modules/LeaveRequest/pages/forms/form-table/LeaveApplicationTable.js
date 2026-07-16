@@ -32,7 +32,7 @@ export function LeaveApplicationTable() {
       setQueryParamsLeaveApp: formUIContext.setQueryParamsLeaveApp,
       editRecord: formUIContext.editRecord,
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
-      setWorkflowId: formUIContext.setWorkflowId,  
+      setWorkflowId: formUIContext.setWorkflowId,
       setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
@@ -46,7 +46,7 @@ export function LeaveApplicationTable() {
         userAccess: state?.auth?.userAccess["Leave Request"],
       };
     },
-    shallowEqual
+    shallowEqual,
   );
   const { totalCount, entities, listLoading } = currentState;
 
@@ -54,7 +54,7 @@ export function LeaveApplicationTable() {
   //   (item) => item.componentName === "UpdateLeaveApplication"
   // );
   const isAccessForReApply = userAccess?.find(
-    (item) => item.componentName === "ResubmitLeaveApplication"
+    (item) => item.componentName === "ResubmitLeaveApplication",
   );
 
   const columns = [
@@ -118,6 +118,8 @@ export function LeaveApplicationTable() {
         minWidth: "200px",
         maxWidth: "200px",
       },
+      headerClasses: "d-none d-md-table-cell",
+      classes: "d-none d-md-table-cell",
     },
     // {
     //   dataField: "leave_modification_status",
@@ -195,6 +197,8 @@ export function LeaveApplicationTable() {
         minWidth: "200px",
         maxWidth: "200px",
       },
+      headerClasses: "d-none d-md-table-cell",
+      classes: "d-none d-md-table-cell",
       formatter: (cell) => {
         return cell ? cell : "-";
       },
@@ -213,7 +217,7 @@ export function LeaveApplicationTable() {
           ? isAccessForReApply?.isAccess &&
             user?.employeeIdMapping === FormUIProps?.employeeId
           : false,
-        setWorkflowId: FormUIProps.setWorkflowId,   
+        setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps.setCurrentData,
       },
       classes: "text-right pr-0",
@@ -259,7 +263,7 @@ export function LeaveApplicationTable() {
                   columns={columns}
                   defaultSorted={uiHelpers.defaultSorted}
                   onTableChange={getHandlerTableChange(
-                    FormUIProps.setQueryParamsLeaveApp
+                    FormUIProps.setQueryParamsLeaveApp,
                   )}
                   {...paginationTableProps}
                 >
