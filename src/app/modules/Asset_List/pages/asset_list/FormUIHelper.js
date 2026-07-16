@@ -65,7 +65,7 @@ export const initialFilter = {
     locationId: [],
 
     // Report Filter
-    assetStatus: ["assigned", "unassigned"],
+    assetStatus: [1, 0],
 
     // Date Range
     acquisitionFrom: "",
@@ -80,8 +80,7 @@ export const initialFilter = {
 
 // Report filter options (Asset Status)
 export const assetStatusOptions = [
-  { value: "all", label: "All" },
-  { value: "assigned", label: "Assigned" },
-  { value: "unassigned", label: "Unassigned" },
-  { value: "disposed", label: "Disposed" },
+  { value: 1, label: "Assigned" },
+  { value: 0, label: "Unassigned" },
+  { value: 2, label: "Disposed" },
 ];
