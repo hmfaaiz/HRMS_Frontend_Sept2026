@@ -22,6 +22,7 @@ import {
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
 import { decodeHtml } from "../../../../../utils/common";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 const formValidation = (minPoint, maxPoint) =>
   Yup.object().shape({
@@ -157,7 +158,7 @@ export function MasterEditForm({
   onHide,
 }) {
   const formUIContext = useFromUIContext();
-
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const formUIProps = useMemo(() => {
     return {
       panelMode: formUIContext.panelMode,
@@ -186,13 +187,27 @@ export function MasterEditForm({
     return ratingList.find((item) => Number(item.points) === point);
   }
 
-  const handleSubmitWithFinalize = (isFinalize, handleSubmit, values) => {
+  const handleSubmitWithFinalize = async (isFinalize, handleSubmit, values) => {
+    const result = await confirm(
+      "Confirm Submission",
+      "Are you sure you want to finalized Rating? Once finalized, you will not be able to make any changes.",
+      "No",
+      "Yes",
+    );
+    if (!result) return;
     // handleSubmit(); // trigger Formik validation
     const valuesWithFlag = { ...values, isFinalize };
     saveFrom(valuesWithFlag);
   };
 
-  const handleSubmitWithConsent = (sendConsent, handleSubmit, values) => {
+  const handleSubmitWithConsent = async (sendConsent, handleSubmit, values) => {
+     const result = await confirm(
+      "Confirm Submission",
+      "Are you sure you want to send consent?",
+      "No",
+      "Yes",
+    );
+    if (!result) return;
     // handleSubmit(); // trigger Formik validation
     const valuesWithFlag = { ...values, sendConsent };
     saveFrom(valuesWithFlag);
@@ -1380,6 +1395,7 @@ export function MasterEditForm({
           );
         }}
       </Formik>
+      <ConfirmationComponent />
     </>
   );
 }

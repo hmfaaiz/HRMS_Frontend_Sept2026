@@ -55,15 +55,15 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateAppraisalReview"
+    (item) => item.componentName === "UpdateEmpAppraisalReview"
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteAppraisalReview"
+    (item) => item.componentName === "DeleteEmpAppraisalReview"
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadAppraisalReview"
+    (item) => item.componentName === "ReadEmpAppraisalReview"
   );
   // Table columns
   const columns = [
