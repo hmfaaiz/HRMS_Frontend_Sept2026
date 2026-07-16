@@ -41,5 +41,17 @@ export const initialFilter = {
   subsidaryId: "",
   sortOrder: "asc",
   pageSize: 10,
-  pageNumber: 1
+  pageNumber: 1,
+  
+  asset_categoryId: [],
+  asset_registerId: [],
+
+  assetStatus: [0, 1],
+
 }
+
+export const assetStatusOptions = [
+  { value: 1, label: "Assigned" },
+  { value: 0, label: "Unassigned" },
+  { value: 2, label: "Disposed" },
+];
