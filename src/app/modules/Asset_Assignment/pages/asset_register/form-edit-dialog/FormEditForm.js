@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -19,6 +19,8 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { fetchAllAssetModelName, fetchAllPresentUnassignedCategory, fetchAllPresentUnassignedMakeCompany, fetchAllRegisterAssetName } from "../../../../Dashboard/_redux/dashboardActions";
 import { EmployeeAssetTable } from "../form-table/EmployeeAssetTable";
 import { fetchAssetAssignmentList } from "../../../_redux/redux-Actions";
+import { Eye, XCircle } from "lucide-react";
+import AssetDetails from "../../../../../utils/common-modules/AssetDetails";
 
 const assetAssignmentSchema = Yup.object().shape({
   employeeId: Yup.number()
@@ -75,7 +77,7 @@ export function FormEditForm({
     dispatch(fetchAllAssetModelName());
 
     // dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
-    
+
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     // dispatch(fetchAllFormsMenu(558, "allAssetMakeList"));
 
@@ -84,12 +86,12 @@ export function FormEditForm({
     dispatch(fetchAssetAssignmentList(formData?.employeeId));
     if (formData?.asset_categoryId) {
       dispatch(fetchAllPresentUnassignedMakeCompany({ asset_categoryId: formData?.asset_categoryId }));
-      dispatch(fetchAllPresentUnassignedCategory({employeeId: formData?.employeeId}));
+      dispatch(fetchAllPresentUnassignedCategory({ employeeId: formData?.employeeId }));
     }
 
   }, [dispatch, formData.Id]);
 
-
+  const [assetDetailsPanel, setAssetDetailsPanel] = useState(false);
   console.log("aaaaaaa2222", formData.assigned_by_employeeId);
 
   return (
@@ -152,8 +154,8 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue("employeeId", e.value || null);
                           dispatch(fetchAssetAssignmentList(e?.value));
-                          dispatch(fetchAllPresentUnassignedCategory({employeeId: e?.value}));
-                           setFieldValue("asset_categoryId", null);
+                          dispatch(fetchAllPresentUnassignedCategory({ employeeId: e?.value }));
+                          setFieldValue("asset_categoryId", null);
                         }}
                         options={dashboard?.allEmployees}
                         autoComplete="off"
@@ -216,6 +218,9 @@ export function FormEditForm({
                         }
                         onChange={(e) => {
                           setFieldValue("asset_categoryId", e.value || null);
+                          setFieldValue("asset_makeId", null);
+                          setFieldValue("asset_modelId", null);
+                          setFieldValue("asset_registerId", null);
                           dispatch(fetchAllPresentUnassignedMakeCompany({ asset_categoryId: e.value }));
                         }}
                         options={dashboard?.allPresentUnassignedCategoryList}
@@ -245,7 +250,11 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue("asset_makeId", e?.value || null);
 
-                          dispatch(fetchAllAssetModelName(e?.value));
+                        
+                          setFieldValue("asset_modelId", null);
+                          setFieldValue("asset_registerId", null);
+
+                          dispatch(fetchAllAssetModelName({ asset_categoryId: values?.asset_categoryId, asset_makeId: e?.value }));
                         }}
                         value={
                           dashboard?.allPresentUnassignedMakeCompanyList?.find(
@@ -287,6 +296,7 @@ export function FormEditForm({
                         isDisabled={!values.asset_makeId}
                         onChange={(e) => {
                           setFieldValue("asset_modelId", e.value || null);
+                          setFieldValue("asset_registerId", null);
                           dispatch(fetchAllRegisterAssetName({ asset_modelId: e?.value }));
                         }}
                         options={dashboard?.allAssetModelNameList}
@@ -300,44 +310,74 @@ export function FormEditForm({
 
                     </div>
 
-                   
-                      <div className="">
-                        <SearchSelect
-                          name="asset_registerId"
-                          component={Input}
-                          placeholder="Select Asset"
-                          className="form-control"
-                          isDisabled={!values.asset_modelId}
-                          value={dashboard?.allRegisterAssetList
-                            ?.filter((item) => Number(item.status) === 0)
-                            ?.find(
-                              (x) => Number(x.value) === Number(values.asset_registerId)
-                            ) || null}
-                          label={
-                            <span>
-                              Asset <span style={{ color: "red" }}>*</span>
-                            </span>
+
+                    <div className="">
+                      <SearchSelect
+                        name="asset_registerId"
+                        component={Input}
+                        placeholder="Select Asset"
+                        className="form-control"
+                        isDisabled={!values.asset_modelId}
+                        value={dashboard?.allRegisterAssetList
+                          ?.filter((item) => Number(item.status) === 0)
+                          ?.find(
+                            (x) => Number(x.value) === Number(values.asset_registerId)
+                          ) || null}
+                        label={
+                          <span>
+                            Asset <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("asset_registerId", e?.value || null);
+                        }}
+                        options={
+                          dashboard?.allRegisterAssetList?.filter(
+                            (item) => Number(item.status) === 0
+                          ) || []
+                        }
+                        autoComplete="off"
+                      />
+
+                      <ErrorMessage
+                        name="asset_registerId"
+                        component="div"
+                        className="invalid-feedback d-block"
+                      />
+                    </div>
+
+                    <div className="mt-6">
+                      {assetDetailsPanel ? (
+                        <button
+                          type="button"
+                          disabled={values.asset_registerId ? false : true}
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() =>
+                            setAssetDetailsPanel(!assetDetailsPanel)
                           }
-                          onChange={(e) => {
-                            setFieldValue("asset_registerId", e?.value || null);
-                          }}
-                          options={
-                            dashboard?.allRegisterAssetList?.filter(
-                              (item) => Number(item.status) === 0
-                            ) || []
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={values.asset_registerId ? false : true}
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() =>
+                            setAssetDetailsPanel(!assetDetailsPanel)
                           }
-                          autoComplete="off"
-                        />
+                        >
+                          <Eye className="w-4 h-4 text-white" />
+                          View Details
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <br />
+                  <AssetDetails assetId={values?.asset_registerId} panelMode={assetDetailsPanel} />
 
-                        <ErrorMessage
-                          name="asset_registerId"
-                          component="div"
-                          className="invalid-feedback d-block"
-                        />
-                      </div>
-                     
-
-
+                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
                       <SearchSelect
                         name="assigned_by_employeeId"
@@ -376,6 +416,7 @@ export function FormEditForm({
 
                     </div>
                   </div>
+
 
 
 

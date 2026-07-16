@@ -19,7 +19,7 @@ const assetSchema = Yup.object().shape({
   inspected_by_employeeId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
   asset_registerId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
   date_of_inspection: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-  reason_for_inspection: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
+  reason_for_inspection: Yup.string().nullable(),
   event_for_inspection: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
   list: Yup.array()
@@ -154,7 +154,7 @@ export function FormEditForm({
                         setFieldValue("list", []);
                         if (e?.value && values.asset_registerId && values.date_of_inspection) {
                           dispatch(fetchAssetInspectionListDataForEdit({
-                            asset_categoryId:e?.value,
+                            asset_categoryId: e?.value,
                             asset_registerId: values.asset_registerId,
                             date_of_inspection: values.date_of_inspection,
                           }));
@@ -178,7 +178,8 @@ export function FormEditForm({
                       component={Input}
                       placeholder="Select Asset"
                       className="form-control"
-                      isDisabled={!values.asset_categoryId}
+
+                      isDisabled={!values.asset_categoryId || isdataForRead || data?.dataIsExist}
                       value={dashboard?.allRegisterAssetList
                         ?.filter((item) => Number(item.status) === 0)
                         ?.find(
@@ -193,7 +194,7 @@ export function FormEditForm({
                         setFieldValue("asset_registerId", e?.value || null);
                         if (e?.value && values?.asset_categoryId && values?.date_of_inspection) {
                           dispatch(fetchAssetInspectionListDataForEdit({
-                            asset_categoryId:values?.asset_categoryId,
+                            asset_categoryId: values?.asset_categoryId,
                             asset_registerId: e?.value,
                             date_of_inspection: values?.date_of_inspection,
                           }));
@@ -231,6 +232,7 @@ export function FormEditForm({
                     ) : (
                       <button
                         type="button"
+                        disabled={values.asset_registerId ? false : true}
                         className="btn btn-primary d-flex align-items-center gap-2"
                         onClick={() =>
                           setAssetDetailsPanel(!assetDetailsPanel)
@@ -243,9 +245,9 @@ export function FormEditForm({
                   </div>
 
                 </div>
-
+                <br />
                 <AssetDetails assetId={values?.asset_registerId} panelMode={assetDetailsPanel} />
-
+                <br />
 
                 <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-1">
@@ -255,6 +257,7 @@ export function FormEditForm({
                     </label>
                     <Field
                       name="date_of_inspection"
+                      disabled={!values.asset_registerId || isdataForRead || data?.dataIsExist}
                       component={DatePickerField} // Custom component
                       dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
@@ -263,9 +266,9 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("date_of_inspection", e);
 
-                         if (e && values?.asset_categoryId && values?.asset_registerId) {
+                        if (e && values?.asset_categoryId && values?.asset_registerId) {
                           dispatch(fetchAssetInspectionListDataForEdit({
-                            asset_categoryId:values?.asset_categoryId,
+                            asset_categoryId: values?.asset_categoryId,
                             asset_registerId: values?.asset_registerId,
                             date_of_inspection: e,
                           }));
@@ -339,7 +342,7 @@ export function FormEditForm({
                         <span>
                           {" "}
                           Reason for Inspection
-                          <span style={{ color: "red" }}>*</span>
+
                         </span>
                       }
                       autoComplete="off"
