@@ -353,11 +353,14 @@ export function MasterEditForm({
                                             <tr key={i}>
                                               <td>{e?.CompetencyName || ""}</td>
                                               <td
-                                                title={e?.questionDescription}
+                                                title={`${e?.questionName}${e?.questionDescription}`}
                                               >
+                                                <span className="font-bold">
+                                                  {e?.questionName}
+                                                </span>{" "}
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  140,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>
@@ -365,7 +368,7 @@ export function MasterEditForm({
                                               </td>
                                               <td>{e?.rating || 0}</td>
                                               <td title={e?.comments}>
-                                                {truncateText(e?.comments, 140)}
+                                                {truncateText(e?.comments, 250)}
                                               </td>
                                               <td>
                                                 <Field
@@ -496,11 +499,14 @@ export function MasterEditForm({
                                             <tr key={i}>
                                               <td>{e?.CompetencyName || ""}</td>
                                               <td
-                                                title={e?.questionDescription}
+                                                title={`${e?.questionName} ${e?.questionDescription}`}
                                               >
+                                                <span className="font-bold">
+                                                  {e?.questionName}
+                                                </span>{" "}
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>
@@ -510,14 +516,14 @@ export function MasterEditForm({
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80,
+                                                  160,
                                                 )}
                                               </td>
                                               <td>
@@ -650,11 +656,14 @@ export function MasterEditForm({
                                             <tr key={i}>
                                               <td>{e?.CompetencyName || ""}</td>
                                               <td
-                                                title={e?.questionDescription}
+                                                title={`${e?.questionName} ${e?.questionDescription}`}
                                               >
+                                                <span className="font-bold">
+                                                  {e?.questionName}
+                                                </span>{" "}
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>
@@ -664,14 +673,14 @@ export function MasterEditForm({
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80,
+                                                  160,
                                                 )}
                                               </td>
                                               <td>
