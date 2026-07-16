@@ -27,10 +27,11 @@ export function FormCard() {
     };
   }, [formUIContext]);
 
-  const { userAccess, appraisal } = useSelector(
+  const { userAccess, appraisal, appraisalAccess } = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.emp_appraisal,
       appraisal: state?.auth?.userAccess["appraisal_evaluation"],
+      appraisalAccess: state?.auth?.userAccess["Appraisal"],
     }),
     shallowEqual
   );
@@ -49,6 +50,31 @@ export function FormCard() {
   const isAccessForRead = userAccess?.find(
     (item) => item.componentName === "ReadAppraisalReview"
   );
+
+  const menuOptions = useMemo(
+    () => [
+      {
+        name: "Employee Goal Setup",
+        link: "/employee_goal_setup_portal/read-all-employee-goal-setup",
+        isShow: appraisalAccess?.find(
+          (el) =>
+            el?.componentName === "ReadAllEmployeeGoalSetup" &&
+            el?.isResourceShow,
+        ),
+      },
+      {
+        name: "Submit Feedback",
+        link: "/appraisal_evaluation/read-all-appraisal-evaluation",
+        isShow: appraisal?.find(
+          (el) =>
+            el?.componentName === "ReadAllAppraisalEvaluation" &&
+            el?.isResourceShow,
+        ),
+      },
+    ],
+    [appraisalAccess, appraisal]
+  );
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
@@ -56,17 +82,7 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
-              {
-                name: "Submit Feedback",
-                link: "/appraisal_evaluation/read-all-appraisal-evaluation",
-                isShow: appraisal?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllAppraisalEvaluation" &&
-                    el?.isResourceShow
-                ),
-              },
-            ]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>
@@ -77,17 +93,7 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
-              {
-                name: "Submit Feedback",
-                link: "/appraisal_evaluation/read-all-appraisal-evaluation",
-                isShow: appraisal?.find(
-                  (el) =>
-                    el?.componentName === "ReadAllAppraisalEvaluation" &&
-                    el?.isResourceShow
-                ),
-              },
-            ]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>
@@ -95,7 +101,6 @@ export function FormCard() {
           <div className="flex justify-start sm:justify-end items-end flex-wrap gap-2">
             <FormFilter />
             <div className="flex items-end gap-2">
-              {/* <CardHeaderToolbar> */}
               {accessUser && (
                 <>
                   <button

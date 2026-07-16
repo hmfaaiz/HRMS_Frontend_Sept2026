@@ -692,6 +692,15 @@ import ("./modules/Asset_Assignment/pages/index"))
 const asset_disposal = lazy (() =>
 import ("./modules/Asset_Disposal/pages/index"))
 
+const asset_list = lazy (() =>
+import ("./modules/Asset_List/pages/index"))
+const asset_inspection_list = lazy (() =>
+import ("./modules/Asset_Inspection_List/pages/index"))
+
+
+const asset_checklist = lazy (() =>
+import ("./modules/Asset_Checklist/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -924,6 +933,9 @@ const ROUTES = {
   asset_disposal: asset_disposal,
 
   ticket_escalation_policy: ticket_escalation_policy,
+  asset_list: asset_list,
+  asset_inspection_list: asset_inspection_list,
+  asset_checklist: asset_checklist,
 
 };
 

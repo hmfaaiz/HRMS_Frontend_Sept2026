@@ -40,7 +40,7 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
+              {row.isActive ? "Revert" : "Mark Active"}
             </Tooltip>
           }
         >

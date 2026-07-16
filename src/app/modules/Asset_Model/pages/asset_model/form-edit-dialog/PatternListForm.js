@@ -115,7 +115,7 @@ function PatternListForm({
                               ? "form-control is-invalid"
                               : "form-control"
                           }
-                          disabled={isdataForRead}
+                          isDisabled={isdataForRead}
                           value={dashboard?.allAssetCategoryList?.find(
                             (x) =>
                               Number(x.value) ===

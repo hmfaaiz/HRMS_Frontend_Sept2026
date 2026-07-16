@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { useSelector, shallowEqual } from "react-redux";
 import { FormTable } from "../form-table/FormTable";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
@@ -7,6 +8,36 @@ import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePort
 import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 
 export function FormCard() {
+  const { appraisalAccess } = useSelector((state) => {
+    return {
+      appraisalAccess: state?.auth?.userAccess["Appraisal"],
+    };
+  }, shallowEqual);
+
+  const menuOptions = useMemo(
+    () => [
+      {
+        name: "Employee Goal Setup",
+        link: "/employee_goal_setup_portal/read-all-employee-goal-setup",
+        isShow: appraisalAccess?.find(
+          (el) =>
+            el?.componentName === "ReadAllEmployeeGoalSetup" &&
+            el?.isResourceShow,
+        ),
+      },
+      {
+        name: "Rating Finalization",
+        link: "/emp_appraisal/appraisal-review-finalization",
+        isShow: appraisalAccess?.find(
+          (el) =>
+            el?.componentName === "AppraisalReviewFinalization" &&
+            el?.isResourceShow,
+        ),
+      },
+    ],
+    [appraisalAccess]
+  );
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
@@ -14,7 +45,7 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[]}
+            menuOptions={menuOptions}
             isDashboardRedirect={true}
             isDashboardIcon={true}
           />
@@ -25,10 +56,10 @@ export function FormCard() {
         <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
-            menuOptions={[]}
+            menuOptions={menuOptions}
             isBackButton={true}
             isDashboardIcon={true}
-            isDashboardRedirect={true}  
+            isDashboardRedirect={true}
           />
         </div>
         <div className="px-3 py-2 rounded-lg bg-white">
