@@ -21,6 +21,7 @@ import StatsCardModal from "../admin_portal_comp/ExpandViews/StatsCardModal";
 import SeparationArea from "../admin_portal_comp/Views/SeparationArea";
 import AppraisalArea from "../admin_portal_comp/Views/AppraisalArea";
 import BudgetArea from "../admin_portal_comp/Views/BudgetArea";
+import AssetsArea from "../admin_portal_comp/Views/AssetsArea";
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
@@ -323,6 +324,22 @@ export const AdminPortal = () => {
         />
       ) : activeTab == "8" ? (
         <BudgetArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          allDesignations={allDesignations}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab == "9" ? (
+        <AssetsArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
           allDesignations={allDesignations}
