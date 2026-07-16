@@ -8,25 +8,58 @@ import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
-import {} from "../../_redux/redux-Actions";
+import { } from "../../_redux/redux-Actions";
 
 
 
 export function FormPage({ history }) {
-console.log("history111111")
+  console.log("history111111")
 
   const dispatch = useDispatch();
   const FormUIEvents = {
     newFormButtonClick: () => {
       history.push("/asset_checklist/read-all-asset-checklist/new");
     },
-  openEditFormDialog: (
+    openEditFormDialog: (
+      assetCategoryId,
+      assetRegisterId,
+      dateOfInspection
+    ) => {
+      history.push({
+        pathname: "/asset_checklist/read-all-asset-checklist/edit",
+        state: {
+          assetCategoryId,
+          assetRegisterId,
+          dateOfInspection,
+        },
+      });
+    },
+
+    openActiveFormDialog: (id) => {
+      history.push(`/asset_checklist/read-all-asset-checklist/${id}/active`);
+    },
+    openReadFormDialog: (assetCategoryId,
+      assetRegisterId,
+      dateOfInspection, isUserRead) => {
+
+      history.push({
+        pathname: `/asset_checklist/read-all-asset-checklist/read`,
+        state: {
+          assetCategoryId,
+          assetRegisterId,
+          dateOfInspection,
+          isUserRead,
+        },
+      });
+    },
+
+ openDeleteFormDialog: (
   assetCategoryId,
   assetRegisterId,
   dateOfInspection
 ) => {
   history.push({
-    pathname: "/asset_checklist/read-all-asset-checklist/edit",
+    pathname: "/asset_checklist/read-all-asset-checklist/delete",
     state: {
       assetCategoryId,
       assetRegisterId,
@@ -34,19 +67,10 @@ console.log("history111111")
     },
   });
 },
-    openDeleteFormDialog: (id, status) => {
-      history.push(`/asset_checklist/read-all-asset-checklist/${id}/${status}/delete`);
-    },
-    openActiveFormDialog: (id) => {
-      history.push(`/asset_checklist/read-all-asset-checklist/${id}/active`);
-    },
-    openReadFormDialog: (id, isUserRead) => {
-      history.push(`/asset_checklist/read-all-asset-checklist/${id}/read`);
-    },
   };
   return (
 
-    
+
     <FormUIProvider FormUIEvents={FormUIEvents}>
       <Route exact path="/asset_checklist/read-all-asset-checklist/new">
         {({ history, match }) => (
@@ -71,24 +95,27 @@ console.log("history111111")
       </Route> */}
 
 
-  <Route path="/asset_checklist/read-all-asset-checklist/edit">
-  {({ history, location, match }) => (
-    <FormEditDialog
-      show={match != null}
-      assetCategoryId={location.state?.assetCategoryId}
-      assetRegisterId={location.state?.assetRegisterId}
-      dateOfInspection={location.state?.dateOfInspection}
-      onHide={() => {
-        history.push("/asset_checklist/read-all-asset-checklist");
-      }}
-    />
-  )}
-</Route>
-      <Route path="/asset_checklist/read-all-asset-checklist/:id/read">
-        {({ history, match }) => (
+      <Route path="/asset_checklist/read-all-asset-checklist/edit">
+        {({ history, location, match }) => (
           <FormEditDialog
             show={match != null}
-            id={match && match.params.id}
+            assetCategoryId={location.state?.assetCategoryId}
+            assetRegisterId={location.state?.assetRegisterId}
+            dateOfInspection={location.state?.dateOfInspection}
+            dataForRead={false}
+            onHide={() => {
+              history.push("/asset_checklist/read-all-asset-checklist");
+            }}
+          />
+        )}
+      </Route>
+      <Route path="/asset_checklist/read-all-asset-checklist/read">
+        {({ history, location, match }) => (
+          <FormEditDialog
+            show={match != null}
+            assetCategoryId={location.state?.assetCategoryId}
+            assetRegisterId={location.state?.assetRegisterId}
+            dateOfInspection={location.state?.dateOfInspection}
             dataForRead={true}
             onHide={() => {
               history.push("/asset_checklist/read-all-asset-checklist");
@@ -96,7 +123,7 @@ console.log("history111111")
           />
         )}
       </Route>
-      <Route path="/asset_checklist/read-all-asset-checklist/:id/:status/delete">
+      {/* <Route path="/asset_checklist/read-all-asset-checklist/:id/:status/delete">
         {({ history, match }) => (
           <FormDeleteDialog
             show={match != null}
@@ -107,8 +134,21 @@ console.log("history111111")
             }}
           />
         )}
+      </Route> */}
+
+      <Route path="/asset_checklist/read-all-asset-checklist/delete">
+        {({ history, location, match }) => (
+          <FormDeleteDialog
+            show={match != null}
+            assetCategoryId={location?.state?.assetCategoryId}
+            assetRegisterId={location?.state?.assetRegisterId}
+            dateOfInspection={location?.state?.dateOfInspection}
+            onHide={() => {
+              history.push("/asset_checklist/read-all-asset-checklist");
+            }}
+          />
+        )}
       </Route>
-    
       <FormCard />
       <ToastContainer
         position="top-right"

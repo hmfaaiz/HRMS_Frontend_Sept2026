@@ -11,22 +11,22 @@ import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
 
 
-export function FormEditDialog({   assetCategoryId,
+export function FormEditDialog({ assetCategoryId,
   assetRegisterId,
-  dateOfInspection,show, onHide, dataForRead }) {
+  dateOfInspection, show, onHide, dataForRead }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
- 
+
   const usersUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
     };
   }, [FormUIContext]);
 
-  const formUIProps  = useMemo(() => {
+  const formUIProps = useMemo(() => {
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
@@ -50,15 +50,15 @@ export function FormEditDialog({   assetCategoryId,
     userStatusTypes,
     isdataForRead,
   } = useSelector((state) => {
-   
-  
+
+
     return {
       actionsLoading: state.users.actionsLoading,
       dataForEdit: state.asset_checklist.dataForEdit,
       isdataForRead: state.asset_checklist.dataForRead,
     };
   }, shallowEqual);
-  
+
 
 
 
@@ -68,38 +68,38 @@ export function FormEditDialog({   assetCategoryId,
   //   // dispatch(actions.fetchAssetInspectionListDataForEdit(formUIProps .queryParams))
   // }, [id, dispatch,show]);
 
-useEffect(() => {
-  if (show) {
-    dispatch(
-      actions.fetchAssetInspectionListDataForEdit({
-        asset_categoryId: assetCategoryId,
-        asset_registerId: assetRegisterId,
-        date_of_inspection: dateOfInspection,
-      })
-    );
-  }
-}, [
-  assetCategoryId,
-  assetRegisterId,
-  dateOfInspection,
-  dispatch,
-  show,
-]);
+  useEffect(() => {
+    if (show) {
+      dispatch(
+        actions.fetchAssetInspectionListDataForEdit({
+          asset_categoryId: assetCategoryId,
+          asset_registerId: assetRegisterId,
+          date_of_inspection: dateOfInspection,
+        })
+      );
+    }
+  }, [
+    assetCategoryId,
+    assetRegisterId,
+    dateOfInspection,
+    dispatch,
+    show,
+  ]);
   // const saveForm = async (data) => {
 
- 
+
 
   //   if (!data.dataIsExist) {
- 
-    
+
+
   //     const finalObject = { data }
   //     await dispatch(actions.createAssetInspectionList(data, disbaleLoading, onHide));
   //     await dispatch(actions.fetchAssetInspectionList(usersUIProps.queryParams));
-      
+
 
   //   } else {
 
-     
+
 
 
   //     const formUpdatedFields = {
@@ -107,7 +107,7 @@ useEffect(() => {
   //       list:data?.list,
   //     };
 
-      
+
 
   //    await dispatch(actions.updateAssetInspectionList(formUpdatedFields, disbaleLoading, onHide));
   //    await dispatch(actions.fetchAssetInspectionList(usersUIProps.queryParams));
@@ -116,54 +116,59 @@ useEffect(() => {
 
 
 
-const saveForm = async (data) => {
-  if (!data.dataIsExist) {
-    const payload = {
-      ...data,
-      date_of_inspection: data.date_of_inspection
-        ? format(new Date(data.date_of_inspection), "yyyy-MM-dd")
-        : null,
-    };
-
-    await dispatch(
-      actions.createAssetInspectionList(
-        payload,
-        disbaleLoading,
-        onHide
-      )
-    );
-
-    await dispatch(
-      actions.fetchAssetInspectionList(usersUIProps.queryParams)
-    );
-  } else {
-    const formUpdatedFields = {
-    
-      date_of_inspection: data.date_of_inspection
-        ? format(new Date(data.date_of_inspection), "yyyy-MM-dd")
-        : null,
-
-      list: data.list.map((item) => ({
-        ...item,
+  const saveForm = async (data) => {
+    if (!data.dataIsExist) {
+      const payload = {
+        ...data,
         date_of_inspection: data.date_of_inspection
           ? format(new Date(data.date_of_inspection), "yyyy-MM-dd")
           : null,
-      })),
-    };
+      };
 
-    await dispatch(
-      actions.updateAssetInspectionList(
-        formUpdatedFields,
-        disbaleLoading,
-        onHide
-      )
-    );
+      await dispatch(
+        actions.createAssetInspectionList(
+          payload,
+          disbaleLoading,
+          onHide
+        )
+      );
 
-    await dispatch(
-      actions.fetchAssetInspectionList(usersUIProps.queryParams)
-    );
-  }
-};
+      await dispatch(
+        actions.fetchAssetInspectionList(usersUIProps.queryParams)
+      );
+    } else {
+      const formUpdatedFields = {
+        asset_categoryId: data.asset_categoryId,
+        asset_registerId: data.asset_registerId,
+        inspected_by_employeeId: data.inspected_by_employeeId,
+        reason_for_inspection: data.reason_for_inspection,
+        event_for_inspection: data.event_for_inspection,
+  
+        date_of_inspection: data.date_of_inspection
+          ? format(new Date(data.date_of_inspection), "yyyy-MM-dd")
+          : null,
+
+        list: data.list.map((item) => ({
+          ...item,
+          date_of_inspection: data.date_of_inspection
+            ? format(new Date(data.date_of_inspection), "yyyy-MM-dd")
+            : null,
+        })),
+      };
+
+      await dispatch(
+        actions.updateAssetInspectionList(
+          formUpdatedFields,
+          disbaleLoading,
+          onHide
+        )
+      );
+
+      await dispatch(
+        actions.fetchAssetInspectionList(usersUIProps.queryParams)
+      );
+    }
+  };
 
   return (
     <Modal

@@ -45,15 +45,21 @@ export const fetchAssetInspectionListDataForEdit = (params) => (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't find record";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
+       return dispatch(
+      actions.AssetInspectionListFetchedForEdit({
+        dataForEdit: undefined,
+      })
+    );
     });
 };
 
-export const deleteAssetInspectionList = (id) => (dispatch) => {
+export const deleteAssetInspectionList = (body) => (dispatch) => {
+  console.log("body111111",body)
   return requestFromServer
-    .deleteAssetInspectionList({ Id: id })
+    .deleteAssetInspectionList(body)
     .then((response) => {
 
-      dispatch(actions.AssetInspectionListDeleted({ Id: id }));
+      dispatch(actions.AssetInspectionListDeleted({ Id: body }));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,

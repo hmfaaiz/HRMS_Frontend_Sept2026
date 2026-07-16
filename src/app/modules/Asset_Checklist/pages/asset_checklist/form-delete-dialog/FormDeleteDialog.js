@@ -4,8 +4,11 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
+import { format } from "date-fns";
 
-export function FormDeleteDialog({ id, status, show, onHide }) {
+export function FormDeleteDialog({ assetCategoryId,
+  assetRegisterId,
+  dateOfInspection, status, show, onHide }) {
 
   const [loading, setLoading] = useState(false);
   // Customers UI Context
@@ -33,23 +36,33 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
 
   // if !id we should close modal
   useEffect(() => {
-    if (!id) {
+    if (
+      !assetCategoryId ||
+      !assetRegisterId ||
+      !dateOfInspection
+    ) {
       onHide();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [assetCategoryId, assetRegisterId, dateOfInspection]);
 
   // looking for loading/dispatch
-  useEffect(() => {}, [isLoading, dispatch]);
+  useEffect(() => { }, [isLoading, dispatch]);
 
   const deleteAssetInspectionList = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteAssetInspectionList(id)).then(() => {
+    dispatch(actions.deleteAssetInspectionList({
+      asset_categoryId: assetCategoryId,
+      asset_registerId: assetRegisterId,
+      date_of_inspection: format(
+        new Date(dateOfInspection),
+        "yyyy-MM-dd"
+      )
+    })).then(() => {
       onHide();
       // refresh list after deletion
       dispatch(actions.fetchAssetInspectionList(usersUIProps.queryParams));
-   
+
       disableLoading();
     });
   };
@@ -87,7 +100,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
             onClick={deleteAssetInspectionList}
             className="btn btn-danger btn-elevate"
           >
-            Delete 
+            Delete
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}

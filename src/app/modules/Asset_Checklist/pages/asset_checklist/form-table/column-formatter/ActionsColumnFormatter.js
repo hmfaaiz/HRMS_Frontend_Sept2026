@@ -29,7 +29,7 @@ export function ActionsColumnFormatter(
         <a
           title=""
           className=""
-          onClick={() => openReadFormDialog(row.Id, isUserRead)}
+          onClick={() => openReadFormDialog(row?.asset_categoryId,row?.asset_registerId,row?.date_of_inspection,isUserRead)}
         >
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
@@ -38,7 +38,7 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
-          <a title="" className="" onClick={() => openEditFormDialog(row.asset_categoryId,row.asset_registerId,row.date_of_inspection)}>
+          <a title="" className="" onClick={() => openEditFormDialog(row?.asset_categoryId,row?.asset_registerId,row?.date_of_inspection)}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
@@ -59,7 +59,7 @@ export function ActionsColumnFormatter(
           <a
             title=""
             className=""
-            onClick={() => openDeleteFormDialog(row.asset_categoryId,row.asset_registerId,row.date_of_inspection)}
+            onClick={() => openDeleteFormDialog(row?.asset_categoryId,row?.asset_registerId,row?.date_of_inspection)}
           >
             <Trash2 className="w-4 h-4 text-black cursor-pointer" />
           </a>

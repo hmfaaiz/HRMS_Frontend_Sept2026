@@ -12,6 +12,7 @@ import { fetchAllAssetInspectionListById, fetchAllPresentUnassignedCategory, fet
 import { format, set } from "date-fns";
 import { Eye, XCircle } from "lucide-react";
 import AssetDetails from "../../../../../utils/common-modules/AssetDetails";
+import { fetchAssetInspectionListDataForEdit } from "../../../_redux/redux-Actions";
 
 const assetSchema = Yup.object().shape({
   asset_categoryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
@@ -151,6 +152,13 @@ export function FormEditForm({
                         dispatch(fetchAllAssetInspectionListById(e?.value));
                         dispatch(fetchAllRegisterAssetName({ asset_categoryId: e?.value }));
                         setFieldValue("list", []);
+                        if (e?.value && values.asset_registerId && values.date_of_inspection) {
+                          dispatch(fetchAssetInspectionListDataForEdit({
+                            asset_categoryId:e?.value,
+                            asset_registerId: values.asset_registerId,
+                            date_of_inspection: values.date_of_inspection,
+                          }));
+                        }
                       }}
                       value={
                         dashboard?.allPresentUnassignedCategoryList?.find(
@@ -183,6 +191,13 @@ export function FormEditForm({
                       }
                       onChange={(e) => {
                         setFieldValue("asset_registerId", e?.value || null);
+                        if (e?.value && values?.asset_categoryId && values?.date_of_inspection) {
+                          dispatch(fetchAssetInspectionListDataForEdit({
+                            asset_categoryId:values?.asset_categoryId,
+                            asset_registerId: e?.value,
+                            date_of_inspection: values?.date_of_inspection,
+                          }));
+                        }
 
                       }}
                       options={
@@ -247,6 +262,14 @@ export function FormEditForm({
                       maxDate={new Date()}
                       onChange={(e) => {
                         setFieldValue("date_of_inspection", e);
+
+                         if (e && values?.asset_categoryId && values?.asset_registerId) {
+                          dispatch(fetchAssetInspectionListDataForEdit({
+                            asset_categoryId:values?.asset_categoryId,
+                            asset_registerId: values?.asset_registerId,
+                            date_of_inspection: e,
+                          }));
+                        }
                       }}
                     />
                   </div>
