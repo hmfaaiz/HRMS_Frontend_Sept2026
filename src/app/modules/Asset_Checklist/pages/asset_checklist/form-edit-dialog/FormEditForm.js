@@ -19,7 +19,7 @@ const assetSchema = Yup.object().shape({
   inspected_by_employeeId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
   asset_registerId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
   date_of_inspection: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-  reason_for_inspection: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
+  reason_for_inspection: Yup.string().nullable(),
   event_for_inspection: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
   list: Yup.array()
@@ -178,7 +178,8 @@ export function FormEditForm({
                       component={Input}
                       placeholder="Select Asset"
                       className="form-control"
-                      isDisabled={!values.asset_categoryId}
+                     
+                      isDisabled={!values.asset_categoryId || isdataForRead || data?.dataIsExist}
                       value={dashboard?.allRegisterAssetList
                         ?.filter((item) => Number(item.status) === 0)
                         ?.find(
@@ -255,6 +256,7 @@ export function FormEditForm({
                     </label>
                     <Field
                       name="date_of_inspection"
+                      disabled={!values.asset_registerId || isdataForRead || data?.dataIsExist}
                       component={DatePickerField} // Custom component
                       dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
@@ -339,7 +341,7 @@ export function FormEditForm({
                         <span>
                           {" "}
                           Reason for Inspection
-                          <span style={{ color: "red" }}>*</span>
+                        
                         </span>
                       }
                       autoComplete="off"
