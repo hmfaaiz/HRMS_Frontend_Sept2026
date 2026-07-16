@@ -23,5 +23,8 @@ export const initialFilter = {
 
     sortOrder: "asc",
     pageSize: 100,
-    pageNumber: 1
+    pageNumber: 1,
+    asset_registerId: "",
+    asset_categoryId: "",
+    asset_modelId: ""
 }

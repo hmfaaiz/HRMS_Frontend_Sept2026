@@ -1,11 +1,10 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
-
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
 import StatsCard from "../StatsCard";
-import { HouseWifi, ClockArrowUp } from "lucide-react";
+import { PackageOpen, UserCheck, UserX, ArchiveX } from "lucide-react";
 import { HolidayTable } from "../../EmpPortalComponent/HolidayCalendar";
 const AssetsArea = ({
   allSubsidiaryList,
@@ -111,7 +110,7 @@ const AssetsArea = ({
               name={"Total Assets"}
               value={summaryData?.totalAssets || 0}
               keyName={"totalAssets"}
-              icon={<ClockArrowUp className="w-5 h-5 text-white" />}
+              icon={<PackageOpen className="w-5 h-5 text-white" />}
             />
             <StatsCard
               summaryFilter={summaryFilter}
@@ -119,7 +118,7 @@ const AssetsArea = ({
               name={"Assigned Assets"}
               value={summaryData?.assignedAssets || 0}
               keyName={"assignedAssets"}
-              icon={<HouseWifi className="w-5 h-5 text-white" />}
+              icon={<UserCheck className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
@@ -129,7 +128,7 @@ const AssetsArea = ({
               name={"Unassigned Assets"}
               value={summaryData?.unAssignedAssets || 0}
               keyName={"unAssignedAssets"}
-              icon={<ClockArrowUp className="w-5 h-5 text-white" />}
+              icon={<UserX className="w-5 h-5 text-white" />}
             />
             <StatsCard
               summaryFilter={summaryFilter}
@@ -137,7 +136,7 @@ const AssetsArea = ({
               name={"Assets Expire This Year"}
               value={summaryData?.assetsExpireThisYear || 0}
               keyName={"assetsExpireThisYear"}
-              icon={<HouseWifi className="w-5 h-5 text-white" />}
+              icon={<ArchiveX className="w-5 h-5 text-white" />}
             />
           </div>
         </div>

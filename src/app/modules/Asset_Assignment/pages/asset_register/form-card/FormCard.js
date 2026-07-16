@@ -309,7 +309,20 @@ export function FormCard() {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={FormUIProps.newFormButtonClick}
+                  onClick={() => {
+
+                    const updatedQueryParams = {
+                      ...FormUIProps.queryParams,
+                      status: 1,
+                      pageNumber: 1,
+                    };
+
+
+                    FormUIProps.setQueryParams(updatedQueryParams);
+                    FormUIProps.newFormButtonClick();
+
+                  }
+                  }
                 >
                   <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
                   Add

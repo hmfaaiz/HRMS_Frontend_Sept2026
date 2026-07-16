@@ -89,7 +89,7 @@ export function FormTable() {
       sort: false,
       sortCaret,
       headerSortingClasses,
-      style: { minWidth: "200px" },
+      style: { minWidth: "150px" },
       formatter: (_, row) => {
         const modelName = row.AssetModel?.name || "";
         const makeName = row.AssetModel?.AssetMake?.formName || "";
