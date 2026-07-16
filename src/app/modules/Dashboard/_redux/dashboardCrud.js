@@ -336,3 +336,11 @@ export const getAllPresentUnassignedCategory = async (body) => {
 export const getAllPresentUnassignedMakeCompany = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-unassigned-make-company`,body);
 };
+
+export const getAssetDetailViewSection = async (Id) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-asset-detail-view-section/${Id}`);
+
+}
+export const getAssetInspectionListById = async (Id) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-asset-inspection-list/${Id}`);
+}
