@@ -65,7 +65,7 @@ export const initialFilter = {
     locationId: [],
 
     // Report Filter
-    assetStatus: [],
+    assetStatus: ["assigned", "unassigned"],
 
     // Date Range
     acquisitionFrom: "",

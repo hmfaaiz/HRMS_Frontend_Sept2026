@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import { isEqual } from "lodash";
@@ -51,8 +51,47 @@ const idsToLabels = (ids, options) => {
   return ids.map((id) => optionMap.get(id)?.label).filter(Boolean).join(", ");
 };
 
+const resolveAssetStatusSelection = (prevValues, selectedValues) => {
+  const justSelectedAll =
+    selectedValues.includes("all") && !prevValues.includes("all");
+  const justSelectedOther =
+    selectedValues.some((v) => v !== "all") && prevValues.includes("all");
+
+  if (justSelectedAll) return ["all"];
+  if (justSelectedOther) return selectedValues.filter((v) => v !== "all");
+  return selectedValues;
+};
+
+const stripIfAllSelected = (selectedIds, fullOptions) => {
+  if (!fullOptions?.length || !selectedIds?.length) return selectedIds;
+  if (selectedIds.length !== fullOptions.length) return selectedIds;
+  const fullSet = new Set(fullOptions.map((o) => o.value));
+  const allMatch = selectedIds.every((id) => fullSet.has(id));
+  return allMatch ? [] : selectedIds;
+};
+
+const stripFullySelected = (values, optionsMap) => {
+  const stripped = { ...values };
+  Object.entries(optionsMap).forEach(([field, options]) => {
+    stripped[field] = stripIfAllSelected(values[field], options);
+  });
+  return stripped;
+};
+
+const labelOrAll = (selectedIds, options) => {
+  if (!options?.length || !selectedIds?.length) return idsToLabels(selectedIds, options);
+  if (selectedIds.length === options.length) {
+    const fullSet = new Set(options.map((o) => o.value));
+    if (selectedIds.every((id) => fullSet.has(id))) return "All";
+  }
+  return idsToLabels(selectedIds, options);
+};
+
 export function FormFilter({ loading, dispatch, pdfLoading, registerExcelLoading }) {
   const FormUIContext = useFormUIContext();
+  const formikRef = useRef(null);
+
+  const autoSelected = useRef({});
 
   const {
     allEmployees,
@@ -63,8 +102,16 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerExcelLoading
     allAssetMakeList,
   } = useSelector((state) => state.dashboard);
 
-
   const { assetModelList: allAssetModelList } = useSelector((state) => state.asset_list);
+  const optionsMap = {
+    asset_categoryId: allAssetCategoryList,
+    asset_makeId: allAssetMakeList,
+    asset_modelId: allAssetModelList,
+    subsidiaryId: allSubsidiaryList,
+    departmentId: allDept,
+    employeeId: allEmployees,
+    locationId: allLocationChildMenus,
+  };
 
   const formUIProps = useMemo(() => {
     return {
@@ -74,7 +121,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerExcelLoading
   }, [FormUIContext]);
 
   const applyFilter = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const strippedValues = stripFullySelected(values, optionsMap);
+    const newQueryParams = prepareFilter(formUIProps.queryParams, strippedValues);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
       newQueryParams.pageNumber = 1;
       formUIProps.setQueryParams(newQueryParams);
@@ -83,15 +131,15 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerExcelLoading
 
   const getLabels = (values) => {
     return {
-      asset_categoryLabel: idsToLabels(values.asset_categoryId, allAssetCategoryList),
-      asset_makeLabel: idsToLabels(values.asset_makeId, allAssetMakeList),
-      asset_modelLabel: idsToLabels(values.asset_modelId, allAssetModelList),
+      asset_categoryLabel: labelOrAll(values.asset_categoryId, allAssetCategoryList),
+      asset_makeLabel: labelOrAll(values.asset_makeId, allAssetMakeList),
+      asset_modelLabel: labelOrAll(values.asset_modelId, allAssetModelList),
       asset_noLabel: values?.asset_no || "",
       registration_noLabel: values?.registration_no || "",
-      subsidiaryLabel: idsToLabels(values.subsidiaryId, allSubsidiaryList),
-      departmentLabel: idsToLabels(values.departmentId, allDept),
-      employeeLabel: idsToLabels(values.employeeId, allEmployees),
-      locationLabel: idsToLabels(values.locationId, allLocationChildMenus),
+      subsidiaryLabel: labelOrAll(values.subsidiaryId, allSubsidiaryList),
+      departmentLabel: labelOrAll(values.departmentId, allDept),
+      employeeLabel: labelOrAll(values.employeeId, allEmployees),
+      locationLabel: labelOrAll(values.locationId, allLocationChildMenus),
       assetStatusLabel: idsToLabels(values.assetStatus, assetStatusOptions),
       acquisitionFromLabel: values?.acquisitionFrom ? formatDates(values.acquisitionFrom) : "",
       acquisitionToLabel: values?.acquisitionTo ? formatDates(values.acquisitionTo) : "",
@@ -101,36 +149,108 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerExcelLoading
   };
 
   const getPdf = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const strippedValues = stripFullySelected(values, optionsMap);
+    const newQueryParams = prepareFilter(formUIProps.queryParams, strippedValues);
     const labels = getLabels(values);
     dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
   };
 
   const getExcel = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const strippedValues = stripFullySelected(values, optionsMap);
+    const newQueryParams = prepareFilter(formUIProps.queryParams, strippedValues);
     const labels = getLabels(values);
     dispatch(actions.generateRegisterExcel(newQueryParams.filter, document, labels));
   };
 
-  useEffect(() => {
-    if (!allSubsidiaryList?.length) return;
-    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
-    if (!findDefaultSubs) return;
-    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
-    dispatch(fetchAllDept(findDefaultSubs?.value));
-  }, [allSubsidiaryList]);
-
-  // Load Asset Model dropdown options once (self-contained fetch,
-  // not tied to subsidiary selection since as_asset_model is company-scoped)
   useEffect(() => {
     if (!allAssetModelList?.length) {
       dispatch(actions.fetchAssetModelOptions());
     }
   }, []);
 
+  // Auto-select "all" for each master-data dropdown, once its options load
+
+  useEffect(() => {
+    if (allAssetCategoryList?.length && !autoSelected.current.asset_categoryId) {
+      formikRef.current?.setFieldValue(
+        "asset_categoryId",
+        allAssetCategoryList.map((o) => o.value),
+      );
+      autoSelected.current.asset_categoryId = true;
+    }
+  }, [allAssetCategoryList]);
+
+  useEffect(() => {
+    if (allAssetMakeList?.length && !autoSelected.current.asset_makeId) {
+      formikRef.current?.setFieldValue(
+        "asset_makeId",
+        allAssetMakeList.map((o) => o.value),
+      );
+      autoSelected.current.asset_makeId = true;
+    }
+  }, [allAssetMakeList]);
+
+  useEffect(() => {
+    if (allAssetModelList?.length && !autoSelected.current.asset_modelId) {
+      formikRef.current?.setFieldValue(
+        "asset_modelId",
+        allAssetModelList.map((o) => o.value),
+      );
+      autoSelected.current.asset_modelId = true;
+    }
+  }, [allAssetModelList]);
+
+  useEffect(() => {
+    if (allLocationChildMenus?.length && !autoSelected.current.locationId) {
+      formikRef.current?.setFieldValue(
+        "locationId",
+        allLocationChildMenus.map((o) => o.value),
+      );
+      autoSelected.current.locationId = true;
+    }
+  }, [allLocationChildMenus]);
+
+  useEffect(() => {
+    if (allSubsidiaryList?.length && !autoSelected.current.subsidiaryId) {
+      const ids = allSubsidiaryList.map((o) => o.value);
+      formikRef.current?.setFieldValue("subsidiaryId", ids);
+      autoSelected.current.subsidiaryId = true;
+
+      ids.forEach((id) => {
+        dispatch(fetchAllActiveEmployeesBySubsidiary(id));
+        dispatch(fetchAllDept(id));
+      });
+    }
+  }, [allSubsidiaryList]);
+
+  useEffect(() => {
+    if (!allDept?.length) return;
+    const newIds = allDept.map((o) => o.value);
+    const lastAuto = autoSelected.current.departmentIdValue;
+    const currentValue = formikRef.current?.values?.departmentId;
+    const untouchedByUser = !lastAuto || isEqual(currentValue, lastAuto);
+    if (untouchedByUser) {
+      formikRef.current?.setFieldValue("departmentId", newIds);
+      autoSelected.current.departmentIdValue = newIds;
+    }
+  }, [allDept]);
+
+  useEffect(() => {
+    if (!allEmployees?.length) return;
+    const newIds = allEmployees.map((o) => o.value);
+    const lastAuto = autoSelected.current.employeeIdValue;
+    const currentValue = formikRef.current?.values?.employeeId;
+    const untouchedByUser = !lastAuto || isEqual(currentValue, lastAuto);
+    if (untouchedByUser) {
+      formikRef.current?.setFieldValue("employeeId", newIds);
+      autoSelected.current.employeeIdValue = newIds;
+    }
+  }, [allEmployees]);
+
   return (
     <>
       <Formik
+        innerRef={formikRef}
         enableReinitialize={true}
         initialValues={initialFilter.filter}
         validationSchema={formValidation}
@@ -232,10 +352,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerExcelLoading
                           onChange={(items = []) => {
                             const ids = items.map((i) => i.value);
                             setFieldValue("subsidiaryId", ids);
-                            if (ids.length === 1) {
-                              dispatch(fetchAllActiveEmployeesBySubsidiary(ids[0]));
-                              dispatch(fetchAllDept(ids[0]));
-                            }
+                            ids.forEach((id) => {
+                              dispatch(fetchAllActiveEmployeesBySubsidiary(id));
+                              dispatch(fetchAllDept(id));
+                            });
                           }}
                         />
                       </div>
@@ -303,7 +423,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerExcelLoading
                             )}
                             options={assetStatusOptions}
                             onChange={(items = []) =>
-                              setFieldValue("assetStatus", items.map((i) => i.value))
+                              setFieldValue("assetStatus",resolveAssetStatusSelection(values.assetStatus, items.map((i) => i.value)),
+                              )
                             }
                           />
                         </div>
