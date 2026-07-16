@@ -9,6 +9,7 @@ import { CirclePlus, UserRoundCheck, UserRoundX } from "lucide-react";
 import { fetchAllActiveEmployees, fetchAllDept, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAssetRegisters } from "../../../_redux/redux-Actions";
+import { fetchAllAssetModelName, fetchAllRegisterAssetName } from "../../../../Dashboard/_redux/dashboardActions";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -43,215 +44,158 @@ export function FormCard() {
   }, shallowEqual);
 
   useEffect(() => {
+    dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
+    dispatch(fetchAllRegisterAssetName());
+    dispatch(fetchAllAssetModelName());
 
-    dispatch(fetchAllDept());
-    dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    dispatch(fetchAllActiveEmployees());
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
 
       <TCard name={CurrentModuleName()}>
 
-        {/* <div className="grid md:grid-cols-6 gap-3 mb-2">
+        <div className="grid md:grid-cols-8 gap-3 mb-2">
 
 
-          <div className="">
-            <div>
-              <SearchSelect
-                name="departmentId"
-                label={
-                  <span>
-                    {" "}
-                    Department
 
-                  </span>
-                }
-
-                value={
-                  (dashboard?.allDept || []).find(
-                    (item) => item.value === FormUIProps?.queryParams?.departmentId
-                  ) || { label: "All", value: "" }
-                }
-                onChange={(e) => {
-
-                  const updatedQueryParams = {
-                    ...FormUIProps.queryParams,
-                    departmentId: e.value,
-                    pageNumber: 1,
-                  };
-
-
-                  FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                  dispatch(fetchAssetRegisters(FormUIProps.queryParams));
-                }}
-
-                // options={dashboard.allDept}
-                options={[
+          <div>
+            <SearchSelect
+              name="asset_categoryId"
+              label={
+                <span>
+                  Asset Category
+                </span>
+              }
+              value={
+                [
                   { label: "All", value: "" },
-                  ...(Array.isArray(dashboard?.allDept)
-                    ? dashboard?.allDept
+                  ...(Array.isArray(dashboard?.allAssetCategoryList)
+                    ? dashboard.allAssetCategoryList
                     : []),
-                ]}
-              />
-            </div>
+                ].find(
+                  (item) =>
+                    String(item.value) ===
+                    String(FormUIProps.queryParams?.asset_categoryId ?? "")
+                ) || { label: "All", value: "" }
+              }
+              onChange={(e) => {
+                const updatedQueryParams = {
+                  ...FormUIProps.queryParams,
+                  asset_categoryId: e?.value ?? "",
+                  asset_modelId: "",
+                  asset_registerId: "",
+                  pageNumber: 1,
+                };
+                dispatch(fetchAllRegisterAssetName({ asset_categoryId: e?.value ?? "", asset_modelId: FormUIProps.queryParams?.asset_modelId ?? "" }));
+                dispatch(fetchAllAssetModelName({ asset_categoryId: e?.value ?? "" }));
+
+
+                FormUIProps.setQueryParams(updatedQueryParams);
+
+                dispatch(fetchAssetRegisters(updatedQueryParams));
+
+
+              }}
+              options={[
+                { label: "All", value: "" },
+                ...(Array.isArray(dashboard?.allAssetCategoryList)
+                  ? dashboard.allAssetCategoryList
+                  : []),
+              ]}
+            />
           </div>
-          <div className="">
-            <div>
-              <SearchSelect
-                name="designationId"
-                label={
-                  <span>
-                    {" "}
-                    Designation
-
-                  </span>
-                }
-
-
-                value={
-                  (dashboard?.allDesignations || []).find(
-                    (item) => item.value === FormUIProps?.queryParams?.designationId
-                  ) || { label: "All", value: "" }
-                }
-                onChange={(e) => {
-
-                  const updatedQueryParams = {
-                    ...FormUIProps.queryParams,
-                    designationId: e.value,
-                    pageNumber: 1,
-                  };
-
-
-                  FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                  dispatch(fetchAssetRegisters(FormUIProps.queryParams));
-                }}
-
-                // options={dashboard?.allDesignations}
-                options={[
+          <div>
+            <SearchSelect
+              name="asset_categoryId"
+              label={
+                <span>
+                  Asset Model Name
+                </span>
+              }
+              value={
+                [
                   { label: "All", value: "" },
-                  ...(Array.isArray(dashboard?.allDesignations)
-                    ? dashboard?.allDesignations
+                  ...(Array.isArray(dashboard?.allAssetModelNameList)
+                    ? dashboard.allAssetModelNameList
                     : []),
-                ]}
-              />
-            </div>
+                ].find(
+                  (item) =>
+                    String(item.value) ===
+                    String(FormUIProps.queryParams?.asset_modelId ?? "")
+                ) || { label: "All", value: "" }
+              }
+              onChange={(e) => {
+                const updatedQueryParams = {
+                  ...FormUIProps.queryParams,
+                  asset_modelId: e?.value ?? "",
+                  asset_registerId: "",
+                  pageNumber: 1,
+                };
+
+
+                dispatch(fetchAllRegisterAssetName({ asset_modelId: e?.value ?? "", asset_categoryId: FormUIProps.queryParams?.asset_categoryId ?? "" }));
+
+
+
+                FormUIProps.setQueryParams(updatedQueryParams);
+
+                dispatch(fetchAssetRegisters(updatedQueryParams));
+
+
+              }}
+              options={[
+                { label: "All", value: "" },
+                ...(Array.isArray(dashboard?.allAssetModelNameList)
+                  ? dashboard.allAssetModelNameList
+                  : []),
+              ]}
+            />
           </div>
 
-          <div className="">
-            <div>
-              <SearchSelect
-                name="employeeId"
-                label={
-                  <span>
-                    {" "}
-                    Employee
 
-                  </span>
-                }
-
-                value={
-                  (dashboard?.allEmployees || []).find(
-                    (item) => item.value === FormUIProps?.queryParams?.employeeId
-                  ) || { label: "All", value: "" }
-                }
-                onChange={(e) => {
-
-                  const updatedQueryParams = {
-                    ...FormUIProps.queryParams,
-                    employeeId: e.value,
-                    pageNumber: 1,
-                  };
-
-
-                  FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                  dispatch(fetchAssetRegisters(FormUIProps.queryParams));
-                }}
-
-                // options={dashboard.allDept}
-                options={[
+          <div>
+            <SearchSelect
+              name="asset_registerId"
+              label={
+                <span>
+                  Asset
+                </span>
+              }
+              value={
+                [
                   { label: "All", value: "" },
-                  ...(Array.isArray(dashboard?.allEmployees)
-                    ? dashboard?.allEmployees
+                  ...(Array.isArray(dashboard?.allRegisterAssetList)
+                    ? dashboard.allRegisterAssetList
                     : []),
-                ]}
-              />
-            </div>
+                ].find(
+                  (item) =>
+                    String(item.value) ===
+                    String(FormUIProps.queryParams?.asset_registerId ?? "")
+                ) || { label: "All", value: "" }
+              }
+              onChange={(e) => {
+                const updatedQueryParams = {
+                  ...FormUIProps.queryParams,
+                  asset_registerId: e?.value ?? "",
+                  pageNumber: 1,
+                };
+
+                FormUIProps.setQueryParams(updatedQueryParams);
+
+                dispatch(fetchAssetRegisters(updatedQueryParams));
+              }}
+              options={[
+                { label: "All", value: "" },
+                ...(Array.isArray(dashboard?.allRegisterAssetList)
+                  ? dashboard.allRegisterAssetList
+                  : []),
+              ]}
+            />
           </div>
-
-
-          <div className="flex items-center gap-2 mt-3 col-span-12">
-            <div className="">
-              <button
-                type="button"
-                className={`btn mr-2 rounded-xl ${FormUIProps?.queryParams?.status
-                  ? "bg-primary text-white"
-                  : "btn-secondary"
-                  }`}
-                onClick={
-                  () => {
-
-                    const updatedQueryParams = {
-                      ...FormUIProps.queryParams,
-                      status: 1,
-                      pageNumber: 1,
-                    };
-
-
-                    FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                    dispatch(fetchAssetRegisters(FormUIProps.queryParams));
-                  }}
-
-
-              >
-                Assigned Asset  <UserRoundCheck size={12} />
-              </button>
-            </div>
-            <div className="">
-              <button
-                type="button"
-                className={`btn mr-2 rounded-xl ${!FormUIProps?.queryParams?.status
-                  ? "bg-primary text-white"
-                  : "btn-secondary"
-                  }`}
-                onClick={
-                  () => {
-
-                    const updatedQueryParams = {
-                      ...FormUIProps.queryParams,
-                      status: 0,
-                      pageNumber: 1,
-                    };
-
-
-                    FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                    dispatch(fetchAssetRegisters(FormUIProps.queryParams));
-                  }}
-              >
-                Unassigned Asset<UserRoundX size={12} />
-              </button>
-            </div>
-
-          </div>
-
-
 
 
         </div>
-
- */}
-
 
 
 

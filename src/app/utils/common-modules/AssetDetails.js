@@ -15,7 +15,7 @@ const SECTIONS = [
       { name: 'Asset Category:', value: 'assetCategoryName' },
       { name: 'Asset Year:', value: 'asset_year' },
       { name: 'Date of Acquisition:', value: 'date_of_acquisition', isDate: false },
-      { name: 'Assigned To:', value: 'assignedEmployeeName' },
+      // { name: 'Assigned To:', value: 'assignedEmployeeName' },
       { name: 'Subsidiary:', value: 'subsidiaryName' },
     ]
   },
@@ -25,7 +25,7 @@ const SECTIONS = [
       { name: 'Asset Model:', value: 'assetModelName' },
       { name: 'Asset Description:', value: 'description' },
       { name: 'Date of Expiry:', value: 'date_of_expiry', isDate: false },
-      { name: 'Current Condition:', value: 'currentConditionName' },
+      // { name: 'Current Condition:', value: 'currentConditionName' },
       { name: 'Location:', value: 'locationName' },
     ]
   },
