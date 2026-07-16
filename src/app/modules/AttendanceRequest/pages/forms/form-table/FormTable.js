@@ -133,6 +133,8 @@ export function FormTable() {
     {
       dataField: "formattedDateOut",
       text: "Date Out",
+       headerClasses: "d-none d-md-table-cell",
+  classes: "d-none d-md-table-cell",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -213,6 +215,8 @@ export function FormTable() {
     {
       dataField: "oT",
       text: "OT Hours",
+       headerClasses: "d-none d-md-table-cell",
+  classes: "d-none d-md-table-cell",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -237,12 +241,13 @@ export function FormTable() {
     {
       dataField: "request_status",
       text: "Request",
+      
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
       formatter: (cell) => {
         let text = "-";
@@ -305,7 +310,7 @@ export function FormTable() {
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
       style: {
-        minWidth: "170px",
+        minWidth: "70px",
       },
     },
     // {
