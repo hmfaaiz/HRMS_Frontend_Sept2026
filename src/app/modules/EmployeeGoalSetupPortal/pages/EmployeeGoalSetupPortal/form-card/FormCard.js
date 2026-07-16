@@ -22,11 +22,16 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-  const { userAccess } = useSelector((state) => {
-    return {
-      userAccess: state.auth.userAccess["Employee_Goal_Setup_Portal"],
-    };
-  }, shallowEqual);
+  const { userAccess, appraisalEvaluationAccess, appraisalAccess } = useSelector(
+    (state) => {
+      return {
+        userAccess: state.auth.userAccess["Employee_Goal_Setup_Portal"],
+        appraisalEvaluationAccess: state?.auth?.userAccess["appraisal_evaluation"],
+        appraisalAccess: state?.auth?.userAccess["Appraisal"],
+      };
+    },
+    shallowEqual
+  );
 
   const accessUser = userAccess?.find(
     (item) => item.componentName === "CreateEmployeeGoalSetup"
@@ -39,8 +44,26 @@ export function FormCard() {
     };
   }, shallowEqual);
 
-
-  const menuOptions = [];
+  const menuOptions = [
+    {
+      name: "Submit FeedBack",
+      link: "/appraisal_evaluation/read-all-appraisal-evaluation",
+      isShow: appraisalEvaluationAccess?.find(
+        (el) =>
+          el?.componentName === "ReadAllAppraisalEvaluation" &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Rating Finalization",
+      link: "/emp_appraisal/appraisal-review-finalization",
+      isShow: appraisalAccess?.find(
+        (el) =>
+          el?.componentName === "AppraisalReviewFinalization" &&
+          el?.isResourceShow,
+      ),
+    },
+  ];
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
