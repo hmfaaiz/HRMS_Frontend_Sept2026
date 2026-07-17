@@ -20,6 +20,8 @@ import { fetchAllRegisterAssetName } from "../../../../Dashboard/_redux/dashboar
 
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { FormDynamicDialogModal } from "../form-delete-dialog/FormDeleteDialog";
+import AssetDetails from "../../../../../utils/common-modules/AssetDetails";
+import { Eye, XCircle } from "lucide-react";
 
 const assetDisposalSchema = Yup.object().shape({
   date_of_disposal: Yup.date()
@@ -61,6 +63,7 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [assetDetailsPanel, setAssetDetailsPanel] = useState(false);
   useEffect(() => {
 
     dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
@@ -185,6 +188,47 @@ export function FormEditForm({
                     </div>
 
 
+                    <div className="mt-6">
+                      {assetDetailsPanel ? (
+                        <button
+                          type="button"
+                          disabled={values.asset_registerId ? false : true}
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() =>
+                            setAssetDetailsPanel(!assetDetailsPanel)
+                          }
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={values.asset_registerId ? false : true}
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() =>
+                            setAssetDetailsPanel(!assetDetailsPanel)
+                          }
+                        >
+                          <Eye className="w-4 h-4 text-white" />
+                          View Details
+                        </button>
+                      )}
+                    </div>
+
+                  </div>
+
+
+
+
+
+
+
+                  <br />
+                  <AssetDetails assetId={values?.asset_registerId} panelMode={assetDetailsPanel} />
+
+
+                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
                       <SearchSelect
                         name="disposal_typeId"
@@ -219,19 +263,6 @@ export function FormEditForm({
 
 
                     </div>
-
-
-
-
-                  </div>
-
-
-
-
-
-
-
-                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
                       <label>
                         Date of Disposal
