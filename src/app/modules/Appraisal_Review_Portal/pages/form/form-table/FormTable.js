@@ -206,7 +206,7 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full overflow-x-auto scrollbar-fancy">
+    <div className="w-full scrollbar-fancy">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
