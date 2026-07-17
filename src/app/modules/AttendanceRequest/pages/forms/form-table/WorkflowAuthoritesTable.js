@@ -68,6 +68,8 @@ export function WorkflowAuthortiesTable() {
     {
       dataField: "department.deptName",
       text: "Department",
+       headerClasses: "d-none d-md-table-cell",
+  classes: "d-none d-md-table-cell",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -78,6 +80,8 @@ export function WorkflowAuthortiesTable() {
     {
       dataField: "grade.formName",
       text: "Grade",
+       headerClasses: "d-none d-md-table-cell",
+  classes: "d-none d-md-table-cell",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

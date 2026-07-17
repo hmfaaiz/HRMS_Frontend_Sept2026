@@ -28,6 +28,7 @@ const EmployeeProfile = ({
   team,
   setAttModalData,
   handleDetailViewChange,
+  isDashboard = false,
   detailViewType,
   isTeamExists,
 }) => {
@@ -87,7 +88,13 @@ const EmployeeProfile = ({
   return (
     <>
       {/* Profile Header */}
-      <div className="p-3 rounded-lg bg-white w-full relative">
+      <div
+        className={
+          isDashboard
+            ? "p-3 rounded-lg bg-white w-full relative"
+            : "p-3 rounded-lg bg-white w-full relative hidden xl:block"
+        }
+      >
         {/* Top right icons */}
         {isAttMarkShow && (
           <div className="absolute top-2 right-2 flex gap-1">
@@ -182,7 +189,13 @@ const EmployeeProfile = ({
       {!isCompactView ? (
         <>
           {/* Employee Details */}
-          <div className="px-5 py-2 rounded-lg bg-white w-full">
+          <div
+            className={
+              isDashboard
+                ? "px-5 py-2 rounded-lg bg-white w-full"
+                : "px-5 py-2 rounded-lg bg-white w-full hidden xl:block"
+            }
+          >
             {profileInfo?.profileInfo ? (
               <>
                 <div className="flex flex-row justify-between items-center">
@@ -246,12 +259,12 @@ const EmployeeProfile = ({
           </div>
 
           <>
-            <MenuOption />
+            <MenuOption isDashboard={isDashboard} />
           </>
 
           {isOpen &&
             portal_ticket_creation?.length > 0 &&
-            allAlertTask?.rows?.length > 0 && (
+            allAlertTask?.rows?.length > 0 && isDashboard && (
               <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
                 <div className="font-size-xs text-black font-bold">
                   <h6 className="font-bold mb-0 text-primary my-2 underline">

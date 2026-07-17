@@ -22,6 +22,7 @@ import {
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
 import { decodeHtml } from "../../../../../utils/common";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 const formValidation = (minPoint, maxPoint) =>
   Yup.object().shape({
@@ -31,7 +32,7 @@ const formValidation = (minPoint, maxPoint) =>
       Yup.object().shape({
         finalizedRating: Yup.number()
           .required(VALIDATION_MESSAGES.required)
-          .min(minPoint, `Rating cannot be less than ${minPoint}`)
+          .min(0, `Rating cannot be less than 0`)
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
@@ -42,7 +43,7 @@ const formValidation = (minPoint, maxPoint) =>
       Yup.object().shape({
         finalizedRating: Yup.number()
           .required(VALIDATION_MESSAGES.required)
-          .min(minPoint, `Rating cannot be less than ${minPoint}`)
+          .min(0, `Rating cannot be less than 0`)
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
@@ -53,7 +54,7 @@ const formValidation = (minPoint, maxPoint) =>
       Yup.object().shape({
         finalizedRating: Yup.number()
           .required(VALIDATION_MESSAGES.required)
-          .min(minPoint, `Rating cannot be less than ${minPoint}`)
+          .min(0, `Rating cannot be less than 0`)
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
@@ -157,7 +158,7 @@ export function MasterEditForm({
   onHide,
 }) {
   const formUIContext = useFromUIContext();
-
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const formUIProps = useMemo(() => {
     return {
       panelMode: formUIContext.panelMode,
@@ -186,13 +187,27 @@ export function MasterEditForm({
     return ratingList.find((item) => Number(item.points) === point);
   }
 
-  const handleSubmitWithFinalize = (isFinalize, handleSubmit, values) => {
+  const handleSubmitWithFinalize = async (isFinalize, handleSubmit, values) => {
+    const result = await confirm(
+      "Confirm Submission",
+      "Are you sure you want to finalized Rating? Once finalized, you will not be able to make any changes.",
+      "No",
+      "Yes",
+    );
+    if (!result) return;
     // handleSubmit(); // trigger Formik validation
     const valuesWithFlag = { ...values, isFinalize };
     saveFrom(valuesWithFlag);
   };
 
-    const handleSubmitWithConsent = (sendConsent, handleSubmit, values) => {
+  const handleSubmitWithConsent = async (sendConsent, handleSubmit, values) => {
+     const result = await confirm(
+      "Confirm Submission",
+      "Are you sure you want to send consent?",
+      "No",
+      "Yes",
+    );
+    if (!result) return;
     // handleSubmit(); // trigger Formik validation
     const valuesWithFlag = { ...values, sendConsent };
     saveFrom(valuesWithFlag);
@@ -352,11 +367,14 @@ export function MasterEditForm({
                                             <tr key={i}>
                                               <td>{e?.CompetencyName || ""}</td>
                                               <td
-                                                title={e?.questionDescription}
+                                                title={`${e?.questionName} ${e?.questionDescription}`}
                                               >
+                                                <span className="font-bold">
+                                                  {e?.questionName}
+                                                </span>{" "}
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  140,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>
@@ -364,7 +382,7 @@ export function MasterEditForm({
                                               </td>
                                               <td>{e?.rating || 0}</td>
                                               <td title={e?.comments}>
-                                                {truncateText(e?.comments, 140)}
+                                                {truncateText(e?.comments, 250)}
                                               </td>
                                               <td>
                                                 <Field
@@ -495,11 +513,14 @@ export function MasterEditForm({
                                             <tr key={i}>
                                               <td>{e?.CompetencyName || ""}</td>
                                               <td
-                                                title={e?.questionDescription}
+                                                title={`${e?.questionName} ${e?.questionDescription}`}
                                               >
+                                                <span className="font-bold">
+                                                  {e?.questionName}
+                                                </span>{" "}
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>
@@ -509,14 +530,14 @@ export function MasterEditForm({
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80,
+                                                  160,
                                                 )}
                                               </td>
                                               <td>
@@ -649,11 +670,14 @@ export function MasterEditForm({
                                             <tr key={i}>
                                               <td>{e?.CompetencyName || ""}</td>
                                               <td
-                                                title={e?.questionDescription}
+                                                title={`${e?.questionName} ${e?.questionDescription}`}
                                               >
+                                                <span className="font-bold">
+                                                  {e?.questionName}
+                                                </span>{" "}
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>
@@ -663,14 +687,14 @@ export function MasterEditForm({
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80,
+                                                  250,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80,
+                                                  160,
                                                 )}
                                               </td>
                                               <td>
@@ -1371,6 +1395,7 @@ export function MasterEditForm({
           );
         }}
       </Formik>
+      <ConfirmationComponent />
     </>
   );
 }

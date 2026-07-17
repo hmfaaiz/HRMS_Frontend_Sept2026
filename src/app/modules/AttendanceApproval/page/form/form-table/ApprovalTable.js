@@ -32,6 +32,7 @@ export function ApprovalFormTable() {
       setIds: formUIContext?.setIds,
       setCurrentData: formUIContext?.setCurrentData,
       setWorkflowId: formUIContext?.setWorkflowId,
+      attendanceRequest : formUIContext?.attendanceRequest,
       Ids: formUIContext?.Ids,
     };
   }, [formUIContext]);
@@ -208,8 +209,10 @@ export function ApprovalFormTable() {
       formatExtraData: {
         setWorkflowId: FormUIProps.setWorkflowId,
         setCurrentData: FormUIProps?.setCurrentData,
+        attendanceRequest : FormUIProps?.attendanceRequest,
       },
-      headerClasses: "text-right",
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
       style: {
         minWidth: "100px",
       },

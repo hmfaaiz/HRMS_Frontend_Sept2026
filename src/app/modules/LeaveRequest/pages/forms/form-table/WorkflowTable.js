@@ -54,6 +54,7 @@ export function WorkflowTable({ onHide, show }) {
     {
       dataField: "approvalAuthorityEmp.department.deptName",
       text: "Department",
+      
       style: { minWidth: "160px" },
     },
     {

@@ -97,6 +97,7 @@ export function FormEditForm({
     { value: 1, label: "Employee" },
     { value: 2, label: "Recuritment" },
     { value: 3, label: "Appraisal" },
+    { value: 4, label: "Asset" },
   ];
 
   return (

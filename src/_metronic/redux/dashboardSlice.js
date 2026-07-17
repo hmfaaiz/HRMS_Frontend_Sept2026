@@ -79,6 +79,7 @@ const initialDashboardState = {
   allExitReasonList: [],
   allAppraisalCompetencySetupList: [],
   allParentSubsidiaries: [],
+  allAssetDisposaTypeList: [],
 
 
   // allTicketTypes: [],

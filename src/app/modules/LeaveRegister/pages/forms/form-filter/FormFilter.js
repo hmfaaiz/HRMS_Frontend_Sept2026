@@ -21,6 +21,7 @@ import { formatDates } from "../../../../../utils/common";
 import {
   fetchAllActiveEmployeesBySubsidiary,
   fetchAllDept,
+  fetchAllLeaveTypeBySubsidiary,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
@@ -61,7 +62,17 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     allDept,
     allLocationChildMenus,
     allDesignations,
+    allLeaveTypes,
+    
   } = useSelector((state) => state.dashboard);
+
+
+   const {
+      leaveType,
+    } = useSelector((state) => ({
+      leaveType: state.leave_type.typeDropdownData,
+    }
+    ));
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
   const allEmployeesMap = useMemo(() => {
@@ -151,6 +162,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
     dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs.value));
     dispatch(fetchAllDept(findDefaultSubs.value));
+    dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes" , findDefaultSubs.value))
   }, [allSubsidiaryList]);
   return (
     <>
@@ -244,6 +256,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               fetchAllActiveEmployeesBySubsidiary(value)
                             );
                             dispatch(fetchAllDept(value));
+                                dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes" , value))
                             setFieldValue("employeeId", "");
                             setFieldValue("departmentId", "");
                             if (e?.payrollMonth) {
@@ -574,7 +587,55 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         />
                       </div>
 
-                      <div className="col-span-3 ">
+                 <div className="col-span-1">
+                        <Field
+                          name="leaveType"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == "All" ? "" : e.value;
+                            setFieldValue("leaveType", value);
+                          }}
+                          label={<span> Leave Type</span>}
+                          value={
+                            leaveType?.find(
+                              (el) => el?.value === values?.leaveType
+                            ) || { label: "All", value: "" }
+                          }
+                          autoComplete="off"
+                          // options={allDept}
+                          options={[
+                            { label: "All", value: "" },
+                            ...(Array.isArray(leaveType) ? leaveType : []),
+                          ]}
+                        />
+                      </div>
+
+                 <div className="col-span-1">
+                        <Field
+                          name="leaveName"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == "All" ? "" : e.value;
+                            setFieldValue("leaveName", value);
+                          }}
+                          label={<span> Leave Type</span>}
+                          value={
+                            allLeaveTypes?.filter((el) => el?.value)?.find(
+                              (el) => el?.value === values?.leaveName
+                            ) || { label: "All", value: "" }
+                          }
+                          autoComplete="off"
+                          // options={allDept}
+                          options={[
+                            { label: "All", value: "" },
+                            ...(Array.isArray(allLeaveTypes) ? allLeaveTypes?.filter((el)=> el?.value) : []),
+                          ]}
+                        />
+                      </div>
+
+                      <div className="col-span-2 sm:col-span-6 md:col-span-5">
                         <div className="flex items-center gap-2  p-1 rounded-sm justify-end ">
                           <button
                             onClick={() => {
@@ -607,6 +668,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                 onClick={() => {
                   applyFilter(initialFilter.filter);
                   handleReset();
+                  dispatch(actions.clearState())
                 }}
                 className="btn btn-light"
               >

@@ -682,6 +682,30 @@ const manpower_budget_dashboard = lazy (() =>
 import ("./modules/Manpower_Budget_Dashboard/pages/index"))
 const department_designation_mapping = lazy (() =>
 import ("./modules/DepartmentDesignationMapping/pages/index"))
+const ticket_escalation_policy = lazy (() =>
+import ("./modules/Ticket_Escalation_Policy/pages/index"))
+
+const asset_model = lazy (() =>
+import ("./modules/Asset_Model/pages/index"))
+
+const asset_register = lazy (() =>
+import ("./modules/Asset_Register/pages/index"))
+
+const asset_assignment = lazy (() =>
+import ("./modules/Asset_Assignment/pages/index"))
+
+
+const asset_disposal = lazy (() =>
+import ("./modules/Asset_Disposal/pages/index"))
+
+const asset_list = lazy (() =>
+import ("./modules/Asset_List/pages/index"))
+const asset_inspection_list = lazy (() =>
+import ("./modules/Asset_Inspection_List/pages/index"))
+
+
+const asset_checklist = lazy (() =>
+import ("./modules/Asset_Checklist/pages/index"))
 
 
 const ROUTES = {
@@ -911,6 +935,15 @@ const ROUTES = {
   department_designation_map: department_designation_mapping,
   employee_profile_workflow: EmployeeProfileWorkflowPortalModule,
   employee_profile_workflow_hrms: EmployeeProfileWorkflowHrmsModule,
+  asset_model: asset_model,
+  asset_register: asset_register,
+  asset_assignment: asset_assignment,
+  asset_disposal: asset_disposal,
+
+  ticket_escalation_policy: ticket_escalation_policy,
+  asset_list: asset_list,
+  asset_inspection_list: asset_inspection_list,
+  asset_checklist: asset_checklist,
 
 };
 

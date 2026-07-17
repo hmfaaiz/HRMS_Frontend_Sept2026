@@ -5,6 +5,46 @@ import { toast } from "react-toastify";
 
 const { actions } = DepartmentWiseBudgetSlice;
 
+const parseBlobErrorMessage = (error, fallback) => {
+  return new Promise((resolve) => {
+    const data = error?.response?.data;
+
+    if (!data) {
+      resolve(fallback);
+      return;
+    }
+
+    if (typeof Blob !== "undefined" && data instanceof Blob) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          resolve(parsed?.message || fallback);
+        } catch (e) {
+          resolve(fallback);
+        }
+      };
+      reader.onerror = () => resolve(fallback);
+      reader.readAsText(data);
+      return;
+    }
+
+    resolve(data?.message || fallback);
+  });
+};
+
+const showReportErrorToast = async (error, fallback) => {
+  const message = await parseBlobErrorMessage(error, fallback);
+  toast.error(message, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
 
 export const fetchDepartmentWiseBudgets = (queryparm) => async (dispatch) => {
 
@@ -181,9 +221,9 @@ export const downloadDepartmentWiseBudgetReport =
         setTimeout(() => URL.revokeObjectURL(url), 5000);
       })
       .catch((error) => {
-        toast.error(
-          error?.response?.data?.message || "Failed to generate department-wise report",
-          { position: "top-right", autoClose: 5000 }
+        return showReportErrorToast(
+          error,
+          "Failed to generate department-wise report"
         );
       });
   };
@@ -219,9 +259,9 @@ export const downloadDesignationWiseBudgetReport =
         setTimeout(() => URL.revokeObjectURL(url), 5000);
       })
       .catch((error) => {
-        toast.error(
-          error?.response?.data?.message || "Failed to generate designation-wise report",
-          { position: "top-right", autoClose: 5000 }
+        return showReportErrorToast(
+          error,
+          "Failed to generate designation-wise report"
         );
       });
   };

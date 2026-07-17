@@ -42,11 +42,11 @@ export function LeaveBalanceTable() {
   const { totalCount, leaveBalances } = currentState;
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateLeaveApplication"
+    (item) => item.componentName === "UpdateLeaveApplication",
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteLeaveApplication"
+    (item) => item.componentName === "DeleteLeaveApplication",
   );
   // Table columns
   const columns = [
@@ -214,19 +214,21 @@ export function LeaveBalanceTable() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8  w-full md:w-7/12">
           {leaveBalances?.length > 0 &&
-            leaveBalances?.map((el, i) => {
-              return (
-                <div
-                  className="grid grid-cols-2 gap-4 items-center text-sm"
-                  key={el?.leaveTypeName || i}
-                >
-                  <p className="text-black m-0 p-0">{el?.leaveTypeName}</p>
-                  <p className="text-primary font-extrabold m-0">
-                    {el?.remainingCount || 0}
-                  </p>
-                </div>
-              );
-            })}
+            leaveBalances
+              ?.filter((v) => !v.isUnpaid)
+              ?.map((el, i) => {
+                return (
+                  <div
+                    className="grid grid-cols-2 gap-4 items-center text-sm"
+                    key={el?.leaveTypeName || i}
+                  >
+                    <p className="text-black m-0 p-0">{el?.leaveTypeName}</p>
+                    <p className="text-primary font-extrabold m-0">
+                      {el?.remainingCount || 0}
+                    </p>
+                  </div>
+                );
+              })}
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchModuleRights } from "../../../_redux/dashboardActions";
 
-export const MenuOption = () => {
+export const MenuOption = ({isDashboard}) => {
   const dispatch = useDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -400,7 +400,7 @@ export const MenuOption = () => {
   }, [moduleRights]);
 
   return (
-    <div className="px-5 py-4 rounded-lg bg-white w-full relative">
+    <div className={ isDashboard ? "px-5 py-4 rounded-lg bg-white w-full relative" : "px-5 py-4 rounded-lg bg-white w-full relative hidden xl:block"}>
       {/* Header section - clickable */}
       <div
         className="bg-tprimary px-4 py-2 flex justify-between items-center rounded-lg cursor-pointer transition-all duration-300 relative z-10"

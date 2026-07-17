@@ -18,11 +18,13 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
 import { X } from "lucide-react";
 import { downloadAppraisalFinalizationPdf } from "../../../_redux/formActions";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 export function FormTable() {
   //Users UI Context
   const [selectedIds, setSelectedIds] = useState([]);
   const [handleBulkLoading, setHandleBulkLoading] = useState(false);
   const formUIContext = useFromUIContext();
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const formUIProps = useMemo(() => {
     return {
       queryParams: formUIContext.queryParams,
@@ -186,6 +188,28 @@ export function FormTable() {
       },
     },
     {
+      dataField: "sendConsent",
+      text: "Consent",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell, row) => {
+        let text = "";
+        let classname = "";
+        if (cell) {
+          classname = "text-approved font-bold";
+          text = "Send";
+        } else {
+          classname = "text-pending font-bold";
+          text = "Not Send";
+        }
+        return <span className={classname}>{text}</span>;
+      },
+    },
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -280,7 +304,14 @@ export function FormTable() {
     },
   };
 
-  const handleBulkAction = () => {
+  const handleBulkAction = async () => {
+    const result = await confirm(
+      "Confirm Submission",
+      "Are you sure you want to finalized Ratings(s)? Once finalized, you will not be able to make any changes.",
+      "No",
+      "Yes",
+    );
+    if (!result) return;
     setHandleBulkLoading(true);
     dispatch(
       actions.createOrUpdateAppraisalReview({
@@ -384,6 +415,7 @@ export function FormTable() {
         bulkResult={errorState}
         onClose={handleCloseBulkResult}
       />
+      <ConfirmationComponent />
     </>
   );
 }
