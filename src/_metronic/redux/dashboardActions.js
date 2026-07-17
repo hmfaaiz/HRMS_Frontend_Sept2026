@@ -769,3 +769,19 @@ export const fetchAllSpecialLeaveTypes = (
       toast.error("Something went wrong");
     });
 };
+
+export const fetchAllParentSubsidiaries = () => async (dispatch) => {
+  return await requestFromServer
+    .getAllParentSubsidiaries()
+    .then((response) => {
+      const raw = response.data?.data || [];
+      const options = raw.map((item) => ({
+        value: item.Id,
+        label: item.name,
+      }));
+      dispatch(actions.AllParentSubsidiariesFetch(options));
+    })
+    .catch((error) => {
+      dispatch(actions.AllParentSubsidiariesFetch([]));
+    });
+};

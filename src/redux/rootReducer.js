@@ -237,6 +237,8 @@ import { BudgetWorkflowPortalSlice } from "../app/modules/Budget_Workflow_Status
 import { BudgetApprovalSlice } from "../app/modules/BudgetApproval/redux/formSlice";
 import { manpowerBudgetDashboardSlice } from "../app/modules/Manpower_Budget_Dashboard/_redux/redux-Slice";
 import { DepartmentDesignationMappingSlice } from "../app/modules/DepartmentDesignationMapping/_redux/redux-Slice";
+import { EmployeeProfileWorkflowPortalSlice } from "../app/modules/Employee_Profile_Workflow_Portal/_redux/redux-Slice";
+import { EmployeeProfileWorkflowHrmsSlice } from "../app/modules/Employee_Profile_Workflow_Hrms/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -473,6 +475,8 @@ export const rootReducer = combineReducers({
   department_wise_budget_approval: BudgetApprovalSlice.reducer,
   manpower_budget_dashboard : manpowerBudgetDashboardSlice.reducer,
   department_designation_map: DepartmentDesignationMappingSlice.reducer,
+  Employee_Profile_Workflow_Portal: EmployeeProfileWorkflowPortalSlice.reducer,
+  Employee_Profile_Workflow_Hrms: EmployeeProfileWorkflowHrmsSlice.reducer,
 
 });
 

@@ -318,3 +318,7 @@ export const getAllComDept = async () => {
 export const getAllDesignationByDepId = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-designation-by-depId`,body);
 };
+
+export const getAllParentSubsidiaries = async () => {
+  return await axios.get(`${USERS_URL}/subsidiary/read-all-parent-subsidiaries`);
+};

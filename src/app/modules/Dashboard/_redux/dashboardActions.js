@@ -1003,3 +1003,20 @@ export const fetchAllDesignationByDepId = (body) => async (
       // toast.error("Something went wrong");
     });
 };
+
+export const fetchAllParentSubsidiaries = () => async (dispatch) => {
+  return await requestFromServer
+    .getAllParentSubsidiaries()
+    .then((response) => {
+      const raw = response.data?.data || [];
+      // Map to { value, label } for SearchSelect dropdown
+      const options = raw.map((item) => ({
+        value: item.Id,
+        label: item.name,
+      }));
+      dispatch(actions.AllParentSubsidiariesFetch(options));
+    })
+    .catch((error) => {
+      dispatch(actions.AllParentSubsidiariesFetch([]));
+    });
+};

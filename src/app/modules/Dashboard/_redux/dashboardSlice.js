@@ -120,6 +120,7 @@ const initialDashboardState = {
   budgetRequestList: [],
   allCompDeptList: [],
   allDesignationByDeptList: [],
+  allParentSubsidiaries: [],
 };
 
 export const callTypes = {
@@ -504,6 +505,9 @@ export const dashboardSlice = createSlice({
     },
     AllDesignationByhDeptFetch: (state, action) => {
       state.allDesignationByDeptList = action.payload;
+    },
+    AllParentSubsidiariesFetch: (state, action) => {
+      state.allParentSubsidiaries = action.payload;
     },
 
   }

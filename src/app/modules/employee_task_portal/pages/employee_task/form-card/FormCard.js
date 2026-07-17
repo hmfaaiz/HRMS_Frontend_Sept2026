@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useSelector, shallowEqual } from "react-redux";
 import { useFormUIContext } from "../FormUIContext";
 import { FormTable } from "../form-table/FormTable";
 import { TaskModal } from "../modal/TaskModal";
@@ -22,6 +23,26 @@ export function FormCard() {
     };
   }, [formUIContext]);
 
+  const { employee_profile_workflow_hrms } = useSelector((state) => {
+    return {
+      employee_profile_workflow_hrms: state?.auth?.userAccess["employee_profile_workflow_hrms"],
+    };
+  }, shallowEqual);
+
+  const employeeProfileWorkflowItem = employee_profile_workflow_hrms?.find(
+    (el) =>
+      (el?.componentName === "ReadEmployeeProfileWorkflowHrms") &&
+      el?.portalType == 1,
+  );
+
+  const menuOptions = [
+    {
+      name: "Personal Profile Change Workflow",
+      link: "/employee_profile_workflow_hrms/read-all-employee-profile-workflow-hrms",
+      isShow: employeeProfileWorkflowItem,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       {/* ── Left Panel — Employee Profile ── */}
@@ -30,7 +51,7 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>
@@ -43,7 +64,7 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[]}
+            menuOptions={menuOptions}
             isDashboardIcon={true}
           />
         </div>
