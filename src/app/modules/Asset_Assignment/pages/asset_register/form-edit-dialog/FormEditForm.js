@@ -21,6 +21,7 @@ import { EmployeeAssetTable } from "../form-table/EmployeeAssetTable";
 import { fetchAssetAssignmentList } from "../../../_redux/redux-Actions";
 import { Eye, XCircle } from "lucide-react";
 import AssetDetails from "../../../../../utils/common-modules/AssetDetails";
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 
 const assetAssignmentSchema = Yup.object().shape({
   employeeId: Yup.number()
@@ -92,6 +93,7 @@ export function FormEditForm({
   }, [dispatch, formData.Id]);
 
   const [assetDetailsPanel, setAssetDetailsPanel] = useState(false);
+  const [employeeDetailsPanel, setEmployeeDetailsPanel] = useState(false);
   console.log("aaaaaaa2222", formData.assigned_by_employeeId);
 
   return (
@@ -170,11 +172,38 @@ export function FormEditForm({
 
                     </div>
 
-
+                    <div className="mt-6">
+                      {employeeDetailsPanel ? (
+                        <button
+                          type="button"
+                          disabled={values.employeeId ? false : true}
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() =>
+                            setEmployeeDetailsPanel(!employeeDetailsPanel)
+                          }
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={values.employeeId ? false : true}
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() =>
+                            setEmployeeDetailsPanel(!employeeDetailsPanel)
+                          }
+                        >
+                          <Eye className="w-4 h-4 text-white" />
+                          View Details
+                        </button>
+                      )}
+                    </div>
 
 
                   </div>
-
+                  <br />
+                  <EmployeeProfile employeeId={values?.employeeId} panelMode={employeeDetailsPanel} />
 
                   <EmployeeAssetTable employeeId={values.employeeId} />
 
@@ -250,7 +279,7 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue("asset_makeId", e?.value || null);
 
-                        
+
                           setFieldValue("asset_modelId", null);
                           setFieldValue("asset_registerId", null);
 
