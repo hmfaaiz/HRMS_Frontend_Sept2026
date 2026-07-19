@@ -42,6 +42,7 @@ export function FormCard() {
     };
   }, shallowEqual);
 
+  const loading = currentState.actionsLoading;
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllDept());
@@ -59,7 +60,7 @@ export function FormCard() {
       <TCard name={CurrentModuleName()}>
         <div className="grid md:grid-cols-8 gap-3 mb-2">
           
-          {/* ✅ Conditionally hide filters when Unassigned is selected */}
+          {/*Conditionally hide filters when Unassigned is selected */}
           {!isUnassigned && (
             <>
               <div className="">
@@ -183,6 +184,7 @@ export function FormCard() {
             <div className="">
               <button
                 type="button"
+                disabled={loading}
                 className={`btn mr-2 rounded-xl ${isAssigned ? "bg-primary text-white" : "btn-secondary"}`}
                 onClick={() => {
                   const updatedQueryParams = {
@@ -201,6 +203,8 @@ export function FormCard() {
             <div className="">
               <button
                 type="button"
+                disabled={loading}
+                
                 className={`btn mr-2 rounded-xl ${isUnassigned ? "bg-primary text-white" : "btn-secondary"}`}
                 onClick={() => {
                   const updatedQueryParams = {
@@ -225,6 +229,7 @@ export function FormCard() {
               <>
                 <button
                   type="button"
+                    disabled={loading}
                   className="btn btn-primary"
                   onClick={() => {
                     const updatedQueryParams = {
