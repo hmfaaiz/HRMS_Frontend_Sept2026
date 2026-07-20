@@ -9,11 +9,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
+import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllAssetModelName, fetchAllRegisterAssetName } from "../../../../Dashboard/_redux/dashboardActions";
 
 
 export function FormEditDialog({ assetCategoryId,
   assetRegisterId,
-  dateOfInspection, show, onHide, dataForRead }) {
+  dateOfInspection, show, clearForm, onHide, dataForRead }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -60,13 +62,15 @@ export function FormEditDialog({ assetCategoryId,
   }, shallowEqual);
 
 
+  useEffect(() => {
+    if (show && clearForm) {
+      dispatch(actions.clearForm());
+
+    }
+
+  }, [show, clearForm, dispatch]);
 
 
-  // useEffect(() => {
-  //   dispatch(actions.fetchAssetInspectionListDataForEdit(id));
-
-  //   // dispatch(actions.fetchAssetInspectionListDataForEdit(formUIProps .queryParams))
-  // }, [id, dispatch,show]);
 
   useEffect(() => {
     if (show) {
@@ -143,7 +147,7 @@ export function FormEditDialog({ assetCategoryId,
         inspected_by_employeeId: data.inspected_by_employeeId,
         reason_for_inspection: data.reason_for_inspection,
         event_for_inspection: data.event_for_inspection,
-  
+
         date_of_inspection: data.date_of_inspection
           ? format(new Date(data.date_of_inspection), "yyyy-MM-dd")
           : null,

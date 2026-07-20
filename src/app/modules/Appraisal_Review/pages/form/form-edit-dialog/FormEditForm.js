@@ -190,13 +190,15 @@ export function MasterEditForm({
   }
 
   const handleSubmitWithFinalize = async (isFinalize, handleSubmit, values) => {
-    const result = await confirm(
-      "Confirm Submission",
-      "Are you sure you want to finalized Rating? Once finalized, you will not be able to make any changes.",
-      "No",
-      "Yes",
-    );
-    if (!result) return;
+    if(isFinalize){
+      const result = await confirm(
+        "Confirm Submission",
+        "Are you sure you want to finalized Rating? Once finalized, you will not be able to make any changes.",
+        "No",
+        "Yes",
+      );
+      if (!result) return;
+    }
     // handleSubmit(); // trigger Formik validation
     const valuesWithFlag = { ...values, isFinalize };
     saveFrom(valuesWithFlag);
@@ -216,10 +218,22 @@ export function MasterEditForm({
   };
 
   useEffect(() => {
-    if (user?.employeeId) {
+    if (user?.employeeId && id) {
       formUIProps.setEmployeeId(user.employeeId);
     }
   }, [user?.employeeId]);
+
+  useEffect(() => {
+    if (id) return;
+    dispatch(
+      actions.fetchAppraisalReview({
+        Id: formUIProps.employeeId,
+        isEmployeeId: true,
+        appraisalCategoryId: formUIProps?.appraisalCategoryId,
+        subsidiaryId: formUIProps.subsidiaryId,
+      }),
+    );
+  }, [formUIProps.employeeId]);
 
   useEffect(() => {
     if (user?.Id) {
@@ -256,7 +270,7 @@ export function MasterEditForm({
                   </div>
                 )}
                 <Form className="form form-label-right">
-                  <fieldset disabled={values.isFinalize}>
+                  <fieldset disabled={values.isFinalize || actionsLoading}>
                     {/* Employee Selection */}
                     <div className="grid grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
                       <div className="flex item-end gap-1 justify-end">
@@ -268,7 +282,7 @@ export function MasterEditForm({
                                 Employee<span style={{ color: "red" }}>*</span>
                               </span>
                             }
-                            isDisabled={id}
+                            isDisabled={true}
                             onChange={(e) => {
                               setFieldValue("employeeId", e?.value);
                               formUIProps.setEmployeeId(e?.value);
@@ -283,12 +297,12 @@ export function MasterEditForm({
                               );
                             }}
                             value={
-                              (id ? dashboard.allEmployees : employee)?.find(
+                              dashboard?.allEmployees?.find(
                                 (item) =>
                                   item?.value == formUIProps?.employeeId,
                               ) || null
                             }
-                            options={id ? dashboard.allEmployees : employee}
+                            options={dashboard.allEmployees}
                           />
                         </div>
                         {/* View/Cancel button */}

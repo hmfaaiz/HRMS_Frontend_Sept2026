@@ -66,21 +66,30 @@ const assetRegisterSchema = Yup.object().shape({
     .matches(/^\d{4}$/, "Please select a valid year")
     .required(VALIDATION_MESSAGES.required),
 
-  date_of_acquisition: Yup.date()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required)
-    .test(
-      "acquisition-year",
-      "Date of acquisition must belong to the selected Asset Year",
-      function (value) {
-        const { asset_year } = this.parent;
+date_of_acquisition: Yup.date()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required)
+  .test(
+    "acquisition-year",
+    function (value) {
+      const { asset_year } = this.parent;
 
-        if (!value || !asset_year) return true;
+      if (!value || !asset_year) return true;
 
-        return new Date(value).getFullYear() === Number(asset_year);
-      },
-    ),
-
+      const acquisitionYear = new Date(value).getFullYear();
+      const assetYear = Number(asset_year);
+      
+      if (acquisitionYear < assetYear) {
+        return this.createError({
+          message: `Acquisition year  is before Asset Year.`,
+        });
+      }
+      
+   
+      
+      return true;
+    },
+  ),
   date_of_expiry: Yup.date()
     .nullable()
     // .required(VALIDATION_MESSAGES.required)

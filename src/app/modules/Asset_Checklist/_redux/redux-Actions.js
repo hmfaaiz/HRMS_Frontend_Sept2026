@@ -23,6 +23,7 @@ export const fetchAssetInspectionList = (queryparm) => async (dispatch) => {
 };
 
 export const fetchAssetInspectionListDataForEdit = (params) => (dispatch) => {
+  console.log("params11111",params)
   if (!params) {
     return dispatch(
       actions.AssetInspectionListFetchedForEdit({
@@ -43,6 +44,7 @@ export const fetchAssetInspectionListDataForEdit = (params) => (dispatch) => {
       );
     })
     .catch((error) => {
+      console.log("error11111", error);
       error.clientMessage = "Can't find record";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
        return dispatch(
@@ -156,4 +158,14 @@ export const updateAssetInspectionList = (data, disbaleLoading, onHide) => (disp
         progress: undefined,
       });
     });
+};
+
+export const clearForm =()=>(dispatch)=>{
+  console.log("hit11111")
+  return dispatch(
+      actions.AssetInspectionListFetchedForEdit({
+        dataForEdit: undefined,
+      })
+    );
+
 };

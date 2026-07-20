@@ -12,6 +12,7 @@ import { fetchAssetRegisters } from "../../../_redux/redux-Actions";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 import { assetStatusOptions } from "../FormUIHelpers";
 import { fetchAllRegisterAssetName } from "../../../../Dashboard/_redux/dashboardActions";
+
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
@@ -42,8 +43,6 @@ export function FormCard() {
     };
   }, shallowEqual);
 
-  // const { currentState } = useSelector();
-
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllDept());
@@ -51,52 +50,65 @@ export function FormCard() {
     dispatch(fetchAllActiveEmployees());
     dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
     dispatch(fetchAllRegisterAssetName());
-
   }, [dispatch]);
 
+  // ✅ NEW: Set default selections when data loads
+  useEffect(() => {
+    // Set default for asset_categoryId (select all by default)
+    if (dashboard?.allAssetCategoryList && 
+        dashboard.allAssetCategoryList.length > 0 && 
+        (!FormUIProps.queryParams.asset_categoryId || 
+         FormUIProps.queryParams.asset_categoryId.length === 0)) {
+      
+      const allCategoryValues = dashboard.allAssetCategoryList.map(item => item.value);
+      const updatedQueryParams = {
+        ...FormUIProps.queryParams,
+        asset_categoryId: allCategoryValues,
+      };
+      FormUIProps.setQueryParams(updatedQueryParams);
+      // Don't dispatch fetch here to avoid multiple calls
+    }
+
+    // Set default for asset_registerId (select all by default)
+    if (dashboard?.allRegisterAssetList && 
+        dashboard.allRegisterAssetList.length > 0 && 
+        (!FormUIProps.queryParams.asset_registerId || 
+         FormUIProps.queryParams.asset_registerId.length === 0)) {
+      
+      const allAssetValues = dashboard.allRegisterAssetList.map(item => item.value);
+      const updatedQueryParams = {
+        ...FormUIProps.queryParams,
+        asset_registerId: allAssetValues,
+      };
+      FormUIProps.setQueryParams(updatedQueryParams);
+      // Don't dispatch fetch here to avoid multiple calls
+    }
+  }, [dashboard?.allAssetCategoryList, dashboard?.allRegisterAssetList]);
 
   return (
     <>
-
       <TCard name={CurrentModuleName()}>
-
         <div className="grid md:grid-cols-8 gap-3 mb-2">
-
-
           <div className="">
             <div>
               <SearchSelect
                 name="subsidiaryId"
-                label={
-                  <span>
-                    {" "}
-                    Subsidiary
-
-                  </span>
-                }
-
+                label={<span> Subsidiary</span>}
                 value={
                   (dashboard?.allSubsidiaryList || []).find(
                     (item) => item.value === FormUIProps?.queryParams?.subsidiaryId
                   ) || { label: "All", value: "" }
                 }
                 onChange={(e) => {
-
                   const updatedQueryParams = {
                     ...FormUIProps.queryParams,
                     subsidiaryId: e.value,
                     pageNumber: 1,
                   };
-
-
                   FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                  dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+                  dispatch(fetchAssetRegisters(updatedQueryParams));
                   dispatch(fetchAllDept(e.value));
                 }}
-
-                // options={dashboard.allSubsidiaryList}
                 options={[
                   { label: "All", value: "" },
                   ...(Array.isArray(dashboard?.allSubsidiaryList)
@@ -105,40 +117,26 @@ export function FormCard() {
                 ]}
               />
             </div>
-
           </div>
+          
           <div>
             <SearchSelect
               name="departmentId"
-              label={
-                <span>
-                  {" "}
-                  Department
-
-                </span>
-              }
-
+              label={<span> Department</span>}
               value={
                 (dashboard?.allDept || []).find(
                   (item) => item.value === FormUIProps?.queryParams?.departmentId
                 ) || { label: "All", value: "" }
               }
               onChange={(e) => {
-
                 const updatedQueryParams = {
                   ...FormUIProps.queryParams,
                   departmentId: e.value,
                   pageNumber: 1,
                 };
-
-
                 FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+                dispatch(fetchAssetRegisters(updatedQueryParams));
               }}
-
-              // options={dashboard.allDept}
               options={[
                 { label: "All", value: "" },
                 ...(Array.isArray(dashboard?.allDept)
@@ -147,40 +145,26 @@ export function FormCard() {
               ]}
             />
           </div>
+          
           <div className="">
             <div>
               <SearchSelect
                 name="designationId"
-                label={
-                  <span>
-                    {" "}
-                    Designation
-
-                  </span>
-                }
-
-
+                label={<span> Designation</span>}
                 value={
                   (dashboard?.allDesignations || []).find(
                     (item) => item.value === FormUIProps?.queryParams?.designationId
                   ) || { label: "All", value: "" }
                 }
                 onChange={(e) => {
-
                   const updatedQueryParams = {
                     ...FormUIProps.queryParams,
                     designationId: e.value,
                     pageNumber: 1,
                   };
-
-
                   FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                  dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+                  dispatch(fetchAssetRegisters(updatedQueryParams));
                 }}
-
-                // options={dashboard?.allDesignations}
                 options={[
                   { label: "All", value: "" },
                   ...(Array.isArray(dashboard?.allDesignations)
@@ -195,35 +179,21 @@ export function FormCard() {
             <div>
               <SearchSelect
                 name="employeeId"
-                label={
-                  <span>
-                    {" "}
-                    Employee
-
-                  </span>
-                }
-
+                label={<span> Employee</span>}
                 value={
                   (dashboard?.allEmployees || []).find(
                     (item) => item.value === FormUIProps?.queryParams?.employeeId
                   ) || { label: "All", value: "" }
                 }
                 onChange={(e) => {
-
                   const updatedQueryParams = {
                     ...FormUIProps.queryParams,
                     employeeId: e.value,
                     pageNumber: 1,
                   };
-
-
                   FormUIProps.setQueryParams(updatedQueryParams);
-
-
-                  dispatch(fetchAssetRegisters(FormUIProps.queryParams));
+                  dispatch(fetchAssetRegisters(updatedQueryParams));
                 }}
-
-                // options={dashboard.allDept}
                 options={[
                   { label: "All", value: "" },
                   ...(Array.isArray(dashboard?.allEmployees)
@@ -233,27 +203,17 @@ export function FormCard() {
               />
             </div>
           </div>
-
-
-
-
-
-
         </div>
 
-
         <div className="grid md:grid-cols-8 gap-3 mb-2">
-
-
+          {/* ✅ FIXED: asset_categoryId - Now shows all selected by default AND clears properly */}
           <MultiSelect
             name="asset_categoryId"
             label="Asset Category"
             value={
-              (FormUIProps.queryParams.asset_categoryId || []).length === 0
-                ? dashboard?.allAssetCategoryList || []
-                : (dashboard?.allAssetCategoryList || []).filter((o) =>
-                  FormUIProps.queryParams.asset_categoryId.includes(o.value)
-                )
+              (dashboard?.allAssetCategoryList || []).filter((o) =>
+                (FormUIProps.queryParams.asset_categoryId || []).includes(o.value)
+              )
             }
             options={dashboard?.allAssetCategoryList || []}
             onChange={(items = []) => {
@@ -262,41 +222,38 @@ export function FormCard() {
                 asset_categoryId: items.map((i) => i.value),
                 pageNumber: 1,
               };
-
               FormUIProps.setQueryParams(updatedQueryParams);
               dispatch(fetchAssetRegisters(updatedQueryParams));
             }}
           />
 
+          {/* ✅ FIXED: assetStatus - Already working fine */}
+          <MultiSelect
+            name="assetStatus"
+            label="Asset Status"
+            value={assetStatusOptions.filter((o) =>
+              (FormUIProps.queryParams.assetStatus || []).includes(o.value)
+            )}
+            options={assetStatusOptions}
+            onChange={(items = []) => {
+              const updatedQueryParams = {
+                ...FormUIProps.queryParams,
+                assetStatus: items.map((i) => i.value),
+                pageNumber: 1,
+              };
+              FormUIProps.setQueryParams(updatedQueryParams);
+              dispatch(fetchAssetRegisters(updatedQueryParams));
+            }}
+          />
 
-
-<MultiSelect
-  name="assetStatus"
-  label="Asset Status"
-  value={assetStatusOptions.filter((o) =>
-    (FormUIProps.queryParams.assetStatus || []).includes(o.value)
-  )}
-  options={assetStatusOptions}
-  onChange={(items = []) => {
-    const updatedQueryParams = {
-      ...FormUIProps.queryParams,
-      assetStatus: items.map((i) => i.value), // [] when X is clicked
-      pageNumber: 1,
-    };
-
-    FormUIProps.setQueryParams(updatedQueryParams);
-    dispatch(fetchAssetRegisters(updatedQueryParams));
-  }}
-/>
+          {/* ✅ FIXED: asset_registerId - Now shows all selected by default AND clears properly */}
           <MultiSelect
             name="asset_registerId"
             label="Asset"
             value={
-              (FormUIProps.queryParams.asset_registerId || []).length === 0
-                ? dashboard?.allRegisterAssetList || []
-                : (dashboard?.allRegisterAssetList || []).filter((o) =>
-                  FormUIProps.queryParams.asset_registerId.includes(o.value)
-                )
+              (dashboard?.allRegisterAssetList || []).filter((o) =>
+                (FormUIProps.queryParams.asset_registerId || []).includes(o.value)
+              )
             }
             options={dashboard?.allRegisterAssetList || []}
             onChange={(items = []) => {
@@ -305,20 +262,15 @@ export function FormCard() {
                 asset_registerId: items.map((i) => i.value),
                 pageNumber: 1,
               };
-
               FormUIProps.setQueryParams(updatedQueryParams);
               dispatch(fetchAssetRegisters(updatedQueryParams));
             }}
           />
-
-
         </div>
 
         <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
           <FormFIlter />
-
           <div className="flex items-center gap-2">
-            {/* <CardHeaderToolbar> */}
             {accessUser && (
               <>
                 <button
@@ -331,7 +283,6 @@ export function FormCard() {
                 </button>
               </>
             )}
-            {/* </CardHeaderToolbar> */}
           </div>
         </div>
         <FormTable />

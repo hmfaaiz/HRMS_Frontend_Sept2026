@@ -7,6 +7,7 @@ import * as actions from "../../../_redux/formActions";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFromUIContext } from "../FormUIContext";
+import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
 
 export function FormEditDialog({ id, show, onHide, userForRead, status }) {
   const formUIContext = useFromUIContext();
@@ -26,15 +27,8 @@ export function FormEditDialog({ id, show, onHide, userForRead, status }) {
   }));
 
   useEffect(() => {
-    if (formUIProps?.appraisalCategoryId && formUIProps?.subsidiaryId) {
-      dispatch(
-        actions.fetchAllAppraisalEmployee({
-          appraisalCategoryId: formUIProps?.appraisalCategoryId,
-          subsidiaryId: formUIProps?.subsidiaryId,
-        })
-      );
-    }
-  }, [formUIProps?.appraisalCategoryId, formUIProps?.subsidiaryId]);
+    dispatch(fetchAllActiveEmployees())
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {

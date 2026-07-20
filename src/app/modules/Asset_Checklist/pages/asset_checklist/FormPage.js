@@ -76,6 +76,7 @@ export function FormPage({ history }) {
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
+            clearForm={true}
             onHide={() => {
               history.push("/asset_checklist/read-all-asset-checklist");
             }}
@@ -99,6 +100,7 @@ export function FormPage({ history }) {
         {({ history, location, match }) => (
           <FormEditDialog
             show={match != null}
+            clearForm={false}
             assetCategoryId={location.state?.assetCategoryId}
             assetRegisterId={location.state?.assetRegisterId}
             dateOfInspection={location.state?.dateOfInspection}
@@ -113,6 +115,7 @@ export function FormPage({ history }) {
         {({ history, location, match }) => (
           <FormEditDialog
             show={match != null}
+            clearForm={false}
             assetCategoryId={location.state?.assetCategoryId}
             assetRegisterId={location.state?.assetRegisterId}
             dateOfInspection={location.state?.dateOfInspection}

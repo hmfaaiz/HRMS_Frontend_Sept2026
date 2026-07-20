@@ -713,7 +713,7 @@ export const requestRaisedBySenior = () => async (dispatch) => {
     .then((response) => {
       dispatch(actions.requestRaisedBySenior(response?.data?.data));
     })
-    .catch((error) => {});
+    .catch((error) => { });
 };
 
 export const uploadFile = async (file) => {
@@ -1022,49 +1022,47 @@ export const fetchAllParentSubsidiaries = () => async (dispatch) => {
 };
 export const fetchAllAssetModelName =
   (asset_makeId = null, asset_categoryId = null) =>
-  async (dispatch) => {
-    if (
-      asset_makeId &&
-      typeof asset_makeId === "object" &&
-      !Array.isArray(asset_makeId)
-    ) {
-      asset_categoryId = asset_makeId.asset_categoryId ?? null;
-      asset_makeId = asset_makeId.asset_makeId ?? null;
-    }
+    async (dispatch) => {
+      if (
+        asset_makeId &&
+        typeof asset_makeId === "object" &&
+        !Array.isArray(asset_makeId)
+      ) {
+        asset_categoryId = asset_makeId.asset_categoryId ?? null;
+        asset_makeId = asset_makeId.asset_makeId ?? null;
+      }
 
-    const response = await requestFromServer.getAllAssetModelName({
-      asset_makeId,
-      asset_categoryId,
-    });
+      const response = await requestFromServer.getAllAssetModelName({
+        asset_makeId,
+        asset_categoryId,
+      });
 
-    dispatch(
-      actions.AllAssetModelNameFetch(response.data?.data || [])
-    );
-  };
+      dispatch(
+        actions.AllAssetModelNameFetch(response.data?.data || [])
+      );
+    };
 
 export const fetchAllRegisterAssetName =
-  (asset_modelId = null, asset_categoryId = null) =>
+  (body = {}) =>
   async (dispatch) => {
-    if (
-      asset_modelId &&
-      typeof asset_modelId === "object" &&
-      !Array.isArray(asset_modelId)
-    ) {
-      asset_categoryId = asset_modelId.asset_categoryId ?? null;
-      asset_modelId = asset_modelId.asset_modelId ?? null;
+    try {
+      const response = await requestFromServer.getAllRegisterAssetName({
+        asset_categoryId: body?.asset_categoryId ?? null,
+        asset_modelId: body?.asset_modelId ?? null,
+        status: body?.status ?? null,
+        subsidiaryId: body?.subsidiaryId ?? null,
+      });
+
+      dispatch(
+        actions.AllRegisterAssetNameFetch(response.data?.data || [])
+      );
+    } catch (error) {
+      console.error("fetchAllRegisterAssetName error:", error);
+      // toast.error("Something went wrong");
     }
-
-    const response = await requestFromServer.getAllRegisterAssetName({
-      asset_modelId,
-      asset_categoryId,
-    });
-
-    dispatch(
-      actions.AllRegisterAssetNameFetch(response.data?.data || [])
-    );
   };
 
-  export const fetchAllPresentUnassignedCategory= (body) => async (
+export const fetchAllPresentUnassignedCategory = (body) => async (
   dispatch,
 ) => {
   return await requestFromServer
@@ -1080,7 +1078,7 @@ export const fetchAllRegisterAssetName =
 
 
 
-  export const fetchAllPresentUnassignedMakeCompany= (body) => async (
+export const fetchAllPresentUnassignedMakeCompany = (body) => async (
   dispatch,
 ) => {
   return await requestFromServer
@@ -1093,9 +1091,9 @@ export const fetchAllRegisterAssetName =
       // toast.error("Something went wrong");
     });
 };
-  
 
-export const fetchAllAssetInspectionListById= (body) => async (
+
+export const fetchAllAssetInspectionListById = (body) => async (
   dispatch,
 ) => {
   return await requestFromServer
