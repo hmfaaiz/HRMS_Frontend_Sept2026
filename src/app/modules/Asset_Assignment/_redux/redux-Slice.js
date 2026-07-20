@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialAssetAssignmentState = {
     listLoading: false,
-    actionsLoading: null,
+    actionsLoading: false,
     totalCount: 0,
     entities: null,
     roles: null,
@@ -32,6 +32,14 @@ export const AssetAssignmentSlice = createSlice({
                 state.actionsLoading = false;
             }
         },
+         startCall: (state, action) => {
+                    if (action.payload.callType === callTypes.list) {
+                        state.listLoading = true;
+                    } else {
+                        state.actionsLoading = true;
+                    }
+                },
+        
 
         assetRegisterFetched: (state, action) => {
 
@@ -39,21 +47,12 @@ export const AssetAssignmentSlice = createSlice({
             const entities = action.payload.data?.data.rows;
 
             const totalResult = action.payload.data?.data.totalResults;
-            // const updatedEntities = entities.map(entity => {
-
-            //     const basis_of_gratuity = entity.basis_of_gratuityId === 0 ? 'Gross' : 'Basis';
-
-
-            //     return {
-            //         ...entity,
-            //         basis_of_gratuity // Add the new field to the entity
-            //     };
-            // });
-
+      
             state.listLoading = false;
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
+            state.actionsLoading = false;
 
         },
 
@@ -61,9 +60,10 @@ export const AssetAssignmentSlice = createSlice({
         AssetRegisterFetchedForEdit: (state, action) => {
 
 
-            state.actionsLoading = false;
+        
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
+            state.actionsLoading = false;
         },
         AssetAssignmentListFetched: (state, action) => {
             const assignmentList = action.payload.data?.data.rows;

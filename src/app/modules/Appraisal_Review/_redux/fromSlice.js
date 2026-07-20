@@ -9,12 +9,14 @@ const initialState = {
   employee: [],
   errorState: null,
   finalizationPdfLoading: false,
+  sumReportLoading: false,
 };
 
 export const callTypes = {
   list: "list",
   action: "action",
   finalizationPdf: "finalizationPdf",
+  sumReport: "sumReport",
 };
 
 export const appraisalReviewSlice = createSlice({
@@ -24,24 +26,31 @@ export const appraisalReviewSlice = createSlice({
     catchError: (state, action) => {
       if (action.payload.callType === callTypes.list) {
         state.listLoading = false;
-         } else if (action.payload.callType === callTypes.finalizationPdf) {
-      state.finalizationPdfLoading = false;  
-    } else {
+      } else if (action.payload.callType === callTypes.finalizationPdf) {
+        state.finalizationPdfLoading = false;
+      } else if (action.payload.callType === callTypes.sumReport) {
+        state.sumReportLoading = false;
+      } else {
         state.actionsLoading = false;
       }
     },
     startCall: (state, action) => {
       if (action.payload.callType === callTypes.list) {
         state.listLoading = true;
-         } else if (action.payload.callType === callTypes.finalizationPdf) {
-      state.finalizationPdfLoading = true;   
-    }  else {
+      } else if (action.payload.callType === callTypes.finalizationPdf) {
+        state.finalizationPdfLoading = true;
+      } else if (action.payload.callType === callTypes.sumReport) {
+        state.sumReportLoading = true;
+      } else {
         state.actionsLoading = true;
       }
     },
     appraisalEmployeeFetched: (state, action) => {
       state.actionsLoading = false;
       state.employee = action.payload;
+    },
+    sumReportFetched: (state, action) => {
+      state.sumReportLoading = false;
     },
     pdfFetched: (state, action) => {
       state.actionsLoading = false;
@@ -73,7 +82,7 @@ export const appraisalReviewSlice = createSlice({
       state.errorState = null;
     },
     finalizationPdfFetched: (state) => {
-    state.finalizationPdfLoading = false;
-  },
+      state.finalizationPdfLoading = false;
+    },
   },
 });

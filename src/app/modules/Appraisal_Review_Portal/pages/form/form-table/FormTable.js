@@ -14,6 +14,7 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
+import { ActionsColumnFormatter2 } from "./column-formatter/ActionsColumnFormatter2";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
 
@@ -29,6 +30,8 @@ export function FormTable() {
       openReadDialog: formUIContext.openReadDialog,
       panelMode: formUIContext.panelMode,
       setPanelMode: formUIContext.setPanelMode,
+      newButtonClick: formUIContext.newButtonClick,
+      setEmployeeId: formUIContext.setEmployeeId,
     };
   }, [formUIContext]);
 
@@ -55,15 +58,19 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateEmpAppraisalReview"
+    (item) => item.componentName === "UpdateEmpAppraisalReview",
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteEmpAppraisalReview"
+    (item) => item.componentName === "DeleteEmpAppraisalReview",
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadEmpAppraisalReview"
+    (item) => item.componentName === "ReadEmpAppraisalReview",
+  );
+
+  const isAccessForCreate = userAccess?.find(
+    (item) => item.componentName === "CreateEmpAppraisalReview",
   );
   // Table columns
   const columns = [
@@ -196,6 +203,110 @@ export function FormTable() {
     },
   ];
 
+  const notCreatedColumns = [
+    {
+      dataField: "employeeCode",
+      text: "Employee Code",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "80px",
+      },
+    },
+    {
+      dataField: "firstName",
+      text: "Name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        return `${row?.firstName || ""} ${row?.middleName ||
+          ""} ${row?.lastName || ""}`;
+      },
+    },
+    {
+      dataField: "grade.formName",
+      text: "Grade",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "employeeType.formName",
+      text: "Employee Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "employeeStatus.formName",
+      text: "Employee Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "payrollGroup.formName",
+      text: "Payroll Group",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter2,
+      formatExtraData: {
+        newButtonClick: formUIProps.newButtonClick,
+        isAccessForCreate: isAccessForCreate
+          ? isAccessForCreate.isAccess
+          : false,
+        setEmployeeId: formUIProps.setEmployeeId,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "170px",
+      },
+    },
+  ];
   //Table pagination properties
   const paginationOptions = {
     custom: true,
@@ -206,7 +317,7 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full overflow-x-auto scrollbar-fancy">
+    <div className="w-full scrollbar-fancy">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -222,10 +333,14 @@ export function FormTable() {
                 remote
                 keyField="Id"
                 data={entities === null ? [] : entities}
-                columns={columns}
+                columns={
+                  formUIProps.queryParams?.filter?.type === "notCreated"
+                    ? notCreatedColumns
+                    : columns
+                }
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
+                  formUIProps.setQueryParams,
                 )}
                 {...paginationTableProps}
               >

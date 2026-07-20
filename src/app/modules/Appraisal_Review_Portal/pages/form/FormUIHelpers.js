@@ -16,6 +16,7 @@ export const initialFilter = {
     searchQuery: "",
     subsidiaryId: "",
     appraisalCategoryId: "",
+    type : "",
     isEmpPortal: true,
   },
   sortOrder: "asc",
