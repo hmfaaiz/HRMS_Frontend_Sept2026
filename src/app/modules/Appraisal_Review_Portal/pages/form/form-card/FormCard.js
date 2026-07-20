@@ -35,20 +35,21 @@ export function FormCard() {
     }),
     shallowEqual
   );
+  console.log("emp appraisal " , userAccess)
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateAppraisalReview"
+    (item) => item.componentName === "CreateEmpAppraisalReview"
   );
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateAppraisalReview"
+    (item) => item.componentName === "UpdateEmpAppraisalReview"
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteAppraisalReview"
+    (item) => item.componentName === "DeleteEmpAppraisalReview"
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadAppraisalReview"
+    (item) => item.componentName === "ReadEmpAppraisalReview"
   );
 
   const menuOptions = useMemo(
