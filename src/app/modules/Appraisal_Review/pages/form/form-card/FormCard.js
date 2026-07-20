@@ -35,10 +35,10 @@ export function FormCard() {
 
   return (
     <TCard name={CurrentModuleName()}>
-      <div className="flex justify-start sm:justify-end items-end flex-wrap gap-2">
-        <FormFilter />
-        <div className="flex items-end gap-2">
-          {/* <CardHeaderToolbar> */}
+      <div className="">
+        
+        <FormFilter createAccess={accessUser} />
+        {/* <div className="flex items-end gap-2">
           {accessUser && (
             <>
               <button
@@ -58,7 +58,7 @@ export function FormCard() {
               </button>
             </>
           )}
-        </div>
+        </div> */}
       </div>
       <FormTable />
     </TCard>

@@ -19,6 +19,7 @@ import { useFromUIContext } from "../FormUIContext";
 import { X } from "lucide-react";
 import { downloadAppraisalFinalizationPdf } from "../../../_redux/formActions";
 import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
+import { ActionsColumnFormatter2 } from "./column-formatter/ActionsColumnFormatter2";
 export function FormTable() {
   //Users UI Context
   const [selectedIds, setSelectedIds] = useState([]);
@@ -32,10 +33,12 @@ export function FormTable() {
       openEditDialog: formUIContext.openEditDialog,
       openDeleteDialog: formUIContext.openDeleteDialog,
       openReadDialog: formUIContext.openReadDialog,
+      newButtonClick: formUIContext.newButtonClick,
       panelMode: formUIContext.panelMode,
       subsidiaryId: formUIContext.subsidiaryId,
       appraisalCategoryId: formUIContext.appraisalCategoryId,
       setPanelMode: formUIContext.setPanelMode,
+      setEmployeeId: formUIContext.setEmployeeId,
     };
   }, [formUIContext]);
 
@@ -53,6 +56,7 @@ export function FormTable() {
     listLoading,
     actionsLoading,
     finalizationPdfLoading,
+    sumReportLoading,
   } = currentState;
 
   //totalCount = 10
@@ -78,6 +82,10 @@ export function FormTable() {
 
   const isAccessForRead = userAccess?.find(
     (item) => item.componentName === "ReadAppraisalReview",
+  );
+
+  const isAccessForCreate = userAccess?.find(
+    (item) => item.componentName === "CreateAppraisalReview",
   );
   // Table columns
   const columns = [
@@ -235,14 +243,118 @@ export function FormTable() {
     },
   ];
 
+  const notCreatedColumns = [
+    {
+      dataField: "employeeCode",
+      text: "Employee Code",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "80px",
+      },
+    },
+    {
+      dataField: "firstName",
+      text: "Name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        return `${row?.firstName || ""} ${row?.middleName ||
+          ""} ${row?.lastName || ""}`;
+      },
+    },
+    {
+      dataField: "grade.formName",
+      text: "Grade",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "employeeType.formName",
+      text: "Employee Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "employeeStatus.formName",
+      text: "Employee Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "payrollGroup.formName",
+      text: "Payroll Group",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter2,
+      formatExtraData: {
+        newButtonClick: formUIProps.newButtonClick,
+        isAccessForCreate: isAccessForCreate
+          ? isAccessForCreate.isAccess
+          : false,
+        setEmployeeId: formUIProps.setEmployeeId,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "170px",
+      },
+    },
+  ];
+
   // top of component (inside FormTable)
   const keyField = "Id";
-
-  // ...
-
+  const isCreatedType = formUIProps.queryParams?.filter?.type !== "notFinal";
   const selectRow = {
     mode: "checkbox",
     clickToSelect: false,
+    hideSelectColumn: isCreatedType,
     // Disable rows jinka isFinalize true ho
     nonSelectable: (entities || [])
       .filter((r) => r?.isFinalize === true)
@@ -339,10 +451,9 @@ export function FormTable() {
     dispatch(actions.clearBulkPublishResult());
     // agar clear action nahi hai to local state se hide karlo
   };
-
   return (
     <>
-      <div className="w-full overflow-x-auto scrollbar-fancy">
+      <div className="w-full scrollbar-fancy">
         <PaginationProvider pagination={paginationFactory(paginationOptions)}>
           {({ paginationProps, paginationTableProps }) => {
             return (
@@ -359,7 +470,11 @@ export function FormTable() {
                     remote
                     keyField="Id"
                     data={entities === null ? [] : entities}
-                    columns={columns}
+                    columns={
+                      formUIProps.queryParams?.filter?.type === "notCreated"
+                        ? notCreatedColumns
+                        : columns
+                    }
                     defaultSorted={uiHelpers.defaultSorted}
                     selectRow={selectRow}
                     onTableChange={getHandlerTableChange(
@@ -377,39 +492,67 @@ export function FormTable() {
         </PaginationProvider>
       </div>
       <div className="d-flex justify-content-end mt-3 gap-x-2">
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={selectedIds.length === 0 || handleBulkLoading}
-          onClick={handleBulkAction}
-        >
-          Finalized Selected ({selectedIds.length})
-          {handleBulkLoading && (
-            <span className="ml-3 mr-3 spinner spinner-white"></span>
-          )}
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={
-            actionsLoading ||
-            !formUIProps?.appraisalCategoryId ||
-            !formUIProps?.subsidiaryId
-          }
-          onClick={() =>
-            dispatch(
-              actions.salaryRecomendationReport({
-                appraisalCategoryId: formUIProps?.appraisalCategoryId,
-                subsidiaryId: formUIProps?.subsidiaryId,
-              }),
-            )
-          }
-        >
-          Salary Recommendation Report
-          {actionsLoading && (
-            <span className="ml-3 mr-5 spinner spinner-white"></span>
-          )}
-        </button>
+        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={selectedIds.length === 0 || handleBulkLoading}
+            onClick={handleBulkAction}
+          >
+            Finalized Selected ({selectedIds.length})
+            {handleBulkLoading && (
+              <span className="ml-3 mr-3 spinner spinner-white"></span>
+            )}
+          </button>
+        ) : null}
+        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={
+              actionsLoading ||
+              !formUIProps?.appraisalCategoryId ||
+              !formUIProps?.subsidiaryId
+            }
+            onClick={() =>
+              dispatch(
+                actions.salaryRecomendationReport({
+                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                  subsidiaryId: formUIProps?.subsidiaryId,
+                }),
+              )
+            }
+          >
+            Salary Recommendation Report
+            {actionsLoading && (
+              <span className="ml-3 mr-5 spinner spinner-white"></span>
+            )}
+          </button>
+        ) : null}
+        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={
+              sumReportLoading ||
+              !formUIProps?.appraisalCategoryId ||
+              !formUIProps?.subsidiaryId
+            }
+            onClick={() =>
+              dispatch(
+                actions.appraisalFinalizationSumReport({
+                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                  subsidiaryId: formUIProps?.subsidiaryId,
+                }),
+              )
+            }
+          >
+            Appraisal Finalization Report
+            {sumReportLoading && (
+              <span className="ml-3 mr-5 spinner spinner-white"></span>
+            )}
+          </button>
+        ) : null}
       </div>
       <BulkPublishSummary
         bulkResult={errorState}
