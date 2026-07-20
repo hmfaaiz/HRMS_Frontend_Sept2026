@@ -56,6 +56,7 @@ export function FormTable() {
     listLoading,
     actionsLoading,
     finalizationPdfLoading,
+    sumReportLoading,
   } = currentState;
 
   //totalCount = 10
@@ -504,28 +505,54 @@ export function FormTable() {
             )}
           </button>
         ) : null}
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={
-            actionsLoading ||
-            !formUIProps?.appraisalCategoryId ||
-            !formUIProps?.subsidiaryId
-          }
-          onClick={() =>
-            dispatch(
-              actions.salaryRecomendationReport({
-                appraisalCategoryId: formUIProps?.appraisalCategoryId,
-                subsidiaryId: formUIProps?.subsidiaryId,
-              }),
-            )
-          }
-        >
-          Salary Recommendation Report
-          {actionsLoading && (
-            <span className="ml-3 mr-5 spinner spinner-white"></span>
-          )}
-        </button>
+        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={
+              actionsLoading ||
+              !formUIProps?.appraisalCategoryId ||
+              !formUIProps?.subsidiaryId
+            }
+            onClick={() =>
+              dispatch(
+                actions.salaryRecomendationReport({
+                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                  subsidiaryId: formUIProps?.subsidiaryId,
+                }),
+              )
+            }
+          >
+            Salary Recommendation Report
+            {actionsLoading && (
+              <span className="ml-3 mr-5 spinner spinner-white"></span>
+            )}
+          </button>
+        ) : null}
+        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={
+              sumReportLoading ||
+              !formUIProps?.appraisalCategoryId ||
+              !formUIProps?.subsidiaryId
+            }
+            onClick={() =>
+              dispatch(
+                actions.appraisalFinalizationSumReport({
+                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                  subsidiaryId: formUIProps?.subsidiaryId,
+                }),
+              )
+            }
+          >
+            Appraisal Finalization Report
+            {sumReportLoading && (
+              <span className="ml-3 mr-5 spinner spinner-white"></span>
+            )}
+          </button>
+        ) : null}
       </div>
       <BulkPublishSummary
         bulkResult={errorState}
