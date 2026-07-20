@@ -292,7 +292,7 @@ export function ResponseTable() {
         </span>
       ),
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
     },
 
@@ -306,7 +306,7 @@ export function ResponseTable() {
         </span>
       ),
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
     },
 
