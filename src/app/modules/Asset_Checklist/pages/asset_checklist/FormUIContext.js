@@ -31,8 +31,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     asset_registerId: "",
     date_of_inspection: null,
     reason_for_inspection: null,
-    event_for_inspection: null,
-    inspected_by_employeeId: "",
+    event_for_inspection: '',
+    inspected_by_employeeId: null,
   
     list: [],
   };

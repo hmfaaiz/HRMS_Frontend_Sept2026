@@ -14,6 +14,7 @@ export function SearchSelect({
   onInputChange,
   isDisabled,
   isClearable,
+  isOptionDisabled, 
 }) {
   //const [selectedOption, setSelectedOption] = useState();
 
@@ -47,6 +48,7 @@ export function SearchSelect({
         classNamePrefix="select_option"
         menuPortalTarget={document.body}
         menuPosition="fixed"
+        isOptionDisabled={isOptionDisabled}
         styles={{
           menuPortal: (base) => ({ ...base, zIndex: 9999 }),
         }}

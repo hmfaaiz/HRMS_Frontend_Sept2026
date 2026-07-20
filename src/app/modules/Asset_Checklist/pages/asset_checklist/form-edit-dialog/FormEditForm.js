@@ -74,7 +74,7 @@ export function FormEditForm({
   const [assetDetailsPanel, setAssetDetailsPanel] = useState(false);
 
   useEffect(() => {
-
+    console.log("data1111111111", data)
     dispatch(fetchAllPresentUnassignedCategory());
     dispatch(fetchAllActiveEmployees());
 
@@ -93,7 +93,7 @@ export function FormEditForm({
   const { entities } = currentState;
 
 
-
+  console.log("data11111", data)
   return (
     <Formik
       enableReinitialize
@@ -180,11 +180,11 @@ export function FormEditForm({
                       className="form-control"
 
                       isDisabled={!values.asset_categoryId || isdataForRead || data?.dataIsExist}
-                      value={dashboard?.allRegisterAssetList
-                        ?.filter((item) => Number(item.status) === 0)
-                        ?.find(
+                      value={
+                        dashboard?.allRegisterAssetList?.find(
                           (x) => Number(x.value) === Number(values.asset_registerId)
-                        ) || null}
+                        ) || null
+                      }
                       label={
                         <span>
                           Asset <span style={{ color: "red" }}>*</span>
@@ -201,11 +201,13 @@ export function FormEditForm({
                         }
 
                       }}
-                      options={
-                        dashboard?.allRegisterAssetList?.filter(
-                          (item) => Number(item.status) === 0
-                        ) || []
-                      }
+                      // options={
+                      //   dashboard?.allRegisterAssetList?.filter(
+                      //     (item) => Number(item.status) === 0
+                      //   ) || []
+                      // }
+                      options={dashboard?.allRegisterAssetList || []}
+                      isOptionDisabled={(option) => Number(option.status) === 1}
                       autoComplete="off"
                     />
 
@@ -280,13 +282,13 @@ export function FormEditForm({
                   <div className="col-span-1">
                     <SearchSelect
                       name="inspected_by_employeeId"
-                      component={Input}
+
                       placeholder="Select Employee"
                       className="form-control" // Force full height
                       value={dashboard?.allEmployees?.find(
                         (x) =>
-                          Number(x.value) === Number(values.inspected_by_employeeId),
-                      )}
+                          Number(x.value) === Number(values.inspected_by_employeeId)
+                      ) || null}
                       label={
                         <span>
                           {" "}

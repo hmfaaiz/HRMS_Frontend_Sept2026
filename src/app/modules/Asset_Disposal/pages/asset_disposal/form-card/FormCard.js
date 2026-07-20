@@ -45,7 +45,7 @@ export function FormCard() {
 
   useEffect(() => {
     dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
-    dispatch(fetchAllRegisterAssetName());
+    dispatch(fetchAllRegisterAssetName({status:2}));
     dispatch(fetchAllAssetModelName());
 
   }, []);
@@ -87,7 +87,7 @@ export function FormCard() {
                   asset_registerId: "",
                   pageNumber: 1,
                 };
-                dispatch(fetchAllRegisterAssetName({ asset_categoryId: e?.value ?? "", asset_modelId: FormUIProps.queryParams?.asset_modelId ?? "" }));
+                dispatch(fetchAllRegisterAssetName({status:2, asset_categoryId: e?.value ?? "", asset_modelId: FormUIProps.queryParams?.asset_modelId ?? "" }));
                 dispatch(fetchAllAssetModelName({ asset_categoryId: e?.value ?? "" }));
 
 
@@ -134,7 +134,7 @@ export function FormCard() {
                 };
 
 
-                dispatch(fetchAllRegisterAssetName({ asset_modelId: e?.value ?? "", asset_categoryId: FormUIProps.queryParams?.asset_categoryId ?? "" }));
+                dispatch(fetchAllRegisterAssetName({status:2, asset_modelId: e?.value ?? "", asset_categoryId: FormUIProps.queryParams?.asset_categoryId ?? "" }));
 
 
 
