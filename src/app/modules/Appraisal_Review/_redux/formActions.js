@@ -137,20 +137,20 @@ export const salaryRecomendationReport = (payload) => async (dispatch) => {
 };
 export const downloadAppraisalFinalizationPdf = (reviewId) => (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.finalizationPdf }));
- 
+
   return requestFromServer.downloadAppraisalFinalizationPdfRequest(reviewId)
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-      const pdfUrl  = URL.createObjectURL(pdfBlob);
- 
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
       const link = document.createElement("a");
-      link.href  = pdfUrl;
+      link.href = pdfUrl;
       link.setAttribute("download", `appraisal_finalization_report.pdf`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(pdfUrl);
- 
+
       dispatch(actions.finalizationPdfFetched());
     })
     .catch((error) => {
@@ -170,7 +170,7 @@ export const appraisalFinalizationSumReport = (payload) => async (dispatch) => {
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type: "application/pdf" });
       const pdfUrl = URL.createObjectURL(pdfBlob);
- 
+
       // Trigger file download
       const link = document.createElement("a");
       link.href = pdfUrl;
@@ -199,8 +199,45 @@ export const appraisalFinalizationSumReport = (payload) => async (dispatch) => {
       );
     });
 };
- 
 
+export const appraisalFinalizationSumReportExcel = (payload) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.sumExcelReport }));
+  return requestFromServer
+    .appraisalFinalizationSumReportExcel(payload)
+    .then((res) => {
+      const excelBlob = new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const excelUrl = URL.createObjectURL(excelBlob);
+
+      // Trigger file download
+      const link = document.createElement("a");
+      link.href = excelUrl;
+      link.setAttribute("download", "appraisal_finalization_sum_report.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.sumExcelReportFetched());
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Excel";
+      dispatch(actions.catchError({ error, callType: callTypes.sumExcelReport }));
+
+      toast.error(
+        error?.response?.status == 400
+          ? "Please select filter to generate Excel"
+          : error.clientMessage,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        },
+      );
+
+    })
+};
 
 export const appraisalFinalizationBeforeCreation = (payload) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.beforeCreation }));
@@ -209,7 +246,7 @@ export const appraisalFinalizationBeforeCreation = (payload) => async (dispatch)
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type: "application/pdf" });
       const pdfUrl = URL.createObjectURL(pdfBlob);
- 
+
       // Trigger file download
       const link = document.createElement("a");
       link.href = pdfUrl;
@@ -238,4 +275,5 @@ export const appraisalFinalizationBeforeCreation = (payload) => async (dispatch)
       );
     });
 };
- 
+
+
