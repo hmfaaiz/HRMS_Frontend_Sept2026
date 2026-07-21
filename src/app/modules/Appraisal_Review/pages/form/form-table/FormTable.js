@@ -558,7 +558,7 @@ export function FormTable() {
             {sumReportLoading && (
               <span className="ml-3 mr-5 spinner spinner-white"></span>
             )}
-            <FileText size={16} className="mr-2" />
+            <FileText size={12} className="ml-2" />
           </button>
         ) : null}
         {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
@@ -583,7 +583,7 @@ export function FormTable() {
             {sumExcelReportLoading && (
               <span className="ml-3 mr-5 spinner spinner-white"></span>
             )}
-            <FileSpreadsheet size={16} className="mr-2" />
+            <FileSpreadsheet size={12} className="ml-2" />
           </button>
         ) : null}
       </div>
