@@ -58,6 +58,7 @@ export function FormTable() {
     finalizationPdfLoading,
     sumReportLoading,
     beforeCreation,
+    sumExcelReportLoading,
   } = currentState;
 
   //totalCount = 10
