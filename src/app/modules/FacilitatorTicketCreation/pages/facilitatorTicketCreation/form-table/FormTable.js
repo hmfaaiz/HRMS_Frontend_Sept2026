@@ -384,7 +384,7 @@ export function FormTable() {
         </span>
       ),
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
     },
     // {
@@ -416,7 +416,7 @@ export function FormTable() {
         </span>
       ),
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
     },
     {
