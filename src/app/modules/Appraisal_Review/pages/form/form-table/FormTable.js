@@ -57,7 +57,7 @@ export function FormTable() {
     actionsLoading,
     finalizationPdfLoading,
     sumReportLoading,
-    sumExcelReportLoading,
+    beforeCreation,
   } = currentState;
 
   //totalCount = 10
@@ -340,6 +340,11 @@ export function FormTable() {
           ? isAccessForCreate.isAccess
           : false,
         setEmployeeId: formUIProps.setEmployeeId,
+        dispatch: dispatch,
+        appraisalFinalizationBeforeCreation:
+          actions.appraisalFinalizationBeforeCreation,
+        beforeCreation,
+        appraisalCategoryId: formUIProps?.appraisalCategoryId,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
