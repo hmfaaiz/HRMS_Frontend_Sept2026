@@ -130,6 +130,32 @@ export function SubsidiaryTable() {
       },
     },
     {
+      dataField: "parentSubsidary.name",
+      text: "Parent Subsidiary Name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell, row) => {
+        return row?.parentSubsidary?.name || "N/A";
+      }
+    },
+    {
+      dataField: "isParentSubsidary",
+      text: "Save As Parent Subsidiary",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell) => {
+        return cell === 1 || cell === true ? "Yes" : "No";
+      }
+    },
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,

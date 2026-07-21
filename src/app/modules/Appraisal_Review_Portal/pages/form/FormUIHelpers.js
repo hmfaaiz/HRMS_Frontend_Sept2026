@@ -20,6 +20,6 @@ export const initialFilter = {
     isEmpPortal: true,
   },
   sortOrder: "asc",
-  pageSize: 5,
+  pageSize: 10,
   pageNumber: 1,
 };

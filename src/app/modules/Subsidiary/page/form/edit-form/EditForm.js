@@ -19,6 +19,7 @@ import {
   fetchAllComapnyData,
   fetchAllFormsMenu,
 } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllParentSubsidiaries } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
@@ -86,6 +87,8 @@ const formSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   users: Yup.array().optional(),
+  isParentSubsidary: Yup.boolean().nullable().optional(),
+  parentSubsidaryId: Yup.number().nullable().optional(),
 });
 
 export const EditForm = ({
@@ -106,6 +109,7 @@ export const EditForm = ({
     dispatch(fetchAllFormsMenu(126, "allCurrency"));
     dispatch(fetchAllComapnyData("allCompanyList"));
     dispatch(fetchAllCountry());
+    dispatch(fetchAllParentSubsidiaries());
   }, []);
 
   useEffect(() => {
@@ -114,13 +118,14 @@ export const EditForm = ({
       // dispatch(fetchUsersByCompanyId(data?.companyId));
     }
   }, [data?.Id]);
-  const { allCurrency, allCity, allCountry, allCompanyList , allUsers } = useSelector(
+  const { allCurrency, allCity, allCountry, allCompanyList, allUsers, allParentSubsidiaries } = useSelector(
     (state) => ({
       allCurrency: state?.dashboard?.allCurrency,
       allCountry: state?.dashboard?.allCountry,
       allCompanyList: state?.dashboard?.allCompanyList,
       allCity: state?.dashboard?.allCity,
-      allUsers : state?.dashboard?.allUsers || [],
+      allUsers: state?.dashboard?.allUsers || [],
+      allParentSubsidiaries: state?.dashboard?.allParentSubsidiaries || [],
     }),
 
     shallowEqual,
@@ -287,6 +292,47 @@ export const EditForm = ({
                         ) || null
                       }
                       options={allCurrency}
+                    />
+                  </div>
+                  <div>
+                    <SearchSelect
+                      name="parentSubsidaryId"
+                      isDisabled={isUserForRead || !!data?.Id}
+                      label={<span>Parent Subsidiary</span>}
+                      onChange={(e) => {
+                        setFieldValue("parentSubsidaryId", e?.value || null);
+                      }}
+                      value={
+                        allParentSubsidiaries?.find(
+                          (e) => e?.value === values?.parentSubsidaryId,
+                        ) || null
+                      }
+                      options={allParentSubsidiaries}
+                    />
+                  </div>
+                  <div>
+                    <SearchSelect
+                      name="isParentSubsidary"
+                      isDisabled={isUserForRead || !!data?.Id}
+                      label={<span>Save As Parent Subsidiary</span>}
+                      onChange={(e) => {
+                        setFieldValue(
+                          "isParentSubsidary",
+                          e?.value !== undefined ? e.value : null,
+                        );
+                      }}
+                      value={
+                        [
+                          { value: 1, label: "Yes" },
+                          { value: 0, label: "No" },
+                        ].find(
+                          (e) => e?.value === values?.isParentSubsidary,
+                        ) || null
+                      }
+                      options={[
+                        { value: 1, label: "Yes" },
+                        { value: 0, label: "No" },
+                      ]}
                     />
                   </div>
                   <div>

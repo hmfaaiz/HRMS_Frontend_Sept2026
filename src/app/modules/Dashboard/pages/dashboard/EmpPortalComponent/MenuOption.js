@@ -36,6 +36,7 @@ export const MenuOption = ({isDashboard}) => {
     company_doc_portal,
     employee_task,
     budget,
+    employee_profile_workflow,
     useracc1111,
   } = useSelector((state) => {
     return {
@@ -55,6 +56,7 @@ export const MenuOption = ({isDashboard}) => {
       portalInfo: state?.dashboard?.portalInfo,
       employee_task: state?.auth?.userAccess["Employee_Task"],
       budget: state?.auth?.userAccess["Manpower Budget"],
+      employee_profile_workflow: state?.auth?.userAccess["Employee"],
       useracc1111: state?.auth?.userAccess,
     };
   }, shallowEqual);
@@ -187,13 +189,25 @@ export const MenuOption = ({isDashboard}) => {
       el?.portalType == 2,
   );
 
+  const employeeProfileWorkflowItem = employee_profile_workflow?.find(
+    (el) =>
+      (el?.componentName === "ReadAllEmployeeProfileWorkflow") &&
+      el?.isResourceShow &&
+      el?.portalType == 2,
+  );
+
   const MENUOPTION = useMemo(() => {
     return [
       {
         icon: <ListChecks className="w-6 h-6 text-black" />,
         name: "Employee",
-        isShow: employeeTaskItem,
+        isShow: employeeTaskItem || employeeProfileWorkflowItem,
         linkList: [
+          {
+            link: "/employee_profile_workflow/read-all-employee-profile-workflow",
+            show: employeeProfileWorkflowItem,
+            name: "Personal Profile Change Workflow",
+          },
           {
             link: "/employee_task/read-all-employee-task",
             show: employeeTaskItem,
@@ -396,19 +410,17 @@ export const MenuOption = ({isDashboard}) => {
           Associated Modules
         </h5>
         <Plus
-          className={`w-5 h-5 font-bold text-white transition-transform duration-300 ${
-            isExpanded ? "rotate-45" : ""
-          }`}
+          className={`w-5 h-5 font-bold text-white transition-transform duration-300 ${isExpanded ? "rotate-45" : ""
+            }`}
         />
       </div>
 
       {/* Expandable content section - absolute positioned */}
       <div
-        className={`absolute left-0  w-full overflow-hidden transition-all duration-300 ease-in-out z-20 ${
-          isExpanded
-            ? "h-[28rem] opacity-100"
-            : "h-0 opacity-0 pointer-events-none"
-        }`}
+        className={`absolute left-0  w-full overflow-hidden transition-all duration-300 ease-in-out z-20 ${isExpanded
+          ? "h-[28rem] opacity-100"
+          : "h-0 opacity-0 pointer-events-none"
+          }`}
         style={{ top: "calc(100% - 8px)" }}
       >
         <div className="bg-tprimary space-y-2 shadow-md rounded-lg p-4 mx-5 h-full overflow-y-auto scrollbar-fancy ">
