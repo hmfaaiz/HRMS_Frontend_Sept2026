@@ -200,3 +200,42 @@ export const appraisalFinalizationSumReport = (payload) => async (dispatch) => {
     });
 };
  
+
+
+export const appraisalFinalizationBeforeCreation = (payload) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.beforeCreation }));
+  return requestFromServer
+    .appraisalFinalizationBeforeCreation(payload)
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+ 
+      // Trigger file download
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.setAttribute("download", "appraisal_finalization_before_creation.pdf");
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.appraisalFinalizationBeforeCreationFetched());
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.beforeCreation }));
+      toast.error(
+        error?.response?.status == 400
+          ? "Please select filter to generate PDF"
+          : error.clientMessage,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        },
+      );
+    });
+};
+ 

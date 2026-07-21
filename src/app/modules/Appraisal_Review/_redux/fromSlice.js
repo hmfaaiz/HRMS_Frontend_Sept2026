@@ -17,6 +17,7 @@ export const callTypes = {
   action: "action",
   finalizationPdf: "finalizationPdf",
   sumReport: "sumReport",
+  beforeCreation: "beforeCreation",
 };
 
 export const appraisalReviewSlice = createSlice({
@@ -30,6 +31,8 @@ export const appraisalReviewSlice = createSlice({
         state.finalizationPdfLoading = false;
       } else if (action.payload.callType === callTypes.sumReport) {
         state.sumReportLoading = false;
+      } else if (action.payload.callType === callTypes.beforeCreation) {
+        state.beforeCreation = false;
       } else {
         state.actionsLoading = false;
       }
@@ -41,6 +44,8 @@ export const appraisalReviewSlice = createSlice({
         state.finalizationPdfLoading = true;
       } else if (action.payload.callType === callTypes.sumReport) {
         state.sumReportLoading = true;
+      } else if (action.payload.callType === callTypes.beforeCreation) {
+        state.beforeCreation = true;
       } else {
         state.actionsLoading = true;
       }
@@ -51,6 +56,9 @@ export const appraisalReviewSlice = createSlice({
     },
     sumReportFetched: (state, action) => {
       state.sumReportLoading = false;
+    },
+    appraisalFinalizationBeforeCreationFetched: (state, action) => {
+      state.beforeCreation = false;
     },
     pdfFetched: (state, action) => {
       state.actionsLoading = false;

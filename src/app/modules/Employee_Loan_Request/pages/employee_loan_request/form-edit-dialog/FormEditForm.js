@@ -32,14 +32,18 @@ import {
   fetchEmployeeLoanRequest,
 } from "../../../_redux/redux-Actions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { Label } from "@material-ui/icons";
 
 const EmployeeLoanRequestSchema = Yup.object().shape({
   loan_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
   employee_loan_accountId: Yup.number().required(VALIDATION_MESSAGES.required),
   // applied_date: Yup.date().required(VALIDATION_MESSAGES.required),
   // installment_start_date: Yup.date().required(VALIDATION_MESSAGES.required),
-  applied_date: Yup.date().required(VALIDATION_MESSAGES.required),
+  applied_date: Yup.date()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
   installment_start_date: Yup.date()
+  .nullable()
     .min(
       Yup.ref("applied_date"),
       "Installment start date cannot be earlier than applied date"
@@ -76,7 +80,7 @@ export function FormEditForm({
   useEffect(() => {
     if (!user.Id) {
       dispatch(actions.getAllLoanType());
-      dispatch(fetchAllAccountsByType(45, accountType.Assets ,"allAccountList"));
+      dispatch(fetchAllAccountsByType(45, accountType.Assets, "allAccountList"));
       dispatch(
         fetchPayrollConfigApproverPermission(
           "allPayrollConfigApproverPermissionList"
@@ -483,7 +487,7 @@ export function FormEditForm({
   };
 
   const addMonthsToDate = (dateStr, months) => {
-   
+
     const date = new Date(dateStr);
     date.setMonth(date.getMonth() + months);
 
@@ -531,7 +535,7 @@ export function FormEditForm({
 
   const handleCloseModal = () => {
     setShowModal(false); // Close the modal
-  
+
   };
 
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
@@ -546,16 +550,16 @@ export function FormEditForm({
       onSubmit={(values, { resetForm }) => {
         enableLoading();
 
-            const payload = {
-                ...values,
-                applied_date: values.applied_date
-                  ? formatDates(values.applied_date, "dd-MMM-yyyy")
-                  : null,
-                   installment_start_date: values.installment_start_date
-                  ? formatDates(values.installment_start_date, "dd-MMM-yyyy")
-                  : null,
+        const payload = {
+          ...values,
+          applied_date: values.applied_date
+            ? formatDates(values.applied_date, "dd-MMM-yyyy")
+            : null,
+          installment_start_date: values.installment_start_date
+            ? formatDates(values.installment_start_date, "dd-MMM-yyyy")
+            : null,
 
-            }
+        }
 
         const clearForm = () => {
           resetForm();
@@ -572,7 +576,7 @@ export function FormEditForm({
           setMonthlyInstallmentsLimit,
           subsidiaryid
         );
-          dispatch(fetchEmployeeLoanRequest(formUIProps));
+        dispatch(fetchEmployeeLoanRequest(formUIProps));
       }}
     >
       {({
@@ -761,7 +765,7 @@ export function FormEditForm({
 
                         <div className="d-flex">
                           Total Loan Amount
-                             <span className="ml-1">
+                          <span className="ml-1">
                             (Limit: {maxAmountLimit?.toLocaleString() || "0, Select loan type"})
                             <span style={{ color: "red" }}>*</span>
                           </span>
@@ -801,20 +805,30 @@ export function FormEditForm({
                         <div className="d-flex">
                           <div className="d-flex"> Monthly Installment</div>
                           <div className="d-flex">
-                            {maxMonthlyAmountSuggest ? (
+                            {/* {maxMonthlyAmountSuggest ? (
                               <span>
                                 (Suggested Installment Based on Policy: {" "}
                                 {maxMonthlyAmountSuggest?.toLocaleString() || 0}
                                 )
                               </span>
-                            ) : null}
+                            ) : null} */}
                             <span style={{ color: "red" }}>*</span>
                           </div>
                         </div>
                       }
                     />
                   </div>
+                  {maxMonthlyAmountSuggest ? (
+                    <div>
 
+                      <label>
+                        (Suggested Installment Based on Policy: {" "}
+                        {maxMonthlyAmountSuggest?.toLocaleString() || 0}
+                        )
+                      </label>
+
+                    </div>
+                  ) : null}
                   <div className="">
                     <Field
                       name="total_installment"
@@ -825,7 +839,7 @@ export function FormEditForm({
                           <div className="d-flex"> Total installments  <span className="ml-1">
                             (Maximum:{" "}
                             {monthlyInstallmentsLimit?.toLocaleString() || 0})
-                            <span  style={{ color: "red" }}>*</span>
+                            <span style={{ color: "red" }}>*</span>
                           </span></div>
 
                         </div>
@@ -936,7 +950,7 @@ export function FormEditForm({
                         handleReset={handleReset}
                         setIds={setIds}
                         formUIProps={formUIProps}
-                         
+
                       />
                     </div>
                   </div>
@@ -980,7 +994,7 @@ export function FormEditForm({
                   // onClick={() => handleSubmit()}
                   onClick={() => {
                     handleSubmit();
-                      // dispatch(fetchEmployeeLoanRequest(formUIProps));
+                    // dispatch(fetchEmployeeLoanRequest(formUIProps));
                   }}
                   className="btn btn-primary btn-elevate"
                   disabled={userForEdit || loading}
@@ -997,8 +1011,9 @@ export function FormEditForm({
                       <button
                         type="button"
                         className="btn btn-green"
-                        onClick={() => {UpdateApprovedStatus(user.Id, 1)
-                           dispatch(fetchEmployeeLoanRequest(formUIProps));
+                        onClick={() => {
+                          UpdateApprovedStatus(user.Id, 1)
+                          dispatch(fetchEmployeeLoanRequest(formUIProps));
 
 
 
@@ -1021,8 +1036,9 @@ export function FormEditForm({
                         <button
                           type="button"
                           className="btn btn-green"
-                          onClick={() =>{ UpdateApprovedStatus(user.Id, 1)
-                             dispatch(fetchEmployeeLoanRequest(formUIProps));
+                          onClick={() => {
+                            UpdateApprovedStatus(user.Id, 1)
+                            dispatch(fetchEmployeeLoanRequest(formUIProps));
                           }}
                         >
                           Approve
