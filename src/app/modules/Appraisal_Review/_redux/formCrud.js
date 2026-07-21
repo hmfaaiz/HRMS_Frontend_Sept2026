@@ -66,3 +66,14 @@ export function appraisalFinalizationSumReport(body) {
   );
 }
  
+
+export function appraisalFinalizationBeforeCreation(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/appraisal-finalization-before-creation`,
+    body,
+    {
+      responseType: "arraybuffer",
+    },
+  );
+}
+ 
