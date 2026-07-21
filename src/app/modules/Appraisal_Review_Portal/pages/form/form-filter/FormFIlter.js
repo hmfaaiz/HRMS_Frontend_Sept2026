@@ -170,7 +170,7 @@ export function FormFilter({ createAccess }) {
                     applyFilter({ ...values, type: "notCreated" });
                   }}
                 >
-                  Not Created
+                  In Process
                 </button>
               ) : null}
               <button
@@ -185,7 +185,7 @@ export function FormFilter({ createAccess }) {
                   applyFilter({ ...values, type: "notFinal" });
                 }}
               >
-                Created
+                Not Finalized
               </button>
               <button
                 type="button"
