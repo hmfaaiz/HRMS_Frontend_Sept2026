@@ -31,5 +31,9 @@ export const appraisalStatusSlice = createSlice({
       state.listLoading = false;
       state.entities = action.payload;
     },
+    clearState: (state, action) => {
+      state.listLoading = false;
+      state.entities = [];
+    },
   },
 });

@@ -5,14 +5,14 @@ import { toast } from "react-toastify";
 const { actions } = appraisalStatusSlice;
 
 export const fetchAllAppraisalStatusEmployeeWise = (payload) => async (
-  dispatch
+  dispatch,
 ) => {
   dispatch(actions.startCall({ callType: callTypes.list }));
   return requestFromServer
     .getAppraisalStatus(payload)
     .then((response) => {
       dispatch(
-        actions.appraisalStatusEmployeeWiseFetched(response?.data?.data || [])
+        actions.appraisalStatusEmployeeWiseFetched(response?.data?.data || []),
       );
     })
     .catch((error) => {
@@ -22,3 +22,6 @@ export const fetchAllAppraisalStatusEmployeeWise = (payload) => async (
     });
 };
 
+export const ClearReduxState = (payload) => async (dispatch) => {
+  dispatch(actions.clearState());
+};

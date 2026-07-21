@@ -39,7 +39,7 @@ export function FormFilter() {
       auth: state?.auth,
       list_loading: state?.appraisal_status?.list_loading,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
   const [initialValues, setInitialValues] = useState(initialFilter);
@@ -56,7 +56,7 @@ export function FormFilter() {
     if (!dashboard?.allSubsidiaryList?.length) return;
 
     const findDefaultSub = dashboard?.allSubsidiaryList?.find(
-      (e) => e.isDefault
+      (e) => e.isDefault,
     );
 
     if (!findDefaultSub) return;
@@ -104,7 +104,7 @@ export function FormFilter() {
                 value={
                   values.subsidiaryId
                     ? dashboard?.allSubsidiaryList?.find(
-                        (i) => i.value === values.subsidiaryId
+                        (i) => i.value === values.subsidiaryId,
                       )
                     : null
                 }
@@ -120,7 +120,7 @@ export function FormFilter() {
 
                   if (e?.value) {
                     dispatch(
-                      fetchAllAppraisalPeriodDataBySubsidiaryId(e.value)
+                      fetchAllAppraisalPeriodDataBySubsidiaryId(e.value),
                     );
                     dispatch(fetchAllActiveEmployeesBySubsidiary(e.value));
                   }
@@ -141,7 +141,7 @@ export function FormFilter() {
                 value={
                   values.appraisalPeriodId
                     ? dashboard?.appraisalPeriodBySubList?.find(
-                        (i) => i.value === values.appraisalPeriodId
+                        (i) => i.value === values.appraisalPeriodId,
                       )
                     : null
                 }
@@ -167,7 +167,7 @@ export function FormFilter() {
                 value={
                   values.appraisalCategoryId
                     ? dashboard?.allAppraisalCategory?.find(
-                        (i) => i.value === values.appraisalCategoryId
+                        (i) => i.value === values.appraisalCategoryId,
                       )
                     : null
                 }
@@ -194,7 +194,7 @@ export function FormFilter() {
                 value={
                   values.employeeId
                     ? dashboard?.allEmployees?.find(
-                        (i) => i.value === values.employeeId
+                        (i) => i.value === values.employeeId,
                       )
                     : null
                 }
@@ -233,7 +233,10 @@ export function FormFilter() {
           <div className="flex gap-2 justify-end mt-2">
             <button
               type="button"
-              onClick={() => resetForm({ values: initialFilter })}
+              onClick={() => {
+                dispatch(actions.ClearReduxState());
+                resetForm({ values: initialFilter });
+              }}
               className="btn btn-light"
             >
               Cancel
