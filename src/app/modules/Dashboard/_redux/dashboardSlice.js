@@ -120,6 +120,7 @@ const initialDashboardState = {
   budgetRequestList: [],
   allCompDeptList: [],
   allDesignationByDeptList: [],
+  allParentSubsidiaries: [],
   allAssetMakeList: [],
   allAssetModelNameList: [],
   allAssetCategoryList: [],
@@ -509,6 +510,9 @@ export const dashboardSlice = createSlice({
     },
     AllDesignationByhDeptFetch: (state, action) => {
       state.allDesignationByDeptList = action.payload;
+    },
+    AllParentSubsidiariesFetch: (state, action) => {
+      state.allParentSubsidiaries = action.payload;
     },
 
     AllAssetModelNameFetch: (state, action) => {

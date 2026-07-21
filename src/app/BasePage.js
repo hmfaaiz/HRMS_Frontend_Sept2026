@@ -82,6 +82,12 @@ const CompensationExpModule = lazy(() =>
 const EmployeeTransferModule = lazy(() =>
   import("./modules/Employee_Transfer/pages/index"),
 );
+const EmployeeProfileWorkflowPortalModule = lazy(() =>
+  import("./modules/Employee_Profile_Workflow_Portal/index"),
+);
+const EmployeeProfileWorkflowHrmsModule = lazy(() =>
+  import("./modules/Employee_Profile_Workflow_Hrms/index"),
+);
 // const EmployeeSalaryRevisionModule = lazy(() =>
 //   import("./modules/Employee_Salary_Revision/pages/index")
 // );
@@ -927,6 +933,8 @@ const ROUTES = {
   budget_setup_year: budget_year_setup,
   manpower_budget_dashboard : manpower_budget_dashboard,
   department_designation_map: department_designation_mapping,
+  employee_profile_workflow: EmployeeProfileWorkflowPortalModule,
+  employee_profile_workflow_hrms: EmployeeProfileWorkflowHrmsModule,
   asset_model: asset_model,
   asset_register: asset_register,
   asset_assignment: asset_assignment,

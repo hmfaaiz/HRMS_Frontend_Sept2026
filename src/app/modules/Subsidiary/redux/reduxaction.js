@@ -82,6 +82,6 @@ export const deleteRecord = (id, disableLoading, onHide) => (dispatch) => {
     .catch((error) => {
       disableLoading();
       error.clientMessage = "Can't Delete Subsidiary";
-      toast.error(SERVER_MESSAGES.deletedFail);
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.deletedFail);
     });
 };
