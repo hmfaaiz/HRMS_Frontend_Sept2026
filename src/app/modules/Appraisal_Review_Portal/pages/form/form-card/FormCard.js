@@ -33,23 +33,23 @@ export function FormCard() {
       appraisal: state?.auth?.userAccess["appraisal_evaluation"],
       appraisalAccess: state?.auth?.userAccess["Appraisal"],
     }),
-    shallowEqual
+    shallowEqual,
   );
-  console.log("emp appraisal " , userAccess)
+
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateEmpAppraisalReview"
+    (item) => item.componentName === "CreateEmpAppraisalReview",
   );
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateEmpAppraisalReview"
+    (item) => item.componentName === "UpdateEmpAppraisalReview",
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteEmpAppraisalReview"
+    (item) => item.componentName === "DeleteEmpAppraisalReview",
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadEmpAppraisalReview"
+    (item) => item.componentName === "ReadEmpAppraisalReview",
   );
 
   const menuOptions = useMemo(
@@ -73,7 +73,7 @@ export function FormCard() {
         ),
       },
     ],
-    [appraisalAccess, appraisal]
+    [appraisalAccess, appraisal],
   );
 
   return (
@@ -99,9 +99,9 @@ export function FormCard() {
           />
         </div>
         <div className="px-3 py-2 rounded-lg bg-white">
-          <div className="flex justify-start sm:justify-end items-end flex-wrap gap-2">
-            <FormFilter />
-            <div className="flex items-end gap-2">
+          <div className="">
+            <FormFilter createAccess={accessUser} />
+            {/* <div className="flex items-end gap-2">
               {accessUser && (
                 <>
                   <button
@@ -122,7 +122,7 @@ export function FormCard() {
                   </button>
                 </>
               )}
-            </div>
+            </div> */}
           </div>
           <FormTable />
         </div>

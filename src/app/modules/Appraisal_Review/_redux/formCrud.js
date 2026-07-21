@@ -54,3 +54,15 @@ export function downloadAppraisalFinalizationPdfRequest(reviewId) {
     { responseType: "arraybuffer" },
   );
 }
+
+ 
+export function appraisalFinalizationSumReport(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/appraisal-finalization-sum-report`,
+    body,
+    {
+      responseType: "arraybuffer",
+    },
+  );
+}
+ 
