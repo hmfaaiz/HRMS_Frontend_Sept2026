@@ -55,7 +55,7 @@ export function downloadAppraisalFinalizationPdfRequest(reviewId) {
   );
 }
 
- 
+
 export function appraisalFinalizationSumReport(body) {
   return axios.post(
     `${USERS_URL}/appraisal_review/appraisal-finalization-sum-report`,
@@ -65,7 +65,16 @@ export function appraisalFinalizationSumReport(body) {
     },
   );
 }
- 
+
+export function appraisalFinalizationSumReportExcel(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/appraisal-finalization-sum-report-excel`,
+    body,
+    {
+      responseType: "arraybuffer",
+    },
+  );
+}
 
 export function appraisalFinalizationBeforeCreation(body) {
   return axios.post(
@@ -76,4 +85,3 @@ export function appraisalFinalizationBeforeCreation(body) {
     },
   );
 }
- 

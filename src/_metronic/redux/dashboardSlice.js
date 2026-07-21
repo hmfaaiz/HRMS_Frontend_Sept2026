@@ -78,6 +78,7 @@ const initialDashboardState = {
   allExitTypeList: [],
   allExitReasonList: [],
   allAppraisalCompetencySetupList: [],
+  allParentSubsidiaries: [],
   allAssetDisposaTypeList: [],
 
 
@@ -274,9 +275,12 @@ export const dashboardSlice = createSlice({
     AllPayrollAccountListFetch: (state, action) => {
       state.allPayrollAccountList = action.payload;
     },   
-     AllExitReasonListFetch: (state, action) => {
+    AllExitReasonListFetch: (state, action) => {
       state.allExitReasonList = action.payload;
-    }, 
+    },
+    AllParentSubsidiariesFetch: (state, action) => {
+      state.allParentSubsidiaries = action.payload;
+    },
 
 
 
