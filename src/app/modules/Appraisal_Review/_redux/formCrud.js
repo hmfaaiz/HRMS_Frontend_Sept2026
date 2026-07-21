@@ -65,4 +65,14 @@ export function appraisalFinalizationSumReport(body) {
     },
   );
 }
+
+export function appraisalFinalizationSumReportExcel(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/appraisal-finalization-sum-report-excel`,
+    body,
+    {
+      responseType: "arraybuffer",
+    },
+  );
+}
  

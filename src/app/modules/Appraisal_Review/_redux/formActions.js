@@ -199,4 +199,40 @@ export const appraisalFinalizationSumReport = (payload) => async (dispatch) => {
       );
     });
 };
+
+export const appraisalFinalizationSumReportExcel = (payload) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.sumExcelReport }));
+  return requestFromServer
+    .appraisalFinalizationSumReportExcel(payload)
+    .then((res) => {
+      const excelBlob = new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const excelUrl = URL.createObjectURL(excelBlob);
  
+      // Trigger file download
+      const link = document.createElement("a");
+      link.href = excelUrl;
+      link.setAttribute("download", "appraisal_finalization_sum_report.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.sumExcelReportFetched());
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Excel";
+      dispatch(actions.catchError({ error, callType: callTypes.sumExcelReport }));
+      toast.error(
+        error?.response?.status == 400
+          ? "Please select filter to generate Excel"
+          : error.clientMessage,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        },
+      );
+    });
+};

@@ -16,7 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
-import { X } from "lucide-react";
+import { X, FileText, FileSpreadsheet } from "lucide-react";
 import { downloadAppraisalFinalizationPdf } from "../../../_redux/formActions";
 import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 import { ActionsColumnFormatter2 } from "./column-formatter/ActionsColumnFormatter2";
@@ -57,6 +57,7 @@ export function FormTable() {
     actionsLoading,
     finalizationPdfLoading,
     sumReportLoading,
+    sumExcelReportLoading,
   } = currentState;
 
   //totalCount = 10
@@ -551,6 +552,32 @@ export function FormTable() {
             {sumReportLoading && (
               <span className="ml-3 mr-5 spinner spinner-white"></span>
             )}
+            <FileText size={16} className="mr-2" />
+          </button>
+        ) : null}
+        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={
+              sumExcelReportLoading ||
+              !formUIProps?.appraisalCategoryId ||
+              !formUIProps?.subsidiaryId
+            }
+            onClick={() =>
+              dispatch(
+                actions.appraisalFinalizationSumReportExcel({
+                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                  subsidiaryId: formUIProps?.subsidiaryId,
+                }),
+              )
+            }
+          >
+            Appraisal Finalization Report
+            {sumExcelReportLoading && (
+              <span className="ml-3 mr-5 spinner spinner-white"></span>
+            )}
+            <FileSpreadsheet size={16} className="mr-2" />
           </button>
         ) : null}
       </div>

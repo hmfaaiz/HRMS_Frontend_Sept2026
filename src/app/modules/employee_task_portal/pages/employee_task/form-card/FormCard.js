@@ -38,7 +38,7 @@ export function FormCard() {
   const menuOptions = [
     {
       name: "Personal Profile Change Workflow",
-      link: "/employee_profile_workflow_hrms/read-all-employee-profile-workflow-hrms",
+      link: "/employee_profile_workflow/read-all-employee-profile-workflow",
       isShow: employeeProfileWorkflowItem,
     },
   ];
