@@ -271,7 +271,7 @@ export function MasterEditForm({
                 <Form className="form form-label-right">
                   <fieldset disabled={values.isFinalize || actionsLoading}>
                     {/* Employee Selection */}
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-x-3 gap-y-1">
                       <div className="flex item-end gap-1 justify-end">
                         <div className="w-full">
                           <SearchSelect
