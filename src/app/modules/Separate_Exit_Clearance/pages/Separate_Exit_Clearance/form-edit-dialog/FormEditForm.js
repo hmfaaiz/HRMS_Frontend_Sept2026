@@ -75,9 +75,13 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...data,
-        patternList: data.patternList || data.list?.map(item => ({
+        // patternList: data.patternList || data.list?.map(item => ({
+        //   ...item,
+        //   isClearanceProvided: item.isClearanceProvided ?? 0
+        // })) || [],
+        patternList: (data.patternList || data.list || []).map(item => ({
           ...item,
-          isClearanceProvided: item.isClearanceProvided ?? 0
+          isClearanceProvided: item.isClearanceProvided ?? 0,
         })) || [],
         onboardChecklist: (data.onboardChecklist || (data.list?.filter(item => item.returnableAssets === true) || [])).map(item => ({
           ...item,
@@ -92,7 +96,14 @@ export function FormEditForm({
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+        console.log("ok1111",
+          values.patternList.map(item => ({
+            isClearanceProvided: item.isClearanceProvided,
+            type: typeof item.isClearanceProvided
+          }))
+        ),
         <>
+
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
