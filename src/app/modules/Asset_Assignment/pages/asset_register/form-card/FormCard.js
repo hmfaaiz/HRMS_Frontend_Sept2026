@@ -9,11 +9,12 @@ import { CirclePlus, UserRoundCheck, UserRoundX } from "lucide-react";
 import { fetchAllActiveEmployees, fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAssetRegisters } from "../../../_redux/redux-Actions";
+import { fetchAllAssetModelName } from "../../../../Dashboard/_redux/dashboardActions";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
-  
+
   const FormUIProps = useMemo(() => {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
@@ -33,7 +34,7 @@ export function FormCard() {
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateAssetAssignment"
   );
-  
+
   const { dashboard } = useSelector((state) => state);
   const { currentState } = useSelector((state) => {
     return {
@@ -48,6 +49,8 @@ export function FormCard() {
     dispatch(fetchAllDept());
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllActiveEmployees());
+    dispatch(fetchAllFormsMenu(557, "allAssetCategoryList"));
+    dispatch(fetchAllAssetModelName());
   }, [dispatch]);
 
   // Check if Unassigned button is active (status === 0)
@@ -55,11 +58,13 @@ export function FormCard() {
   // Check if Assigned button is active (status === 1)
   const isAssigned = FormUIProps?.queryParams?.status === 1;
 
+
+
   return (
     <>
       <TCard name={CurrentModuleName()}>
         <div className="grid md:grid-cols-8 gap-3 mb-2">
-          
+
           {/*Conditionally hide filters when Unassigned is selected */}
           {!isUnassigned && (
             <>
@@ -92,7 +97,7 @@ export function FormCard() {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <SearchSelect
                   name="departmentId"
@@ -119,7 +124,7 @@ export function FormCard() {
                   ]}
                 />
               </div>
-              
+
               <div className="">
                 <div>
                   <SearchSelect
@@ -177,8 +182,101 @@ export function FormCard() {
                   />
                 </div>
               </div>
+
+
+            
+
             </>
           )}
+
+            <div>
+                <SearchSelect
+                  name="asset_categoryId"
+                  label={
+                    <span>
+                      Asset Category
+                    </span>
+                  }
+                  value={
+                    [
+                      { label: "All", value: "" },
+                      ...(Array.isArray(dashboard?.allAssetCategoryList)
+                        ? dashboard.allAssetCategoryList
+                        : []),
+                    ].find(
+                      (item) =>
+                        String(item.value) ===
+                        String(FormUIProps.queryParams?.asset_categoryId ?? "")
+                    ) || { label: "All", value: "" }
+                  }
+                  onChange={(e) => {
+                    const updatedQueryParams = {
+                      ...FormUIProps.queryParams,
+                      asset_categoryId: e?.value ?? "",
+                      asset_modelId: "",
+                      pageNumber: 1,
+                    };
+                   
+                    dispatch(fetchAllAssetModelName({ asset_categoryId: e?.value ?? "" }));
+
+
+                    FormUIProps.setQueryParams(updatedQueryParams);
+
+                    dispatch(fetchAssetRegisters(updatedQueryParams));
+
+
+                  }}
+                  options={[
+                    { label: "All", value: "" },
+                    ...(Array.isArray(dashboard?.allAssetCategoryList)
+                      ? dashboard.allAssetCategoryList
+                      : []),
+                  ]}
+                />
+              </div>
+              <div>
+                <SearchSelect
+                  name="asset_categoryId"
+                  label={
+                    <span>
+                      Asset Model Name
+                    </span>
+                  }
+                  value={
+                    [
+                      { label: "All", value: "" },
+                      ...(Array.isArray(dashboard?.allAssetModelNameList)
+                        ? dashboard.allAssetModelNameList
+                        : []),
+                    ].find(
+                      (item) =>
+                        String(item.value) ===
+                        String(FormUIProps.queryParams?.asset_modelId ?? "")
+                    ) || { label: "All", value: "" }
+                  }
+                  onChange={(e) => {
+                    const updatedQueryParams = {
+                      ...FormUIProps.queryParams,
+                      asset_modelId: e?.value ?? "",
+                    
+                      pageNumber: 1,
+                    };
+
+                    FormUIProps.setQueryParams(updatedQueryParams);
+
+                    dispatch(fetchAssetRegisters(updatedQueryParams));
+
+
+                  }}
+                  options={[
+                    { label: "All", value: "" },
+                    ...(Array.isArray(dashboard?.allAssetModelNameList)
+                      ? dashboard.allAssetModelNameList
+                      : []),
+                  ]}
+                />
+              </div>
+
 
           <div className="flex items-center gap-2 mt-3 col-span-12">
             <div className="">
@@ -199,12 +297,12 @@ export function FormCard() {
                 Assigned Asset <UserRoundCheck size={12} />
               </button>
             </div>
-            
+
             <div className="">
               <button
                 type="button"
                 disabled={loading}
-                
+
                 className={`btn mr-2 rounded-xl ${isUnassigned ? "bg-primary text-white" : "btn-secondary"}`}
                 onClick={() => {
                   const updatedQueryParams = {
@@ -229,7 +327,7 @@ export function FormCard() {
               <>
                 <button
                   type="button"
-                    disabled={loading}
+                  disabled={loading}
                   className="btn btn-primary"
                   onClick={() => {
                     const updatedQueryParams = {
