@@ -101,9 +101,7 @@ export function FormFilter({ createAccess }) {
         ...formUIProps.queryParams?.filter,
         subsidiaryId: findDefaultSub?.value,
         monthId: findDefaultSub?.payrollMonth?.Id || "",
-        type:
-          formUIProps.queryParams?.filter?.type ||
-          (createAccess ? "notCreated" : "notFinal"),
+        type: "notFinal",
         isEmpPortal: true,
       },
       pageNumber: 1,
@@ -125,12 +123,10 @@ export function FormFilter({ createAccess }) {
       filter: {
         ...formUIProps.queryParams?.filter,
         appraisalCategoryId: defaultCategory?.value,
-        type:
-          formUIProps.queryParams?.filter?.type ||
-          (createAccess ? "notCreated" : "notFinal"),
+        type: "notFinal",
+        isEmpPortal: true,
       },
       pageNumber: 1,
-      isEmpPortal: true,
     };
 
     formUIProps.setAppraisalCategoryId(defaultCategory?.value);
@@ -145,9 +141,7 @@ export function FormFilter({ createAccess }) {
           searchQuery: "",
           subsidiaryId: formUIProps.subsidiaryId || "",
           appraisalCategoryId: formUIProps.appraisalCategoryId || "",
-          type:
-            formUIProps.queryParams?.filter?.type ||
-            (createAccess ? "notCreated" : "notFinal"),
+          type: "notFinal",
         }}
         validationSchema={FilterSchema}
         onSubmit={(values) => {
@@ -155,9 +149,9 @@ export function FormFilter({ createAccess }) {
         }}
       >
         {({ values, handleBlur, setFieldValue }) => (
-          <form className="flex justify-start sm:justify-between items-end flex-wrap gap-2">
-            <div>
-              {createAccess ? (
+          <form className="grid grid-cols-2 md:grid-cols-5 gap-2">
+            <div className="col-span-1">
+              {/* {createAccess ? (
                 <button
                   type="button"
                   className={`btn mr-2 rounded-xl ${
@@ -172,7 +166,7 @@ export function FormFilter({ createAccess }) {
                 >
                   In Process
                 </button>
-              ) : null}
+              ) : null} */}
               <button
                 type="button"
                 className={`btn mr-2 rounded-xl ${
@@ -185,7 +179,7 @@ export function FormFilter({ createAccess }) {
                   applyFilter({ ...values, type: "notFinal" });
                 }}
               >
-                Not Finalized
+                In Process
               </button>
               <button
                 type="button"
@@ -199,13 +193,13 @@ export function FormFilter({ createAccess }) {
                   applyFilter({ ...values, type: "final" });
                 }}
               >
-                Finalized
+                Finalized by HR
               </button>
             </div>
-            <div className="grid md:grid-cols-4 gap-3">
+            <div className="grid md:grid-cols-5 gap-3 col-span-4">
               {values?.subsidiaryId &&
                 dashboard?.allSubsidiaryList?.length > 0 && (
-                  <div className="col-start-1 flex flex-col justify-end items-end">
+                  <div className="col-start-2 flex flex-col justify-end items-end">
                     <span className="text-sm text-black font-bold">
                       Active Appraisal Period
                     </span>
@@ -218,7 +212,7 @@ export function FormFilter({ createAccess }) {
                     </span>
                   </div>
                 )}
-              <div className="col-start-2">
+              <div className="col-start-3">
                 <SearchSelect
                   name="subsidiaryId"
                   label={<span> Subsidiary</span>}
@@ -232,7 +226,6 @@ export function FormFilter({ createAccess }) {
                         ...formUIProps.queryParams?.filter,
                         subsidiaryId: e.value,
                         type: values?.type,
-                        isEmpPortal: true,
                       },
                       pageNumber: 1,
                     };
@@ -243,7 +236,7 @@ export function FormFilter({ createAccess }) {
                   options={dashboard?.allSubsidiaryList}
                 />
               </div>
-              <div className="col-start-3">
+              <div className="col-start-4">
                 <SearchSelect
                   name="appraisalCategoryId"
                   label={<span> Appraisal Category</span>}
@@ -257,7 +250,6 @@ export function FormFilter({ createAccess }) {
                         ...formUIProps.queryParams?.filter,
                         appraisalCategoryId: e.value,
                         type: values?.type,
-                        isEmpPortal: true,
                       },
                       pageNumber: 1,
                     };
@@ -271,7 +263,7 @@ export function FormFilter({ createAccess }) {
                 />
               </div>
 
-              <div className="col-start-4">
+              <div className="col-start-5">
                 <label>
                   <span> Search</span>
                 </label>
