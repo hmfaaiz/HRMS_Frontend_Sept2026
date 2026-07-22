@@ -159,27 +159,53 @@ export function FormTable() {
     //   },
     // },
     {
-      dataField: "isFinalize",
-      text: "Approval Status",
+      dataField: "sendConsent",
+      text: "Consent",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "70px",
       },
-      formatter: (cell) => {
+      formatter: (cell, row) => {
         let text = "";
         let classname = "";
         if (cell) {
           classname = "text-approved font-bold";
-          text = "Approved";
+          text = "Send";
         } else {
           classname = "text-pending font-bold";
-          text = "Pending";
+          text = "Not Send";
         }
-        return <span className={classname}>{text}</span>;
+        return (
+          <span className={classname}>
+            {text}
+          </span>
+        );
       },
     },
+    // {
+    //   dataField: "isFinalize",
+    //   text: "Approval Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => {
+    //     let text = "";
+    //     let classname = "";
+    //     if (cell) {
+    //       classname = "text-approved font-bold";
+    //       text = "Approved";
+    //     } else {
+    //       classname = "text-pending font-bold";
+    //       text = "Pending";
+    //     }
+    //     return <span className={classname}>{text}</span>;
+    //   },
+    // },
     {
       dataField: "action",
       text: "Actions",
@@ -289,6 +315,58 @@ export function FormTable() {
       },
     },
     {
+      dataField: "sendConsent",
+      text: "Consent",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell, row) => {
+        let text = "";
+        let classname = "";
+        if (cell) {
+          classname = "text-approved font-bold";
+          text = "Send";
+        } else {
+          classname = "text-pending font-bold";
+          text = "Not Send";
+        }
+        return (
+          <span className={row?.isAppraisalReview ? `${classname}` : ""}>
+            {row?.isAppraisalReview ? `${text}` : "-"}
+          </span>
+        );
+      },
+    },
+    {
+      dataField: "isPortalFinalize",
+      text: "Finalized by HR",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell, row) => {
+        let text = "";
+        let classname = "";
+        if (row?.isFinalize) {
+          classname = "text-approved font-bold";
+          text = "Yes";
+        } else {
+          classname = "text-pending font-bold";
+          text = "No";
+        }
+        return (
+          <span className={row?.isAppraisalReview ? `${classname}` : ""}>
+            {row?.isAppraisalReview ? `${text}` : "-"}
+          </span>
+        );
+      },
+    },
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -299,6 +377,14 @@ export function FormTable() {
           ? isAccessForCreate.isAccess
           : false,
         setEmployeeId: formUIProps.setEmployeeId,
+        openEditDialog: formUIProps.openEditDialog,
+        openDeleteDialog: formUIProps.openDeleteDialog,
+        openReadDialog: formUIProps.openReadDialog,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForDelete: isAccessForDelete
+          ? isAccessForDelete.isAccess
+          : false,
+        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -334,7 +420,7 @@ export function FormTable() {
                 keyField="Id"
                 data={entities === null ? [] : entities}
                 columns={
-                  formUIProps.queryParams?.filter?.type === "notCreated"
+                  formUIProps.queryParams?.filter?.type === "notFinal"
                     ? notCreatedColumns
                     : columns
                 }
