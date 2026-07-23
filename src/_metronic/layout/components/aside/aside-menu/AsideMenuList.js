@@ -28,6 +28,7 @@ export function AsideMenuList({ layoutProps }) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [itemWidth, setItemWidth] = useState(0);
 
   // Hide menu when clicked outside
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -58,15 +59,31 @@ export function AsideMenuList({ layoutProps }) {
     }
   };
 
+  // Calculate item width
+  const calculateItemWidth = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const firstItem = container.querySelector('.menu-item');
+      if (firstItem) {
+        const width = firstItem.offsetWidth + 24; // width + gap (space-x-6 = 24px)
+        setItemWidth(width);
+      }
+    }
+  };
+
   // Scroll functions - scroll by 8 items
   const scrollLeft = () => {
-    if (scrollContainerRef.current) {
+    if (scrollContainerRef.current && itemWidth > 0) {
+      scrollContainerRef.current.scrollBy({ left: -(itemWidth * 8), behavior: 'smooth' });
+    } else {
       scrollContainerRef.current.scrollBy({ left: -240, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
-    if (scrollContainerRef.current) {
+    if (scrollContainerRef.current && itemWidth > 0) {
+      scrollContainerRef.current.scrollBy({ left: itemWidth * 8, behavior: 'smooth' });
+    } else {
       scrollContainerRef.current.scrollBy({ left: 240, behavior: 'smooth' });
     }
   };
@@ -76,8 +93,14 @@ export function AsideMenuList({ layoutProps }) {
     const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
       scrollContainer.addEventListener('scroll', updateScrollButtons);
-      setTimeout(updateScrollButtons, 100);
-      window.addEventListener('resize', updateScrollButtons);
+      setTimeout(() => {
+        updateScrollButtons();
+        calculateItemWidth();
+      }, 100);
+      window.addEventListener('resize', () => {
+        updateScrollButtons();
+        calculateItemWidth();
+      });
 
       return () => {
         scrollContainer.removeEventListener('scroll', updateScrollButtons);
@@ -173,7 +196,10 @@ export function AsideMenuList({ layoutProps }) {
 
   // Update scroll buttons when menu changes
   useEffect(() => {
-    setTimeout(updateScrollButtons, 200);
+    setTimeout(() => {
+      updateScrollButtons();
+      calculateItemWidth();
+    }, 200);
   }, [menu, isEmployeePortal, isVisible]);
 
   // Get visible menu items
@@ -207,52 +233,48 @@ export function AsideMenuList({ layoutProps }) {
         >
           <nav className="w-full flex items-center py-1 px-2" style={{ position: 'relative' }}>
 
-             <div className="flex-shrink-0 mr-4" style={{ flexShrink: 0 }}>
-                <a
-                  className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl whitespace-nowrap"
-                  href="/dashboard"
-                >
-                  <LayoutDashboard className="w-4 h-4 stroke-2 rounded-md inline-block text-white" />
-                  <span className="ml-2">Dashboard</span>
-                </a>
-              </div>
+            <div className="flex-shrink-0 mr-4" style={{ flexShrink: 0 }}>
+              <a
+                className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl whitespace-nowrap"
+                href="/dashboard"
+              >
+                <LayoutDashboard className="w-4 h-4 stroke-2 rounded-md inline-block text-white" />
+                <span className="ml-2">Dashboard</span>
+              </a>
+            </div>
 
             <div className="flex items-center w-full" style={{ position: 'relative' }}>
-
-
-              {/* Dashboard - Fixed, never scrolls */}
-             
-
               {/* Left Arrow */}
               {canScrollLeft && (
                 <button
                   onClick={scrollLeft}
                   className="absolute left-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 ml-1 transition-all duration-200"
                   style={{
-                    width: '30px',
-                    height: '30px',
+                    width: '25px',
+                    height: '25px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: '1px solid #e5e7eb'
+                    border: '1px solid #e5e7eb',
+                    marginRight: '8px' // Right side margin
                   }}
                 >
                   <ChevronsLeft size={16} className="w-4 h-4 text-gray-700" />
                 </button>
               )}
-              {/* Separator */}
-        
 
               {/* Scrollable Menu Items */}
               <div
-                className="flex-1 overflow-x-auto scroll-smooth"
+                className="overflow-x-auto scroll-smooth ml-1"
                 style={{
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
-                  paddingLeft: canScrollLeft ? '35px' : '0',
-                  paddingRight: canScrollRight ? '35px' : '0',
+                  paddingLeft: canScrollLeft ? '45px' : '0', // Increased from 35px to 45px
+                  paddingRight: canScrollRight ? '45px' : '0', // Increased from 35px to 45px
                   overflowY: 'visible',
-                  maxWidth: 'calc(100% - 600px)',
+                  width: itemWidth > 0 ? `${itemWidth * 8}px` : 'auto',
+                  maxWidth: '100%',
+                  flex: '0 0 auto'
                 }}
                 ref={scrollContainerRef}
               >
@@ -273,7 +295,7 @@ export function AsideMenuList({ layoutProps }) {
                       if (!hasVisible) return null;
 
                       return (
-                        <li className="relative" key={parentKey} style={{ position: 'relative', flexShrink: 0 }}>
+                        <li className="relative menu-item" key={parentKey} style={{ position: 'relative', flexShrink: 0 }}>
                           <button
                             className="p-0 bg-transparent border-none font-bold text-white focus:outline-none capitalize flex items-center whitespace-nowrap hover:text-gray-200 transition-colors text-sm"
                             onClick={(e) => handleDropdown(idx, e)}
@@ -295,8 +317,8 @@ export function AsideMenuList({ layoutProps }) {
                     onClick={scrollRight}
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 mr-1 transition-all duration-200"
                     style={{
-                      width: '30px',
-                      height: '30px',
+                      width: '25px',
+                      height: '25px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -307,9 +329,6 @@ export function AsideMenuList({ layoutProps }) {
                   </button>
                 )}
               </div>
-
-              {/* Right Arrow */}
-
             </div>
           </nav>
         </div>
