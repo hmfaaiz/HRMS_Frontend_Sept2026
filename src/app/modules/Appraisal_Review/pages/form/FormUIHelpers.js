@@ -19,6 +19,6 @@ export const initialFilter = {
     type : ""
   },
   sortOrder: "asc",
-  pageSize: 10,
+  pageSize: 20,
   pageNumber: 1,
 };

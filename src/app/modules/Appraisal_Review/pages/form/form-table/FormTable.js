@@ -16,7 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
-import { X, FileText, FileSpreadsheet } from "lucide-react";
+import { X, FileText, FileSpreadsheet, Calculator } from "lucide-react";
 import { downloadAppraisalFinalizationPdf } from "../../../_redux/formActions";
 import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 import { ActionsColumnFormatter2 } from "./column-formatter/ActionsColumnFormatter2";
@@ -145,36 +145,36 @@ export function FormTable() {
         maxWidth: "100px",
       },
     },
-    {
-      dataField: "Employee.employeeType.formName",
-      text: "Employee Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-    {
-      dataField: "Employee.employeeStatus.formName",
-      text: "Employee Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-    {
-      dataField: "Employee.payrollGroup.formName",
-      text: "Payroll Group",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
+    // {
+    //   dataField: "Employee.employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "Employee.employeeStatus.formName",
+    //   text: "Employee Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "Employee.payrollGroup.formName",
+    //   text: "Payroll Group",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
     // {
     //   dataField: "isFinalize",
     //   text: "Approval Status",
@@ -217,6 +217,54 @@ export function FormTable() {
           text = "Not Send";
         }
         return <span className={classname}>{text}</span>;
+      },
+    },
+    {
+      dataField: "selfRating",
+      text: "Self Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "managerRating",
+      text: "Manager Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "finalRating",
+      text: "Final Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
       },
     },
     {
@@ -300,37 +348,37 @@ export function FormTable() {
         maxWidth: "100px",
       },
     },
+    // {
+    //   dataField: "employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "employeeStatus.formName",
+    //   text: "Employee Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "payrollGroup.formName",
+    //   text: "Payroll Group",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
     {
-      dataField: "employeeType.formName",
-      text: "Employee Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-    {
-      dataField: "employeeStatus.formName",
-      text: "Employee Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-    {
-      dataField: "payrollGroup.formName",
-      text: "Payroll Group",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-        {
       dataField: "isPortalFinalize",
       text: "Finalized by Supervisor",
       sort: false,
@@ -382,6 +430,54 @@ export function FormTable() {
           text = "Not Send";
         }
         return <span className={classname}>{text}</span>;
+      },
+    },
+    {
+      dataField: "selfRating",
+      text: "Self Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "managerRating",
+      text: "Manager Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "finalRating",
+      text: "Final Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
       },
     },
     {
@@ -671,7 +767,7 @@ export function FormTable() {
           {sumExcelReportLoading && (
             <span className="ml-3 mr-5 spinner spinner-white"></span>
           )}
-          <FileSpreadsheet size={12} className="ml-2" />
+          <Calculator size={12} className="ml-2" />
         </button>
         {/* ) : null} */}
       </div>
