@@ -32,6 +32,8 @@ export function AsideMenuList({ layoutProps }) {
 
   // Hide menu when clicked outside
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const dropdownPortalRef = useRef(null);
+  const subMenuPortalRef = useRef(null);
 
   const handleDropdown = (index, event) => {
     if (event && event.currentTarget) {
@@ -112,10 +114,14 @@ export function AsideMenuList({ layoutProps }) {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (
-        dropdownContainerRef.current &&
-        !dropdownContainerRef.current.contains(event.target)
-      ) {
+      const clickedInsideMain = dropdownContainerRef.current &&
+        dropdownContainerRef.current.contains(event.target);
+      const clickedInsideDropdownPortal = dropdownPortalRef.current &&
+        dropdownPortalRef.current.contains(event.target);
+      const clickedInsideSubMenuPortal = subMenuPortalRef.current &&
+        subMenuPortalRef.current.contains(event.target);
+
+      if (!clickedInsideMain && !clickedInsideDropdownPortal && !clickedInsideSubMenuPortal) {
         setDropdownOpen(null);
         setOpenSubMenu({});
       }
@@ -341,6 +347,7 @@ export function AsideMenuList({ layoutProps }) {
 
         return ReactDOM.createPortal(
           <div
+            ref={dropdownPortalRef}
             className="bg-white border rounded shadow-lg"
             style={{
               position: 'fixed',
@@ -409,6 +416,7 @@ export function AsideMenuList({ layoutProps }) {
 
           return ReactDOM.createPortal(
             <div
+              ref={subMenuPortalRef}
               className="bg-white border rounded shadow-lg sub-menu-open"
               style={{
                 position: 'fixed',
@@ -418,7 +426,7 @@ export function AsideMenuList({ layoutProps }) {
                 minWidth: '200px',
               }}
               onMouseLeave={() => {
-                setOpenSubMenu({});
+                setTimeout(() => setOpenSubMenu({}), 150);
               }}
             >
               {visibleItems
