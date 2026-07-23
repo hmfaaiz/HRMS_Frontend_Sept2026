@@ -707,6 +707,9 @@ import ("./modules/Asset_Inspection_List/pages/index"))
 const asset_checklist = lazy (() =>
 import ("./modules/Asset_Checklist/pages/index"))
 
+const cpl_leave = lazy (() =>
+import ("./modules/CPL_Leave/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -944,6 +947,7 @@ const ROUTES = {
   asset_list: asset_list,
   asset_inspection_list: asset_inspection_list,
   asset_checklist: asset_checklist,
+  cpl_leave: cpl_leave,
 
 };
 
