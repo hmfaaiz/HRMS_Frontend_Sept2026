@@ -121,7 +121,7 @@ export function FormFIlter({ listLoading, user }) {
                   }}
                 />
                 <small className="form-text text-muted">
-                  <b>Search</b> in asset register
+                  <b>Search</b> in Compensatory Leave
                 </small>
               </div> */}
 

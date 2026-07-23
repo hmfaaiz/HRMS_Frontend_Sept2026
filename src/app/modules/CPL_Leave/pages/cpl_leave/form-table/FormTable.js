@@ -74,106 +74,86 @@ export function FormTable() {
   ];
 
   const columns = [
-  {
-    dataField: "Subsidiary.name",
-    text: "Subsidiary",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "220px" },
-    formatter: (_, row) => row.Subsidiary?.name || "",
-  },
-
-  {
-    dataField: "Grade.formName",
-    text: "Grade",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "220px" },
-    formatter: (_, row) => row.Grade?.formName || "",
-  },
-
-  {
-    dataField: "EmployeeType.formName",
-    text: "Employee Type",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "180px" },
-    formatter: (_, row) => row.EmployeeType?.formName || "",
-  },
-
-  {
-    dataField: "isAttProcessExecuted",
-    text: "Attendance Process",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "180px" },
-    formatter: (_, row) => {
-      return row.isAttProcessExecuted === 0
-        ? "Do Nothing"
-        : "Accumulate CPL";
+    {
+      dataField: "Subsidiary.name",
+      text: "Subsidiary",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "220px" },
+      formatter: (_, row) => row.Subsidiary?.name || "",
     },
-  },
 
-  {
-    dataField: "accumulateDays",
-    text: "Accumulate Days",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "150px" },
-    formatter: (cell) => cell ?? "-",
-  },
+    {
+      dataField: "Grade.formName",
+      text: "Grade",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "220px" },
+      formatter: (_, row) =>
+        row.gradeId == null ? "All" : (row.Grade?.formName || "All"),
+    },
 
-  {
-    dataField: "cplGeneratedTillEndDate",
-    text: "CPL / OT Action",
-    sort: false,
-    sortCaret,
-    headerSortingClasses,
-    style: { minWidth: "320px" },
-    formatter: (cell) => {
-      switch (cell) {
-        case 1:
-          return "Current Payroll Month + Give OT";
-        case 2:
-          return "Previous Payroll Month + Give OT";
-        case 3:
-          return "Current Payroll Month + No OT";
-        case 4:
-          return "Previous Payroll Month + No OT";
-        default:
-          return "-";
-      }
+    {
+      dataField: "EmployeeType.formName",
+      text: "Employee Type",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "180px" },
+      formatter: (_, row) => row.EmployeeType?.formName || "",
     },
-  },
 
-  {
-    dataField: "action",
-    text: "Actions",
-    isDummyField: true,
-    formatter: ActionsColumnFormatter,
-    formatExtraData: {
-      openEditFormDialog: formUIProps.openEditFormDialog,
-      openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-      openActiveFormDialog: formUIProps.openActiveFormDialog,
-      openReadFormDialog: formUIProps.openReadFormDialog,
-      isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-      isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
-      isAccessForDelete: isAccessForDelete
-        ? isAccessForDelete.isAccess
-        : false,
+    {
+      dataField: "isAttProcessExecuted",
+      text: "Lapse policy",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "180px" },
+      formatter: (_, row) => {
+        return row.isAttProcessExecuted === 0
+          ? "Do not Lapse Leave"
+          : "Leave will Lapse";
+      },
     },
-    classes: "text-right pr-0",
-    headerClasses: "text-right pr-3",
-    style: {
-      minWidth: "100px",
+
+    {
+      dataField: "accumulateDays",
+      text: "Accumulate Days",
+      sort: false,
+      sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "150px" },
+      formatter: (cell) => cell ?? "-",
     },
-  },
-];
+
+
+
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        openEditFormDialog: formUIProps.openEditFormDialog,
+        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        openActiveFormDialog: formUIProps.openActiveFormDialog,
+        openReadFormDialog: formUIProps.openReadFormDialog,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
+        isAccessForDelete: isAccessForDelete
+          ? isAccessForDelete.isAccess
+          : false,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "100px",
+      },
+    },
+  ];
 
   //Table pagination properties
   const paginationOptions = {

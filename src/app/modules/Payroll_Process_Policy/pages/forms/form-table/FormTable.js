@@ -1890,7 +1890,7 @@ export function FormTable(user) {
                   <hr></hr>
 
                   <h6 className="font-bold mb-0 text-primary my-2">
-                    CPL Leave Management
+                    Compensatory Leave Management
                   </h6>
                   <div className="flex items-start">
                     <label className="flex items-center space-x-1">
@@ -1903,7 +1903,7 @@ export function FormTable(user) {
                         checked={values.isEnableCPLLeave}
 
                       />
-                      Enable CPL Leave
+                      Enable Compensatory Leave
                     </label>
                   </div>
                   <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-3">
@@ -1914,7 +1914,7 @@ export function FormTable(user) {
                         className="form-control"
                         name="isEnableCPLLeavePolicy"
                         value={values.isEnableCPLLeavePolicy}
-                        label={<span>Enable CPL</span>}
+                        label={<span>Map Compensatory Leave</span>}
                         onChange={(e) => {
                           setFieldValue("isEnableCPLLeavePolicy", e.target.value);
 

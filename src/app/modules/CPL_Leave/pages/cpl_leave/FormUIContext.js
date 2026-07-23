@@ -53,7 +53,7 @@ const initUser = {
 
   isAttProcessExecuted: 0,
   accumulateDays: "",
-  cplGeneratedTillEndDate: null,
+
 
 
 };

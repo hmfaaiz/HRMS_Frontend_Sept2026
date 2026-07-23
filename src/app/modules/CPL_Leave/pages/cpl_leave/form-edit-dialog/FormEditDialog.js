@@ -111,7 +111,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         // Attendance Process
         isAttProcessExecuted: formData.isAttProcessExecuted,
         accumulateDays: formData.accumulateDays,
-        cplGeneratedTillEndDate: formData.cplGeneratedTillEndDate,
+    
 
 
       };

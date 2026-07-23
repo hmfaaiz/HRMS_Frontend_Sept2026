@@ -18,18 +18,6 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
-const decimalField = Yup.number()
-  .nullable()
-  .transform((value, originalValue) =>
-    originalValue === "" ? null : value
-  )
-  .typeError("Please enter a valid number")
-  .min(0, "Value cannot be negative")
-  .test(
-    "half-step",
-    "Value must be in 0.5 increments",
-    (value) => value == null || (Number(value) * 2) % 1 === 0
-  );
 
 const cplLeaveSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
@@ -37,42 +25,73 @@ const cplLeaveSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   gradeId: Yup.number()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+    .nullable(),
+  // .required(VALIDATION_MESSAGES.required),
 
   employeeTypeId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
   // Business Days
-  HalfDay_BusinessDay: decimalField,
-  FullDay_BusinessDay: decimalField,
-  Onehalf_BusinessDay: decimalField,
-  Double_BusinessDay: decimalField,
+  HalfDay_BusinessDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+  ,
+
+  FullDay_BusinessDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+  ,
+
+  Onehalf_BusinessDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+  ,
+
+  Double_BusinessDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+  ,
 
   // Off Days
-  HalfDay_OffDay: decimalField,
-  FullDay_OffDay: decimalField,
-  Onehalf_OffDay: decimalField,
-  Double_OffDay: decimalField,
+  HalfDay_OffDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+
+  FullDay_OffDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+
+  Onehalf_OffDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+
+  Double_OffDay: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
 
   // Holidays
-  HalfDay_Holiday: decimalField,
-  FullDay_Holiday: decimalField,
-  Onehalf_Holiday: decimalField,
-  Double_Holiday: decimalField,
+  HalfDay_Holiday: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
 
-  accumulateDays: Yup.number().when("isAttProcessExecuted", {
-    is: 1,
-    then: (schema) => schema.required("Days is required"),
-    otherwise: (schema) => schema.nullable(),
-  }),
+  FullDay_Holiday: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
 
-  cplGeneratedTillEndDate: Yup.number().when("isAttProcessExecuted", {
-    is: 1,
-    then: (schema) => schema.required("Please select one option"),
-    otherwise: (schema) => schema.nullable(),
-  }),
+  Onehalf_Holiday: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+
+  Double_Holiday: Yup.string()
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+
+  accumulateDays: Yup.number()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value
+    )
+    .when("isAttProcessExecuted", {
+      is: 1,
+      then: (schema) =>
+        schema
+          .nullable()
+          .required(VALIDATION_MESSAGES.required)
+          .integer("Only whole numbers are allowed")
+          .min(1, "Days must be at least 1")
+          .max(999, "Days cannot exceed 999"),
+      otherwise: (schema) => schema.nullable(),
+    }),
+
+
 });
 
 export function FormEditForm({
@@ -113,7 +132,7 @@ export function FormEditForm({
     (item) => item.isDefault
   );
 
-  console.log("11111111aaaaaaaaaa",formData)
+
   return (
     <Formik
       enableReinitialize={true}
@@ -180,7 +199,7 @@ export function FormEditForm({
 
 
 
-                    <div className="col-span-1">
+                    {/* <div className="col-span-1">
                       <SearchSelect
                         name="gradeId"
                         label={
@@ -199,7 +218,7 @@ export function FormEditForm({
                         }
                         // options={dashboard?.allEmployeegradeList}
                         options={[
-                          // { label: "Select", value: "" },
+                          { label: "All", value: "" },
                           ...(Array.isArray(dashboard?.allEmployeegradeList)
                             ? dashboard?.allEmployeegradeList
                             : []),
@@ -212,9 +231,34 @@ export function FormEditForm({
 
 
 
+                    </div> */}
+                    <div className="col-span-1">
+                      <SearchSelect
+                        name="gradeId"
+                        label={
+                          <span>
+                            Grade<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("gradeId", e?.value ?? "");
+                        }}
+                        value={
+                          [
+                            { label: "All", value: "" },
+                            ...(dashboard?.allEmployeegradeList || []),
+                          ].find(
+                            option => String(option.value) === String(values.gradeId ?? "")
+                          ) || { label: "All", value: "" }
+                        }
+                        options={[
+                          { label: "All", value: "" },
+                          ...(dashboard?.allEmployeegradeList || []),
+                        ]}
+                        error={errors?.gradeId}
+                        touched={touched?.gradeId}
+                      />
                     </div>
-
-
                     <div className="col-span-1">
                       <SearchSelect
                         name="employeeTypeId"
@@ -489,7 +533,7 @@ export function FormEditForm({
 
                   <div className="grid grid-cols-1 gap-y-3">
                     <h2 className="text-lg font-bold text-tprimary">
-                      If Export Attendance Process is executed for a payroll month
+                      Lapse policy
                     </h2>
 
                     {/* Do Nothing */}
@@ -501,22 +545,21 @@ export function FormEditForm({
                         onChange={() => {
                           setFieldValue("isAttProcessExecuted", 0);
                           setFieldValue("accumulateDays", "");
-                          setFieldValue("cplGeneratedTillEndDate", null);
+
                         }}
                       />
 
                       <span>
-                        Do nothing (system will neither Lapse CPL nor Give OT regardless of CPL
-                        balance)
+                        Do not Lapse Leave
                       </span>
                     </label>
 
                     {/* Accumulate */}
-                    <div className="grid grid-cols-12 gap-2 items-center">
-                      <div className="col-span-8 flex items-center">
+                    <div className="grid gap-2">
+                      <div className="flex items-center gap-2">
                         <input
                           type="radio"
-                          className="mr-2"
+                          className=""
                           name="isAttProcessExecuted"
                           checked={values.isAttProcessExecuted === 1}
                           onChange={() => {
@@ -524,23 +567,30 @@ export function FormEditForm({
                           }}
                         />
 
-                        <span>
-                          Accumulate CPL up to days. For CPL days in excess of this
-                        </span>
-                      </div>
+                        <span>Leave will Lapse after</span>
 
-                      <div className="col-span-2">
-                        <Field
-                          name="accumulateDays"
-                          component={Input}
-                          placeholder="Days"
-                          disabled={values.isAttProcessExecuted !== 1}
-                        />
+                        <div className="flex flex-col">
+                          <Field
+                            name="accumulateDays"
+                            component={Input}
+                            placeholder="Days"
+                            disabled={values.isAttProcessExecuted !== 1}
+                            style={{ width: "80px" }}
+                          />
+
+                          {/* {touched.accumulateDays && errors.accumulateDays && (
+                            <div className="text-danger text-xs mt-1">
+                              {errors.accumulateDays}
+                            </div>
+                          )} */}
+                        </div>
+
+                        <span>Days</span>
                       </div>
                     </div>
 
                     {/* Options */}
-                    {values.isAttProcessExecuted === 1 && (
+                    {/* {values.isAttProcessExecuted === 1 && (
                       <div className="grid grid-cols-1 gap-y-2 ml-6">
 
                         <label className="flex items-center">
@@ -600,7 +650,7 @@ export function FormEditForm({
                         </label>
 
                       </div>
-                    )}
+                    )} */}
                   </div>
 
 

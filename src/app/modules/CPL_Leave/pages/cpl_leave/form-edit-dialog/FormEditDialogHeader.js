@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Asset Register";
+    let _title = id ? "" : "Add Compensatory Leave";
     if (id) {
-      _title = `Edit Asset Register`;
+      _title = `Edit Compensatory Leave`;
     } //else if (isUserForRead) {
     //   _title = `Read user '}'`
     // }
@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View Asset Register"}
+          {!isUserForRead ? title : "View Compensatory Leave"}
         </Modal.Title>
       </Modal.Header>
     </>
