@@ -200,7 +200,7 @@ export function MasterEditForm({
       if (!result) return;
     }
     // handleSubmit(); // trigger Formik validation
-    const valuesWithFlag = { ...values, isFinalize };
+    const valuesWithFlag = { ...values, isFinalize , isPortalFinalize : true };
     saveFrom(valuesWithFlag);
   };
 

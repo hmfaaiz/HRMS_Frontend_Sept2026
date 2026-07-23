@@ -187,8 +187,12 @@ export function MasterEditForm({
     return ratingList.find((item) => Number(item.points) === point);
   }
 
-  const handleSubmitWithFinalize = async (isFinalize, handleSubmit, values) => {
-    if (isFinalize) {
+  const handleSubmitWithFinalize = async (
+    isPortalFinalize,
+    handleSubmit,
+    values,
+  ) => {
+    if (isPortalFinalize) {
       const result = await confirm(
         "Confirm Submission",
         "Are you sure you want to finalized Rating? Once finalized, you will not be able to make any changes.",
@@ -198,7 +202,7 @@ export function MasterEditForm({
       if (!result) return;
     }
     // handleSubmit(); // trigger Formik validation
-    const valuesWithFlag = { ...values, isFinalize };
+    const valuesWithFlag = { ...values, isPortalFinalize };
     saveFrom(valuesWithFlag);
   };
 
@@ -271,7 +275,7 @@ export function MasterEditForm({
                 <Form className="form form-label-right">
                   <fieldset disabled={values.isFinalize || actionsLoading}>
                     {/* Employee Selection */}
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-x-3 gap-y-1">
                       <div className="flex item-end gap-1 justify-end">
                         <div className="w-full">
                           <SearchSelect
@@ -1366,7 +1370,7 @@ export function MasterEditForm({
                       )}
                     </button>
                   )}
-                  {id && !isUserForRead && !values.isFinalize && (
+                  {id && !isUserForRead && !values.isFinalize && !values?.isPortalFinalize && (
                     <button
                       type="button"
                       className="btn btn-primary btn-elevate"
@@ -1388,7 +1392,7 @@ export function MasterEditForm({
                   )}
 
                   {/* Finalize Button */}
-                  {!isUserForRead && !values.isFinalize && id && (
+                  {!isUserForRead && !values.isFinalize && !values?.isPortalFinalize && id && (
                     <button
                       type="button"
                       className="btn btn-success btn-elevate"

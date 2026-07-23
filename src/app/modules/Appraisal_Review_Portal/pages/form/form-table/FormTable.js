@@ -128,26 +128,26 @@ export function FormTable() {
     //     maxWidth: "100px",
     //   },
     // },
-    {
-      dataField: "Employee.employeeType.formName",
-      text: "Employee Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "130px",
-      },
-    },
-    {
-      dataField: "Employee.employeeStatus.formName",
-      text: "Employee Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "130px",
-      },
-    },
+    // {
+    //   dataField: "Employee.employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "130px",
+    //   },
+    // },
+    // {
+    //   dataField: "Employee.employeeStatus.formName",
+    //   text: "Employee Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "130px",
+    //   },
+    // },
     // {
     //   dataField: "Employee.payrollGroup.formName",
     //   text: "Payroll Group",
@@ -159,27 +159,103 @@ export function FormTable() {
     //   },
     // },
     {
-      dataField: "isFinalize",
-      text: "Approval Status",
+      dataField: "sendConsent",
+      text: "Consent",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "70px",
       },
-      formatter: (cell) => {
+      formatter: (cell, row) => {
         let text = "";
         let classname = "";
         if (cell) {
           classname = "text-approved font-bold";
-          text = "Approved";
+          text = "Send";
         } else {
           classname = "text-pending font-bold";
-          text = "Pending";
+          text = "Not Send";
         }
-        return <span className={classname}>{text}</span>;
+        return (
+          <span className={classname}>
+            {text}
+          </span>
+        );
       },
     },
+    {
+      dataField: "selfRating",
+      text: "Self Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "managerRating",
+      text: "Manager Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "finalRating",
+      text: "Final Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+
+
+    // {
+    //   dataField: "isFinalize",
+    //   text: "Approval Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => {
+    //     let text = "";
+    //     let classname = "";
+    //     if (cell) {
+    //       classname = "text-approved font-bold";
+    //       text = "Approved";
+    //     } else {
+    //       classname = "text-pending font-bold";
+    //       text = "Pending";
+    //     }
+    //     return <span className={classname}>{text}</span>;
+    //   },
+    // },
     {
       dataField: "action",
       text: "Actions",
@@ -258,34 +334,146 @@ export function FormTable() {
         maxWidth: "100px",
       },
     },
+    // {
+    //   dataField: "employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "employeeStatus.formName",
+    //   text: "Employee Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "payrollGroup.formName",
+    //   text: "Payroll Group",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
     {
-      dataField: "employeeType.formName",
-      text: "Employee Type",
+      dataField: "sendConsent",
+      text: "Consent",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        maxWidth: "100px",
+        minWidth: "70px",
+      },
+      formatter: (cell, row) => {
+        let text = "";
+        let classname = "";
+        if (cell) {
+          classname = "text-approved font-bold";
+          text = "Send";
+        } else {
+          classname = "text-pending font-bold";
+          text = "Not Send";
+        }
+        return (
+          <span className={row?.isAppraisalReview ? `${classname}` : ""}>
+            {row?.isAppraisalReview ? `${text}` : "-"}
+          </span>
+        );
       },
     },
     {
-      dataField: "employeeStatus.formName",
-      text: "Employee Status",
+      dataField: "selfRating",
+      text: "Self Rating",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        maxWidth: "100px",
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
       },
     },
     {
-      dataField: "payrollGroup.formName",
-      text: "Payroll Group",
+      dataField: "managerRating",
+      text: "Manager Rating",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        maxWidth: "100px",
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "finalRating",
+      text: "Final Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+
+
+    // {
+    //   dataField: "employeeType.formName",
+    //   text: "Self Rating",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    {
+      dataField: "isPortalFinalize",
+      text: "Finalized by HR",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell, row) => {
+        let text = "";
+        let classname = "";
+        if (row?.isFinalize) {
+          classname = "text-approved font-bold";
+          text = "Yes";
+        } else {
+          classname = "text-pending font-bold";
+          text = "No";
+        }
+        return (
+          <span className={row?.isAppraisalReview ? `${classname}` : ""}>
+            {row?.isAppraisalReview ? `${text}` : "-"}
+          </span>
+        );
       },
     },
     {
@@ -299,6 +487,14 @@ export function FormTable() {
           ? isAccessForCreate.isAccess
           : false,
         setEmployeeId: formUIProps.setEmployeeId,
+        openEditDialog: formUIProps.openEditDialog,
+        openDeleteDialog: formUIProps.openDeleteDialog,
+        openReadDialog: formUIProps.openReadDialog,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForDelete: isAccessForDelete
+          ? isAccessForDelete.isAccess
+          : false,
+        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -334,7 +530,7 @@ export function FormTable() {
                 keyField="Id"
                 data={entities === null ? [] : entities}
                 columns={
-                  formUIProps.queryParams?.filter?.type === "notCreated"
+                  formUIProps.queryParams?.filter?.type === "notFinal"
                     ? notCreatedColumns
                     : columns
                 }

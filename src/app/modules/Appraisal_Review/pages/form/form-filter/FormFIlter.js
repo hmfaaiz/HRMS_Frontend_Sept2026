@@ -100,9 +100,7 @@ export function FormFilter({ createAccess }) {
         ...formUIProps.queryParams?.filter,
         subsidiaryId: findDefaultSub?.value,
         monthId: findDefaultSub?.payrollMonth?.Id || "",
-        type:
-          formUIProps.queryParams?.filter?.type ||
-          (createAccess ? "notCreated" : "notFinal"),
+        type:"notFinal",
       },
       pageNumber: 1,
     };
@@ -123,9 +121,7 @@ export function FormFilter({ createAccess }) {
       filter: {
         ...formUIProps.queryParams?.filter,
         appraisalCategoryId: defaultCategory?.value,
-        type:
-          formUIProps.queryParams?.filter?.type ||
-          (createAccess ? "notCreated" : "notFinal"),
+        type: "notFinal",
       },
       pageNumber: 1,
     };
@@ -142,9 +138,7 @@ export function FormFilter({ createAccess }) {
           searchQuery: "",
           subsidiaryId: formUIProps.subsidiaryId || "",
           appraisalCategoryId: formUIProps.appraisalCategoryId || "",
-          type:
-            formUIProps.queryParams?.filter?.type ||
-            (createAccess ? "notCreated" : "notFinal"),
+          type:"notFinal",
         }}
         validationSchema={FilterSchema}
         onSubmit={(values) => {
@@ -154,7 +148,7 @@ export function FormFilter({ createAccess }) {
         {({ values, handleBlur, setFieldValue }) => (
           <form className="flex justify-start sm:justify-between items-end flex-wrap gap-2">
             <div>
-              {createAccess ? (
+              {/* {createAccess ? (
                 <button
                   type="button"
                   className={`btn mr-2 rounded-xl ${
@@ -169,7 +163,7 @@ export function FormFilter({ createAccess }) {
                 >
                   In Process
                 </button>
-              ) : null}
+              ) : null} */}
               <button
                 type="button"
                 className={`btn mr-2 rounded-xl ${
@@ -182,7 +176,7 @@ export function FormFilter({ createAccess }) {
                   applyFilter({ ...values, type: "notFinal" });
                 }}
               >
-                Not Finalized
+                In Process
               </button>
               <button
                 type="button"

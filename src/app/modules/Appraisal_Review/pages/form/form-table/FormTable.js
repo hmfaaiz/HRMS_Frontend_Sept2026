@@ -16,7 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFromUIContext } from "../FormUIContext";
-import { X, FileText, FileSpreadsheet } from "lucide-react";
+import { X, FileText, FileSpreadsheet, Calculator } from "lucide-react";
 import { downloadAppraisalFinalizationPdf } from "../../../_redux/formActions";
 import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 import { ActionsColumnFormatter2 } from "./column-formatter/ActionsColumnFormatter2";
@@ -145,58 +145,58 @@ export function FormTable() {
         maxWidth: "100px",
       },
     },
-    {
-      dataField: "Employee.employeeType.formName",
-      text: "Employee Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-    {
-      dataField: "Employee.employeeStatus.formName",
-      text: "Employee Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-    {
-      dataField: "Employee.payrollGroup.formName",
-      text: "Payroll Group",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        maxWidth: "100px",
-      },
-    },
-    {
-      dataField: "isFinalize",
-      text: "Approval Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => {
-        let text = "";
-        let classname = "";
-        if (cell) {
-          classname = "text-approved font-bold";
-          text = "Approved";
-        } else {
-          classname = "text-pending font-bold";
-          text = "Pending";
-        }
-        return <span className={classname}>{text}</span>;
-      },
-    },
+    // {
+    //   dataField: "Employee.employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "Employee.employeeStatus.formName",
+    //   text: "Employee Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "Employee.payrollGroup.formName",
+    //   text: "Payroll Group",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "isFinalize",
+    //   text: "Approval Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => {
+    //     let text = "";
+    //     let classname = "";
+    //     if (cell) {
+    //       classname = "text-approved font-bold";
+    //       text = "Approved";
+    //     } else {
+    //       classname = "text-pending font-bold";
+    //       text = "Pending";
+    //     }
+    //     return <span className={classname}>{text}</span>;
+    //   },
+    // },
     {
       dataField: "sendConsent",
       text: "Consent",
@@ -217,6 +217,54 @@ export function FormTable() {
           text = "Not Send";
         }
         return <span className={classname}>{text}</span>;
+      },
+    },
+    {
+      dataField: "selfRating",
+      text: "Self Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "managerRating",
+      text: "Manager Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "finalRating",
+      text: "Final Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
       },
     },
     {
@@ -300,34 +348,136 @@ export function FormTable() {
         maxWidth: "100px",
       },
     },
+    // {
+    //   dataField: "employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "employeeStatus.formName",
+    //   text: "Employee Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
+    // {
+    //   dataField: "payrollGroup.formName",
+    //   text: "Payroll Group",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     maxWidth: "100px",
+    //   },
+    // },
     {
-      dataField: "employeeType.formName",
-      text: "Employee Type",
+      dataField: "isPortalFinalize",
+      text: "Finalized by Supervisor",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        maxWidth: "100px",
+        minWidth: "70px",
+      },
+      formatter: (cell, row) => {
+        //  If isAppraisalReview is false, show "-"
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+
+        let text = "";
+        let classname = "";
+        if (cell) {
+          classname = "text-approved font-bold";
+          text = "Yes";
+        } else {
+          classname = "text-pending font-bold";
+          text = "No";
+        }
+        return <span className={classname}>{text}</span>;
       },
     },
     {
-      dataField: "employeeStatus.formName",
-      text: "Employee Status",
+      dataField: "sendConsent",
+      text: "Consent",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        maxWidth: "100px",
+        minWidth: "70px",
+      },
+      formatter: (cell, row) => {
+        //  If isAppraisalReview is false, show "-"
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+
+        let text = "";
+        let classname = "";
+        if (cell) {
+          classname = "text-approved font-bold";
+          text = "Send";
+        } else {
+          classname = "text-pending font-bold";
+          text = "Not Send";
+        }
+        return <span className={classname}>{text}</span>;
       },
     },
     {
-      dataField: "payrollGroup.formName",
-      text: "Payroll Group",
+      dataField: "selfRating",
+      text: "Self Rating",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        maxWidth: "100px",
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "managerRating",
+      text: "Manager Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
+      },
+    },
+    {
+      dataField: "finalRating",
+      text: "Final Rating",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        if (row?.isAppraisalReview === false) {
+          return <span className="text-muted">-</span>;
+        }
+        return <span>{cell}</span>;
       },
     },
     {
@@ -346,6 +496,17 @@ export function FormTable() {
           actions.appraisalFinalizationBeforeCreation,
         beforeCreation,
         appraisalCategoryId: formUIProps?.appraisalCategoryId,
+        openEditDialog: formUIProps.openEditDialog,
+        openDeleteDialog: formUIProps.openDeleteDialog,
+        openReadDialog: formUIProps.openReadDialog,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForDelete: isAccessForDelete
+          ? isAccessForDelete.isAccess
+          : false,
+        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
+        dispatch,
+        downloadAppraisalFinalizationPdf,
+        finalizationPdfLoading,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -355,22 +516,38 @@ export function FormTable() {
     },
   ];
 
-  // top of component (inside FormTable)
-  const keyField = "Id";
-  const isCreatedType = formUIProps.queryParams?.filter?.type !== "notFinal";
+  const employeeKeyField = "Id"; // Employee ID field (fallback key ke liye)
+  const isCreatedType = formUIProps.queryParams?.filter?.type == "final";
+
+  const tableData = useMemo(() => {
+    return (entities || []).map((row) => ({
+      ...row,
+      _rowKey:
+        row?.appraisalReviewId != null
+          ? row.appraisalReviewId
+          : `emp-${row?.[employeeKeyField]}`,
+    }));
+  }, [entities]);
+
+  const keyField = "_rowKey";
+
   const selectRow = {
     mode: "checkbox",
     clickToSelect: false,
     hideSelectColumn: isCreatedType,
-    // Disable rows jinka isFinalize true ho
-    nonSelectable: (entities || [])
-      .filter((r) => r?.isFinalize === true)
-      .map((r) => r?.[keyField])
+
+    // Selectable sirf woh rows: isAppraisalReview === true AND appraisalReviewId not null.
+    // Baaki sab (false ya null appraisalReviewId) -> nonSelectable.
+    nonSelectable: tableData
+      .filter(
+        (r) => r?.isAppraisalReview !== true || r?.appraisalReviewId == null,
+      )
+      .map((r) => r?._rowKey)
       .filter(Boolean),
 
-    nonSelectableStyle: { opacity: 1 },
+    nonSelectableStyle: { opacity: 1, cursor: "not-allowed" },
 
-    // Header checkbox (Select All) - IMPORTANT: onChange pass karo
+    // Header checkbox (Select All)
     selectionHeaderRenderer: ({ mode, checked, indeterminate, onChange }) => (
       <input
         type={mode}
@@ -382,7 +559,7 @@ export function FormTable() {
       />
     ),
 
-    // Row checkbox - IMPORTANT: disabled + onChange pass karo
+    // Row checkbox
     selectionRenderer: ({ mode, checked, disabled, onChange }) => (
       <input
         type={mode}
@@ -396,11 +573,14 @@ export function FormTable() {
     selected: selectedIds,
 
     onSelect: (row, isSelect) => {
-      const rowId = row?.[keyField];
+      // Selection state hamesha appraisalReviewId se track hoti hai (bulk action isi ko use karta hai)
+      const rowId = row?.appraisalReviewId;
       if (!rowId) return;
 
-      // safety: published rows select na hon
-      if (row?.isFinalize === true) return;
+      // Sirf true wali rows hi select ho sakti hain
+      if (row?.isAppraisalReview !== true) {
+        return;
+      }
 
       setSelectedIds((prev) => {
         if (isSelect) return [...new Set([...prev, rowId])];
@@ -410,10 +590,13 @@ export function FormTable() {
 
     onSelectAll: (isSelect, rows) => {
       if (isSelect) {
-        // Select all EXCEPT published rows
+        // Select only rows where isAppraisalReview is true AND appraisalReviewId exists
         const ids = (rows || [])
-          .filter((r) => r?.isFinalize !== true)
-          .map((r) => r?.[keyField])
+          .filter(
+            (r) =>
+              r?.isAppraisalReview === true && r?.appraisalReviewId != null,
+          )
+          .map((r) => r?.appraisalReviewId)
           .filter(Boolean);
 
         setSelectedIds(ids);
@@ -422,6 +605,7 @@ export function FormTable() {
       }
     },
   };
+  // ---- FIX END ----
 
   const handleBulkAction = async () => {
     const result = await confirm(
@@ -475,10 +659,10 @@ export function FormTable() {
                     classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
                     bootstrap4
                     remote
-                    keyField="Id"
-                    data={entities === null ? [] : entities}
+                    keyField={keyField}
+                    data={tableData}
                     columns={
-                      formUIProps.queryParams?.filter?.type === "notCreated"
+                      formUIProps.queryParams?.filter?.type === "notFinal"
                         ? notCreatedColumns
                         : columns
                     }
@@ -499,93 +683,93 @@ export function FormTable() {
         </PaginationProvider>
       </div>
       <div className="d-flex justify-content-end mt-3 gap-x-2">
-        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={selectedIds.length === 0 || handleBulkLoading}
-            onClick={handleBulkAction}
-          >
-            Finalized Selected ({selectedIds.length})
-            {handleBulkLoading && (
-              <span className="ml-3 mr-3 spinner spinner-white"></span>
-            )}
-          </button>
-        ) : null}
-        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={
-              actionsLoading ||
-              !formUIProps?.appraisalCategoryId ||
-              !formUIProps?.subsidiaryId
-            }
-            onClick={() =>
-              dispatch(
-                actions.salaryRecomendationReport({
-                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
-                  subsidiaryId: formUIProps?.subsidiaryId,
-                }),
-              )
-            }
-          >
-            Salary Recommendation Report
-            {actionsLoading && (
-              <span className="ml-3 mr-5 spinner spinner-white"></span>
-            )}
-          </button>
-        ) : null}
-        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={
-              sumReportLoading ||
-              !formUIProps?.appraisalCategoryId ||
-              !formUIProps?.subsidiaryId
-            }
-            onClick={() =>
-              dispatch(
-                actions.appraisalFinalizationSumReport({
-                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
-                  subsidiaryId: formUIProps?.subsidiaryId,
-                }),
-              )
-            }
-          >
-            Appraisal Finalization Report
-            {sumReportLoading && (
-              <span className="ml-3 mr-5 spinner spinner-white"></span>
-            )}
-            <FileText size={12} className="ml-2" />
-          </button>
-        ) : null}
-        {formUIProps.queryParams?.filter?.type !== "notCreated" ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={
-              sumExcelReportLoading ||
-              !formUIProps?.appraisalCategoryId ||
-              !formUIProps?.subsidiaryId
-            }
-            onClick={() =>
-              dispatch(
-                actions.appraisalFinalizationSumReportExcel({
-                  appraisalCategoryId: formUIProps?.appraisalCategoryId,
-                  subsidiaryId: formUIProps?.subsidiaryId,
-                }),
-              )
-            }
-          >
-            Appraisal Finalization Report
-            {sumExcelReportLoading && (
-              <span className="ml-3 mr-5 spinner spinner-white"></span>
-            )}
-            <FileSpreadsheet size={12} className="ml-2" />
-          </button>
-        ) : null}
+        {/* {formUIProps.queryParams?.filter?.type !== "notCreated" ? ( */}
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={selectedIds.length === 0 || handleBulkLoading}
+          onClick={handleBulkAction}
+        >
+          Finalized Selected ({selectedIds.length})
+          {handleBulkLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )}
+        </button>
+        {/* // ) : null} */}
+        {/* {formUIProps.queryParams?.filter?.type !== "notCreated" ? ( */}
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={
+            actionsLoading ||
+            !formUIProps?.appraisalCategoryId ||
+            !formUIProps?.subsidiaryId
+          }
+          onClick={() =>
+            dispatch(
+              actions.salaryRecomendationReport({
+                appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                subsidiaryId: formUIProps?.subsidiaryId,
+              }),
+            )
+          }
+        >
+          Salary Recommendation Report
+          {actionsLoading && (
+            <span className="ml-3 mr-5 spinner spinner-white"></span>
+          )}
+        </button>
+        {/* ) : null} */}
+        {/* {formUIProps.queryParams?.filter?.type !== "notCreated" ? ( */}
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={
+            sumReportLoading ||
+            !formUIProps?.appraisalCategoryId ||
+            !formUIProps?.subsidiaryId
+          }
+          onClick={() =>
+            dispatch(
+              actions.appraisalFinalizationSumReport({
+                appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                subsidiaryId: formUIProps?.subsidiaryId,
+              }),
+            )
+          }
+        >
+          Appraisal Finalization Report
+          {sumReportLoading && (
+            <span className="ml-3 mr-5 spinner spinner-white"></span>
+          )}
+          <FileText size={12} className="ml-2" />
+        </button>
+        {/* ) : null} */}
+        {/* {formUIProps.queryParams?.filter?.type !== "notCreated" ? ( */}
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={
+            sumExcelReportLoading ||
+            !formUIProps?.appraisalCategoryId ||
+            !formUIProps?.subsidiaryId
+          }
+          onClick={() =>
+            dispatch(
+              actions.appraisalFinalizationSumReportExcel({
+                appraisalCategoryId: formUIProps?.appraisalCategoryId,
+                subsidiaryId: formUIProps?.subsidiaryId,
+              }),
+            )
+          }
+        >
+          Appraisal Finalization Report
+          {sumExcelReportLoading && (
+            <span className="ml-3 mr-5 spinner spinner-white"></span>
+          )}
+          <Calculator size={12} className="ml-2" />
+        </button>
+        {/* ) : null} */}
       </div>
       <BulkPublishSummary
         bulkResult={errorState}
