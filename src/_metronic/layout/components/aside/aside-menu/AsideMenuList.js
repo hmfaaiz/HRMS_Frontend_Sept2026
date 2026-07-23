@@ -75,6 +75,8 @@ export function AsideMenuList({ layoutProps }) {
 
   // Scroll functions - scroll by 8 items
   const scrollLeft = () => {
+      setDropdownOpen(null);
+        setOpenSubMenu({});
     if (scrollContainerRef.current && itemWidth > 0) {
       scrollContainerRef.current.scrollBy({ left: -(itemWidth * 8), behavior: 'smooth' });
     } else {
@@ -83,6 +85,8 @@ export function AsideMenuList({ layoutProps }) {
   };
 
   const scrollRight = () => {
+      setDropdownOpen(null);
+        setOpenSubMenu({});
     if (scrollContainerRef.current && itemWidth > 0) {
       scrollContainerRef.current.scrollBy({ left: itemWidth * 8, behavior: 'smooth' });
     } else {
