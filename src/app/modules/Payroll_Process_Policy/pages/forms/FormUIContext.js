@@ -103,6 +103,9 @@ export function FormUIProvider({ FormUIEvents, children }) {
     pf_employee_percent: "",
     pf_eligibility: 0,
 
+    // CPL
+    isEnableCPLLeave:"",
+    isEnableCPLLeavePolicy:""
 
     
   };
