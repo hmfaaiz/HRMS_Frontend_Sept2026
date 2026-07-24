@@ -1108,3 +1108,18 @@ export const fetchAllAssetInspectionListById = (body) => async (
       // toast.error("Something went wrong");
     });
 };
+export const fetchAssetAssignmentListByEmpId= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAssetAssignmentListByEmpId(body)
+    .then((response) => {
+      const entities = [...(response.data?.data?.rows || [])];
+     
+      dispatch(actions.AllAssetAssignmentListByEmpIdFetch(entities));
+    })
+    .catch((error) => {
+      console.log("error111", error);
+      // toast.error("Something went wrong");
+    });
+};

@@ -128,6 +128,7 @@ const initialDashboardState = {
   allPresentUnassignedCategoryList: [],
   allPresentUnassignedMakeCompanyList: [],
   allAssetInspectionList: [],
+  allAssetAssignmentListByEmpId: [],
 };
 
 export const callTypes = {
@@ -535,6 +536,12 @@ export const dashboardSlice = createSlice({
     AllAssetInspectionListFetch: (state, action) => {
       console.log("action.payload", action.payload);
       state.allAssetInspectionList = action.payload;
+    },
+
+
+    AllAssetAssignmentListByEmpIdFetch: (state, action) => {
+      console.log("action.payload", action.payload);
+      state.allAssetAssignmentListByEmpId = action.payload;
     },
 
 

@@ -1923,7 +1923,7 @@ export function FormTable(user) {
                         onBlur={handleBlur}
                       >
 
-                        <option value="N/A">N/A</option>
+                        <option value="">N/A</option>
 
 
                         {dashboard.allLeaveTypes

@@ -39,6 +39,7 @@ import FileUpload from "../../../../../../_metronic/_partials/controls/forms/Fil
 import { fetchExitReasonData } from "../../../../Dashboard/_redux/dashboardActions";
 import { Eye, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+import { AssetListByEmp } from "../../../../../utils/common-modules/AssetListByEmp";
 
 
 export const getSeparationEditSchema = (formData) => {
@@ -100,12 +101,12 @@ export const getSeparationEditSchema = (formData) => {
 
       }),
 
-   notEligibleForFinalSettlementRemarks: Yup.string().nullable().when("isNotEligibleForFinalSettlement", {
+      notEligibleForFinalSettlementRemarks: Yup.string().nullable().when("isNotEligibleForFinalSettlement", {
         is: true,
         then: (schema) => schema.required(VALIDATION_MESSAGES.required),
         otherwise: (schema) => schema.notRequired(),
 
-        
+
       }),
 
 
@@ -161,8 +162,8 @@ export function FormEditForm({
   const [empPayrollInfo, setEmpPayrollInfo] = useState("");
   const [empSalInfo, setSalInfo] = useState("");
   const [isRoleSeparationApprover, setIsRoleSeparationApprover] = useState("");
-
-
+  const [assetMode, setAssetMode] = useState(false)
+  const [assetExists, setAssetExists] = useState(false);
 
   const handlePolicyModalClose = () => {
     setPolicyMode(false);
@@ -564,6 +565,8 @@ export function FormEditForm({
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
+                         setAssetExists(false);
+                         setAssetMode(false);
                         setFieldValue("employeeId", value);
                         setEmpPayrollInfo(
                           !e?.approvedForPayroll
@@ -585,6 +588,7 @@ export function FormEditForm({
                         if (selectedEmp) {
                           setDepartmentId(selectedEmp?.departmentId)
                           setDateOfJoining(selectedEmp?.dateOfJoining);
+                          setAssetExists(selectedEmp?.assetIs);
 
 
                         }
@@ -610,7 +614,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="mt-6">
+                 <div className="mt-6 d-flex align-items-center gap-2">
 
 
 
@@ -635,6 +639,33 @@ export function FormEditForm({
                         <Eye className="w-4 h-4 text-white" />
                         View Details
                       </button>
+
+
+                    )}
+
+
+
+
+                    {assetExists && (
+                      assetMode ? (
+                        <button
+                          type="button"
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() => setAssetMode(false)}
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() => setAssetMode(true)}
+                        >
+                          <Eye className="w-4 h-4 text-white" />
+                          View Asset Details
+                        </button>
+                      )
                     )}
 
 
@@ -647,7 +678,7 @@ export function FormEditForm({
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={panelMode}
                 />
-
+                <AssetListByEmp employeeId={values?.employeeId} assetMode={assetMode} />
 
                 <div>
                   <label className="form-feedBack">{empPayrollInfo && <p>{empPayrollInfo}</p>}</label>
@@ -1234,7 +1265,8 @@ export function FormEditForm({
                         type="checkbox"
                         name="isNotEligibleForFinalSettlement"
                         checked={values.isNotEligibleForFinalSettlement}
-                        onChange={(e) => {setFieldValue("isNotEligibleForFinalSettlement", e.target.checked)
+                        onChange={(e) => {
+                          setFieldValue("isNotEligibleForFinalSettlement", e.target.checked)
 
                           setFieldValue("notEligibleForFinalSettlementRemarks", "")
                         }}
@@ -1256,7 +1288,7 @@ export function FormEditForm({
                       component={TextArea}
                       disabled={!values.isNotEligibleForFinalSettlement}
                       placeholder="Enter remarks"
-                      className="form-control"  
+                      className="form-control"
                       label={
                         <span>
 
