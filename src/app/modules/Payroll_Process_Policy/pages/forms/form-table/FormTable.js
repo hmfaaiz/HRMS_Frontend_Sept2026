@@ -647,12 +647,18 @@ export function FormTable(user) {
         }),
 
       isEnableCPLLeavePolicy: Yup.number()
-        .when('isEnableCPLLeave', {
-          is: true, // if select value is 2
-          then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
+        .transform((value, originalValue) =>
+          originalValue === "" ? undefined : value
+        )
+        .when("isEnableCPLLeave", {
+          is: true,
+          then: Yup.number()
+            .transform((value, originalValue) =>
+              originalValue === "" ? undefined : value
+            )
+            .required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
-
     },
 
   );
@@ -758,7 +764,7 @@ export function FormTable(user) {
 
     // CPL
     isEnableCPLLeave: false,
-    isEnableCPLLeavePolicy: false,
+    isEnableCPLLeavePolicy: "",
 
 
 
@@ -1934,6 +1940,12 @@ export function FormTable(user) {
                             </option>
                           ))}
                       </Select>
+
+                      {touched.isEnableCPLLeavePolicy && errors.isEnableCPLLeavePolicy && (
+                        <div className="text-danger">
+                          {errors.isEnableCPLLeavePolicy}
+                        </div>
+                      )}
 
                     </div>
 
