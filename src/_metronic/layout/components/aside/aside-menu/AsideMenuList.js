@@ -253,12 +253,12 @@ export function AsideMenuList({ layoutProps }) {
               </a>
             </div>
 
-            <div className="flex items-center w-full" style={{ position: 'relative' }}>
+            <div className="flex items-center w-200 mr-2 ml-1" style={{ position: 'relative' }}>
               {/* Left Arrow */}
               {canScrollLeft && (
                 <button
                   onClick={scrollLeft}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 ml-1 transition-all duration-200"
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 ml-1 mr-4 transition-all duration-200"
                   style={{
                     width: '25px',
                     height: '25px',
@@ -266,7 +266,7 @@ export function AsideMenuList({ layoutProps }) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     border: '1px solid #e5e7eb',
-                    marginRight: '8px' // Right side margin
+                    marginRight: '16px' // Right side margin
                   }}
                 >
                   <ChevronsLeft size={16} className="w-4 h-4 text-gray-700" />
@@ -275,7 +275,7 @@ export function AsideMenuList({ layoutProps }) {
 
               {/* Scrollable Menu Items */}
               <div
-                className="overflow-x-auto scroll-smooth ml-1"
+                className="overflow-x-auto scroll-smooth ml-1 mr-16"
                 style={{
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
@@ -322,10 +322,12 @@ export function AsideMenuList({ layoutProps }) {
                     })}
                 </ul>
 
-                {canScrollRight && (
+           
+              </div>
+                   {canScrollRight && (
                   <button
                     onClick={scrollRight}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 mr-1 transition-all duration-200"
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 ml-1 transition-all duration-200"
                     style={{
                       width: '25px',
                       height: '25px',
@@ -338,7 +340,6 @@ export function AsideMenuList({ layoutProps }) {
                     <ChevronsRight size={16} className="w-4 h-4 text-gray-700" />
                   </button>
                 )}
-              </div>
             </div>
           </nav>
         </div>
