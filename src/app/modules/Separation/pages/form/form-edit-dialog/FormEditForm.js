@@ -191,6 +191,7 @@ export function FormEditForm({
     else {
       dispatch(fetchExitReasonData(formData?.exitTypeId));
       dispatch(actions.fetchEmpBySeparationFlag({ flag: null, employeeId: formData?.employeeId }));
+      setAssetExists(formData?.assetIs ? true:false)
 
     }
   }, [dispatch, formData.Id]);
@@ -678,7 +679,8 @@ export function FormEditForm({
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={panelMode}
                 />
-                <AssetListByEmp employeeId={values?.employeeId} assetMode={assetMode} />
+                {assetExists && assetMode && <AssetListByEmp employeeId={values?.employeeId}  assetMode={assetMode} />}
+                {/* <AssetListByEmp employeeId={values?.employeeId} assetMode={assetMode} /> */}
 
                 <div>
                   <label className="form-feedBack">{empPayrollInfo && <p>{empPayrollInfo}</p>}</label>

@@ -69,6 +69,8 @@ export function FormEditForm({
         (option) => Number(option?.value) === Number(data?.employeeId)
       );
       setClearanceDate(selected || null);
+
+      setAssetExists(data.assetIs? true:false);
     }
   }, [dashboard?.approvedResignedEmpList, data?.employeeId]);
 
@@ -223,7 +225,8 @@ export function FormEditForm({
                   employeeId={values.employeeId}
                   panelMode={panelMode}
                 />
-                <AssetListByEmp employeeId={values?.employeeId} assetMode={assetMode} />
+                {/* <AssetListByEmp employeeId={values?.employeeId} assetMode={assetMode} /> */}
+                  {assetExists && assetMode && <AssetListByEmp employeeId={values?.employeeId}  assetMode={assetMode} />}
 
                 <hr />
 
