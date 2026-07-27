@@ -1123,3 +1123,19 @@ export const fetchAssetAssignmentListByEmpId= (body) => async (
       // toast.error("Something went wrong");
     });
 };
+
+export const fetchAssetChecklistById= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAssetChecklistById(body)
+    .then((response) => {
+      const entities = [...(response.data?.data || [])];
+     
+      dispatch(actions.AllAssetChecklistByIdFetch(entities));
+    })
+    .catch((error) => {
+      console.log("error111", error);
+      // toast.error("Something went wrong");
+    });
+};

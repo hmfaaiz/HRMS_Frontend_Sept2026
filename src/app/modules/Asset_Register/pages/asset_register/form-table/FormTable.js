@@ -33,6 +33,8 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      openReadAssetHistoryDialog: formUIContext.openReadAssetHistoryDialog,
+      openReadAssetAssessmentDialog: formUIContext.openReadAssetAssessmentDialog,
     };
   }, [formUIContext]);
 
@@ -199,6 +201,8 @@ export function FormTable() {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openReadAssetHistoryDialog: formUIProps.openReadAssetHistoryDialog,
+        openReadAssetAssessmentDialog: formUIProps.openReadAssetAssessmentDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
         isAccessForDelete: isAccessForDelete

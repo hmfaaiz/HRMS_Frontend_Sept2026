@@ -75,7 +75,7 @@ export function AssetListByEmp({ employeeId, assetMode }) {
 
     ];
 
-
+console.log("dashboard?.allAssetAssignmentListByEmpId111111",dashboard?.allAssetAssignmentListByEmpId)
   return (
     <>
         {assetMode && (

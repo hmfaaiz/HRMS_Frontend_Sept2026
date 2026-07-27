@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -23,9 +23,10 @@ import {
 import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
-import { fetchAllAssetModelName, fetchAllCity } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllAssetModelName, fetchAllCity, uploadFile } from "../../../../Dashboard/_redux/dashboardActions";
 import { AssetHistoryTable } from "../form-table/AssetHistoryTable";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+
 // percentage: Yup.string().required("Required*"),
 const assetRegisterSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
@@ -165,6 +166,8 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   const inputFile = useRef(null);
+  const [assetFile, setassetFile] = useState("");
+  const [file, setFile] = useState("");
   useEffect(() => {
 
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
@@ -181,12 +184,11 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess } = useSelector((state) => {
-    return {
-      currentState: state.asset_register,
-      userAccess: state?.auth?.userAccess["asset_register"],
-    };
-  }, shallowEqual);
+    useEffect(() => {
+      if (formData?.Id && formData?.file) {
+        setCompanyLogo(formData?.file);
+      }
+    }, [formData?.Id]);
 
   const statusOptions = [
     { value: 0, label: "Unassigned" },
@@ -203,7 +205,14 @@ export function FormEditForm({
     { value: 5, label: "Non Functional" },
 
   ];
+  const onImageChange = async (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setFile(img);
 
+      setassetFile(URL.createObjectURL(img));
+    }
+  };
   return (
     <Formik
       enableReinitialize={true}
@@ -214,10 +223,22 @@ export function FormEditForm({
           : "Unattached",
       }}
       validationSchema={assetRegisterSchema}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         enableLoading();
-        console.log("values111111", values);
-        saveForm(values);
+            if (file) {
+         
+                  try {
+                    const uploadRes = await uploadFile(file);
+                    setassetFile(uploadRes.data.filename);
+                    saveForm({ ...values, file: uploadRes.data.filename });
+                  } catch (err) {
+                    console.error("File upload failed:", err);
+                  
+                  }
+                } else {
+                  saveForm(values);
+                }
+     
       }}
     >
       {({
@@ -279,6 +300,42 @@ export function FormEditForm({
 
                     </div>
 
+      <div className="col-span-1">
+                    <FileUpload
+                      label={<>Asset Image</>}
+                      id="file"
+                      name="file"
+                      type="file"
+                      accept=".jpeg,.jpg,.png,"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={onImageChange}
+                    />
+                    {errors.file && touched.file && (
+                      <div className="invalid-feedback">{errors.file}</div>
+                    )}
+
+                    {(formData?.file || values?.file) && (
+                      <div className="mt-2">
+                        <label>Existing File:</label>
+
+                        <a
+                          href={
+                            typeof (values?.file || formData?.file) === "string"
+                              ? getUploadUrl(values?.file || formData?.file)
+                              : URL.createObjectURL(values?.file || formData?.file)
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-primary text-sm"
+                        >
+                          {typeof (values?.file || formData?.file) === "string"
+                            ? getFileName(values?.file || formData?.file)
+                            : values?.file?.name || formData?.file}
+                        </a>
+                      </div>
+                    )}
+                  </div>
 
 
 
