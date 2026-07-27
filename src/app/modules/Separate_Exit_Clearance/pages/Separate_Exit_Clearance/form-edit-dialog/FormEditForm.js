@@ -15,6 +15,7 @@ import { fetchDesignationWiseGoalSetupByEmp } from "../../../_redux/redux-Action
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { Eye, XCircle } from "lucide-react";
 import OnboardChecklistForm from "./OnboardChecklistForm";
+import { AssetListByEmp } from "../../../../../utils/common-modules/AssetListByEmp";
 
 const employeeEditSchema = Yup.object().shape({
   employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -51,7 +52,8 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   const [clearanceDate, setClearanceDate] = useState();
-
+  const [assetExists, setAssetExists] = useState(false);
+  const [assetMode, setAssetMode] = useState(false)
   const { entities } = useSelector(
     (state) => state.exit_clearance,
     shallowEqual
@@ -126,6 +128,8 @@ export function FormEditForm({
                         setFieldValue("employeeId", e.value || null);
                         setFieldValue("patternList", []);  // Changed from "list" to "patternList"
                         setFieldValue("onboardChecklist", []);  // Also clear onboardChecklist
+                        setAssetExists(false);
+                        setAssetMode(false);
                         if (e.value) {
                           dispatch(
                             fetchDesignationWiseGoalSetupByEmp({
@@ -134,12 +138,29 @@ export function FormEditForm({
                             })
                           );
                         }
+
+                        const selectedEmp = dashboard?.approvedResignedEmpList?.find(
+                          (emp) => emp.value === e.value
+                        );
+
+                        if (selectedEmp) {
+                       
+                        
+                          setAssetExists(selectedEmp?.assetIs);
+
+
+                        }
                       }}
+
+
+
                       value={
                         dashboard?.approvedResignedEmpList?.find(
                           (option) => option?.value == values?.employeeId
                         ) || null
                       }
+
+
                       options={
                         dashboard?.approvedResignedEmpList?.map((opt) => ({
                           ...opt,
@@ -151,7 +172,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="mt-6 col-span-1">
+                  <div className="col-span-2 mt-6 d-flex align-items-center gap-2">
                     {panelMode ? (
                       <button
                         type="button"
@@ -171,6 +192,30 @@ export function FormEditForm({
                         View Details
                       </button>
                     )}
+
+
+                    {assetExists && (
+                      assetMode ? (
+                        <button
+                          type="button"
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() => setAssetMode(false)}
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() => setAssetMode(true)}
+                        >
+                          <Eye className="w-4 h-4 text-white" />
+                          View Asset Details
+                        </button>
+                      )
+                    )}
+
                   </div>
                 </div>
 
@@ -178,6 +223,8 @@ export function FormEditForm({
                   employeeId={values.employeeId}
                   panelMode={panelMode}
                 />
+                <AssetListByEmp employeeId={values?.employeeId} assetMode={assetMode} />
+
                 <hr />
 
                 <div>
