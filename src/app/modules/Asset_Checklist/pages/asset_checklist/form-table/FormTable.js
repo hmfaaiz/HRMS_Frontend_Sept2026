@@ -123,6 +123,18 @@ export function FormTable() {
       },
 
     },
+
+    {
+      dataField: "InspectedByEmployee",
+      text: "Inspected By",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+
+    },
     // {
     //   dataField: "assetCount",
     //   text: "No. of Checklist Descriptions",

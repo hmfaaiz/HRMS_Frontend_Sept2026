@@ -54,6 +54,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   current_price: "",
 
   remarks: "",
+  file: "",
 
   Status: "Unattached",
 };
@@ -72,6 +73,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
     openActiveFormDialog: FormUIEvents.openActiveFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
+    openReadAssetHistoryDialog: FormUIEvents.openReadAssetHistoryDialog,
+    openReadAssetAssessmentDialog: FormUIEvents.openReadAssetAssessmentDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

@@ -9,6 +9,8 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
 import {} from "../../_redux/redux-Actions";
+import { AssetHistoryTable } from "./form-table/AssetHistoryTable";
+import { AssetAssessmentTable } from "./form-table/AssetAssessmentTable";
 
 
 
@@ -31,6 +33,13 @@ export function FormPage({ history }) {
     },
     openReadFormDialog: (id, isUserRead) => {
       history.push(`/asset_register/read-all-asset-register/${id}/read`);
+    },
+    openReadAssetHistoryDialog: (id, isUserRead) => {
+      history.push(`/asset_register/read-all-asset-register/${id}/assethistory`);
+    },
+    
+    openReadAssetAssessmentDialog: (id, isUserRead) => {
+      history.push(`/asset_register/read-all-asset-register/${id}/sssetassessment`);
     },
   };
   return (
@@ -75,6 +84,35 @@ export function FormPage({ history }) {
           <FormDeleteDialog
             show={match != null}
             id={match && match.params.id}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/asset_register/read-all-asset-register");
+            }}
+          />
+        )}
+      </Route>
+
+
+          <Route path="/asset_register/read-all-asset-register/:id/assethistory">
+        {({ history, match }) => (
+          <AssetHistoryTable
+            show={match != null}
+            
+            Id={match && match.params.id}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/asset_register/read-all-asset-register");
+            }}
+          />
+        )}
+      </Route>
+    
+          <Route path="/asset_register/read-all-asset-register/:id/sssetassessment">
+        {({ history, match }) => (
+          <AssetAssessmentTable
+            show={match != null}
+            
+            Id={match && match.params.id}
             status={match && match.params.status}
             onHide={() => {
               history.push("/asset_register/read-all-asset-register");
