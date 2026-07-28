@@ -34,46 +34,46 @@ const cplLeaveSchema = Yup.object().shape({
 
   // Business Days
   HalfDay_BusinessDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'")
   ,
 
   FullDay_BusinessDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'")
   ,
 
   Onehalf_BusinessDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'")
   ,
 
   Double_BusinessDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)")
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'")
   ,
 
   // Off Days
   HalfDay_OffDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   FullDay_OffDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   Onehalf_OffDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   Double_OffDay: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   // Holidays
   HalfDay_Holiday: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   FullDay_Holiday: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   Onehalf_Holiday: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   Double_Holiday: Yup.string()
-    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid time (e.g. 0900, 1730)"),
+    .matches(/^([01]\d|2[0-3])[0-5]\d$/, "Invalid Time: It should be between '0000' to '2400'"),
 
   accumulateDays: Yup.number()
     .transform((value, originalValue) =>
@@ -300,12 +300,13 @@ export function FormEditForm({
                         <Field
                           name="HalfDay_BusinessDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter half business day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Half Business Day
+                              Half Business Day (hhmm)
 
                             </span>
                           }
@@ -318,12 +319,13 @@ export function FormEditForm({
                         <Field
                           name="FullDay_BusinessDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter full business day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Full Business Day
+                              Full Business Day (hhmm)
 
                             </span>
                           }
@@ -336,12 +338,13 @@ export function FormEditForm({
                         <Field
                           name="Onehalf_BusinessDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter one half business day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              One Half Business Day
+                              One Half Business Day (hhmm)
 
                             </span>
                           }
@@ -354,12 +357,13 @@ export function FormEditForm({
                         <Field
                           name="Double_BusinessDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter double business day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Double Business Day
+                              Double Business Day (hhmm)
 
                             </span>
                           }
@@ -375,12 +379,13 @@ export function FormEditForm({
                         <Field
                           name="HalfDay_OffDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter half off day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Half Off Day
+                              Half Off Day (hhmm)
 
                             </span>
                           }
@@ -393,12 +398,13 @@ export function FormEditForm({
                         <Field
                           name="FullDay_OffDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter full off day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Full Off Day
+                              Full Off Day (hhmm)
 
                             </span>
                           }
@@ -411,12 +417,13 @@ export function FormEditForm({
                         <Field
                           name="Onehalf_OffDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter one half off day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              One Half Off Day
+                              One Half Off Day (hhmm)
 
                             </span>
                           }
@@ -429,12 +436,13 @@ export function FormEditForm({
                         <Field
                           name="Double_OffDay"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter double off day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Double Off Day
+                              Double Off Day (hhmm)
 
                             </span>
                           }
@@ -450,12 +458,13 @@ export function FormEditForm({
                         <Field
                           name="HalfDay_Holiday"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter half holiday day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Half Holiday Day
+                              Half Holiday Day (hhmm)
 
                             </span>
                           }
@@ -468,12 +477,13 @@ export function FormEditForm({
                         <Field
                           name="FullDay_Holiday"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter full holiday day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Full Holiday Day
+                              Full Holiday Day (hhmm)
 
                             </span>
                           }
@@ -486,12 +496,13 @@ export function FormEditForm({
                         <Field
                           name="Onehalf_Holiday"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter one half holiday day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              One Half Holiday Day
+                              One Half Holiday Day (hhmm)
 
                             </span>
                           }
@@ -504,12 +515,13 @@ export function FormEditForm({
                         <Field
                           name="Double_Holiday"
                           component={Input}
+                          maxLength={4}
                           placeholder="Enter double holiday day"
                           className="form-control" // Force full height
                           label={
                             <span>
                               {" "}
-                              Double Holiday Day
+                              Double Holiday Day (hhmm)
 
                             </span>
                           }
@@ -573,6 +585,7 @@ export function FormEditForm({
                           <Field
                             name="accumulateDays"
                             component={Input}
+                            maxLength={3}
                             placeholder="Days"
                             disabled={values.isAttProcessExecuted !== 1}
                             style={{ width: "80px" }}
