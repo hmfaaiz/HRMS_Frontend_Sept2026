@@ -105,29 +105,29 @@ export function FormTable() {
       formatter: (_, row) => row.EmployeeType?.formName || "",
     },
 
-    {
-      dataField: "isAttProcessExecuted",
-      text: "Lapse policy",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "180px" },
-      formatter: (_, row) => {
-        return row.isAttProcessExecuted === 0
-          ? "Do not Lapse Leave"
-          : "Leave will Lapse";
-      },
-    },
+    // {
+    //   dataField: "isAttProcessExecuted",
+    //   text: "Lapse policy",
+    //   sort: false,
+    //   sortCaret,
+    //   headerSortingClasses,
+    //   style: { minWidth: "180px" },
+    //   formatter: (_, row) => {
+    //     return row.isAttProcessExecuted === 0
+    //       ? "Do not Lapse Leave"
+    //       : "Leave will Lapse";
+    //   },
+    // },
 
-    {
-      dataField: "accumulateDays",
-      text: "Accumulate Days",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "150px" },
-      formatter: (cell) => cell ?? "-",
-    },
+    // {
+    //   dataField: "accumulateDays",
+    //   text: "Accumulate Days",
+    //   sort: false,
+    //   sortCaret,
+    //   headerSortingClasses,
+    //   style: { minWidth: "150px" },
+    //   formatter: (cell) => cell ?? "-",
+    // },
 
 
 
