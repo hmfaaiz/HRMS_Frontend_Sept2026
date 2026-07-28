@@ -348,3 +348,9 @@ export const getAssetDetailViewSection = async (Id) => {
 export const getAssetInspectionListById = async (Id) => {
   return await axios.get(`${USERS_URL}/settings/read-all-asset-inspection-list/${Id}`);
 }
+export const getAssetAssignmentListByEmpId = async (Id) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-asset-assignment-list-by-empId/${Id}`);
+}
+export const getAssetChecklistById = async (Id) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-asset-checklist/${Id}`);
+}

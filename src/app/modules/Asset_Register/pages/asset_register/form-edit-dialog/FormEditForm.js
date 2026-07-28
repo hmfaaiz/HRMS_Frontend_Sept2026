@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { FaUpload, FaImage } from "react-icons/fa";
 import * as Yup from "yup";
 import {
   DatePickerField,
@@ -23,9 +24,10 @@ import {
 import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
-import { fetchAllAssetModelName, fetchAllCity } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllAssetModelName, fetchAllCity, uploadFile } from "../../../../Dashboard/_redux/dashboardActions";
 import { AssetHistoryTable } from "../form-table/AssetHistoryTable";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+
 // percentage: Yup.string().required("Required*"),
 const assetRegisterSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
@@ -66,30 +68,30 @@ const assetRegisterSchema = Yup.object().shape({
     .matches(/^\d{4}$/, "Please select a valid year")
     .required(VALIDATION_MESSAGES.required),
 
-date_of_acquisition: Yup.date()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required)
-  .test(
-    "acquisition-year",
-    function (value) {
-      const { asset_year } = this.parent;
+  date_of_acquisition: Yup.date()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required)
+    .test(
+      "acquisition-year",
+      function (value) {
+        const { asset_year } = this.parent;
 
-      if (!value || !asset_year) return true;
+        if (!value || !asset_year) return true;
 
-      const acquisitionYear = new Date(value).getFullYear();
-      const assetYear = Number(asset_year);
-      
-      if (acquisitionYear < assetYear) {
-        return this.createError({
-          message: `Acquisition year  is before Asset Year.`,
-        });
-      }
-      
-   
-      
-      return true;
-    },
-  ),
+        const acquisitionYear = new Date(value).getFullYear();
+        const assetYear = Number(asset_year);
+
+        if (acquisitionYear < assetYear) {
+          return this.createError({
+            message: `Acquisition year  is before Asset Year.`,
+          });
+        }
+
+
+
+        return true;
+      },
+    ),
   date_of_expiry: Yup.date()
     .nullable()
     // .required(VALIDATION_MESSAGES.required)
@@ -165,6 +167,9 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   const inputFile = useRef(null);
+  const [assetFile, setassetFile] = useState("");
+  const [file, setFile] = useState("");
+  const [showImageModal, setShowImageModal] = useState(false);
   useEffect(() => {
 
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
@@ -181,12 +186,11 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess } = useSelector((state) => {
-    return {
-      currentState: state.asset_register,
-      userAccess: state?.auth?.userAccess["asset_register"],
-    };
-  }, shallowEqual);
+  useEffect(() => {
+    if (formData?.Id && formData?.file) {
+      setassetFile(formData?.file);
+    }
+  }, [formData?.Id]);
 
   const statusOptions = [
     { value: 0, label: "Unassigned" },
@@ -203,7 +207,43 @@ export function FormEditForm({
     { value: 5, label: "Non Functional" },
 
   ];
+  const onImageChange = (event) => {
+    const file = event.target.files[0];
 
+    if (file) {
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      if (!validTypes.includes(file.type)) {
+        alert('Only JPEG, JPG, and PNG files are allowed');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size should be less than 5MB');
+        return;
+      }
+
+      // Create image URL for preview (immediate replacement)
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setassetFile(reader.result); // Set the preview URL
+        setFile(file); // Store the actual file for upload
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() => {
+    if (formData?.Id && formData?.file) {
+      // If it's a string filename from DB
+      if (typeof formData.file === 'string') {
+        setassetFile(formData.file);
+        // Also set it in values for consistency
+        // The imageUrl will handle the conversion via getUploadUrl
+      }
+    }
+  }, [formData?.Id, formData?.file]);
   return (
     <Formik
       enableReinitialize={true}
@@ -214,10 +254,26 @@ export function FormEditForm({
           : "Unattached",
       }}
       validationSchema={assetRegisterSchema}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         enableLoading();
-        console.log("values111111", values);
-        saveForm(values);
+        if (file) {
+          try {
+            // If file is a File object (new upload), upload it
+            if (file instanceof File) {
+              const uploadRes = await uploadFile(file);
+              const filename = uploadRes.data.filename;
+              setassetFile(getUploadUrl(filename)); // Update preview with server URL
+              saveForm({ ...values, file: filename });
+            } else {
+              // If file is already a string (existing image)
+              saveForm({ ...values, file: file });
+            }
+          } catch (err) {
+            console.error("File upload failed:", err);
+          }
+        } else {
+          saveForm(values);
+        }
       }}
     >
       {({
@@ -232,6 +288,29 @@ export function FormEditForm({
         const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
           (item) => Number(item.value) === Number(values.subsidiaryId),
         );
+        const imageUrl = (() => {
+          // Priority: assetFile (for new uploads) > values.file > formData.file
+          const fileSource = assetFile || values?.file || formData?.file;
+
+          if (!fileSource) return "";
+
+          // If it's a string (filename from DB or URL)
+          if (typeof fileSource === "string") {
+            // Check if it's already a full URL (data URL or http URL)
+            if (fileSource.startsWith('data:') || fileSource.startsWith('http')) {
+              return fileSource;
+            }
+            // Otherwise, get the upload URL
+            return getUploadUrl(fileSource);
+          }
+
+          // If it's a File object, create object URL
+          if (fileSource instanceof File) {
+            return URL.createObjectURL(fileSource);
+          }
+
+          return "";
+        })();
         return (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
@@ -242,115 +321,273 @@ export function FormEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="grid grid-cols-3 gap-x-3 gap-y-1">
 
+
+                  <div className="grid grid-cols-3 gap-4">
                     <div className="col-span-1">
-                      <SearchSelect
-                        name="asset_categoryId"
-                        component={Input}
-                        placeholder="Asset Category"
-                        className="form-control" // Force full height
-                        value={dashboard?.allAssetCategoryList?.find(
-                          (x) =>
-                            Number(x.value) === Number(values.asset_categoryId),
-                        )}
-                        label={
-                          <span>
-                            {" "}
-                            Asset Category
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(e) => {
-                          setFieldValue("asset_categoryId", e.value || null);
-                          dispatch(fetchAllAssetModelName({ asset_categoryId: e?.value }));
-                          setFieldValue("asset_modelId", null);
-                        }}
-                        options={dashboard?.allAssetCategoryList}
-                        autoComplete="off"
-                      />
-                      <ErrorMessage
-                        name="asset_categoryId"
-                        component="div"
-                        className="invalid-feedback d-block"
-                      />
+                      <div className="">
+
+                        <div>
+                          <SearchSelect
+                            name="asset_categoryId"
+                            component={Input}
+                            placeholder="Asset Category"
+                            className="form-control"
+                            value={dashboard?.allAssetCategoryList?.find(
+                              (x) => Number(x.value) === Number(values.asset_categoryId)
+                            )}
+                            label={
+                              <span>
+                                Asset Category
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            onChange={(e) => {
+                              setFieldValue("asset_categoryId", e.value || null);
+                              dispatch(
+                                fetchAllAssetModelName({
+                                  asset_categoryId: e?.value,
+                                })
+                              );
+                              setFieldValue("asset_modelId", null);
+                            }}
+                            options={dashboard?.allAssetCategoryList}
+                            autoComplete="off"
+                          />
+
+                          <ErrorMessage
+                            name="asset_categoryId"
+                            component="div"
+                            className="invalid-feedback d-block"
+                          />
+
+                        </div>
+                        <div className="">
+                          <SearchSelect
+                            name="asset_modelId"
+                            component={Input}
+                            placeholder="Enter date of expiry"
+                            className="form-control" // Force full height
+                            value={dashboard?.allAssetModelNameList?.find(
+                              (x) =>
+                                Number(x.value) === Number(values.asset_modelId),
+                            )}
+                            label={
+                              <span>
+                                {" "}
+                                Asset Model Name
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            onChange={(e) => {
+                              setFieldValue("asset_modelId", e.value || null);
+                            }}
+                            options={dashboard?.allAssetModelNameList}
+                            autoComplete="off"
+                          />
+                          <ErrorMessage
+                            name="asset_modelId"
+                            component="div"
+                            className="invalid-feedback d-block"
+                          />
+
+                        </div>
+
+                        <div className="">
+                          <label>
+                            Color <span style={{ color: "red" }}>*</span>
+                          </label>
+
+                          <div className="d-flex align-items-center">
+                            <Field
+                              type="color"
+                              name="color"
+                              className="form-control form-control-color"
+                              style={{
+                                width: "280px",
+                                height: "25px",
+                                padding: "1px",
+                              }}
+                            />
+
+                            {/* <span className="ml-3">
+                          {values.color || "#000000"}
+                        </span> */}
+                          </div>
+
+                          <ErrorMessage
+                            name="color"
+                            component="div"
+                            className="invalid-feedback d-block"
+                          />
+                        </div>
 
 
-
+                      </div>
                     </div>
 
+                    <div className="col-span-1">
+
+                      <div>
+                        <div>
 
 
+                          <Field
+                            name="asset_no"
+                            component={Input}
+                            placeholder="Enter asset no"
+                            className="form-control" // Force full height
+                            label={
+                              <span>
+                                {" "}
+                                Asset No
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            autoComplete="off"
+                          />
+                        </div>
+
+
+                        <div className="">
+                          <Field
+                            name="registration_no"
+                            component={Input}
+                            placeholder="Enter 'serial / registration number"
+                            className="form-control" // Force full height
+                            label={
+                              <span>
+                                {" "}
+                                Serial
+
+                              </span>
+                            }
+                            autoComplete="off"
+                          />
+
+                        </div>
+
+                        <div className="">
+
+
+                          <SearchSelect
+                            name="current_conditionId"
+                            component={Input}
+                            placeholder="Select Current Condition"
+                            className="form-control"
+                            value={currentConditionOptions?.find(
+                              (x) => Number(x.value) === Number(values.current_conditionId),
+                            )}
+                            label={
+                              <span>
+                                {" "}
+                                Current Condition
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            onChange={(e) => {
+                              setFieldValue("current_conditionId", e.value || null);
+                            }}
+                            options={currentConditionOptions}
+                            autoComplete="off"
+                          />
+                          <ErrorMessage
+                            name="current_conditionId"
+                            component="div"
+                            className="invalid-feedback d-block"
+                          />
+                        </div>
+
+
+                      </div>
+                    </div>
+
+                    <div className="col-span-1 d-flex flex-column align-items-center justify-content-end">
+                      {/* Image Preview */}
+                      {/* Image Preview - Shows uploaded or default image */}
+                      {/* Image Preview - Shows uploaded or default image */}
+                      {(() => {
+                        const hasImage = assetFile || values?.file || formData?.file;
+                        return hasImage ? (
+                          <img
+                            src={imageUrl}
+                            alt="Asset"
+                            onClick={() => setShowImageModal(true)}
+                            style={{
+                              width: "130px",
+                              height: "130px",
+                              objectFit: "contain",
+                              border: "1px solid #dee2e6",
+                              borderRadius: "10px",
+                              cursor: "pointer",
+                            }}
+                            onError={(e) => {
+                              // If image fails to load, show default icon
+                              e.target.style.display = 'none';
+                              // You might want to set a state here to show fallback
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: "130px",
+                              height: "130px",
+                              border: "2px dashed #ced4da",
+                              borderRadius: "10px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              background: "#f8f9fa",
+                            }}
+                          >
+                            <FaImage size={45} color="#adb5bd" />
+                          </div>
+                        );
+                      })()}
+                      {/* 
+                      <small className="text-muted mt-2">
+                        Click image to view
+                      </small> */}
+
+                      {/* Hidden File Input */}
+                      <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept=".jpeg,.jpg,.png"
+                        ref={inputFile}
+                        className="d-none"
+                        onChange={onImageChange}
+                      />
+
+                      {/* Upload Button - triggers file input */}
+                      <button
+                        type="button"
+                        className="btn btn-light-primary btn-sm mt-2"
+                        onClick={() => {
+                          // Reset input value so same file can be uploaded again
+                          if (inputFile.current) {
+                            inputFile.current.value = '';
+                          }
+                          inputFile.current?.click();
+                        }}
+                      >
+                        <FaUpload className="mr-2" />
+                        Upload Image
+                      </button>
+                      {errors.file && touched.file && (
+                        <div className="invalid-feedback d-block">
+                          {errors.file}
+                        </div>
+                      )}
+                    </div>
 
                   </div>
 
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-                    <div className="">
-                      <Field
-                        name="asset_no"
-                        component={Input}
-                        placeholder="Enter asset no"
-                        className="form-control" // Force full height
-                        label={
-                          <span>
-                            {" "}
-                            Asset No
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                      />
-                      <div></div>
-                    </div>
 
-                    <div className="">
-                      <SearchSelect
-                        name="asset_modelId"
-                        component={Input}
-                        placeholder="Enter date of expiry"
-                        className="form-control" // Force full height
-                        value={dashboard?.allAssetModelNameList?.find(
-                          (x) =>
-                            Number(x.value) === Number(values.asset_modelId),
-                        )}
-                        label={
-                          <span>
-                            {" "}
-                            Asset Model Name
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(e) => {
-                          setFieldValue("asset_modelId", e.value || null);
-                        }}
-                        options={dashboard?.allAssetModelNameList}
-                        autoComplete="off"
-                      />
-                      <ErrorMessage
-                        name="asset_modelId"
-                        component="div"
-                        className="invalid-feedback d-block"
-                      />
 
-                    </div>
 
-                    <div className="">
-                      <Field
-                        name="registration_no"
-                        component={Input}
-                        placeholder="Enter 'serial / registration number"
-                        className="form-control" // Force full height
-                        label={
-                          <span>
-                            {" "}
-                            'Serial / Registration Number
-
-                          </span>
-                        }
-                        autoComplete="off"
-                      />
-
-                    </div>
 
                     <div>
                       <label>
@@ -428,34 +665,6 @@ export function FormEditForm({
 
                     </div>
 
-                    <div className="">
-                      <label>
-                        Color <span style={{ color: "red" }}>*</span>
-                      </label>
-
-                      <div className="d-flex align-items-center">
-                        <Field
-                          type="color"
-                          name="color"
-                          className="form-control form-control-color"
-                          style={{
-                            width: "280px",
-                            height: "25px",
-                            padding: "1px",
-                          }}
-                        />
-
-                        {/* <span className="ml-3">
-                          {values.color || "#000000"}
-                        </span> */}
-                      </div>
-
-                      <ErrorMessage
-                        name="color"
-                        component="div"
-                        className="invalid-feedback d-block"
-                      />
-                    </div>
 
                     {/* <div className="">
                       <label>
@@ -470,33 +679,33 @@ export function FormEditForm({
                         options={statusOptions}
                       </Field>
                     </div> */}
-     <div className="">
-                    <Field
-                      name="current_assigned_employeeId"
-                      component={Input}
-                      disabled
-                      className="form-control"
-                      value={
-                        values.current_assigned_employeeId
-                          ? (() => {
-                            const employee = dashboard?.allEmployees?.find(
-                              (x) => Number(x.value) === Number(values.current_assigned_employeeId)
-                            );
+                    <div className="">
+                      <Field
+                        name="current_assigned_employeeId"
+                        component={Input}
+                        disabled
+                        className="form-control"
+                        value={
+                          values.current_assigned_employeeId
+                            ? (() => {
+                              const employee = dashboard?.allEmployees?.find(
+                                (x) => Number(x.value) === Number(values.current_assigned_employeeId)
+                              );
 
-                            return employee
-                              ? `${employee.label} (${employee.department})`
-                              : "Select employee";
-                          })()
-                          : Number(values.status) === 2
-                            ? `Disposed${values.disposal_remarks ? ` - ${values.disposal_remarks}` : ""}`
-                            : statusOptions.find(
-                              (item) => item.value === Number(values.status)
-                            )?.label || "Unassigned"
-                      }
-                      label={<span>Current Assigned Employee</span>}
-                      autoComplete="off"
-                    />
- </div>
+                              return employee
+                                ? `${employee.label} (${employee.department})`
+                                : "Select employee";
+                            })()
+                            : Number(values.status) === 2
+                              ? `Disposed${values.disposal_remarks ? ` - ${values.disposal_remarks}` : ""}`
+                              : statusOptions.find(
+                                (item) => item.value === Number(values.status)
+                              )?.label || "Unassigned"
+                        }
+                        label={<span>Assigned To</span>}
+                        autoComplete="off"
+                      />
+                    </div>
 
                     {/* <div className="">
                       <Field
@@ -524,36 +733,6 @@ export function FormEditForm({
                       />
                     </div> */}
 
-                    <div className="">
-
-
-                      <SearchSelect
-                        name="current_conditionId"
-                        component={Input}
-                        placeholder="Select Current Condition"
-                        className="form-control"
-                        value={currentConditionOptions?.find(
-                          (x) => Number(x.value) === Number(values.current_conditionId),
-                        )}
-                        label={
-                          <span>
-                            {" "}
-                            Current Condition
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(e) => {
-                          setFieldValue("current_conditionId", e.value || null);
-                        }}
-                        options={currentConditionOptions}
-                        autoComplete="off"
-                      />
-                      <ErrorMessage
-                        name="current_conditionId"
-                        component="div"
-                        className="invalid-feedback d-block"
-                      />
-                    </div>
 
 
                     <div className="">
@@ -754,17 +933,54 @@ export function FormEditForm({
                 </fieldset>
               </Form>
 
-              {formData.isPresent && (
+              {/* {formData.isPresent && (
                 <div className="mt-3">
                   <hr />
                   <h6 className="font-bold mb-0 text-primary">Asset Assignment History</h6>
                   <AssetHistoryTable Id={formData.Id} />
                 </div>
-              )}
+              )} */}
 
 
 
             </Modal.Body>
+            <Modal
+              show={showImageModal}
+              onHide={() => setShowImageModal(false)}
+              centered
+              size="lg"
+            >
+              <Modal.Header className="border-0 pb-0">
+                <Modal.Title>Asset Image</Modal.Title>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => setShowImageModal(false)}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                    padding: "0.5rem",
+                    lineHeight: 1,
+                  }}
+                >
+                  <span style={{ fontSize: "1.8rem" }}>&times;</span>
+                </button>
+              </Modal.Header>
+
+              <Modal.Body className="text-center">
+                <img
+                  src={imageUrl}
+                  alt="Asset"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "70vh",
+                  }}
+                />
+              </Modal.Body>
+            </Modal>
             <Modal.Footer>
               {!isUserForRead ? (
                 <button

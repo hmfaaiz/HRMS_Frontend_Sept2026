@@ -39,6 +39,7 @@ export function FormEditForm({
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingValues, setPendingValues] = useState(null);
+  const [pendingAction, setPendingAction] = useState("approve");
 
   // ── List States ─────────────────────────────────────────────────────────
   const [defContactList, setDefaultContactList] = useState([]);
@@ -288,6 +289,7 @@ export function FormEditForm({
       validationSchema={employeeProfileWorkflowPortalEditSchema}
       onSubmit={(values) => {
         setPendingValues(values);
+        setPendingAction(status === "edit" ? "approve" : "save");
         setShowConfirm(true);
       }}
     >
@@ -946,6 +948,26 @@ export function FormEditForm({
             >
               Cancel
             </button>
+            {!isdataForRead && status === "edit" && (
+              <button
+                type="button"
+                onClick={() => {
+                  setPendingAction("reject");
+                  setShowConfirm(true);
+                }}
+                className="btn btn-danger mr-2"
+                disabled={actionsLoading}
+              >
+                {loading && pendingAction === "reject" ? (
+                  <span>
+                    Reject
+                    <span className="ml-3 spinner spinner-white" />
+                  </span>
+                ) : (
+                  "Reject"
+                )}
+              </button>
+            )}
             {!isdataForRead && (
               <button
                 type="button"
@@ -953,7 +975,7 @@ export function FormEditForm({
                 className="btn btn-primary"
                 disabled={actionsLoading}
               >
-                {loading ? (
+                {loading && pendingAction !== "reject" ? (
                   <span>
                     {status === "edit" ? "Approve" : "Save"}
                     <span className="ml-3 spinner spinner-white" />
@@ -975,12 +997,31 @@ export function FormEditForm({
               // HRMS only sends Id + isApproved — all data is already stored in the workflow tables from the portal submission
               const payload = {
                 Id: formData?.Id,
-                isApproved: 1,
+                isApproved: pendingAction === "reject" ? 2 : (pendingAction === "approve" ? 1 : 0),
               };
               saveForm(payload);
             }}
-            message={status === "edit" ? "Are you sure you want to approve this profile update request?" : "Are you sure you want to submit this profile update request?"}
-            title={status === "edit" ? "Confirm Approval" : "Confirm Request"}
+            message={
+              pendingAction === "reject"
+                ? "Are you sure you want to reject this profile change request?"
+                : status === "edit"
+                ? "Are you sure you want to approve this profile change request?"
+                : "Are you sure you want to submit this profile change request?"
+            }
+            title={
+              pendingAction === "reject"
+                ? "Confirm Rejection"
+                : status === "edit"
+                ? "Confirm Approval"
+                : "Confirm Request"
+            }
+            confirmText={
+              pendingAction === "reject"
+                ? "Reject"
+                : status === "edit"
+                ? "Approve"
+                : "Confirm"
+            }
           />
         </>
       )}

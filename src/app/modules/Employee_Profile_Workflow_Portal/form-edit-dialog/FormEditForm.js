@@ -1019,7 +1019,7 @@ export function FormEditForm({
               }
               saveForm(payload);
             }}
-            message="Are you sure you want to submit this profile update request?"
+            message="Are you sure you want to submit this profile change request?"
             title="Confirm Request"
           />
         </>

@@ -98,7 +98,7 @@ export function FormTable(user) {
   const isAccessForRead = userAccess?.find(
     (item) => item.componentName === "ReadPayrollProcessPolicy"
 
-  );  const isAccessForCopy = userAccess?.find(
+  ); const isAccessForCopy = userAccess?.find(
     (item) => item.componentName === "CopyPayrollProcessPolicy"
   );
 
@@ -193,7 +193,7 @@ export function FormTable(user) {
     const eobiAllowance = currentState.userForEdit?.tran_payroll_policy_providentFundAllowances?.map((x) => {
       return x.earningId
     }) || [];
-  
+
     setDefaultProvidentFundAllowances(
       [...eobiAllowance]
     );
@@ -204,7 +204,7 @@ export function FormTable(user) {
     const pensionAllowance = currentState.userForEdit?.tran_payroll_policy_pensionAllowances?.map((x) => {
       return x.earningId
     }) || [];
-  
+
     setDefaultPensionAllowances(
       [...pensionAllowance]
     );
@@ -250,14 +250,14 @@ export function FormTable(user) {
   };
 
 
-    const handleCheckboxChangeFor_pensionFundAllowances = (option) => {
-   
+  const handleCheckboxChangeFor_pensionFundAllowances = (option) => {
+
     setDefaultPensionAllowances((prevState) =>
       prevState.includes(option)
         ? prevState.filter(item => item !== option)
         : [...prevState, option]
     );
-  
+
   };
 
   const deleteRowBankInfo = (element) => {
@@ -300,7 +300,7 @@ export function FormTable(user) {
 
     setDefaultBankInfoList(updatedBankInfoList); // Update the state
   };
-
+  console.log("dashboard.allLeaveTypes1111111", dashboard.allLeaveTypes)
 
 
   // Table columns
@@ -328,7 +328,7 @@ export function FormTable(user) {
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete ? isAccessForDelete.isAccess : false,
         isAccessForCopy: isAccessForCopy ? isAccessForCopy.isAccess : false,
-        openDuplicateDialog:FormUIProps.openDuplicateDialog,
+        openDuplicateDialog: FormUIProps.openDuplicateDialog,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -365,7 +365,7 @@ export function FormTable(user) {
           otherwise: Yup.number().notRequired(),
         }),
       default_loan_accountId: Yup.number()
-      .nullable()
+        .nullable()
         .when('isEnableAccounting', {
           is: true, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
@@ -478,15 +478,15 @@ export function FormTable(user) {
       //   .nullable()
       //   .required(VALIDATION_MESSAGES.required),
 
-    OvertimeBasis: Yup.number()
-    .nullable()
-    .when('isEnableOverTimeCalc', {
-      is: true,
-      then: Yup.number()
+      OvertimeBasis: Yup.number()
         .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.number().nullable().notRequired(),
-    }),
+        .when('isEnableOverTimeCalc', {
+          is: true,
+          then: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable().notRequired(),
+        }),
 
       SalaryPolicy: Yup.number()
         .nullable()
@@ -494,83 +494,83 @@ export function FormTable(user) {
 
 
       SalaryPolicy_Days: Yup.number()
-      .nullable()
+        .nullable()
         .when('SalaryPolicy', {
           is: 1, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.minZeroValue).max(99, "Max 99 days").required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
 
-  //// new
-  // Overtime Policy validations
-  OvertimePolicy: Yup.number()
-    .nullable()
-    .when('isEnableOverTimeCalc', {
-      is: true,
-      then: Yup.number()
+      //// new
+      // Overtime Policy validations
+      OvertimePolicy: Yup.number()
         .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.number().nullable().notRequired(),
-    }),
+        .when('isEnableOverTimeCalc', {
+          is: true,
+          then: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable().notRequired(),
+        }),
 
-  OvertimePolicy_Days: Yup.number()
-    .nullable()
-    .when(['isEnableOverTimeCalc', 'OvertimePolicy'], {
-      is: (isEnable, OvertimePolicy) => isEnable == true && OvertimePolicy == 1,
-      then: Yup.number()
-        .min(1, VALIDATION_MESSAGES.minZeroValue)
-        .max(99, "Max 99 days")
-        .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.number().nullable().notRequired(),
-    }),
-
-  hoursPolicy: Yup.number()
-    .nullable()
-    .when('isEnableOverTimeCalc', {
-      is: true,
-      then: Yup.number()
+      OvertimePolicy_Days: Yup.number()
         .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.number().nullable().notRequired(),
-    }),
+        .when(['isEnableOverTimeCalc', 'OvertimePolicy'], {
+          is: (isEnable, OvertimePolicy) => isEnable == true && OvertimePolicy == 1,
+          then: Yup.number()
+            .min(1, VALIDATION_MESSAGES.minZeroValue)
+            .max(99, "Max 99 days")
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable().notRequired(),
+        }),
 
-  fixedHours: Yup.number()
-    .nullable()
-    .when(['isEnableOverTimeCalc', 'hoursPolicy'], {
-      is: (isEnable, hoursPolicy) => isEnable == true && hoursPolicy == 1,
-      then: Yup.number()
-        .min(1, VALIDATION_MESSAGES.minZeroValue)
-        .max(99, "Max 99 days")
-        .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.number().nullable().notRequired(),
-    }),
-
-  // Final Settlement validations
-  finalSettlementPolicy: Yup.number()
-    .nullable()
-    .when('isEnableFinalSettlement', {
-      is: true,
-      then: Yup.number()
+      hoursPolicy: Yup.number()
         .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.number().nullable().notRequired(),
-    }),
+        .when('isEnableOverTimeCalc', {
+          is: true,
+          then: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable().notRequired(),
+        }),
 
-  finalSettlement_Days: Yup.number()
-    .nullable()
-    .when(['isEnableFinalSettlement', 'finalSettlementPolicy'], {
-      is: (isEnable, finalPolicy) => isEnable == true && finalPolicy == 1,
-      then: Yup.number()
-        .min(1, VALIDATION_MESSAGES.minZeroValue)
-        .max(99, "Max 99 days")
-        .required(VALIDATION_MESSAGES.required),
-      otherwise: Yup.number().nullable().notRequired(),
-    }),
+      fixedHours: Yup.number()
+        .nullable()
+        .when(['isEnableOverTimeCalc', 'hoursPolicy'], {
+          is: (isEnable, hoursPolicy) => isEnable == true && hoursPolicy == 1,
+          then: Yup.number()
+            .min(1, VALIDATION_MESSAGES.minZeroValue)
+            .max(99, "Max 99 days")
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable().notRequired(),
+        }),
+
+      // Final Settlement validations
+      finalSettlementPolicy: Yup.number()
+        .nullable()
+        .when('isEnableFinalSettlement', {
+          is: true,
+          then: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable().notRequired(),
+        }),
+
+      finalSettlement_Days: Yup.number()
+        .nullable()
+        .when(['isEnableFinalSettlement', 'finalSettlementPolicy'], {
+          is: (isEnable, finalPolicy) => isEnable == true && finalPolicy == 1,
+          then: Yup.number()
+            .min(1, VALIDATION_MESSAGES.minZeroValue)
+            .max(99, "Max 99 days")
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable().notRequired(),
+        }),
 
 
       // Provident Fund 
-          providentFundId: Yup.number()
-          .nullable()
+      providentFundId: Yup.number()
+        .nullable()
         .when('isProvidentFund', {
           is: true, // if select value is 2
           then: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -584,21 +584,21 @@ export function FormTable(user) {
       //     otherwise: Yup.number().notRequired(),
       //   }),
       pf_eligibility: Yup.number()
-      .nullable()
+        .nullable()
         .when('isProvidentFund', {
           is: true, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.minOneValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
-         pf_employer_percent: Yup.number()
-      .nullable()
+      pf_employer_percent: Yup.number()
+        .nullable()
         .when('isProvidentFund', {
           is: true, // if select value is 2
           then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
       pf_employee_percent: Yup.number()
-      .nullable()
+        .nullable()
         .when('isProvidentFund', {
           is: true, // if select value is 2
 
@@ -608,46 +608,57 @@ export function FormTable(user) {
 
 
 
-          // Provident Fund 
-          pensionAllowanceId: Yup.number()
-  .when("isPensionAllowance", {
-    is: true,
-    then: Yup.number()
-      .typeError("Please select Pension Allowance")
-      .required(VALIDATION_MESSAGES.required)
-      .notOneOf([-1], "Please select Pension Allowance"),
-    otherwise: Yup.number().notRequired(),
-  }),
- 
-
-         pa_employer_percent: Yup.number()
-      .nullable()
-        .when('isPensionAllowance', {
-          is: true, 
-          then: Yup.number().required(VALIDATION_MESSAGES.required),
-          otherwise: Yup.number().notRequired(),
-        }),
-      	pa_employee_percent: Yup.number()
-      .nullable()
-        .when('isPensionAllowance', {
-          is: true, 
-
-          then: Yup.number().required(VALIDATION_MESSAGES.required),
+      // Provident Fund 
+      pensionAllowanceId: Yup.number()
+        .when("isPensionAllowance", {
+          is: true,
+          then: Yup.number()
+            .typeError("Please select Pension Allowance")
+            .required(VALIDATION_MESSAGES.required)
+            .notOneOf([-1], "Please select Pension Allowance"),
           otherwise: Yup.number().notRequired(),
         }),
 
 
-      	pensionAllowanceId: Yup.number()
-      .nullable()
+      pa_employer_percent: Yup.number()
+        .nullable()
         .when('isPensionAllowance', {
-          is: true, 
+          is: true,
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+      pa_employee_percent: Yup.number()
+        .nullable()
+        .when('isPensionAllowance', {
+          is: true,
 
           then: Yup.number().required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
 
 
+      pensionAllowanceId: Yup.number()
+        .nullable()
+        .when('isPensionAllowance', {
+          is: true,
 
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+
+      isEnableCPLLeavePolicy: Yup.number()
+        .transform((value, originalValue) =>
+          originalValue === "" ? undefined : value
+        )
+        .when("isEnableCPLLeave", {
+          is: true,
+          then: Yup.number()
+            .transform((value, originalValue) =>
+              originalValue === "" ? undefined : value
+            )
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
     },
 
   );
@@ -696,14 +707,14 @@ export function FormTable(user) {
 
     /// new 
     isEnableOverTimeCalc: "",
-    OvertimePolicy : 0,
-    OvertimePolicy_Days :"",
-    hoursPolicy : 0,
-    fixedHours : "",
+    OvertimePolicy: 0,
+    OvertimePolicy_Days: "",
+    hoursPolicy: 0,
+    fixedHours: "",
 
-    isEnableFinalSettlement : "",
-    finalSettlementPolicy : 0,
-    finalSettlement_Days :"",
+    isEnableFinalSettlement: "",
+    finalSettlementPolicy: 0,
+    finalSettlement_Days: "",
 
     //-- Loan Integration	
     isEnableLoan: "",
@@ -732,24 +743,30 @@ export function FormTable(user) {
     // --  Provident Fund Configuration
     isProvidentFund: false,
     providentFundId: null,
-    providentFundAllowancesId:null,
-    pf_employer_percent:null,
-    pf_employee_percent:null,
-    pf_eligibility:0,
+    providentFundAllowancesId: null,
+    pf_employer_percent: null,
+    pf_employee_percent: null,
+    pf_eligibility: 0,
 
 
-   // --  Provident Fund Configuration
+    // --  Provident Fund Configuration
     isPensionAllowance: false,
-    	pensionAllowanceId: null,
-    pensionAllowancesId:null,
-    	pa_employer_percent:null,
-    pa_employee_percent:null,
-  
+    pensionAllowanceId: null,
+    pensionAllowancesId: null,
+    pa_employer_percent: null,
+    pa_employee_percent: null,
 
 
-    SalaryPolicy:0,
 
-    OvertimeBasis:"",
+    SalaryPolicy: 0,
+
+    OvertimeBasis: "",
+
+    // CPL
+    isEnableCPLLeave: false,
+    isEnableCPLLeavePolicy: "",
+
+
 
     //-- Other
   };
@@ -763,10 +780,10 @@ export function FormTable(user) {
     page: FormUIProps.queryParams.pageNumber,
   };
 
-  const SavePayrollPolicy = async (user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances,pensionAllowances) => {
+  const SavePayrollPolicy = async (user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances, pensionAllowances) => {
     if (!user.Id) {
 
-      await dispatch(actions.create_Payroll_Policy(user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances,pensionAllowances));
+      await dispatch(actions.create_Payroll_Policy(user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances, pensionAllowances));
       //  const list = await dispatch(actions.fetchUsers(usersUIProps.queryParams));
 
 
@@ -878,11 +895,16 @@ export function FormTable(user) {
         isEnableFinalSettlement: user.isEnableFinalSettlement,
         finalSettlementPolicy: user.finalSettlementPolicy,
         finalSettlement_Days: user.finalSettlement_Days,
-       
+
+        // CPL
+
+        isEnableCPLLeave: user.isEnableCPLLeave,
+        isEnableCPLLeavePolicy: user.isEnableCPLLeavePolicy,
+
 
       };
 
-      await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList,providentFundAllowances,pensionAllowances));
+      await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances, pensionAllowances));
       // await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }
   };
@@ -909,8 +931,8 @@ export function FormTable(user) {
         newErrors[`bankCode-${index}`] = VALIDATION_MESSAGES.required;
       }
       else if (objValidate.bankCode?.toString()?.trim()?.length > 25) {
-  newErrors[`bankCode-${index}`] = `Max 25 Characters`;
-}
+        newErrors[`bankCode-${index}`] = `Max 25 Characters`;
+      }
       // Check if factorValue is required
       if (!objValidate.bankAccountNo) {
         newErrors[`bankAccountNo-${index}`] = VALIDATION_MESSAGES.required;
@@ -1038,8 +1060,8 @@ export function FormTable(user) {
             } else {
               defaultCount = 0
               setotherErrors(validate());
-             
-              SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances, defProvidentFundAllowances,defPensionAllowances);
+
+              SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances, defProvidentFundAllowances, defPensionAllowances);
 
               if (user.formid) {
                 dispatch(actions.fetchUser(null));
@@ -1063,7 +1085,7 @@ export function FormTable(user) {
             formik,
           }) => (
             <>  <Form className="form form-label-right">
-              
+
               <fieldset disabled={user?.readOnly || false} >
 
                 <div className="flex justify-between">
@@ -1148,12 +1170,12 @@ export function FormTable(user) {
                     <Field
                       disabled={!Boolean(values.SalaryPolicy)}
                       name="SalaryPolicy_Days"
-                       component={Input}
+                      component={Input}
                       type="number"
                       placeholder="Fixed Days"
 
-                       label={<span>Fixed Days{Boolean(values.SalaryPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      
+                      label={<span>Fixed Days{Boolean(values.SalaryPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+
                       autoComplete="off"
                     />
                   </div>
@@ -1288,7 +1310,7 @@ export function FormTable(user) {
                         </div>
 
 
-                           <div className="">
+                        <div className="">
                           <label>
                             Separation Approver
                           </label>
@@ -1386,20 +1408,20 @@ export function FormTable(user) {
                 <h6 className="font-bold mb-0 text-primary my-2">
                   Accounting Impact
                 </h6>
-                  <div className="col-span-1">
-                    <label className="flex items-center mt-1">
-                      <input
-                        className="mr-1"
-                        name="isEnableAccounting"
-                        type="checkbox"
-                        onChange={(e) => {
-                          setFieldValue('isEnableAccounting', e.target.checked);
-                        }}
-                        checked={values.isEnableAccounting}
-                      />
-                      <span>Enable Accounting Impact</span>
-                    </label>
-                  </div>
+                <div className="col-span-1">
+                  <label className="flex items-center mt-1">
+                    <input
+                      className="mr-1"
+                      name="isEnableAccounting"
+                      type="checkbox"
+                      onChange={(e) => {
+                        setFieldValue('isEnableAccounting', e.target.checked);
+                      }}
+                      checked={values.isEnableAccounting}
+                    />
+                    <span>Enable Accounting Impact</span>
+                  </label>
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-3 ">
                   {/* <div className="flex justify-start items-center">
@@ -1463,26 +1485,26 @@ export function FormTable(user) {
                   (option) => option.value === values.subsidiaryId
                 )?.localizationId == 1 && (<>
                   <hr></hr>
-                <h6 className="font-bold mb-0 text-primary my-2">
+                  <h6 className="font-bold mb-0 text-primary my-2">
                     Tax Integration
                   </h6>
-                    <div className="flex items-start">
-                      <label className="flex items-center mt-1">
-                        <input className="mr-1"
-                          name="isEnableTax"
-                          type="checkbox"
-                          onChange={(e) => {
-                            setFieldValue('isEnableTax', e.target.checked)
-                          }}
-                          checked={values.isEnableTax}
+                  <div className="flex items-start">
+                    <label className="flex items-center mt-1">
+                      <input className="mr-1"
+                        name="isEnableTax"
+                        type="checkbox"
+                        onChange={(e) => {
+                          setFieldValue('isEnableTax', e.target.checked)
+                        }}
+                        checked={values.isEnableTax}
 
-                        />
-                        <span>
-                          Enable Tax Integration
-                        </span>
-                      </label>
+                      />
+                      <span>
+                        Enable Tax Integration
+                      </span>
+                    </label>
 
-                    </div>
+                  </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-3  ">
                     {/* <div className="flex justify-start items-center">
@@ -1657,25 +1679,25 @@ export function FormTable(user) {
 
                 <div >
 
-                <hr></hr>
+                  <hr></hr>
 
-                <h6 className="font-bold mb-0 text-primary my-2">
+                  <h6 className="font-bold mb-0 text-primary my-2">
                     Overtime / Leave Encashment
                   </h6>
-                    <div className="flex items-start">
-                      <label className="flex items-center space-x-1">
-                        <input className="mr-1"
-                          // disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          type="checkbox"
-                          name="isEnableOverTimeCalc"
-                          onChange={(e) => {
-                            setFieldValue('isEnableOverTimeCalc', e.target.checked)
-                          }}
-                          checked={values.isEnableOverTimeCalc}
-                        />
-                        Enable Overtime / Leave Encashment
-                      </label>
-                    </div>
+                  <div className="flex items-start">
+                    <label className="flex items-center space-x-1">
+                      <input className="mr-1"
+                        // disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        type="checkbox"
+                        name="isEnableOverTimeCalc"
+                        onChange={(e) => {
+                          setFieldValue('isEnableOverTimeCalc', e.target.checked)
+                        }}
+                        checked={values.isEnableOverTimeCalc}
+                      />
+                      Enable Overtime / Leave Encashment
+                    </label>
+                  </div>
                   <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-3">
                     <div className="">
                       {<label>Overtime Allowance{Boolean(values.isEnableOverTimeCalc) && <span style={{ color: 'red' }}>*</span>}</label>}
@@ -1716,86 +1738,86 @@ export function FormTable(user) {
                         options={overtimeBasisOptions}
                         isDisabled={Boolean(user?.readOnly) || !Boolean(values.isEnableOverTimeCalc)}
                       />
-                      
+
                     </div>
 
-                  {/* new  */}
-               
-                  <div className="">
-                    <SearchSelect
-                      name="OvertimePolicy"
-                      label={<span>Policy for per Day Calculation<span style={{ color: 'red' }}>*</span></span>}
-                      onChange={(e) => {
-                        setFieldValue("OvertimePolicy", Number(e?.value));
-                        setFieldValue("OvertimePolicy_Days", 0);
-                      }}
+                    {/* new  */}
 
-                      value={
-                        salaryPolicyOptions.find(
-                          (option) => option.value == Number(values?.OvertimePolicy)
-                        ) || null
-                      }
+                    <div className="">
+                      <SearchSelect
+                        name="OvertimePolicy"
+                        label={<span>Policy for per Day Calculation<span style={{ color: 'red' }}>*</span></span>}
+                        onChange={(e) => {
+                          setFieldValue("OvertimePolicy", Number(e?.value));
+                          setFieldValue("OvertimePolicy_Days", 0);
+                        }}
 
-                      error={errors.OvertimePolicy}
-                      touched={touched.OvertimePolicy}
-                      options={salaryPolicyOptions}
-                      isDisabled={!Boolean(values.isEnableOverTimeCalc)}
-                    />
-                  </div>
+                        value={
+                          salaryPolicyOptions.find(
+                            (option) => option.value == Number(values?.OvertimePolicy)
+                          ) || null
+                        }
 
-                  <div className="">
-                    <Field
-                      disabled={!Boolean(values.OvertimePolicy) || !Boolean(values.isEnableOverTimeCalc)}
-                      name="OvertimePolicy_Days"
-                       component={Input}
-                      type="number"
-                      placeholder="Fixed Days"
+                        error={errors.OvertimePolicy}
+                        touched={touched.OvertimePolicy}
+                        options={salaryPolicyOptions}
+                        isDisabled={!Boolean(values.isEnableOverTimeCalc)}
+                      />
+                    </div>
 
-                       label={<span>Fixed Days{Boolean(values.OvertimePolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      
-                      autoComplete="off"
-                    />
-                  </div>
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.OvertimePolicy) || !Boolean(values.isEnableOverTimeCalc)}
+                        name="OvertimePolicy_Days"
+                        component={Input}
+                        type="number"
+                        placeholder="Fixed Days"
 
-                  <div className="">
-                    <SearchSelect
-                      name="hoursPolicy"
-                      label={<span>Policy for per Hour Calculation<span style={{ color: 'red' }}>*</span></span>}
-                      onChange={(e) => {
-                        setFieldValue("hoursPolicy", Number(e?.value));
-                        setFieldValue("fixedHours", 0);
-                      }}
+                        label={<span>Fixed Days{Boolean(values.OvertimePolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
 
-                      value={
-                        overtimeHoursOptions.find(
-                          (option) => option.value == Number(values?.hoursPolicy)
-                        ) || null
-                      }
+                        autoComplete="off"
+                      />
+                    </div>
 
-                      error={errors.hoursPolicy}
-                      touched={touched.hoursPolicy}
-                      options={overtimeHoursOptions}
-                      isDisabled={!Boolean(values.isEnableOverTimeCalc)}
-                    />
-                  </div>
+                    <div className="">
+                      <SearchSelect
+                        name="hoursPolicy"
+                        label={<span>Policy for per Hour Calculation<span style={{ color: 'red' }}>*</span></span>}
+                        onChange={(e) => {
+                          setFieldValue("hoursPolicy", Number(e?.value));
+                          setFieldValue("fixedHours", 0);
+                        }}
 
-                  <div className="">
-                    <Field
-                      disabled={!Boolean(values.hoursPolicy) || !Boolean(values.isEnableOverTimeCalc)}
-                      name="fixedHours"
-                       component={Input}
-                      type="number"
-                      placeholder="Fixed Hours"
+                        value={
+                          overtimeHoursOptions.find(
+                            (option) => option.value == Number(values?.hoursPolicy)
+                          ) || null
+                        }
 
-                       label={<span>Fixed Hours{Boolean(values.hoursPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      
-                      autoComplete="off"
-                    />
-                  </div>
+                        error={errors.hoursPolicy}
+                        touched={touched.hoursPolicy}
+                        options={overtimeHoursOptions}
+                        isDisabled={!Boolean(values.isEnableOverTimeCalc)}
+                      />
+                    </div>
+
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.hoursPolicy) || !Boolean(values.isEnableOverTimeCalc)}
+                        name="fixedHours"
+                        component={Input}
+                        type="number"
+                        placeholder="Fixed Hours"
+
+                        label={<span>Fixed Hours{Boolean(values.hoursPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+
+                        autoComplete="off"
+                      />
+                    </div>
 
                   </div>
                   <div className="grid grid-cols-2 lg:grid-cols-6 gap-x-3">
-                                      <div className="">
+                    <div className="">
                       {<label>Encashment Allowance{Boolean(values.isEnableOverTimeCalc) && <span style={{ color: 'red' }}>*</span>}</label>}
                       <select className="form-control"
                         onChange={(e) => {
@@ -1812,7 +1834,7 @@ export function FormTable(user) {
                       </select>
                       {errors.leaveEnchashment_EarningId && touched.leaveEnchashment_EarningId && <ErrorMessage className="invalid-feedback" name="leaveEnchashment_EarningId" component="div" />}
                     </div>
-                    </div>
+                  </div>
                 </div>
 
 
@@ -1820,25 +1842,25 @@ export function FormTable(user) {
                 <div >
 
 
-                <hr></hr>
+                  <hr></hr>
 
-                <h6 className="font-bold mb-0 text-primary my-2">
+                  <h6 className="font-bold mb-0 text-primary my-2">
                     Leave Management
                   </h6>
-                    <div className="flex items-start">
-                      <label className="flex items-center space-x-1">
-                        <input className="mr-1"
-                          type="checkbox"
-                          name="isEnableLeaveManagemenent"
-                          onChange={(e) => {
-                            setFieldValue('isEnableLeaveManagemenent', e.target.checked)
-                          }}
-                          checked={values.isEnableLeaveManagemenent}
-                          // disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                        />
-                        Enable Leave Management
-                      </label>
-                    </div>
+                  <div className="flex items-start">
+                    <label className="flex items-center space-x-1">
+                      <input className="mr-1"
+                        type="checkbox"
+                        name="isEnableLeaveManagemenent"
+                        onChange={(e) => {
+                          setFieldValue('isEnableLeaveManagemenent', e.target.checked)
+                        }}
+                        checked={values.isEnableLeaveManagemenent}
+                      // disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      />
+                      Enable Leave Management
+                    </label>
+                  </div>
                   <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-3">
 
 
@@ -1867,67 +1889,132 @@ export function FormTable(user) {
                 </div>
 
 
-                {/* final settlement  */}
-                
+                {/* CPL */}
                 <div >
 
 
-                <hr></hr>
+                  <hr></hr>
 
-                <h6 className="font-bold mb-0 text-primary my-2">
-                    Final Settlement Policy
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Compensatory Leave Management
                   </h6>
-                    <div className="flex items-start">
-                      <label className="flex items-center space-x-1">
-                        <input className="mr-1"
-                          type="checkbox"
-                          name="isEnableFinalSettlement"
-                          onChange={(e) => {
-                            setFieldValue('isEnableFinalSettlement', e.target.checked)
-                          }}
-                          checked={values.isEnableFinalSettlement}
-                          // disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                        />
-                        Enable Final Settlement
-                      </label>
-                    </div>
+                  <div className="flex items-start">
+                    <label className="flex items-center space-x-1">
+                      <input className="mr-1"
+                        type="checkbox"
+                        name="isEnableCPLLeave"
+                        onChange={(e) => {
+                          setFieldValue('isEnableCPLLeave', e.target.checked)
+                        }}
+                        checked={values.isEnableCPLLeave}
+
+                      />
+                      Enable Compensatory Leave
+                    </label>
+                  </div>
                   <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-3">
 
-                  <div className="">
-                    <SearchSelect
-                      name="finalSettlementPolicy"
-                      label={<span>Policy for per Day Calculation<span style={{ color: 'red' }}>*</span></span>}
-                      onChange={(e) => {
-                        setFieldValue("finalSettlementPolicy", Number(e?.value));
-                        setFieldValue("finalSettlement_Days", 0);
-                      }}
 
-                      value={
-                        salaryPolicyOptions.find(
-                          (option) => option.value == Number(values?.finalSettlementPolicy)
-                        ) || null
-                      }
+                    <div className="">
+                      <Select
+                        className="form-control"
+                        name="isEnableCPLLeavePolicy"
+                        value={values.isEnableCPLLeavePolicy}
+                        label={<span>Map Compensatory Leave</span>}
+                        onChange={(e) => {
+                          setFieldValue("isEnableCPLLeavePolicy", e.target.value);
 
-                      error={errors.finalSettlementPolicy}
-                      touched={touched.finalSettlementPolicy}
-                      options={salaryPolicyOptions}
-                      isDisabled={!Boolean(values.isEnableFinalSettlement)}
-                    />
+                        }}
+                        disabled={!Boolean(values.isEnableCPLLeave)}
+                        onBlur={handleBlur}
+                      >
+
+                        <option value="">N/A</option>
+
+
+                        {dashboard.allLeaveTypes
+                          ?.filter(x => x.value !== null && x.type == 2)
+                          .map((x) => (
+                            <option key={x.value} value={x.value}>
+                              {x.label}
+                            </option>
+                          ))}
+                      </Select>
+
+                      {touched.isEnableCPLLeavePolicy && errors.isEnableCPLLeavePolicy && (
+                        <div className="text-danger">
+                          {errors.isEnableCPLLeavePolicy}
+                        </div>
+                      )}
+
+                    </div>
+
                   </div>
+                </div>
 
-                  <div className="">
-                    <Field
-                      disabled={!Boolean(values.finalSettlementPolicy) || !Boolean(values.isEnableFinalSettlement)}
-                      name="finalSettlement_Days"
-                       component={Input}
-                      type="number"
-                      placeholder="Fixed Days"
 
-                       label={<span>Fixed Days{Boolean(values.finalSettlementPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      
-                      autoComplete="off"
-                    />
+
+                {/* final settlement  */}
+
+                <div >
+
+
+                  <hr></hr>
+
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Final Settlement Policy
+                  </h6>
+                  <div className="flex items-start">
+                    <label className="flex items-center space-x-1">
+                      <input className="mr-1"
+                        type="checkbox"
+                        name="isEnableFinalSettlement"
+                        onChange={(e) => {
+                          setFieldValue('isEnableFinalSettlement', e.target.checked)
+                        }}
+                        checked={values.isEnableFinalSettlement}
+                      // disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      />
+                      Enable Final Settlement
+                    </label>
                   </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-3">
+
+                    <div className="">
+                      <SearchSelect
+                        name="finalSettlementPolicy"
+                        label={<span>Policy for per Day Calculation<span style={{ color: 'red' }}>*</span></span>}
+                        onChange={(e) => {
+                          setFieldValue("finalSettlementPolicy", Number(e?.value));
+                          setFieldValue("finalSettlement_Days", 0);
+                        }}
+
+                        value={
+                          salaryPolicyOptions.find(
+                            (option) => option.value == Number(values?.finalSettlementPolicy)
+                          ) || null
+                        }
+
+                        error={errors.finalSettlementPolicy}
+                        touched={touched.finalSettlementPolicy}
+                        options={salaryPolicyOptions}
+                        isDisabled={!Boolean(values.isEnableFinalSettlement)}
+                      />
+                    </div>
+
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.finalSettlementPolicy) || !Boolean(values.isEnableFinalSettlement)}
+                        name="finalSettlement_Days"
+                        component={Input}
+                        type="number"
+                        placeholder="Fixed Days"
+
+                        label={<span>Fixed Days{Boolean(values.finalSettlementPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+
+                        autoComplete="off"
+                      />
+                    </div>
 
 
                   </div>
@@ -1935,28 +2022,28 @@ export function FormTable(user) {
 
                 <hr></hr>
 
-     <div>
-                <hr></hr>
+                <div>
+                  <hr></hr>
 
-                <h6 className="font-bold mb-0 text-primary my-2">
+                  <h6 className="font-bold mb-0 text-primary my-2">
                     Provident Fund Policy
                   </h6>
 
-                    <div className="flex  items-start">
-                      <label className="flex items-center space-x-1">
+                  <div className="flex  items-start">
+                    <label className="flex items-center space-x-1">
 
-                        <input className="mr-1"
+                      <input className="mr-1"
 
-                          name="isProvidentFund"
-                          type="checkbox"
-                          onChange={(e) => {
-                            setFieldValue('isProvidentFund', e.target.checked)
-                          }}
-                          checked={values.isProvidentFund}
-                        />
-                        Enable Provident Fund
-                      </label>
-                    </div>
+                        name="isProvidentFund"
+                        type="checkbox"
+                        onChange={(e) => {
+                          setFieldValue('isProvidentFund', e.target.checked)
+                        }}
+                        checked={values.isProvidentFund}
+                      />
+                      Enable Provident Fund
+                    </label>
+                  </div>
                   <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
@@ -1978,7 +2065,7 @@ export function FormTable(user) {
                       {errors.providentFundId && touched.providentFundId && <ErrorMessage className="invalid-feedback" name="providentFundId" component="div" />}
                     </div>
 
-                     <div className="">
+                    <div className="">
                       <Field
                         disabled={!Boolean(values.isProvidentFund)}
                         name="pf_eligibility"
@@ -2052,28 +2139,28 @@ export function FormTable(user) {
 
                 </div>
 
-                     <div>
-                <hr></hr>
+                <div>
+                  <hr></hr>
 
-                <h6 className="font-bold mb-0 text-primary my-2">
-                 Pension Allowance
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Pension Allowance
                   </h6>
 
-                    <div className="flex  items-start">
-                      <label className="flex items-center space-x-1">
+                  <div className="flex  items-start">
+                    <label className="flex items-center space-x-1">
 
-                        <input className="mr-1"
+                      <input className="mr-1"
 
-                          name="isPensionAllowance"
-                          type="checkbox"
-                          onChange={(e) => {
-                            setFieldValue('isPensionAllowance', e.target.checked)
-                          }}
-                          checked={values.isPensionAllowance}
-                        />
-                        Enable Pension Allowance
-                      </label>
-                    </div>
+                        name="isPensionAllowance"
+                        type="checkbox"
+                        onChange={(e) => {
+                          setFieldValue('isPensionAllowance', e.target.checked)
+                        }}
+                        checked={values.isPensionAllowance}
+                      />
+                      Enable Pension Allowance
+                    </label>
+                  </div>
                   <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
@@ -2095,7 +2182,7 @@ export function FormTable(user) {
                       {errors.pensionAllowanceId && touched.pensionAllowanceId && <ErrorMessage className="invalid-feedback" name="pensionAllowanceId" component="div" />}
                     </div>
 
-                    
+
 
 
                     <div className="">
@@ -2117,7 +2204,7 @@ export function FormTable(user) {
                         component={Input}
                         type="number"
                         placeholder="Employee value"
-                         value={values?.pa_employee_percent || 0.00}
+                        value={values?.pa_employee_percent || 0.00}
                         label={<span>Employee(%){Boolean(values.isPensionAllowance) && <span style={{ color: 'red' }}>*</span>}</span>}
                         autoComplete="off"
                       />
@@ -2170,21 +2257,21 @@ export function FormTable(user) {
                     EOBI Configuration
                   </h6>
 
-                    <div className="flex  items-start">
-                      <label className="flex items-center space-x-1">
+                  <div className="flex  items-start">
+                    <label className="flex items-center space-x-1">
 
-                        <input className="mr-1"
+                      <input className="mr-1"
 
-                          name="isEnableEOBI"
-                          type="checkbox"
-                          onChange={(e) => {
-                            setFieldValue('isEnableEOBI', e.target.checked)
-                          }}
-                          checked={values.isEnableEOBI}
-                        />
-                        Enable EOBI
-                      </label>
-                    </div>
+                        name="isEnableEOBI"
+                        type="checkbox"
+                        onChange={(e) => {
+                          setFieldValue('isEnableEOBI', e.target.checked)
+                        }}
+                        checked={values.isEnableEOBI}
+                      />
+                      Enable EOBI
+                    </label>
+                  </div>
                   <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
@@ -2287,7 +2374,7 @@ export function FormTable(user) {
 
 
 
-           
+
 
 
 
@@ -2300,20 +2387,20 @@ export function FormTable(user) {
                   </h6>
 
 
-                    <div className="flex items-start">
-                      <label className="flex items-center space-x-1">
+                  <div className="flex items-start">
+                    <label className="flex items-center space-x-1">
 
-                        <input className="mr-1"
-                          name="isEnableSESSI"
-                          type="checkbox"
-                          onChange={(e) => {
-                            setFieldValue('isEnableSESSI', e.target.checked)
-                          }}
-                          checked={values.isEnableSESSI}
-                        />
-                        Enable Social Security
-                      </label>
-                    </div>
+                      <input className="mr-1"
+                        name="isEnableSESSI"
+                        type="checkbox"
+                        onChange={(e) => {
+                          setFieldValue('isEnableSESSI', e.target.checked)
+                        }}
+                        checked={values.isEnableSESSI}
+                      />
+                      Enable Social Security
+                    </label>
+                  </div>
                   <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
 
 
@@ -2449,18 +2536,18 @@ export function FormTable(user) {
                         {errors.journalChequeAccountId && touched.journalChequeAccountId && <ErrorMessage className="invalid-feedback" name="journalChequeAccountId" component="div" />}
                       </div>
 
-                       <div className="">
-                      <Field
-                        name="employer_uniqueId"
-                        component={Input}
-                        type="text"
-                       
-                        placeholder="Employeer value"
-                        value={values.employer_uniqueId}
-                        label={<label>Employer Unique Id</label>}
-                        autoComplete="off"
-                      />
-                    </div>
+                      <div className="">
+                        <Field
+                          name="employer_uniqueId"
+                          component={Input}
+                          type="text"
+
+                          placeholder="Employeer value"
+                          value={values.employer_uniqueId}
+                          label={<label>Employer Unique Id</label>}
+                          autoComplete="off"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">

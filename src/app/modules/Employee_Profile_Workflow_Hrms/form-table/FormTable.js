@@ -94,16 +94,15 @@ export function FormTable({ showApplicantDetails }) {
         minWidth: "200px",
       },
       formatter: (cell, row) => {
-        // Access from employeeProfile nested object
         if (row.employeeProfile) {
-          const { firstName, lastName, employeeCode } = row.employeeProfile;
-          return employeeCode && firstName && lastName
-            ? `${employeeCode}-${firstName} ${lastName}`
-            : "-";
+          const { firstName, middleName, lastName, employeeCode } = row.employeeProfile;
+          if (employeeCode && firstName && lastName) {
+            return `${employeeCode} ${firstName} ${middleName ? middleName + " " : ""}${lastName}`;
+          }
         }
         // Fallback to top-level fields if available
         return row.employeeCode && row.employeeName
-          ? `${row.employeeCode}-${row.employeeName}`
+          ? `${row.employeeCode} ${row.employeeName}`
           : "-";
       },
     },
@@ -145,6 +144,18 @@ export function FormTable({ showApplicantDetails }) {
     },
 
     {
+      dataField: "createdAt",
+      text: "Request Date",
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "150px",
+      },
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "-";
+      },
+    },
+    {
       dataField: "isApproved",
       text: "Request Status",
       sortCaret: sortCaret,
@@ -153,8 +164,15 @@ export function FormTable({ showApplicantDetails }) {
         minWidth: "100px",
       },
       formatter: (cell) => {
-        const text = cell ? "Approved" : "Pending";
-        const className = cell ? "text-approved font-bold" : "text-pending font-bold";
+        let text = "Pending";
+        let className = "text-pending font-bold";
+        if (cell === 2 || cell === "2") {
+          text = "Rejected";
+          className = "text-danger font-bold";
+        } else if (cell === 1 || cell === "1" || cell === true) {
+          text = "Approved";
+          className = "text-approved font-bold";
+        }
         return <span className={className}>{text}</span>;
       },
     },

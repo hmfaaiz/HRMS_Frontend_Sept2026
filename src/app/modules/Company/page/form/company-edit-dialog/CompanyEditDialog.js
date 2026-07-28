@@ -41,16 +41,17 @@ export const CompanyEditDialog = ({ show, onHide, isUserForRead }) => {
     setLoading(false);
   };
   const handleSubmit = async (val) => {
+    enableLoading();
     try {
-      enableLoading();
       if (!id) {
         await dispatch(createRecord(val, disbaleLoading));
       } else {
-        dispatch(updateRecord(val, disbaleLoading));
+        await dispatch(updateRecord(val, disbaleLoading));
       }
       onHide();
     } catch (error) {
       console.error(error);
+      // Form stays open on failure — toast already shown inside the thunk
     } finally {
       disbaleLoading();
     }

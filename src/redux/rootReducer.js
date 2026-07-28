@@ -245,10 +245,13 @@ import { AssetAssignmentSlice } from "../app/modules/Asset_Assignment/_redux/red
 import { AssetDisposalSlice } from "../app/modules/Asset_Disposal/_redux/redux-Slice";
 import { AssetInspectionListSlice } from "../app/modules/Asset_Inspection_List/_redux/redux-Slice";
 import { AssetChecklistSlice } from "../app/modules/Asset_Checklist/_redux/redux-Slice";
+import { bonusPolicySlice } from "../app/modules/Bonus_Policy/_redux/redux-Slice";
 
 
 import { ticketEscalationPolicySlice } from "../app/modules/Ticket_Escalation_Policy/_redux/redux-Slice";
 import { AssetListSlice  } from "../app/modules/Asset_List/_redux/redux-Slice";
+import { CPLLeaveSlice  } from "../app/modules/CPL_Leave/_redux/redux-Slice"; 
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -494,6 +497,8 @@ export const rootReducer = combineReducers({
   asset_list: AssetListSlice.reducer,
   asset_inspection_list: AssetInspectionListSlice.reducer,
   asset_checklist: AssetChecklistSlice.reducer,
+  bonus_policy: bonusPolicySlice.reducer,
+  cpl_leave: CPLLeaveSlice.reducer,
 
 });
 

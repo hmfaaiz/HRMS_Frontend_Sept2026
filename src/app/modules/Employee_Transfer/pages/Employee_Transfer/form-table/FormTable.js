@@ -43,7 +43,7 @@ export function FormTable({ showApplicantDetails }) {
   }, shallowEqual);
 
   const { totalCount, entities, listLoading, reportPdfLoading } = currentState || {};
-  
+
 
   const dispatch = useDispatch();
 
@@ -93,19 +93,20 @@ export function FormTable({ showApplicantDetails }) {
       style: {
         minWidth: "200px",
       },
+
       formatter: (cell, row) => {
-        // Access from employeeProfile nested object
         if (row.employeeProfile) {
-          const { firstName, lastName, employeeCode } = row.employeeProfile;
-          return employeeCode && firstName && lastName
-            ? `${employeeCode}-${firstName} ${lastName}`
-            : "-";
+          const { firstName, middleName, lastName, employeeCode } = row.employeeProfile;
+          if (employeeCode && firstName && lastName) {
+            return `${employeeCode} ${firstName} ${middleName ? middleName + " " : ""}${lastName}`;
+          }
         }
         // Fallback to top-level fields if available
         return row.employeeCode && row.employeeName
-          ? `${row.employeeCode}-${row.employeeName}`
+          ? `${row.employeeCode} ${row.employeeName}`
           : "-";
       },
+
     },
     {
       dataField: "Dept",
