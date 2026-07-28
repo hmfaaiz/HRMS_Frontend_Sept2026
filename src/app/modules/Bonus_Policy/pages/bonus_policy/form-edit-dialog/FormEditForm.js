@@ -193,7 +193,7 @@ export function FormEditForm({
     divisor: data.divisor ?? 1,
     multiplier: data.multiplier ?? 1,
     serviceSlabs: data.serviceSlabs?.length
-      ? data.serviceSlabs
+      ? data.serviceSlabs.map((s) => ({ ...s }))
       : [
           {
             serviceDurationFrom: "",
@@ -698,9 +698,15 @@ export function FormEditForm({
                             disabled={isUserForRead}
                             value={slab.serviceDurationFrom}
                             onChange={(e) => {
-                              const list = [...values.serviceSlabs];
-                              list[index].serviceDurationFrom = e.target.value;
-                              setFieldValue("serviceSlabs", list);
+                              const value = e.target.value;
+                              setFieldValue(
+                                "serviceSlabs",
+                                values.serviceSlabs.map((s, i) =>
+                                  i === index
+                                    ? { ...s, serviceDurationFrom: value }
+                                    : s,
+                                ),
+                              );
                             }}
                           />
                           {errors.serviceSlabs?.[index]?.serviceDurationFrom &&
@@ -721,9 +727,15 @@ export function FormEditForm({
                             disabled={isUserForRead}
                             value={slab.serviceDurationTo}
                             onChange={(e) => {
-                              const list = [...values.serviceSlabs];
-                              list[index].serviceDurationTo = e.target.value;
-                              setFieldValue("serviceSlabs", list);
+                              const value = e.target.value;
+                              setFieldValue(
+                                "serviceSlabs",
+                                values.serviceSlabs.map((s, i) =>
+                                  i === index
+                                    ? { ...s, serviceDurationTo: value }
+                                    : s,
+                                ),
+                              );
                             }}
                           />
                           {errors.serviceSlabs?.[index]?.serviceDurationTo &&
@@ -754,9 +766,15 @@ export function FormEditForm({
                             }
                             isDisabled={isUserForRead}
                             onChange={(e) => {
-                              const list = [...values.serviceSlabs];
-                              list[index].paymentCriteriaId = e?.value || null;
-                              setFieldValue("serviceSlabs", list);
+                              const value = e?.value || null;
+                              setFieldValue(
+                                "serviceSlabs",
+                                values.serviceSlabs.map((s, i) =>
+                                  i === index
+                                    ? { ...s, paymentCriteriaId: value }
+                                    : s,
+                                ),
+                              );
                             }}
                           />
                           {errors.serviceSlabs?.[index]?.paymentCriteriaId &&
