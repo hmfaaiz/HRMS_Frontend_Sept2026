@@ -74,7 +74,48 @@ const validationSchema = Yup.object().shape({
         paymentCriteriaId: Yup.mixed().required(VALIDATION_MESSAGES.required),
       }),
     )
-    .min(1, "At least one service duration slab is required"),
+    .min(1, "At least one service duration slab is required")
+    .test(
+      "no-overlapping-slabs",
+      "Service duration ranges cannot overlap",
+      function (slabs) {
+        if (!slabs || slabs.length < 2) return true;
+
+        const round2 = (n) => Math.round(n * 100) / 100;
+
+        const parsed = slabs
+          .map((s, idx) => ({
+            idx,
+            from: round2(Number(s.serviceDurationFrom)),
+            to: round2(Number(s.serviceDurationTo)),
+          }))
+          .filter((s) => !Number.isNaN(s.from) && !Number.isNaN(s.to));
+
+        const overlappingIdx = new Set();
+        for (let i = 0; i < parsed.length; i++) {
+          for (let j = i + 1; j < parsed.length; j++) {
+            const a = parsed[i];
+            const b = parsed[j];
+            const conflict =
+              Math.max(a.from, b.from) <= Math.min(a.to, b.to);
+            if (conflict) {
+              overlappingIdx.add(b.idx); // flag only the later row
+            }
+          }
+        }
+
+        if (overlappingIdx.size === 0) return true;
+
+        const errors = Array.from(overlappingIdx).map((idx) =>
+          this.createError({
+            path: `${this.path}[${idx}].serviceDurationFrom`,
+            message: "This range overlaps or touches another slab's boundary",
+          }),
+        );
+
+        throw new Yup.ValidationError(errors);
+      },
+    ),
 });
 
 export function FormEditForm({
@@ -389,11 +430,8 @@ export function FormEditForm({
                 </div>
               </div>
 
-              {/* Sum of Earnings with Multiplier/Divisor toggle and fields on the same row */}
-              {/* Sum of Earnings with Multiplier/Divisor toggle */}
-              <div className="flex items-start gap-3 mt-3 flex-wrap">
-                {/* Sum of Earnings - unchanged width */}
-                <div style={{ width: "50%", flexShrink: 0 }}>
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-3 mt-3">
+                <div>
                   <MultiSelect
                     name="sumOfEarningsComponents"
                     label={
@@ -421,41 +459,10 @@ export function FormEditForm({
                         {errors.sumOfEarningsComponents}
                       </div>
                     )}
-                </div>
 
-                {/* Toggle - now allowed to wrap onto 2 lines within a fixed width */}
-                {/* Toggle - single line, no wrap, same position as before */}
-                <div
-                  className="flex items-center whitespace-nowrap"
-                  style={{ marginTop: "28px", flexShrink: 0 }}
-                >
-                  {!showProrationFields ? (
-                    <span
-                      className="flex items-center gap-2 cursor-pointer whitespace-nowrap"
-                      onClick={() => setShowProrationFields(true)}
-                    >
-                      <CirclePlus className="w-4 h-4 text-primary flex-shrink-0" />
-                      <span className="text-sm whitespace-nowrap">
-                        Add Multiplier & Divisor
-                      </span>
-                    </span>
-                  ) : (
-                    <span
-                      className="flex items-center gap-2 cursor-pointer whitespace-nowrap"
-                      onClick={() => setShowProrationFields(false)}
-                    >
-                      <CircleMinus className="w-4 h-4 text-primary flex-shrink-0" />
-                      <span className="text-sm whitespace-nowrap">
-                        Hide Multiplier & Divisor
-                      </span>
-                    </span>
-                  )}
-                </div>
-                {/* Divide by / Multiply by - back in the same row as the toggle */}
-                {showProrationFields && (
-                  <>
-                    <div style={{ width: "140px", flexShrink: 0 }}>
-                      <label className="text-xs whitespace-nowrap block">
+                  {showProrationFields && (
+                    <div className="mt-3" style={{ width: "180px" }}>
+                      <label className="text-sm whitespace-nowrap block">
                         Multiply by the number of bonus-eligible days.{" "}
                         <span className="text-red-500">*</span>
                       </label>
@@ -477,8 +484,40 @@ export function FormEditForm({
                         </div>
                       )}
                     </div>
-                    <div style={{ width: "140px", flexShrink: 0 }}>
-                      <label className="text-xs whitespace-nowrap block">
+                  )}
+                </div>
+
+                <div>
+                  <div
+                    className="flex items-center whitespace-nowrap"
+                    style={{ marginTop: "28px", flexShrink: 0 }}
+                  >
+                    {!showProrationFields ? (
+                      <span
+                        className="flex items-center gap-2 cursor-pointer whitespace-nowrap"
+                        onClick={() => setShowProrationFields(true)}
+                      >
+                        <CirclePlus className="w-4 h-4 text-primary flex-shrink-0" />
+                        <span className="text-sm whitespace-nowrap">
+                          Add Multiplier & Divisor
+                        </span>
+                      </span>
+                    ) : (
+                      <span
+                        className="flex items-center gap-2 cursor-pointer whitespace-nowrap"
+                        onClick={() => setShowProrationFields(false)}
+                      >
+                        <CircleMinus className="w-4 h-4 text-primary flex-shrink-0" />
+                        <span className="text-sm whitespace-nowrap">
+                          Hide Multiplier & Divisor
+                        </span>
+                      </span>
+                    )}
+                  </div>
+
+                  {showProrationFields && (
+                    <div className="mt-3" style={{ width: "180px" }}>
+                      <label className="text-sm whitespace-nowrap block">
                         Divide by (No. of days to calculate per day bonus
                         amount) <span className="text-red-500">*</span>
                       </label>
@@ -500,13 +539,13 @@ export function FormEditForm({
                         </div>
                       )}
                     </div>
-                  </>
-                )}
+                  )}
+                </div>
               </div>
-              {/* Confirmation/Joining Date checkboxes */}
+
               {!values.considerJoiningDate && (
                 <div className="grid grid-cols-4 md:grid-cols-4 gap-4 mt-3">
-                  <div className="col-span-2 flex items-center gap-1">
+                  <div className="col-span-2 flex items-center gap-3">
                     <input
                       type="checkbox"
                       checked={values.considerConfirmationDate}
@@ -519,8 +558,8 @@ export function FormEditForm({
                         }
                       }}
                     />
-                    <label className="mb-0 text-sm whitespace-nowrap">
-                      Only give bonus to Employees whose 'Date of Confirmation'
+                    <label className="mb-0 text-sm ">
+                      Give bonus to Employees whose 'Date of Confirmation'
                       is before
                     </label>
                   </div>
@@ -549,7 +588,7 @@ export function FormEditForm({
 
               {!values.considerConfirmationDate && (
                 <div className="grid grid-cols-4 md:grid-cols-4 gap-3 mt-3">
-                  <div className="col-span-2 flex items-center gap-2">
+                  <div className="col-span-2 flex items-center gap-3">
                     <input
                       type="checkbox"
                       checked={values.considerJoiningDate}
@@ -563,7 +602,7 @@ export function FormEditForm({
                       }}
                     />
                     <label className="mb-0 text-sm">
-                      Only give bonus to Employees whose 'Date of Joining' is
+                      Give bonus to Employees whose 'Date of Joining' is
                       before
                     </label>
                   </div>
@@ -591,7 +630,6 @@ export function FormEditForm({
               )}
             </div>
 
-            {/* Bonus Payment Criteria */}
             <div className="mt-4">
               <h6 className="font-bold mb-3 text-primary">
                 Bonus Payment Criteria
