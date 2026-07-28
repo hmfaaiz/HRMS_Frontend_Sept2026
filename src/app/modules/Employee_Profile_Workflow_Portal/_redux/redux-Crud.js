@@ -39,3 +39,6 @@ export function generateEmployeeProfileWorkflowPortalReportRequest(Id) {
   );
 }
 
+export function getEmployeeDocumentsByProfile() {
+  return axios.post(`${USERS_URL}/employee_profile_workflow/get-employee-documents`);
+}
