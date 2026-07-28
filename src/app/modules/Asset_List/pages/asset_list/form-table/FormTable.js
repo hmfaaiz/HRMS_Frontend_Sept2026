@@ -39,6 +39,14 @@ export function FormTable() {
     dispatch(actions.fetchAssetList(FormUIProps.queryParams));
   }, [FormUIProps.queryParams, dispatch]);
 
+
+
+  const statusOptions = [
+        { value: 0, label: "Unassigned" },
+        { value: 1, label: "Assigned" },
+        { value: 2, label: "Disposed" },
+    ];
+
   const columns = [
     {
       dataField: "AssetCategory.formName",
@@ -115,15 +123,25 @@ export function FormTable() {
       dataField: "AssignedEmployee.fullName",
       text: "Asset Assigned To",
       sort: false,
-      sortCaret: sortCaret,
+      sortCaret,
       headerSortingClasses,
       style: { minWidth: "180px", maxWidth: "180px" },
-      formatter: (cell, row) => {
-        const name = row?.AssignedEmployee?.fullName || "";
-        const dept = row?.AssignedEmployee?.department?.deptName || "";
-        return name ? `${name}${dept ? ` (${dept})` : ""}` : "";
-      },
+      formatter: (_, row) => {
+      // If asset is not assigned, show status label
+      if (Number(row.status) !== 1) {
+        const status = statusOptions.find(
+          item => item.value === Number(row.status)
+        );
+        return status?.label || "-";
+      }
+    // Otherwise show employee name and department
+      const name = row?.AssignedEmployee?.fullName || "";
+      const dept = row?.AssignedEmployee?.department?.deptName || "";
+      return name
+      ? `${name}${dept ? ` (${dept})` : ""}`
+      : "Assigned";
     },
+  },
     {
       dataField: "dateOfAssignment",
       text: "Date of Assignment",

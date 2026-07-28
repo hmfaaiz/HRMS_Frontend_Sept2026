@@ -43,12 +43,16 @@ export const createRecord = (data, disableLoading) => (dispatch) => {
         dispatch(actions.CompanyCreated(createdData));
         disableLoading();
         toast.success(SERVER_MESSAGES.insertedSuccess);
+        return createdData;
       }
+      disableLoading();
+      throw new Error("No data returned from server");
     })
     .catch((error) => {
       disableLoading();
       error.clientMessage = "Can't Create Company";
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || error?.message || "Can't Create Company");
+      throw error; 
     });
 };
 
@@ -61,12 +65,16 @@ export const updateRecord = (data, disableLoading) => (dispatch) => {
         dispatch(actions.CompanyUpdated(updatedData));
         disableLoading();
         toast.success(SERVER_MESSAGES.updatedSuccess);
+        return updatedData; 
       }
+      disableLoading();
+      throw new Error("No data returned from server");
     })
     .catch((error) => {
       disableLoading();
       error.clientMessage = "Can't Update Company";
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || error?.message || "Can't Update Company");
+      throw error;
     });
 };
 
@@ -83,6 +91,7 @@ export const deleteRecord = (id, disableLoading, onHide) => (dispatch) => {
       disableLoading();
       error.clientMessage = "Can't Delete Company";
       toast.error(SERVER_MESSAGES.deletedFail);
+      throw error; 
     });
 };
 
