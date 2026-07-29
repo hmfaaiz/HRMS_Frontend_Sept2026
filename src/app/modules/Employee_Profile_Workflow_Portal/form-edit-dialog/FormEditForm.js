@@ -55,7 +55,7 @@ export function FormEditForm({
       }
     });
 
-    dispatch(fetchEmployeeDocumentsByProfile()).then((res) => {
+    dispatch(fetchEmployeeDocumentsByProfile(employeeId || formData?.employeeId || 0)).then((res) => {
       if (res) {
         setCurrentEmployeeDocs(res);
       }
@@ -83,7 +83,7 @@ export function FormEditForm({
       setDefaultContactList(currentEmployeeData?.employeeContactWorkflow || []);
       setAcademicList(currentEmployeeData?.employeeAcademicWorkflow || []);
       setSkillList(currentEmployeeData?.employeeSkillWorkflow || []);
-      setDocumentsList([]);
+      setDocumentsList(currentEmployeeDocs?.data || currentEmployeeDocs || []);
     }
   }, [
     formData?.Id,
@@ -92,6 +92,7 @@ export function FormEditForm({
     formData?.employeeSkillWorkflow,
     formData?.employeeDocWorkflow,
     currentEmployeeData,
+    currentEmployeeDocs,
   ]);
 
   useEffect(() => {
@@ -997,72 +998,7 @@ export function FormEditForm({
                     </div>
                   </div>
                 </div>
-                {/* ══════════════════════════════════════
-                    CURRENT DOCUMENTS
-                ══════════════════════════════════════ */}
-                <hr className="my-4" />
-                <div className="w-full overflow-x-auto">
-                  <div className="flex justify-between items-center">
-                    <h6 className="font-bold mb-0 text-primary">
-                      Current Documents
-                    </h6>
-                  </div>
-                  <div className="w-full overflow-x-auto mt-2">
-                    <div className="react-bootstrap-table table-responsive">
-                      <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                        <thead>
-                          <tr className="custom-table-header">
-                            <td className="min-w-40">Document Name</td>
-                            <td className="min-w-40">Document Description</td>
-                            <td className="min-w-40">Employee Attachment</td>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {currentEmployeeDocs && currentEmployeeDocs.length > 0 ? (
-                            currentEmployeeDocs.map((doc, idx) => (
-                              <tr key={`cur-doc-${idx}`}>
-                                <td>
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    disabled={true}
-                                    value={doc.docName || ""}
-                                  />
-                                </td>
-                                <td>
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    disabled={true}
-                                    value={doc.docDesc || ""}
-                                  />
-                                </td>
-                                <td>
-                                  {doc.empAttachment && (
-                                    <a
-                                      href={getUploadUrl(doc.empAttachment)}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-primary"
-                                    >
-                                      📄 {getFileName(doc.empAttachment)}
-                                    </a>
-                                  )}
-                                </td>
-                              </tr>
-                            ))
-                          ) : (
-                            <tr>
-                              <td colSpan="3" className="text-center text-muted">
-                                No current documents found.
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
+
 
                 {/* ══════════════════════════════════════
                     EMPLOYEE DOCUMENT
@@ -1092,7 +1028,7 @@ export function FormEditForm({
                           <tr className="custom-table-header">
                             <td className="min-w-40">Document Name</td>
                             <td className="min-w-40">Document Description</td>
-                            <td className="min-w-40">Document Uploadation Date</td>
+                            <td className="min-w-40">Document Upload Date</td>
                             <td className="min-w-40">Employee Attachment</td>
                             <td className="text-right">Action</td>
                           </tr>
@@ -1137,6 +1073,18 @@ export function FormEditForm({
                                     />
                                   </td>
 
+                                  {/* Document Upload Date */}
+                                  <td>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      disabled={true}
+                                      placeholder="-"
+                                      value={obj.createdAt ? formatDates(obj.createdAt, "dd-MMM-yyyy") : ""}
+                                      readOnly
+                                    />
+                                  </td>
+
                                   {/* Employee Attachment */}
                                   <td style={{ minWidth: "200px" }}>
                                     {!isFromBackend && !isdataForRead && (
@@ -1151,7 +1099,14 @@ export function FormEditForm({
                                           onChange={(e) => {
                                             const file = e.currentTarget.files[0];
                                             if (file) {
-                                              handleFieldChangedDocument(rightindex, "empAttachment", file);
+                                              const maxSizeBytes = 0.5 * 1024 * 1024; // 0.5 MB
+                                              if (file.size > maxSizeBytes) {
+                                                setErrors((prev) => ({ ...prev, [`empAttachment-${rightindex}`]: "File size must not exceed 0.5 MB." }));
+                                                e.currentTarget.value = ""; // reset input
+                                              } else {
+                                                setErrors((prev) => ({ ...prev, [`empAttachment-${rightindex}`]: "" }));
+                                                handleFieldChangedDocument(rightindex, "empAttachment", file);
+                                              }
                                             }
                                           }}
                                         />
@@ -1163,7 +1118,7 @@ export function FormEditForm({
                                             document.getElementById(`empAttachment-input-${rightindex}`).click()
                                           }
                                         >
-                                          📎 Browse
+                                          Browse
                                         </button>
                                       </>
                                     )}
@@ -1179,11 +1134,11 @@ export function FormEditForm({
                                             rel="noopener noreferrer"
                                             className="text-primary"
                                           >
-                                            📄 {getFileName(obj.empAttachment)}
+                                            {getFileName(obj.empAttachment)}
                                           </a>
                                         ) : (
                                           // Newly selected File object — show name
-                                          <span className="text-muted">📄 {obj.empAttachment.name}</span>
+                                          <span className="text-muted"> {obj.empAttachment.name}</span>
                                         )}
                                       </div>
                                     )}

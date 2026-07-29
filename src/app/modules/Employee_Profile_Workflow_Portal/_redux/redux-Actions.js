@@ -7,7 +7,7 @@ import {
 } from "./redux-Crud";
 import { uploadFile as dashboardUploadFile } from "../../Dashboard/_redux/dashboardActions";
 
-export const uploadFile = (file) => (dispatch) => dashboardUploadFile(file)(dispatch);
+export const uploadFile = (file) => (dispatch) => dashboardUploadFile(file);
 
 const { actions } = EmployeeProfileWorkflowPortalSlice;
 
@@ -112,9 +112,9 @@ export const fetchDataFromEmployeeProfileById = (employeeId) => (dispatch) => {
     });
 };
 
-export const fetchEmployeeDocumentsByProfile = () => (dispatch) => {
+export const fetchEmployeeDocumentsByProfile = (employeeId) => (dispatch) => {
   return requestFromServer
-    .getEmployeeDocumentsByProfile()
+    .getEmployeeDocumentsByProfile({ employeeId })
     .then((response) => {
       return response.data;
     })
