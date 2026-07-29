@@ -40,6 +40,7 @@ import { toast } from "react-toastify";
 import { CirclePlus, Trash2, Upload } from "lucide-react";
 import { format } from "date-fns";
 import { fetchEmpDeviceId, fetchGeoLocationBySubsidiary } from "../../../../Dashboard/_redux/dashboardActions";
+import { AssetListByEmp } from "../../../../../utils/common-modules/AssetListByEmp";
 
 export const USERS_URL = process.env.REACT_APP_API_URL;
 const currentDate = new Date();
@@ -5900,6 +5901,7 @@ export function DesignationEditForm({
                       </table>
                     </div>
                   </div>
+
                   {/* {
                     <>
                       {" "}
@@ -5917,6 +5919,21 @@ export function DesignationEditForm({
                     </>
                   } */}
                 </div>
+
+      <hr />
+                <div className="w-full overflow-x-auto">
+                  <div className="flex justify-between items-center">
+                    {/* <h6 className="font-bold mb-0 text-primary">
+                    Asset Detail
+                    </h6> */}
+                  </div>  
+                  {user?.assetIs && (
+                    <>
+                          <AssetListByEmp employeeId={user?.Id} assetMode={true} />
+                     
+                     </>
+                  )}
+                  </div>
               </fieldset>
             </Form>
             <Modal.Footer>
