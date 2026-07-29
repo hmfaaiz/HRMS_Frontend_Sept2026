@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { formatDates } from "../../../utils/common";
+import { formatDates, getUploadUrl, getFileName } from "../../../utils/common";
 import {
   fetchAllSubsidiaryData,
   fetchAllCountry,
@@ -12,7 +12,7 @@ import {
   fetchAllEmployeeShifts,
   fetchAllDept,
 } from "../../../../_metronic/redux/dashboardActions";
-import { fetchDataFromEmployeeProfileById } from "../_redux/redux-Actions";
+import { fetchDataFromEmployeeProfileById, fetchDataFromEmployeeDocumentById, fetchDataFromEmployeeDocumentOriginalById } from "../_redux/redux-Actions";
 import EmployeeProfile from "../../../utils/common-modules/EmployeeProfile";
 import DatePicker from "react-datepicker";
 import { differenceInYears, differenceInMonths } from "date-fns";
@@ -36,6 +36,8 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard, Employee_Profile_Workflow_Hrms } = useSelector((state) => state);
   const [currentEmployeeData, setCurrentEmployeeData] = React.useState(null);
+  const [currentDocumentData, setCurrentDocumentData] = React.useState([]);
+  const [originalDocumentData, setOriginalDocumentData] = React.useState([]);
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingValues, setPendingValues] = useState(null);
@@ -46,6 +48,8 @@ export function FormEditForm({
   const [academicList, setAcademicList] = useState([]);
   const [skillsList, setSkillList] = useState([]);
   const [deferrors, setErrors] = useState({});
+  const [documentsList, setDocumentsList] = useState([]);
+  const fileInputRefs = useRef({});
 
   useEffect(() => {
     // Fetch the employee profile data from backend.
@@ -53,6 +57,18 @@ export function FormEditForm({
     dispatch(fetchDataFromEmployeeProfileById(employeeId || formData?.employeeId || 0)).then((res) => {
       if (res?.data) {
         setCurrentEmployeeData(res.data);
+      }
+    });
+    // Fetch employee documents (existing + workflow combined)
+    dispatch(fetchDataFromEmployeeDocumentById(employeeId || formData?.employeeId || 0)).then((res) => {
+      if (res?.data) {
+        setCurrentDocumentData(Array.isArray(res.data) ? res.data : []);
+      }
+    });
+    // Fetch original/committed documents only (EmployeeDocModel) — shown in approved view
+    dispatch(fetchDataFromEmployeeDocumentOriginalById(employeeId || formData?.employeeId || 0)).then((res) => {
+      if (res?.data) {
+        setOriginalDocumentData(Array.isArray(res.data) ? res.data : []);
       }
     });
   }, [employeeId, dispatch, formData?.Id, formData?.employeeId]);
@@ -69,6 +85,8 @@ export function FormEditForm({
       setDefaultContactList(currentEmployeeData?.employeeContactWorkflow || []);
       setAcademicList(currentEmployeeData?.employeeAcademicWorkflow || []);
       setSkillList(currentEmployeeData?.employeeSkillWorkflow || []);
+      // Show original committed documents (EmployeeDocModel) not the pending workflow ones
+      setDocumentsList(originalDocumentData);
     } else if (formData?.Id) {
       // Edit mode: use keys saved on the workflow record
       setDefaultContactList(
@@ -80,18 +98,23 @@ export function FormEditForm({
       setSkillList(
         formData?.employeeSkillWorkflow || formData?.employeeSkills || []
       );
+      setDocumentsList(currentDocumentData);
     } else if (currentEmployeeData) {
       // Create mode: pre-populate with the employee's existing profile data
       setDefaultContactList(currentEmployeeData?.employeeContactWorkflow || []);
       setAcademicList(currentEmployeeData?.employeeAcademicWorkflow || []);
       setSkillList(currentEmployeeData?.employeeSkillWorkflow || []);
+      setDocumentsList(currentDocumentData);
     }
   }, [
     formData?.Id,
     formData?.employeeContactWorkflow,
     formData?.employeeAcademicWorkflow,
     formData?.employeeSkillWorkflow,
+    formData?.employeeDocWorkflow,
     currentEmployeeData,
+    currentDocumentData,
+    originalDocumentData,
     isApprovedRequest,
   ]);
 
@@ -213,6 +236,29 @@ export function FormEditForm({
     setSkillList([...data]);
   };
 
+  // ── Document Handlers ────────────────────────────────────────────────────
+  const addRowDocument = () => {
+    setDocumentsList([
+      ...documentsList,
+      { transactionType: "Document", employeeId: employeeId },
+    ]);
+  };
+
+  const handleFieldChangedDocument = (index, field, value) => {
+    const newList = [...documentsList];
+    newList[index][field] = value;
+    setDocumentsList(newList);
+  };
+
+  const deleteRowDocument = (index) => {
+    const data = [...documentsList];
+    data.splice(index, 1);
+    setDocumentsList([...data]);
+    if (fileInputRefs.current[index]) {
+      fileInputRefs.current[index].value = "";
+    }
+  };
+
   // ── Validation Schema ────────────────────────────────────────────────────
   const employeeProfileWorkflowPortalEditSchema = useMemo(() => {
     return Yup.object().shape({});
@@ -230,6 +276,7 @@ export function FormEditForm({
     contact: ["relation_name", "relation_text", "contactNo"],
     academic: ["institutionId", "degreeId", "countryId", "cityId", "gpa", "startDate", "endDate", "lengthInYear"],
     skills: ["skill", "description", "ratingScale", "startDate", "endDate", "lengthInMonths"],
+    documents: ["docName", "docDesc", "empAttachment"],
   };
 
   const findOriginalListItem = (originalList, item, index) => {
@@ -275,6 +322,13 @@ export function FormEditForm({
     () => isApprovedRequest ? false : hasSectionChanges(currentEmployeeData?.employeeSkillWorkflow || [], skillsList, workflowChangeKeys.skills),
     [currentEmployeeData?.employeeSkillWorkflow, skillsList, isApprovedRequest]
   );
+
+  // Documents section: highlight heading if any pending workflow docs exist
+  const documentsSectionChanged = useMemo(() => {
+    if (isApprovedRequest) return false;
+    // Backend tags rows from EmployeeDocModelWorkflow with _isWorkflow: true
+    return documentsList.some((d) => d._isWorkflow === true);
+  }, [documentsList, isApprovedRequest]);
 
   return (
     <Formik
@@ -477,7 +531,6 @@ export function FormEditForm({
                           <td className="min-w-40">Name</td>
                           <td className="min-w-40">Relation</td>
                           <td className="min-w-40">Contact No</td>
-                          <td className="text-right">Action</td>
                         </tr>
                         {defContactList?.map((obj, rightindex) => {
                           const isFromBackend = !!(obj.Id || obj.id);
@@ -590,7 +643,6 @@ export function FormEditForm({
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
                           <td className="min-w-40">Length In Year</td>
-                          <td className="text-right">Action</td>
                         </tr>
                         {academicList?.map((obj, rightindex) => {
                           const isFromBackend = !!(obj.Id || obj.id);
@@ -801,7 +853,6 @@ export function FormEditForm({
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
                           <td className="min-w-40">Length In Months</td>
-                          <td className="text-right">Action</td>
                         </tr>
                         {skillsList?.map((obj, rightindex) => {
                           const isFromBackend = !!(obj.Id || obj.id);
@@ -935,6 +986,175 @@ export function FormEditForm({
                   </div>
                 </div>
 
+
+                {/* ══════════════════════════════════════
+                    EMPLOYEE DOCUMENT
+                ══════════════════════════════════════ */}
+                <hr className="my-4" />
+                <div className="w-full overflow-x-auto">
+                  <div className="flex justify-between items-center">
+                    <h6 className={`font-bold mb-0 text-primary ${documentsSectionChanged ? "bg-yellow-300 border-warning" : ""}`}>
+                      Employee Document
+                    </h6>
+                    {!isdataForRead && (
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        id="Document"
+                        onClick={addRowDocument}
+                      >
+                        <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
+                        Add
+                      </button>
+                    )}
+                  </div>
+                  <div className="w-full overflow-x-auto mt-2">
+                    <div className="react-bootstrap-table table-responsive">
+                      <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <thead>
+                          <tr className="custom-table-header">
+                            <td className="min-w-40">Document Name</td>
+                            <td className="min-w-40">Document Description</td>
+                            <td className="min-w-40">Document Upload Date</td>
+                            <td className="min-w-40">Employee Attachment</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {documentsList?.map((obj, rightindex) => {
+                            const isFromBackend = !!(obj.Id || obj.id);
+                            return (
+                              <React.Fragment key={rightindex}>
+                                <tr>
+                                  {/* Document Name */}
+                                  <td>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      disabled={isFromBackend || isdataForRead}
+                                      placeholder="Document name"
+                                      onChange={(e) => {
+                                        handleFieldChangedDocument(rightindex, "docName", e.target.value);
+                                        setErrors((prev) => ({ ...prev, [`docName-${rightindex}`]: "" }));
+                                      }}
+                                      value={obj.docName || ""}
+                                      id={"docName-" + rightindex}
+                                    />
+                                    {deferrors[`docName-${rightindex}`] && (
+                                      <div className="form-feedBack">{deferrors[`docName-${rightindex}`]}</div>
+                                    )}
+                                  </td>
+
+                                  {/* Document Description */}
+                                  <td>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      disabled={isFromBackend || isdataForRead}
+                                      placeholder="Description"
+                                      onChange={(e) => {
+                                        handleFieldChangedDocument(rightindex, "docDesc", e.target.value);
+                                      }}
+                                      value={obj.docDesc || ""}
+                                      id={"docDesc-" + rightindex}
+                                    />
+                                  </td>
+
+                                  {/* Document Upload Date */}
+                                  <td>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      disabled={true}
+                                      placeholder="-"
+                                      value={obj.createdAt ? formatDates(obj.createdAt, "dd-MMM-yyyy") : ""}
+                                      readOnly
+                                    />
+                                  </td>
+
+                                  {/* Employee Attachment */}
+                                  <td style={{ minWidth: "200px" }}>
+                                    {!isFromBackend && !isdataForRead && (
+                                      <>
+                                        {/* Hidden real file input */}
+                                        <input
+                                          type="file"
+                                          accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                                          style={{ display: "none" }}
+                                          id={`empAttachment-input-${rightindex}`}
+                                          ref={(el) => (fileInputRefs.current[rightindex] = el)}
+                                          onChange={(e) => {
+                                            const file = e.currentTarget.files[0];
+                                            if (file) {
+                                              const maxSizeBytes = 0.5 * 1024 * 1024; // 0.5 MB
+                                              if (file.size > maxSizeBytes) {
+                                                setErrors((prev) => ({ ...prev, [`empAttachment-${rightindex}`]: "File size must not exceed 0.5 MB." }));
+                                                e.currentTarget.value = ""; // reset input
+                                              } else {
+                                                setErrors((prev) => ({ ...prev, [`empAttachment-${rightindex}`]: "" }));
+                                                handleFieldChangedDocument(rightindex, "empAttachment", file);
+                                              }
+                                            }
+                                          }}
+                                        />
+                                        {/* Browse button */}
+                                        <button
+                                          type="button"
+                                          className="btn btn-sm btn-outline-primary"
+                                          onClick={() =>
+                                            document.getElementById(`empAttachment-input-${rightindex}`).click()
+                                          }
+                                        >
+                                          Browse
+                                        </button>
+                                      </>
+                                    )}
+
+                                    {/* Show file name / preview link */}
+                                    {obj.empAttachment && (
+                                      <div className="mt-1" style={{ fontSize: "0.8rem" }}>
+                                        {typeof obj.empAttachment === "string" ? (
+                                          // Already saved on backend — show link
+                                          <a
+                                            href={getUploadUrl(obj.empAttachment)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-primary"
+                                          >
+                                            {getFileName(obj.empAttachment)}
+                                          </a>
+                                        ) : (
+                                          // Newly selected File object — show name
+                                          <span className="text-muted"> {obj.empAttachment.name}</span>
+                                        )}
+                                      </div>
+                                    )}
+                                    {deferrors[`empAttachment-${rightindex}`] && (
+                                      <div className="form-feedBack">{deferrors[`empAttachment-${rightindex}`]}</div>
+                                    )}
+                                  </td>
+
+                                  {/* Delete */}
+                                  <td className="text-right">
+                                    {!isFromBackend && !isdataForRead && (
+                                      <button
+                                        className="border-none bg-transparent"
+                                        type="button"
+                                        id={`doc-del-${rightindex}`}
+                                        onClick={() => deleteRowDocument(rightindex)}
+                                      >
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                      </button>
+                                    )}
+                                  </td>
+                                </tr>
+                              </React.Fragment>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </fieldset>
             </Form>
           </Modal.Body>
@@ -1005,22 +1225,22 @@ export function FormEditForm({
               pendingAction === "reject"
                 ? "Are you sure you want to reject this profile change request?"
                 : status === "edit"
-                ? "Are you sure you want to approve this profile change request?"
-                : "Are you sure you want to submit this profile change request?"
+                  ? "Are you sure you want to approve this profile change request?"
+                  : "Are you sure you want to submit this profile change request?"
             }
             title={
               pendingAction === "reject"
                 ? "Confirm Rejection"
                 : status === "edit"
-                ? "Confirm Approval"
-                : "Confirm Request"
+                  ? "Confirm Approval"
+                  : "Confirm Request"
             }
             confirmText={
               pendingAction === "reject"
                 ? "Reject"
                 : status === "edit"
-                ? "Approve"
-                : "Confirm"
+                  ? "Approve"
+                  : "Confirm"
             }
           />
         </>
