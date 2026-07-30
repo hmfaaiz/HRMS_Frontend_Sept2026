@@ -712,6 +712,9 @@ import ("./modules/Bonus_Policy/pages/index"))
 const cpl_leave = lazy (() =>
 import ("./modules/CPL_Leave/pages/index"))
 
+const cpl_approval = lazy (() =>
+import ("./modules/CPL_Approval/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -951,6 +954,7 @@ const ROUTES = {
   asset_checklist: asset_checklist,
   bonus_policy: bonus_policy,
   cpl_leave: cpl_leave,
+  cpl_approval: cpl_approval,
 
 };
 

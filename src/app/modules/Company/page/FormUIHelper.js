@@ -104,6 +104,11 @@ export const moduleList = [
     label: "Asset",
     key: "asset",
     value: false,
+  },  
+  {
+    label: "Travel",
+    key: "travel",
+    value: false,
   },
 ];
 
