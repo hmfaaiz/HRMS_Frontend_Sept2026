@@ -19,8 +19,12 @@ import FileUpload from "../../../../../../_metronic/_partials/controls/forms/Fil
 const employee_docEditSchema = Yup.object().shape({
 
 
-  empAttachment: Yup.string().nullable()
-    .required(VALIDATION_MESSAGES.required),
+  empAttachment: Yup.mixed()
+    .required(VALIDATION_MESSAGES.required)
+    .test("fileSize", "File size must be less than 0.5 MB", (value) => {
+      if (typeof value === "string") return true;
+      return value && value.size <= 0.5 * 1024 * 1024;
+    }),
 
   docName: Yup.string()
     .trim()

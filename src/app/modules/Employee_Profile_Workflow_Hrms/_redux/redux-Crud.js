@@ -43,3 +43,11 @@ export function generateEmployeeProfileWorkflowPortalReportRequest(Id) {
     { responseType: "arraybuffer" }
   );
 }
+
+export function getDataFromEmployeeDocumnentById(body) {
+  return axios.post(`${USERS_URL}/employee_profile_workflow_hrms/get-data-from-employee-document-by-id`, body);
+}
+
+export function getDataFromEmployeeDocumnentOriginalById(body) {
+  return axios.post(`${USERS_URL}/employee_profile_workflow_hrms/get-data-from-employee-document-original-by-id`, body);
+}

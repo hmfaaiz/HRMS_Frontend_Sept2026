@@ -93,7 +93,7 @@ export function FormCard({ onRegisterReset }) {
 
   useEffect(() => {
     if (onRegisterReset) onRegisterReset(resetAllState);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddNew = () => {
@@ -141,18 +141,19 @@ export function FormCard({ onRegisterReset }) {
   const activeEmployeeId = isEditMode
     ? editRowData?.employeeId
     : isViewMode
-    ? viewRowData?.employeeId
-    : FormUIProps.employeeId;
+      ? viewRowData?.employeeId
+      : FormUIProps.employeeId;
 
   const activeTravelRequestId = isEditMode
     ? editRowData?.preApprovalTravelRequestId
     : isViewMode
-    ? viewRowData?.preApprovalTravelRequestId
-    : FormUIProps.travelRequestId;
+      ? viewRowData?.preApprovalTravelRequestId
+      : FormUIProps.travelRequestId;
 
   const activeUser = isEditMode ? editRowData : isViewMode ? viewRowData : null;
 
   const showMainForm = showForm && activeEmployeeId && activeTravelRequestId;
+
 
   const menuOptions = [
     {
@@ -165,17 +166,52 @@ export function FormCard({ onRegisterReset }) {
           el?.isResourceShow,
       ),
     },
-    // {
-    //   name: "Post Travel Request",
-    //   link: "/post_travel_request/read-all-post-travel-request",
-    //   isShow: payrollAccess?.some(
-    //     (el) =>
-    //       (el?.componentName === "ReadAllPostTravelRequest" ||
-    //         el?.slug === "read-all-post-travel-request") &&
-    //       el?.isResourceShow,
-    //   ),
-    // },
+    {
+      name: "Approval",
+      link: "/travel_request_approval/read-all-travel-request-approval",
+      isShow: payrollAccess?.some(
+        (el) =>
+          (el?.componentName === "TravelRequestApproval" ||
+            el?.componentName === "ReadAllTravelRequestApproval" ||
+            el?.slug === "read-all-travel-request-approval") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Workflow Status",
+      link:
+        "/travel_request_workflow_status/read-all-travel-request-workflow-status",
+      isShow: payrollAccess?.some(
+        (el) =>
+          (el?.componentName === "TravelRequestWorkflowStatus" ||
+            el?.componentName === "ReadAllTravelRequestWorkflowStatus" ||
+            el?.slug === "read-all-travel-request-workflow-status") &&
+          el?.isResourceShow,
+      ),
+    },
   ];
+  // const menuOptions = [
+  //   {
+  //     name: "Travel Request",
+  //     link: "/travel_request/read-all-travel-request",
+  //     isShow: payrollAccess?.some(
+  //       (el) =>
+  //         (el?.componentName === "TravelRequest" ||
+  //           el?.slug === "read-all-travel-request") &&
+  //         el?.isResourceShow,
+  //     ),
+  //   },
+  //   // {
+  //   //   name: "Post Travel Request",
+  //   //   link: "/post_travel_request/read-all-post-travel-request",
+  //   //   isShow: payrollAccess?.some(
+  //   //     (el) =>
+  //   //       (el?.componentName === "ReadAllPostTravelRequest" ||
+  //   //         el?.slug === "read-all-post-travel-request") &&
+  //   //       el?.isResourceShow,
+  //   //   ),
+  //   // },
+  // ];
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">

@@ -107,6 +107,30 @@ export const fetchDataFromEmployeeProfileById = (employeeId) => (dispatch) => {
     });
 };
 
+export const fetchDataFromEmployeeDocumentById = (employeeId) => (dispatch) => {
+  return requestFromServer
+    .getDataFromEmployeeDocumnentById({ employeeId })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't fetch employee document data";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+export const fetchDataFromEmployeeDocumentOriginalById = (employeeId) => (dispatch) => {
+  return requestFromServer
+    .getDataFromEmployeeDocumnentOriginalById({ employeeId })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't fetch employee original document data";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
 export const deleteemployeeProfileWorkflowPortal = (id) => (dispatch) => {
   return requestFromServer
     .deleteEmployeeProfileWorkflowPortal({ Id: id })

@@ -36,7 +36,7 @@ export const FormCard = () => {
   });
   const menuOptions = [
     {
-      name: "Request",
+      name: "Travel Request",
       link: "/travel_request/read-all-travel-request",
       isShow: tada?.find(
         (el) =>
@@ -46,6 +46,7 @@ export const FormCard = () => {
           el?.isResourceShow,
       ),
     },
+
     {
       name: "Approval",
       link: "/travel_request_approval/read-all-travel-request-approval",
@@ -54,6 +55,16 @@ export const FormCard = () => {
           (el?.componentName === "TravelRequestApproval" ||
             el?.componentName === "ReadAllTravelRequestApproval" ||
             el?.slug === "read-all-travel-request-approval") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Post Travel Request",
+      link: "/post_travel_request/read-all-post-travel-request",
+      isShow: tada?.some(
+        (el) =>
+          (el?.componentName === "ReadAllPostTravelRequest" ||
+            el?.slug === "read-all-post-travel-request") &&
           el?.isResourceShow,
       ),
     },
