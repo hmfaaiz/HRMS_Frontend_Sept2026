@@ -49,7 +49,7 @@ const formValidation = Yup.object().shape({
 });
 
 export function MasterEditForm({
-  submitForm,
+
   user,
   actionsLoading,
   isUserForRead,
@@ -206,22 +206,7 @@ export function MasterEditForm({
         enableReinitialize={true}
         initialValues={user}
         validationSchema={formValidation}
-        onSubmit={(values) => {
-          enableLoading();
-          const payload = {
-            ...values,
-            attDateIn: values.attDateIn
-              ? formatDates(values.attDateIn, "dd-MMM-yyyy")
-              : null, attDateOut: values.attDateOut
-                ? formatDates(values.attDateOut, "dd-MMM-yyyy")
-                : null,
 
-
-          }
-
-
-          submitForm(payload);
-        }}
       >
         {({
           handleSubmit,

@@ -8,18 +8,16 @@ import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  fetchAllActiveEmployees,
-  fetchAllActiveEmployeesBySubsidiary,
-  fetchAllDept,
+
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../_metronic/redux/dashboardActions";
-import { CardHeader } from "../../../../../_metronic/_partials/controls";
+
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
-import ReportButton from "./AttendanceReportButton";
+
 import TCard from "../../../../utils/common-modules/TCard";
 
-export function AttendanceViewPage() {
+export function CompensatoryLeaveViewPage() {
   const [activeKey, setActiveKey] = useState("0");
   const dispatch = useDispatch();
   const {

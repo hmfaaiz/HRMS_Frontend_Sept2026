@@ -48,7 +48,7 @@ export function FormTable() {
   }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
-console.log("entities11111",entities);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -118,7 +118,7 @@ console.log("entities11111",entities);
       if (numValue > 2) numValue = 2;
 
       // Round to nearest 0.5
-      numValue = Math.round(numValue * 2) / 2;
+      // numValue = Math.round(numValue * 2) / 2;
 
       return numValue;
     };
@@ -129,7 +129,7 @@ console.log("entities11111",entities);
         value={inputValue}
         min={0}
         max={2}
-        step={0.5}
+        // step={0.5}
         className="form-control"
         disabled={isApproved}
         onChange={(e) => {

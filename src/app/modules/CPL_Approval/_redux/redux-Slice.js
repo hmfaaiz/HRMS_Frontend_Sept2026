@@ -190,72 +190,7 @@ export const CPLApprovalSlice = createSlice({
             state.entities = entities;
             state.totalCount = totalResult;
         },
-        AttendanceFetchedForEdit: (state, action) => {
-            const entities = action?.payload?.userForEdit;
-            state.actionsLoading = false;
-            if (entities) {
-                // Commented out due to date shifting to the next day because of timezone conversion issue
-                // entities.attDateIn = new Date(entities.attDateIn);
-                // entities.attDateOut = new Date(entities.attDateOut)
-                if (entities.attDateIn) {
-                    entities.attDateIn = new Date(entities.attDateIn);
-                }
-
-                if (entities.attDateOut) {
-                    entities.attDateOut = new Date(entities.attDateOut);
-                }
-
-                //     entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
-
-                //     entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
-
-
-
-
-
-            }
-            state.userForEdit = entities;
-            state.error = null;
-        },
-        AttendanceCreated: (state, action) => {
-            const entities = action?.payload
-            state.actionsLoading = false;
-            state.error = null;
-            if (entities) {
-                // entities.attDateIn = new Date(entities.attDateIn);
-                // entities.attDateOut = new Date(entities.attDateOut)
-                entities.attDateIn = entities.attDateIn ? new Date(entities.attDateIn) : null;
-                entities.attDateOut = entities.attDateOut ? new Date(entities.attDateOut) : null;
-
-
-                // entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
-                // entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
-
-            }
-            state.userForEdit = entities;
-        },
-        AttendanceUpdated: (state, action) => {
-            const entities = action?.payload
-            state.error = null;
-            state.actionsLoading = false;
-            if (entities) {
-                // entities.attDateIn = new Date(entities.attDateIn);
-                // entities.attDateOut = new Date(entities.attDateOut)
-
-                if (entities.attDateIn) {
-                    entities.attDateIn = new Date(entities.attDateIn);
-                }
-
-                if (entities.attDateOut) {
-                    entities.attDateOut = new Date(entities.attDateOut);
-                }
-                // entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
-                // entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
-
-
-            }
-            state.userForEdit = entities;
-        },
+     
         PayrollMonthFetched: (state, action) => {
             const payrollData = action?.payload?.payrollData;
             state.error = null;

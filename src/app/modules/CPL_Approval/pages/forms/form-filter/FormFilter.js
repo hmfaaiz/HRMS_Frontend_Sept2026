@@ -15,7 +15,6 @@ import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import {
   fetchAttendance,
-  fetchAttendanceSheetConsolidated,
   runProcess,
   stopAllCalls,
 } from "../../../_redux/redux-Actions";
@@ -164,21 +163,6 @@ export function FormFilter({
           ?.label || "",
       amountLabel: values?.amount || "",
     };
-  };
-  const generateReport = (values, group_by_emp) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      fetchAttendanceSheetConsolidated(
-        newQueryParams,
-        document,
-        labels,
-        group_by_emp
-      )
-    );
-  };
-  const handleCheck = (e, setFieldValue) => {
-    setFieldValue("markAttendancewithshift", e.target.checked);
   };
 
   const cplTypeOptions = [
