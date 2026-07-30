@@ -8,7 +8,7 @@ import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComp
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import { FormEditForm } from "../form-edit-dialog/FormEditForm";
 import { FormTable } from "../form-table/FormTable";
-import { FormFilter } from "../form-filter/FormFilter";
+import { FormFilter, FormSearch } from "../form-filter/FormFilter";
 import { CirclePlus } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 import TravelProfile from "../form-edit-dialog/TravelProfile";
@@ -240,24 +240,25 @@ export function FormCard({ onRegisterReset }) {
         </div>
 
         <div className="px-3 py-4 rounded-lg bg-white">
-          <div className="flex justify-between items-center flex-wrap gap-2 mb-4">
+          <div className="flex justify-between items-end flex-wrap gap-2 mb-4">
             <h6 className="text-primary font-bold mb-0">
               Post Travel Request History
             </h6>
-            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-              <FormFilter />
-              <div className="flex items-center gap-2">
-                {accessUser && (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={handleAddNew}
-                  >
-                    <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
-                    Add
-                  </button>
-                )}
-              </div>
+          </div>
+          <div className="flex justify-between items-end flex-wrap gap-2 mb-6">
+            <FormFilter />
+            <div className="flex items-center gap-2">
+              <FormSearch />
+              {accessUser && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddNew}
+                >
+                  <CirclePlus className="w-4 h-4 text-white mr-2" />
+                  Add
+                </button>
+              )}
             </div>
           </div>
 

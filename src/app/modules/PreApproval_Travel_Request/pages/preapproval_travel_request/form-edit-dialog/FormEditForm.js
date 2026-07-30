@@ -1552,7 +1552,7 @@ export function FormEditForm({
               </div>
 
               {/* Travel Hotel details */}
-              <div className="w-full mt-6">
+              <div className="w-full mt-6 mb-4">
                 <Accordion
                   activeKey={activeHotelKey}
                   onSelect={(key) => setActiveHotelKey(key)}
@@ -1743,6 +1743,85 @@ export function FormEditForm({
               {/* Daily Allowance, Taxi Fare,  */}
               <div className="border-t pt-4 ">
                 <div className="flex flex-col lg:flex-row gap-8 justify-between">
+
+
+                  {/* Advance Request Section */}
+                  <div className="border-t ">
+                    <div className="flex flex-col lg:flex-row gap-8 justify-between">
+
+
+
+                      {/* Advance Request Section */}
+                      <div className="max-w-[500px] mr-8">
+                        <div className="flex items-center mb-2">
+                          <h6 className="font-bold text-primary mr-3 mb-0">
+                            Advance Request
+                          </h6>
+
+                        </div>
+
+                        <div className="grid grid-cols-9 gap-x-3 items-end">
+                          {/* Amount */}
+                          <div className="col-span-3 flex ">
+                            <Checkbox
+                              disabled={isFormDisabled}
+                              isSelected={values.advanceRequested}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFieldValue("advanceRequested", checked);
+                                if (!checked) {
+                                  setFieldValue("advanceAmount", 0);
+                                  setFieldValue("advanceRemarks", "");
+                                }
+                              }}
+                            />
+                            <label className="ml-2 mb-0">Advance Required</label>
+                          </div>
+                          <div className="col-span-2">
+                            <label className="block mb-1">
+                              Amount
+                              {values.advanceRequested && (
+                                <span className="text-danger">*</span>
+                              )}
+                            </label>
+                            <NumericFormat
+                              name="advanceAmount"
+                              className="form-control text-sm"
+                              style={{ backgroundColor: "#eefbff" }}
+                              placeholder="0"
+                              thousandSeparator
+                              allowNegative={false}
+                              isAllowed={({ value }) => value.length <= 9}
+                              disabled={isFormDisabled || !values.advanceRequested}
+                              value={values.advanceAmount}
+                              onValueChange={(valuesObj) => {
+                                setFieldValue("advanceAmount", valuesObj.value);
+                              }}
+                            />
+                          </div>
+                          {/* Advance Remarks */}
+                          <div className="col-span-4">
+                            <label className="block mb-1">
+                              Advance Request Remarks
+                              {values.advanceRequested && (
+                                <span className="text-danger">*</span>
+                              )}
+                            </label>
+                            <Field
+                              as="textarea"
+                              name="advanceRemarks"
+                              className="form-control"
+                              style={{ backgroundColor: "#eefbff", height: "38px" }}
+                              rows="1"
+                              placeholder="Enter remarks..."
+                              maxLength={500}
+                              disabled={isFormDisabled || !values.advanceRequested}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   {/* Daily Allowance */}
                   <div className="">
                     <h6 className="font-bold text-primary mb-2">
@@ -1813,7 +1892,7 @@ export function FormEditForm({
                   </div>
 
                   {/* Taxi Fare */}
-                  <div className="max-w-32">
+                  <div className="max-w-32 pr-[9px]">
                     <h6 className="font-bold text-primary mb-2">Taxi Fare</h6>
                     <div>
                       <label className="block mb-1">Rate</label>
@@ -1829,177 +1908,104 @@ export function FormEditForm({
                     </div>
                   </div>
 
-                  {/* Travel Cost Summary */}
-                  <div className="border-t flex justify-end pt-2">
-                    <div className="w-[300px]">
-                      <div className="flex flex-col gap-y-4 pr-[9px]">
-                        {/* Daily Allowance Total */}
-                        <div className="flex justify-between items-center gap-x-2">
-                          <label className="block mb-0 font-semibold opacity-70 text-nowrap">
-                            Total Allowance
-                          </label>
-                          <NumericFormat
-                            name="dailyAllowanceTotal"
-                            className="form-control text-sm bg-light"
-                            placeholder="0"
-                            thousandSeparator
-                            allowNegative={false}
-                            disabled={true}
-                            value={values.dailyAllowanceAmount}
-                            style={{ width: "159px" }}
-                          />
-                        </div>
 
-                        {/* Taxi Fare Input */}
-                        <div className="flex justify-between items-center gap-x-2">
-                          <label className="block mb-0 font-semibold opacity-70 text-nowrap">
-                            Taxi Fare Amount
-                          </label>
-                          <div className="flex flex-col" style={{ width: "159px" }}>
-                            <NumericFormat
-                              name="taxiFareAmount"
-                              className="form-control text-sm"
-                              placeholder="0"
-                              thousandSeparator
-                              allowNegative={false}
-                              isAllowed={({ value }) => value.length <= 9}
-                              disabled={isReadOnly}
-                              value={values.taxiFareAmount ?? ""}
-                              onValueChange={(valuesObj) => {
-                                setFieldValue("taxiFareAmount", valuesObj.value);
-                              }}
-                            />
-                            {errors.taxiFareAmount && touched.taxiFareAmount && (
-                              <div className="form-feedBack text-xs mt-1">
-                                {errors.taxiFareAmount}
-                              </div>
-                            )}
-                          </div>
-                        </div>
 
-                        {/* Other Amount Input */}
-                        <div className="flex justify-between items-center gap-x-2">
-                          <label className="block mb-0 font-semibold opacity-70 text-nowrap">
-                            Other Amount
-                          </label>
-                          <div className="flex flex-col" style={{ width: "159px" }}>
-                            <NumericFormat
-                              name="otherAmount"
-                              className="form-control text-sm"
-                              placeholder="0"
-                              thousandSeparator
-                              allowNegative={false}
-                              isAllowed={({ value }) => value.length <= 9}
-                              disabled={isReadOnly}
-                              value={values.otherAmount ?? ""}
-                              onValueChange={(valuesObj) => {
-                                setFieldValue("otherAmount", valuesObj.value);
-                              }}
-                            />
-                            {errors.otherAmount && touched.otherAmount && (
-                              <div className="form-feedBack text-xs mt-1">
-                                {errors.otherAmount}
-                              </div>
-                            )}
-                          </div>
-                        </div>
 
-                        {/* Total Travel Budget */}
-                        <div className="flex justify-between items-center gap-x-2">
-                          <label className="block mb-0 font-bold text-nowrap">
-                            Total Travel Budget
-                          </label>
-                          <NumericFormat
-                            name="totalTravelBudget"
-                            className="form-control text-sm bg-light"
-                            placeholder="0"
-                            thousandSeparator
-                            allowNegative={false}
-                            disabled={true}
-                            value={values.totalTravelBudget}
-                            style={{ width: "159px" }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
                 </div>
               </div>
 
 
-              {/* Advance Request Section */}
-              <div className="border-t pt-4">
-                <div className="flex flex-col lg:flex-row gap-8 justify-between">
-
-
-
-                  {/* Advance Request Section */}
-                  <div className="max-w-[500px] mr-8">
-                    <div className="flex items-center mb-2">
-                      <h6 className="font-bold text-primary mr-3 mb-0">
-                        Advance Request
-                      </h6>
-                      <div className="flex items-center">
-                        <Checkbox
-                          disabled={isFormDisabled}
-                          isSelected={values.advanceRequested}
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setFieldValue("advanceRequested", checked);
-                            if (!checked) {
-                              setFieldValue("advanceAmount", 0);
-                              setFieldValue("advanceRemarks", "");
-                            }
-                          }}
-                        />
-                        <label className="ml-2 mb-0">Advance Required</label>
-                      </div>
+              {/* Travel Cost Summary */}
+              <div className="border-t flex justify-end pt-2">
+                <div className="w-[300px]">
+                  <div className="flex flex-col gap-y-4 pr-[9px]">
+                    {/* Daily Allowance Total */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                        Total Allowance
+                      </label>
+                      <NumericFormat
+                        name="dailyAllowanceTotal"
+                        className="form-control text-sm bg-light"
+                        placeholder="0"
+                        thousandSeparator
+                        allowNegative={false}
+                        disabled={true}
+                        value={values.dailyAllowanceAmount}
+                        style={{ width: "159px" }}
+                      />
                     </div>
 
-                    <div className="grid grid-cols-6 gap-x-3 items-end">
-                      {/* Amount */}
-                      <div className="col-span-2">
-                        <label className="block mb-1">
-                          Amount
-                          {values.advanceRequested && (
-                            <span className="text-danger">*</span>
-                          )}
-                        </label>
+                    {/* Taxi Fare Input */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                        Taxi Fare Amount
+                      </label>
+                      <div className="flex flex-col" style={{ width: "159px" }}>
                         <NumericFormat
-                          name="advanceAmount"
+                          name="taxiFareAmount"
                           className="form-control text-sm"
-                          style={{ backgroundColor: "#eefbff" }}
                           placeholder="0"
                           thousandSeparator
                           allowNegative={false}
                           isAllowed={({ value }) => value.length <= 9}
-                          disabled={isFormDisabled || !values.advanceRequested}
-                          value={values.advanceAmount}
+                          disabled={isReadOnly}
+                          value={values.taxiFareAmount ?? ""}
                           onValueChange={(valuesObj) => {
-                            setFieldValue("advanceAmount", valuesObj.value);
+                            setFieldValue("taxiFareAmount", valuesObj.value);
                           }}
                         />
+                        {errors.taxiFareAmount && touched.taxiFareAmount && (
+                          <div className="form-feedBack text-xs mt-1">
+                            {errors.taxiFareAmount}
+                          </div>
+                        )}
                       </div>
-                      {/* Advance Remarks */}
-                      <div className="col-span-4">
-                        <label className="block mb-1">
-                          Advance Request Remarks
-                          {values.advanceRequested && (
-                            <span className="text-danger">*</span>
-                          )}
-                        </label>
-                        <Field
-                          as="textarea"
-                          name="advanceRemarks"
-                          className="form-control"
-                          style={{ backgroundColor: "#eefbff", height: "38px" }}
-                          rows="1"
-                          placeholder="Enter remarks..."
-                          maxLength={500}
-                          disabled={isFormDisabled || !values.advanceRequested}
+                    </div>
+
+                    {/* Other Amount Input */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-semibold opacity-70 text-nowrap">
+                        Other Amount
+                      </label>
+                      <div className="flex flex-col" style={{ width: "159px" }}>
+                        <NumericFormat
+                          name="otherAmount"
+                          className="form-control text-sm"
+                          placeholder="0"
+                          thousandSeparator
+                          allowNegative={false}
+                          isAllowed={({ value }) => value.length <= 9}
+                          disabled={isReadOnly}
+                          value={values.otherAmount ?? ""}
+                          onValueChange={(valuesObj) => {
+                            setFieldValue("otherAmount", valuesObj.value);
+                          }}
                         />
+                        {errors.otherAmount && touched.otherAmount && (
+                          <div className="form-feedBack text-xs mt-1">
+                            {errors.otherAmount}
+                          </div>
+                        )}
                       </div>
+                    </div>
+
+                    {/* Total Travel Budget */}
+                    <div className="flex justify-between items-center gap-x-2">
+                      <label className="block mb-0 font-bold text-nowrap">
+                        Total Travel Budget
+                      </label>
+                      <NumericFormat
+                        name="totalTravelBudget"
+                        className="form-control text-sm bg-light"
+                        placeholder="0"
+                        thousandSeparator
+                        allowNegative={false}
+                        disabled={true}
+                        value={values.totalTravelBudget}
+                        style={{ width: "159px" }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -2026,7 +2032,7 @@ export function FormEditForm({
               </div>
 
               {/* Form Actions */}
-              <div className="mt-4 border-t pt-4 flex justify-end gap-x-3">
+              <div className="mt-4 border-t pt-4  flex justify-end gap-x-3">
                 <button
                   type="button"
                   className="btn btn-light btn-sm font-bold px-6"

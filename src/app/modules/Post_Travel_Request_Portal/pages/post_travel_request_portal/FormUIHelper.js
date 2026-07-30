@@ -7,6 +7,7 @@ export const initialValues = {
 export const initialFilter = {
   filter: {
     searchQuery: "",
+    approved_status: [0],
   },
   sortOrder: "ASC",
   pageSize: 10,

@@ -6,7 +6,7 @@ import TCard from "../../../../../utils/common-modules/TCard";
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import { FormEditForm } from "../form-edit-dialog/FormEditForm";
 import { FormTable } from "../form-table/FormTable";
-import { FormFilter } from "../form-filter/FormFilter";
+import { FormFilter, FormSearch } from "../form-filter/FormFilter";
 import { CirclePlus } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 import TravelProfile from "../form-edit-dialog/TravelProfile";
@@ -142,14 +142,14 @@ export function FormCard({ onRegisterReset }) {
   const activeEmployeeId = isEditMode
     ? editRowData?.employeeId
     : isViewMode
-    ? viewRowData?.employeeId
-    : FormUIProps.employeeId;
+      ? viewRowData?.employeeId
+      : FormUIProps.employeeId;
 
   const activeTravelRequestId = isEditMode
     ? editRowData?.preApprovalTravelRequestId
     : isViewMode
-    ? viewRowData?.preApprovalTravelRequestId
-    : FormUIProps.travelRequestId;
+      ? viewRowData?.preApprovalTravelRequestId
+      : FormUIProps.travelRequestId;
 
   const activeUser = isEditMode ? editRowData : isViewMode ? viewRowData : null;
 
@@ -158,19 +158,22 @@ export function FormCard({ onRegisterReset }) {
   return (
     <>
       <TCard name={moduleName}>
-        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2 mb-4">
+        <div className="flex flex-col gap-2 mb-4">
           <FormFilter />
-          <div className="flex items-center gap-2">
-            {accessUser && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleAddNew}
-              >
-                <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
-                Add
-              </button>
-            )}
+          <div className="flex justify-end items-center flex-wrap gap-2">
+            <FormSearch />
+            <div className="flex items-center gap-2">
+              {accessUser && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddNew}
+                >
+                  <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
+                  Add
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
