@@ -29,6 +29,7 @@ import ReportButton from "../AttendanceReportButton";
 import { Download } from "lucide-react";
 import { formatDates } from "../../../../../utils/common";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { fetchOvertimeEntitledEmployeesData } from "../../../../Dashboard/_redux/dashboardActions";
 //Validation for date fields
 const formValidation = Yup.object().shape({
   from: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
@@ -64,14 +65,14 @@ export function FormFilter({
     allEmployeeGradeList,
     allDept,
     allLocationChildMenus,
-    allDesignations,
+    allDesignations, allOvertimeEntitledEmployees,
   } = useSelector((state) => state.dashboard);
 
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
   const allEmployeesMap = useMemo(() => {
-    return new Map(allEmployees?.map((item) => [item.value, item]));
-  }, [allEmployees]);
+    return new Map(allOvertimeEntitledEmployees?.map((item) => [item.value, item]));
+  }, [allOvertimeEntitledEmployees]);
 
   const allSubsidiaryMap = useMemo(() => {
     return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
@@ -114,22 +115,22 @@ export function FormFilter({
     dispatch(fetchAttendance(newQueryParams));
   };
   const { modifiedRows } = useSelector(state => state.cpl_approval);
-const runAllProcess = () => {
-console.log("modifiedRows111111",modifiedRows)
-  const formattedValues = {
+  const runAllProcess = () => {
+    console.log("modifiedRows111111", modifiedRows)
+    const formattedValues = {
 
-    rows: modifiedRows?.map((x) => ({
-      Id: x.Id,
-      ApprovedCPLDays: x?.ApprovedCPLDays,
-      CPLProcessed: x?.CPLProcessed,
-      LaspseLeaveBalance: x?.LaspseLeaveBalance,
-      employeeId: x?.employeeId,
-      subsidiaryId: x?.subsidiaryId,
-    })),
+      rows: modifiedRows?.map((x) => ({
+        Id: x.Id,
+        ApprovedCPLDays: x?.ApprovedCPLDays,
+        CPLProcessed: x?.CPLProcessed,
+        LaspseLeaveBalance: x?.LaspseLeaveBalance,
+        employeeId: x?.employeeId,
+        subsidiaryId: x?.subsidiaryId,
+      })),
+    };
+
+    dispatch(runProcess(formattedValues));
   };
-
-  dispatch(runProcess(formattedValues));
-};
 
   useEffect(() => {
     if (!allSubsidiaryList?.length) return;
@@ -138,8 +139,13 @@ console.log("modifiedRows111111",modifiedRows)
 
     if (!findDefaultSubs) return;
 
-    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs.value));
+
     dispatch(fetchAllDept(findDefaultSubs.value));
+    dispatch(
+      fetchOvertimeEntitledEmployeesData({
+        subsidiaryId: findDefaultSubs.value,
+      })
+    );
   }, [allSubsidiaryList]);
   const getLabels = (values) => {
     return {
@@ -150,6 +156,13 @@ console.log("modifiedRows111111",modifiedRows)
       designationLabel: allDesignationsMap?.get(values.designationId || "")
         ?.label,
       locationLabel: allLocationMap?.get(values.locationId || "")?.label,
+      cpl_days_typeLabel:
+        cplTypeOptions?.find((option) => option.value === values.cpl_days_type)
+          ?.label || "",
+      operatorLabel:
+        operatorOptions?.find((option) => option.value === values.operator)
+          ?.label || "",
+      amountLabel: values?.amount || "",
     };
   };
   const generateReport = (values, group_by_emp) => {
@@ -168,9 +181,21 @@ console.log("modifiedRows111111",modifiedRows)
     setFieldValue("markAttendancewithshift", e.target.checked);
   };
 
+  const cplTypeOptions = [
+    { value: "0", label: "CPL Days (Calculated)" },
+    { value: "1", label: "CPL Days (Approved)" },
+  ];
+
+  const operatorOptions = [
+    { value: "=", label: "Equal To" },
+    { value: ">", label: "Greater Than" },
+    { value: ">=", label: "Greater Than & Equal To" },
+    { value: "<", label: "Less Than" },
+    { value: "<=", label: "Less Than & Equal To" },
+  ];
 
 
-
+  console.log("allOvertimeEntitledEmployees1111", allOvertimeEntitledEmployees);
 
   return (
     <>
@@ -212,7 +237,7 @@ console.log("modifiedRows111111",modifiedRows)
           applyFilter(payload);
         }}
       >
-        {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
+        {({ values, handleSubmit, handleBlur, setFieldValue, handleReset, errors, touched }) => (
           <>
             {/* <h6 className="mb-5">  Attendance Sheet</h6> */}
             <Form className="form form-label-right">
@@ -220,7 +245,7 @@ console.log("modifiedRows111111",modifiedRows)
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-x-3 gap-y-1">
                   {/* Subsidiary Field Start */}
                   <div>
-                 
+
                     <SearchSelect
                       name="subsidiaryId"
                       onBlur={handleBlur}
@@ -235,6 +260,7 @@ console.log("modifiedRows111111",modifiedRows)
                         dispatch(fetchAllDept(value));
                         setFieldValue("employeeId", "");
                         setFieldValue("departmentId", "");
+                        dispatch(fetchOvertimeEntitledEmployeesData({ subsidiaryId: value }))
                       }}
                       label={
                         <span>
@@ -393,9 +419,7 @@ console.log("modifiedRows111111",modifiedRows)
                         setFieldValue("employeeId", value);
                       }}
                       label={<span> Employee</span>}
-                      // value={
-                      //   allEmployeesMap?.get(values?.employeeId || "") || ""
-                      // }
+
                       value={
                         values.employeeId === ""
                           ? { label: "All", value: "" }
@@ -405,14 +429,8 @@ console.log("modifiedRows111111",modifiedRows)
                       // options={allEmployees}
                       options={[
                         { label: "All", value: "" },
-                        ...(Array.isArray(allEmployees)
-                          ? allEmployees.filter((emp) => {
-                            const attendanceMatch =
-                              values?.attendanceType === undefined ||
-                                values?.attendanceType === ""
-                                ? true
-                                : emp.attendanceType ===
-                                Number(values.attendanceType);
+                        ...(Array.isArray(allOvertimeEntitledEmployees)
+                          ? allOvertimeEntitledEmployees.filter((emp) => {
 
                             const departmentMatch =
                               values?.departmentId === undefined ||
@@ -421,7 +439,7 @@ console.log("modifiedRows111111",modifiedRows)
                                 : emp.departmentId ===
                                 Number(values.departmentId);
 
-                            return attendanceMatch && departmentMatch;
+                            return departmentMatch;
                           })
                           : []),
                       ]}
@@ -473,7 +491,68 @@ console.log("modifiedRows111111",modifiedRows)
                   </div>
 
 
+                  <div className="col-span-3 mt-2">
+                    <h6 className="font-bold mb-0 text-primary">
+                      CPL Days Filter
+                    </h6>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-3 gap-y-1">
+                      <div className="col-span-1">
+                        <label>Salary Type</label>
+                        <Field
+                          name="cpl_days_type"
+                          as="select"
+                          className="form-control"
+                          onChange={(e) => {
+                            setFieldValue("cpl_days_type", e.target.value); // Use the raw value
+                          }}
+                        >
+                          <option value="">Select </option>
+                          {cplTypeOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </Field>
+                        {errors.cpl_days_type && touched.cpl_days_type && (
+                          <label className="invalid-feedback">
+                            {errors.cpl_days_type}
+                          </label>
+                        )}
+                      </div>
 
+                      <div className="col-span-1">
+                        <label>Operator</label>
+                        <Field
+                          name="operator"
+                          as="select"
+                          className="form-control"
+                          onChange={(e) => {
+                            setFieldValue("operator", e.target.value); // Use the raw value
+                          }}
+                        >
+                          <option value="">Select </option>
+                          {operatorOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </Field>
+                      </div>
+
+                      <div className="col-span-1">
+                        <label>Amount</label>
+                        <Field
+                          // component={AmountInput}
+                          name="amount"
+                          as="input"
+                          className="form-control"
+                          onChange={(e) => {
+                            setFieldValue("amount", e.target.value); // Use the raw value
+                          }}
+                        ></Field>
+                      </div>
+                    </div>
+                  </div>
 
                 </div>
                 {(!values.from || !values.to) && (
@@ -550,7 +629,7 @@ console.log("modifiedRows111111",modifiedRows)
             </div> */}
             <Modal.Footer>
               <div className="d-flex flex-column">
-            
+
                 <div className="flex justify-end items-center gap-2">
                   <button
                     type="button"

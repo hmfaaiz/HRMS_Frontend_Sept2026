@@ -53,7 +53,11 @@ console.log("entities11111",entities);
 
   useEffect(() => {
 
-    dispatch(actions.fetchAttendance(FormUIProps.queryParams));
+    if(FormUIProps.queryParams?.filter?.subsidiaryId){
+  dispatch(actions.fetchAttendance(FormUIProps.queryParams));
+    }
+
+  
   }, [FormUIProps.queryParams.pageSize, FormUIProps.queryParams.pageNumber, dispatch]);
 
   // Table columns
@@ -139,6 +143,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: null,
+                CPLProcessed: 0,
               })
             );
             return;
@@ -153,6 +158,7 @@ console.log("entities11111",entities);
               employeeId: row?.employeeId,
               subsidiaryId: row?.subsidiaryId,
               ApprovedCPLDays: validatedValue,
+              CPLProcessed: 1,
             })
           );
         }}
@@ -166,6 +172,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: 0,
+                CPLProcessed: 0,
               })
             );
             return;
@@ -180,6 +187,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: 0,
+                CPLProcessed: 0,
               })
             );
             return;
@@ -195,6 +203,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: validatedValue,
+                CPLProcessed: 1,
               })
             );
           }
