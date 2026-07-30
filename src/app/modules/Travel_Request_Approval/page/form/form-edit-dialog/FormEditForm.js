@@ -25,7 +25,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { NumericFormat } from "react-number-format";
 import { Modal, Accordion, Button, Card } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
-import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog"; 
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 export function FormEditForm({
   employeeId,
   employeeDetails,
@@ -75,8 +75,8 @@ export function FormEditForm({
     const preApproverIds = Array.isArray(preApprover)
       ? preApprover.map((id) => String(id).trim())
       : String(preApprover)
-          .split(",")
-          .map((id) => id.trim());
+        .split(",")
+        .map((id) => id.trim());
 
     return preApproverIds.includes(roleId);
   }, [auth?.user?.roleId, employeeEntitlement?.preApprover]);
@@ -103,7 +103,7 @@ export function FormEditForm({
     dailyAllowanceRate: Yup.number()
       .required(VALIDATION_MESSAGES.required)
       .min(0, VALIDATION_MESSAGES.minOneValue)
-      .test("limit-check", VALIDATION_MESSAGES.amountExceedLimit, function(
+      .test("limit-check", VALIDATION_MESSAGES.amountExceedLimit, function (
         value,
       ) {
         const limit = employeeEntitlement?.dailyAllowanceAmount || 0;
@@ -124,7 +124,7 @@ export function FormEditForm({
             .test(
               "different-locations",
               "From and To locations cannot be the same",
-              function(value) {
+              function (value) {
                 const { fromLocation } = this.parent;
                 if (!value || !fromLocation) return true; // Skip if either is empty
                 return value !== fromLocation;
@@ -162,20 +162,20 @@ export function FormEditForm({
             (accommodationRequired, selfEntitlement, schema) => {
               return accommodationRequired && selfEntitlement
                 ? schema
-                    .required(VALIDATION_MESSAGES.required)
-                    .min(0, VALIDATION_MESSAGES.minOneValue)
-                    .test(
-                      "self-amount-limit",
-                      VALIDATION_MESSAGES.amountExceedLimit,
-                      function(value) {
-                        const limit =
-                          employeeEntitlement?.hotelEntitlementSelfAmount || 0;
-                        if (limit > 0 && value > limit) {
-                          return false;
-                        }
-                        return true;
-                      },
-                    )
+                  .required(VALIDATION_MESSAGES.required)
+                  .min(0, VALIDATION_MESSAGES.minOneValue)
+                  .test(
+                    "self-amount-limit",
+                    VALIDATION_MESSAGES.amountExceedLimit,
+                    function (value) {
+                      const limit =
+                        employeeEntitlement?.hotelEntitlementSelfAmount || 0;
+                      if (limit > 0 && value > limit) {
+                        return false;
+                      }
+                      return true;
+                    },
+                  )
                 : schema.nullable();
             },
           ),
@@ -187,8 +187,8 @@ export function FormEditForm({
       (advanceRequested, schema) => {
         return advanceRequested
           ? schema
-              .required(VALIDATION_MESSAGES.required)
-              .min(0, VALIDATION_MESSAGES.minOneValue)
+            .required(VALIDATION_MESSAGES.required)
+            .min(0, VALIDATION_MESSAGES.minOneValue)
           : schema.nullable();
       },
     ),
@@ -727,7 +727,7 @@ export function FormEditForm({
                                                     setFieldValue(
                                                       `travelSegments.${values
                                                         .travelSegments.length -
-                                                        1}.toLocation`,
+                                                      1}.toLocation`,
                                                       val,
                                                     );
                                                   }
@@ -769,14 +769,14 @@ export function FormEditForm({
                                                 style={
                                                   values.travelSegments.length >
                                                     1 &&
-                                                  index ===
+                                                    index ===
                                                     values.travelSegments
                                                       .length -
-                                                      1
+                                                    1
                                                     ? {
-                                                        backgroundColor:
-                                                          "#f3f6f9",
-                                                      }
+                                                      backgroundColor:
+                                                        "#f3f6f9",
+                                                    }
                                                     : {}
                                                 }
                                                 onChange={(e) => {
@@ -790,11 +790,11 @@ export function FormEditForm({
                                                     index <
                                                     values.travelSegments
                                                       .length -
-                                                      1
+                                                    1
                                                   ) {
                                                     setFieldValue(
                                                       `travelSegments.${index +
-                                                        1}.fromLocation`,
+                                                      1}.fromLocation`,
                                                       val,
                                                     );
                                                   }
@@ -850,14 +850,14 @@ export function FormEditForm({
                                                 popperPlacement="bottom"
                                                 minDate={
                                                   index > 0 &&
-                                                  values.travelSegments[
-                                                    index - 1
-                                                  ]?.toDate
+                                                    values.travelSegments[
+                                                      index - 1
+                                                    ]?.toDate
                                                     ? new Date(
-                                                        values.travelSegments[
-                                                          index - 1
-                                                        ].toDate,
-                                                      )
+                                                      values.travelSegments[
+                                                        index - 1
+                                                      ].toDate,
+                                                    )
                                                     : null
                                                 }
                                               />
@@ -1066,13 +1066,13 @@ export function FormEditForm({
                                               style={{
                                                 opacity:
                                                   !segment.accommodationRequired ||
-                                                  segment.selfEntitlement ||
-                                                  (values.travelSegments
-                                                    .length > 1 &&
-                                                    index ===
+                                                    segment.selfEntitlement ||
+                                                    (values.travelSegments
+                                                      .length > 1 &&
+                                                      index ===
                                                       values.travelSegments
                                                         .length -
-                                                        1)
+                                                      1)
                                                     ? 0.4
                                                     : 1,
                                               }}
@@ -1132,13 +1132,13 @@ export function FormEditForm({
                                                   style={{
                                                     opacity:
                                                       !segment.accommodationRequired ||
-                                                      segment.hotelEntitlement ||
-                                                      (values.travelSegments
-                                                        .length > 1 &&
-                                                        index ===
+                                                        segment.hotelEntitlement ||
+                                                        (values.travelSegments
+                                                          .length > 1 &&
+                                                          index ===
                                                           values.travelSegments
                                                             .length -
-                                                            1)
+                                                          1)
                                                         ? 0.4
                                                         : 1,
                                                   }}
@@ -1180,14 +1180,14 @@ export function FormEditForm({
                                                 style={{
                                                   opacity:
                                                     !segment.accommodationRequired ||
-                                                    !segment.selfEntitlement ||
-                                                    segment.hotelEntitlement ||
-                                                    (values.travelSegments
-                                                      .length > 1 &&
-                                                      index ===
+                                                      !segment.selfEntitlement ||
+                                                      segment.hotelEntitlement ||
+                                                      (values.travelSegments
+                                                        .length > 1 &&
+                                                        index ===
                                                         values.travelSegments
                                                           .length -
-                                                          1)
+                                                        1)
                                                       ? 0.4
                                                       : 1,
                                                 }}
@@ -1204,8 +1204,8 @@ export function FormEditForm({
                                                   disabled={true}
                                                   value={
                                                     !segment.accommodationRequired ||
-                                                    !segment.selfEntitlement ||
-                                                    !!segment.hotelEntitlement
+                                                      !segment.selfEntitlement ||
+                                                      !!segment.hotelEntitlement
                                                       ? ""
                                                       : segment.selfAmount
                                                   }
@@ -1242,170 +1242,6 @@ export function FormEditForm({
                               </>
                             )}
                           </FieldArray>
-                        </div>
-
-                        {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
-                        <div className="border-t pt-4">
-                          <div className="flex flex-col lg:flex-row gap-8 justify-between">
-                            {/* Daily Allowance */}
-                            <div className="max-w-[400px]">
-                              <h6 className="font-bold text-primary mb-2">
-                                Daily Allowance
-                              </h6>
-                              <div className="grid grid-cols-3 gap-x-2">
-                                <div>
-                                  <label className=" mb-1 flex items-center gap-1">
-                                    Rate <span className="text-danger">*</span>
-                                    {employeeEntitlement?.dailyAllowanceAmount && (
-                                      <span className="text-muted font-normal ml-1">
-                                        (Limit ={" "}
-                                        {
-                                          employeeEntitlement.dailyAllowanceAmount
-                                        }
-                                        )
-                                      </span>
-                                    )}
-                                  </label>
-                                  <NumericFormat
-                                    name="dailyAllowanceRate"
-                                    className="form-control text-sm bg-light"
-                                    placeholder="0"
-                                    thousandSeparator
-                                    allowNegative={false}
-                                    isAllowed={({ value }) => value.length <= 6}
-                                    disabled={true}
-                                    value={values.dailyAllowanceRate}
-                                    onValueChange={(valuesObj) => {
-                                      setFieldValue(
-                                        "dailyAllowanceRate",
-                                        valuesObj.value,
-                                      );
-                                    }}
-                                  />
-                                  {errors.dailyAllowanceRate &&
-                                    touched.dailyAllowanceRate && (
-                                      <div className="form-feedBack mt-1 text-xs">
-                                        {errors.dailyAllowanceRate}
-                                      </div>
-                                    )}
-                                </div>
-                                <div>
-                                  <label className=" block mb-1">
-                                    Days <span className="text-danger">*</span>
-                                  </label>
-                                  <Field
-                                    type="number"
-                                    name="dailyAllowanceDays"
-                                    className="form-control text-sm bg-light"
-                                    placeholder="0"
-                                    min="0"
-                                    disabled={true}
-                                    onInput={(e) => {
-                                      e.target.value = e.target.value.slice(
-                                        0,
-                                        3,
-                                      );
-                                    }}
-                                  />
-                                  {errors.dailyAllowanceDays &&
-                                    touched.dailyAllowanceDays && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {errors.dailyAllowanceDays}
-                                      </div>
-                                    )}
-                                </div>
-                                <div>
-                                  <label className=" block mb-1">Amount</label>
-                                  <NumericFormat
-                                    name="dailyAllowanceAmount"
-                                    className="form-control text-sm bg-light"
-                                    placeholder="0"
-                                    thousandSeparator
-                                    allowNegative={false}
-                                    disabled={true}
-                                    value={values.dailyAllowanceAmount}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Taxi Fare */}
-                            <div className="max-w-32">
-                              <h6 className="font-bold text-primary mb-2">
-                                Taxi Fare
-                              </h6>
-                              <div>
-                                <label className="block mb-1">Rate</label>
-                                <NumericFormat
-                                  name="taxiFareRate"
-                                  className="form-control text-sm"
-                                  placeholder="0"
-                                  thousandSeparator
-                                  allowNegative={false}
-                                  isAllowed={({ value }) => value.length <= 6}
-                                  disabled={true}
-                                  value={values.taxiFareRate}
-                                />
-                              </div>
-                            </div>
-
-                            {/* Advance Request Section */}
-                            <div className="max-w-[300px] mr-8 ">
-                              <div className="flex items-center mb-2">
-                                <h6 className="font-bold text-primary mr-3 mb-0">
-                                  Advance Request
-                                </h6>
-                                <div className="flex items-center">
-                                  <label className="ml-16 mr-2 mb-0">
-                                    Advance Required
-                                  </label>
-                                  <Checkbox
-                                    disabled={true}
-                                    isSelected={values.advanceRequested}
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="grid grid-cols-6 gap-x-3 items-end">
-                                {/* Amount */}
-                                <div className="col-span-2">
-                                  <label className=" block mb-1">
-                                    Amount
-                                    {values.advanceRequested && (
-                                      <span className="text-danger">*</span>
-                                    )}
-                                  </label>
-                                  <NumericFormat
-                                    name="advanceAmount"
-                                    className="form-control text-sm"
-                                    style={{ backgroundColor: "#eefbff" }}
-                                    placeholder="0"
-                                    thousandSeparator
-                                    allowNegative={false}
-                                    isAllowed={({ value }) => value.length <= 9}
-                                    disabled={true}
-                                    value={values.advanceAmount}
-                                  />
-                                  {errors.advanceAmount &&
-                                    touched.advanceAmount && (
-                                      <div className="form-feedBack text-xs mt-1">
-                                        {errors.advanceAmount}
-                                      </div>
-                                    )}
-                                </div>
-                                {/* Advance Remarks */}
-                                <div className="col-span-4">
-                                  <label className="font-bold mb-1 opacity-70">
-                                    Advance Request Remarks:
-                                    <span className="font-normal">
-                                      {" "}
-                                      {values.advanceRemarks || "-"}
-                                    </span>
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
                         </div>
 
                         <div className="grid grid-cols-12 gap-x-3 mt-4 mb-8">
@@ -1718,7 +1554,7 @@ export function FormEditForm({
 
               {/* Travel Hotel details */}
               {values.isAccessToUpdate && (
-                <div className="w-full mt-9">
+                <div className="w-full mt-9 mb-4">
                   <Accordion
                     activeKey={activeHotelKey}
                     onSelect={(key) => setActiveHotelKey(key)}
@@ -1787,7 +1623,7 @@ export function FormEditForm({
                                           if (
                                             !segment.accommodationRequired ||
                                             index ===
-                                              values.travelSegments.length - 1
+                                            values.travelSegments.length - 1
                                           ) {
                                             return null;
                                           }
@@ -1962,6 +1798,176 @@ export function FormEditForm({
                     </Card>
                   </Accordion>
 
+                  {/* Daily Allowance, Taxi Fare, and Advance Request Section */}
+                  <div className="border-t py-6">
+                    <div className="flex flex-col lg:flex-row gap-8 justify-between">
+                      {/* Advance Request Section */}
+                      <div className="max-w-[300px] mr-8 ">
+                        <div className="flex items-center mb-2">
+                          <h6 className="font-bold text-primary mr-3 mb-0">
+                            Advance Request
+                          </h6>
+
+                        </div>
+
+                        <div className="grid grid-cols-10 gap-x-3 items-end">
+                          {/* Amount */}
+                          <div className="col-span-4 flex items-center">
+                            <label className=" mr-2 mb-0">
+                              Advance Required
+                            </label>
+                            <Checkbox
+                              disabled={true}
+                              isSelected={values.advanceRequested}
+                            />
+                          </div>
+                          <div className="col-span-2">
+                            <label className=" block mb-1">
+                              Amount
+                              {values.advanceRequested && (
+                                <span className="text-danger">*</span>
+                              )}
+                            </label>
+                            <NumericFormat
+                              name="advanceAmount"
+                              className="form-control text-sm"
+                              style={{ backgroundColor: "#eefbff" }}
+                              placeholder="0"
+                              thousandSeparator
+                              allowNegative={false}
+                              isAllowed={({ value }) => value.length <= 9}
+                              disabled={true}
+                              value={values.advanceAmount}
+                            />
+                            {errors.advanceAmount &&
+                              touched.advanceAmount && (
+                                <div className="form-feedBack text-xs mt-1">
+                                  {errors.advanceAmount}
+                                </div>
+                              )}
+                          </div>
+                          {/* Advance Remarks */}
+                          <div className="col-span-4">
+                            <label className="font-bold mb-1 opacity-70">
+                              Advance Request Remarks:
+                              <span className="font-normal">
+                                {" "}
+                                {values.advanceRemarks || "-"}
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Daily Allowance */}
+                      <div className="max-w-[400px]">
+                        <h6 className="font-bold text-primary mb-2">
+                          Daily Allowance
+                        </h6>
+                        <div className="grid grid-cols-3 gap-x-2">
+                          <div>
+                            <label className=" mb-1 flex items-center gap-1">
+                              Rate <span className="text-danger">*</span>
+                              {employeeEntitlement?.dailyAllowanceAmount && (
+                                <span className="text-muted font-normal ml-1">
+                                  (Limit ={" "}
+                                  {
+                                    employeeEntitlement.dailyAllowanceAmount
+                                  }
+                                  )
+                                </span>
+                              )}
+                            </label>
+                            <NumericFormat
+                              name="dailyAllowanceRate"
+                              className="form-control text-sm bg-light"
+                              placeholder="0"
+                              thousandSeparator
+                              allowNegative={false}
+                              isAllowed={({ value }) => value.length <= 6}
+                              disabled={true}
+                              value={values.dailyAllowanceRate}
+                              onValueChange={(valuesObj) => {
+                                setFieldValue(
+                                  "dailyAllowanceRate",
+                                  valuesObj.value,
+                                );
+                              }}
+                            />
+                            {errors.dailyAllowanceRate &&
+                              touched.dailyAllowanceRate && (
+                                <div className="form-feedBack mt-1 text-xs">
+                                  {errors.dailyAllowanceRate}
+                                </div>
+                              )}
+                          </div>
+                          <div>
+                            <label className=" block mb-1">
+                              Days <span className="text-danger">*</span>
+                            </label>
+                            <Field
+                              type="number"
+                              name="dailyAllowanceDays"
+                              className="form-control text-sm bg-light"
+                              placeholder="0"
+                              min="0"
+                              disabled={true}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.slice(
+                                  0,
+                                  3,
+                                );
+                              }}
+                            />
+                            {errors.dailyAllowanceDays &&
+                              touched.dailyAllowanceDays && (
+                                <div className="form-feedBack text-xs mt-1">
+                                  {errors.dailyAllowanceDays}
+                                </div>
+                              )}
+                          </div>
+                          <div>
+                            <label className=" block mb-1">Amount</label>
+                            <NumericFormat
+                              name="dailyAllowanceAmount"
+                              className="form-control text-sm bg-light"
+                              placeholder="0"
+                              thousandSeparator
+                              allowNegative={false}
+                              disabled={true}
+                              value={values.dailyAllowanceAmount}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+
+                      {/* Taxi Fare */}
+                      <div className="max-w-32 pr-[9px]">
+                        <h6 className="font-bold text-primary mb-2">
+                          Taxi Fare
+                        </h6>
+                        <div>
+                          <label className="block mb-1">Rate</label>
+                          <NumericFormat
+                            name="taxiFareRate"
+                            className="form-control text-sm"
+                            placeholder="0"
+                            thousandSeparator
+                            allowNegative={false}
+                            isAllowed={({ value }) => value.length <= 6}
+                            disabled={true}
+                            value={values.taxiFareRate}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
                   {/* Travel Cost Summary */}
                   <div className="border-t  flex justify-end pt-2">
                     <div className="w-[300px]">
@@ -2108,21 +2114,21 @@ export function FormEditForm({
                       type="button"
                       className="btn btn-danger btn-sm font-bold px-8"
                       disabled={isReadOnly || isSubmitting}
-                     onClick={async () => {
-  if (!values.authorityRemarks) {
-    toast.error("Remarks are required for rejection");
-    return;
-  }
-  const result = await confirm(
-    "Reject Request",
-    "Are you sure you want to reject this request?",
-    "Cancel",
-    "Reject",
-  );
-  if (!result) return;
-  setFieldValue("request_status", "R");
-  setTimeout(() => submitForm(), 0);
-}}
+                      onClick={async () => {
+                        if (!values.authorityRemarks) {
+                          toast.error("Remarks are required for rejection");
+                          return;
+                        }
+                        const result = await confirm(
+                          "Reject Request",
+                          "Are you sure you want to reject this request?",
+                          "Cancel",
+                          "Reject",
+                        );
+                        if (!result) return;
+                        setFieldValue("request_status", "R");
+                        setTimeout(() => submitForm(), 0);
+                      }}
                     >
                       Reject
                     </button>
@@ -2131,17 +2137,17 @@ export function FormEditForm({
                       className="btn btn-success btn-sm font-bold px-8"
                       disabled={isReadOnly || isSubmitting}
                       onClick={async () => {
-  const result = await confirm(
-    "Approve Request",
-    "Are you sure you want to approve this request?",
-    "Cancel",
-    "Approve",
-  );
-  if (!result) return;
-  isApprovingRef.current = true;
-  setFieldValue("request_status", "A");
-  setTimeout(() => submitForm(), 0);
-}}
+                        const result = await confirm(
+                          "Approve Request",
+                          "Are you sure you want to approve this request?",
+                          "Cancel",
+                          "Approve",
+                        );
+                        if (!result) return;
+                        isApprovingRef.current = true;
+                        setFieldValue("request_status", "A");
+                        setTimeout(() => submitForm(), 0);
+                      }}
                     >
                       Approve
                     </button>
@@ -2173,16 +2179,16 @@ export function FormEditForm({
                   <span className="text-xs">
                     {employeeEntitlement.ModeOfTransports?.length > 0
                       ? employeeEntitlement.ModeOfTransports.map(
-                          (m) => m.formName || m.name || m.label,
-                        ).join(", ")
+                        (m) => m.formName || m.name || m.label,
+                      ).join(", ")
                       : transportOptions
-                          .filter((opt) =>
-                            employeeEntitlement.modeOfTransportId?.includes(
-                              String(opt.value),
-                            ),
-                          )
-                          .map((o) => o.label)
-                          .join(", ") || "N/A"}
+                        .filter((opt) =>
+                          employeeEntitlement.modeOfTransportId?.includes(
+                            String(opt.value),
+                          ),
+                        )
+                        .map((o) => o.label)
+                        .join(", ") || "N/A"}
                   </span>
                 </label>
               </div>
@@ -2193,16 +2199,16 @@ export function FormEditForm({
                   <span className="text-xs">
                     {employeeEntitlement.HotelEntitlements?.length > 0
                       ? employeeEntitlement.HotelEntitlements.map(
-                          (h) => h.formName || h.name || h.label,
-                        ).join(", ")
+                        (h) => h.formName || h.name || h.label,
+                      ).join(", ")
                       : hotelOptions
-                          .filter((opt) =>
-                            employeeEntitlement.hotelEntitlementId?.includes(
-                              String(opt.value),
-                            ),
-                          )
-                          .map((o) => o.label)
-                          .join(", ") || "N/A"}
+                        .filter((opt) =>
+                          employeeEntitlement.hotelEntitlementId?.includes(
+                            String(opt.value),
+                          ),
+                        )
+                        .map((o) => o.label)
+                        .join(", ") || "N/A"}
                   </span>
                 </label>
               </div>
