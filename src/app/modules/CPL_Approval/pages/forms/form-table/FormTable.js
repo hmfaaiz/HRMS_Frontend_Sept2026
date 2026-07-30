@@ -143,7 +143,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: null,
-                CPLProcessed: 0,
+           
               })
             );
             return;
@@ -158,7 +158,7 @@ console.log("entities11111",entities);
               employeeId: row?.employeeId,
               subsidiaryId: row?.subsidiaryId,
               ApprovedCPLDays: validatedValue,
-              CPLProcessed: 1,
+          
             })
           );
         }}
@@ -172,7 +172,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: 0,
-                CPLProcessed: 0,
+              
               })
             );
             return;
@@ -187,7 +187,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: 0,
-                CPLProcessed: 0,
+              
               })
             );
             return;
@@ -203,7 +203,7 @@ console.log("entities11111",entities);
                 employeeId: row?.employeeId,
                 subsidiaryId: row?.subsidiaryId,
                 ApprovedCPLDays: validatedValue,
-                CPLProcessed: 1,
+              
               })
             );
           }
