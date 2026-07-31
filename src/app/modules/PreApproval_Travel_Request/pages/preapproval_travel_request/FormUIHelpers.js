@@ -31,6 +31,7 @@ export const initialValues = {
 export const initialFilter = {
   filter: {
     searchQuery: "",
+    request_status: ["P"],
   },
   sortOrder: "ASC",
   pageSize: 10,
