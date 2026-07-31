@@ -77,7 +77,7 @@ export function FormTable() {
       style: { minWidth: "110px" },
     },
     {
-     
+
       dataField: "grade",
       text: "Grade",
       sort: false,
@@ -119,20 +119,20 @@ export function FormTable() {
       ),
     },
     {
-  dataField: "SalaryMonth.label",
-  text: "Salary Considered",
-  sort: false,
-  sortCaret: sortCaret,
-  headerSortingClasses,
-  style: { minWidth: "120px" },
-  formatter: (cell, row) => {
-  if (!row.SalaryMonth) return "-";
-
-  return row.salaryMonthOption === "CURRENT_SALARY"
-    ? `${row.SalaryMonth.reportFormat} (Current Salary)`
-    : row.SalaryMonth.reportFormat;
-}
-}, {
+      dataField: "SalaryMonth.label",
+      text: "Salary Considered",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: { minWidth: "120px" },
+      formatter: (cell, row) => {
+  
+        if (row.salaryMonthOption === "CURRENT_SALARY") {
+          return "Current Salary";
+        }
+        return row.SalaryMonth ? row.SalaryMonth.reportFormat : "-";
+      },
+    }, {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
