@@ -70,7 +70,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
   const saveForm = async (formData) => {
 
-    console.log("formdata11111",formData)
+    console.log("formdata11111",formData?.file);
   if (!formData.Id) {
     // Create
     dispatch(
@@ -103,6 +103,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       remarks: formData.remarks,
       cityId: formData.cityId,
       countryId: formData.countryId,
+      file: formData?.file,
     };
 
     await dispatch(
@@ -125,6 +126,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
+      
     >
       <FormEditDialogHeader id={id} isUserForRead={userForRead} />
       <FormEditForm

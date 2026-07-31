@@ -8,7 +8,7 @@ import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComp
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import { FormEditForm } from "../form-edit-dialog/FormEditForm";
 import { FormTable } from "../form-table/FormTable";
-import { FormFilter } from "../form-filter/FormFilter";
+import { FormFilter, FormSearch } from "../form-filter/FormFilter";
 import { CirclePlus } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 import TravelProfile from "../form-edit-dialog/TravelProfile";
@@ -93,7 +93,7 @@ export function FormCard({ onRegisterReset }) {
 
   useEffect(() => {
     if (onRegisterReset) onRegisterReset(resetAllState);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddNew = () => {
@@ -141,18 +141,19 @@ export function FormCard({ onRegisterReset }) {
   const activeEmployeeId = isEditMode
     ? editRowData?.employeeId
     : isViewMode
-    ? viewRowData?.employeeId
-    : FormUIProps.employeeId;
+      ? viewRowData?.employeeId
+      : FormUIProps.employeeId;
 
   const activeTravelRequestId = isEditMode
     ? editRowData?.preApprovalTravelRequestId
     : isViewMode
-    ? viewRowData?.preApprovalTravelRequestId
-    : FormUIProps.travelRequestId;
+      ? viewRowData?.preApprovalTravelRequestId
+      : FormUIProps.travelRequestId;
 
   const activeUser = isEditMode ? editRowData : isViewMode ? viewRowData : null;
 
   const showMainForm = showForm && activeEmployeeId && activeTravelRequestId;
+
 
   const menuOptions = [
     {
@@ -165,17 +166,52 @@ export function FormCard({ onRegisterReset }) {
           el?.isResourceShow,
       ),
     },
-    // {
-    //   name: "Post Travel Request",
-    //   link: "/post_travel_request/read-all-post-travel-request",
-    //   isShow: payrollAccess?.some(
-    //     (el) =>
-    //       (el?.componentName === "ReadAllPostTravelRequest" ||
-    //         el?.slug === "read-all-post-travel-request") &&
-    //       el?.isResourceShow,
-    //   ),
-    // },
+    {
+      name: "Approval",
+      link: "/travel_request_approval/read-all-travel-request-approval",
+      isShow: payrollAccess?.some(
+        (el) =>
+          (el?.componentName === "TravelRequestApproval" ||
+            el?.componentName === "ReadAllTravelRequestApproval" ||
+            el?.slug === "read-all-travel-request-approval") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Workflow Status",
+      link:
+        "/travel_request_workflow_status/read-all-travel-request-workflow-status",
+      isShow: payrollAccess?.some(
+        (el) =>
+          (el?.componentName === "TravelRequestWorkflowStatus" ||
+            el?.componentName === "ReadAllTravelRequestWorkflowStatus" ||
+            el?.slug === "read-all-travel-request-workflow-status") &&
+          el?.isResourceShow,
+      ),
+    },
   ];
+  // const menuOptions = [
+  //   {
+  //     name: "Travel Request",
+  //     link: "/travel_request/read-all-travel-request",
+  //     isShow: payrollAccess?.some(
+  //       (el) =>
+  //         (el?.componentName === "TravelRequest" ||
+  //           el?.slug === "read-all-travel-request") &&
+  //         el?.isResourceShow,
+  //     ),
+  //   },
+  //   // {
+  //   //   name: "Post Travel Request",
+  //   //   link: "/post_travel_request/read-all-post-travel-request",
+  //   //   isShow: payrollAccess?.some(
+  //   //     (el) =>
+  //   //       (el?.componentName === "ReadAllPostTravelRequest" ||
+  //   //         el?.slug === "read-all-post-travel-request") &&
+  //   //       el?.isResourceShow,
+  //   //   ),
+  //   // },
+  // ];
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
@@ -204,24 +240,25 @@ export function FormCard({ onRegisterReset }) {
         </div>
 
         <div className="px-3 py-4 rounded-lg bg-white">
-          <div className="flex justify-between items-center flex-wrap gap-2 mb-4">
+          <div className="flex justify-between items-end flex-wrap gap-2 mb-4">
             <h6 className="text-primary font-bold mb-0">
               Post Travel Request History
             </h6>
-            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-              <FormFilter />
-              <div className="flex items-center gap-2">
-                {accessUser && (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={handleAddNew}
-                  >
-                    <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
-                    Add
-                  </button>
-                )}
-              </div>
+          </div>
+          <div className="flex justify-between items-end flex-wrap gap-2 mb-6">
+            <FormFilter />
+            <div className="flex items-center gap-2">
+              <FormSearch />
+              {accessUser && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleAddNew}
+                >
+                  <CirclePlus className="w-4 h-4 text-white mr-2" />
+                  Add
+                </button>
+              )}
             </div>
           </div>
 

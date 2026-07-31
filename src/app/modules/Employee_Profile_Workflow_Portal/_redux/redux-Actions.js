@@ -5,6 +5,9 @@ import { toast } from "react-toastify";
 import {
   generateEmployeeProfileWorkflowPortalReportRequest,
 } from "./redux-Crud";
+import { uploadFile as dashboardUploadFile } from "../../Dashboard/_redux/dashboardActions";
+
+export const uploadFile = (file) => (dispatch) => dashboardUploadFile(file);
 
 const { actions } = EmployeeProfileWorkflowPortalSlice;
 
@@ -105,6 +108,18 @@ export const fetchDataFromEmployeeProfileById = (employeeId) => (dispatch) => {
     })
     .catch((error) => {
       error.clientMessage = "Can't fetch employee profile data";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+export const fetchEmployeeDocumentsByProfile = (employeeId) => (dispatch) => {
+  return requestFromServer
+    .getEmployeeDocumentsByProfile({ employeeId })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't fetch employee documents data";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };

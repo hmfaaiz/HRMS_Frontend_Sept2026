@@ -716,6 +716,10 @@ import ("./modules/Bonus_Process/pages/index"))
 const bonus_register = lazy (() =>
 import ("./modules/Bonus_Register/pages/index"))
 
+const cpl_approval = lazy (() =>
+import ("./modules/CPL_Approval/pages/index"))
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -956,6 +960,7 @@ const ROUTES = {
   cpl_leave: cpl_leave,
   bonus_process: bonus_process,
   bonus_register: bonus_register,
+  cpl_approval: cpl_approval,
 
 };
 

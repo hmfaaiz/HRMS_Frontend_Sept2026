@@ -8,7 +8,7 @@ import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashb
 import { getEmployeeProfileById } from "../../../../../../_metronic/redux/dashboardCrud";
 import { FormEditForm } from "../form-edit-dialog/FormEditForm";
 import { FormTable } from "../form-table/FormTable";
-import { FormFilter } from "../form-filter/FormFilter";
+import { FormFilter, FormSearch } from "../form-filter/FormFilter";
 import { CirclePlus } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 import { WorkflowAuthortiesTable } from "../form-table/WorkflowAuthortiesTable";
@@ -56,9 +56,9 @@ export function FormCard() {
       employeeId: FormUIContext.employeeId,
       setEmployeeId: FormUIContext.setEmployeeId,
       workflowId: FormUIContext.workflowId,
-    setWorkflowId: FormUIContext.setWorkflowId,
-    workflowRowData: FormUIContext.workflowRowData,
-    setWorkflowRowData: FormUIContext.setWorkflowRowData,
+      setWorkflowId: FormUIContext.setWorkflowId,
+      workflowRowData: FormUIContext.workflowRowData,
+      setWorkflowRowData: FormUIContext.setWorkflowRowData,
     };
   }, [FormUIContext]);
 
@@ -141,16 +141,16 @@ export function FormCard() {
   };
 
   const menuOptions = [
-    {
-      name: "Travel Request",
-      link: "/travel_request/read-all-travel-request",
-      isShow: travel?.some(
-        (el) =>
-          (el?.componentName === "TravelRequest" ||
-            el?.slug === "read-all-travel-request") &&
-          el?.isResourceShow,
-      ),
-    },
+    // {
+    //   name: "Travel Request",
+    //   link: "/travel_request/read-all-travel-request",
+    //   isShow: travel?.some(
+    //     (el) =>
+    //       (el?.componentName === "TravelRequest" ||
+    //         el?.slug === "read-all-travel-request") &&
+    //       el?.isResourceShow,
+    //   ),
+    // },
     {
       name: "Post Travel Request",
       link: "/post_travel_request/read-all-post-travel-request",
@@ -216,9 +216,10 @@ export function FormCard() {
 
         {/* Table View - Always visible */}
         <div className="px-3 py-2 rounded-lg bg-white">
-          <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2 mb-6">
+          <div className="flex justify-between items-end flex-wrap gap-2 ">
             <FormFilter />
             <div className="flex items-center gap-2">
+              <FormSearch />
               <button
                 type="button"
                 className="btn btn-primary"
@@ -244,7 +245,7 @@ export function FormCard() {
                 saveForm={saveForm}
                 onHide={handleCancel}
                 disableLoading={disableLoading}
-                loading={loading}   
+                loading={loading}
               />
             )}
           </div>
@@ -263,17 +264,17 @@ export function FormCard() {
           </div>
         )}
         {/* Workflow Modal */}
-{FormUIProps.workflowId && (
-  <TravelRequestWorkflowModal
-    show={!!FormUIProps.workflowId}
-    workflowId={FormUIProps.workflowId}
-    rowData={FormUIProps.workflowRowData}
-    onHide={() => {
-      FormUIProps.setWorkflowId(null);
-      FormUIProps.setWorkflowRowData(null);
-    }}
-  />
-)}
+        {FormUIProps.workflowId && (
+          <TravelRequestWorkflowModal
+            show={!!FormUIProps.workflowId}
+            workflowId={FormUIProps.workflowId}
+            rowData={FormUIProps.workflowRowData}
+            onHide={() => {
+              FormUIProps.setWorkflowId(null);
+              FormUIProps.setWorkflowRowData(null);
+            }}
+          />
+        )}
 
         {/* Workflow Authorities Card */}
         <WorkflowAuthortiesTable />

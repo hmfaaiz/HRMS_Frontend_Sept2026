@@ -3,7 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, Pencil, Trash2, View } from "lucide-react";
+import { Eye, FileClock, FileCog, Pencil, Trash2, View } from "lucide-react";
 import { getUploadUrl } from "../../../../../../utils/common";
 
 export function ActionsColumnFormatter(
@@ -19,13 +19,35 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog,
-    isAccessForRead,
+    isAccessForRead, openReadAssetHistoryDialog, openReadAssetAssessmentDialog,
   }
 ) {
   const isUserRead = false;
   return (
     <div className="space-x-2">
-       
+
+
+
+      {isAccessForRead && row.isPresent == 1 && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Asset History</Tooltip>}
+        >
+          <a onClick={() => openReadAssetHistoryDialog(row.Id, isUserRead)}>
+            <FileClock className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+
+      {isAccessForRead && row.isAssessmentExist == 1 && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Asset Assessment</Tooltip>}
+        >
+          <a onClick={() => openReadAssetAssessmentDialog(row.Id, isUserRead)}>
+            <FileCog className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+
       {isAccessForRead && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
@@ -35,7 +57,7 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       )}
-      {isAccessForEdit && row.status !=2 &&(
+      {isAccessForEdit && row.status != 2 && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -45,7 +67,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForDelete && !row.isPresent && (
+      {isAccessForDelete && !row.isPresent && row.status != 2 && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">

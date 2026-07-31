@@ -23,6 +23,7 @@ export function AsideMenuList({ layoutProps }) {
   const menuRef = useRef(null);
   const dropdownContainerRef = useRef(null);
   const scrollContainerRef = useRef(null);
+  const headerRef = useRef(null);
 
   // State for scroll position
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -35,12 +36,20 @@ export function AsideMenuList({ layoutProps }) {
   const dropdownPortalRef = useRef(null);
   const subMenuPortalRef = useRef(null);
 
+  // Add state for dropdown anchor rect to handle scroll updates
+  const [dropdownAnchorRect, setDropdownAnchorRect] = useState(null);
+  // Add state for submenu anchor rect to handle scroll updates
+  const [subMenuAnchorRect, setSubMenuAnchorRect] = useState(null);
+
   const handleDropdown = (index, event) => {
     if (event && event.currentTarget) {
       const rect = event.currentTarget.getBoundingClientRect();
+      // Store the rect for scroll position updates
+      setDropdownAnchorRect(rect);
+      // Use viewport coordinates (no scroll offset)
       setDropdownPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX
+        top: rect.bottom,
+        left: rect.left
       });
     }
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -128,6 +137,8 @@ export function AsideMenuList({ layoutProps }) {
       if (!clickedInsideMain && !clickedInsideDropdownPortal && !clickedInsideSubMenuPortal) {
         setDropdownOpen(null);
         setOpenSubMenu({});
+        setDropdownAnchorRect(null);
+        setSubMenuAnchorRect(null);
       }
     }
     if (dropdownOpen !== null) {
@@ -139,6 +150,78 @@ export function AsideMenuList({ layoutProps }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownOpen]);
+
+  // Update dropdown position on scroll - ALWAYS use viewport coordinates
+  useEffect(() => {
+    if (dropdownOpen !== null && dropdownAnchorRect) {
+      const updateDropdownPosition = () => {
+        // Get the current position of the sticky header
+        const headerElement = document.querySelector('.sticky-header');
+        if (headerElement) {
+          const headerRect = headerElement.getBoundingClientRect();
+          // Position dropdown right below the header using viewport coordinates
+          setDropdownPosition({
+            top: headerRect.bottom,
+            left: dropdownAnchorRect.left
+          });
+        } else {
+          // Fallback: use the stored viewport coordinates
+          setDropdownPosition({
+            top: dropdownAnchorRect.bottom,
+            left: dropdownAnchorRect.left
+          });
+        }
+      };
+
+      // Initial update
+      updateDropdownPosition();
+
+      // Update on scroll and resize
+      window.addEventListener('scroll', updateDropdownPosition, true);
+      window.addEventListener('resize', updateDropdownPosition);
+
+      return () => {
+        window.removeEventListener('scroll', updateDropdownPosition, true);
+        window.removeEventListener('resize', updateDropdownPosition);
+      };
+    }
+  }, [dropdownOpen, dropdownAnchorRect]);
+
+  // Update submenu position on scroll
+  useEffect(() => {
+    if (Object.keys(openSubMenu).length > 0 && subMenuAnchorRect) {
+      const updateSubMenuPosition = () => {
+        // Get the current position of the sticky header
+        const headerElement = document.querySelector('.sticky-header');
+        if (headerElement) {
+          const headerRect = headerElement.getBoundingClientRect();
+          // Position submenu relative to the header using viewport coordinates
+          setSubMenuPosition({
+            top: headerRect.bottom + 5,
+            left: subMenuAnchorRect.right + 5
+          });
+        } else {
+          // Fallback: use the stored viewport coordinates
+          setSubMenuPosition({
+            top: subMenuAnchorRect.top + 5,
+            left: subMenuAnchorRect.right + 5
+          });
+        }
+      };
+
+      // Initial update
+      updateSubMenuPosition();
+
+      // Update on scroll and resize
+      window.addEventListener('scroll', updateSubMenuPosition, true);
+      window.addEventListener('resize', updateSubMenuPosition);
+
+      return () => {
+        window.removeEventListener('scroll', updateSubMenuPosition, true);
+        window.removeEventListener('resize', updateSubMenuPosition);
+      };
+    }
+  }, [openSubMenu, subMenuAnchorRect]);
 
   const isDashboardAccess = Settings?.some((obj) =>
     Object.values(obj).includes("read-all-vehicles-dashboard")
@@ -179,9 +262,12 @@ export function AsideMenuList({ layoutProps }) {
   const toggleSubMenu = (parentKey, childHeading, event) => {
     if (event && event.currentTarget) {
       const rect = event.currentTarget.getBoundingClientRect();
+      // Store the rect for scroll position updates
+      setSubMenuAnchorRect(rect);
+      // Use viewport coordinates (no scroll offset)
       setSubMenuPosition({
-        top: rect.top + window.scrollY,
-        left: rect.right + window.scrollX + 5
+        top: rect.top + 5,
+        left: rect.right + 5
       });
     }
     setOpenSubMenu((prev) => {
@@ -229,7 +315,17 @@ export function AsideMenuList({ layoutProps }) {
   };
 
   return (
-    <div style={{ zIndex: "999" }} className="sticky top-0 w-full bg-[#0093dd]">
+    <div 
+      ref={headerRef} 
+      className="sticky-header" 
+      style={{ 
+        zIndex: "999", 
+        position: 'sticky', 
+        top: 0, 
+        width: '100%',
+        backgroundColor: '#0093dd'
+      }}
+    >
       <Header
         isEmployeePortal={isEmployeePortal}
         company={user?.Company}
@@ -266,7 +362,7 @@ export function AsideMenuList({ layoutProps }) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     border: '1px solid #e5e7eb',
-                    marginRight: '16px' // Right side margin
+                    marginRight: '16px'
                   }}
                 >
                   <ChevronsLeft size={16} className="w-4 h-4 text-gray-700" />
@@ -279,8 +375,8 @@ export function AsideMenuList({ layoutProps }) {
                 style={{
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
-                  paddingLeft: canScrollLeft ? '45px' : '0', // Increased from 35px to 45px
-                  paddingRight: canScrollRight ? '45px' : '0', // Increased from 35px to 45px
+                  paddingLeft: canScrollLeft ? '45px' : '0',
+                  paddingRight: canScrollRight ? '45px' : '0',
                   overflowY: 'visible',
                   width: itemWidth > 0 ? `${itemWidth * 8}px` : 'auto',
                   maxWidth: '100%',
@@ -360,6 +456,8 @@ export function AsideMenuList({ layoutProps }) {
               left: dropdownPosition.left + 'px',
               zIndex: 99999,
               minWidth: '200px',
+              maxHeight: '80vh',
+              overflowY: 'auto'
             }}
             onMouseLeave={() => {
               setTimeout(() => {
@@ -429,6 +527,8 @@ export function AsideMenuList({ layoutProps }) {
                 left: subMenuPosition.left + 'px',
                 zIndex: 999999,
                 minWidth: '200px',
+                maxHeight: '80vh',
+                overflowY: 'auto'
               }}
               onMouseLeave={() => {
                 setTimeout(() => setOpenSubMenu({}), 150);

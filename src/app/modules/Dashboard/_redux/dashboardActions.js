@@ -1108,3 +1108,51 @@ export const fetchAllAssetInspectionListById = (body) => async (
       // toast.error("Something went wrong");
     });
 };
+export const fetchAssetAssignmentListByEmpId= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAssetAssignmentListByEmpId(body)
+    .then((response) => {
+      const entities = [...(response.data?.data?.rows || [])];
+     
+      dispatch(actions.AllAssetAssignmentListByEmpIdFetch(entities));
+    })
+    .catch((error) => {
+      console.log("error111", error);
+      // toast.error("Something went wrong");
+    });
+};
+
+export const fetchAssetChecklistById= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAssetChecklistById(body)
+    .then((response) => {
+      const entities = [...(response.data?.data || [])];
+     
+      dispatch(actions.AllAssetChecklistByIdFetch(entities));
+    })
+    .catch((error) => {
+      console.log("error111", error);
+      // toast.error("Something went wrong");
+    });
+};
+
+
+export const fetchOvertimeEntitledEmployeesData= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getOvertimeEntitledEmployeesData(body)
+    .then((response) => {
+      const entities = [...(response.data?.data || [])];
+     
+      dispatch(actions.AllOvertimeEntitledEmployeesFetch(entities));
+    })
+    .catch((error) => {
+      console.log("error111", error);
+      // toast.error("Something went wrong");
+    });
+};
