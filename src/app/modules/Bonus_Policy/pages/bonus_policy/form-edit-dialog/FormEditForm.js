@@ -45,7 +45,13 @@ const validationSchema = Yup.object().shape({
         .required(VALIDATION_MESSAGES.required),
     }),
   salaryMonthOption: Yup.mixed().required(VALIDATION_MESSAGES.required),
-  specificSalaryMonth: Yup.mixed().required(VALIDATION_MESSAGES.required),
+  specificSalaryMonth: Yup.mixed()
+  .nullable()
+  .when("salaryMonthOption", {
+    is: "CURRENT_SALARY",
+    then: Yup.mixed().nullable(),
+    otherwise: Yup.mixed().required(VALIDATION_MESSAGES.required),
+  }),
   divisor: Yup.number()
     .typeError("Must be a number")
     .required(VALIDATION_MESSAGES.required)
@@ -54,68 +60,73 @@ const validationSchema = Yup.object().shape({
     .typeError("Must be a number")
     .required(VALIDATION_MESSAGES.required)
     .min(1, "Must be at least 1"),
-  serviceSlabs: Yup.array()
-    .of(
-      Yup.object().shape({
-        serviceDurationFrom: Yup.number()
-          .typeError("Must be a number")
-          .required(VALIDATION_MESSAGES.required)
-          .min(0, "Must be between 0 and 99.99")
-          .max(99.99, "Must be between 0 and 99.99"),
-        serviceDurationTo: Yup.number()
-          .typeError("Must be a number")
-          .required(VALIDATION_MESSAGES.required)
-          .min(0, "Must be between 0 and 99.99")
-          .max(99.99, "Must be between 0 and 99.99")
-          .moreThan(
-            Yup.ref("serviceDurationFrom"),
-            "'To' must be greater than 'From'",
-          ),
-        paymentCriteriaId: Yup.mixed().required(VALIDATION_MESSAGES.required),
-      }),
-    )
-    .min(1, "At least one service duration slab is required")
-    .test(
-      "no-overlapping-slabs",
-      "Service duration ranges cannot overlap",
-      function (slabs) {
-        if (!slabs || slabs.length < 2) return true;
 
-        const round2 = (n) => Math.round(n * 100) / 100;
-
-        const parsed = slabs
-          .map((s, idx) => ({
-            idx,
-            from: round2(Number(s.serviceDurationFrom)),
-            to: round2(Number(s.serviceDurationTo)),
-          }))
-          .filter((s) => !Number.isNaN(s.from) && !Number.isNaN(s.to));
-
-        const overlappingIdx = new Set();
-        for (let i = 0; i < parsed.length; i++) {
-          for (let j = i + 1; j < parsed.length; j++) {
-            const a = parsed[i];
-            const b = parsed[j];
-            const conflict =
-              Math.max(a.from, b.from) <= Math.min(a.to, b.to);
-            if (conflict) {
-              overlappingIdx.add(b.idx); // flag only the later row
-            }
-          }
-        }
-
-        if (overlappingIdx.size === 0) return true;
-
-        const errors = Array.from(overlappingIdx).map((idx) =>
-          this.createError({
-            path: `${this.path}[${idx}].serviceDurationFrom`,
-            message: "This range overlaps or touches another slab's boundary",
-          }),
-        );
-
-        throw new Yup.ValidationError(errors);
-      },
-    ),
+  // 
+  // "Prorate Bonus by Service Duration" is not mandatory for now.
+  // Uncomment this block to re-enable serviceSlabs validation.
+  // 
+  // serviceSlabs: Yup.array()
+  //   .of(
+  //     Yup.object().shape({
+  //       serviceDurationFrom: Yup.number()
+  //         .typeError("Must be a number")
+  //         .required(VALIDATION_MESSAGES.required)
+  //         .min(0, "Must be between 0 and 99.99")
+  //         .max(99.99, "Must be between 0 and 99.99"),
+  //       serviceDurationTo: Yup.number()
+  //         .typeError("Must be a number")
+  //         .required(VALIDATION_MESSAGES.required)
+  //         .min(0, "Must be between 0 and 99.99")
+  //         .max(99.99, "Must be between 0 and 99.99")
+  //         .moreThan(
+  //           Yup.ref("serviceDurationFrom"),
+  //           "'To' must be greater than 'From'",
+  //         ),
+  //       paymentCriteriaId: Yup.mixed().required(VALIDATION_MESSAGES.required),
+  //     }),
+  //   )
+  //   .min(1, "At least one service duration slab is required")
+  //   .test(
+  //     "no-overlapping-slabs",
+  //     "Service duration ranges cannot overlap",
+  //     function (slabs) {
+  //       if (!slabs || slabs.length < 2) return true;
+  //
+  //       const round2 = (n) => Math.round(n * 100) / 100;
+  //
+  //       const parsed = slabs
+  //         .map((s, idx) => ({
+  //           idx,
+  //           from: round2(Number(s.serviceDurationFrom)),
+  //           to: round2(Number(s.serviceDurationTo)),
+  //         }))
+  //         .filter((s) => !Number.isNaN(s.from) && !Number.isNaN(s.to));
+  //
+  //       const overlappingIdx = new Set();
+  //       for (let i = 0; i < parsed.length; i++) {
+  //         for (let j = i + 1; j < parsed.length; j++) {
+  //           const a = parsed[i];
+  //           const b = parsed[j];
+  //           const conflict =
+  //             Math.max(a.from, b.from) <= Math.min(a.to, b.to);
+  //           if (conflict) {
+  //             overlappingIdx.add(b.idx); // flag only the later row
+  //           }
+  //         }
+  //       }
+  //
+  //       if (overlappingIdx.size === 0) return true;
+  //
+  //       const errors = Array.from(overlappingIdx).map((idx) =>
+  //         this.createError({
+  //           path: `${this.path}[${idx}].serviceDurationFrom`,
+  //           message: "This range overlaps or touches another slab's boundary",
+  //         }),
+  //       );
+  //
+  //       throw new Yup.ValidationError(errors);
+  //     },
+  //   ),
 });
 
 export function FormEditForm({
@@ -197,12 +208,10 @@ export function FormEditForm({
     if (activePayrollMonth) {
       opts.push({
         value: "CURRENT_SALARY",
-        // label: `Current Salary (${activePayrollMonth.label})`,
         label: `Current Salary`,
       });
-    }
-    payrollMonthOptions
-      .filter((m) => m.value !== activePayrollMonth?.value)
+    }    [...payrollMonthOptions]
+      .sort((a, b) => Number(b.value) - Number(a.value))
       .forEach((m) => {
         opts.push({ value: String(m.value), label: m.label });
       });
@@ -233,35 +242,38 @@ export function FormEditForm({
     specificSalaryMonth: data.specificSalaryMonth || null,
     divisor: data.divisor ?? 1,
     multiplier: data.multiplier ?? 1,
-    serviceSlabs: data.serviceSlabs?.length
-      ? data.serviceSlabs.map((s) => ({ ...s }))
-      : [
-          {
-            serviceDurationFrom: "",
-            serviceDurationTo: "",
-            paymentCriteriaId: null,
-          },
-        ],
+    // "Prorate Bonus by Service Duration" disabled for now — kept in initialValues
+    // so the shape stays intact and existing `data.serviceSlabs` isn't lost.
+    // Uncomment the block below (and the related JSX + helpers) to re-enable.
+    // serviceSlabs: data.serviceSlabs?.length
+    //   ? data.serviceSlabs.map((s) => ({ ...s }))
+    //   : [
+    //       {
+    //         serviceDurationFrom: "",
+    //         serviceDurationTo: "",
+    //         paymentCriteriaId: null,
+    //       },
+    //     ],
   };
 
-  const addSlabRow = (values, setFieldValue) => {
-    setFieldValue("serviceSlabs", [
-      ...values.serviceSlabs,
-      {
-        serviceDurationFrom: "",
-        serviceDurationTo: "",
-        paymentCriteriaId: null,
-      },
-    ]);
-  };
+  // const addSlabRow = (values, setFieldValue) => {
+  //   setFieldValue("serviceSlabs", [
+  //     ...values.serviceSlabs,
+  //     {
+  //       serviceDurationFrom: "",
+  //       serviceDurationTo: "",
+  //       paymentCriteriaId: null,
+  //     },
+  //   ]);
+  // };
 
-  const removeSlabRow = (index, values, setFieldValue) => {
-    if (values.serviceSlabs.length > 1) {
-      const list = [...values.serviceSlabs];
-      list.splice(index, 1);
-      setFieldValue("serviceSlabs", list);
-    }
-  };
+  // const removeSlabRow = (index, values, setFieldValue) => {
+  //   if (values.serviceSlabs.length > 1) {
+  //     const list = [...values.serviceSlabs];
+  //     list.splice(index, 1);
+  //     setFieldValue("serviceSlabs", list);
+  //   }
+  // };
 
   return (
     <Formik
@@ -285,15 +297,18 @@ export function FormEditForm({
             considerJoiningDate: values.considerJoiningDate,
             joiningDateBefore: values.joiningDateBefore,
             salaryMonthOption: values.salaryMonthOption,
-            specificSalaryMonth: values.specificSalaryMonth,
+            specificSalaryMonth:
+              values.salaryMonthOption === "CURRENT_SALARY"
+                ? null
+                : values.specificSalaryMonth,
             divisor: values.divisor,
             multiplier: values.multiplier,
-            serviceSlabs: values.serviceSlabs.map((slab) => ({
-              ...(slab.Id ? { Id: slab.Id } : {}),
-              serviceDurationFrom: slab.serviceDurationFrom,
-              serviceDurationTo: slab.serviceDurationTo,
-              paymentCriteriaId: slab.paymentCriteriaId,
-            })),
+            // serviceSlabs: values.serviceSlabs.map((slab) => ({
+            //   ...(slab.Id ? { Id: slab.Id } : {}),
+            //   serviceDurationFrom: slab.serviceDurationFrom,
+            //   serviceDurationTo: slab.serviceDurationTo,
+            //   paymentCriteriaId: slab.paymentCriteriaId,
+            // })),
           });
           onHide();
         } catch (error) {
@@ -469,7 +484,7 @@ export function FormEditForm({
                       <input
                         type="number"
                         min="1"
-                        step="1"
+                        step="0.01"
                         className="form-control form-control-sm"
                         disabled={isUserForRead}
                         value={values.multiplier}
@@ -524,7 +539,7 @@ export function FormEditForm({
                       <input
                         type="number"
                         min="1"
-                        step="1"
+                        step="0.01"
                         className="form-control form-control-sm"
                         disabled={isUserForRead}
                         value={values.divisor}
@@ -559,7 +574,7 @@ export function FormEditForm({
                       }}
                     />
                     <label className="mb-0 text-sm ">
-                      Give bonus to Employees whose 'Date of Confirmation'
+                      Give bonus to Employees whose 'Date of Confirmation' 
                       is before
                     </label>
                   </div>
@@ -602,7 +617,7 @@ export function FormEditForm({
                       }}
                     />
                     <label className="mb-0 text-sm">
-                      Give bonus to Employees whose 'Date of Joining' is
+                      Give bonus to Employees whose 'Date of Joining' is 
                       before
                     </label>
                   </div>
@@ -681,6 +696,14 @@ export function FormEditForm({
               </div>
             </div>
           </fieldset>
+
+          {/*
+            
+            "Prorate Bonus by Service Duration" section — disabled for now.
+            Not mandatory currently. Uncomment this whole block (along with
+            the serviceSlabs validation, initialValues, addSlabRow/removeSlabRow
+            helpers, and the serviceSlabs payload above) to bring it back.
+            
 
           <div className="w-full overflow-x-auto mt-8">
             <div className="flex justify-between items-center mb-3">
@@ -849,6 +872,8 @@ export function FormEditForm({
               </div>
             </div>
           </div>
+
+          */}
 
           <div className="mt-5 flex justify-end gap-2">
             <button
