@@ -17,7 +17,7 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchModuleRights } from "../../../_redux/dashboardActions";
 
-export const MenuOption = ({isDashboard}) => {
+export const MenuOption = ({ isDashboard }) => {
   const dispatch = useDispatch();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -25,6 +25,7 @@ export const MenuOption = ({isDashboard}) => {
     moduleRights,
     attendance,
     payroll,
+    travel,
     interview_recommendations,
     requisition_job_vacancy,
     appraisalEval,
@@ -43,6 +44,7 @@ export const MenuOption = ({isDashboard}) => {
       moduleRights: state?.dashboard?.moduleRights,
       attendance: state?.auth?.userAccess["Attendance Management"],
       payroll: state?.auth?.userAccess["Payroll"],
+      travel: state?.auth?.userAccess["Travel"],
       interview_recommendations:
         state?.auth?.userAccess?.["Interview Recommendations"],
       requisition_job_vacancy:
@@ -71,18 +73,20 @@ export const MenuOption = ({isDashboard}) => {
       el?.portalType == 2,
   );
 
-  const TravelRequest = payroll?.find(
+  const TravelRequest = travel?.find(
     (el) =>
       el?.componentName === "ReadAllTravelRequest" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-  const PostTravelRequest = payroll?.find(
+  const PostTravelRequest = travel?.find(
     (el) =>
       el?.componentName === "ReadAllPostTravelRequest" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
+
+  console.log(travel, "travel")
 
   const claimRequest = payroll?.find(
     (el) =>
@@ -195,6 +199,7 @@ export const MenuOption = ({isDashboard}) => {
       el?.isResourceShow &&
       el?.portalType == 2,
   );
+  console.log(travel, "travel")
 
   const MENUOPTION = useMemo(() => {
     return [
@@ -400,7 +405,7 @@ export const MenuOption = ({isDashboard}) => {
   }, [moduleRights]);
 
   return (
-    <div className={ isDashboard ? "px-5 py-4 rounded-lg bg-white w-full relative" : "px-5 py-4 rounded-lg bg-white w-full relative hidden xl:block"}>
+    <div className={isDashboard ? "px-5 py-4 rounded-lg bg-white w-full relative" : "px-5 py-4 rounded-lg bg-white w-full relative hidden xl:block"}>
       {/* Header section - clickable */}
       <div
         className="bg-tprimary px-4 py-2 flex justify-between items-center rounded-lg cursor-pointer transition-all duration-300 relative z-10"
