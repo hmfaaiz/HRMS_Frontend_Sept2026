@@ -2504,7 +2504,7 @@ export function DesignationEditForm({
                           className="object-cover rounded-lg"
                           alt="Profile"
                           style={{
-                            objectFit: "cover",
+                            objectFit: "contain",
                           }}
                         />
 
