@@ -53,8 +53,8 @@ export function FormEditDialog({ show, Id, onHide, dataForRead }) {
           // If there's a new file to upload
           if (item.attachment && item.attachment instanceof File) {
             try {
-              const res = await actions.uploadImage(item.attachment);
-              attachmentPath = res.data.filename;
+              const res = await actions.uploadFormDoc(item.attachment);
+              attachmentPath = res.data.filePath;
             } catch (error) {
               console.error(`Failed to upload file for ${item.taskName}:`, error);
               // Keep existing attachmentPath if upload fails

@@ -122,7 +122,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       if (formData?.empAttachment && typeof formData?.empAttachment === "object") {
         try {
-          const uploadRes = await uploadEmployeeDoc(formData.empAttachment);
+          const uploadRes = await actions.uploadEmployeeDoc(formData.empAttachment);
           formUpdatedFields.empAttachment = uploadRes.data?.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
         } catch (err) {
           console.error("File upload failed:", err);
