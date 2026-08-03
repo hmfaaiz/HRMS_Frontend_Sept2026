@@ -86,7 +86,6 @@ export const MenuOption = ({ isDashboard }) => {
       el?.portalType == 2,
   );
 
-  console.log(travel, "travel")
 
   const claimRequest = payroll?.find(
     (el) =>
@@ -199,7 +198,6 @@ export const MenuOption = ({ isDashboard }) => {
       el?.isResourceShow &&
       el?.portalType == 2,
   );
-  console.log(travel, "travel")
 
   const MENUOPTION = useMemo(() => {
     return [
