@@ -43,17 +43,15 @@ export function FormTable() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+  const { subsidiaryId, bonusTypeId, payrollMonthId } =
+    formUIProps.queryParams?.filter || {};
 
-  const bonusTypeId = formUIProps.queryParams?.filter?.bonusTypeId;
-
-  if (bonusTypeId) {
+  if (subsidiaryId && bonusTypeId && payrollMonthId) {
     formUIProps.setIds("");
     dispatch(actions.fetchBonusProcess(formUIProps));
-  } 
-  else {
+  } else {
     dispatch(actions.clearReduxData());
   }
-
 }, [formUIProps.queryParams, dispatch]);
 
   const isAccessForEdit = userAccess?.find(

@@ -40,20 +40,21 @@ export function FormEditDialog({ id, userForRead }) {
     formUIProps.setIds("");
 
     if (!data.Id && data) {
-      await dispatch(
-        actions.createBonusProcess(data, disbaleLoading, resetForm)
-      ).then(async () => {
-        let values = {
-          SubsidiaryId: data?.subsidiaryId,
-          PayrollGroupId: data?.payroll_groupId,
-          BonusTypeId: data?.bonusTypeId,
-          MonthId: data?.payroll_monthId,
-          revert: false,
-          finalize: false,
-        };
-        await dispatch(actions.checkBonus_EmployeesByIds({ data: values }));
-      });
-    } else {
+  await dispatch(
+    actions.createBonusProcess(data, disbaleLoading, resetForm)
+  ).then(async () => {
+    let values = {
+      SubsidiaryId: data?.subsidiaryId,
+      PayrollGroupId: data?.payroll_groupId,
+      BonusTypeId: data?.bonusTypeId,
+      MonthId: data?.payroll_monthId,
+      revert: false,
+      finalize: false,
+    };
+    await dispatch(actions.checkBonus_EmployeesByIds({ data: values }));
+    await dispatch(actions.fetchBonusProcess(formUIProps));
+  });
+} else {
       const formUpdatedFields = {
         Id: data.Id,
         payroll_groupId: data.payroll_groupId,
