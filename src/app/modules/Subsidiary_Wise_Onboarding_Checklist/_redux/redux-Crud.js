@@ -39,6 +39,12 @@ export function getSubsidiaryChecklistBySubsidiaryId(subsidiaryId) {
  * @param {Object} body
  * @returns res
  */
-export function uploadImage(body) {
-  return axios.post(`${API_URL}/file-upload`, body);
+// export function uploadImage(body) {
+//   return axios.post(`${API_URL}/file-upload`, body);
+// }
+
+
+export function uploadFormDoc(body) {
+  return axios.post(`${API_URL}/onboarding_checklist/document-upload`, body);
 }
+
