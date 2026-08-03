@@ -34,7 +34,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Link } from "@material-ui/core";
 import { useDesignationUIContext } from "../DesignationUIContext";
 import MaskedInput from "react-text-mask";
-import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays, getUploadUrl } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
 import { CirclePlus, Trash2, Upload } from "lucide-react";
@@ -533,7 +533,7 @@ export function DesignationEditForm({
 
   const [profile_image, setImage] = useState(
     user?.id && user?.profile_image
-      ? user.profile_image
+      ? getUploadUrl(user.profile_image)
       : toAbsoluteUrl("/media/users/profileImage.png")
   );
   const [file, setFile] = useState("");
@@ -1093,7 +1093,7 @@ export function DesignationEditForm({
 
   useEffect(() => {
     if (id && user?.profile_image) {
-      setImage(user.profile_image); // edit/view case
+      setImage(getUploadUrl(user.profile_image)); // edit/view case
     } else {
       setImage(toAbsoluteUrl("/media/users/profileImage.png")); // new case
     }
@@ -2183,10 +2183,10 @@ export function DesignationEditForm({
               await axios
                 .post(`${USERS_URL}/profile/image-upload`, formData)
                 .then((res) => {
-                  setImage(res.data.imageUrl);
+                  setImage(res.data.filePath);
                   saveEmployeeProfile(
                     payload,
-                    res.data.imageUrl,
+                    res.data.filePath,
                     defContactList,
                     workExperienceList,
                     academicList,

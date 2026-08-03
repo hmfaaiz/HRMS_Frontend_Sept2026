@@ -82,8 +82,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       formData.employeeId = formUIProps.employeeId
       if (formData?.empAttachment && typeof formData?.empAttachment === "object") {
         try {
-          const uploadRes = await uploadFile(formData.empAttachment);
-          formData.empAttachment = uploadRes.data.filename;
+          const uploadRes = await actions.uploadEmployeeDoc(formData.empAttachment);
+          formData.empAttachment = uploadRes.data?.filePath;
         } catch (err) {
           console.error("File upload failed:", err);
           // Optionally return here or set a default file value
@@ -122,8 +122,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       if (formData?.empAttachment && typeof formData?.empAttachment === "object") {
         try {
-          const uploadRes = await uploadFile(formData.empAttachment);
-          formUpdatedFields.empAttachment = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
+          const uploadRes = await uploadEmployeeDoc(formData.empAttachment);
+          formUpdatedFields.empAttachment = uploadRes.data?.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
         } catch (err) {
           console.error("File upload failed:", err);
           // Optionally return here or set a default file value
