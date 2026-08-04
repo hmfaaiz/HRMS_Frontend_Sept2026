@@ -65,3 +65,8 @@ export function sendFollowUpMessage(body) {
 
   return axios.post(`${USERS_URL}/facilitator_ticket_creation/send-followUpMessage/`,body);
 }
+
+
+export function uploadFormDoc(body) {
+  return axios.post(`${USERS_URL}/facilitator_ticket_creation/document-upload`, body);
+}
