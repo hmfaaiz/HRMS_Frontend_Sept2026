@@ -162,7 +162,9 @@ export const checkBonus_EmployeesByIds = (data) => async (dispatch) => {
     .then((response) => {
       dispatch(actions.checkBonus_EmployeesByIdsFetched(response));
 
-      if (response.data.data == true) {
+      const wasRevertOrFinalize = data?.data?.revert || data?.data?.finalize;
+
+      if (wasRevertOrFinalize) {
         toast.success(SERVER_MESSAGES.updatedSuccess, {
           position: "top-right",
           autoClose: 5000,
@@ -187,4 +189,7 @@ export const clearReduxData = () => async (dispatch) => {
   dispatch(actions.bonusPolicyDetailFetched(null));
   dispatch(actions.resultAfterBonusProcessFetched(null));
   dispatch(actions.bonusProcessCleared());
+}
+export const clearProcessResult = () => async (dispatch) => {
+  dispatch(actions.resultAfterBonusProcessFetched(null));
 }
