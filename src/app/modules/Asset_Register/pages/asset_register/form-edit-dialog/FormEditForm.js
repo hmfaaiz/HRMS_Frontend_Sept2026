@@ -27,6 +27,7 @@ import FileUpload from "../../../../../../_metronic/_partials/controls/forms/Fil
 import { fetchAllAssetModelName, fetchAllCity, uploadFile } from "../../../../Dashboard/_redux/dashboardActions";
 import { AssetHistoryTable } from "../form-table/AssetHistoryTable";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { uploadFormDoc } from "../../../_redux/redux-Actions";
 
 // percentage: Yup.string().required("Required*"),
 const assetRegisterSchema = Yup.object().shape({
@@ -260,8 +261,8 @@ export function FormEditForm({
           try {
             // If file is a File object (new upload), upload it
             if (file instanceof File) {
-              const uploadRes = await uploadFile(file);
-              const filename = uploadRes.data.filename;
+              const uploadRes = await uploadFormDoc(file);
+              const filename = uploadRes.data.filePath;
               setassetFile(getUploadUrl(filename)); // Update preview with server URL
               saveForm({ ...values, file: filename });
             } else {

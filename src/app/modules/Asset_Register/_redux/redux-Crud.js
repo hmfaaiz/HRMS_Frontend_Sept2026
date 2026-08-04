@@ -36,3 +36,10 @@ export function assetAssignmentHistory(Id) {
 
   return axios.get(`${USERS_URL}/asset_register/read-asset-assignment-history/${Id}`);
 }
+
+
+
+export function uploadFormDoc(body) {
+  return axios.post(`${USERS_URL}/asset_register/document-upload`, body);
+}
+
