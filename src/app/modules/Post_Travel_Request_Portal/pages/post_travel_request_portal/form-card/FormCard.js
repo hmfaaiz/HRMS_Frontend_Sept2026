@@ -50,7 +50,7 @@ export function FormCard({ onRegisterReset }) {
       userAccess:
         state.auth?.userAccess?.post_travel_request ||
         state.auth?.userAccess?.post_approval_travel_request,
-      payrollAccess: state.auth?.userAccess["Payroll"] || [],
+      payrollAccess: state.auth?.userAccess["Travel"] || [],
     }),
     shallowEqual,
   );

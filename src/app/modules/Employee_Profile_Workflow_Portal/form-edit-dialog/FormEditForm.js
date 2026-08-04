@@ -480,12 +480,12 @@ export function FormEditForm({
                 <hr className="my-4" />
 
                 {/* ══════════════════════════════════════
-                    EMERGENCY CONTACT INFORMATION
+                    CONTACT INFORMATION
                 ══════════════════════════════════════ */}
                 <div className="w-full overflow-x-auto">
                   <div className="flex justify-between items-center">
                     <h6 className="font-bold mb-0 text-primary">
-                      Emergency Contact Information
+                      Contact Information
                     </h6>
                     <button
                       type="button"
