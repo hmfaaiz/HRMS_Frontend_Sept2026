@@ -124,13 +124,15 @@ const closeSubMenu = (parentKey, childHeading) => {
               >
                 <ul className="flex flex-col items-start lg:items-end lg:flex-row lg:space-x-6 list-none mb-1">
                   <li className="relative group">
-                    <a
+                    <Link
                       className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl"
-                      href="/dashboard"
+                      // href="/dashboard"
+                       to={`/dashboard`}
+                       
                     >
                       <LayoutDashboard className="w-4 h-4 stroke-2 rounded-md inline-block text-white" />
                       <span className="ml-2">Dashboard</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
                 {/* <ul className="flex flex-col justify-start items-start lg:items-end lg:justify-end w-full text-sm lg:flex-row lg:space-x-6 list-none mb-1">
@@ -332,13 +334,13 @@ const closeSubMenu = (parentKey, childHeading) => {
                         {visibleItems
                           .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
                           .map((item) => (
-                            <a
+                            <Link
                               key={item.url}
-                              href={`/${item.url}`}
+                              to={`/${item.url}`}
                               className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           ))}
                       </div>
                     )}
