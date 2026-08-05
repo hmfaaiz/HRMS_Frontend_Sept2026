@@ -47,6 +47,9 @@ export function FormCard() {
     shallowEqual,
   );
 
+
+    console.log("currentState",userAccess )
+
   const moduleName = CurrentModuleName();
 
   // In FormCard.jsx, add this to your useSelector

@@ -113,8 +113,7 @@ export function FormEditForm({
         finalize,
       };
       await dispatch(checkBonus_EmployeesByIds({ data }));
-      if (revert) {
-        // use live context props, not the possibly-stale/incomplete formUIProps prop
+      if (revert || finalize) {
         await dispatch(
           fetchBonusProcess({
             queryParams: formUIContext.queryParams,
@@ -435,8 +434,8 @@ export function FormEditForm({
             {payrollConfigApproverPermission && (
               <>
                 <button
-                  onClick={() => {
-                    checkBonus_Employees(
+                  onClick={async () => {
+                    await checkBonus_Employees(
                       values.subsidiaryId,
                       values.payroll_groupId,
                       values.bonusTypeId,
@@ -445,8 +444,7 @@ export function FormEditForm({
                       true,
                     );
                     setIds("");
-                    handleReset();
-                    dispatch(actions.clearReduxData());
+                    dispatch(actions.clearProcessResult());
                   }}
                   className="btn btn-green"
                   disabled={
@@ -462,8 +460,8 @@ export function FormEditForm({
                 </button>
 
                 <button
-                  onClick={() => {
-                    checkBonus_Employees(
+                  onClick={async () => {
+                    await checkBonus_Employees(
                       values.subsidiaryId,
                       values.payroll_groupId,
                       values.bonusTypeId,
@@ -472,8 +470,7 @@ export function FormEditForm({
                       false,
                     );
                     setIds("");
-                    handleReset();
-                    dispatch(actions.clearReduxData());
+                    dispatch(actions.clearProcessResult());
                   }}
                   className="btn btn-red"
                   disabled={loading || !checkBonus_EmployeesExist?.revert}

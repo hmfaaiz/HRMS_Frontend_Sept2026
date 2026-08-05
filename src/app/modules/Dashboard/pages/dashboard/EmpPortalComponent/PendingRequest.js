@@ -2,12 +2,13 @@ import React from "react";
 import { useSelector, shallowEqual } from "react-redux";
 
 export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
-  const { leave, payroll, attendance, resignation, roster,budget } = useSelector(
+  const { leave, payroll, attendance, resignation, roster, budget, travel } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
       attendance: state?.auth?.userAccess["Attendance"],
       roster: state?.auth?.userAccess["Attendance Management"],
       payroll: state?.auth?.userAccess["Payroll"],
+      travel: state?.auth?.userAccess["Travel"],
       resignation: state?.auth?.userAccess["Resignation"],
       budget: state?.auth?.userAccess["Manpower Budget"],
     }),
@@ -99,14 +100,14 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
     {
       name: "Travel",
       count: data?.tadaApproval || 0,
-      isApproval: payroll?.find(
+      isApproval: travel?.find(
         (el) =>
           el?.componentName == "ReadAllTravelRequestApproval" &&
           el?.isResourceShow &&
           el?.portalType == 2,
       ),
       approvalUrl: "/travel_request_approval/read-all-travel-request-approval",
-      isWorkflow: payroll?.find(
+      isWorkflow: travel?.find(
         (el) =>
           el?.componentName == "ReadAllTravelRequestWorkflowStatus" &&
           el?.isResourceShow &&
@@ -114,7 +115,7 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       ),
       workflowUrl:
         "/travel_request_workflow_status/read-all-travel-request-workflow-status",
-      isModuleAllow: moduleRights?.find((el) => el?.value == 4)?.allow,
+      isModuleAllow: moduleRights?.find((el) => el?.value == 10)?.allow,
     },
     {
       name: "Claim",
@@ -183,10 +184,9 @@ export const PendingRequestSelf = ({ moduleRights, setAttModalData, data }) => {
       // ),
       // workflowUrl:
       //   "/",
-      isModuleAllow: moduleRights?.find((el) => el?.value ==8)?.allow,
+      isModuleAllow: moduleRights?.find((el) => el?.value == 8)?.allow,
     },
   ];
-
   const filteredCards = PENDINGAPPROVALWORKFLOWLIST?.filter(
     (el) => el?.isModuleAllow && (el?.isApproval || el?.isWorkflow),
   );

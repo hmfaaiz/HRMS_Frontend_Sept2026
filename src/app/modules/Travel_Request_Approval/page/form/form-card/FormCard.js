@@ -24,7 +24,7 @@ export const FormCard = () => {
     (state) => ({
       listLoading: state?.travel_approval?.listLoading,
       user: state?.auth?.user,
-      travel: state?.auth?.userAccess["Payroll"],
+      travel: state?.auth?.userAccess["Travel"],
       userForEdit: state.travel_approval?.userForEdit,
     }),
     shallowEqual,
