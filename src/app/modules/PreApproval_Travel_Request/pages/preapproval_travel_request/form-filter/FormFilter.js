@@ -48,11 +48,25 @@ const prepareFilter = (queryParams, values) => {
     else delete filter.designationId;
   }
 
-  // Map form field 'requestStatus' to backend field 'request_status'
+  // Map form field 'requestStatus' to backend field 'request_status'.
+  // When "P" (Pending) is selected, also send pendingHrms:true so the backend
+  // can OR-match both Pending (Portal) [request_status="P"] and
+  // Pending (HRMS) [request_status="A", approved_status=0].
   if (requestStatus !== undefined) {
-    if (requestStatus && requestStatus.length > 0) filter.request_status = requestStatus;
-    else delete filter.request_status;
     delete filter.requestStatus;
+
+    if (requestStatus && requestStatus.length > 0) {
+      filter.request_status = requestStatus;
+
+      if (requestStatus.includes("P")) {
+        filter.pendingHrms = true;
+      } else {
+        delete filter.pendingHrms;
+      }
+    } else {
+      delete filter.request_status;
+      delete filter.pendingHrms;
+    }
   }
 
   newQueryParams.filter = filter;

@@ -30,7 +30,7 @@ export function getEmployeeAuthorties(empId, workflowTypeId) {
 
 export function getTadaConfigurationPolicies(employeeId) {
   return axios.post(
-    `${USERS_URL}/t_preapproval_travel_request/read-tada-configuration-policies`,
+    `${USERS_URL}/preapproval_travel_request/read-tada-configuration-policies`,
     {
       employeeId,
     },
