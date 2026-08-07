@@ -646,7 +646,7 @@ export function FormTable(user) {
           otherwise: Yup.number().notRequired(),
         }),
 
-      isEnableCPLLeavePolicy: Yup.number()
+      isEnableCPLLeavePolicy: Yup.number().nullable()
         .transform((value, originalValue) =>
           originalValue === "" ? undefined : value
         )

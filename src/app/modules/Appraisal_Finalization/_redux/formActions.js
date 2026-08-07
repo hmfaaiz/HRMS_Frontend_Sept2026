@@ -95,7 +95,7 @@ export const downloadIncrementLetter = (payload) => async (dispatch) => {
 
     const link = document.createElement("a");
     link.href = pdfUrl;
-    link.setAttribute("download", "increment_letters.pdf");
+    link.setAttribute("download", "performance_outcome.pdf");
     document.body.appendChild(link);
     link.click();
     dispatch(actions.pdfFetched({}));
