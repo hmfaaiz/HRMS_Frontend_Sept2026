@@ -32,6 +32,7 @@ export const initialFilter = {
   filter: {
     searchQuery: "",
     request_status: ["P"],
+    pendingHrms: true,
   },
   sortOrder: "ASC",
   pageSize: 10,
