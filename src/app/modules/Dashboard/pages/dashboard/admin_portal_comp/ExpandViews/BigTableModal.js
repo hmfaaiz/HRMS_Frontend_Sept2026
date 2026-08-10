@@ -7,10 +7,12 @@ import {
   toAbsoluteUrl,
 } from "../../../../../../../_metronic/_helpers";
 import { format } from "date-fns";
+import { useSelector } from "react-redux";
+import { PeriodType } from "../../EmpUIHelper";
 
 const BigTableModal = ({ onHide, show, data }) => {
   const columnData = data?.data?.length > 0 ? data?.data[0] : {};
-
+  const dashboard = useSelector((state) => state.dashboard || []);
   let columns = Object.keys(columnData).map((key) => {
     if (key === "profile_image") {
       return {
@@ -76,6 +78,29 @@ const BigTableModal = ({ onHide, show, data }) => {
       };
     }
   });
+
+  const getHeading = () => {
+    if (!data) return "";
+    let name = data.dashlet_name || "";
+    if (data.isPeriodType) {
+      const periodLabel = PeriodType[data.PeriodType];
+      if (periodLabel) {
+        name = `${name} In ${periodLabel}`;
+      } else {
+        const type = data.sequenceStatus == "0" ? "Next" : "Last";
+        name = `${name} In ${type} ${data.days} Days`;
+      }
+    }
+    if (data.trendValue) {
+      const label =
+        Number(data.trendValue) === 1
+          ? dashboard?.activeFiscalYear?.label
+          : dashboard?.activeFiscalYear?.payrollMonthLabel;
+      name = `${name} - ${label ?? ""}`;
+    }
+    return name;
+  };
+
   return (
     <Modal
       size="lg"
@@ -84,12 +109,7 @@ const BigTableModal = ({ onHide, show, data }) => {
       aria-labelledby="example-modal-sizes-title-lg"
     >
       <div className="bg-white rounded-lg px-3 py-2 col-span-2">
-        <h6 className="font-bold mb-0 text-primary">
-          {" "}
-          {data?.days
-            ? data?.dashlet_name?.replace("${days}", data?.days)
-            : data?.dashlet_name}
-        </h6>
+        <h6 className="font-bold mb-0 text-primary"> {getHeading()}</h6>
         <div className="max-h-[65vh] overflow-auto scrollbar-fancy">
           {data?.data.length > 0 ? (
             <BootstrapTable

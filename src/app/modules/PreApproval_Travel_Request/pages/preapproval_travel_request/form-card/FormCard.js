@@ -9,7 +9,7 @@ import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashb
 import { getEmployeeProfileById } from "../../../../../../_metronic/redux/dashboardCrud";
 import { FormEditForm } from "../form-edit-dialog/FormEditForm";
 import { FormTable } from "../form-table/FormTable";
-import { FormFilter } from "../form-filter/FormFilter";
+import { FormFilter, FormSearch } from "../form-filter/FormFilter";
 import { CirclePlus, XCircle } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
 
@@ -46,6 +46,9 @@ export function FormCard() {
     }),
     shallowEqual,
   );
+
+
+    console.log("currentState",userAccess )
 
   const moduleName = CurrentModuleName();
 
@@ -167,9 +170,13 @@ export function FormCard() {
     <>
       {/* FormTable Card */}
       <TCard name={moduleName}>
-        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2 mb-6">
+        <div className="w-full">
           <FormFilter />
+        </div>
+        <div className="flex justify-between items-center flex-wrap gap-2 mb-6">
+          <div className="flex-grow"></div>
           <div className="flex items-center gap-2">
+            <FormSearch />
             {accessUser && (
               <button
                 type="button"

@@ -513,7 +513,7 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [profile_image, setImage] = useState(formData?.profile_image);
+  const [profile_image, setImage] = useState(getUploadUrl(formData?.profile_image));
   const inputFile = useRef(null);
   const [file, setFile] = useState("");
   const [applicantCode, setApplicantCode] = useState("");
@@ -673,7 +673,7 @@ export function FormEditForm({
 
   useEffect(() => {
     if (formData.Id && formData?.profile_image) {
-      setImage(formData.profile_image);
+      setImage(getUploadUrl(formData.profile_image));
     } else {
       setImage(toAbsoluteUrl("/media/users/profileImage.png")); // new case
     }
@@ -741,10 +741,10 @@ export function FormEditForm({
           let formData = new FormData();
           await formData.append("image", file);
           await axios
-            .post(`${USERS_URL}/profile/image-upload`, formData)
+            .post(`${USERS_URL}/applicant_profile/image-upload`, formData)
             .then((res) => {
-              setImage(res.data.imageUrl);
-              saveForm(values, res.data.imageUrl);
+              setImage(res.data.filePath);
+              saveForm(values, res.data.filePath);
             });
         } else {
           saveForm(values, values.profile_image || profile_image);
@@ -970,11 +970,11 @@ export function FormEditForm({
                         name="myImage"
                         width={65}
                         height={65}
-                        src={profile_image || formData?.profile_image}
+                        src={profile_image || getUploadUrl(formData?.profile_image)}
                         className="object-cover rounded-lg"
                         alt="Profile"
                         style={{
-                          objectFit: "cover",
+                          objectFit: "contain",
                         }}
                       />
 

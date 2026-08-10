@@ -126,3 +126,10 @@ export function getSandwichPolicy(subsidiaryId) {
     `${USERS_URL}/leave_application/read-sandwich-policy/${subsidiaryId}`
   );
 }
+
+
+
+export function uploadFormDoc(body) {
+  return axios.post(`${USERS_URL}/leave_application/document-upload`, body);
+}
+

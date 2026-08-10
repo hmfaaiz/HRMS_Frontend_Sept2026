@@ -152,7 +152,7 @@ export const FormFilter = ({ loading, queryParams }) => {
     let valueToUpdate = {
       ...queryParams.filter,
       subsidiaryId: findDefaultSubs?.value || null,
-      requestStatus: "P",
+      requestStatus: "",
     };
     applyFilter(valueToUpdate);
     dispatch(fetchAllDept(findDefaultSubs?.value));
@@ -238,13 +238,20 @@ export const FormFilter = ({ loading, queryParams }) => {
                       setFieldValue("departmentId", e?.value || null);
                     }}
                     value={
-                      dashboard?.allDept?.find(
-                        (opt) => opt.value === values?.departmentId,
-                      ) || null
+                      [
+                        { label: "All", value: "" },
+                        ...(dashboard?.allDept || []),
+                      ]?.find((opt) => opt.value === values?.departmentId) || {
+                        label: "All",
+                        value: "",
+                      }
                     }
                     error={errors?.departmentId}
                     touched={touched?.departmentId}
-                    options={dashboard?.allDept}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(dashboard?.allDept || []),
+                    ]}
                   />
                 </div>
                 <div className="col-span-4 sm:col-span-2">
@@ -291,7 +298,10 @@ export const FormFilter = ({ loading, queryParams }) => {
                     value={
                       requestFilter?.find(
                         (opt) => opt.value === values?.requestStatus,
-                      ) || ""
+                      ) || {
+                        label: "All",
+                        value: "",
+                      }
                     }
                     autoComplete="off"
                     options={requestFilter}

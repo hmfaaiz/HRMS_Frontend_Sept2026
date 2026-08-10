@@ -52,3 +52,8 @@ export function deleteEmployeeOnboardingChecklist(employeeId) {
 export function uploadImage(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);
 }
+
+
+export function uploadFormDoc(body) {
+  return axios.post(`${USERS_URL}/employee_onboarding_checklist/document-upload`, body);
+}

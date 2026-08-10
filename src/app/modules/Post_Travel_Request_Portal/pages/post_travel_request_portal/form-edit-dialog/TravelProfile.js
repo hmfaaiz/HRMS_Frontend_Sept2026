@@ -250,6 +250,15 @@ export default function TravelProfile({
                         </>
                       )}
 
+                      {travelData.totalTravelBudget && (
+                        <>
+                          <div className="font-medium">Total Travel Budget:</div>
+                          <div>
+                            {Number(travelData.totalTravelBudget).toLocaleString()}
+                          </div>
+                        </>
+                      )}
+
                       {travelData.advanceRemarks && (
                         <>
                           <div className="font-medium">Advance Remarks:</div>

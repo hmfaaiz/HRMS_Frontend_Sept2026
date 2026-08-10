@@ -24,7 +24,7 @@ export const FormCard = () => {
     (state) => ({
       listLoading: state?.travel_approval?.listLoading,
       user: state?.auth?.user,
-      travel: state?.auth?.userAccess["Payroll"],
+      travel: state?.auth?.userAccess["Travel"],
       userForEdit: state.travel_approval?.userForEdit,
     }),
     shallowEqual,
@@ -133,12 +133,22 @@ export const FormCard = () => {
 
   const menuOptions = [
     {
-      name: "Request",
+      name: "Travel Request",
       link: "/travel_request/read-all-travel-request",
       isShow: travel?.find(
         (el) =>
           (el?.componentName === "ReadAllTravelRequest" ||
             el?.slug === "read-all-travel-request") &&
+          el?.isResourceShow,
+      ),
+    },
+    {
+      name: "Post Travel Request",
+      link: "/post_travel_request/read-all-post-travel-request",
+      isShow: travel?.some(
+        (el) =>
+          (el?.componentName === "ReadAllPostTravelRequest" ||
+            el?.slug === "read-all-post-travel-request") &&
           el?.isResourceShow,
       ),
     },

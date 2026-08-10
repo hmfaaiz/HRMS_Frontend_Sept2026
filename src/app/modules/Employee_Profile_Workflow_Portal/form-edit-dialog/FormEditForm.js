@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { formatDates } from "../../../utils/common";
+import { formatDates, getUploadUrl, getFileName } from "../../../utils/common";
 import {
   fetchAllSubsidiaryData,
   fetchAllCountry,
@@ -12,7 +12,7 @@ import {
   fetchAllEmployeeShifts,
   fetchAllDept,
 } from "../../../../_metronic/redux/dashboardActions";
-import { fetchDataFromEmployeeProfileById } from "../_redux/redux-Actions";
+import { fetchDataFromEmployeeProfileById, uploadFile, fetchEmployeeDocumentsByProfile } from "../_redux/redux-Actions";
 import EmployeeProfile from "../../../utils/common-modules/EmployeeProfile";
 import DatePicker from "react-datepicker";
 import { differenceInYears, differenceInMonths } from "date-fns";
@@ -36,12 +36,15 @@ export function FormEditForm({
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingValues, setPendingValues] = useState(null);
+  const [currentEmployeeDocs, setCurrentEmployeeDocs] = useState([]);
 
   // ── List States ─────────────────────────────────────────────────────────
   const [defContactList, setDefaultContactList] = useState([]);
   const [academicList, setAcademicList] = useState([]);
   const [skillsList, setSkillList] = useState([]);
+  const [documentsList, setDocumentsList] = useState([]);
   const [deferrors, setErrors] = useState({});
+  const fileInputRefs = useRef({});
 
   useEffect(() => {
     // Fetch the employee profile data from backend.
@@ -49,6 +52,12 @@ export function FormEditForm({
     dispatch(fetchDataFromEmployeeProfileById(employeeId || formData?.employeeId || 0)).then((res) => {
       if (res?.data) {
         setCurrentEmployeeData(res.data);
+      }
+    });
+
+    dispatch(fetchEmployeeDocumentsByProfile(employeeId || formData?.employeeId || 0)).then((res) => {
+      if (res) {
+        setCurrentEmployeeDocs(res);
       }
     });
   }, [employeeId, dispatch, formData?.Id, formData?.employeeId]);
@@ -66,18 +75,24 @@ export function FormEditForm({
       setSkillList(
         formData?.employeeSkillWorkflow || formData?.employeeSkills || []
       );
+      setDocumentsList(
+        formData?.employeeDocWorkflow || formData?.employeeDocuments || []
+      );
     } else if (currentEmployeeData) {
       // Create mode: pre-populate with the employee's existing profile data
       setDefaultContactList(currentEmployeeData?.employeeContactWorkflow || []);
       setAcademicList(currentEmployeeData?.employeeAcademicWorkflow || []);
       setSkillList(currentEmployeeData?.employeeSkillWorkflow || []);
+      setDocumentsList(currentEmployeeDocs?.data || currentEmployeeDocs || []);
     }
   }, [
     formData?.Id,
     formData?.employeeContactWorkflow,
     formData?.employeeAcademicWorkflow,
     formData?.employeeSkillWorkflow,
+    formData?.employeeDocWorkflow,
     currentEmployeeData,
+    currentEmployeeDocs,
   ]);
 
   useEffect(() => {
@@ -231,6 +246,30 @@ export function FormEditForm({
     const data = [...skillsList];
     data.splice(index, 1);
     setSkillList([...data]);
+  };
+
+  // ── Document Handlers ────────────────────────────────────────────────────
+  const addRowDocument = () => {
+    setDocumentsList([
+      ...documentsList,
+      { transactionType: "Document", employeeId: employeeId },
+    ]);
+  };
+
+  const handleFieldChangedDocument = (index, field, value) => {
+    const newList = [...documentsList];
+    newList[index][field] = value;
+    setDocumentsList(newList);
+  };
+
+  const deleteRowDocument = (index) => {
+    const data = [...documentsList];
+    data.splice(index, 1);
+    setDocumentsList([...data]);
+    // Clear the file input ref for this index
+    if (fileInputRefs.current[index]) {
+      fileInputRefs.current[index].value = "";
+    }
   };
 
   // ── Validation Schema ────────────────────────────────────────────────────
@@ -441,12 +480,12 @@ export function FormEditForm({
                 <hr className="my-4" />
 
                 {/* ══════════════════════════════════════
-                    EMERGENCY CONTACT INFORMATION
+                    CONTACT INFORMATION
                 ══════════════════════════════════════ */}
                 <div className="w-full overflow-x-auto">
                   <div className="flex justify-between items-center">
                     <h6 className="font-bold mb-0 text-primary">
-                      Emergency Contact Information
+                      Contact Information
                     </h6>
                     <button
                       type="button"
@@ -960,6 +999,177 @@ export function FormEditForm({
                   </div>
                 </div>
 
+
+                {/* ══════════════════════════════════════
+                    EMPLOYEE DOCUMENT
+                ══════════════════════════════════════ */}
+                <hr className="my-4" />
+                <div className="w-full overflow-x-auto">
+                  <div className="flex justify-between items-center">
+                    <h6 className="font-bold mb-0 text-primary">
+                      Employee Document
+                    </h6>
+                    {!isdataForRead && (
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        id="Document"
+                        onClick={addRowDocument}
+                      >
+                        <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
+                        Add
+                      </button>
+                    )}
+                  </div>
+                  <div className="w-full overflow-x-auto mt-2">
+                    <div className="react-bootstrap-table table-responsive">
+                      <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <thead>
+                          <tr className="custom-table-header">
+                            <td className="min-w-40">Document Name</td>
+                            <td className="min-w-40">Document Description</td>
+                            <td className="min-w-40">Document Upload Date</td>
+                            <td className="min-w-40">Employee Attachment</td>
+                            <td className="text-right">Action</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {documentsList?.map((obj, rightindex) => {
+                            const isFromBackend = !!(obj.Id || obj.id);
+                            return (
+                              <React.Fragment key={rightindex}>
+                                <tr>
+                                  {/* Document Name */}
+                                  <td>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      disabled={isFromBackend || isdataForRead}
+                                      placeholder="Document name"
+                                      onChange={(e) => {
+                                        handleFieldChangedDocument(rightindex, "docName", e.target.value);
+                                        setErrors((prev) => ({ ...prev, [`docName-${rightindex}`]: "" }));
+                                      }}
+                                      value={obj.docName || ""}
+                                      id={"docName-" + rightindex}
+                                    />
+                                    {deferrors[`docName-${rightindex}`] && (
+                                      <div className="form-feedBack">{deferrors[`docName-${rightindex}`]}</div>
+                                    )}
+                                  </td>
+
+                                  {/* Document Description */}
+                                  <td>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      disabled={isFromBackend || isdataForRead}
+                                      placeholder="Description"
+                                      onChange={(e) => {
+                                        handleFieldChangedDocument(rightindex, "docDesc", e.target.value);
+                                      }}
+                                      value={obj.docDesc || ""}
+                                      id={"docDesc-" + rightindex}
+                                    />
+                                  </td>
+
+                                  {/* Document Upload Date */}
+                                  <td>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      disabled={true}
+                                      placeholder="-"
+                                      value={obj.createdAt ? formatDates(obj.createdAt, "dd-MMM-yyyy") : ""}
+                                      readOnly
+                                    />
+                                  </td>
+
+                                  {/* Employee Attachment */}
+                                  <td style={{ minWidth: "200px" }}>
+                                    {!isFromBackend && !isdataForRead && (
+                                      <>
+                                        {/* Hidden real file input */}
+                                        <input
+                                          type="file"
+                                          accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                                          style={{ display: "none" }}
+                                          id={`empAttachment-input-${rightindex}`}
+                                          ref={(el) => (fileInputRefs.current[rightindex] = el)}
+                                          onChange={(e) => {
+                                            const file = e.currentTarget.files[0];
+                                            if (file) {
+                                              const maxSizeBytes = 0.5 * 1024 * 1024; // 0.5 MB
+                                              if (file.size > maxSizeBytes) {
+                                                setErrors((prev) => ({ ...prev, [`empAttachment-${rightindex}`]: "File size must not exceed 0.5 MB." }));
+                                                e.currentTarget.value = ""; // reset input
+                                              } else {
+                                                setErrors((prev) => ({ ...prev, [`empAttachment-${rightindex}`]: "" }));
+                                                handleFieldChangedDocument(rightindex, "empAttachment", file);
+                                              }
+                                            }
+                                          }}
+                                        />
+                                        {/* Browse button */}
+                                        <button
+                                          type="button"
+                                          className="btn btn-sm btn-outline-primary"
+                                          onClick={() =>
+                                            document.getElementById(`empAttachment-input-${rightindex}`).click()
+                                          }
+                                        >
+                                          Browse
+                                        </button>
+                                      </>
+                                    )}
+
+                                    {/* Show file name / preview link */}
+                                    {obj.empAttachment && (
+                                      <div className="mt-1" style={{ fontSize: "0.8rem" }}>
+                                        {typeof obj.empAttachment === "string" ? (
+                                          // Already saved on backend — show link
+                                          <a
+                                            href={getUploadUrl(obj.empAttachment)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-primary"
+                                          >
+                                            {getFileName(obj.empAttachment)}
+                                          </a>
+                                        ) : (
+                                          // Newly selected File object — show name
+                                          <span className="text-muted"> {obj.empAttachment.name}</span>
+                                        )}
+                                      </div>
+                                    )}
+                                    {deferrors[`empAttachment-${rightindex}`] && (
+                                      <div className="form-feedBack">{deferrors[`empAttachment-${rightindex}`]}</div>
+                                    )}
+                                  </td>
+
+                                  {/* Delete */}
+                                  <td className="text-right">
+                                    {!isFromBackend && !isdataForRead && (
+                                      <button
+                                        className="border-none bg-transparent"
+                                        type="button"
+                                        id={`doc-del-${rightindex}`}
+                                        onClick={() => deleteRowDocument(rightindex)}
+                                      >
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                      </button>
+                                    )}
+                                  </td>
+                                </tr>
+                              </React.Fragment>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
               </fieldset>
             </Form>
           </Modal.Body>
@@ -997,10 +1207,24 @@ export function FormEditForm({
             onConfirm={() => {
               setShowConfirm(false);
               enableLoading();
+              const newDocs = documentsList.filter(d => !d.Id && !d.id);
+              // Validate: each new doc must have a docName
+              let hasDocErrors = false;
+              newDocs.forEach((d, i) => {
+                if (!d.docName || !d.docName.trim()) {
+                  setErrors((prev) => ({ ...prev, [`docName-${i}`]: "Document name is required" }));
+                  hasDocErrors = true;
+                }
+              });
+              if (hasDocErrors) {
+                // setShowConfirm(false) already done above; just stop
+                return;
+              }
               const payload = {
                 employeeContacts: defContactList.filter(c => !c.Id && !c.id),
                 employeeAcademics: academicList.filter(a => !a.Id && !a.id),
                 employeeSkills: skillsList.filter(s => !s.Id && !s.id),
+                employeeDocuments: newDocs,
                 // Map current fields (from)
                 fromMaritalStatus: formData?.Id ? (formData.fromMaritalStatusId || formData.fromMaritalStatus) : (currentEmployeeData?.maritalStatus || ""),
                 fromPhoneHome: formData?.Id ? formData.fromPhoneHome : (currentEmployeeData?.phone_home || ""),

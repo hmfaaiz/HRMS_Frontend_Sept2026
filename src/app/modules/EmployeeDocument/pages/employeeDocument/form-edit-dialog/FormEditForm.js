@@ -15,12 +15,17 @@ import { formatDates, getFileName, getUploadUrl } from "../../../../../utils/com
 import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
+import { File } from "lucide-react";
 // percentage: Yup.string().required("Required*"),
 const employee_docEditSchema = Yup.object().shape({
 
 
-  empAttachment: Yup.string().nullable()
-    .required(VALIDATION_MESSAGES.required),
+  empAttachment: Yup.mixed()
+    .required(VALIDATION_MESSAGES.required)
+    .test("fileSize", "File size must be less than 0.5 MB", (value) => {
+      if (typeof value === "string") return true;
+      return value && value.size <= 0.5 * 1024 * 1024;
+    }),
 
   docName: Yup.string()
     .trim()
@@ -43,7 +48,7 @@ export function FormEditForm({
   onHide,
   isUserForRead,
   enableLoading,
-  loading, setId,setReadMode
+  loading, setId, setReadMode
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -75,13 +80,13 @@ export function FormEditForm({
       onSubmit={(values, { resetForm }) => {
         enableLoading();
         const clearForm = () => {
-      
+
           resetForm();
           if (inputFile?.current) {
             inputFile.current.value = "";
           }
         };
-        saveForm(values,clearForm);
+        saveForm(values, clearForm);
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
@@ -162,9 +167,11 @@ export function FormEditForm({
                           rel="noopener noreferrer"
                           className="text-blue-600 underline text-primary text-sm"
                         >
-                          {typeof (values?.empAttachment || formData?.empAttachment) === "string"
-                            ? getFileName(values?.empAttachment || formData?.empAttachment)
-                            : (values?.empAttachment)?.name || formData?.empAttachment}
+                          {/* {typeof (values?.empAttachment || formData?.empAttachment) === "string"
+                            ? getUploadUrl(values?.empAttachment || formData?.empAttachment)
+                            : (values?.empAttachment)?.name || formData?.empAttachment} */}
+
+                          <File className="w-4 h-4 text-black cursor-pointer" />
                         </a>
                       </div>
                     )}
@@ -202,21 +209,21 @@ export function FormEditForm({
           </Modal.Body>
           <Modal.Footer>
             {/* {!isUserForRead ? ( */}
-              <button
-                type="reset"
-                onClick={() => {
-                  setId("");
-                  handleReset();
-                  setReadMode(false)
+            <button
+              type="reset"
+              onClick={() => {
+                setId("");
+                handleReset();
+                setReadMode(false)
 
-                  if (inputFile?.current) {
-                    inputFile.current.value = "";
-                  }
-                }}
-                className="btn btn-light btn-elevate"
-              >
-                Cancel
-              </button>
+                if (inputFile?.current) {
+                  inputFile.current.value = "";
+                }
+              }}
+              className="btn btn-light btn-elevate"
+            >
+              Cancel
+            </button>
             {/* ) : (
               <button
                 type="button"

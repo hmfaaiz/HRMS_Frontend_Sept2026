@@ -5,7 +5,7 @@ export const BASE_URL = process.env.REACT_APP_API_URL;
 // Create
 export function createPreApprovalTravelRequest(body) {
   return axios.post(
-    `${BASE_URL}/t_preapproval_travel_request/create-preapproval-travel-request`,
+    `${BASE_URL}/preapproval_travel_request/create-preapproval-travel-request`,
     body,
   );
 }
@@ -13,7 +13,7 @@ export function createPreApprovalTravelRequest(body) {
 // Read All
 export function getAllPreApprovalTravelRequest(body) {
   return axios.post(
-    `${BASE_URL}/t_preapproval_travel_request/read-all-preapproval-travel-request`,
+    `${BASE_URL}/preapproval_travel_request/read-all-preapproval-travel-request`,
     body,
   );
 }
@@ -21,7 +21,7 @@ export function getAllPreApprovalTravelRequest(body) {
 // Read One
 export function getPreApprovalTravelRequestById(Id) {
   return axios.post(
-    `${BASE_URL}/t_preapproval_travel_request/read-preapproval-travel-request`,
+    `${BASE_URL}/preapproval_travel_request/read-preapproval-travel-request`,
     { Id },
   );
 }
@@ -29,7 +29,7 @@ export function getPreApprovalTravelRequestById(Id) {
 // Update
 export function updatePreApprovalTravelRequest(body) {
   return axios.post(
-    `${BASE_URL}/t_preapproval_travel_request/update-preapproval-travel-request`,
+    `${BASE_URL}/preapproval_travel_request/update-preapproval-travel-request`,
     body,
   );
 }
@@ -37,7 +37,7 @@ export function updatePreApprovalTravelRequest(body) {
 // Delete
 export function deletePreApprovalTravelRequest(Id) {
   return axios.post(
-    `${BASE_URL}/t_preapproval_travel_request/delete-preapproval-travel-request`,
+    `${BASE_URL}/preapproval_travel_request/delete-preapproval-travel-request`,
     { Id },
   );
 }
@@ -45,7 +45,7 @@ export function deletePreApprovalTravelRequest(Id) {
 // Fetch TADA configurations by employeeId
 export function getTadaConfigurationPolicies(employeeId) {
   return axios.post(
-    `${BASE_URL}/t_preapproval_travel_request/read-tada-configuration-policies`,
+    `${BASE_URL}/preapproval_travel_request/read-tada-configuration-policies`,
     {
       employeeId,
     },
@@ -54,7 +54,7 @@ export function getTadaConfigurationPolicies(employeeId) {
 
 export function getPreApprovalTravelRequestReportById(Id) {
   return axios.post(
-    `${BASE_URL}/t_preapproval_travel_request/read-preapproval-travel-request-report`,
+    `${BASE_URL}/preapproval_travel_request/read-preapproval-travel-request-report`,
     { Id },
     { responseType: "arraybuffer" },
   );

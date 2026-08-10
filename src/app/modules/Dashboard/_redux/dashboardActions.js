@@ -1139,3 +1139,20 @@ export const fetchAssetChecklistById= (body) => async (
       // toast.error("Something went wrong");
     });
 };
+
+
+export const fetchOvertimeEntitledEmployeesData= (body) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getOvertimeEntitledEmployeesData(body)
+    .then((response) => {
+      const entities = [...(response.data?.data || [])];
+     
+      dispatch(actions.AllOvertimeEntitledEmployeesFetch(entities));
+    })
+    .catch((error) => {
+      console.log("error111", error);
+      // toast.error("Something went wrong");
+    });
+};

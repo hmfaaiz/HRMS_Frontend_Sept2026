@@ -1370,43 +1370,55 @@ export function MasterEditForm({
                       )}
                     </button>
                   )}
-                  {id && !isUserForRead && !values.isFinalize && !values?.isPortalFinalize && (
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-elevate"
-                      onClick={() =>
-                        handleSubmitWithConsent(true, handleSubmit, values)
-                      }
-                      disabled={
-                        loading ||
-                        !isValid ||
-                        !values?.employeeId ||
-                        values?.sendConsent
-                      }
-                    >
-                      {values?.sendConsent ? "Consent Sended" : "Send Consent"}
-                      {loading && (
-                        <span className="ml-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  )}
+                  {id &&
+                    !isUserForRead &&
+                    !values.isFinalize &&
+                    !values?.isPortalFinalize &&
+                    Number(
+                      parseFloat(values?.generalSelfRating) +
+                        parseFloat(values?.goalSelfRating),
+                    ) > 0 && (
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-elevate"
+                        onClick={() =>
+                          handleSubmitWithConsent(true, handleSubmit, values)
+                        }
+                        disabled={
+                          loading ||
+                          !isValid ||
+                          !values?.employeeId ||
+                          values?.sendConsent
+                        }
+                      >
+                        {values?.sendConsent
+                          ? "Consent Sended"
+                          : "Send Consent"}
+                        {loading && (
+                          <span className="ml-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    )}
 
                   {/* Finalize Button */}
-                  {!isUserForRead && !values.isFinalize && !values?.isPortalFinalize && id && (
-                    <button
-                      type="button"
-                      className="btn btn-success btn-elevate"
-                      onClick={() =>
-                        handleSubmitWithFinalize(true, handleSubmit, values)
-                      }
-                      disabled={loading || !isValid || !values?.employeeId}
-                    >
-                      Finalize
-                      {loading && (
-                        <span className="ml-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  )}
+                  {!isUserForRead &&
+                    !values.isFinalize &&
+                    !values?.isPortalFinalize &&
+                    id && (
+                      <button
+                        type="button"
+                        className="btn btn-success btn-elevate"
+                        onClick={() =>
+                          handleSubmitWithFinalize(true, handleSubmit, values)
+                        }
+                        disabled={loading || !isValid || !values?.employeeId}
+                      >
+                        Finalize
+                        {loading && (
+                          <span className="ml-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    )}
                 </div>
               </Modal.Footer>
             </>

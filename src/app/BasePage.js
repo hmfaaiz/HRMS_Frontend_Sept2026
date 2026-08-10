@@ -711,6 +711,13 @@ const bonus_policy = lazy (() =>
 import ("./modules/Bonus_Policy/pages/index"))
 const cpl_leave = lazy (() =>
 import ("./modules/CPL_Leave/pages/index"))
+const bonus_process = lazy (() =>
+import ("./modules/Bonus_Process/pages/index"))
+const bonus_register = lazy (() =>
+import ("./modules/Bonus_Register/pages/index"))
+
+const cpl_approval = lazy (() =>
+import ("./modules/CPL_Approval/pages/index"))
 
 
 const ROUTES = {
@@ -951,6 +958,9 @@ const ROUTES = {
   asset_checklist: asset_checklist,
   bonus_policy: bonus_policy,
   cpl_leave: cpl_leave,
+  bonus_process: bonus_process,
+  bonus_register: bonus_register,
+  cpl_approval: cpl_approval,
 
 };
 

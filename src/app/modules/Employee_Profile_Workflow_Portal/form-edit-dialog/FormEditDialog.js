@@ -56,6 +56,44 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
   }, [id, dispatch]);
 
   const saveForm = async (formData) => {
+    // ── Upload any new document File objects before saving ──
+    // if (formData.employeeDocuments && formData.employeeDocuments.length > 0) {
+    //   const uploadedDocs = await Promise.all(
+    //     formData.employeeDocuments.map(async (doc) => {
+    //       if (doc.empAttachment && typeof doc.empAttachment !== "string") {
+    //         // It's a File object — upload it first
+    //         const uploadRes = await dispatch(actions.uploadFormDoc(doc.empAttachment));
+    //         return { ...doc, empAttachment: uploadRes?.data?.filePath || null };
+    //       }
+    //       return doc;
+    //     })
+    //   );
+    //   formData = { ...formData, employeeDocuments: uploadedDocs };
+    // }
+
+    if (formData.employeeDocuments && formData.employeeDocuments.length > 0) {
+      const uploadedDocs = await Promise.all(
+        formData.employeeDocuments.map(async (doc) => {
+          if (doc.empAttachment && typeof doc.empAttachment !== "string") {
+            // Upload the file first
+            const uploadRes = await actions.uploadFormDoc(doc.empAttachment);
+
+            return {
+              ...doc,
+              empAttachment: uploadRes?.data?.filePath || null,
+            };
+          }
+
+          return doc;
+        })
+      );
+
+      formData = {
+        ...formData,
+        employeeDocuments: uploadedDocs,
+      };
+    }
+
     if (!formData.Id) {
       await dispatch(
         actions.createemployeeProfileWorkflowPortal(formData, disableLoading, onHide)

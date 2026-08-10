@@ -5,6 +5,9 @@ import { toast } from "react-toastify";
 import {
   generateEmployeeProfileWorkflowPortalReportRequest,
 } from "./redux-Crud";
+import { uploadFile as dashboardUploadFile } from "../../Dashboard/_redux/dashboardActions";
+
+export const uploadFile = (file) => (dispatch) => dashboardUploadFile(file);
 
 const { actions } = EmployeeProfileWorkflowPortalSlice;
 
@@ -109,6 +112,18 @@ export const fetchDataFromEmployeeProfileById = (employeeId) => (dispatch) => {
     });
 };
 
+export const fetchEmployeeDocumentsByProfile = (employeeId) => (dispatch) => {
+  return requestFromServer
+    .getEmployeeDocumentsByProfile({ employeeId })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't fetch employee documents data";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
 export const createemployeeProfileWorkflowPortal = (data, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
     .createEmployeeProfileWorkflowPortal(data)
@@ -180,5 +195,26 @@ export const downloademployeeProfileWorkflowPortalReport = (Id) => (dispatch) =>
       error.clientMessage = "Can't Generate Employee Profile Workflow Report";
       dispatch(actions.catchError({ error, callType: callTypes.reportPdf }));
       toast.error("Failed to generate Employee Profile Workflow Report", { position: "top-right", autoClose: 5000 });
+    });
+};
+
+export const uploadFormDoc= async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  return await requestFromServer
+    .uploadFormDoc(formData)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.fileFail, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
 };

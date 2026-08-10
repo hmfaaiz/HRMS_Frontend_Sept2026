@@ -251,6 +251,9 @@ import { bonusPolicySlice } from "../app/modules/Bonus_Policy/_redux/redux-Slice
 import { ticketEscalationPolicySlice } from "../app/modules/Ticket_Escalation_Policy/_redux/redux-Slice";
 import { AssetListSlice  } from "../app/modules/Asset_List/_redux/redux-Slice";
 import { CPLLeaveSlice  } from "../app/modules/CPL_Leave/_redux/redux-Slice"; 
+import { bonus_processSlice } from "../app/modules/Bonus_Process/_redux/redux-Slice";
+import { BonusRegisterSlice } from "../app/modules/Bonus_Register/_redux/redux-Slice"
+import { CPLApprovalSlice  } from "../app/modules/CPL_Approval/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -499,6 +502,9 @@ export const rootReducer = combineReducers({
   asset_checklist: AssetChecklistSlice.reducer,
   bonus_policy: bonusPolicySlice.reducer,
   cpl_leave: CPLLeaveSlice.reducer,
+  bonus_process: bonus_processSlice.reducer,
+  bonus_register: BonusRegisterSlice.reducer,
+  cpl_approval: CPLApprovalSlice.reducer,
 
 });
 

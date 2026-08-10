@@ -354,3 +354,6 @@ export const getAssetAssignmentListByEmpId = async (Id) => {
 export const getAssetChecklistById = async (Id) => {
   return await axios.get(`${USERS_URL}/settings/read-all-asset-checklist/${Id}`);
 }
+export const getOvertimeEntitledEmployeesData = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-overtime-entitled-employees`,body);
+}
