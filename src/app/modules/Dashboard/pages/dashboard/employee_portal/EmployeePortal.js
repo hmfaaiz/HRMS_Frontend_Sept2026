@@ -176,15 +176,15 @@ const DetailView = ({
                 detailViewType == 1
                   ? "My Details"
                   : detailViewType == 2
-                  ? "Department Details"  
-                  : "Company Details"
+                    ? "Department Details"
+                    : "Company Details"
               }
             />
           </>
         )}
       {moduleRights?.find((e) => e?.value == 3)?.allow ||
-      moduleRights?.find((e) => e?.value == 2)?.allow ||
-      moduleRights?.find((e) => e?.value == 4)?.allow ? (
+        moduleRights?.find((e) => e?.value == 2)?.allow ||
+        moduleRights?.find((e) => e?.value == 4)?.allow ? (
         <div className="flex flex-col md:flex-row gap-4">
           {moduleRights?.find((e) => e?.value == 3)?.allow ? (
             detailViewType == 1 ? (
@@ -255,7 +255,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
     ticket_setup_portal,
     reimbursement_claim,
     roster,
-    recruitment,budget,
+    recruitment, budget,
   } = useSelector(
     (state) => ({
       leave: state?.auth?.userAccess["Leave"],
@@ -411,19 +411,19 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       el?.portalType == 2,
   );
 
-    const portalDepartmentWiseBudget = budget?.find(
+  const portalDepartmentWiseBudget = budget?.find(
     (el) =>
       el?.componentName === "ReadAllPortalDepartmentWiseBudget" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
- 
+
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 ">
       {/* Attendance Request */}
       {moduleRights?.find((e) => e?.value == 3)?.allow &&
-      (isAttRequest || isAttApproval) ? (
+        (isAttRequest || isAttApproval) ? (
         <CompactViewCard
           Icon={UserCheck}
           name={"Attendance"}
@@ -439,7 +439,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* Leave Request */}
       {moduleRights?.find((e) => e?.value == 2)?.allow &&
-      (isLeaveRequest || isLeaveApproval) ? (
+        (isLeaveRequest || isLeaveApproval) ? (
         <CompactViewCard
           Icon={UserRoundX}
           name={"Leave"}
@@ -453,7 +453,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* Loan Request */}
       {moduleRights?.find((e) => e?.value == 4)?.allow &&
-      (isLoanRequest || isLoanApproval) ? (
+        (isLoanRequest || isLoanApproval) ? (
         <CompactViewCard
           Icon={Banknote}
           isTeamExists={isTeamExists}
@@ -467,7 +467,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* Roster Claim */}
       {moduleRights?.find((e) => e?.value == 4)?.allow &&
-      (isRostRequest || isRostApproval) ? (
+        (isRostRequest || isRostApproval) ? (
         <CompactViewCard
           Icon={NotebookTabs}
           isTeamExists={isTeamExists}
@@ -483,7 +483,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* tada */}
       {moduleRights?.find((e) => e?.value == 4)?.allow &&
-      (istadaRequest || istadaApproval) ? (
+        (istadaRequest || istadaApproval) ? (
         <CompactViewCard
           Icon={Luggage}
           isTeamExists={isTeamExists}
@@ -495,14 +495,13 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
               : false
           }
           link={
-            // "/reimbursement_claim_request/read-all-reimbursement-claim-request"
-            "/"
+            "/travel_request/read-all-travel-request"
           }
         />
       ) : null}
       {/* Reimbursement Claim */}
       {moduleRights?.find((e) => e?.value == 4)?.allow &&
-      (isreimbRequest || isreimbApproval) ? (
+        (isreimbRequest || isreimbApproval) ? (
         <CompactViewCard
           Icon={Receipt}
           isTeamExists={isTeamExists}
@@ -520,7 +519,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* Appraisal Evaluation */}
       {moduleRights?.find((e) => e?.value == 6)?.allow &&
-      isAppraisalEvaluation ? (
+        isAppraisalEvaluation ? (
         <CompactViewCard
           Icon={TrendingUpDown}
           isTeamExists={isTeamExists}
@@ -531,7 +530,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* Seperation Request  */}
       {moduleRights?.find((e) => e?.value == "separation")?.allow &&
-      (isAccessForResignationRequest || isAccessForResignationApproval) ? (
+        (isAccessForResignationRequest || isAccessForResignationApproval) ? (
         <CompactViewCard
           Icon={FileUser}
           isTeamExists={isTeamExists}
@@ -544,7 +543,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
           }
           link={
             portalInfo?.allowResignationRequest === 0 ||
-            portalInfo?.allowResignationRequest === false
+              portalInfo?.allowResignationRequest === false
               ? "/resignation_approval/read-all-resignation-approval" // disabled ---- go to approval
               : "/employee_resignation/read-all-resignation" // enabled ---- go to submission
           }
@@ -552,7 +551,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* /// Job Requisition */}
       {moduleRights?.find((e) => e?.value == 5)?.allow &&
-      (isAccessForJobReq || isAccessForJobApproval) ? (
+        (isAccessForJobReq || isAccessForJobApproval) ? (
         <CompactViewCard
           Icon={BriefcaseBusiness}
           isTeamExists={isTeamExists}
@@ -578,7 +577,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
       ) : null}
       {/* /// Project Management  */}
       {moduleRights?.find((e) => e?.value == 7)?.allow &&
-      isProjectManagement ? (
+        isProjectManagement ? (
         <CompactViewCard
           Icon={PanelsTopLeft}
           isTeamExists={isTeamExists}
@@ -599,7 +598,7 @@ const CompactView = ({ portalInfo, moduleRights, isTeamExists }) => {
         />
       ) : null}
 
-            {/* Department wise Budget  */}
+      {/* Department wise Budget  */}
       {moduleRights?.find((e) => e?.value == 8)?.allow && portalDepartmentWiseBudget ? (
         <CompactViewCard
           Icon={HeartHandshake}
