@@ -69,3 +69,7 @@ export function getWorkflowStatusByLeaveId(leaveId) {
     `${USERS_URL}/leave-approval/read-leave-approval/${leaveId}`
   );
 }
+
+export function uploadFormDoc(body) {
+  return axios.post(`${USERS_URL}/leave-approval/document-upload`, body);
+}

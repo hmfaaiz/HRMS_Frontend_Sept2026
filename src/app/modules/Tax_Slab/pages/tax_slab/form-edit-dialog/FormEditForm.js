@@ -61,12 +61,12 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
 
-  useEffect(() => {
-    if (!user.Id) {
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(actions.fetchgetAllTaxYearSetup());
-    }
-  }, [dispatch, user.Id]);
+  // useEffect(() => {
+  //   if (!user.Id) {
+  //     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+  //     dispatch(actions.fetchgetAllTaxYearSetup());
+  //   }
+  // }, [dispatch, user.Id]);
 
   const { currentState, userAccess } = useSelector((state) => {
     return {
