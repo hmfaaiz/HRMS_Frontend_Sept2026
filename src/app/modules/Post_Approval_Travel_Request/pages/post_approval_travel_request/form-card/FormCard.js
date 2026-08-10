@@ -173,7 +173,7 @@ export function FormCard({ onRegisterReset }) {
                   Add
                 </button>
               )}
-            </div>
+          </div>
           </div>
         </div>
 

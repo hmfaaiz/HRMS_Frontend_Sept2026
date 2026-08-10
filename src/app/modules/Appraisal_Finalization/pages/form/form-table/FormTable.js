@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/formActions";
 import * as uiHelpers from "../FormUIHelpers";
@@ -101,6 +101,7 @@ export function FormTable() {
   //Users UI Context
   const [actionName, setActionName] = useState("");
   const [designationsByGrade, setDesignationsByGrade] = useState({});
+  const fetchedGradesRef = useRef(new Set());
   const formUIContext = useFromUIContext();
   const formUIProps = useMemo(() => {
     return {
@@ -266,23 +267,38 @@ export function FormTable() {
     setSubmitting(false);
   };
 
+  // - Common function used by BOTH the initial-load effect AND the grade-dropdown onChange.
+  // - fetchedGradesRef marks a gradeId as "handled" BEFORE the await, so if the same
+  //   gradeId shows up on multiple rows (or is selected again quickly), we never fire
+  const loadDesignationsForGrade = async (gradeId) => {
+    if (!gradeId || fetchedGradesRef.current.has(gradeId)) return;
+    fetchedGradesRef.current.add(gradeId);
+
+    try {
+      const designation = await dispatch(
+        fetchAllDesignationByGradeId(gradeId),
+      );
+      setDesignationsByGrade((prev) => ({
+        ...prev,
+        [gradeId]: designation || [],
+      }));
+    } catch (err) {
+      // fetch fail hui tw agli baar retry allow karne ke liye mark hata do
+      fetchedGradesRef.current.delete(gradeId);
+      console.error("Failed to fetch designations for grade:", gradeId, err);
+    }
+  };
+
   useEffect(() => {
     if (!entities?.length) return;
-    const designationListthroughGrade = async () => {
-      entities?.forEach(async (e, i) => {
-        if (!designationsByGrade[e?.revisedGradeId]) {
-          const designation = await dispatch(
-            fetchAllDesignationByGradeId(e?.revisedGradeId),
-          );
-          setDesignationsByGrade({
-            ...designationsByGrade,
-            [e?.revisedGradeId]: designation,
-          });
-        }
-      });
-    };
-    designationListthroughGrade();
+    entities.forEach((e) => {
+      if (e?.revisedGradeId) {
+        loadDesignationsForGrade(e.revisedGradeId);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entities]);
+
   return (
     <>
       <Formik
@@ -374,13 +390,6 @@ export function FormTable() {
                                   >
                                     Mgmt. Recommendations
                                   </th>
-                                  {/* <th className="w-44">
-                                  Actucal{" "}
-                                  {salaryPolicy == "Basic to Gross"
-                                    ? "Basic"
-                                    : "Gross"}{" "}
-                                  Salary
-                                </th> */}
                                   <th className="w-52">
                                     {salaryPolicy == "Basic to Gross"
                                       ? "Basic"
@@ -559,7 +568,6 @@ export function FormTable() {
                                             className="invalid-feedback d-block"
                                           />
                                         </td>
-                                        {/* <td>{e?.salary || ""}</td> */}
                                         <td>
                                           {amountFormat(
                                             e?.revisedBeforeSalary,
@@ -621,27 +629,20 @@ export function FormTable() {
                                           <SearchSelect
                                             name={`entities.${i}.revisedGradeId`}
                                             onChange={(e) => {
+                                              const gradeId = e?.value || null;
                                               setFieldValue(
                                                 `entities.${i}.revisedGradeId`,
-                                                e?.value || null,
+                                                gradeId,
                                               );
-                                              if (
-                                                !designationsByGrade[e?.value]
-                                              ) {
-                                                let designation = dispatch(
-                                                  fetchAllDesignationByGradeId(
-                                                    e?.value,
-                                                  ),
-                                                );
-                                                setDesignationsByGrade({
-                                                  ...designationsByGrade,
-                                                  [e?.value]: designation,
-                                                });
-                                              }
                                               setFieldValue(
                                                 `entities.${i}.revisedDesignationId`,
                                                 null,
                                               );
+                                              if (gradeId) {
+                                                loadDesignationsForGrade(
+                                                  gradeId,
+                                                );
+                                              }
                                             }}
                                             value={
                                               dashboard?.allEmployeegradeList?.find(
@@ -805,37 +806,6 @@ export function FormTable() {
                                             className="invalid-feedback d-block"
                                           />
                                         </td>
-                                        {/* <td>
-                                        <Field
-                                          name={`entities.${i}.effectiveDate`}
-                                        >
-                                          {({ field, form }) => (
-                                            <DatePicker
-                                              selected={
-                                                field.value
-                                                  ? new Date(field.value)
-                                                  : null
-                                              }
-                                              onChange={(date) =>
-                                                setFieldValue(field.name, date)
-                                              }
-                                              dateFormat="dd-MMM-yyyy"
-                                              className="form-control"
-                                              disabled={
-                                                !e?.isSelected || e?.isCompleted
-                                              }
-                                              popperContainer={({ children }) =>
-                                                document.getElementById(
-                                                  "root-portal"
-                                                ) || document.body
-                                              }
-                                              popperClassName="z-[9999]"
-                                              popperPlacement="bottom-start"
-                                              showPopperArrow={false}
-                                            />
-                                          )}
-                                        </Field>
-                                      </td> */}
                                         <td>
                                           <span
                                             className={

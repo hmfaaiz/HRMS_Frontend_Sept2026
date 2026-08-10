@@ -338,18 +338,18 @@ const profileValidation = (localizationId) =>
       .oneOf([true, false], "Required*"), // Ensures the value is either true or false
 
 
-isForMachineAtt: Yup.boolean().nullable(),
+    isForMachineAtt: Yup.boolean().nullable(),
 
-empMachineAttId: Yup.number()
-  .nullable()
-  .when("isForMachineAtt", {
-    is: true,
-    then: (schema) =>
-      schema
-        .typeError("Must be a number")
-        .required("Required*"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+    empMachineAttId: Yup.number()
+      .nullable()
+      .when("isForMachineAtt", {
+        is: true,
+        then: (schema) =>
+          schema
+            .typeError("Must be a number")
+            .required("Required*"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
 
     geoLocationIds: Yup.array()
       .nullable()
@@ -1307,7 +1307,7 @@ export function DesignationEditForm({
 
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
-      
+
       if (!id) {
         setFieldValue("allowResignationRequest", response?.data?.data[0]?.allowEmployeeToSubmit ?? false);
       }
@@ -2230,7 +2230,7 @@ export function DesignationEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                
+
                 <h6 className="font-bold mb-0 text-primary mt-2">
                   Basic Information
                 </h6>
@@ -3700,7 +3700,7 @@ export function DesignationEditForm({
                           setFieldValue("isForMachineAtt", newValue);
                           setFieldValue("empMachineAttId", "");
 
-                       
+
                         }}
                         onBlur={handleBlur}
                         checked={values.isForMachineAtt}
@@ -3715,23 +3715,23 @@ export function DesignationEditForm({
                   </div>
 
 
-                    <div>
-                      <Field
-                        name="empMachineAttId"
-                        disabled={!values.isForMachineAtt}
-                        component={Input}
-                        placeholder="Employee Attendance Machine Id 1000000001"
-                        label="Employee Attendance Machine Id"
-                        autoComplete="off"
-                        maxLength="10"
+                  <div>
+                    <Field
+                      name="empMachineAttId"
+                      disabled={!values.isForMachineAtt}
+                      component={Input}
+                      placeholder="Employee Attendance Machine Id 1000000001"
+                      label="Employee Attendance Machine Id"
+                      autoComplete="off"
+                      maxLength="10"
 
-                      />
-                       
-                    </div>
+                    />
+
+                  </div>
 
 
                   <div>
-                   
+
                   </div>
                 </div>
                 <hr />
@@ -4565,7 +4565,7 @@ export function DesignationEditForm({
                 <div className="w-full overflow-x-auto">
                   <div className="flex justify-between items-center">
                     <h6 className="font-bold mb-0 text-primary">
-                      Emergency Contact Information
+                      Contact Information
                       {"  "}
                     </h6>
                     <button
@@ -5920,20 +5920,20 @@ export function DesignationEditForm({
                   } */}
                 </div>
 
-      <hr />
+                <hr />
                 <div className="w-full overflow-x-auto">
                   <div className="flex justify-between items-center">
                     {/* <h6 className="font-bold mb-0 text-primary">
                     Asset Detail
                     </h6> */}
-                  </div>  
+                  </div>
                   {user?.assetIs && (
                     <>
-                          <AssetListByEmp employeeId={user?.Id} assetMode={true} />
-                     
-                     </>
+                      <AssetListByEmp employeeId={user?.Id} assetMode={true} />
+
+                    </>
                   )}
-                  </div>
+                </div>
               </fieldset>
             </Form>
             <Modal.Footer>
