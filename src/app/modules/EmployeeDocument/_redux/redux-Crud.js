@@ -32,3 +32,7 @@ export function deleteEmployeeDoc(Id) {
 
   return axios.delete(`${USERS_URL}/employee_doc/delete-employee-doc/${Id}`);
 }
+
+export function uploadEmployeeDoc(body) {
+  return axios.post(`${USERS_URL}/employee_doc/document-upload`, body);
+}
