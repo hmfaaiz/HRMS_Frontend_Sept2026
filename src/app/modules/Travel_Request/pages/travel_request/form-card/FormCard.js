@@ -32,7 +32,7 @@ export function FormCard() {
       employeeId: state?.auth?.user?.employeeIdMapping,
       employeeEntitlement: state.travel_request.employeeEntitlement,
       allEmployees: state.dashboard.allEmployees,
-      travel: state?.auth?.userAccess["Payroll"],
+      travel: state?.auth?.userAccess["Travel"],
     }),
     shallowEqual,
   );

@@ -131,28 +131,28 @@ export function FormTable() {
     //   },
     //   formatter: (cell) => (cell ? "Yes" : "No"),
     // },
-    {
-      dataField: "empRattingToSuperVisor",
-      text: "Show Employee Rating to Supervisor",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => (cell ? "Yes" : "No"),
-    },
-    {
-      dataField: "ratingScaleSelection",
-      text: "Allow User Rating Scale Selection",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => (cell ? "Yes" : "No"),
-    },
+    // {
+    //   dataField: "empRattingToSuperVisor",
+    //   text: "Show Employee Rating to Supervisor",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => (cell ? "Yes" : "No"),
+    // },
+    // {
+    //   dataField: "ratingScaleSelection",
+    //   text: "Allow User Rating Scale Selection",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => (cell ? "Yes" : "No"),
+    // },
     {
       dataField: "action",
       text: "Actions",

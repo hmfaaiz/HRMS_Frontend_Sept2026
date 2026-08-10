@@ -36,13 +36,19 @@ export function FormUIProvider({ FormUIEvents, children }) {
     excludeEmp: false,
     appraisalFacilitatorId: "",
     appraisalFeedbackPeriod: "",
-    appraisalType : '',
-    signIncrementEmailId : '',
-    signIncrementLetter1Id : '',
-    signIncrementLetter2Id : '',
-    approvers : [],
-    probationDays : "",
-    appraisalDays : "",
+    appraisalType: "",
+    signIncrementEmailId: "",
+    signIncrementLetter1Id: "",
+    signIncrementLetter2Id: "",
+    approvers: [],
+    probationDays: "",
+    appraisalDays: "",
+  //// prob policy
+    probFacilitatorId: "",
+    probFeedbackPeriod: "",
+    empRattingToSuperVisorProb: false,
+    ratingScaleSelectionProb: false,
+    excludeEmpProb: false,
   };
 
   const value = {

@@ -68,8 +68,8 @@ export function SubsidiaryOnboardingEditDialog({
     let attachmentPath = e.attachmentPath;
 
     if (e.attachment) {
-      const res = await actions.uploadImage(e.attachment);
-      attachmentPath = res.data.filename;
+      const res = await actions.uploadFormDoc(e.attachment);
+      attachmentPath = res.data.filePath;
     }
 
     return {

@@ -35,76 +35,212 @@ const department_wise_budgetEditSchema = Yup.object().shape({
   budgetYearId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
 
 
-  list: Yup.array()
-    .of(
-      Yup.object().shape({
-        budgeted_strength: Yup.number()
-          .required(VALIDATION_MESSAGES.required)
-          .max(999999999, 'Maximum 9 digits allowed'),
+  // list: Yup.array()
+  //   .of(
+  //     Yup.object().shape({
+  //       budgeted_strength: Yup.number()
+  //         .required(VALIDATION_MESSAGES.required)
+  //         .max(999999999, 'Maximum 9 digits allowed'),
 
-        // budgeted_salary: Yup.number()
-        //   .required(VALIDATION_MESSAGES.required)
-        //   .max(999999999, "Maximum 9 digits allowed")
-        //   .test(
-        //     "salary-greater-than-strength",
-        //     "Budgeted Salary must be greater than Budgeted Strength",
-        //     function (value) {
-        //       const { budgeted_strength } = this.parent;
+  //       // budgeted_salary: Yup.number()
+  //       //   .required(VALIDATION_MESSAGES.required)
+  //       //   .max(999999999, "Maximum 9 digits allowed")
+  //       //   .test(
+  //       //     "salary-greater-than-strength",
+  //       //     "Budgeted Salary must be greater than Budgeted Strength",
+  //       //     function (value) {
+  //       //       const { budgeted_strength } = this.parent;
 
-        //       if (!value || !budgeted_strength) return true;
+  //       //       if (!value || !budgeted_strength) return true;
 
-        //       return Number(value) > Number(budgeted_strength);
-        //     }
-        //   ),
+  //       //       return Number(value) > Number(budgeted_strength);
+  //       //     }
+  //       //   ),
+  //       budgeted_salary: Yup.number()
+  //         .typeError(VALIDATION_MESSAGES.required)
+  //         .transform((value, originalValue) => {
+  //           return originalValue === "" ? null : value;
+  //         })
+  //         .nullable()
+  //         .required(VALIDATION_MESSAGES.required)
+  //         .max(999999999, "Maximum 9 digits allowed")
+  //         .test(
+  //           "salary-greater-than-strength",
+  //           "Budgeted Salary must be greater than Budgeted Strength",
+  //           function (value) {
+  //             const { budgeted_strength } = this.parent;
 
-        designationId: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-        sno: Yup.number().required(VALIDATION_MESSAGES.required),
+  //             if (value == null || budgeted_strength == null) return true;
 
-        business_need: Yup.string().nullable(),
-        impact_of_position: Yup.string().nullable(),
-        expected_date_of_joining: Yup.date()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required)
-          .min(
-            new Date(new Date().setHours(0, 0, 0, 0)),
-            "Expected Date of Joining cannot be in the past"
-          ),
-        // request_date: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-      })
-    )
-    // .test(
-    //   "unique-designation",
-    //   "Duplicate designation is not allowed",
-    //   function (list) {
-    //     if (!list || !list.length) return true;
+  //             return Number(value) > Number(budgeted_strength);
+  //           }
+  //         ),
+  //       designationId: Yup.number()
+  //         .nullable()
+  //         .required(VALIDATION_MESSAGES.required),
+  //       sno: Yup.number().required(VALIDATION_MESSAGES.required),
 
-    //     const designationIds = list
-    //       .map((item) => item.designationId)
-    //       .filter(Boolean);
+  //       business_need: Yup.string().nullable(),
+  //       impact_of_position: Yup.string().nullable(),
+  //       request_date: Yup.date()
+  //         .nullable()
+  //         .required(VALIDATION_MESSAGES.required),
 
-    //     return designationIds.length === new Set(designationIds).size;
-    //   }
-    // ),
-    .test(
-      "unique-designation-date",
-      "Duplicate designation with the same expected date is not allowed",
-      function (list) {
-        if (!list || !list.length) return true;
+  //       expected_date_of_joining: Yup.date()
+  //         .nullable()
+  //         .required(VALIDATION_MESSAGES.required)
+  //         .test(
+  //           "date-validation",
+  //           "Expected Date must be greater than or equal to Request Date",
+  //           function (value) {
+  //             const { request_date } = this.parent;
 
-        const designationDateKeys = list
-          .filter(
-            (item) => item.designationId && item.expected_date_of_joining
-          )
-          .map(
-            (item) =>
-              `${item.designationId}_${item.expected_date_of_joining}`
-          );
+  //             if (!value || !request_date) return true;
 
-        return designationDateKeys.length === new Set(designationDateKeys).size;
-      }
-    ),
+  //             const expected = new Date(value);
+  //             const request = new Date(request_date);
+
+  //             // normalize time
+  //             expected.setHours(0, 0, 0, 0);
+  //             request.setHours(0, 0, 0, 0);
+
+  //             return expected >= request;
+  //           }
+  //         )
+  //         .test(
+  //           "not-past-date",
+  //           "Expected Date of Joining cannot be in the past",
+  //           function (value) {
+  //             if (!value) return true;
+
+  //             const today = new Date();
+  //             today.setHours(0, 0, 0, 0);
+
+  //             const expected = new Date(value);
+  //             expected.setHours(0, 0, 0, 0);
+
+  //             return expected >= today;
+  //           }
+  //         ),
+  //     })
+  //   )
+  //   // .test(
+  //   //   "unique-designation",
+  //   //   "Duplicate designation is not allowed",
+  //   //   function (list) {
+  //   //     if (!list || !list.length) return true;
+
+  //   //     const designationIds = list
+  //   //       .map((item) => item.designationId)
+  //   //       .filter(Boolean);
+
+  //   //     return designationIds.length === new Set(designationIds).size;
+  //   //   }
+  //   // ),
+  //   .test(
+  //     "unique-designation-date",
+  //     "Duplicate designation with the same expected date is not allowed",
+  //     function (list) {
+  //       if (!list || !list.length) return true;
+
+  //       const designationDateKeys = list
+  //         .filter(
+  //           (item) => item.designationId && item.expected_date_of_joining
+  //         )
+  //         .map(
+  //           (item) =>
+  //             `${item.designationId}_${item.expected_date_of_joining}`
+  //         );
+
+  //       return designationDateKeys.length === new Set(designationDateKeys).size;
+  //     }
+  //   ),
+
+  list: Yup.array().of(
+  Yup.lazy((row) => {
+    // Approved ya Rejected row par validation skip
+    if (row?.request_status === "A" || row?.request_status === "R") {
+      return Yup.object().shape({});
+    }
+
+    // Sirf Pending rows ke liye validation
+    return Yup.object().shape({
+      budgeted_strength: Yup.number()
+        .required(VALIDATION_MESSAGES.required)
+        .max(999999999, "Maximum 9 digits allowed"),
+
+      budgeted_salary: Yup.number()
+        .typeError(VALIDATION_MESSAGES.required)
+        .transform((value, originalValue) =>
+          originalValue === "" ? null : value
+        )
+        .nullable()
+        .required(VALIDATION_MESSAGES.required)
+        .max(999999999, "Maximum 9 digits allowed")
+        .test(
+          "salary-greater-than-strength",
+          "Budgeted Salary must be greater than Budgeted Strength",
+          function (value) {
+            const { budgeted_strength } = this.parent;
+
+            if (value == null || budgeted_strength == null) return true;
+
+            return Number(value) > Number(budgeted_strength);
+          }
+        ),
+
+      designationId: Yup.number()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      sno: Yup.number().required(VALIDATION_MESSAGES.required),
+
+      business_need: Yup.string().nullable(),
+
+      impact_of_position: Yup.string().nullable(),
+
+      request_date: Yup.date()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      expected_date_of_joining: Yup.date()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required)
+        .test(
+          "date-validation",
+          "Expected Date must be greater than or equal to Request Date",
+          function (value) {
+            const { request_date } = this.parent;
+
+            if (!value || !request_date) return true;
+
+            const expected = new Date(value);
+            const request = new Date(request_date);
+
+            expected.setHours(0, 0, 0, 0);
+            request.setHours(0, 0, 0, 0);
+
+            return expected >= request;
+          }
+        )
+        .test(
+          "not-past-date",
+          "Expected Date of Joining cannot be in the past",
+          function (value) {
+            if (!value) return true;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const expected = new Date(value);
+            expected.setHours(0, 0, 0, 0);
+
+            return expected >= today;
+          }
+        ),
+    });
+  })
+)
 });
 
 export function FormEditForm({

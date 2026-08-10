@@ -649,6 +649,7 @@ export function FormFilter({
                   </button>
 
                   <button
+
                     disabled={
                       loading ||
                       processLoading ||
@@ -660,10 +661,11 @@ export function FormFilter({
                       csvLoading ||
                       excelLoading
                     }
-                    className="btn btn-success"
+
                     onClick={() => runAllProcess()}
+                    className="btn btn-primary btn-elevate"
                   >
-                    Run Process
+                    Save
                     {processLoading && (
                       <span className="ml-3 mr-3 spinner spinner-white"></span>
                     )}

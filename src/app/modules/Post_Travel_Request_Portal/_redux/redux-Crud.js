@@ -4,7 +4,7 @@ export const BASE_URL = process.env.REACT_APP_API_URL;
 
 export function getApprovedTravelRequestsByEmployee() {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/read-all-post-approval-travel-request`,
+    `${BASE_URL}/post_travel_request/read-all-post-approval-travel-request`,
     {},
   );
 }
@@ -12,7 +12,7 @@ export function getApprovedTravelRequestsByEmployee() {
 // Create
 export function createPostTravelRequestPortal(body) {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/create-post-approval-travel-request`,
+    `${BASE_URL}/post_travel_request/create-post-approval-travel-request`,
     body,
   );
 }
@@ -20,7 +20,7 @@ export function createPostTravelRequestPortal(body) {
 // Read All (paginated table)
 export function getAllPostTravelRequestPortals(body) {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/read-all-post-approval-records`,
+    `${BASE_URL}/post_travel_request/read-all-post-approval-records`,
     body,
   );
 }
@@ -28,7 +28,7 @@ export function getAllPostTravelRequestPortals(body) {
 // Read One
 export function getPostTravelRequestPortalById(Id) {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/read-post-approval-travel-request`,
+    `${BASE_URL}/post_travel_request/read-post-approval-travel-request`,
     { Id },
   );
 }
@@ -36,7 +36,7 @@ export function getPostTravelRequestPortalById(Id) {
 // Update
 export function updatePostTravelRequestPortal(body) {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/update-post-approval-travel-request`,
+    `${BASE_URL}/post_travel_request/update-post-approval-travel-request`,
     body,
   );
 }
@@ -44,7 +44,7 @@ export function updatePostTravelRequestPortal(body) {
 // Delete
 export function deletePostTravelRequestPortal(Id) {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/delete-post-approval-travel-request`,
+    `${BASE_URL}/post_travel_request/delete-post-approval-travel-request`,
     { Id },
   );
 }
@@ -63,14 +63,14 @@ export function uploadImage(body) {
 
 export function checkCanApprove(Id) {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/can-approve-post-approval-request`,
+    `${BASE_URL}/post_travel_request/can-approve-post-approval-request`,
     { Id },
   );
 }
 
 export function getPostTravelRequestPortalReport(Id) {
   return axios.post(
-    `${BASE_URL}/post_travel_request_portal/post-approval-travel-request-report`,
+    `${BASE_URL}/post_travel_request/post-approval-travel-request-report`,
     { Id },
     { responseType: "arraybuffer" },
   );

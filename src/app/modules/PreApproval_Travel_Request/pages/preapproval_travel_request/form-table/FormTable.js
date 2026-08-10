@@ -40,6 +40,8 @@ export function FormTable({ onEditClick, onViewClick }) {
     shallowEqual,
   );
 
+  console.log("currentState",currentState )
+
   const { entities, totalCount, listLoading } = currentState;
   const dispatch = useDispatch();
 

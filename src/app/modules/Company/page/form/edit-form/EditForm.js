@@ -25,6 +25,7 @@ import { fiscalMonthList, moduleList } from "../../FormUIHelper";
 import Axios from "axios";
 import { toast } from "react-toastify";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
+import { uploadFormDoc } from "../../../redux/reduxaction";
 
 const USERS_URL = process.env.REACT_APP_API_URL;
 const phoneRegExp = /^((\+92)|(0092))?-?\d{3}-?\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -164,9 +165,9 @@ export const EditForm = ({
           // );
 
           try {
-            const uploadRes = await uploadFile(file);
-            setCompanyLogo(uploadRes.data.filename);
-            handleSubmit({ ...values, Logo: uploadRes.data.filename });
+            const uploadRes = await uploadFormDoc(file);
+            setCompanyLogo(uploadRes.data.filePath);
+            handleSubmit({ ...values, Logo: uploadRes.data.filePath });
           } catch (err) {
             console.error("File upload failed:", err);
             // Optionally return here or set a default file value

@@ -17,10 +17,12 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { X } from "lucide-react";
+import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
 
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
+  const { confirm, ConfirmationComponent } = useConfirmationDialog();
   const [selectedIds, setSelectedIds] = useState([]);
   const [handleBulkLoading, setHandleBulkLoading] = useState(false);
   const formUIProps = useMemo(() => {
@@ -178,7 +180,7 @@ export function FormTable() {
               yearId: row?.yearId,
               appraisalCategoryId: row?.appraisalCategoryId,
               Id: row?.Id,
-            })
+            }),
           );
         },
       },
@@ -199,7 +201,14 @@ export function FormTable() {
     page: formUIProps.queryParams.pageNumber,
   };
 
-  const handleBulkAction = () => {
+  const handleBulkAction = async () => {
+    const result = await confirm(
+      "Confirm Submission",
+      "Are you sure you want to publish evaluation?",
+      "No",
+      "Yes",
+    );
+    if (!result) return;
     setHandleBulkLoading(true);
     dispatch(
       actions.publishAppraisal({
@@ -290,7 +299,7 @@ export function FormTable() {
 
   return (
     <div className="w-full overflow-x-auto scrollbar-fancy">
-       <BulkPublishSummary
+      <BulkPublishSummary
         bulkResult={errorState}
         onClose={handleCloseBulkResult}
       />
@@ -343,6 +352,7 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
+      <ConfirmationComponent />
     </div>
   );
 }
