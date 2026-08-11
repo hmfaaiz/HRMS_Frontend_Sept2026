@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, shallowEqual } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
@@ -9,22 +9,56 @@ import { BankDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 import { FormCard } from "./form-card/FormCard";
 
 export function FormPage({ history }) {
+  const location = useLocation();
+
   const FormUIEvents = {
     newButtonClick: () => {
       history.push("/onetime_allowance/read-all-onetime-allowance/new");
     },
+
     openEditDialog: (id) => {
-      history.push(`/onetime_allowance/read-all-onetime-allowance/${id}/edit`);
+      // OLD URL
+      // history.push(`/onetime_allowance/read-all-onetime-allowance/${id}/edit`);
+
+      // NEW URL - ID hidden from URL
+      history.push({
+        pathname: "/onetime_allowance/read-all-onetime-allowance/edit",
+        state: {
+          id,
+        },
+      });
     },
+
     openDeleteDialog: (id, status) => {
-      history.push(
-        `/onetime_allowance/read-all-onetime-allowance/${id}/delete`
-      );
+      // OLD URL
+      // history.push(
+      //   `/onetime_allowance/read-all-onetime-allowance/${id}/delete`
+      // );
+
+      // NEW URL - ID and status hidden from URL
+      history.push({
+        pathname: "/onetime_allowance/read-all-onetime-allowance/delete",
+        state: {
+          id,
+          status,
+        },
+      });
     },
+
     openReadDialog: (id) => {
-      history.push(`/onetime_allowance/read-all-onetime-allowance/${id}/read`);
+      // OLD URL
+      // history.push(`/onetime_allowance/read-all-onetime-allowance/${id}/read`);
+
+      // NEW URL - ID hidden from URL
+      history.push({
+        pathname: "/onetime_allowance/read-all-onetime-allowance/read",
+        state: {
+          id,
+        },
+      });
     },
   };
+
   const { userAccess } = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.onetime_allowance,
@@ -40,15 +74,19 @@ export function FormPage({ history }) {
     (item) => item.componentName === "DeleteOnetimeAllowance"
   );
 
-  const accessUser = userAccess.find(
+  const accessUser = userAccess?.find(
     (item) => item.componentName === "CreateOnetimeAllowance"
   );
+
   const isAccessForRead = userAccess?.find(
     (item) => item.componentName === "ReadOnetimeAllowance"
   );
+
   return (
     <FormUIProvider FormUIEvents={FormUIEvents}>
       <FormCard />
+
+      {/* NEW */}
       {accessUser && (
         <Route
           path="/onetime_allowance/read-all-onetime-allowance/new"
@@ -63,6 +101,10 @@ export function FormPage({ history }) {
         />
       )}
 
+      {/* EDIT */}
+
+      {/* OLD URL */}
+      {/*
       {isAccessForEdit && (
         <Route
           path="/onetime_allowance/read-all-onetime-allowance/:id/edit"
@@ -77,7 +119,29 @@ export function FormPage({ history }) {
           )}
         />
       )}
+      */}
 
+      {/* NEW URL - ID from location.state */}
+      {isAccessForEdit && (
+        <Route
+          path="/onetime_allowance/read-all-onetime-allowance/edit"
+          render={({ match, history }) => (
+            <FormEditDialog
+              show={match != null}
+              id={location.state?.id}
+              status="edit"
+              onHide={() =>
+                history.push("/onetime_allowance/read-all-onetime-allowance")
+              }
+            />
+          )}
+        />
+      )}
+
+      {/* READ */}
+
+      {/* OLD URL */}
+      {/*
       {isAccessForRead && (
         <Route
           path="/onetime_allowance/read-all-onetime-allowance/:id/read"
@@ -93,13 +157,53 @@ export function FormPage({ history }) {
           )}
         />
       )}
+      */}
 
+      {/* NEW URL - ID from location.state */}
+      {isAccessForRead && (
+        <Route
+          path="/onetime_allowance/read-all-onetime-allowance/read"
+          render={({ match, history }) => (
+            <FormEditDialog
+              show={match != null}
+              id={location.state?.id}
+              status="read"
+              userForRead={true}
+              onHide={() =>
+                history.push("/onetime_allowance/read-all-onetime-allowance")
+              }
+            />
+          )}
+        />
+      )}
+
+      {/* DELETE */}
+
+      {/* OLD URL */}
+      {/*
       {isAccessForDelete && (
         <Route path="/onetime_allowance/read-all-onetime-allowance/:id/delete">
           {({ history, match }) => (
             <BankDeleteDialog
               show={match != null}
               id={match && match.params.id}
+              onHide={() => {
+                history.push("/onetime_allowance/read-all-onetime-allowance");
+              }}
+            />
+          )}
+        </Route>
+      )}
+      */}
+
+      {/* NEW URL - ID and status from location.state */}
+      {isAccessForDelete && (
+        <Route path="/onetime_allowance/read-all-onetime-allowance/delete">
+          {({ history, match }) => (
+            <BankDeleteDialog
+              show={match != null}
+              id={location.state?.id}
+              status={location.state?.status}
               onHide={() => {
                 history.push("/onetime_allowance/read-all-onetime-allowance");
               }}
