@@ -34,7 +34,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Link } from "@material-ui/core";
 import { useDesignationUIContext } from "../DesignationUIContext";
 import MaskedInput from "react-text-mask";
-import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays, getUploadUrl } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
 import { CirclePlus, Trash2, Upload } from "lucide-react";
@@ -338,18 +338,18 @@ const profileValidation = (localizationId) =>
       .oneOf([true, false], "Required*"), // Ensures the value is either true or false
 
 
-isForMachineAtt: Yup.boolean().nullable(),
+    isForMachineAtt: Yup.boolean().nullable(),
 
-empMachineAttId: Yup.number()
-  .nullable()
-  .when("isForMachineAtt", {
-    is: true,
-    then: (schema) =>
-      schema
-        .typeError("Must be a number")
-        .required("Required*"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+    empMachineAttId: Yup.number()
+      .nullable()
+      .when("isForMachineAtt", {
+        is: true,
+        then: (schema) =>
+          schema
+            .typeError("Must be a number")
+            .required("Required*"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
 
     geoLocationIds: Yup.array()
       .nullable()
@@ -533,7 +533,7 @@ export function DesignationEditForm({
 
   const [profile_image, setImage] = useState(
     user?.id && user?.profile_image
-      ? user.profile_image
+      ? getUploadUrl(user.profile_image)
       : toAbsoluteUrl("/media/users/profileImage.png")
   );
   const [file, setFile] = useState("");
@@ -1093,7 +1093,7 @@ export function DesignationEditForm({
 
   useEffect(() => {
     if (id && user?.profile_image) {
-      setImage(user.profile_image); // edit/view case
+      setImage(getUploadUrl(user.profile_image)); // edit/view case
     } else {
       setImage(toAbsoluteUrl("/media/users/profileImage.png")); // new case
     }
@@ -1307,7 +1307,7 @@ export function DesignationEditForm({
 
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
-      
+
       if (!id) {
         setFieldValue("allowResignationRequest", response?.data?.data[0]?.allowEmployeeToSubmit ?? false);
       }
@@ -2183,10 +2183,10 @@ export function DesignationEditForm({
               await axios
                 .post(`${USERS_URL}/profile/image-upload`, formData)
                 .then((res) => {
-                  setImage(res.data.imageUrl);
+                  setImage(res.data.filePath);
                   saveEmployeeProfile(
                     payload,
-                    res.data.imageUrl,
+                    res.data.filePath,
                     defContactList,
                     workExperienceList,
                     academicList,
@@ -2230,7 +2230,7 @@ export function DesignationEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                
+
                 <h6 className="font-bold mb-0 text-primary mt-2">
                   Basic Information
                 </h6>
@@ -2504,7 +2504,7 @@ export function DesignationEditForm({
                           className="object-cover rounded-lg"
                           alt="Profile"
                           style={{
-                            objectFit: "cover",
+                            objectFit: "contain",
                           }}
                         />
 
@@ -3700,7 +3700,7 @@ export function DesignationEditForm({
                           setFieldValue("isForMachineAtt", newValue);
                           setFieldValue("empMachineAttId", "");
 
-                       
+
                         }}
                         onBlur={handleBlur}
                         checked={values.isForMachineAtt}
@@ -3715,23 +3715,23 @@ export function DesignationEditForm({
                   </div>
 
 
-                    <div>
-                      <Field
-                        name="empMachineAttId"
-                        disabled={!values.isForMachineAtt}
-                        component={Input}
-                        placeholder="Employee Attendance Machine Id 1000000001"
-                        label="Employee Attendance Machine Id"
-                        autoComplete="off"
-                        maxLength="10"
+                  <div>
+                    <Field
+                      name="empMachineAttId"
+                      disabled={!values.isForMachineAtt}
+                      component={Input}
+                      placeholder="Employee Attendance Machine Id 1000000001"
+                      label="Employee Attendance Machine Id"
+                      autoComplete="off"
+                      maxLength="10"
 
-                      />
-                       
-                    </div>
+                    />
+
+                  </div>
 
 
                   <div>
-                   
+
                   </div>
                 </div>
                 <hr />
@@ -4565,7 +4565,7 @@ export function DesignationEditForm({
                 <div className="w-full overflow-x-auto">
                   <div className="flex justify-between items-center">
                     <h6 className="font-bold mb-0 text-primary">
-                      Emergency Contact Information
+                      Contact Information
                       {"  "}
                     </h6>
                     <button
@@ -5920,20 +5920,20 @@ export function DesignationEditForm({
                   } */}
                 </div>
 
-      <hr />
+                <hr />
                 <div className="w-full overflow-x-auto">
                   <div className="flex justify-between items-center">
                     {/* <h6 className="font-bold mb-0 text-primary">
                     Asset Detail
                     </h6> */}
-                  </div>  
+                  </div>
                   {user?.assetIs && (
                     <>
-                          <AssetListByEmp employeeId={user?.Id} assetMode={true} />
-                     
-                     </>
+                      <AssetListByEmp employeeId={user?.Id} assetMode={true} />
+
+                    </>
                   )}
-                  </div>
+                </div>
               </fieldset>
             </Form>
             <Modal.Footer>

@@ -190,7 +190,7 @@ export function MasterEditForm({
   }
 
   const handleSubmitWithFinalize = async (isFinalize, handleSubmit, values) => {
-    if(isFinalize){
+    if (isFinalize) {
       const result = await confirm(
         "Confirm Submission",
         "Are you sure you want to finalized Rating? Once finalized, you will not be able to make any changes.",
@@ -200,7 +200,7 @@ export function MasterEditForm({
       if (!result) return;
     }
     // handleSubmit(); // trigger Formik validation
-    const valuesWithFlag = { ...values, isFinalize , isPortalFinalize : true };
+    const valuesWithFlag = { ...values, isFinalize, isPortalFinalize: true };
     saveFrom(valuesWithFlag);
   };
 
@@ -1366,27 +1366,35 @@ export function MasterEditForm({
                       )}
                     </button>
                   )}
-
-                  {id && !isUserForRead && !values.isFinalize && (
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-elevate"
-                      onClick={() =>
-                        handleSubmitWithConsent(true, handleSubmit, values)
-                      }
-                      disabled={
-                        loading ||
-                        !isValid ||
-                        !values?.employeeId ||
-                        values?.sendConsent
-                      }
-                    >
-                      {values?.sendConsent ? "Consent Sended" : "Send Consent"}
-                      {loading && (
-                        <span className="ml-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  )}
+                  {console.log("trettt", values)}
+                  {id &&
+                    !isUserForRead &&
+                    !values.isFinalize &&
+                    Number(
+                      parseFloat(values?.generalSelfRating) +
+                        parseFloat(values?.goalSelfRating),
+                    ) > 0 && (
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-elevate"
+                        onClick={() =>
+                          handleSubmitWithConsent(true, handleSubmit, values)
+                        }
+                        disabled={
+                          loading ||
+                          !isValid ||
+                          !values?.employeeId ||
+                          values?.sendConsent
+                        }
+                      >
+                        {values?.sendConsent
+                          ? "Consent Sended"
+                          : "Send Consent"}
+                        {loading && (
+                          <span className="ml-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    )}
 
                   {/* Finalize Button */}
                   {!isUserForRead && !values.isFinalize && id && (

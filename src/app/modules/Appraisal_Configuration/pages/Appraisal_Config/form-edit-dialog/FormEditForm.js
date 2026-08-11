@@ -101,6 +101,25 @@ const formSchema = Yup.object()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
       .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
       .required(VALIDATION_MESSAGES.required),
+
+    probFacilitatorId: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+    probFeedbackPeriod: Yup.number()
+      .integer("Only whole numbers are allowed") //  ensures no decimals
+      .nullable()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
+      .required(VALIDATION_MESSAGES.required),
+    empRattingToSuperVisorProb: Yup.boolean()
+      .required(VALIDATION_MESSAGES.required)
+      .oneOf([true, false], VALIDATION_MESSAGES.required),
+    ratingScaleSelectionProb: Yup.boolean()
+      .required(VALIDATION_MESSAGES.required)
+      .oneOf([true, false], VALIDATION_MESSAGES.required),
+    excludeEmpProb: Yup.boolean()
+      .required(VALIDATION_MESSAGES.required)
+      .oneOf([true, false], VALIDATION_MESSAGES.required),
   })
   .test(
     "sum-must-be-100",
@@ -421,6 +440,90 @@ export function FormEditForm({
                     </div>
                   </div>
                   <hr className="col-span-2 lg:col-span-3" />
+
+                  {/* probation area publish policy  */}
+                  <div className="grid grid-cols-2 lg:grid-cols-3 col-span-2 lg:col-span-3 gap-x-3">
+                    <p className="text-tprimary text-sm col-span-2 font-semibold lg:col-span-3 mb-0">
+                      Probation Publish Policy
+                    </p>
+                    <div>
+                      <SearchSelect
+                        name={"probFacilitatorId"}
+                        label={
+                          <span>
+                            Probation Facilitator
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={!values?.subsidiaryId}
+                        onChange={(e) => {
+                          setFieldValue("probFacilitatorId", e?.value || null);
+                        }}
+                        value={
+                          dashboard?.allEmployees?.find(
+                            (el) => el?.value === values?.probFacilitatorId,
+                          ) || null
+                        }
+                        error={errors?.probFacilitatorId}
+                        touched={touched?.probFacilitatorId}
+                        options={dashboard?.allEmployees}
+                      />
+                    </div>
+                    <div>
+                      <Field
+                        name="probFeedbackPeriod"
+                        component={Input}
+                        type="number"
+                        label={
+                          <span>
+                            Probation Feedback Period
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue("probFeedbackPeriod", e?.target?.value);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <div>
+                        <Checkbox
+                          isSelected={values?.empRattingToSuperVisorProb}
+                          children={"Show Employee Rating to Supervisor"}
+                          onChange={(e) => {
+                            setFieldValue(
+                              "empRattingToSuperVisorProb",
+                              e?.target?.checked,
+                            );
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Checkbox
+                          isSelected={values?.ratingScaleSelectionProb}
+                          children={"Allow User Rating Scale Selection"}
+                          onChange={(e) => {
+                            setFieldValue(
+                              "ratingScaleSelectionProb",
+                              e?.target?.checked,
+                            );
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Checkbox
+                          isSelected={values?.excludeEmpProb}
+                          children={"Exclude Employee in Probation Process"}
+                          onChange={(e) => {
+                            setFieldValue("excludeEmpProb", e?.target?.checked);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <hr className="col-span-2 lg:col-span-3" />
+                  {/* probation area publish policy  */}
+
                   <div className="grid grid-cols-2 lg:grid-cols-3 col-span-2 lg:col-span-3 gap-x-3">
                     <p className="text-tprimary text-sm col-span-2 font-semibold lg:col-span-3 mb-0">
                       Increment Finalization Signatures

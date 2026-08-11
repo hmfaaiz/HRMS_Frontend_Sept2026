@@ -22,3 +22,6 @@ export function deleteCompany(id) {
   return axios.delete(`${USERS_URL}/company/delete-company/${id}`);
 }
 
+export function uploadFormDoc(body) {
+  return axios.post(`${USERS_URL}/company/image-upload`, body);
+}

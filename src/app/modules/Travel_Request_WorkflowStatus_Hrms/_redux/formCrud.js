@@ -32,7 +32,7 @@ export async function handleTravelRequestApproval(body) {
 // Fetch TADA policy / entitlement for an employee
 export async function getTadaConfigurationPolicies(employeeId) {
   return axios.post(
-    `${USERS_URL}/t_preapproval_travel_request/read-tada-configuration-policies`,
+    `${USERS_URL}/preapproval_travel_request/read-tada-configuration-policies`,
     {
       employeeId,
     },

@@ -307,3 +307,24 @@ export const fetchWorkflowStatusByLeaveId = (leaveId) => async (dispatch) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };
+
+export const uploadFormDoc= async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  return await requestFromServer
+    .uploadFormDoc(formData)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.fileFail, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

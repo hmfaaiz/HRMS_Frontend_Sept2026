@@ -54,12 +54,12 @@ export function FormEditDialog({
   //Create or Update record on form submit. First if file or image is available then will be uploaded then data is saved in db
   const submitForm = (values, resetForm) => {
     if (values.file && typeof values.file == "object") {
-      actions.uploadImage(values.file).then((res) => {
+      actions.uploadFormDoc(values.file).then((res) => {
         dispatch(
           actions.saveRecord(
             {
               ...values,
-              file: res.data.filename,
+              file: res.data.filePath,
               authortiesList: empAuthorityList,
             },
             employeeId,

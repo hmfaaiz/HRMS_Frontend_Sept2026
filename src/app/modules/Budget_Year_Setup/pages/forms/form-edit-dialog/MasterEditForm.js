@@ -328,7 +328,7 @@ export function MasterEditForm({
                         <SearchSelect
                           name="fiscalYearId"
                           label={<span>Fiscal Year</span>}
-                          isDisabled={isUserForRead || !values?.subsidiaryId || isEdit}
+                          isDisabled={isUserForRead || !values?.subsidiaryId || (isEdit && values?.fiscalYearId !== null && values?.fiscalYearId !== undefined)}
                           onChange={(e) => {
                             const selectedFY =
                               dashboard?.fiscalyearBySubList?.find(

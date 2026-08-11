@@ -112,16 +112,37 @@ export const fetchSubsidiaryChecklistForEditBySubsidiaryId = (subsidiaryId) => (
  * @param {Object} queryparm
  * @returns
  */
-export const uploadImage = async (file) => {
+// export const uploadImage = async (file) => {
+//   const formData = new FormData();
+//   formData.append("file", file);
+//   return await requestFromServer
+//     .uploadImage(formData)
+//     .then((response) => {
+//       return response;
+//     })
+//     .catch((error) => {
+//       error.clientMessage = "File not Uploaded";
+//       // dispatch(actions.catchError({ error, callType: callTypes.list }));
+//     });
+// };
+
+export const uploadFormDoc= async (file) => {
   const formData = new FormData();
   formData.append("file", file);
   return await requestFromServer
-    .uploadImage(formData)
+    .uploadFormDoc(formData)
     .then((response) => {
       return response;
     })
     .catch((error) => {
-      error.clientMessage = "File not Uploaded";
-      // dispatch(actions.catchError({ error, callType: callTypes.list }));
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.fileFail, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
 };
