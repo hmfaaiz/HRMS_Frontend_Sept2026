@@ -72,7 +72,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
   const saveForm = async (data,maxAmount, isFileReq, resetForm) => {
     // enableLoading();
-
+console.log("data.file11111",data.file)
     if (maxAmount < data.amount) {
       disbaleLoading();
       toast.error("Amount exceeds the limit.", {
@@ -109,8 +109,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       if (data.file && typeof data.file == "object") {
         //This is to check if file is uploaded or not. If uploaded then upload the file to server else just save form values
 
-        actions.uploadImage(data.file).then((res) => {
-          data.file = res.data.filename;
+        actions.uploadFormDoc(data.file).then((res) => {
+          data.file = res.data.filePath;
           dispatch(actions.createReimbursementClaim(data, disbaleLoading, resetForm));
         });
       } else {
@@ -139,7 +139,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
    
 
         actions.uploadImage(data.file).then((res) => {
-          formUpdatedFields.file = res.data.filename;
+          formUpdatedFields.file = res.data.filePath;
           dispatch(
             actions.updateReimbursementClaim(
               formUpdatedFields,
