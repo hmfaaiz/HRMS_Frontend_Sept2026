@@ -14,6 +14,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [panelMode, setPanelMode] = useState(false);
   const [subsidiaryId, setSubsidiaryId] = useState(null);
   const [appraisalCategoryId, setAppraisalCategoryId] = useState(null);
+  const [appraisalPublishRating, setAppraisalPublishRating] = useState(null);
   const [employeeId, setEmployeeId] = useState(null);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
@@ -41,6 +42,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setEmployeeId,
     panelMode,
     setPanelMode,
+    appraisalPublishRating,
+    setAppraisalPublishRating,
     newButtonClick: FormUIEvents.newButtonClick,
     openEditDialog: FormUIEvents.openEditDialog,
     openDeleteDialog: FormUIEvents.openDeleteDialog,

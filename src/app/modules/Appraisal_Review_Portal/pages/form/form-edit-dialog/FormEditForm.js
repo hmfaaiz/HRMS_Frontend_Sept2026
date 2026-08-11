@@ -167,6 +167,7 @@ export function MasterEditForm({
       setEmployeeId: formUIContext.setEmployeeId,
       subsidiaryId: formUIContext.subsidiaryId,
       appraisalCategoryId: formUIContext.appraisalCategoryId,
+      setAppraisalPublishRating: formUIContext.setAppraisalPublishRating,
     };
   }, [formUIContext]);
 
@@ -339,6 +340,20 @@ export function MasterEditForm({
                           )}
                         </div>
                       </div>
+                    </div>
+                    <div className="flex items-end justify-start">
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2 mt-2"
+                        onClick={() => {
+                          formUIProps.setAppraisalPublishRating({
+                            subsidiaryId: values?.subsidiaryId,
+                            yearId: values?.yearId,
+                          });
+                        }}
+                      >
+                        View Rating Scale
+                      </button>
                     </div>
                     <br />
                     <EmployeeProfile

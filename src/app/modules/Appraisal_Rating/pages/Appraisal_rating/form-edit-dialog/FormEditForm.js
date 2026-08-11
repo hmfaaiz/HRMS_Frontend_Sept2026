@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Input, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import {
+  Checkbox,
+  Input,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { useSelector } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
@@ -18,11 +22,11 @@ const formSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   description: Yup.string()
     .nullable()
-    .max(200 , "Maximum 200 charachter allowed")
+    .max(200, "Maximum 200 charachter allowed")
     .required(VALIDATION_MESSAGES.required),
   points: Yup.number()
     .transform((value, originalValue) =>
-      String(originalValue).trim() === "" ? null : value
+      String(originalValue).trim() === "" ? null : value,
     ) // treat empty string as null
     .nullable()
     .test("min-check", VALIDATION_MESSAGES.minZeroValue, (value) => {
@@ -58,10 +62,10 @@ const formSchema = Yup.object().shape({
     }),
 
   to_percentage: Yup.number().nullable(),
-
+  isActive: Yup.boolean(),
   increment_percentage: Yup.number()
     .transform((value, originalValue) =>
-      String(originalValue).trim() === "" ? null : value
+      String(originalValue).trim() === "" ? null : value,
     ) // treat empty string as null
     .nullable()
     .test("min-check", VALIDATION_MESSAGES.minZeroValue, (value) => {
@@ -95,7 +99,7 @@ export function FormEditForm({
     let codeRes = await getLastTableId(
       "a_appraisal_ratting",
       "code",
-      `subsidiaryId = ${subsidiaryId}`
+      `subsidiaryId = ${subsidiaryId}`,
     );
     setCode(codeRes?.data?.data[0]?.NewId || null);
   };
@@ -116,7 +120,7 @@ export function FormEditForm({
         saveForm(values);
       }}
     >
-      {({ handleSubmit }) => (
+      {({ handleSubmit, values, setFieldValue }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -127,7 +131,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-2 lg:col-span-4">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-2 lg:col-span-4 self-end">
                     <div>
                       <Field
                         name="code"
@@ -152,6 +156,15 @@ export function FormEditForm({
                             Rating Name<span style={{ color: "red" }}>*</span>
                           </span>
                         }
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Checkbox
+                        children={"Active"}
+                        isSelected={values?.isActive}
+                        onChange={(e) => setFieldValue( "isActive" , e?.target.checked)}
+                        disabled={isUserForRead}
+
                       />
                     </div>
                   </div>
