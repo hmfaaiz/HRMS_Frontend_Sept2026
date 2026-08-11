@@ -198,7 +198,7 @@ export function DesignationTable({onHide}) {
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
       style: {
-        minWidth: "170px",
+        minWidth: "10px",
       },
     },
   ];
