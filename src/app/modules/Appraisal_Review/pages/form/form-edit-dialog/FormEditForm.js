@@ -23,6 +23,7 @@ import {
 } from "../../../../../../_metronic/_partials/controls";
 import { decodeHtml } from "../../../../../utils/common";
 import { useConfirmationDialog } from "../../../../../../_metronic/_partials/controls/forms/useConfirmationDialog";
+import ExpandableText from "../../../../../../_metronic/_partials/controls/forms/ExpandableText";
 
 const formValidation = (minPoint, maxPoint) =>
   Yup.object().shape({
@@ -273,7 +274,7 @@ export function MasterEditForm({
                 <Form className="form form-label-right">
                   <fieldset disabled={values.isFinalize || actionsLoading}>
                     {/* Employee Selection */}
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-x-3 gap-y-1">
                       <div className="flex item-end gap-1 justify-end">
                         <div className="w-full">
                           <SearchSelect
@@ -307,7 +308,7 @@ export function MasterEditForm({
                           />
                         </div>
                         {/* View/Cancel button */}
-                        <div className="flex items-end justify-end">
+                        <div className="flex items-end justify-end w-40">
                           {formUIProps?.panelMode ? (
                             <button
                               type="button"
@@ -332,7 +333,7 @@ export function MasterEditForm({
                               }
                             >
                               <Eye className="w-4 h-4 text-white" />
-                              View
+                              View Details
                             </button>
                           )}
                         </div>
@@ -400,20 +401,21 @@ export function MasterEditForm({
                                               <td
                                                 title={`${e?.questionName}${e?.questionDescription}`}
                                               >
-                                                <span className="font-bold">
-                                                  {e?.questionName}
-                                                </span>{" "}
-                                                {truncateText(
-                                                  e?.questionDescription,
-                                                  250,
-                                                )}
+                                                <ExpandableText lines={5}>
+                                                  <span className="font-bold">
+                                                    {e?.questionName}
+                                                  </span>{" "}
+                                                  {e?.questionDescription}
+                                                </ExpandableText>
                                               </td>
                                               <td>
                                                 {e?.questionWeightage || 0}
                                               </td>
                                               <td>{e?.rating || 0}</td>
                                               <td title={e?.comments}>
-                                                {truncateText(e?.comments, 250)}
+                                                <ExpandableText lines={6}>
+                                                  {e?.comments}
+                                                </ExpandableText>
                                               </td>
                                               <td>
                                                 <Field
@@ -546,30 +548,27 @@ export function MasterEditForm({
                                               <td
                                                 title={`${e?.questionName} ${e?.questionDescription}`}
                                               >
-                                                <span className="font-bold">
-                                                  {e?.questionName}
-                                                </span>{" "}
-                                                {truncateText(
-                                                  e?.questionDescription,
-                                                  250,
-                                                )}
+                                                <ExpandableText lines={5}>
+                                                  <span className="font-bold">
+                                                    {e?.questionName}
+                                                  </span>{" "}
+                                                  {e?.questionDescription}
+                                                </ExpandableText>
                                               </td>
                                               <td>
                                                 {e?.questionWeightage || 0}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
-                                                {truncateText(
-                                                  e?.selfComments,
-                                                  250,
-                                                )}
+                                                <ExpandableText lines={5}>
+                                                  {e?.selfComments}
+                                                </ExpandableText>
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
-                                                {truncateText(
-                                                  e?.managerComments,
-                                                  160,
-                                                )}
+                                                <ExpandableText lines={4}>
+                                                  {e?.managerComments}
+                                                </ExpandableText>
                                               </td>
                                               <td>
                                                 <Field
@@ -703,30 +702,27 @@ export function MasterEditForm({
                                               <td
                                                 title={`${e?.questionName} ${e?.questionDescription}`}
                                               >
-                                                <span className="font-bold">
-                                                  {e?.questionName}
-                                                </span>{" "}
-                                                {truncateText(
-                                                  e?.questionDescription,
-                                                  250,
-                                                )}
+                                                <ExpandableText lines={5}>
+                                                  <span className="font-bold">
+                                                    {e?.questionName}
+                                                  </span>{" "}
+                                                  {e?.questionDescription}
+                                                </ExpandableText>
                                               </td>
                                               <td>
                                                 {e?.questionWeightage || 0}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
-                                                {truncateText(
-                                                  e?.selfComments,
-                                                  250,
-                                                )}
+                                                <ExpandableText lines={5}>
+                                                  {e?.selfComments}
+                                                </ExpandableText>
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
-                                                {truncateText(
-                                                  e?.managerComments,
-                                                  160,
-                                                )}
+                                                <ExpandableText lines={4}>
+                                                  {e?.managerComments}
+                                                </ExpandableText>
                                               </td>
                                               <td>
                                                 <Field
