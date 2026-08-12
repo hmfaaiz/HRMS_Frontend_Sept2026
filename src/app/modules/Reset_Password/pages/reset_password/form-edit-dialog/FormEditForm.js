@@ -57,7 +57,7 @@ export function FormEditForm({
           )}
           <Form className="form form-label-right" onSubmit={handleSubmit}>
             <fieldset>
-              <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+              <div className="grid grid-cols-1 gap-y-2">
                 <div>
                   <label>
                     Email <span style={{ color: "red" }}>*</span>
