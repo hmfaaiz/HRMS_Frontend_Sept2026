@@ -27,8 +27,8 @@ export function AssetHistoryTable({ show, onHide, Id }) {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
-      openReadAssetHistoryDialog:formUIContext.openReadAssetHistoryDialog,
-      openReadAssetAssessmentDialog:formUIContext.openReadAssetAssessmentDialog,
+      openReadAssetHistoryDialog: formUIContext.openReadAssetHistoryDialog,
+      openReadAssetAssessmentDialog: formUIContext.openReadAssetAssessmentDialog,
     };
   }, [formUIContext]);
 
@@ -100,8 +100,30 @@ export function AssetHistoryTable({ show, onHide, Id }) {
       aria-labelledby="asset-history-modal"
       centered
     >
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title>Asset Assignment History</Modal.Title>
+
+        <button
+          type="button"
+          onClick={onHide}
+          aria-label="Close"
+          style={{
+            marginLeft: "auto",
+            border: "none",
+            background: "transparent",
+            fontSize: "28px",
+            lineHeight: "1",
+            fontWeight: "bold",
+            cursor: "pointer",
+            color: "#000",
+            opacity: 1,
+            display: "block",
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          ×
+        </button>
       </Modal.Header>
 
       <Modal.Body>

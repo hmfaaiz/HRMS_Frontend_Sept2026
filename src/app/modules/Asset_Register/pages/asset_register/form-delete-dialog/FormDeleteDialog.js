@@ -69,7 +69,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
       </Modal.Header>
       <Modal.Body>
         {!isLoading && <label>Are you sure want to delete this record?</label>}
-        {isLoading && <label>user is deactivating...</label>}
+        {/* {isLoading && <label>user is deactivating...</label>} */}
       </Modal.Body>
       <Modal.Footer>
         <div>
