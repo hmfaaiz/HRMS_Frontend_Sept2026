@@ -7,6 +7,7 @@ const initialState = {
   entities: null,
   userForEdit: undefined,
   employee: [],
+  appraisalPublishRating: [],
 };
 
 export const callTypes = {
@@ -55,6 +56,9 @@ export const empAppraisalReviewSlice = createSlice({
       state.actionsLoading = false;
       state.userForEdit = null;
     },
-    
+    appraisalPublishRatingFetched: (state, action) => {
+      state.appraisalPublishRating = action.payload;
+      state.actionsLoading = false;
+    },
   },
 });

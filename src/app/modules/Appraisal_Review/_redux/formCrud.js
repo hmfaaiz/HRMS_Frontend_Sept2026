@@ -85,3 +85,11 @@ export function appraisalFinalizationBeforeCreation(body) {
     },
   );
 }
+
+
+export function getAppraisalPublishRating(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/get-appraisal-publish-rating`,
+    body,
+  );
+}
