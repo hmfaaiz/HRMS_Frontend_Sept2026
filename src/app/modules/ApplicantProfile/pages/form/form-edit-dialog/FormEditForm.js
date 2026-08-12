@@ -670,6 +670,7 @@ export function FormEditForm({
       setImage(URL.createObjectURL(img));
     }
   };
+  const [topCvParsing, setTopCvParsing] = useState(false);
 
   useEffect(() => {
     if (formData.Id && formData?.profile_image) {
@@ -759,7 +760,89 @@ export function FormEditForm({
         setFieldValue,
         handleChange,
         setFieldTouched,
-      }) => (
+      }) => {
+
+        const handleTopCvParse = async (parseFile) => {
+          if (!parseFile) return;
+          setTopCvParsing(true);
+          const result = await dispatch(actions.parseApplicantCv(parseFile));
+          setTopCvParsing(false);
+
+          if (!result?.mapped) return;
+          const { mapped, rawParsedResponse } = result;
+
+          if (mapped.firstName) setFieldValue("firstName", mapped.firstName);
+          if (mapped.middleName) setFieldValue("middleName", mapped.middleName);
+          if (mapped.lastName) setFieldValue("lastName", mapped.lastName);
+          if (mapped.email_personal) setFieldValue("email_personal", mapped.email_personal);
+          if (mapped.phone_cell) setFieldValue("phone_cell", mapped.phone_cell);
+          if (mapped.additional_summary) setFieldValue("additional_summary", mapped.additional_summary);
+          if (mapped.currentDesignation) setFieldValue("currentDesignation", mapped.currentDesignation);
+
+          const experienceFromOtherSources = (values.details_applicant_work_experience || []).filter(
+            (exp) => !exp._fromCvParse
+          );
+          const mappedExperience = (mapped.details_applicant_work_experience || []).map((exp) => ({
+            companyName: exp.companyName || "",
+            positionHeld: exp.positionHeld || "",
+            countryId: null,
+            cityId: null,
+            startDate: exp.startDate || "",
+            endDate: exp.endDate || "",
+            _fromCvParse: true,
+          }));
+          setFieldValue("details_applicant_work_experience", [
+            ...experienceFromOtherSources,
+            ...mappedExperience,
+          ]);
+
+          // Academic info: same replace-not-append treatment.
+          const academicFromOtherSources = (values.details_applicant_academic_info || []).filter(
+            (edu) => !edu._fromCvParse
+          );
+          const mappedAcademic = (mapped.details_applicant_academic_info_raw || []).map((edu) => {
+            const matchedInstitution = dashboard?.allInstitution?.find(
+              (x) => x.label?.trim().toLowerCase() === (edu.institutionName || "").trim().toLowerCase()
+            );
+            const matchedDegree = dashboard?.allDegreeTitle?.find(
+              (x) => x.label?.trim().toLowerCase() === (edu.degreeName || "").trim().toLowerCase()
+            );
+            return {
+              institutionId: matchedInstitution?.value || "",
+              degreeId: matchedDegree?.value || "",
+              countryId: "",
+              cityId: "",
+              gpa: edu.gpa || "",
+              startDate: edu.startDate || "",
+              endDate: edu.endDate || "",
+              _fromCvParse: true,
+            };
+          });
+          setFieldValue("details_applicant_academic_info", [
+            ...academicFromOtherSources,
+            ...mappedAcademic,
+          ]);
+
+ 
+          const skillsFromOtherSources = (values.details_applicant_skills || []).filter(
+            (skill) => !skill._fromCvParse
+          );
+          const existingSkillNames = skillsFromOtherSources.map((s) => (s.skill || "").toLowerCase());
+          const newSkills = (mapped.skillNames || [])
+            .filter((name) => name && !existingSkillNames.includes(name.toLowerCase()))
+            .map((name) => ({
+              skill: name,
+              description: "",
+              ratingScale: "",
+              startDate: "",
+              endDate: "",
+              _fromCvParse: true,
+            }));
+          setFieldValue("details_applicant_skills", [...skillsFromOtherSources, ...newSkills]);
+
+          setFieldValue("parse_cv_data", rawParsedResponse || null);
+        };
+        return (
         <>
           {" "}
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -769,6 +852,59 @@ export function FormEditForm({
               </div>
             )}
             <Form className="form form-label-right" autoComplete="off">
+        {!formData?.Id && !isdataForRead && (
+          <div className="mb-3 d-flex justify-content-center">
+            <div
+            className="d-flex flex-column align-items-center justify-content-center text-center"
+            style={{
+               width: "150px",
+               height: "90px",
+               border: "2px dashed #93c5fd",
+               borderRadius: "10px",
+               padding: "16px",
+               background: "#f8fbff",
+               cursor: "pointer",
+              }}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                const droppedFile = e.dataTransfer.files?.[0];
+                if (droppedFile) handleTopCvParse(droppedFile);
+              }}
+              onClick={() => {
+                document.getElementById("topCvParseInput")?.click();
+              }}
+            >
+              {topCvParsing ? (
+              <span className="text-primary" style={{ fontSize: "0.9rem" }}>
+              <span className="spinner spinner-sm spinner-primary mr-2"></span>
+               Parsing CV, filling form...
+              </span>
+              ) : (
+            <>
+            <Upload size={28} className="text-primary mb-2" />
+            <span style={{ fontSize: "0.85rem" }}>
+              Drag &amp; Drop CV here
+            </span>
+            <small className="text-muted mt-1">
+            or click to browse
+            </small>
+            </>
+          )}
+          <input
+           id="topCvParseInput"
+           type="file"
+           accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+           style={{ display: "none" }}
+           onChange={(e) => {
+          const selected = e.target.files?.[0];
+          if (selected) handleTopCvParse(selected);
+          e.target.value = "";
+        }}
+        />
+        </div>
+        </div>
+      )}
               <fieldset disabled={isdataForRead}>
                 {/* Job */}
                 <div className="grid lg:grid-cols-10 gap-x-3 gap-y-1">
@@ -789,7 +925,7 @@ export function FormEditForm({
                           type="text"
                           minLength={6}
                           maxLength={6}
-                        // error={ errors.applicantCode}
+                          // error={ errors.applicantCode}
                         />
                       </div>
 
@@ -1078,219 +1214,219 @@ export function FormEditForm({
                 {/* Details Job Vacancy */}
 
                 <FieldArray name="details_applicant_vacancy">
-  {({ push, remove }) => (
-    <>
-      <div className="flex justify-between items-center">
-        <h6 className="font-bold mb-0 text-primary">
-          Applicant Vacancy{"  "}
-        </h6>
-        <button
-          type="button"
-          className="btn btn-primary"
-          id="Other"
-          onClick={() =>
-            push({
-              jobVacancyId: "",
-              applicationDate: "",
-              applicationStatusId: "",
-              statusDate: "",
-              // appointmentTypeId: "", //  fix this key name
-            })
-          }
-        >
-          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-          Add
-        </button>
-      </div>
-      <div className="w-full overflow-x-auto">
-        <div className="react-bootstrap-table table-responsive">
-          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-            <tr className="custom-table-header">
-  <td className="">Job Vacancy</td>
-  <td className="">Application Date</td>
-  <td className="">Application Status</td>
-  <td className=""> Status Date</td>
-  {/* <td className="">Appointment Type</td> */}
-  <td className="">Signed File</td>
-  <td className="">Active Vacancy</td>
-  <td className="text-right">Action</td>
-</tr>
+                  {({ push, remove }) => (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Applicant Vacancy{"  "}
+                        </h6>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          id="Other"
+                          onClick={() =>
+                            push({
+                              jobVacancyId: "",
+                              applicationDate: "",
+                              applicationStatusId: "",
+                              statusDate: "",
+                              // appointmentTypeId: "", //  fix this key name
+                            })
+                          }
+                        >
+                          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                          Add
+                        </button>
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
+                              <td className="">Job Vacancy</td>
+                              <td className="">Application Date</td>
+                              <td className="">Application Status</td>
+                              <td className=""> Status Date</td>
+                              {/* <td className="">Appointment Type</td> */}
+                              <td className="">Signed File</td>
+                              <td className="">Active Vacancy</td>
+                              <td className="text-right">Action</td>
+                            </tr>
 
-            <tbody>
-              {values?.details_applicant_vacancy &&
-                values?.details_applicant_vacancy?.length > 0 &&
-                values?.details_applicant_vacancy?.map(
-                  (detail, index) => (
-                    <tr key={index}>
-                      {/* job vacancy selection */}
-                      <td>
-                        <SearchSelect
-                          name={`details_applicant_vacancy[${index}].jobVacancyId`}
-                          className="form-control"
+                            <tbody>
+                              {values?.details_applicant_vacancy &&
+                                values?.details_applicant_vacancy?.length > 0 &&
+                                values?.details_applicant_vacancy?.map(
+                                  (detail, index) => (
+                                    <tr key={index}>
+                                      {/* job vacancy selection */}
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_vacancy[${index}].jobVacancyId`}
+                                          className="form-control"
                                           style={{
                                             width: "200px",
                                             zIndex: 9999,
                                           }}
-                          isDisabled={
-                            isdataForRead ||
+                                          isDisabled={
+                                            isdataForRead ||
                             values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                             selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
-                          }
-                          value={
-                            dashboard?.allJobVacancyList?.find(
+                                          }
+                                          value={
+                                            dashboard?.allJobVacancyList?.find(
                               (x) => x.value === values.details_applicant_vacancy[index]?.jobVacancyId
-                            ) || null
-                          }
-                          onChange={async (e) => {
-                            setFieldValue(
-                              `details_applicant_vacancy[${index}].jobVacancyId`,
+                                            ) || null
+                                          }
+                                          onChange={async (e) => {
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].jobVacancyId`,
                               e?.value
-                            );
-                            const updatedVacancyArray = values.details_applicant_vacancy.map(
-                              (item, i) =>
+                                            );
+                                            const updatedVacancyArray = values.details_applicant_vacancy.map(
+                                              (item, i) =>
                                 i === index ? { ...item, jobVacancyId: e?.value } : item
-                            );
+                                            );
                             const result = await printSkills(formData, updatedVacancyArray);
                             if (result?.details_applicant_skills) {
                               setFieldValue("details_applicant_skills", result.details_applicant_skills);
-                            }
-                          }}
-                          options={
-                            dashboard?.allJobVacancyList
-                              ?.filter(
-                                (x) =>
-                                  x?.jobPostingStatus === 1 &&
+                                            }
+                                          }}
+                                          options={
+                                            dashboard?.allJobVacancyList
+                                              ?.filter(
+                                                (x) =>
+                                                  x?.jobPostingStatus === 1 &&
                                   (!values?.subsidiaryId || x?.subsidiaryId === values?.subsidiaryId)
-                              )
-                              .map((x) => ({
-                                label: x.label,
-                                value: x.value,
-                                disabled: values.details_applicant_vacancy.some(
+                                              )
+                                              .map((x) => ({
+                                                label: x.label,
+                                                value: x.value,
+                                                disabled: values.details_applicant_vacancy.some(
                                   (el) => el.jobVacancyId === x.value
-                                ),
-                              })) || []
-                          }
-                          getOptionLabel={(x) => x.label}
-                          getOptionValue={(x) => x.value}
-                          isOptionDisabled={(x) => x.disabled}
-                          placeholder="Select--"
-                        />
+                                                ),
+                                              })) || []
+                                          }
+                                          getOptionLabel={(x) => x.label}
+                                          getOptionValue={(x) => x.value}
+                                          isOptionDisabled={(x) => x.disabled}
+                                          placeholder="Select--"
+                                        />
                         {errors.details_applicant_vacancy?.[index]?.jobVacancyId &&
                           touched.details_applicant_vacancy?.[index]?.jobVacancyId && (
-                            <div className="text-danger">
+                                            <div className="text-danger">
                               {errors.details_applicant_vacancy[index]?.jobVacancyId}
-                            </div>
-                          )}
-                      </td>
+                                            </div>
+                                          )}
+                                      </td>
 
-                      {/* Application Date */}
-                      <td>
-                        <DatePicker
-                          className="form-control"
-                          placeholderText="Select Date"
-                          selected={
+                                      {/* Application Date */}
+                                      <td>
+                                        <DatePicker
+                                          className="form-control"
+                                          placeholderText="Select Date"
+                                          selected={
                             values?.details_applicant_vacancy?.[index]?.applicationDate
                               ? new Date(values.details_applicant_vacancy[index].applicationDate)
-                              : null
-                          }
-                          onChange={(date) => {
+                                              : null
+                                          }
+                                          onChange={(date) => {
                             const selectedDate = formatDates(date, "yyyy-MM-dd");
-                            setFieldValue(
-                              `details_applicant_vacancy[${index}].applicationDate`,
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].applicationDate`,
                               selectedDate
-                            );
-                          }}
-                          dateFormat="dd-MMM-yyyy"
-                          name={`details_applicant_vacancy[${index}].applicationDate`}
-                          disabled={
-                            isdataForRead ||
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_vacancy[${index}].applicationDate`}
+                                          disabled={
+                                            isdataForRead ||
                             values.details_applicant_vacancy?.[index]?.activeCV ||
                             values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                             selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
-                          }
-                          maxDate={new Date()}
-                          showPopperArrow={false}
-                        />
+                                          }
+                                          maxDate={new Date()}
+                                          showPopperArrow={false}
+                                        />
                         {errors.details_applicant_vacancy?.[index]?.applicationDate &&
                           touched.details_applicant_vacancy?.[index]?.applicationDate && (
-                            <div className="text-danger">
+                                            <div className="text-danger">
                               {errors.details_applicant_vacancy[index].applicationDate}
-                            </div>
-                          )}
-                      </td>
+                                            </div>
+                                          )}
+                                      </td>
 
-                      {/* Application Status */}
-                      <td>
-                        <SearchSelect
-                          name={`details_applicant_vacancy[${index}].applicationStatusId`}
-                          className="form-control"
-                          style={{ width: "130px" }}
-                          isDisabled={
+                                      {/* Application Status */}
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_vacancy[${index}].applicationStatusId`}
+                                          className="form-control"
+                                          style={{ width: "130px" }}
+                                          isDisabled={
                             values.details_applicant_vacancy?.[index]?.activeCV ||
                             values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
-                            isdataForRead ||
+                                            isdataForRead ||
                             selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
-                          }
-                          value={
-                            dashboard?.allApplicationStatusList?.find(
+                                          }
+                                          value={
+                                            dashboard?.allApplicationStatusList?.find(
                               (x) => x.value === values.details_applicant_vacancy[index]?.applicationStatusId
-                            ) || null
-                          }
-                          onChange={(e) => {
-                            setFieldValue(
-                              `details_applicant_vacancy[${index}].applicationStatusId`,
+                                            ) || null
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].applicationStatusId`,
                               e?.value
-                            );
+                                            );
                             const selectedDate = formatDates(new Date(), "yyyy-MM-dd");
-                            setFieldValue(
-                              `details_applicant_vacancy[${index}].statusDate`,
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].statusDate`,
                               selectedDate
-                            );
-                          }}
+                                            );
+                                          }}
                           options={dashboard?.allApplicationStatusList || []}
-                          getOptionLabel={(x) => x.label}
-                          getOptionValue={(x) => x.value}
-                          placeholder="Select Status"
-                        />
+                                          getOptionLabel={(x) => x.label}
+                                          getOptionValue={(x) => x.value}
+                                          placeholder="Select Status"
+                                        />
                         {errors.details_applicant_vacancy?.[index]?.applicationStatusId &&
                           touched.details_applicant_vacancy?.[index]?.applicationStatusId && (
-                            <div className="text-danger">
+                                            <div className="text-danger">
                               {errors.details_applicant_vacancy[index].applicationStatusId}
-                            </div>
-                          )}
-                      </td>
+                                            </div>
+                                          )}
+                                      </td>
 
-                      {/* Status Date */}
-                      <td>
-                        <DatePicker
-                          className="form-control"
-                          placeholderText="Select Date"
-                          selected={
+                                      {/* Status Date */}
+                                      <td>
+                                        <DatePicker
+                                          className="form-control"
+                                          placeholderText="Select Date"
+                                          selected={
                             values?.details_applicant_vacancy?.[index]?.statusDate
                               ? new Date(values.details_applicant_vacancy[index].statusDate)
-                              : null
-                          }
-                          onChange={(date) => {
+                                              : null
+                                          }
+                                          onChange={(date) => {
                             const selectedDate = formatDates(date, "yyyy-MM-dd");
-                            setFieldValue(
-                              `details_applicant_vacancy[${index}].statusDate`,
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].statusDate`,
                               selectedDate
-                            );
-                          }}
-                          dateFormat="dd-MMM-yyyy"
-                          name={`details_applicant_vacancy[${index}].statusDate`}
-                          autoComplete="off"
-                          disabled={true}
-                          maxDate={new Date()}
-                          showPopperArrow={false}
-                        />
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_vacancy[${index}].statusDate`}
+                                          autoComplete="off"
+                                          disabled={true}
+                                          maxDate={new Date()}
+                                          showPopperArrow={false}
+                                        />
                         {errors.details_applicant_vacancy?.[index]?.statusDate &&
                           touched.details_applicant_vacancy?.[index]?.statusDate && (
-                            <div className="text-danger">
+                                            <div className="text-danger">
                               {errors.details_applicant_vacancy[index].statusDate}
-                            </div>
-                          )}
-                      </td>
+                                            </div>
+                                          )}
+                                      </td>
 
                       {/* Appointment Type */}
                       {/* <td>
@@ -1327,110 +1463,110 @@ export function FormEditForm({
                           )}
                       </td> */}
 
-                      {/* Signed File */}
-                      <td>
+                                      {/* Signed File */}
+                                      <td>
                         {values.details_applicant_vacancy[index].acceptFile ? (
-                          <a
+                                          <a
                             href={getUploadUrl(values.details_applicant_vacancy[index].acceptFile)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            View File
-                          </a>
-                        ) : (
-                          <span>No File</span>
-                        )}
-                      </td>
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            View File
+                                          </a>
+                                        ) : (
+                                          <span>No File</span>
+                                        )}
+                                      </td>
 
-                      {/* Active Vacancy */}
-                      <td>
-                        <input
-                          name={`details_applicant_vacancy[${index}].activeCV`}
-                          type="checkbox"
-                          disabled={
-                            isdataForRead ||
+                                      {/* Active Vacancy */}
+                                      <td>
+                                        <input
+                                          name={`details_applicant_vacancy[${index}].activeCV`}
+                                          type="checkbox"
+                                          disabled={
+                                            isdataForRead ||
                             // values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                             selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
-                          }
+                                          }
                           checked={values.details_applicant_vacancy?.[index]?.activeCV}
-                          onChange={(e) => {
-                            setFieldValue(
-                              `details_applicant_vacancy[${index}].activeCV`,
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].activeCV`,
                               e.target.checked
-                            );
-                            if (e.target.checked) {
-                              setFieldValue(
-                                `details_applicant_vacancy[${index}].applicationStatusId`,
+                                            );
+                                            if (e.target.checked) {
+                                              setFieldValue(
+                                                `details_applicant_vacancy[${index}].applicationStatusId`,
                                 values.applicantStatusId
-                              );
-                            }
-                          }}
-                        />
-                      </td>
+                                              );
+                                            }
+                                          }}
+                                        />
+                                      </td>
 
-                      {/* ── Report Download Button (NEW) ── */}
-                     <td className="text-right">
-  <div className="flex items-center justify-end gap-2">
+                                      {/* ── Report Download Button (NEW) ── */}
+                                      <td className="text-right">
+                                        <div className="flex items-center justify-end gap-2">
 
-    {/* Report download — only visible for saved rows */}
-    {detail.Id && (
-      <OverlayTrigger
-        overlay={
+                                          {/* Report download — only visible for saved rows */}
+                                          {detail.Id && (
+                                            <OverlayTrigger
+                                              overlay={
           <Tooltip id={`vacancy-report-tooltip-${index}`}>
-            Vacancy Report
-          </Tooltip>
-        }
-      >
-        <button
-          type="button"
-          className="border-none bg-transparent"
-          onClick={() =>
-            dispatch(
+                                                  Vacancy Report
+                                                </Tooltip>
+                                              }
+                                            >
+                                              <button
+                                                type="button"
+                                                className="border-none bg-transparent"
+                                                onClick={() =>
+                                                  dispatch(
               downloadApplicantVacancyReport(values.Id, detail.jobVacancyId)
-            )
-          }
-        >
-          <ClipboardList className="w-4 h-4 text-black cursor-pointer" />
-        </button>
-      </OverlayTrigger>
-    )}
+                                                  )
+                                                }
+                                              >
+                                                <ClipboardList className="w-4 h-4 text-black cursor-pointer" />
+                                              </button>
+                                            </OverlayTrigger>
+                                          )}
 
-    {/* Delete */}
-    <button
-      disabled={
-        isdataForRead ||
+                                          {/* Delete */}
+                                          <button
+                                            disabled={
+                                              isdataForRead ||
         values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
         selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
-      }
-      className="border-none bg-transparent"
-      type="button"
-      onClick={async () => {
+                                            }
+                                            className="border-none bg-transparent"
+                                            type="button"
+                                            onClick={async () => {
         deleteApplicantVacancyDetail(detail.Id);
-        const updatedVacancies = values.details_applicant_vacancy.filter(
+                                              const updatedVacancies = values.details_applicant_vacancy.filter(
           (_, i) => i !== index
-        );
-        remove(index);
+                                              );
+                                              remove(index);
         const result = await printSkills(formData, updatedVacancies, detail.Id);
         if (result?.details_applicant_skills) {
           setFieldValue("details_applicant_skills", result.details_applicant_skills);
-        }
-      }}
-    >
-      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-    </button>
+                                              }
+                                            }}
+                                          >
+                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                          </button>
 
-  </div>
-</td>
-                    </tr>
+                                        </div>
+                                      </td>
+                                    </tr>
                   )
-                )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  )}
-</FieldArray>
+                                )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </FieldArray>
                 {typeof errors.details_applicant_vacancy === "string" && (
                   <div className="text-danger">
                     {errors.details_applicant_vacancy}
@@ -2130,41 +2266,45 @@ export function FormEditForm({
                     {/* <label>
                       CV<span style={{ color: "red" }}>*</span>
                     </label> */}
-                    <FileUpload
-                      label={
-                        <>
-                          CV<span style={{ color: "red" }}>*</span>
-                        </>
-                      }
-                      id="file"
-                      name="file"
-                      type="file"
-                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                      ref={inputFile}
-                      className="hidden"
-                      onChange={(event) => {
-                        const file = event.currentTarget.files[0];
-                        setFieldValue("file", file);
-                      }}
-                    />
-                    {errors.file && touched.file && (
-                      <div className="invalid-feedback">{errors.file}</div>
+                  <FileUpload
+                  label={
+                  <>
+                  CV<span style={{ color: "red" }}>*</span>
+                  </>
+                  }
+                  id="file"
+                  name="file"
+                  type="file"
+                  accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                  ref={inputFile}
+                  className="hidden"
+                  onChange={(event) => {
+                  const file = event.currentTarget.files[0];
+                  setFieldValue("file", file);
+                  }}
+                  />
+                  {errors.file && touched.file && (
+                    <div className="invalid-feedback">{errors.file}</div>
                     )}
 
                     {/* </label> */}
 
-                    {/* Show existing file if any */}
-                    {formData.file && formData.file === formData.file && (
-                      <div className="mt-2">
-                        <label>Existing File:</label>
-                        <a
-                          href={getUploadUrl(formData.file)}
-                          target="_blank"
-                          className="text-blue-600 underline  text-primary text-sm"
-                        >
-                          {getFileName(formData.file)}
-                        </a>
-                      </div>
+{/* Show existing file if any */}
+{formData.file && formData.file === formData.file && (
+  <div className="mt-2">
+    <label>Existing File:</label>
+    <a
+      href={getUploadUrl(formData.file)}
+      target="_blank"
+      className="text-blue-600 underline  text-primary text-sm"
+    >
+      {getFileName(formData.file)}
+    </a>
+  </div>
+)}
+
+                    {errors.file && touched.file && (
+                      <div className="invalid-feedback">{errors.file}</div>
                     )}
                   </div>
                 </div>
@@ -2436,10 +2576,10 @@ export function FormEditForm({
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                values.details_applicant_work_experience[
-                                                  index
+                                                  values.details_applicant_work_experience[
+                                                    index
                                                 ].startDate
-                                              )
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -2496,10 +2636,10 @@ export function FormEditForm({
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                values.details_applicant_work_experience[
-                                                  index
+                                                  values.details_applicant_work_experience[
+                                                    index
                                                 ].endDate
-                                              )
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -2885,10 +3025,10 @@ export function FormEditForm({
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                values.details_applicant_academic_info[
-                                                  index
+                                                  values.details_applicant_academic_info[
+                                                    index
                                                 ].startDate
-                                              )
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -2945,10 +3085,10 @@ export function FormEditForm({
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                values.details_applicant_academic_info[
-                                                  index
+                                                  values.details_applicant_academic_info[
+                                                    index
                                                 ].endDate
-                                              )
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3201,10 +3341,10 @@ export function FormEditForm({
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                values.details_applicant_skills[
-                                                  index
+                                                  values.details_applicant_skills[
+                                                    index
                                                 ].startDate
-                                              )
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3257,10 +3397,10 @@ export function FormEditForm({
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                values.details_applicant_skills[
-                                                  index
+                                                  values.details_applicant_skills[
+                                                    index
                                                 ].endDate
-                                              )
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3338,7 +3478,7 @@ export function FormEditForm({
                 )}
               </div>
 
- <hr></hr>
+              <hr></hr>
               {/* Interview Skills  */}
               <div className="w-full overflow-x-auto">
                 <FieldArray name="details_interview">
@@ -3686,7 +3826,8 @@ export function FormEditForm({
             )}
           </Modal.Footer>
         </>
-      )}
+        );
+      }}
     </Formik>
   );
 }

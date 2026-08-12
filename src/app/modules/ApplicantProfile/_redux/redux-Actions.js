@@ -454,3 +454,16 @@ export const downloadApplicantVacancyReport = (applicantId, jobVacancyId) => asy
       toast.error(SERVER_MESSAGES.pdfFail);
     });
 };
+
+export const parseApplicantCv = (file) => async () => {
+  try {
+    const res = await requestFromServer.parseApplicantCv(file);
+    return res.data?.data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "CV parse failed", {
+      position: "top-right",
+      autoClose: 5000,
+    });
+    return null;
+  }
+};

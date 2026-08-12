@@ -26,3 +26,10 @@ export function createOrUpdateAppraisalReview(body) {
 export function deleteAppraisalReview(body) {
   return axios.post(`${USERS_URL}/emp_appraisal/delete-emp-appraisal-review`, body);
 }
+
+export function getAppraisalPublishRating(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_review/get-appraisal-publish-rating`,
+    body,
+  );
+}

@@ -7,6 +7,7 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { CirclePlus } from "lucide-react";
 import TCard from "../../../../../utils/common-modules/TCard";
 import * as actions from "../../../_redux/formActions";
+import { FormAppraisalRatingViewDialog } from "../form-appraisal-rating-view-dialog/FormAppraisalRatingViewDialog";
 
 export function FormCard() {
   const dispatch = useDispatch();
@@ -20,6 +21,8 @@ export function FormCard() {
       subsidiaryId: formUIContext.subsidiaryId,
       appraisalCategoryId: formUIContext.appraisalCategoryId,
       setEmployeeId: formUIContext.setEmployeeId,
+      appraisalPublishRating: formUIContext.appraisalPublishRating,
+      setAppraisalPublishRating: formUIContext.setAppraisalPublishRating,
     };
   }, [formUIContext]);
 
@@ -27,16 +30,15 @@ export function FormCard() {
     (state) => ({
       userAccess: state.auth.userAccess.appraisal_review,
     }),
-    shallowEqual
+    shallowEqual,
   );
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateAppraisalReview"
+    (item) => item.componentName === "CreateAppraisalReview",
   );
 
   return (
     <TCard name={CurrentModuleName()}>
       <div className="">
-        
         <FormFilter createAccess={accessUser} />
         {/* <div className="flex items-end gap-2">
           {accessUser && (
@@ -61,6 +63,11 @@ export function FormCard() {
         </div> */}
       </div>
       <FormTable />
+      <FormAppraisalRatingViewDialog
+        show={FormUIProps?.appraisalPublishRating}
+        onHide={() => FormUIProps.setAppraisalPublishRating(null)}
+        payload={FormUIProps.appraisalPublishRating}
+      />
     </TCard>
     // </>
   );

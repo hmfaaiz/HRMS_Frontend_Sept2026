@@ -277,3 +277,18 @@ export const appraisalFinalizationBeforeCreation = (payload) => async (dispatch)
 };
 
 
+export const appraisalPublishRatingFetch = (payload) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getAppraisalPublishRating(payload)
+
+    .then((response) => {
+      dispatch(actions.appraisalPublishRatingFetched(response?.data?.data));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Appraisal record";
+      toast.error(error?.response?.data?.message || error.clientMessage);
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+

@@ -11,6 +11,7 @@ const initialState = {
   finalizationPdfLoading: false,
   sumReportLoading: false,
   sumExcelReportLoading: false,
+  appraisalPublishRating: [],
 };
 
 export const callTypes = {
@@ -100,6 +101,10 @@ export const appraisalReviewSlice = createSlice({
     },
     finalizationPdfFetched: (state) => {
       state.finalizationPdfLoading = false;
+    },
+    appraisalPublishRatingFetched: (state, action) => {
+      state.appraisalPublishRating = action.payload;
+      state.actionsLoading = false;
     },
   },
 });
