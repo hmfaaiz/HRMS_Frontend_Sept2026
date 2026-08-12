@@ -54,3 +54,7 @@ export function updateApprovedStatus(data) {
    
   return axios.put(`${USERS_URL}/reimbursement_claim/update-reimbursement-approved-status`, data);
 }
+
+export function uploadFormDoc(body) {
+  return axios.post(`${USERS_URL}/reimbursement_claim/document-upload`, body);
+}

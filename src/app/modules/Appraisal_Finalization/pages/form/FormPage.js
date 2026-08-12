@@ -1,37 +1,53 @@
 import React from "react";
 import { useSelector, shallowEqual } from "react-redux";
-import { Route } from "react-router-dom";
+import {Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import { FormUIProvider } from "./FormUIContext";
 import { FormCard } from "./form-card/FormCard";
 import { FormReadDialog } from "./form-read-dialog/FormReadDialog";
 import { FormReadFiscalPeriodDialog } from "./form-read-fiiscal-period-dialog/FormReadFiscalPeriodDialog";
 
 export function FormPage({ history }) {
+  const location = useLocation();
+
   const FormUIEvents = {
+    // ==================== READ ====================
     openReadDialog: (id) => {
-      history.push(
-        `/appraisal_finalization/read-all-appraisal-finalization/${id}/read`
-      );
+      history.push({
+        pathname:
+          "/appraisal_finalization/read-all-appraisal-finalization/read",
+        state: {
+          id,
+        },
+      });
     },
+
+    // ==================== FISCAL PERIOD ====================
     openReadFiscalPeriodDialog: (id) => {
-      history.push(
-        `/appraisal_finalization/read-all-appraisal-finalization/${id}/fiscal-period`
-      );
+      history.push({
+        pathname:
+          "/appraisal_finalization/read-all-appraisal-finalization/fiscal-period",
+        state: {
+          id,
+        },
+      });
     },
   };
 
   return (
     <FormUIProvider FormUIEvents={FormUIEvents}>
+
       <FormCard />
 
+      {/* ==================== READ ==================== */}
       <Route
-        path="/appraisal_finalization/read-all-appraisal-finalization/:id/read"
-        render={({ match, history }) => (
+        path="/appraisal_finalization/read-all-appraisal-finalization/read"
+        render={({ history }) => (
           <FormReadDialog
-            show={match != null}
-            id={match && match.params.id}
+            show={true}
+            id={location.state?.id}
             onHide={() =>
               history.push(
                 "/appraisal_finalization/read-all-appraisal-finalization"
@@ -41,12 +57,13 @@ export function FormPage({ history }) {
         )}
       />
 
+      {/* ==================== FISCAL PERIOD ==================== */}
       <Route
-        path="/appraisal_finalization/read-all-appraisal-finalization/:id/fiscal-period"
-        render={({ match, history }) => (
+        path="/appraisal_finalization/read-all-appraisal-finalization/fiscal-period"
+        render={({ history }) => (
           <FormReadFiscalPeriodDialog
-            show={match != null}
-            id={match && match.params.id}
+            show={true}
+            id={location.state?.id}
             onHide={() =>
               history.push(
                 "/appraisal_finalization/read-all-appraisal-finalization"
@@ -67,6 +84,7 @@ export function FormPage({ history }) {
         draggable
         pauseOnHover
       />
+
     </FormUIProvider>
   );
 }

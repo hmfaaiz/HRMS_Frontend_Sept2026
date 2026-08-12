@@ -176,6 +176,27 @@ export function AssetAssessmentTable({ show, onHide, Id }) {
     >
       <Modal.Header closeButton>
         <Modal.Title>Asset Assessment</Modal.Title>
+           <button
+          type="button"
+          onClick={onHide}
+          aria-label="Close"
+          style={{
+            marginLeft: "auto",
+            border: "none",
+            background: "transparent",
+            fontSize: "28px",
+            lineHeight: "1",
+            fontWeight: "bold",
+            cursor: "pointer",
+            color: "#000",
+            opacity: 1,
+            display: "block",
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          ×
+        </button>
       </Modal.Header>
 
       <Modal.Body>

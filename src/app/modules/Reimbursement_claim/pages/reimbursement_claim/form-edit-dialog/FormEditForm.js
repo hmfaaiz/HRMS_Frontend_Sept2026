@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
+import { File as FileIcon } from "lucide-react";
 import { format } from "date-fns";
 import {
   DatePickerField,
@@ -174,7 +175,7 @@ export function FormEditForm({
     }
     else if (limit_type == 2) {
 
-    claimedAmount = entities
+      claimedAmount = entities
         ?.filter((entity) => {
           const entityStartDate = new Date(entity.PayInPayrollForId.startDate);
           const entityEndDate = new Date(entity.PayInPayrollForId.endDate);
@@ -622,7 +623,7 @@ export function FormEditForm({
                         }}
                       >
                         {user.file ? user.file : "Upload"} */}
-                      <FileUpload
+                      {/* <FileUpload
                         label={
                           <>
                             Attachment{" "}
@@ -657,7 +658,65 @@ export function FormEditForm({
                         <div className="text-danger text-xs mt-1">
                           {errors.file}
                         </div>
-                      )}
+                      )} */}
+
+
+                      <div className="">
+                        <FileUpload
+                          label={
+                            <>
+                              Attachment{" "}
+                              {isFileReq && (
+                                <span style={{ color: "red" }}>*</span>
+                              )}
+                            </>
+                          }
+                          id="file"
+                          name="file"
+                          type="file"
+                          accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                          ref={inputFile}
+                          isEdit={isEdit}
+                          className="hidden"
+                          onChange={(event) => {
+                            const file = event.currentTarget.files[0];
+
+                            setFieldValue("file", file || null);
+                            setFieldTouched("file", true);
+
+                            if (file) {
+                              setIsFileReq(false);
+                            }
+                          }}
+                        />
+
+                        {errors.file && touched.file && (
+                          <div className="text-danger text-xs mt-1">
+                            {errors.file}
+                          </div>
+                        )}
+
+                        {(values?.file || user?.file) && (
+                          <div className="mt-2">
+                            <label>Existing File:</label>
+
+                            <a
+                              href={
+                                values?.file instanceof File
+                                  ? URL.createObjectURL(values?.file)
+                                  : getUploadUrl(values?.file || user?.file)
+                              }
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 underline text-primary text-sm"
+                            >
+                              <FileIcon className="w-4 h-4 text-black cursor-pointer" />
+                            </a>
+                          </div>
+                        )}
+                      </div>
+
+
                     </div>
                   </div>
                 </div>
