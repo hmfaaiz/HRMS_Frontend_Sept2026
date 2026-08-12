@@ -116,7 +116,7 @@ export function UserProfileDropdown() {
               className="w-full flex items-center px-4 py-2 hover:bg-gray-100"
             >
               <LockOpenIcon fontSize="small" className="mr-2" />
-              Reset Password
+              Change Password
             </Link>
 
             <Link
