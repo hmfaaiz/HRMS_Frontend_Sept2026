@@ -20,9 +20,9 @@ const initialEmpSalaryRevisionState = {
     empForSalRev: null,
     previousSalaryRev: null,
     dataForEdit: false,
-    previousSalaryComparison:null,
-    dataForSalaryComparison:false,
-    salaryRevisionPdfLoading: false,        
+    previousSalaryComparison: null,
+    dataForSalaryComparison: false,
+    salaryRevisionPdfLoading: false,
 
 
 };
@@ -31,7 +31,7 @@ const initialEmpSalaryRevisionState = {
 export const callTypes = {
     list: "list",
     action: "action",
-      salaryRevisionPdf: "salaryRevisionPdf", 
+    salaryRevisionPdf: "salaryRevisionPdf",
 
 };
 
@@ -44,15 +44,19 @@ export const EmpSalaryRevisionSlice = createSlice({
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
             } else if (action.payload.callType === callTypes.salaryRevisionPdf) {
-    state.salaryRevisionPdfLoading = false;
-  }else {
+                state.salaryRevisionPdfLoading = false;
+            } else {
                 state.actionsLoading = false;
             }
         },
 
-        clearUserForEdit: (state) => {
-
+        clearUserForEdit: (state, action) => {
+            const Id = action.payload;
+            console.log("state.entities11111", Id, state.entities);
             state.userForEdit = null;
+            state.entities = state.entities.filter(
+                (item) => item.Id !== Id
+            );
 
         },
 
@@ -63,18 +67,18 @@ export const EmpSalaryRevisionSlice = createSlice({
 
 
         },
-  previousSalaryComparisonFetched: (state, action) => {
+        previousSalaryComparisonFetched: (state, action) => {
 
 
-            state.previousSalaryComparison = action.payload.data?.data ;
+            state.previousSalaryComparison = action.payload.data?.data;
 
 
         },
 
 
- 
+
         previousSalaryRevisionFetched: (state, action) => {
-           
+
             const entities = action.payload.data?.data.rows;
 
             const totalResult = action.payload.data?.data.totalResults;
@@ -93,17 +97,17 @@ export const EmpSalaryRevisionSlice = createSlice({
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
-            state.dataForSalaryComparison=false;
-         
+            state.dataForSalaryComparison = false;
+
         },
 
-      EmpLastCompSalaryRevisionForView: (state, action) => {
+        EmpLastCompSalaryRevisionForView: (state, action) => {
 
 
             state.actionsLoading = false;
-            state.dataForSalaryComparison =action.payload.flag;
+            state.dataForSalaryComparison = action.payload.flag;
             state.error = null;
-         
+
         },
 
 
@@ -134,11 +138,11 @@ export const EmpSalaryRevisionSlice = createSlice({
             state.error = null;
             // state.entities = entities;
             // state.totalCount = totalResult;
-         
+
         },
         salaryRevisionPdfFetched: (state) => {
-  state.salaryRevisionPdfLoading = false;
-},
+            state.salaryRevisionPdfLoading = false;
+        },
 
 
 

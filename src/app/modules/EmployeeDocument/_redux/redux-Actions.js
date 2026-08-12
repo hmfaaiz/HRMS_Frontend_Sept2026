@@ -51,6 +51,7 @@ export const deleteEmployeeDoc = (id) => (dispatch) => {
     .then((response) => {
     
       dispatch(actions.EmployeeDocDeleted({ Id: id }));
+      dispatch(actions.clearEmployeeDocFetchedForEdit());
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,

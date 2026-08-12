@@ -23,7 +23,7 @@ export function DesignationEditDialog({
   const [loading, setLoading] = useState(false);
   const title = "EmployeeProfileEditDialog";
   const DesignationUIContext = useDesignationUIContext();
-
+console.log("Iddddddd",id)
   const [activeKey, setActiveKey] = useState("0");
 
   useEffect(() => {
