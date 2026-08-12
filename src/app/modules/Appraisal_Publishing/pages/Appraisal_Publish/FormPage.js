@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,40 +12,88 @@ import { FormAuthortiesDialog } from "./form-authorties-dialog/FormAuthortiesDia
 import { FormDetailDialog } from "./form-detail-dialog/FormDetailDialog";
 
 export function FormPage({ history }) {
+  const location = useLocation();
+
   const FormUIEvents = {
     openPublishFormDialog: (id) => {
-      history.push(
-        `/appraisal_publish/read-all-appraisal-publish/${id}/publish`
-      );
+      // history.push(
+      //   `/appraisal_publish/read-all-appraisal-publish/${id}/publish`
+      // );
+
+      history.push({
+        pathname: "/appraisal_publish/read-all-appraisal-publish/publish",
+        state: {
+          id,
+        },
+      });
     },
+
     openHoldFormDialog: (id, status) => {
-      history.push(
-        `/appraisal_publish/read-all-appraisal-publish/${id}/${status}/hold`
-      );
+      // history.push(
+      //   `/appraisal_publish/read-all-appraisal-publish/${id}/${status}/hold`
+      // );
+
+      history.push({
+        pathname: "/appraisal_publish/read-all-appraisal-publish/hold",
+        state: {
+          id,
+          status,
+        },
+      });
     },
+
     openDeleteFormDialog: (id) => {
-      history.push(
-        `/appraisal_publish/read-all-appraisal-publish/${id}/delete`
-      );
+      // history.push(
+      //   `/appraisal_publish/read-all-appraisal-publish/${id}/delete`
+      // );
+
+      history.push({
+        pathname: "/appraisal_publish/read-all-appraisal-publish/delete",
+        state: {
+          id,
+        },
+      });
     },
+
     openAuthortiesFormDialog: (id) => {
-      history.push(
-        `/appraisal_publish/read-all-appraisal-publish/${id}/authorties`
-      );
+      // history.push(
+      //   `/appraisal_publish/read-all-appraisal-publish/${id}/authorties`
+      // );
+
+      history.push({
+        pathname: "/appraisal_publish/read-all-appraisal-publish/authorties",
+        state: {
+          id,
+        },
+      });
     },
+
     openDetailFormDialog: (id) => {
-      history.push(
-        `/appraisal_publish/read-all-appraisal-publish/${id}/detail`
-      );
+      // history.push(
+      //   `/appraisal_publish/read-all-appraisal-publish/${id}/detail`
+      // );
+
+      history.push({
+        pathname: "/appraisal_publish/read-all-appraisal-publish/detail",
+        state: {
+          id,
+        },
+      });
     },
   };
+
   return (
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <Route path="/appraisal_publish/read-all-appraisal-publish/:id/publish">
+
+      {/* PUBLISH */}
+      <Route path="/appraisal_publish/read-all-appraisal-publish/publish">
         {({ history, match }) => (
           <FormPublishDialog
             show={match != null}
-            id={match && match.params.id}
+
+            // id={match && match.params.id}
+            id={location.state?.id}
+
             onHide={() => {
               history.push("/appraisal_publish/read-all-appraisal-publish");
             }}
@@ -52,12 +101,17 @@ export function FormPage({ history }) {
         )}
       </Route>
 
-      <Route path="/appraisal_publish/read-all-appraisal-publish/:id/:status/hold">
+      {/* HOLD */}
+      <Route path="/appraisal_publish/read-all-appraisal-publish/hold">
         {({ history, match }) => (
           <FormHoldDialog
             show={match != null}
-            id={match && match.params.id}
-            status={match && match.params.status}
+
+            // id={match && match.params.id}
+            // status={match && match.params.status}
+            id={location.state?.id}
+            status={location.state?.status}
+
             onHide={() => {
               history.push("/appraisal_publish/read-all-appraisal-publish");
             }}
@@ -65,11 +119,15 @@ export function FormPage({ history }) {
         )}
       </Route>
 
-      <Route path="/appraisal_publish/read-all-appraisal-publish/:id/delete">
+      {/* DELETE */}
+      <Route path="/appraisal_publish/read-all-appraisal-publish/delete">
         {({ history, match }) => (
           <FormDeleteDialog
             show={match != null}
-            id={match && match.params.id}
+
+            // id={match && match.params.id}
+            id={location.state?.id}
+
             onHide={() => {
               history.push("/appraisal_publish/read-all-appraisal-publish");
             }}
@@ -77,11 +135,15 @@ export function FormPage({ history }) {
         )}
       </Route>
 
-      <Route path="/appraisal_publish/read-all-appraisal-publish/:id/authorties">
+      {/* AUTHORTIES */}
+      <Route path="/appraisal_publish/read-all-appraisal-publish/authorties">
         {({ history, match }) => (
           <FormAuthortiesDialog
             show={match != null}
-            id={match && match.params.id}
+
+            // id={match && match.params.id}
+            id={location.state?.id}
+
             onHide={() => {
               history.push("/appraisal_publish/read-all-appraisal-publish");
             }}
@@ -89,11 +151,15 @@ export function FormPage({ history }) {
         )}
       </Route>
 
-      <Route path="/appraisal_publish/read-all-appraisal-publish/:id/detail">
+      {/* DETAIL */}
+      <Route path="/appraisal_publish/read-all-appraisal-publish/detail">
         {({ history, match }) => (
           <FormDetailDialog
             show={match != null}
-            id={match && match.params.id}
+
+            // id={match && match.params.id}
+            id={location.state?.id}
+
             onHide={() => {
               history.push("/appraisal_publish/read-all-appraisal-publish");
             }}
@@ -102,6 +168,7 @@ export function FormPage({ history }) {
       </Route>
 
       <FormCard />
+
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -113,6 +180,7 @@ export function FormPage({ history }) {
         draggable
         pauseOnHover
       />
+
     </FormUIProvider>
   );
 }
