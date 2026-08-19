@@ -139,6 +139,17 @@ export function FormTable() {
         minWidth: "30px",
       },
     },
+    {
+      dataField: "isActive",
+      text: "Active",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter : (cell) => cell ? "Yes" : "No"
+    },
    {
       dataField: "action",
       text: "Actions",

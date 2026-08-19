@@ -173,6 +173,8 @@ export const deleteEmpSalaryRevById = (Id) => (dispatch) => {
         draggable: true,
         progress: undefined,
       });
+     
+      dispatch(actions.clearUserForEdit(Id));
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));

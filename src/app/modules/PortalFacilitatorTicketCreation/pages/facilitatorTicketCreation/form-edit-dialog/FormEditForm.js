@@ -510,9 +510,9 @@ export function FormEditForm({
                       dateFormat="dd-MMM-yyyy"
                       name="ticketDate"
                       autoComplete="off"
-                      minDate={new Date().setDate(new Date().getDate() - 14)}
+                      minDate={new Date().setDate(new Date().getDate() - 30)}
                       // maxDate={values?.dueDate || new Date().setDate(new Date().getDate() + 14)}
-                      maxDate={new Date(Math.min(values?.dueDate ? new Date(values.dueDate).getTime() : new Date().setDate(new Date().getDate() + 14), new Date().setDate(new Date().getDate() + 14)))}
+                      maxDate={new Date(Math.min(values?.dueDate ? new Date(values.dueDate).getTime() : new Date().setDate(new Date().getDate() + 30), new Date().setDate(new Date().getDate() + 30)))}
                     />
 
                     {touched.ticketDate && errors.ticketDate && (

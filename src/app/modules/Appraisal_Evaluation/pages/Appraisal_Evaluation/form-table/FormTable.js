@@ -82,16 +82,16 @@ export function FormTable() {
         minWidth: "60px",
       },
     },
-    {
-      dataField: "FromEmp.department.deptName",
-      text: "Department",
-      sort: true,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "60px",
-      },
-    },
+    // {
+    //   dataField: "FromEmp.department.deptName",
+    //   text: "Department",
+    //   sort: true,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "60px",
+    //   },
+    // },
     {
       dataField: "FromEmp.designation.formName",
       text: "Designation",

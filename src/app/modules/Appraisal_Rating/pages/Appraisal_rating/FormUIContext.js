@@ -35,6 +35,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     from_percentage: 0,
     to_percentage: 0,
     increment_percentage: 0,
+    isActive : true,
   };
 
   const value = {

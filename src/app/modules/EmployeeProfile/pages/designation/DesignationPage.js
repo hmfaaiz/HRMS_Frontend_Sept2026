@@ -17,12 +17,12 @@
 //   const readMatch = useRouteMatch("/profile/read-all-profile/:id/read");
 //   const DesignationUIEvents = {
 
- 
+
 
 
 
 //     newDesignationButtonClick: () => {
-  
+
 //       history.push("/profile/read-all-profile/new");
 //     },
 //     openEditDesignationDialog: (id) => {
@@ -37,7 +37,7 @@
 //     },
 //     openReadDesignationDialog: (id, isUserRead) => {
 
-  
+
 //       history.push(`/profile/read-all-profile/${id}/read`);
 //     },
 //   };
@@ -71,7 +71,7 @@
 //     <ReligionCard onHide={() => history.push("/profile/read-all-profile")} />
 //   )}
 // />
-      
+
 
 //       {/* <ReligionCard onHide={() => history.push("/profile/read-all-profile")} /> */}
 
@@ -162,7 +162,7 @@
 // }
 import React from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { useRouteMatch, useHistory } from "react-router-dom";
+import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DesignationUIProvider } from "./DesignationUIContext";
@@ -174,22 +174,54 @@ import { ReligionCard } from "./religion-card/ReligionCard";
 export function ProfilePage() {
   const dispatch = useDispatch();
   const history = useHistory();
-
+  const location = useLocation();
   // Route matches
-  const readMatch = useRouteMatch("/profile/read-all-profile/:id/read");
-  const editMatch = useRouteMatch("/profile/read-all-profile/:id/edit");
+  // const readMatch = useRouteMatch("/profile/read-all-profile/:id/read");
+  const readMatch = useRouteMatch("/profile/read-all-profile/read");
+  // const editMatch = useRouteMatch("/profile/read-all-profile/:id/edit");
+  const editMatch = useRouteMatch("/profile/read-all-profile/edit");
   const newMatch = useRouteMatch("/profile/read-all-profile/new");
-  const deleteMatch = useRouteMatch("/profile/read-all-profile/:id/:status/delete");
-  const activeMatch = useRouteMatch("/profile/read-all-profile/:id/active");
+  // const deleteMatch = useRouteMatch("/profile/read-all-profile/:id/:status/delete");
+  const deleteMatch = useRouteMatch("/profile/read-all-profile/delete");
+  // const activeMatch = useRouteMatch("/profile/read-all-profile/:id/active");
+  const activeMatch = useRouteMatch("/profile/read-all-profile/active");
 
   // UI Events
   const DesignationUIEvents = {
     newDesignationButtonClick: () => history.push("/profile/read-all-profile/new"),
-    openEditDesignationDialog: (id) => history.push(`/profile/read-all-profile/${id}/edit`),
-    openReadDesignationDialog: (id) => history.push(`/profile/read-all-profile/${id}/read`),
+    // openEditDesignationDialog: (id) => history.push(`/profile/read-all-profile/${id}/edit`),
+    openEditDesignationDialog: (id) => history.push({
+      pathname: "/profile/read-all-profile/edit",
+      state: {
+        id,
+      },
+    }),
+    // openReadDesignationDialog: (id) => history.push(`/profile/read-all-profile/${id}/read`),
+    openReadDesignationDialog: (id) => history.push({
+      pathname: "/profile/read-all-profile/read",
+      state: {
+        id,
+      },
+    }),
+    // openDeleteDesignationDialog: (id, status) =>
+    //   history.push(`/profile/read-all-profile/${id}/${status}/delete`), 
+    // 
     openDeleteDesignationDialog: (id, status) =>
-      history.push(`/profile/read-all-profile/${id}/${status}/delete`),
-    openActiveDesignationDialog: (id) => history.push(`/profile/read-all-profile/${id}/active`),
+      history.push({
+        pathname: "/profile/read-all-profile/delete",
+        state: {
+          id,
+          status,
+        },
+      }),
+    // openActiveDesignationDialog: (id) => history.push(`/profile/read-all-profile/${id}/active`),
+    openActiveDesignationDialog: (id) => history.push({
+      pathname: "/profile/read-all-profile/active",
+      state: {
+        id,
+
+      },
+    }),
   };
 
   // Access Control
@@ -223,7 +255,8 @@ export function ProfilePage() {
       {editMatch && isAccessForEdit && (
         <DesignationEditDialog
           show={true}
-          id={editMatch.params.id}
+          // id={editMatch.params.id}
+          id={location.state?.id}
           status="edit"
           onHide={() => history.push("/profile/read-all-profile")}
         />
@@ -233,7 +266,8 @@ export function ProfilePage() {
       {readMatch && isAccessForRead && (
         <DesignationEditDialog
           show={true}
-          id={readMatch.params.id}
+          // id={readMatch.params.id}
+          id={location.state?.id}
           status="read"
           userForRead={true}
           onHide={() => history.push("/profile/read-all-profile")}
@@ -244,7 +278,8 @@ export function ProfilePage() {
       {deleteMatch && isAccessForDelete && (
         <BankDeleteDialog
           show={true}
-          id={deleteMatch.params.id}
+          // id={deleteMatch.params.id}
+          id={location.state?.id}
           status={deleteMatch.params.status}
           onHide={() => history.push("/profile/read-all-profile")}
         />
@@ -254,7 +289,8 @@ export function ProfilePage() {
       {activeMatch && (
         <DesignationActiveDialog
           show={true}
-          id={activeMatch.params.id}
+          // id={activeMatch.params.id}
+          id={location.state?.id}
           onHide={() => history.push("/profile/read-all-profile")}
         />
       )}

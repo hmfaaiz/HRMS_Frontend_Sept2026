@@ -81,3 +81,11 @@ export function downloadApplicantVacancyReportRequest(applicantId, jobVacancyId)
     { responseType: "arraybuffer" }
   );
 }
+
+export function parseApplicantCv(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  return axios.post(`${USERS_URL}/applicant_profile/parse-cv`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}

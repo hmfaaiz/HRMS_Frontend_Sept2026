@@ -11,6 +11,7 @@ import { BankDeleteDialog } from "../form-delete-dialog/FormDeleteDialog";
 import * as actions from "../../../_redux/formActions";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
+import { FormAppraisalRatingViewDialog } from "../form-appraisal-rating-view-dialog/FormAppraisalRatingViewDialog";
 
 export function FormCard() {
   const dispatch = useDispatch();
@@ -24,6 +25,8 @@ export function FormCard() {
       subsidiaryId: formUIContext.subsidiaryId,
       appraisalCategoryId: formUIContext.appraisalCategoryId,
       setEmployeeId: formUIContext.setEmployeeId,
+      appraisalPublishRating: formUIContext.appraisalPublishRating,
+      setAppraisalPublishRating: formUIContext.setAppraisalPublishRating,
     };
   }, [formUIContext]);
 
@@ -185,6 +188,11 @@ export function FormCard() {
           </Route>
         )}
       </div>
+      <FormAppraisalRatingViewDialog
+        show={FormUIProps?.appraisalPublishRating}
+        onHide={() => FormUIProps.setAppraisalPublishRating(null)}
+        payload={FormUIProps.appraisalPublishRating}
+      />
     </div>
   );
 }

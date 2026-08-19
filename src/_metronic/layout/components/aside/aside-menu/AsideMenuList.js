@@ -291,12 +291,38 @@ export function AsideMenuList({ layoutProps }) {
   };
 
   // Update scroll buttons when menu changes
-  useEffect(() => {
-    setTimeout(() => {
-      updateScrollButtons();
-      calculateItemWidth();
-    }, 200);
-  }, [menu, isEmployeePortal, isVisible]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     updateScrollButtons();
+  //     calculateItemWidth();
+  //   }, 200);
+  // }, [menu, isEmployeePortal, isVisible]);
+
+
+  // Update scroll buttons when menu / portal changes
+useEffect(() => {
+  const resetAndCalculate = () => {
+    if (!scrollContainerRef.current) return;
+
+    const container = scrollContainerRef.current;
+
+    // Reset scroll position whenever portal changes
+    container.scrollLeft = 0;
+
+    // Recalculate item width
+    calculateItemWidth();
+
+    // Recalculate arrow visibility
+    updateScrollButtons();
+  };
+
+  // Run after DOM has updated
+  const timer = setTimeout(() => {
+    resetAndCalculate();
+  }, 300);
+
+  return () => clearTimeout(timer);
+}, [menu, isEmployeePortal, isVisible]);
 
   // Get visible menu items
   const getVisibleMenuItems = () => {

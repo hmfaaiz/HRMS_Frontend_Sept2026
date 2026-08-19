@@ -298,62 +298,64 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full overflow-x-auto scrollbar-fancy">
+    <>
       <BulkPublishSummary
         bulkResult={errorState}
         onClose={handleCloseBulkResult}
       />
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            <>
-              <Pagination
-                isLoading={listLoading}
-                paginationProps={paginationProps}
-              >
-                <BootstrapTable
-                  wrapperClasses="table-responsive"
-                  bordered={false}
-                  classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                  bootstrap4
-                  remote
-                  keyField="Id"
-                  data={entities === null ? [] : entities}
-                  columns={columns}
-                  defaultSorted={uiHelpers.defaultSorted}
-                  onTableChange={getHandlerTableChange(
-                    formUIProps.setQueryParams,
-                  )}
-                  selectRow={selectRow}
-                  // selectRow={getSelectRow({
-                  //   entities,
+      <div className="w-full">
+        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+          {({ paginationProps, paginationTableProps }) => {
+            return (
+              <>
+                <Pagination
+                  isLoading={listLoading}
+                  paginationProps={paginationProps}
+                >
+                  <BootstrapTable
+                    wrapperClasses="table-responsive"
+                    bordered={false}
+                    classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                    bootstrap4
+                    remote
+                    keyField="Id"
+                    data={entities === null ? [] : entities}
+                    columns={columns}
+                    defaultSorted={uiHelpers.defaultSorted}
+                    onTableChange={getHandlerTableChange(
+                      formUIProps.setQueryParams,
+                    )}
+                    selectRow={selectRow}
+                    // selectRow={getSelectRow({
+                    //   entities,
 
-                  // })}
-                  {...paginationTableProps}
-                >
-                  <PleaseWaitMessage entities={entities} />
-                  <NoRecordsFoundMessage entities={entities} />
-                </BootstrapTable>
-              </Pagination>
-              <div className="d-flex justify-content-end mt-3">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  disabled={selectedIds.length === 0 || handleBulkLoading}
-                  onClick={handleBulkAction}
-                >
-                  Publish Selected ({selectedIds.length})
-                  {handleBulkLoading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
-              </div>
-            </>
-          );
-        }}
-      </PaginationProvider>
+                    // })}
+                    {...paginationTableProps}
+                  >
+                    <PleaseWaitMessage entities={entities} />
+                    <NoRecordsFoundMessage entities={entities} />
+                  </BootstrapTable>
+                </Pagination>
+                <div className="d-flex justify-content-end mt-3">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={selectedIds.length === 0 || handleBulkLoading}
+                    onClick={handleBulkAction}
+                  >
+                    Publish Selected ({selectedIds.length})
+                    {handleBulkLoading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
+                </div>
+              </>
+            );
+          }}
+        </PaginationProvider>
+      </div>
       <ConfirmationComponent />
-    </div>
+    </>
   );
 }
 

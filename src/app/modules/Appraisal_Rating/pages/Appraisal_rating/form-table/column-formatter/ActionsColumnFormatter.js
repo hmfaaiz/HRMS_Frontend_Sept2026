@@ -18,7 +18,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog,
-  }
+  },
 ) {
   const isUserRead = false;
   return (
@@ -43,29 +43,16 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       )}
-      {isAccessForDelete  && (
+      {isAccessForDelete && (
         <OverlayTrigger
-          overlay={
-            <Tooltip id="products-edit-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
-            </Tooltip>
-          }
+          overlay={<Tooltip id="products-edit-tooltip">"Delete"</Tooltip>}
         >
-          {row.isActive ? (
-            <a
-              title=""
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
-            >
-              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          ) : (
-            <a
-              title=""
-              onClick={() => openActiveFormDialog(row.Id, row.isActive)}
-            >
-              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          )}
+          <a
+            title=""
+            onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
+          >
+            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+          </a>
         </OverlayTrigger>
       )}
     </div>
