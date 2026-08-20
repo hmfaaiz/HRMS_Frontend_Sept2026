@@ -296,6 +296,43 @@ export function FormTable() {
     //   },
     // },
 
+     {
+          dataField: "billableHours",
+          text: "Billable Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
+        },
+        {
+          dataField: "nonBillableHours",
+          text: "Non Billable Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
+        },
+        {
+          dataField: "idleHours",
+          text: "Idle Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
+        },
+
     {
       dataField: "action",
       text: "Actions",
