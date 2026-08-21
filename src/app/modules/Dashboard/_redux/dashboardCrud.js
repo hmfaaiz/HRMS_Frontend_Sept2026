@@ -357,3 +357,15 @@ export const getAssetChecklistById = async (Id) => {
 export const getOvertimeEntitledEmployeesData = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-overtime-entitled-employees`,body);
 }
+
+export function getAttendanceTaskLogs(employeeId, loggedDate) {
+  return axios.get(
+    `${USERS_URL}/attendance/read-all-attendance-timelog-detail`,
+    {
+      params: {
+        employeeId,
+        loggedDate,
+      },
+    }
+  );
+}
