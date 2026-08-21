@@ -35,11 +35,13 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState } = useSelector((state) => {
+  const { currentState ,auth} = useSelector((state) => {
     return {
       currentState: state.attendance,
+      auth: state.auth,
     };
   }, shallowEqual);
+  
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -49,7 +51,7 @@ export function FormTable() {
 
     dispatch(actions.fetchAttendance(FormUIProps.queryParams));
   }, [FormUIProps.queryParams.pageSize, FormUIProps.queryParams.pageNumber, dispatch]);
-
+const showTaskColumns = auth.user?.Company?.task === true;
   // Table columns
   const columns = [
     {
@@ -196,6 +198,9 @@ export function FormTable() {
         </span>)
       }
     },
+
+      ...(showTaskColumns
+    ? [
     {
       dataField: "billableHours",
       text: "Billable Hours",
@@ -233,7 +238,8 @@ export function FormTable() {
       },
       formatter: (cell) => formatTime(cell)
     },
-
+      ]
+    : []),
     {
       dataField: "actions",
       text: "Actions",

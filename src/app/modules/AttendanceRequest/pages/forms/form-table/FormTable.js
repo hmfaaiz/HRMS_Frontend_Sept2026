@@ -50,9 +50,10 @@ export function FormTable() {
       setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
-  const { currentState } = useSelector((state) => {
+  const { currentState ,auth} = useSelector((state) => {
     return {
       currentState: state.attendance_request,
+         auth: state.auth,
     };
   }, shallowEqual);
 
@@ -73,6 +74,7 @@ export function FormTable() {
 
   const allowRequestOnThisLevel = FormUIProps.currentLevel >= 0;
   const isAuthorityExists = empAuthorityList.length > 0;
+  const showTaskColumns = auth.user?.Company?.task === true;
   // Table columns
   const columns = [
     {
@@ -296,42 +298,47 @@ export function FormTable() {
     //   },
     // },
 
-     {
-          dataField: "billableHours",
-          text: "Billable Hours",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "10px",
-            maxWidth: "10px",
-          },
-          formatter: (cell) => formatTime(cell)
+     ...(showTaskColumns
+      ? [
+      {
+        dataField: "billableHours",
+        text: "Billable Hours",
+        sort: false,
+        sortCaret: sortCaret,
+        headerSortingClasses,
+        style: {
+          minWidth: "10px",
+          maxWidth: "10px",
         },
-        {
-          dataField: "nonBillableHours",
-          text: "Non Billable Hours",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "10px",
-            maxWidth: "10px",
-          },
-          formatter: (cell) => formatTime(cell)
+        formatter: (cell) => formatTime(cell)
+      },
+      {
+        dataField: "nonBillableHours",
+        text: "Non Billable Hours",
+        sort: false,
+        sortCaret: sortCaret,
+        headerSortingClasses,
+        style: {
+          minWidth: "10px",
+          maxWidth: "10px",
         },
-        {
-          dataField: "idleHours",
-          text: "Idle Hours",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "10px",
-            maxWidth: "10px",
-          },
-          formatter: (cell) => formatTime(cell)
+        formatter: (cell) => formatTime(cell)
+      },  
+      
+      {
+        dataField: "idleHours",
+        text: "Idle Hours",
+        sort: false,
+        sortCaret: sortCaret,
+        headerSortingClasses,
+        style: {
+          minWidth: "10px",
+          maxWidth: "10px",
         },
+        formatter: (cell) => formatTime(cell)
+      },
+        ]
+      : []),
 
     {
       dataField: "action",
