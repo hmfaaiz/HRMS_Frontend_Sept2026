@@ -15,3 +15,10 @@ export function getAllPreviewData(body) {
 
   return axios.post(`${USERS_URL}/ticket_time_report/read-all-preview-report`, body);
 }
+
+
+export async function getSummaryReportByFilters(body) {
+  return axios.post(`${USERS_URL}/ticket_time_report/read-all-summary-report`, body,{
+    responseType:'arraybuffer'
+  });
+}
