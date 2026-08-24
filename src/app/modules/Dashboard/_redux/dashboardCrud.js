@@ -360,7 +360,7 @@ export const getOvertimeEntitledEmployeesData = async (body) => {
 
 export function getAttendanceTaskLogs(employeeId, loggedDate) {
   return axios.get(
-    `${USERS_URL}/attendance/read-all-attendance-timelog-detail`,
+    `${USERS_URL}/settings/read-all-attendance-timelog-detail`,
     {
       params: {
         employeeId,

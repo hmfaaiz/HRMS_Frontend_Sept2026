@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 
-export function AttendanceTaskLog({ onHide, show }) {
+export function AttendanceTaskLog({ onHide, show,attDate  }) {
   const { taskLogs } = useSelector(
     (state) => ({
       taskLogs: state.dashboard.taskLogs,
@@ -28,7 +28,7 @@ export function AttendanceTaskLog({ onHide, show }) {
   const getBillableStatus = (isBillable) => {
     return isBillable ? "Yes" : "No";
   };
-  const loggedDate = rows?.[0]?.loggedDate || "-";
+  const loggedDate = rows?.[0]?.loggedDate || attDate || "-";
 
   const columns = [
     {

@@ -1159,6 +1159,7 @@ export const fetchOvertimeEntitledEmployeesData= (body) => async (
 
 export const fetchAttendanceTaskLogs = (employeeId, loggedDate) => (dispatch) => {
   if (!employeeId || !loggedDate) {
+     dispatch(actions.AttendanceTaskLogsFetched([]));
     return;
   }
 
@@ -1168,7 +1169,6 @@ export const fetchAttendanceTaskLogs = (employeeId, loggedDate) => (dispatch) =>
     .getAttendanceTaskLogs(employeeId, loggedDate)
     .then((response) => {
       const taskLogs = [...(response.data?.data?.rows || [])];
-console.log("taskLogs22222",taskLogs)
       dispatch(
         actions.AttendanceTaskLogsFetched(
           taskLogs
@@ -1178,6 +1178,9 @@ console.log("taskLogs22222",taskLogs)
   
     })
     .catch((error) => {
+      dispatch(
+        actions.AttendanceTaskLogsFetched([])
+      );
        console.log("Can't find Attendance Task Logs");
 
     

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
@@ -23,6 +23,8 @@ import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { ClockFading } from "lucide-react";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
+import { fetchAttendanceTaskLogs } from "../../../../Dashboard/_redux/dashboardActions";
+import { AttendanceTaskLog } from "../../../../../utils/common-modules/AttendanceTaskLog";
 
 const isValidMonthRequest = (monthStartDate, monthEndDate, attDate) => {
   const start = new Date(monthStartDate);
@@ -36,13 +38,14 @@ export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
   const history = useHistory();
-
+  const [showTaskLogsModal, setShowTaskLogsModal] = useState(false);
   const FormUIProps = useMemo(() => {
     return {
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
       newAttendanceRequest: formUIContext?.newAttendanceRequest,
       viewttendanceLogs: formUIContext?.viewttendanceLogs,
+      viewTaskLogs: formUIContext?.viewTaskLogs,
       employeeId: formUIContext?.employeeId,
       panelMode: formUIContext.panelMode,
       currentLevel: formUIContext.currentLevel,
@@ -50,10 +53,10 @@ export function FormTable() {
       setCurrentData: formUIContext.setCurrentData,
     };
   }, [formUIContext]);
-  const { currentState ,auth} = useSelector((state) => {
+  const { currentState, auth } = useSelector((state) => {
     return {
       currentState: state.attendance_request,
-         auth: state.auth,
+      auth: state.auth,
     };
   }, shallowEqual);
 
@@ -75,6 +78,26 @@ export function FormTable() {
   const allowRequestOnThisLevel = FormUIProps.currentLevel >= 0;
   const isAuthorityExists = empAuthorityList.length > 0;
   const showTaskColumns = auth.user?.Company?.task === true;
+  const [selectedAttDate, setSelectedAttDate] = useState("");
+  const hasTaskHours = (row) => {
+    const isValidHours = (value) => {
+      if (!value) return false;
+
+      const hours = String(value).trim();
+
+      return (
+        hours !== "00:00" &&
+        hours !== "00:00:00" &&
+        hours !== "0" &&
+        hours !== "0.00"
+      );
+    };
+
+    return (
+      isValidHours(row?.billableHours) ||
+      isValidHours(row?.nonBillableHours)
+    );
+  };
   // Table columns
   const columns = [
     {
@@ -135,8 +158,8 @@ export function FormTable() {
     {
       dataField: "formattedDateOut",
       text: "Date Out",
-       headerClasses: "d-none d-md-table-cell",
-  classes: "d-none d-md-table-cell",
+      headerClasses: "d-none d-md-table-cell",
+      classes: "d-none d-md-table-cell",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -217,8 +240,8 @@ export function FormTable() {
     {
       dataField: "oT",
       text: "OT Hours",
-       headerClasses: "d-none d-md-table-cell",
-  classes: "d-none d-md-table-cell",
+      headerClasses: "d-none d-md-table-cell",
+      classes: "d-none d-md-table-cell",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -243,7 +266,7 @@ export function FormTable() {
     {
       dataField: "request_status",
       text: "Request",
-      
+
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -298,46 +321,46 @@ export function FormTable() {
     //   },
     // },
 
-     ...(showTaskColumns
+    ...(showTaskColumns
       ? [
-      {
-        dataField: "billableHours",
-        text: "Billable Hours",
-        sort: false,
-        sortCaret: sortCaret,
-        headerSortingClasses,
-        style: {
-          minWidth: "10px",
-          maxWidth: "10px",
+        {
+          dataField: "billableHours",
+          text: "Billable Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
         },
-        formatter: (cell) => formatTime(cell)
-      },
-      {
-        dataField: "nonBillableHours",
-        text: "Non Billable Hours",
-        sort: false,
-        sortCaret: sortCaret,
-        headerSortingClasses,
-        style: {
-          minWidth: "10px",
-          maxWidth: "10px",
+        {
+          dataField: "nonBillableHours",
+          text: "Non Billable Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
         },
-        formatter: (cell) => formatTime(cell)
-      },  
-      
-      {
-        dataField: "idleHours",
-        text: "Idle Hours",
-        sort: false,
-        sortCaret: sortCaret,
-        headerSortingClasses,
-        style: {
-          minWidth: "10px",
-          maxWidth: "10px",
+
+        {
+          dataField: "idleHours",
+          text: "Idle Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
         },
-        formatter: (cell) => formatTime(cell)
-      },
-        ]
+      ]
       : []),
 
     {
@@ -347,8 +370,16 @@ export function FormTable() {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         viewttendanceLogs: FormUIProps?.viewttendanceLogs,
+        viewTaskLogs: FormUIProps?.viewTaskLogs,
         setWorkflowId: FormUIProps?.setWorkflowId,
         setCurrentData: FormUIProps?.setCurrentData,
+        showTaskColumns,
+        hasTaskHours,
+        dispatch,
+        fetchAttendanceTaskLogs,
+        setShowTaskLogsModal,
+        setSelectedAttDate,
+
 
       },
       classes: "text-right pr-0",
@@ -417,6 +448,11 @@ export function FormTable() {
 
   return (
     <div className="px-3 py-2 rounded-lg bg-white">
+        <AttendanceTaskLog
+                show={showTaskLogsModal}
+                onHide={() => setShowTaskLogsModal(false)}
+                attDate={selectedAttDate}
+              />
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (

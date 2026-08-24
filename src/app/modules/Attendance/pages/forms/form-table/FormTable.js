@@ -30,6 +30,7 @@ export function FormTable() {
   const formUIContext = useFormUIContext();
   const [showLogsModal, setShowLogsModal] = useState(false);
   const [showTaskLogsModal, setShowTaskLogsModal] = useState(false);
+  const [selectedAttDate, setSelectedAttDate] = useState("");
   const FormUIProps = useMemo(() => {
     return {
       queryParams: formUIContext.queryParams,
@@ -329,7 +330,7 @@ export function FormTable() {
                   <ClockFading className="w-5 h-5" />
                 </span>
               </OverlayTrigger>
-              {showTaskColumns && hasTaskHours(row) && (
+              {showTaskColumns && (
                 <OverlayTrigger
                   overlay={
                     <Tooltip id={`products-edit-tooltip-${row?.employeeCode}`}>
@@ -341,6 +342,9 @@ export function FormTable() {
                     type="button"
                     className="btn p-0 ml-1"
                     onClick={() => {
+                      const attDate = formatDates(row?.attDate, "dd-MMM-yyyy");
+
+                      setSelectedAttDate(attDate);
                       dispatch(
                         fetchAttendanceTaskLogs(
                           row?.employeeId,
@@ -393,6 +397,7 @@ export function FormTable() {
         <AttendanceTaskLog
           show={showTaskLogsModal}
           onHide={() => setShowTaskLogsModal(false)}
+          attDate={selectedAttDate}
         />
         <PaginationProvider pagination={paginationFactory(paginationOptions)}>
           {({ paginationProps, paginationTableProps }) => {
