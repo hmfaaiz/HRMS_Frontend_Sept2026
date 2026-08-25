@@ -1232,7 +1232,7 @@ export function FormEditForm({
             {!isUserForRead && (
               <button
                 type="button"
-                disabled={receiveMode && !allCompanyEmployeesData?.find(option => option.value === values.assignBy)}
+                disabled={receiveMode && !allCompanyEmployeesData?.find(option => option.value === values.assignBy) || loading}
                 onClick={() => {
 
                   if (facilitatorEmployeeList?.length === 1) {
