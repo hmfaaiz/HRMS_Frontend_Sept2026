@@ -244,10 +244,10 @@ const EmployeeLogTimeSummaryPreview = ({ data, fromDate, toDate }) => {
               </td>
 
               <td style={{ textAlign: "center" }}>
-                0.00
-                {/* {employee.rating !== undefined
+        
+                {employee.rating !== undefined
                   ? formatNumber(employee.rating)
-                  : "0.00"} */}
+                  : "0.00"}
               </td>
             </tr>
           ))}
