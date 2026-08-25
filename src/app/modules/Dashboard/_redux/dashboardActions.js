@@ -1156,3 +1156,33 @@ export const fetchOvertimeEntitledEmployeesData= (body) => async (
       // toast.error("Something went wrong");
     });
 };
+
+export const fetchAttendanceTaskLogs = (employeeId, loggedDate) => (dispatch) => {
+  if (!employeeId || !loggedDate) {
+     dispatch(actions.AttendanceTaskLogsFetched([]));
+    return;
+  }
+
+
+
+  return requestFromServer
+    .getAttendanceTaskLogs(employeeId, loggedDate)
+    .then((response) => {
+      const taskLogs = [...(response.data?.data?.rows || [])];
+      dispatch(
+        actions.AttendanceTaskLogsFetched(
+          taskLogs
+        )
+      );
+
+  
+    })
+    .catch((error) => {
+      dispatch(
+        actions.AttendanceTaskLogsFetched([])
+      );
+       console.log("Can't find Attendance Task Logs");
+
+    
+    });
+};
