@@ -86,7 +86,7 @@ const PivotRow = ({ row, dateColumns, level = 0 }) => {
 };
 
 function FormPreview({ data }) {
-  if (!data || !data.data) return <div>No data to display</div>;
+  if (!data || !data.data) return <div></div>;
 
   const { data: pivotData, totals, dateColumns } = data;
 

@@ -39,6 +39,7 @@ export const fetchAllTicketReportByFiltersForExcel = (filter, document, labels =
 
 
 export const fetchPreviewData = (body) => async (dispatch) => {
+  dispatch(actions.previewSummaryDataFetched(undefined));
  if (new Date(body?.from_date) > new Date (body?.to_date)) {
       toast.error(SERVER_MESSAGES.correctDateRange)
     
@@ -93,4 +94,28 @@ export const fetchAllSummaryReportByFiltersForExcel = (filter, document, labels 
            progress: undefined,
          });
        });
+};
+
+export const fetchPreviewSummaryData = (body) => async (dispatch) => {
+   dispatch(actions.previewDataFetched(undefined));
+ if (new Date(body?.from_date) > new Date (body?.to_date)) {
+      toast.error(SERVER_MESSAGES.correctDateRange)
+    
+      return;
+    }
+
+  return requestFromServer.getAllPreviewSummaryData(body)
+   
+    .then((response) => {
+    
+
+      dispatch(actions.previewSummaryDataFetched(response));
+    
+    })
+    .catch((error) => {
+
+      dispatch(actions.previewSummaryDataFetched(undefined));
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+      toast.error(error.response?.data?.message);
+    });
 };

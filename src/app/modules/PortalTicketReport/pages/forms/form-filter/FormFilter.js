@@ -27,7 +27,7 @@ import {
 } from "../../../../../../_metronic/_partials/controls";
 import FormPreview from "../preview/FormPreview";
 import { FetchAllFacilitatorEmployee, getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
-
+import EmployeeLogTimeSummaryPreview from "../preview/EmployeeLogTimeSummary";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -50,18 +50,21 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   const FormUIContext = useFormUIContext();
   const [activeKey, setActiveKey] = useState("0");
   //Get All dropdown data from state
+  const [activePreview, setActivePreview] = useState(0);
   useEffect(() => {
     dispatch(FetchAllFacilitatorEmployee());
     dispatch(getEmployeeHierarchy(1));
 
   }, [dispatch]);
 
-
-  const { currentState, dashboard, previewData } = useSelector((state) => {
+  const { currentState, dashboard, previewData, previewSummaryData, previewSummaryFromDate, previewSummaryToDate } = useSelector((state) => {
     return {
       currentState: state?.portal_ticket_time_report,
       dashboard: state?.dashboard,
       previewData: state?.portal_ticket_time_report?.previewData,
+      previewSummaryData: state?.portal_ticket_time_report?.previewSummaryData,
+      previewSummaryFromDate: state?.portal_ticket_time_report?.previewSummaryFromDate,
+      previewSummaryToDate: state?.portal_ticket_time_report?.previewSummaryToDate,
     };
   });
   const {
@@ -69,6 +72,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
     allSubsidiaryList, employeeList
 
   } = useSelector((state) => state.dashboard);
+
 
   const allEmployeesMap = useMemo(() => {
     return new Map(employeeList?.map((item) => [item.value, item]));
@@ -126,6 +130,17 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
   };
 
 
+  const getSummaryReportByFilters = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchAllSummaryReportByFiltersForExcel(newQueryParams.filter, document, labels));
+  };
+
+  const getPreviewSummaryReportByFilters = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchPreviewSummaryData(newQueryParams.filter, document, labels));
+  };
 
   useEffect(() => {
     if (!allSubsidiaryList?.length) return;
@@ -188,6 +203,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
           //   allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
           //   "",
 
+
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -231,15 +247,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
                               <div className="">
 
-
-
-
                                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
-
                                   <h6 className="font-bold mb-0 text-primary my-2">
                                     Project
                                   </h6>
-
 
                                   <div className="col-span-1 mt-3">
                                     <input
@@ -248,14 +259,18 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                       className="relative top-1"
                                       // onChange={handleChange}
                                       onChange={(e) => {
+                                        setFieldValue("isDays", true)
+                                        setFieldValue("isWeekDays", false)
+                                        setFieldValue("isMonthDays", false)
                                         clearFields(["taskTicketDescription"], setFieldValue);
                                         setFieldValue("taskTicketStatusIds", [])
                                         setFieldValue("taskTicketTypeIds", [])
                                         setFieldValue("isEnable_via_task_assignment", false);
+                                        setFieldValue("isEnable_via_task_assignment_emp_logtime_summary", false);
                                         clearFields(["projectId", "projectTicketDescription",], setFieldValue);
 
-                                        // setFieldValue('ticketStatusIds', [])
-                                        // setFieldValue('ticketTypeIds', [])
+
+
                                         setFieldValue("istTcketTypeTicket", false)
                                         setFieldValue("isTicketTypeEmp", false)
                                         setFieldValue("isEmpTicketTypeTicket", false)
@@ -270,12 +285,16 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                         setFieldValue("isEmployeeProjectTicket", false)
                                         setFieldValue("isProjectEmployee", false)
                                         setFieldValue("isProjectTicket", false)
+
                                         setFieldValue('ticketStatusIds', dashboard?.allTicketStatus?.length
                                           ? dashboard?.allTicketStatus?.map(t => t.value)
                                           : [])
                                         setFieldValue('ticketTypeIds', TicketType?.length
                                           ? TicketType?.map(t => t.value)
                                           : [])
+
+
+
 
 
                                         handleChange(e); // Trigger the form change handler
@@ -291,7 +310,6 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     </label>
                                   </div>
                                 </div>
-
 
                                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
                                   <div className="col-span-2">
@@ -364,17 +382,14 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
 
 
+
+
+
                                 </div>
-
-
-
 
                               </div>
 
                               <div className="grid grid-cols-2 md:grid-cols-12 gap-x-3 gap-y-1 mt-3">
-
-
-
 
                                 <div className="col-span-1">
                                   <label className="flex items-center">
@@ -464,7 +479,6 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     <span>Project & Employee Wise</span>
                                   </label>
                                 </div>
-
 
 
 
@@ -570,10 +584,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
 
 
-
                               <div className="grid grid-cols-8 gap-x-3 gap-y-1">
-
-
                                 <h6 className="font-bold mb-0 text-primary my-2">
                                   Task Assignment
                                 </h6>
@@ -584,8 +595,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     className="relative top-1"
                                     // onChange={handleChange}
                                     onChange={(e) => {
+                                      setFieldValue("isDays", true)
+                                      setFieldValue("isWeekDays", false)
+                                      setFieldValue("isMonthDays", false)
                                       clearFields(["projectId", "projectTicketDescription",], setFieldValue);
                                       setFieldValue("isEnable_via_task_project", false);
+                                      setFieldValue("isEnable_via_task_assignment_emp_logtime_summary", false);
                                       setFieldValue('ticketStatusIds', [])
                                       setFieldValue('ticketTypeIds', [])
 
@@ -611,9 +626,6 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                         ? ticketStatusOptions?.map(t => t.value)
                                         : [])
 
-
-
-
                                       handleChange(e); // Trigger the form change handler
 
                                     }}
@@ -626,11 +638,17 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     &nbsp;<span>Search Via Task Assignment</span>
                                   </label>
                                 </div>
+
+
                               </div>
 
 
+
                               <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+
+
                                 <div className="col-span-2">
+
                                   <MultiSelect
                                     name="taskTicketTypeIds"
                                     label="Ticket Type"
@@ -671,16 +689,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                 </div>
 
 
-
-
-
-
-
                               </div>
 
 
-                              <div className="grid grid-cols-8 gap-x-3 gap-y-1 mt-3">
 
+                              <div className="grid grid-cols-8 gap-x-3 gap-y-1 mt-3">
                                 <div className="col-span-2">
                                   <label className="flex items-center">
                                     <input
@@ -770,8 +783,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                     <span>Ticket Type & Employee Wise </span>
                                   </label>
                                 </div>
-
                               </div>
+
+
+
                             </>
                           </Accordion.Collapse>
                         </Card>
@@ -875,9 +890,9 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                   Assignee <span style={{ color: "red" }}>*</span>
                                 </label>
                               }
-                               value={dashboard.employeeList.filter(t =>
-                                      values.employeeId?.includes(t.value)
-                                    )}
+                              value={dashboard.employeeList.filter(t =>
+                                values.employeeId?.includes(t.value)
+                              )}
                               options={dashboard?.employeeList}
                               onChange={(items = []) =>
                                 setFieldValue(
@@ -900,6 +915,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                 className="mr-1"
                                 name="isDays"
                                 type="checkbox"
+                                disabled={values.isEnable_via_task_assignment_emp_logtime_summary}
 
                                 onChange={() => {
                                   setFieldValue("isDays", !values?.isDays)
@@ -925,7 +941,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                 className="mr-1"
                                 name="isWeekDays"
                                 type="checkbox"
-
+                                disabled={values.isEnable_via_task_assignment_emp_logtime_summary}
                                 onChange={() => {
                                   setFieldValue("isWeekDays", !values?.isWeekDays)
                                   setFieldValue("isMonthDays", false)
@@ -950,7 +966,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                                 className="mr-1"
                                 name="isMonthDays"
                                 type="checkbox"
-
+                                disabled={values.isEnable_via_task_assignment_emp_logtime_summary}
                                 onChange={() => {
 
                                   setFieldValue("isMonthDays", !values?.isMonthDays)
@@ -985,79 +1001,215 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
                     </div>
 
+
+                    <div className="grid grid-cols-1 gap-x-3 gap-y-1 ">
+
+                      {/* <div className="">
+                        <h6 className="font-bold mb-0 text-primary my-2">
+                          Employee Productivity Summary
+                        </h6>
+
+                        <div className="d-flex justify-content-end">
+
+                          <button
+                            onClick={() => {
+                              if (!pdfLoading) {
+                                const formattedValues = {
+                                  ...values,
+                                  from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
+                                  to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
+
+                                };
+
+                                getSummaryReportByFilters(formattedValues);
+                              }
+                            }}
+                            disabled={pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
+                            className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
+                              }`}
+
+                            type="button"
+
+                          >
+                            Generate Summary Report
+
+                            <Download className="w-4 h-4 ml-2" />
+                            {pdf && (
+                              <span className="ml-3 mr-3 spinner spinner-white"></span>
+                            )}
+                          </button>
+
+
+                        </div>
+
+
+
+                      </div> */}
+
+
+
+                    </div>
+
                   </div>
                 </fieldset>
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <button
-                type="button"
-                onClick={() => {
-                  applyFilter(initialFilter.filter);
-                  handleReset();
-                }}
-                className="btn btn-light"
-              >
-                Cancel
-              </button>
 
-              {/* <div className="flex items-center gap-2  p-1 rounded-sm justify-end"> */}
-              <button
-                onClick={() => {
-                  if (!pdfLoading) {
-                    const formattedValues = {
-                      ...values,
-                      from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
-                      to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
+              <div>
+                <div className="col-span-2 mt-3">
+                  <input
+                    name="isEnable_via_task_assignment_emp_logtime_summary"
+                    type="checkbox"
+                    className="relative top-1"
+                    // onChange={handleChange}
+                    onChange={(e) => {
+                      setFieldValue("isDays", false)
+                      setFieldValue("isWeekDays", false)
+                      setFieldValue("isMonthDays", false)
+                      clearFields(["projectId", "projectTicketDescription",], setFieldValue);
+                      setFieldValue("isEnable_via_task_project", false);
+                      setFieldValue("isEnable_via_task_assignment", false);
+                      setFieldValue("isEnable_via_task_assignment_emp_logtime_summary", true);
+                      setFieldValue('ticketStatusIds', [])
+                      setFieldValue('ticketTypeIds', [])
 
-                    };
+                      clearFields(["taskTicketDescription"], setFieldValue);
+                      // setFieldValue("taskTicketStatusIds", [])
+                      // setFieldValue("taskTicketTypeIds", [])
 
-                    getTicketReportByFilters(formattedValues);
-                  }
-                }}
-                disabled={values.employeeId.length == 0 || pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
-                className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
-                  }`}
 
-                type="button"
+                      setFieldValue("isProjectWise", false)
+                      setFieldValue("istTcketTypeTicket", false)
+                      setFieldValue("isEmpTicketTypeTicket", false)
+                      setFieldValue("isTicketTypeEmp", false)
+                      setFieldValue("isEmployeeWise", false)
+                      setFieldValue("isEmployeeProject", false)
+                      setFieldValue("isEmployeeProjectTicket", false)
+                      setFieldValue("isProjectEmployee", false)
+                      setFieldValue("isProjectTicket", false)
 
-              >
-                Generate Report
+                      clearFields(["taskTicketDescription"], setFieldValue);
+                      setFieldValue("taskTicketStatusIds", [])
+                      setFieldValue("taskTicketTypeIds", [])
+                      setFieldValue("isEnable_via_task_assignment", false);
 
-                <Download className="w-4 h-4 ml-2" />
-                {pdf && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
+                      clearFields(["projectId", "projectTicketDescription",], setFieldValue);
 
-              <button
-                onClick={() => {
-                  if (!pdfLoading) {
-                    const formattedValues = {
-                      ...values,
-                      from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
-                      to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
 
-                    };
 
-                    getPreviewReportByFilters(formattedValues);
-                  }
-                }}
-                disabled={values.employeeId.length == 0 || pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
-                className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
-                  }`}
+                      setFieldValue("istTcketTypeTicket", false)
+                      setFieldValue("isTicketTypeEmp", false)
+                      setFieldValue("isEmpTicketTypeTicket", false)
 
-                type="button"
 
-              >
-                Preview Time Logs
+                      setFieldValue("isProjectWise", false)
+                      setFieldValue("istTcketTypeTicket", false)
+                      setFieldValue("isEmpTicketTypeTicket", false)
+                      setFieldValue("isTicketTypeEmp", false)
+                      setFieldValue("isEmployeeWise", false)
+                      setFieldValue("isEmployeeProject", false)
+                      setFieldValue("isEmployeeProjectTicket", false)
+                      setFieldValue("isProjectEmployee", false)
+                      setFieldValue("isProjectTicket", false)
 
-                {/* <Download className="w-4 h-4 ml-2" /> */}
-                {pdf && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
 
+                      handleChange(e); // Trigger the form change handler
+
+                    }}
+                    onBlur={handleBlur}
+                    value={values.isEnable_via_task_assignment_emp_logtime_summary}
+                    checked={values.isEnable_via_task_assignment_emp_logtime_summary}
+
+                  />
+                  <label>
+                    &nbsp;<span>Employee Logtime Summary</span>
+                  </label>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    applyFilter(initialFilter.filter);
+                    handleReset();
+                    setActivePreview(0);
+                  }}
+                  className="btn btn-light mr-1"
+                >
+                  Cancel
+                </button>
+
+                {/* <div className="flex items-center gap-2  p-1 rounded-sm justify-end"> */}
+                <button
+                  onClick={() => {
+                    if (!pdfLoading) {
+                      const formattedValues = {
+                        ...values,
+                        from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
+                        to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
+
+                      };
+                      if (values.isEnable_via_task_assignment_emp_logtime_summary) {
+                        getSummaryReportByFilters(formattedValues);
+                      } else {
+                        getTicketReportByFilters(formattedValues);
+                      }
+
+
+                    }
+                  }}
+                  disabled={values.employeeId.length == 0 || pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment && !values.isEnable_via_task_assignment_emp_logtime_summary)}
+                  className={`btn btn-primary btn-elevate h-9  mr-1  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
+                    }`}
+
+                  type="button"
+
+                >
+                  Generate Report
+
+                  <Download className="w-4 h-4 ml-2" />
+                  {pdf && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (!pdfLoading) {
+                      const formattedValues = {
+                        ...values,
+                        from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
+                        to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
+
+                      };
+
+                      if (values.isEnable_via_task_assignment_emp_logtime_summary) {
+                        getPreviewSummaryReportByFilters(formattedValues);
+                        setActivePreview(2);
+                      }
+                      else {
+                        getPreviewReportByFilters(formattedValues);
+                        setActivePreview(1);
+                      }
+
+
+                    }
+                  }}
+                  disabled={values.employeeId.length == 0 || pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment && !values.isEnable_via_task_assignment_emp_logtime_summary)}
+                  className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
+                    }`}
+
+                  type="button"
+
+                >
+                  Preview Time Logs
+
+                  {/* <Download className="w-4 h-4 ml-2" /> */}
+                  {pdf && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+              </div>
               {/* </div> */}
 
 
@@ -1066,9 +1218,16 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
             </Modal.Footer>
           </>
         )}
-      </Formik>
+      </Formik >
+      {activePreview == 1 && < FormPreview data={previewData} />
+      }
+      {activePreview == 2 && <EmployeeLogTimeSummaryPreview
+        data={previewSummaryData}
+        fromDate={previewSummaryFromDate}
+        toDate={previewSummaryToDate}
+      />}
 
-      <FormPreview data={previewData} />
+
 
       <br />
       <br />

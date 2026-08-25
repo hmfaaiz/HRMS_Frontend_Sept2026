@@ -22,3 +22,9 @@ export async function getSummaryReportByFilters(body) {
     responseType:'arraybuffer'
   });
 }
+
+
+export function getAllPreviewSummaryData(body) {
+
+  return axios.post(`${USERS_URL}/ticket_time_report/read-all-preview-summary-report`, body);
+}
