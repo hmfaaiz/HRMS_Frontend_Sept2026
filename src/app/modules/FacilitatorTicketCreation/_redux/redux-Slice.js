@@ -4,7 +4,7 @@ const initialFacilitatorTicketCreationState = {
     listLoading: false,
     actionsLoading: null,
     totalCount: 0,
-    entities: null,
+    entities: [],
     roles: null,
     centers: null,
     userStatusTypes: null,
@@ -12,14 +12,14 @@ const initialFacilitatorTicketCreationState = {
     timeLogForEdit: undefined,
     lastError: null,
     userForRead: false,
-    receiveEntities: null,
+    receiveEntities: [],
     receiveTotalCount: 0,
     userForReceive: false,
     detailData: undefined,
     detailEntities: null,
     detailTotalCount: 0,
     timeLogsTotalCount: 0,
-    timelogsEntities: null,
+    timelogsEntities: [],
 };
 
 

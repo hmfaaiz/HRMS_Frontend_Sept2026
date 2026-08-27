@@ -37,6 +37,7 @@ export function DetailTimeLogsTable() {
       setReceiveMode: formUIContext.setReceiveMode,
       receiveMode: formUIContext.receiveMode,
       openDetailGridData: formUIContext.openDetailGridData,
+      openParentChildDetailGridData: formUIContext.openParentChildDetailGridData,
       setDetailId: formUIContext.setDetailId,
     };
   }, [formUIContext]);

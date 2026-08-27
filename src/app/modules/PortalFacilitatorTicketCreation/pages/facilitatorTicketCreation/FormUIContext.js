@@ -107,6 +107,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openReadFormDialog: FormUIEvents.openReadFormDialog,
     openReceiveFormDialog: FormUIEvents.openReceiveFormDialog,
     openDetailGridData: FormUIEvents.openDetailGridData,
+    openParentChildDetailGridData: FormUIEvents.openParentChildDetailGridData,
     openTicketTimeLog: FormUIEvents.openTicketTimeLog,
     openDetailTimeLog: FormUIEvents.openDetailTimeLog,
     openTicketFollowUp: FormUIEvents.openTicketFollowUp,
