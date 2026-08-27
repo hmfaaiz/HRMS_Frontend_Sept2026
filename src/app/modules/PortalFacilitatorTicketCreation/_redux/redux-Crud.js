@@ -71,3 +71,8 @@ export function uploadFormDoc(body) {
   return axios.post(`${USERS_URL}/portal_ticket_creation/document-upload`, body);
 }
 
+export function getAllChildOfParentTicket(Id) {
+
+  return axios.get(`${USERS_URL}/portal_ticket_creation/read-all-child-task/${Id}`);
+}
+

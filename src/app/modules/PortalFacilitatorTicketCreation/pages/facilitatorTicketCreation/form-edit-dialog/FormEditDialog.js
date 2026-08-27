@@ -122,8 +122,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
       dispatch(actions.createTicketCreation(formData, disbaleLoading, clearForm,onHide));
-      dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
       dispatch(actions.fetchReceiveTickets(usersReceiveUIProps.queryReceiveParams));
+      dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
+      
 
 
 
@@ -158,6 +159,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         alertEndDate: formData.alertEndDate,
         isSelf: formData.isSelf,
         editMode: formUIProps.editMode,
+        parentId: formData.parentId,
 
 
 
