@@ -13,6 +13,7 @@ import { DetailData } from "./modal/DetailData";
 import { TimeLog } from "./modal/TimeLog";
 import { DetailTimeLog } from "./modal/DetailTimeLog";
 import { FollowUp } from "./modal/FollowUp";
+import { DetailParentChildData } from "./modal/DetailParentChildData";
 
 
 
@@ -39,7 +40,7 @@ export function FormPage({ history }) {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
-  
+
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/${status}/delete`);
     },
     openActiveFormDialog: (id) => {
@@ -61,10 +62,21 @@ export function FormPage({ history }) {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/detailtimelog`);
     },
 
-     openTicketFollowUp: (detailId, status) => {
+    openTicketFollowUp: (detailId, status) => {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/${status}/msg`);
     },
+
+    openParentChildDetailGridData: (detailId) => {
+      history.push(
+        "/facilitator_ticket_creation/read-all-facilitator-ticket-creation/childtask",
+        {
+          detailId: detailId,
+        }
+      );
+    },
   };
+
+
   return (
 
 
@@ -106,15 +118,15 @@ export function FormPage({ history }) {
             }}
           />
         )}
-      </Route> 
-      
-      
-       <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:id/receive">
+      </Route>
+
+
+      <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:id/receive">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             id={match && match.params.id}
-          
+
             onHide={() => {
               history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
             }}
@@ -185,6 +197,20 @@ export function FormPage({ history }) {
             status={match && match.params.status}
             onHide={() => {
               history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
+
+      <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/childtask">
+        {({ history, location, match }) => (
+          <DetailParentChildData
+            show={match != null}
+            detailId={location.state && location.state.detailId}
+            onHide={() => {
+              history.push(
+                "/facilitator_ticket_creation/read-all-facilitator-ticket-creation"
+              );
             }}
           />
         )}

@@ -123,22 +123,6 @@ console.log("detailChildTotalCount, detailChildEntities1111111",detailChildTotal
     },
 
 
-    {
-      dataField: "EmployeeProfile.fullName",
-      text: "Assign To",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
-
-
 
         {
           dataField: "ticketDescription",
@@ -172,6 +156,22 @@ console.log("detailChildTotalCount, detailChildEntities1111111",detailChildTotal
             );
           },
         },
+
+    {
+      dataField: "EmployeeProfile.fullName",
+      text: "Assign To",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
 
   
 

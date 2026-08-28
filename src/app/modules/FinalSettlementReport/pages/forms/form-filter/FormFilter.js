@@ -41,7 +41,7 @@ export function FormFilter({
   payableSlip,
   incomeTaxComputationSlip,
   gratuitySlip,
-  providentFundSlip,acknowledgementLetter
+  providentFundSlip, acknowledgementLetter
 
 }) {
   const history = useHistory();
@@ -167,9 +167,9 @@ export function FormFilter({
         initialValues={{
           ...initialFilter.filter,
           subsidiaryId:
-                        initialFilter.filter?.subsidiaryId ||
-                        allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
-                        "",
+            initialFilter.filter?.subsidiaryId ||
+            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+            "",
 
         }}
         validationSchema={formValidation}
@@ -218,16 +218,16 @@ export function FormFilter({
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         value={
-                            allSubsidiaryList?.find(
-                              (el) => el?.value === values?.subsidiaryId
-                            ) || null
-                          }
-                      options={allSubsidiaryList}
+                          allSubsidiaryList?.find(
+                            (el) => el?.value === values?.subsidiaryId
+                          ) || null
+                        }
+                        options={allSubsidiaryList}
                       />
                     </div>
 
 
-                    <div className="">
+                    {/* <div className="">
                       <Field
                         name="departmentId"
                         component={SearchSelect}
@@ -247,8 +247,81 @@ export function FormFilter({
                         autoComplete="off"
                         options={departmentBySubIdsList}
                       />
-                    </div>
+                    </div> */}
+                    {/* 
+<div className="">
+  <Field
+    name="departmentId"
+    component={SearchSelect}
+    isDisabled={!values.subsidiaryId}
+    onBlur={handleBlur}
+    onChange={(e) => {
+      const value =
+        e.value === "--Select--" || e.value === "All"
+          ? ""
+          : Number(e.value);
 
+      setFieldValue("departmentId", value);
+      setFieldValue("employeeId", "");
+
+      dispatch(
+        FetchAllApprovedFSEmp({
+          subsidiaryId: values?.subsidiaryId,
+          departmentId: value,
+        })
+      );
+    }}
+    label={<span>Department</span>}
+    // value={allDeptMap?.get(values?.departmentId || "") || ""}
+     value={
+                        values?.departmentId == null
+                          ? { value: null, label: "All" }
+                          : allDeptMap?.get(values?.departmentId || "") || ""
+                      }
+    autoComplete="off"
+    options={[
+      { value: "", label: "All" },
+      ...departmentBySubIdsList,
+    ]}
+  />
+</div> */}
+                    <div className="">
+                      <Field
+                        name="departmentId"
+                        component={SearchSelect}
+                        isDisabled={!values.subsidiaryId}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value =
+                            e.value === "--Select--" ||
+                              e.value === "All" ||
+                              e.value === ""
+                              ? ""
+                              : Number(e.value);
+
+                          setFieldValue("departmentId", value);
+                          setFieldValue("employeeId", "");
+
+                          dispatch(
+                            FetchAllApprovedFSEmp({
+                              subsidiaryId: values?.subsidiaryId,
+                              departmentId: value,
+                            })
+                          );
+                        }}
+                        label={<span>Department</span>}
+                        value={
+                          values?.departmentId === ""
+                            ? { value: "", label: "All" }
+                            : allDeptMap?.get(values?.departmentId) || ""
+                        }
+                        autoComplete="off"
+                        options={[
+                          { value: "", label: "All" },
+                          ...departmentBySubIdsList,
+                        ]}
+                      />
+                    </div>
                     <div className="">
                       <Field
                         name="employeeId"
@@ -432,7 +505,7 @@ export function FormFilter({
 
 
                   <h6 className="font-bold mb-0 text-primary ">
-                   Acknowledgment Letter
+                    Acknowledgment Letter
                   </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
