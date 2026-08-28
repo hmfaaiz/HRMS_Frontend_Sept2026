@@ -84,13 +84,14 @@ export function ActionsColumnFormatter(
       {(row.isParent === true || row.isParent === 1 || row.isParent === "1") && (
 
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Detail Child</Tooltip>}
+          overlay={<Tooltip id="products-edit-tooltip">View Child Status</Tooltip>}
         >
           <button
             type="button"
             onClick={() => {
               setReceiveMode(false);
               setReadMode(false);
+              setEditMode(false);
               setId("");
               setMasterId(row.masterId);
               openParentChildDetailGridData(row.masterId)
@@ -155,7 +156,7 @@ export function ResponseColumnFormatter(
   { setId,
     isAccessForEdit,
     openReceiveFormDialog,
-    setReceiveMode, receiveMode, openDetailGridData, openParentChildDetailGridData, setMasterId, openTicketTimeLog, setReadMode, setDetailId, openDetailTimeLog, user
+    setReceiveMode, receiveMode, openDetailGridData, openParentChildDetailGridData,setEditMode, setMasterId, openTicketTimeLog, setReadMode, setDetailId, openDetailTimeLog, user
   }
 ) {
   const isUserRead = false;
@@ -196,13 +197,14 @@ export function ResponseColumnFormatter(
       {(row.isParent === true || row.isParent === 1 || row.isParent === "1") && (
 
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Detail Child</Tooltip>}
+          overlay={<Tooltip id="products-edit-tooltip">View Child Status</Tooltip>}
         >
           <button
             type="button"
             onClick={() => {
               setReceiveMode(false);
               setReadMode(false);
+              setEditMode(false);
               setId("");
               setMasterId(row.masterId);
               openParentChildDetailGridData(row.masterId)

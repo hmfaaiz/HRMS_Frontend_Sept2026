@@ -34,6 +34,7 @@ export function FormTable() {
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       openDetailGridData: formUIContext.openDetailGridData,
+      openParentChildDetailGridData: formUIContext.openParentChildDetailGridData,
       setIsFileReq: formUIContext.setIsFileReq,
       setReadMode: formUIContext.setReadMode,
       setEditMode: formUIContext.setEditMode,
@@ -530,6 +531,7 @@ export function FormTable() {
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
         openDetailGridData: formUIProps.openDetailGridData,
+        openParentChildDetailGridData: formUIProps.openParentChildDetailGridData,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
         isAccessForDelete: isAccessForDelete
