@@ -1378,14 +1378,9 @@ export function MasterEditForm({
                       )}
                     </button>
                   )}
-                  {console.log("trettt", values)}
                   {id &&
                     !isUserForRead &&
-                    !values.isFinalize &&
-                    Number(
-                      parseFloat(values?.generalSelfRating) +
-                        parseFloat(values?.goalSelfRating),
-                    ) > 0 && (
+                    !values.isFinalize && (
                       <button
                         type="button"
                         className="btn btn-primary btn-elevate"

@@ -13,7 +13,7 @@ const initialState = {
   employeeDetail: null,
   appraisalEmpDetail: {},
   isHREvaluation: false,
-
+  consentAppraisalId: null, /// those appraisal consent where employee is not a part of appraisal feedback
 };
 
 export const callTypes = {
@@ -69,7 +69,7 @@ export const appraisalEvaluationSlice = createSlice({
         const updatedUser = state.userForEdit.map((question) =>
           question.Id === updatedQuestion.Id
             ? { ...question, ...updatedQuestion }
-            : question
+            : question,
         );
         state.userForEdit = updatedUser;
       }
@@ -78,6 +78,10 @@ export const appraisalEvaluationSlice = createSlice({
       state.actionsLoading = false;
       state.error = null;
       state.appraisalEmpDetail = action.payload;
+    },
+    /// those appraisal consent where employee is not a part of appraisal feedback
+    appraisalConsentIdFetched: (state, action) => {
+      state.consentAppraisalId = action.payload;
     },
   },
 });

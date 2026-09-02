@@ -1384,11 +1384,7 @@ export function MasterEditForm({
                   {id &&
                     !isUserForRead &&
                     !values.isFinalize &&
-                    !values?.isPortalFinalize &&
-                    Number(
-                      parseFloat(values?.generalSelfRating) +
-                        parseFloat(values?.goalSelfRating),
-                    ) > 0 && (
+                    !values?.isPortalFinalize && (
                       <button
                         type="button"
                         className="btn btn-primary btn-elevate"
