@@ -27,11 +27,12 @@ export function FormConsentDialog({ id, show, onHide }) {
       queryParams: FormUIContext.queryParams,
     };
   }, [FormUIContext]);
-  const { isLoading, appraisalFinalizedRating } = useSelector(
+  const { isLoading, appraisalFinalizedRating, employeeId } = useSelector(
     (state) => ({
       isLoading: state.appraisal_finalization.actionsLoading,
       appraisalFinalizedRating:
         state?.appraisal_finalization?.appraisalFinalizedRating,
+      employeeId: state?.auth?.user?.employeeIdMapping,
     }),
     shallowEqual,
   );
@@ -62,6 +63,7 @@ export function FormConsentDialog({ id, show, onHide }) {
       ),
     ).then(() => {
       dispatch(actions.fetchAppraisalEvaluation(formUIProps.queryParams));
+      dispatch(actions.getEvaluationConsent({ employeeId }));
     });
   };
 
