@@ -22,6 +22,7 @@ import { fetchAssetAssignmentList } from "../../../_redux/redux-Actions";
 import { Eye, XCircle } from "lucide-react";
 import AssetDetails from "../../../../../utils/common-modules/AssetDetails";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+import { formatDates } from "../../../../../utils/common";
 
 const assetAssignmentSchema = Yup.object().shape({
   employeeId: Yup.number()
@@ -109,8 +110,13 @@ export function FormEditForm({
       validationSchema={assetAssignmentSchema}
       onSubmit={(values) => {
         enableLoading();
-        console.log("values111111", values);
-        saveForm(values);
+        const formattedValues = {
+          ...values,
+          date_of_assignment: values?.date_of_assignment
+            ? formatDates(values.date_of_assignment, "dd-MMM-yyyy")
+            : null,
+        };
+        saveForm(formattedValues);
       }}
     >
       {({

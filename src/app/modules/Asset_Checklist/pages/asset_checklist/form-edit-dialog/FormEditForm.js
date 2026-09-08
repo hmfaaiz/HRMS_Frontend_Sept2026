@@ -13,6 +13,7 @@ import { format, set } from "date-fns";
 import { Eye, XCircle } from "lucide-react";
 import AssetDetails from "../../../../../utils/common-modules/AssetDetails";
 import { fetchAssetInspectionListDataForEdit } from "../../../_redux/redux-Actions";
+import { formatDates } from "../../../../../utils/common";
 
 const assetSchema = Yup.object().shape({
   asset_categoryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
@@ -114,7 +115,14 @@ export function FormEditForm({
       validationSchema={assetSchema}
       onSubmit={(values) => {
         enableLoading();
-        saveForm(values);
+        const formattedValues = {
+          ...values,
+          date_of_inspection: values?.date_of_inspection
+            ? formatDates(new Date(values.date_of_inspection), "dd-MMM-yyyy")
+            : null,
+        };
+
+        saveForm(formattedValues);
       }}
     >
       {({
