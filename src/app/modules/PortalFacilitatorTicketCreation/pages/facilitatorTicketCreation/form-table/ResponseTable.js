@@ -38,6 +38,7 @@ export function ResponseTable() {
       detailId: formUIContext.detailId,
       setDetailId: formUIContext.setDetailId,
       setReadMode: formUIContext.setReadMode,
+      setEditMode: formUIContext.setEditMode,
       openDetailGridData: formUIContext.openDetailGridData,
       openParentChildDetailGridData: formUIContext.openParentChildDetailGridData,
       openTicketTimeLog: formUIContext.openTicketTimeLog,
@@ -578,6 +579,7 @@ formatter: (cell) => {
         openTicketTimeLog: formUIProps.openTicketTimeLog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
         setReadMode: formUIProps.setReadMode,
+        setEditMode: formUIProps.setEditMode,
         openReceiveFormDialog: formUIProps.openReceiveFormDialog,
         user,
 

@@ -138,3 +138,9 @@ export const updateEvaluationConsent = (body, onHide, setLoading) => (
       setLoading(false);
     });
 };
+/// those appraisal consent where employee is not a part of appraisal feedback
+export const getEvaluationConsent = (body) => (dispatch) => {
+  return requestFromServer.getEvaluationConsent(body).then((res) => {
+    dispatch(actions.appraisalConsentIdFetched(res?.data?.data));
+  });
+};

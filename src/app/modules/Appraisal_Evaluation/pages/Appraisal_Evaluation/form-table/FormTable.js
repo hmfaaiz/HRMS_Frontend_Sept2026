@@ -34,15 +34,20 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess, employeeId } = useSelector((state) => {
     return {
       currentState: state.appraisal_evaluation,
       userAccess: state?.auth?.userAccess["appraisal_evaluation"],
+      employeeId: state?.auth?.user?.employeeIdMapping,
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading } = currentState;
-
+  const {
+    totalCount,
+    entities,
+    listLoading,
+    consentAppraisalId,
+  } = currentState;
   //totalCount = 10
 
   const dispatch = useDispatch();
@@ -51,6 +56,10 @@ export function FormTable() {
     formUIProps.setIds([]);
     dispatch(actions.fetchAppraisalEvaluation(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
+
+  useEffect(() => {
+    dispatch(actions.getEvaluationConsent({ employeeId }));
+  }, [dispatch]);
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateAppraisalEvaluationQuestion",
@@ -218,6 +227,17 @@ export function FormTable() {
 
   return (
     <div className="w-full overflow-x-auto scrollbar-fancy">
+      {consentAppraisalId ? (
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => {
+            formUIProps.openConsentDialog(consentAppraisalId);
+          }}
+        >
+          Consent Review{" "}
+        </button>
+      ) : null}
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (

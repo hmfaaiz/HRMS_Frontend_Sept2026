@@ -37,3 +37,10 @@ export function updateEvaluationConsent(body) {
     body
   );
 }
+
+export function getEvaluationConsent(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_evaluation/get-evaluation-consent`,
+    body
+  );
+}

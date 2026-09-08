@@ -39,6 +39,7 @@ export function DetailTable() {
       setReceiveMode: formUIContext.setReceiveMode,
       receiveMode: formUIContext.receiveMode,
       openDetailGridData: formUIContext.openDetailGridData,
+      openParentChildDetailGridData: formUIContext.openParentChildDetailGridData,
     };
   }, [formUIContext]);
 

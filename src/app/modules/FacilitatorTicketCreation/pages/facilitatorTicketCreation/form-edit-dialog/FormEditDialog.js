@@ -158,6 +158,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         alertEndDate: formData.alertEndDate,
         isSelf: formData.isSelf,
         editMode: formUIProps.editMode,
+        parentId: formData.parentId,
 
 
 
