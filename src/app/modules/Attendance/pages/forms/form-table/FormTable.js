@@ -19,15 +19,18 @@ import { useFormUIContext } from "../FormUIContext";
 import { Modal } from "react-bootstrap";
 import { format } from "date-fns";
 import { formatDates, formatTime } from "../../../../../utils/common";
-import { fetchAttLogsByDate } from "../../../../Dashboard/_redux/dashboardActions";
-import { ClockFading } from "lucide-react";
+import { fetchAttendanceTaskLogs, fetchAttLogsByDate } from "../../../../Dashboard/_redux/dashboardActions";
+import { ClockFading, FolderClock } from "lucide-react";
 import { LogsDialog } from "../../../../../utils/common-modules/LogsDialog";
+import { AttendanceTaskLog } from "../../../../../utils/common-modules/AttendanceTaskLog";
 // import { LogsDialog } from "../log/LogsDialog";
 
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
- const [showLogsModal, setShowLogsModal] = useState(false);
+  const [showLogsModal, setShowLogsModal] = useState(false);
+  const [showTaskLogsModal, setShowTaskLogsModal] = useState(false);
+  const [selectedAttDate, setSelectedAttDate] = useState("");
   const FormUIProps = useMemo(() => {
     return {
       queryParams: formUIContext.queryParams,
@@ -35,21 +38,42 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState } = useSelector((state) => {
+  const { currentState, auth } = useSelector((state) => {
     return {
       currentState: state.attendance,
+      auth: state.auth,
     };
   }, shallowEqual);
+
 
   const { totalCount, entities, listLoading } = currentState;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-   
-    dispatch(actions.fetchAttendance(FormUIProps.queryParams));
-  }, [FormUIProps.queryParams.pageSize,FormUIProps.queryParams.pageNumber, dispatch]);
 
+    dispatch(actions.fetchAttendance(FormUIProps.queryParams));
+  }, [FormUIProps.queryParams.pageSize, FormUIProps.queryParams.pageNumber, dispatch]);
+  const showTaskColumns = auth.user?.Company?.task === true;
+  const hasTaskHours = (row) => {
+    const isValidHours = (value) => {
+      if (!value) return false;
+
+      const hours = String(value).trim();
+
+      return (
+        hours !== "00:00" &&
+        hours !== "00:00:00" &&
+        hours !== "0" &&
+        hours !== "0.00"
+      );
+    };
+
+    return (
+      isValidHours(row?.billableHours) ||
+      isValidHours(row?.nonBillableHours)
+    );
+  };
   // Table columns
   const columns = [
     {
@@ -89,9 +113,9 @@ export function FormTable() {
       formatter: (cell) => {
         // Format the date without timestamp
         // return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
-          return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
-      
+
     },
     {
       dataField: "shiftCode",
@@ -138,7 +162,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell)
     },
 
     {
@@ -163,7 +187,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell)
     },
     {
       dataField: "oT",
@@ -175,7 +199,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell)
     },
     {
       dataField: "attendanceStatus",
@@ -187,93 +211,160 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter: (cell,row)=>{return(<span
-                className={`${
-                  uiHelpers.attendanceStatusMap[row?.attendanceStatus]
-                } font-weight-bold `}
-              >
-                {cell}
-              </span>)}
+      formatter: (cell, row) => {
+        return (<span
+          className={`${uiHelpers.attendanceStatusMap[row?.attendanceStatus]
+            } font-weight-bold `}
+        >
+          {cell}
+        </span>)
+      }
     },
 
+    ...(showTaskColumns
+      ? [
+        {
+          dataField: "billableHours",
+          text: "Billable Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
+        },
+        {
+          dataField: "nonBillableHours",
+          text: "Non Billable Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
+        },
+
+        {
+          dataField: "idleHours",
+          text: "Idle Hours",
+          sort: false,
+          sortCaret: sortCaret,
+          headerSortingClasses,
+          style: {
+            minWidth: "10px",
+            maxWidth: "10px",
+          },
+          formatter: (cell) => formatTime(cell)
+        },
+      ]
+      : []),
     {
-  dataField: "actions",
-  text: "Actions",
-  sort: false,
-  headerSortingClasses,
-  style: {
-    minWidth: "100px",
-    maxWidth: "100px",
-    textAlign: "text-end pr-3",
-  },
-  // formatter: (cell, row) => {
-  //   return (
-  //     <OverlayTrigger
-  //       placement="top"
-  //       overlay={
-  //         <Tooltip id={`products-edit-tooltip-${row.employeeId}`}>
-  //           View Logs
-  //         </Tooltip>
-  //       }
-  //     >
-  //       <span
-  //         className="cursor-pointer font-bold text-underline-hover"
-  //         onClick={() => {
-  //           dispatch(
-  //             fetchAttLogsByDate({
-  //               employeeId: row?.t_employee_profile?.employeeId,
-  //               attDate: formatDates(row?.attDate, "dd-MMM-yyyy"),
-  //             })
-  //           );
-  //         }}
-  //       >
-  //         <ClockFading className="w-4 h-4 pointer" />
-  //       </span>
-  //     </OverlayTrigger>
-  //   );
-  // },
+      dataField: "actions",
+      text: "Actions",
+      sort: false,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+        maxWidth: "100px",
+        textAlign: "text-end pr-1",
+      },
+      // formatter: (cell, row) => {
+      //   return (
+      //     <OverlayTrigger
+      //       placement="top"
+      //       overlay={
+      //         <Tooltip id={`products-edit-tooltip-${row.employeeId}`}>
+      //           View Logs
+      //         </Tooltip>
+      //       }
+      //     >
+      //       <span
+      //         className="cursor-pointer font-bold text-underline-hover"
+      //         onClick={() => {
+      //           dispatch(
+      //             fetchAttLogsByDate({
+      //               employeeId: row?.t_employee_profile?.employeeId,
+      //               attDate: formatDates(row?.attDate, "dd-MMM-yyyy"),
+      //             })
+      //           );
+      //         }}
+      //       >
+      //         <ClockFading className="w-4 h-4 pointer" />
+      //       </span>
+      //     </OverlayTrigger>
+      //   );
+      // },
 
-  formatter: (cell, row) => {
-  return (
-    <>
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip id={`products-edit-tooltip-${row?.employeeCode}`}>
-            View Logs
-          </Tooltip>
-        }
-      >
-        <span
-          className="cursor-pointer"
-          onClick={() => {
-            dispatch(
-              fetchAttLogsByDate({
-                employeeId:
-                  row?.t_employee_profile?.employeeId,
-                attDate: formatDates(
-                  row?.attDate,
-                  "dd-MMM-yyyy"
-                ),
-              })
-            );
+      formatter: (cell, row) => {
+        return (
+          <>
+            <div className="d-flex align-items-center">
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <Tooltip id={`products-edit-tooltip-${row?.employeeCode}`}>
+                    View Logs
+                  </Tooltip>
+                }
+              >
+                <span
+                  className="cursor-pointer"
+                  onClick={() => {
+                    dispatch(
+                      fetchAttLogsByDate({
+                        employeeId: row?.t_employee_profile?.employeeId,
+                        attDate: formatDates(
+                          row?.attDate,
+                          "dd-MMM-yyyy"
+                        ),
+                      })
+                    );
 
-            setShowLogsModal(true);
-          }}
-        >
-          <ClockFading className="ml-2 w-5 h-5 " />
-        </span>
-      </OverlayTrigger>
-{/* 
-      <LogsDialog
-        show={showLogsModal}
-        onHide={() => setShowLogsModal(false)}
-      /> */}
-    </>
-  );
-},
-}
-   
+                    setShowLogsModal(true);
+                  }}
+                >
+                  <ClockFading className="w-5 h-5" />
+                </span>
+              </OverlayTrigger>
+              {showTaskColumns && (
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id={`products-edit-tooltip-${row?.employeeCode}`}>
+                      Detail Time Log
+                    </Tooltip>
+                  }
+                >
+                  <button
+                    type="button"
+                    className="btn p-0 ml-1"
+                    onClick={() => {
+                      const attDate = formatDates(row?.attDate, "dd-MMM-yyyy");
+
+                      setSelectedAttDate(attDate);
+                      dispatch(
+                        fetchAttendanceTaskLogs(
+                          row?.employeeId,
+                          row?.attDate
+                        )
+                      );
+
+                      setShowTaskLogsModal(true);
+                    }}
+                  >
+                    <FolderClock className="w-5 h-5 text-black cursor-pointer" />
+                  </button>
+                </OverlayTrigger>
+              )}
+            </div>
+          </>
+        );
+      },
+    }
+
     // {
     //   dataField: "finalRemarks",
     //   text: "Remarks",
@@ -299,10 +390,15 @@ export function FormTable() {
   return (
     <>
       <Modal.Body className="overlay overlay-block cursor-default">
-            <LogsDialog
-      show={showLogsModal}
-      onHide={() => setShowLogsModal(false)}
-    />
+        <LogsDialog
+          show={showLogsModal}
+          onHide={() => setShowLogsModal(false)}
+        />
+        <AttendanceTaskLog
+          show={showTaskLogsModal}
+          onHide={() => setShowTaskLogsModal(false)}
+          attDate={selectedAttDate}
+        />
         <PaginationProvider pagination={paginationFactory(paginationOptions)}>
           {({ paginationProps, paginationTableProps }) => {
             return (

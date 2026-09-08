@@ -3,7 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CalendarClock, Eye, FolderClock, LayoutList, MessageSquareText, Pencil, Reply, Trash2 } from "lucide-react";
+import { CalendarClock, Eye, FolderClock, LayoutList, MessageSquareText, Network, Pencil, Reply, Trash2 } from "lucide-react";
 import { fetchAllFacilitatorDetail } from "../../../../_redux/redux-Actions";
 import { FormDeleteDialog } from "../../form-delete-dialog/FormDeleteDialog";
 
@@ -20,7 +20,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog, setDetailId,
-    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, user, setEditMode, openTicketFollowUp,
+    isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData, openParentChildDetailGridData, user, setEditMode, openTicketFollowUp,
   }
 ) {
   const isUserRead = false;
@@ -81,6 +81,28 @@ export function ActionsColumnFormatter(
         )
       ) : null}
 
+      {(row.isParent === true || row.isParent === 1 || row.isParent === "1") && (
+
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">View Child Status</Tooltip>}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setReceiveMode(false);
+              setReadMode(false);
+              setEditMode(false);
+              setId("");
+              setMasterId(row.masterId);
+              openParentChildDetailGridData(row.masterId)
+            }}
+            style={{ background: 'none', border: 'none', padding: 0 }}
+          >
+            <Network className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
+      )}
+
 
       {isAccessForRead && user?.employeeIdMapping === row?.assignBy ? (
         row?.initiator ? (
@@ -134,7 +156,7 @@ export function ResponseColumnFormatter(
   { setId,
     isAccessForEdit,
     openReceiveFormDialog,
-    setReceiveMode, receiveMode, openDetailGridData, setMasterId, openTicketTimeLog, setReadMode, setDetailId, openDetailTimeLog, user
+    setReceiveMode, receiveMode, openDetailGridData, openParentChildDetailGridData,setEditMode, setMasterId, openTicketTimeLog, setReadMode, setDetailId, openDetailTimeLog, user
   }
 ) {
   const isUserRead = false;
@@ -146,7 +168,7 @@ export function ResponseColumnFormatter(
   let isOverdue = false;
   isOverdue = dueDate < today;
 
-
+  console.log("row111", row.isParent)
 
   return (
     <div className="space-x-2">
@@ -170,6 +192,28 @@ export function ResponseColumnFormatter(
           </a>
         </OverlayTrigger>
 
+      )}
+
+      {(row.isParent === true || row.isParent === 1 || row.isParent === "1") && (
+
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">View Child Status</Tooltip>}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setReceiveMode(false);
+              setReadMode(false);
+              setEditMode(false);
+              setId("");
+              setMasterId(row.masterId);
+              openParentChildDetailGridData(row.masterId)
+            }}
+            style={{ background: 'none', border: 'none', padding: 0 }}
+          >
+            <Network className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
       )}
 
 

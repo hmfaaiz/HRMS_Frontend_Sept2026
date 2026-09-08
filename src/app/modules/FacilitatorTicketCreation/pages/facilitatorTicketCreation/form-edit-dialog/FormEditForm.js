@@ -20,7 +20,7 @@ import { FetchAllFacilitatorEmployee, fetchCompanyEmployeesData, fetchCurrentPar
 import { CircleMinus, CirclePlus } from "lucide-react";
 
 // percentage: Yup.string().required("Required*"),
-const facilitator_ticket_creationEditSchema = (value, currentUser) => {
+const facilitator_ticket_creationEditSchema =  (value, currentUser, parentTasks) => {
   return Yup.object()
     .shape({
       file: Yup.string().nullable(),
@@ -87,10 +87,45 @@ const facilitator_ticket_creationEditSchema = (value, currentUser) => {
         .required(VALIDATION_MESSAGES.required),
 
 
-      ticketDate: Yup.date()
+      // ticketDate: Yup.date()
 
+      //   .nullable()
+      //   .required(VALIDATION_MESSAGES.required),
+
+      ticketDate: Yup.date()
         .nullable()
-        .required(VALIDATION_MESSAGES.required),
+        .required(VALIDATION_MESSAGES.required)
+        .test(
+          "parent-start-date",
+          "Start Date cannot be earlier than Parent Task Start Date",
+          function (value) {
+            const { parentId } = this.parent;
+
+            if (!value || !parentId) {
+              return true;
+            }
+
+            const selectedParent = parentTasks?.find(
+              option =>
+                Number(option.value) === Number(parentId)
+            );
+
+            if (!selectedParent?.ticketDate) {
+              return true;
+            }
+
+            const childStartDate = new Date(value);
+            const parentStartDate = new Date(
+              selectedParent.ticketDate
+            );
+
+            childStartDate.setHours(0, 0, 0, 0);
+            parentStartDate.setHours(0, 0, 0, 0);
+
+            return childStartDate >= parentStartDate;
+          }
+        ),
+
 
 
       // timeRangeFrom: Yup.string()
@@ -311,7 +346,7 @@ export function FormEditForm({
 
       }}
 
-      validationSchema={facilitator_ticket_creationEditSchema(formData, currentUser?.employeeIdMapping)}
+      validationSchema={facilitator_ticket_creationEditSchema(formData, currentUser?.employeeIdMapping, dashboard?.allCurrentParentTask)}
       onSubmit={(values, { resetForm }) => {
         enableLoading();
 
@@ -327,7 +362,18 @@ export function FormEditForm({
         saveForm(values, clearForm, onHide);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
+      {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => {
+
+          const selectedParent = dashboard.allCurrentParentTask?.find(
+          option => Number(option.value) === Number(values.parentId)
+        );
+
+        const parentStartDate = selectedParent?.ticketDate
+          ? new Date(selectedParent.ticketDate)
+          : null;
+
+
+        return (
         <>
 
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -519,7 +565,8 @@ export function FormEditForm({
                       dateFormat="dd-MMM-yyyy"
                       name="ticketDate"
                       autoComplete="off"
-                      minDate={new Date().setDate(new Date().getDate() - 30)}
+                      // minDate={new Date().setDate(new Date().getDate() - 30)}
+                      minDate={parentStartDate || new Date().setDate(new Date().getDate() - 30)}
                       // maxDate={values?.dueDate || new Date().setDate(new Date().getDate() + 14)}
                       maxDate={new Date(Math.min(values?.dueDate ? new Date(values.dueDate).getTime() : new Date().setDate(new Date().getDate() + 30), new Date().setDate(new Date().getDate() + 30)))}
                     />
@@ -749,7 +796,7 @@ export function FormEditForm({
                       }}
                       value={
                         dashboard.allCurrentParentTask?.find(
-                          (option) => option.value === values.parentId
+                           (option) => Number(option.value) === Number(values.parentId)
                         ) || null
                       }
 
@@ -1232,7 +1279,7 @@ export function FormEditForm({
             {!isUserForRead && (
               <button
                 type="button"
-                disabled={receiveMode && !allCompanyEmployeesData?.find(option => option.value === values.assignBy)}
+                disabled={receiveMode && !allCompanyEmployeesData?.find(option => option.value === values.assignBy) || loading}
                 onClick={() => {
 
                   if (facilitatorEmployeeList?.length === 1) {
@@ -1258,7 +1305,8 @@ export function FormEditForm({
             )}
           </Modal.Footer>
         </>
-      )}
+      )
+      }}
     </Formik>
   );
 }

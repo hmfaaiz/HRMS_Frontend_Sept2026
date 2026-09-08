@@ -7,6 +7,12 @@ const initialState = {
     lastError: null,
     pdfLoading: false,
     pdf: false,
+
+    previewSummaryData: [],
+    previewSummaryTitle: "",
+    previewSummaryFromDate: "",
+    previewSummaryToDate: "",
+
  
 
 };
@@ -60,6 +66,23 @@ export const PortalTicketTimeReportSlice = createSlice({
             // state.dateRange=action.payload.data?.data?.dateRange;
             // state.totalCount = action.payload.data?.data?.count;
 
+        },
+
+           previewSummaryDataFetched: (state, action) => {
+            state.listLoading = false;
+            state.error = null;
+
+            state.previewSummaryData =
+                action.payload?.data?.data || [];
+            console.log("previewSummaryData1111", state.previewSummaryData)
+            state.previewSummaryTitle =
+                action.payload?.data?.title || "";
+
+            state.previewSummaryFromDate =
+                action.payload?.data?.fromDate || "";
+
+            state.previewSummaryToDate =
+                action.payload?.data?.toDate || "";
         },
 
     },

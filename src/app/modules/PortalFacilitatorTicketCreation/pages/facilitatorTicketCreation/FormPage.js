@@ -13,6 +13,7 @@ import { DetailData } from "./modal/DetailData";
 import { TimeLog } from "./modal/TimeLog";
 import { DetailTimeLog } from "./modal/DetailTimeLog";
 import { FollowUp } from "./modal/FollowUp";
+import { DetailParentChildData } from "./modal/DetailParentChildData";
 
 
 
@@ -63,6 +64,14 @@ export function FormPage({ history }) {
     openDetailTimeLog: (detailId, isUserRead) => {
       history.push(`/portal_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/detailtimelog`);
     },
+   openParentChildDetailGridData: (detailId) => {
+    history.push(
+        "/portal_ticket_creation/read-all-facilitator-ticket-creation/childtask",
+        {
+            detailId: detailId,
+        }
+    );
+},
   };
   return (
 
@@ -105,15 +114,15 @@ export function FormPage({ history }) {
             }}
           />
         )}
-      </Route> 
-      
-      
-       <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:id/receive">
+      </Route>
+
+
+      <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:id/receive">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             id={match && match.params.id}
-          
+
             onHide={() => {
               history.push("/portal_ticket_creation/read-all-facilitator-ticket-creation");
             }}
@@ -161,6 +170,24 @@ export function FormPage({ history }) {
           />
         )}
       </Route>
+
+
+  <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/childtask">
+    {({ history, location, match }) => (
+        <DetailParentChildData
+            show={match != null}
+            detailId={location.state && location.state.detailId}
+            onHide={() => {
+                history.push(
+                    "/portal_ticket_creation/read-all-facilitator-ticket-creation"
+                );
+            }}
+        />
+    )}
+</Route>
+
+
+
 
       <Route path="/portal_ticket_creation/read-all-facilitator-ticket-creation/:detailId/timelog">
         {({ history, match }) => (

@@ -4,7 +4,7 @@ const initialFacilitatorTicketCreationState = {
     listLoading: false,
     actionsLoading: null,
     totalCount: 0,
-    entities: null,
+    entities: [],
     roles: null,
     centers: null,
     userStatusTypes: null,
@@ -12,14 +12,16 @@ const initialFacilitatorTicketCreationState = {
     timeLogForEdit: undefined,
     lastError: null,
     userForRead: false,
-    receiveEntities: null,
+    receiveEntities: [],
     receiveTotalCount: 0,
     userForReceive: false,
     detailData: undefined,
     detailEntities: null,
     detailTotalCount: 0,
     timeLogsTotalCount: 0,
-    timelogsEntities: null,
+    timelogsEntities: [],
+    detailChildEntities: [],
+    detailChildTotalCount: 0,
 };
 
 
@@ -122,6 +124,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
                     totalTimeLogHours: parent.totalTimeLogHours,
                     ticketCode: parent.ticketCode,
                     completionDate: parent.completionDate,
+                    isParent: parent?.isParent,
                 }))
             );
             state.listLoading = false;
@@ -146,6 +149,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
                     ticketCode: parent.ticketCode,
                     isPermanent: parent.ticketStatus == 0,
                     completionDate: parent.completionDate,
+                    isParent: parent?.isParent,
                 })));
 
             state.listLoading = false;
@@ -265,6 +269,42 @@ export const FacilitatorTicketCreationSlice = createSlice({
             });
 
         },
+
+          parentChildDetailChildFetched: (state, action) => {
+            state.listLoading = false;
+            state.error = null;
+
+   
+            const data = action.payload;
+
+            // Defensive: hamesha array bana lo
+            const parents = Array.isArray(data) ? data : data ? [data] : [];
+
+            // Flatten Details + inject parent fields
+            const allDetails = parents.flatMap(parent =>
+                (parent.Details || []).map(detail => ({
+                    ...detail,
+
+
+                    ticketDescription: parent?.ticketDescription, // ya parent.remarks
+                    parentId: parent?.Id,
+                    dueDate: parent?.dueDate,
+                    ticketCode: parent?.ticketCode,
+                    EmployeeProfile: parent?.EmployeeProfile,
+                    priorityLevel: parent?.priorityLevel,
+                    noOfHours: parent?.noOfHours,
+                    loggedHours: parent?.loggedHours,
+
+                }))
+            );
+
+            state.detailChildEntities = allDetails;
+            state.detailChildTotalCount = allDetails.length;
+
+
+
+        },
+
 
 
 

@@ -362,3 +362,23 @@ export const uploadFormDoc= async (file) => {
     });
 };
 
+export const fetchAllChildOfParentTicket = (Id) => (dispatch) => {
+
+
+  if (!Id) {
+    return dispatch(actions.parentChildDetailChildFetched({ detailData: undefined }));
+  }
+
+  return requestFromServer
+    .getAllChildOfParentTicket(Id)
+    .then((response) => {
+      const entities = response.data.data;
+     
+
+      dispatch(actions.parentChildDetailChildFetched(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};

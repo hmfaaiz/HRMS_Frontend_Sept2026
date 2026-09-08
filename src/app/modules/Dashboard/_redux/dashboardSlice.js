@@ -131,6 +131,7 @@ const initialDashboardState = {
   allAssetAssignmentListByEmpId: [],
   allAssetChecklistById: [],
   allOvertimeEntitledEmployees: [],
+  taskLogs: [],
 };
 
 export const callTypes = {
@@ -550,6 +551,13 @@ export const dashboardSlice = createSlice({
 
     AllOvertimeEntitledEmployeesFetch: (state, action) => {
       state.allOvertimeEntitledEmployees = action.payload;
+    },
+
+    AttendanceTaskLogsFetched: (state, action) => {
+      state.taskLogs = action.payload;
+
+
+
     },
 
 

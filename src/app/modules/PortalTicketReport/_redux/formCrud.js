@@ -15,3 +15,13 @@ export function getAllPreviewData(body) {
 
   return axios.post(`${USERS_URL}/portal_ticket_time_report/read-all-preview-report`, body);
 }
+
+export async function getSummaryReportByFilters(body) {
+  return axios.post(`${USERS_URL}/portal_ticket_time_report/read-all-summary-report`, body,{
+    responseType:'arraybuffer'
+  });
+}
+export function getAllPreviewSummaryData(body) {
+
+  return axios.post(`${USERS_URL}/portal_ticket_time_report/read-all-preview-summary-report`, body);
+}
