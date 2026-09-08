@@ -257,6 +257,16 @@ export function FormEditForm({
       validationSchema={assetRegisterSchema}
       onSubmit={async (values) => {
         enableLoading();
+        const formattedValues = {
+          ...values,
+          date_of_acquisition: values?.date_of_acquisition
+            ? formatDates(values.date_of_acquisition, "dd-MMM-yyyy")
+            : null,
+
+          date_of_expiry: values?.date_of_expiry
+            ? formatDates(values.date_of_expiry, "dd-MMM-yyyy")
+            : null,
+        };
         if (file) {
           try {
             // If file is a File object (new upload), upload it
@@ -264,16 +274,16 @@ export function FormEditForm({
               const uploadRes = await uploadFormDoc(file);
               const filename = uploadRes.data.filePath;
               setassetFile(getUploadUrl(filename)); // Update preview with server URL
-              saveForm({ ...values, file: filename });
+              saveForm({ ...formattedValues, file: filename });
             } else {
               // If file is already a string (existing image)
-              saveForm({ ...values, file: file });
+              saveForm({ ...formattedValues, file: file });
             }
           } catch (err) {
             console.error("File upload failed:", err);
           }
         } else {
-          saveForm(values);
+          saveForm(formattedValues);
         }
       }}
     >
