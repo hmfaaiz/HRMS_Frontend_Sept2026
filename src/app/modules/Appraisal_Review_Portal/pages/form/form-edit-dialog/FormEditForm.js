@@ -1173,6 +1173,7 @@ export function MasterEditForm({
                                                     <Field
                                                       name={`areaOfDevelopment[${index}].description`}
                                                       component={Input}
+                                                      maxLength={250}
                                                       disabled={isUserForRead}
                                                       className={`form-control ${
                                                         errors
@@ -1283,6 +1284,7 @@ export function MasterEditForm({
                                                   <td>
                                                     <Field
                                                       name={`areaOfStrength[${index}].description`}
+                                                      maxLength={250}
                                                       component={Input}
                                                       disabled={isUserForRead}
                                                       className={`form-control ${
