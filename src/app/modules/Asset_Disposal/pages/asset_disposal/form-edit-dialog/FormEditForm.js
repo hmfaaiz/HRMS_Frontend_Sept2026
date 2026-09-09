@@ -22,6 +22,7 @@ import { AmountInput } from "../../../../../../_metronic/_partials/controls/form
 import { FormDynamicDialogModal } from "../form-delete-dialog/FormDeleteDialog";
 import AssetDetails from "../../../../../utils/common-modules/AssetDetails";
 import { Eye, XCircle } from "lucide-react";
+import { formatDates } from "../../../../../utils/common";
 
 const assetDisposalSchema = Yup.object().shape({
   date_of_disposal: Yup.date()
@@ -89,8 +90,13 @@ export function FormEditForm({
       validationSchema={assetDisposalSchema}
       onSubmit={(values) => {
         enableLoading();
-        console.log("values111111", values);
-        saveForm(values);
+        const formattedValues = {
+          ...values,
+          date_of_disposal: values?.date_of_disposal
+            ? formatDates(new Date(values.date_of_disposal), "dd-MMM-yyyy")
+            : null,
+        };
+        saveForm(formattedValues);
       }}
     >
       {({
