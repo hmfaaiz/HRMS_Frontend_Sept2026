@@ -39,6 +39,13 @@ export function FormFilter({
     { value: 2, label: "In Review" },
   ];
 
+  const assignmentTypeOptions = [
+    { value: 0, label: "All" },
+    { value: 1, label: "Assignment By" },
+    { value: 2, label: "Assignment To" },
+
+  ];
+
   const applyFilter = (values) => {
     const cleanFilter = { ...values };
     Object.keys(cleanFilter).forEach((k) => {
@@ -128,6 +135,7 @@ export function FormFilter({
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
         // ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
         employeeId: uiProps.queryParams?.filter?.employeeId || "",
+        assignment_type: uiProps.queryParams?.filter?.assignment_type || 0,
         ticketStatus: uiProps.queryParams?.isFiltered
           ? uiProps.queryParams.filter.ticketStatus ?? null
           : 1,
@@ -230,11 +238,12 @@ export function FormFilter({
                     onChange={(e) => {
                       const value = e.value == "All" ? "" : e.value;
                       setFieldValue("employeeId", value);
+                      if (e?.value === "All" || e?.value === "") {
+                        setFieldValue("assignment_type", 0);
+                      }
                     }}
                     label={<span>Employee</span>}
-                    // value={
-                    //   allEmployeesMap?.get(values?.reportTo || "") || ""
-                    // }
+
                     value={
                       values.employeeId === ""
                         ? { label: "All", value: "" }
@@ -248,6 +257,29 @@ export function FormFilter({
                         ? allEmployeesWithNoPermissionList
                         : []),
                     ]}
+                  />
+                </div>
+
+                <div className="col-span-6 sm:col-span-2">
+                  <SearchSelect
+                    name="assignment_type"
+                    label="Assignment Type"
+                    isDisabled={!values.employeeId}
+                    value={
+                      assignmentTypeOptions.find(
+                        (o) => o.value === values.assignment_type
+                      ) || null
+                    }
+                    options={[
+
+                      ...assignmentTypeOptions,
+                    ]}
+                    onChange={(e) =>
+                      setFieldValue(
+                        "assignment_type",
+                        e?.value === null ? null : e.value,
+                      )
+                    }
                   />
                 </div>
 
