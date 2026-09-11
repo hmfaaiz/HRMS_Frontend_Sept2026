@@ -18,6 +18,8 @@ export function FormFilter({
   onPrint,
   showTicketDetails,
   onTicketDetailsChange,
+  setCurrentStatusToggle,
+  currentStatusToggle,
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
@@ -38,10 +40,10 @@ export function FormFilter({
   ];
 
 
-   const assignmentTypeOptions = [
+  const assignmentTypeOptions = [
     { value: 0, label: "All" },
-    { value: 1, label: "Assignment By" },
-    { value: 2, label: "Assignment To" },
+    { value: 1, label: "Assign By" },
+    { value: 2, label: "Assign To" },
 
   ];
 
@@ -110,8 +112,8 @@ export function FormFilter({
         // ticketDateFrom: uiProps.queryParams?.filter?.ticketDateFrom || null,
         // ticketDateTo: uiProps.queryParams?.filter?.ticketDateTo || null,
 
-        ticketDateFrom:formatDates(getFirstDayOfCurrentMonth(), "dd-MMM-yyyy")  || "",
-        ticketDateTo:formatDates( getLastDayOfCurrentMonth(), "dd-MMM-yyyy")  || "",
+        ticketDateFrom: formatDates(getFirstDayOfCurrentMonth(), "dd-MMM-yyyy") || "",
+        ticketDateTo: formatDates(getLastDayOfCurrentMonth(), "dd-MMM-yyyy") || "",
         dueDateFrom: uiProps.queryParams?.filter?.dueDateFrom || null,
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
 
@@ -199,7 +201,7 @@ export function FormFilter({
                     onChange={(e) => {
                       const value = e.value == "All" ? "" : e.value;
                       setFieldValue("employeeId", value);
-                       if (e?.value === "All" || e?.value === "") {
+                      if (e?.value === "All" || e?.value === "") {
                         setFieldValue("assignment_type", 0);
                       }
                     }}
@@ -223,28 +225,28 @@ export function FormFilter({
                   />
                 </div>
 
-                 <div className="col-span-6 sm:col-span-2">
-                                  <SearchSelect
-                                    name="assignment_type"
-                                    label="Assignment Type"
-                                    isDisabled={!values.employeeId}
-                                    value={
-                                      assignmentTypeOptions.find(
-                                        (o) => o.value === values.assignment_type
-                                      ) || null
-                                    }
-                                    options={[
-                
-                                      ...assignmentTypeOptions,
-                                    ]}
-                                    onChange={(e) =>
-                                      setFieldValue(
-                                        "assignment_type",
-                                        e?.value === null ? null : e.value,
-                                      )
-                                    }
-                                  />
-                                </div>
+                <div className="col-span-6 sm:col-span-2">
+                  <SearchSelect
+                    name="assignment_type"
+                    label="Assignment Type"
+                    isDisabled={!values.employeeId}
+                    value={
+                      assignmentTypeOptions.find(
+                        (o) => o.value === values.assignment_type
+                      ) || null
+                    }
+                    options={[
+
+                      ...assignmentTypeOptions,
+                    ]}
+                    onChange={(e) =>
+                      setFieldValue(
+                        "assignment_type",
+                        e?.value === null ? null : e.value,
+                      )
+                    }
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-12 sm:col-span-4">
@@ -371,6 +373,26 @@ export function FormFilter({
               </div>
             </div>
 
+
+  <div className="flex flex-col items-end gap-2">
+              {/* Show Current Status */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="currentStatusToggle"
+                  checked={currentStatusToggle}
+                  onChange={(e) => setCurrentStatusToggle(e.target.checked)}
+                  style={{ cursor: "pointer", width: 15, height: 15 }}
+                />
+
+                <label
+                  htmlFor="currentStatusToggle"
+                  className="text-md mb-0"
+                  style={{ cursor: "pointer", userSelect: "none" }}
+                >
+                  Show Ticket Current Status
+                </label>
+              </div>
             {/* Action buttons */}
             <div className="flex justify-end gap-2 flex-wrap">
               <button
@@ -455,6 +477,7 @@ export function FormFilter({
                   </OverlayTrigger>
                 </div>
               )}
+            </div>
             </div>
           </div>
         </>

@@ -141,7 +141,7 @@ function DetailSubTable({ masterId }) {
 }
 
 
-export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTicketDetails, onExpandedRowsChange }) {
+export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTicketDetails, onExpandedRowsChange, currentStatusToggle }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const dispatch = useDispatch();
 
@@ -292,7 +292,7 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
       }
     },
 
-   
+
 
     {
       dataField: "Details[0].AssignToProfile.fullName",
@@ -393,52 +393,108 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
     },
 
 
+    ...(!currentStatusToggle
+      ? [
+        {
+          dataField: "ticketStatus",
+          text: "Status",
+          style: { minWidth: "20px" },
 
-    {
-      dataField: "ticketStatus",
-      text: "Status",
-      style: { minWidth: "20px" },
+          formatter: (cell, row) => {
+            const lastDetail = row?.Details?.[0];
+            if (!lastDetail) return "";
 
-      formatter: (cell, row) => {
-        const lastDetail = row?.Details?.[0];
-        if (!lastDetail) return "";
+            const dueDate = new Date(lastDetail.dueDate);
+            const today = new Date();
+            const createdDate = new Date(lastDetail.createdAt);
 
-        const dueDate = new Date(lastDetail.dueDate);
-        const today = new Date();
-        const createdDate = new Date(lastDetail.createdAt);
+            dueDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            createdDate.setHours(0, 0, 0, 0);
 
-        dueDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
-        createdDate.setHours(0, 0, 0, 0);
+            const isExpiredOrToday =
+              ((dueDate < today && dueDate < createdDate) ||
+                (dueDate < today && row.ticketStatus != 0));
 
-        const isExpiredOrToday =
-          ((dueDate < today && dueDate < createdDate) ||
-            (dueDate < today && row.ticketStatus != 0));
+            // const statusLabel =
+            //   ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
+            const statusLabel = ticketStatusOptions.find(opt => opt.value === cell)?.label || "";
 
-        // const statusLabel =
-        //   ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
-        const statusLabel = ticketStatusOptions.find(opt => opt.value === cell)?.label || "";
+            let color = "";
 
-        let color = "";
+            if (isExpiredOrToday) {
+              color = "red";
+            } else if (!isExpiredOrToday && row.ticketStatus === 0) {
+              color = "green";
+            }
 
-        if (isExpiredOrToday) {
-          color = "red";
-        } else if (!isExpiredOrToday && row.ticketStatus === 0) {
-          color = "green";
-        }
+            return (
+              <span
+                style={{
+                  color: color,
+                  fontWeight: 600,
+                }}
+              >
+                {statusLabel}
+              </span>
+            );
+          },
+        },
+      ]
+      : []),
+    ...(currentStatusToggle
+      ? [
+        {
+          dataField: "currentStatus",
+          text: "Status",
+          style: { minWidth: "20px" },
 
-        return (
-          <span
-            style={{
-              color: color,
-              fontWeight: 600,
-            }}
-          >
-            {statusLabel}
-          </span>
-        );
-      },
-    },
+          formatter: (cell, row) => {
+            const lastDetail = row?.Details?.[0];
+            if (!lastDetail) return "";
+
+            const dueDate = new Date(lastDetail.dueDate);
+            const today = new Date();
+            // const createdDate = new Date(lastDetail.createdAt);
+            const completedDate = row?.completionDate
+              ? new Date(row.completionDate)
+              : null;
+            const createdDate = new Date(completedDate);
+
+
+            dueDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            createdDate.setHours(0, 0, 0, 0);
+
+            const isExpiredOrToday = dueDate < today && dueDate < createdDate || dueDate < today && lastDetail.ticketStatus != 0;
+            // const statusLabel =
+            //   ticketStatusOptions.find((s) => s.value === lastDetail?.ticketStatus)?.label || "";
+
+
+            const statusLabel = ticketStatusOptions.find(opt => opt.value === cell)?.label || "";
+
+            let color = "";
+
+            if (isExpiredOrToday) {
+              color = "red";
+            } else if (!isExpiredOrToday && row.ticketStatus === 0) {
+              color = "green";
+            }
+
+            return (
+              <span
+                style={{
+                  color: color,
+                  fontWeight: 600,
+                }}
+              >
+                {statusLabel}
+              </span>
+            );
+          },
+        },
+      ]
+      : []),
 
     {
       dataField: "overDue",
@@ -477,7 +533,6 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
         );
       },
     },
-
     {
       dataField: "action",
       text: "Actions",
