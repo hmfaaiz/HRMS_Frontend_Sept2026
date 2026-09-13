@@ -80,7 +80,8 @@ function PatternListForm({
                   attachment: null,
                   attachmentPath: null,
                   responsibleEmployeeId: "",
-                  taskStatus: "", // NO DEFAULT - EMPTY
+                  // taskStatus: "", // NO DEFAULT - EMPTY
+                  taskStatus: "Not Completed",
                   returnableAssets: false,
                   completionDate: "",
                   remarks: "",
@@ -170,6 +171,7 @@ function PatternListForm({
                                 ) || null
                               }
                               onChange={(selected) => {
+                                const departmentId = selected?.value || "";
                                 setFieldValue(
                                   `list[${index}].departmentId`,
                                   selected?.value || "",
@@ -178,6 +180,9 @@ function PatternListForm({
                                   `list[${index}].responsibleEmployeeId`,
                                   "",
                                 );
+
+                                const departmentHOD = dashboard.allEmployeesWithNoPermissionList?.find((emp) => emp.departmentId === departmentId && emp.hod === 1 && emp.value !== values.employeeId);
+                                setFieldValue(`list[${index}].responsibleEmployeeId`, departmentHOD?.value || "");
                               }}
                               placeholder="Select Department"
                             />
