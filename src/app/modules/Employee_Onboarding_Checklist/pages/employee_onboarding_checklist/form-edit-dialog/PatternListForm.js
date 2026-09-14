@@ -62,6 +62,8 @@ function PatternListForm({
     });
   }, [values.list, setFieldValue]);
 
+
+
   return (
     <FieldArray name="list">
       {({ insert, remove, push }) => (
@@ -146,6 +148,14 @@ function PatternListForm({
                             (opt) => opt.value === "Completed",
                           )
                           : taskStatusOptions;
+
+                           const selectedEmployee =
+    dashboard?.allEmployeesWithNoPermissionList?.find(
+      (emp) => emp.value === row.responsibleEmployeeId
+    );
+
+  const isHOD = selectedEmployee?.hod === 1;
+
 
                       return (
                         <tr key={index}>
@@ -280,7 +290,7 @@ function PatternListForm({
                           >
                             <SearchSelect
                               name={`list[${index}].responsibleEmployeeId`}
-                              isDisabled={isdataForRead || !row.departmentId}
+                              isDisabled={isdataForRead || !row.departmentId || isHOD}
                               options={dashboard.allEmployeesWithNoPermissionList?.filter(
                                 (emp) =>
                                   emp.departmentId === row.departmentId &&
