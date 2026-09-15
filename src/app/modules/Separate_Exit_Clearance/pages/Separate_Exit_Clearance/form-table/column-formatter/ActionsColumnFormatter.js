@@ -47,7 +47,7 @@ export function ActionsColumnFormatter(
 
       <> </>
 
-      {isAccessForDelete && !row?.isApproved && !row?.hasOnboardChecklistData && (
+      {isAccessForDelete && !row?.isApproved && !row?.hasOnboardChecklistData && !row?.isPolicyAllowed &&(
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
