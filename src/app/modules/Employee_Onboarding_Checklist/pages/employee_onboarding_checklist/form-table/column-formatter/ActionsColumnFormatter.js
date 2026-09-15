@@ -49,7 +49,7 @@ export function EmployeeOnboardingActionsColumnFormatter(
       )}
 
       {/* Delete (only if access is allowed and task not approved) */}
-      {isAccessForDelete && !row?.isApproved && (
+      {isAccessForDelete && !row?.isApproved && !row?.isPolicyAllowed && (
         <OverlayTrigger
           overlay={<Tooltip id={`delete-tooltip-${row.Id}`}>Delete</Tooltip>}
         >

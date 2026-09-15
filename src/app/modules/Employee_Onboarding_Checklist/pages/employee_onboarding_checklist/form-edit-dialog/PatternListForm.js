@@ -142,6 +142,7 @@ function PatternListForm({
                   {(values.list || []).length > 0 ? (
                     values.list.map((row, index) => {
                       // Filter task status options based on original status
+
                       const filteredTaskStatusOptions =
                         row.originalTaskStatus === "Completed"
                           ? taskStatusOptions.filter(
@@ -290,7 +291,7 @@ function PatternListForm({
                           >
                             <SearchSelect
                               name={`list[${index}].responsibleEmployeeId`}
-                              isDisabled={isdataForRead || !row.departmentId || isHOD}
+                              isDisabled={isdataForRead || !row.departmentId || isHOD ||   (!!row.Id && !!row.responsibleEmployeeId)}
                               options={dashboard.allEmployeesWithNoPermissionList?.filter(
                                 (emp) =>
                                   emp.departmentId === row.departmentId &&
@@ -412,9 +413,10 @@ function PatternListForm({
                             style={{ width: columnWidths.action }}
                             className="text-right"
                           >
-                            {!isdataForRead && !row.isFromMasterChecklist && (
+                            {!isdataForRead && !row.isFromMasterChecklist && !row.isPolicyAllowed &&(
                               <button
                                 type="button"
+                                // disabled={row.isPolicyAllowed}
                                 className="border-none bg-transparent"
                                 onClick={() => remove(index)}
                               >

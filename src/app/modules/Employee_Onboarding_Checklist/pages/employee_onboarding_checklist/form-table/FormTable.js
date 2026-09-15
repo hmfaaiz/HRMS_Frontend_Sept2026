@@ -129,6 +129,7 @@ export function FormTable() {
         departmentSet: new Set(), // track distinct departments
         isApproved: task.isApproved,
         tasks: [task],
+        isPolicyAllowed: task?.isPolicyAllowed
       };
     } else {
       employeeMap[empId].tasks.push(task);
