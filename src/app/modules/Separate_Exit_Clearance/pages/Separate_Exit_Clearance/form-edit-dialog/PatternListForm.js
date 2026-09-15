@@ -407,7 +407,7 @@ function PatternListForm({
                             </td>
 
                             {
-                              !values.patternList?.[index]?.isFromDesignationMap && (
+                              !values.patternList?.[index]?.isFromDesignationMap && !isdataForRead &&  !values.isPolicyAllowed &&(
                                 <td className="text-right">
                                   <button
                                     disabled={isdataForRead}
