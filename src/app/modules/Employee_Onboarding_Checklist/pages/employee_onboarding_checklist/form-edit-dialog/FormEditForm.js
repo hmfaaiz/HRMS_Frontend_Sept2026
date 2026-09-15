@@ -167,6 +167,12 @@ export function FormEditForm({
                           const key = `${task.departmentId}_${task.taskName}`;
                           const empTask = employeeTaskMap[key];
 
+                          const departmentHOD = employeeOptions.find(
+                            (emp) =>
+                              emp.departmentId === task.departmentId &&
+                              emp.hod === 1
+                          );
+
                           return {
                             masterChecklistId: task.Id,
                             departmentId: task.departmentId,
@@ -174,9 +180,14 @@ export function FormEditForm({
                             taskDescription: task.taskDescription,
                             attachmentPath: task.attachmentPath || null,
                             attachment: null,
+                            // responsibleEmployeeId:
+                            //   empTask?.responsibleEmployeeId || "",
                             responsibleEmployeeId:
-                              empTask?.responsibleEmployeeId || "",
-                            taskStatus: empTask?.taskStatus || "", // NO DEFAULT
+                              empTask?.responsibleEmployeeId ||
+                              departmentHOD?.value ||
+                              "",
+                            // taskStatus: empTask?.taskStatus || "", // NO DEFAULT
+                            taskStatus: empTask?.taskStatus || "Not Completed",
                             completionDate: empTask?.completionDate || "",
                             remarks: empTask?.remarks || "",
                             sno: idx + 1,

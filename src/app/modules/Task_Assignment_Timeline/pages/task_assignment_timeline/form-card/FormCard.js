@@ -24,6 +24,7 @@ export function FormCard() {
     : null;
 
   const [showTicketDetails, setShowTicketDetails] = useState(true);
+  const [currentStatusToggle, setCurrentStatusToggle] = useState(false);
 
   const [expandedMasterIds, setExpandedMasterIds] = useState([]);
 
@@ -88,6 +89,8 @@ export function FormCard() {
         onPrint={print}
         showTicketDetails={showTicketDetails}
         onTicketDetailsChange={setShowTicketDetails}
+        setCurrentStatusToggle={setCurrentStatusToggle}
+        currentStatusToggle={currentStatusToggle}
         ticketCodeFromUrl={ticketCodeFromUrl}
       />
       <FormTable
@@ -97,6 +100,7 @@ export function FormCard() {
         showTicketDetails={showTicketDetails}
         // FormTable calls this whenever a row is expanded/collapsed
         onExpandedRowsChange={setExpandedMasterIds}
+        currentStatusToggle={currentStatusToggle}
       />
     </TCard>
   );

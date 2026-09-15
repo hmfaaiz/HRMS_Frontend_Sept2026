@@ -62,6 +62,8 @@ function PatternListForm({
     });
   }, [values.list, setFieldValue]);
 
+
+
   return (
     <FieldArray name="list">
       {({ insert, remove, push }) => (
@@ -80,7 +82,8 @@ function PatternListForm({
                   attachment: null,
                   attachmentPath: null,
                   responsibleEmployeeId: "",
-                  taskStatus: "", // NO DEFAULT - EMPTY
+                  // taskStatus: "", // NO DEFAULT - EMPTY
+                  taskStatus: "Not Completed",
                   returnableAssets: false,
                   completionDate: "",
                   remarks: "",
@@ -139,12 +142,21 @@ function PatternListForm({
                   {(values.list || []).length > 0 ? (
                     values.list.map((row, index) => {
                       // Filter task status options based on original status
+
                       const filteredTaskStatusOptions =
                         row.originalTaskStatus === "Completed"
                           ? taskStatusOptions.filter(
                             (opt) => opt.value === "Completed",
                           )
                           : taskStatusOptions;
+
+                           const selectedEmployee =
+    dashboard?.allEmployeesWithNoPermissionList?.find(
+      (emp) => emp.value === row.responsibleEmployeeId
+    );
+
+  const isHOD = selectedEmployee?.hod === 1;
+
 
                       return (
                         <tr key={index}>
@@ -170,6 +182,7 @@ function PatternListForm({
                                 ) || null
                               }
                               onChange={(selected) => {
+                                const departmentId = selected?.value || "";
                                 setFieldValue(
                                   `list[${index}].departmentId`,
                                   selected?.value || "",
@@ -178,6 +191,9 @@ function PatternListForm({
                                   `list[${index}].responsibleEmployeeId`,
                                   "",
                                 );
+
+                                const departmentHOD = dashboard.allEmployeesWithNoPermissionList?.find((emp) => emp.departmentId === departmentId && emp.hod === 1 && emp.value !== values.employeeId);
+                                setFieldValue(`list[${index}].responsibleEmployeeId`, departmentHOD?.value || "");
                               }}
                               placeholder="Select Department"
                             />
@@ -275,7 +291,7 @@ function PatternListForm({
                           >
                             <SearchSelect
                               name={`list[${index}].responsibleEmployeeId`}
-                              isDisabled={isdataForRead || !row.departmentId}
+                              isDisabled={isdataForRead || !row.departmentId || isHOD ||   (!!row.Id && !!row.responsibleEmployeeId)}
                               options={dashboard.allEmployeesWithNoPermissionList?.filter(
                                 (emp) =>
                                   emp.departmentId === row.departmentId &&
@@ -397,9 +413,10 @@ function PatternListForm({
                             style={{ width: columnWidths.action }}
                             className="text-right"
                           >
-                            {!isdataForRead && !row.isFromMasterChecklist && (
+                            {!isdataForRead && !row.isFromMasterChecklist && !row.isPolicyAllowed &&(
                               <button
                                 type="button"
+                                // disabled={row.isPolicyAllowed}
                                 className="border-none bg-transparent"
                                 onClick={() => remove(index)}
                               >

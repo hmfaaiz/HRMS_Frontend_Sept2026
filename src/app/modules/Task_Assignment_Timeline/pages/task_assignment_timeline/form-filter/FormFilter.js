@@ -19,6 +19,8 @@ export function FormFilter({
   showTicketDetails,
   onTicketDetailsChange,
   ticketCodeFromUrl,
+  setCurrentStatusToggle,
+  currentStatusToggle,
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
@@ -37,6 +39,13 @@ export function FormFilter({
     { value: 0, label: "Completed" },
     { value: 3, label: "Re-opened" },
     { value: 2, label: "In Review" },
+  ];
+
+  const assignmentTypeOptions = [
+    { value: 0, label: "All" },
+    { value: 1, label: "Assign By" },
+    { value: 2, label: "Assign To" },
+
   ];
 
   const applyFilter = (values) => {
@@ -128,6 +137,7 @@ export function FormFilter({
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
         // ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
         employeeId: uiProps.queryParams?.filter?.employeeId || "",
+        assignment_type: uiProps.queryParams?.filter?.assignment_type || 0,
         ticketStatus: uiProps.queryParams?.isFiltered
           ? uiProps.queryParams.filter.ticketStatus ?? null
           : 1,
@@ -230,11 +240,12 @@ export function FormFilter({
                     onChange={(e) => {
                       const value = e.value == "All" ? "" : e.value;
                       setFieldValue("employeeId", value);
+                      if (e?.value === "All" || e?.value === "") {
+                        setFieldValue("assignment_type", 0);
+                      }
                     }}
                     label={<span>Employee</span>}
-                    // value={
-                    //   allEmployeesMap?.get(values?.reportTo || "") || ""
-                    // }
+
                     value={
                       values.employeeId === ""
                         ? { label: "All", value: "" }
@@ -248,6 +259,29 @@ export function FormFilter({
                         ? allEmployeesWithNoPermissionList
                         : []),
                     ]}
+                  />
+                </div>
+
+                <div className="col-span-6 sm:col-span-2">
+                  <SearchSelect
+                    name="assignment_type"
+                    label="Assignment Type"
+                    isDisabled={!values.employeeId}
+                    value={
+                      assignmentTypeOptions.find(
+                        (o) => o.value === values.assignment_type
+                      ) || null
+                    }
+                    options={[
+
+                      ...assignmentTypeOptions,
+                    ]}
+                    onChange={(e) =>
+                      setFieldValue(
+                        "assignment_type",
+                        e?.value === null ? null : e.value,
+                      )
+                    }
                   />
                 </div>
 
@@ -306,6 +340,7 @@ export function FormFilter({
                       label="To"
                       onChange={(d) => setFieldValue("dueDateTo", d || null)}
                     />
+
                   </div>
                 </div>
               </div>
@@ -376,92 +411,116 @@ export function FormFilter({
                   Show Ticket Detail
                 </label>
               </div>
+
+
             </div>
 
-            {/* Action buttons */}
-            <div className="flex justify-end gap-2 flex-wrap">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={uiContext.addNewTicket}
-              >
-                <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" /> Add
-              </button>
-              <button
-                type="submit"
-                onClick={handleSubmit}
-                disabled={loading}
-                className="btn btn-primary"
-              >
-                Filter
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white" />
+
+            <div className="flex flex-col items-end gap-2">
+              {/* Show Current Status */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="currentStatusToggle"
+                  checked={currentStatusToggle}
+                  onChange={(e) => setCurrentStatusToggle(e.target.checked)}
+                  style={{ cursor: "pointer", width: 15, height: 15 }}
+                />
+
+                <label
+                  htmlFor="currentStatusToggle"
+                  className="text-md mb-0"
+                  style={{ cursor: "pointer", userSelect: "none" }}
+                >
+                  Show Ticket Current Status
+                </label>
+              </div>
+              {/* Action buttons */}
+              <div className="flex justify-end gap-2 flex-wrap">
+
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={uiContext.addNewTicket}
+                >
+                  <CirclePlus className="w-3 h-3 text-white mb-1 stroke-3" /> Add
+                </button>
+                <button
+                  type="submit"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="btn btn-primary"
+                >
+                  Filter
+                  {loading && (
+                    <span className="ml-3 mr-3 spinner spinner-white" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleReset();
+                    uiProps.setQueryParams({
+                      ...uiProps.queryParams,
+                      filter: {},
+                      pageNumber: 1,
+                      isFiltered: false,
+                    });
+                    uiContext.setShowFilter(false);
+                  }}
+                  className="btn btn-light"
+                >
+                  Cancel
+                </button>
+                {onPrint && (
+                  <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
+                    {/* PDF */}
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id="export-pdf-tooltip">Export PDF</Tooltip>
+                      }
+                    >
+                      <button
+                        type="button"
+                        className="border-none bg-transparent"
+                        onClick={() => handleExport("pdf")}
+                      >
+                        <FileText className="w-4 h-4 cursor-pointer" />
+                      </button>
+                    </OverlayTrigger>
+
+                    {/* CSV */}
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id="export-csv-tooltip">Export CSV</Tooltip>
+                      }
+                    >
+                      <button
+                        type="button"
+                        className="border-none bg-transparent"
+                        onClick={() => handleExport("csv")}
+                      >
+                        <FileSpreadsheet className="w-4 h-4 cursor-pointer" />
+                      </button>
+                    </OverlayTrigger>
+
+                    {/* Excel */}
+                    <OverlayTrigger
+                      overlay={
+                        <Tooltip id="export-excel-tooltip">Export Excel</Tooltip>
+                      }
+                    >
+                      <button
+                        type="button"
+                        className="border-none bg-transparent"
+                        onClick={() => handleExport("excel")}
+                      >
+                        <Sheet className="w-4 h-4 cursor-pointer" />
+                      </button>
+                    </OverlayTrigger>
+                  </div>
                 )}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  handleReset();
-                  uiProps.setQueryParams({
-                    ...uiProps.queryParams,
-                    filter: {},
-                    pageNumber: 1,
-                    isFiltered: false,
-                  });
-                  uiContext.setShowFilter(false);
-                }}
-                className="btn btn-light"
-              >
-                Cancel
-              </button>
-              {onPrint && (
-                <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
-                  {/* PDF */}
-                  <OverlayTrigger
-                    overlay={
-                      <Tooltip id="export-pdf-tooltip">Export PDF</Tooltip>
-                    }
-                  >
-                    <button
-                      type="button"
-                      className="border-none bg-transparent"
-                      onClick={() => handleExport("pdf")}
-                    >
-                      <FileText className="w-4 h-4 cursor-pointer" />
-                    </button>
-                  </OverlayTrigger>
-
-                  {/* CSV */}
-                  <OverlayTrigger
-                    overlay={
-                      <Tooltip id="export-csv-tooltip">Export CSV</Tooltip>
-                    }
-                  >
-                    <button
-                      type="button"
-                      className="border-none bg-transparent"
-                      onClick={() => handleExport("csv")}
-                    >
-                      <FileSpreadsheet className="w-4 h-4 cursor-pointer" />
-                    </button>
-                  </OverlayTrigger>
-
-                  {/* Excel */}
-                  <OverlayTrigger
-                    overlay={
-                      <Tooltip id="export-excel-tooltip">Export Excel</Tooltip>
-                    }
-                  >
-                    <button
-                      type="button"
-                      className="border-none bg-transparent"
-                      onClick={() => handleExport("excel")}
-                    >
-                      <Sheet className="w-4 h-4 cursor-pointer" />
-                    </button>
-                  </OverlayTrigger>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </>

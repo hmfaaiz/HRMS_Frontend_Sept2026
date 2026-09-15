@@ -57,6 +57,7 @@ function PatternListForm({
 
     // Loop through each row and auto-populate HOD where department exists but approver is empty
     const updatedRows = values.patternList.map((row, index) => {
+
       if (row.departmentId && !row.approverEmployeeId) {
         // Find HOD for this department (hod === 1)
         const hodEmployee = employeeList.find(
@@ -111,6 +112,7 @@ function PatternListForm({
     <>
       <FieldArray name="patternList">
         {({ insert, remove, push }) => (
+
           <>
             <div className="">
               <h6 className="font-bold mb-0 text-primary ">
@@ -128,8 +130,8 @@ function PatternListForm({
                       departmentId: "",
                       approverEmployeeId: "",
                       designationId: "",
-                      isClearanceProvided: "",
-                      // isClearanceProvided: 0,
+                      // isClearanceProvided: "",
+                      isClearanceProvided: 0,
                       sno: "",
                       clearanceDate: "",
                       remarks: "",
@@ -156,267 +158,274 @@ function PatternListForm({
                       </tr>
                     </thead>
                     <tbody>
-                      {values?.patternList?.map((row, index) => (
-                        <tr key={index}>
-                          <td>
-                            <Field
-                              name={`patternList[${index}].sno`}
-                              value={index + 1}
-                              type="number"
-                              className="form-control"
-                              style={{ width: "20px" }}
-                              disabled
-                            />
-                            {errors.patternList?.[index]?.sno &&
-                              touched.patternList?.[index]?.sno && (
-                                <div className="text-danger">
-                                  {errors.patternList[index].sno}
+                      {values?.patternList?.map((row, index) => {
+                        const selectedEmployee =
+                          dashboard?.allEmployeesWithNoPermissionList?.find(
+                            (emp) => emp.value === row.approverEmployeeId
+                          );
+
+                        const isHOD = selectedEmployee?.hod === 1;
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <Field
+                                name={`patternList[${index}].sno`}
+                                value={index + 1}
+                                type="number"
+                                className="form-control"
+                                style={{ width: "20px" }}
+                                disabled
+                              />
+                              {errors.patternList?.[index]?.sno &&
+                                touched.patternList?.[index]?.sno && (
+                                  <div className="text-danger">
+                                    {errors.patternList[index].sno}
+                                  </div>
+                                )}
+                            </td>
+
+                            {/* Department */}
+                            <td>
+                              <SearchSelect
+                                name={`patternList[${index}].departmentId`}
+                                className={
+                                  errors.patternList?.[index]?.departmentId && touched.patternList?.[index]?.departmentId
+                                    ? "form-control is-invalid"
+                                    : "form-control"
+                                }
+                                isDisabled={isdataForRead || values.patternList?.[index]?.isFromDesignationMap}
+                                options={
+                                  (dashboard?.allDept || []).filter((dept) => {
+                                    // already selected departments (excluding current row)
+                                    const selectedDepts = values.patternList
+                                      ?.filter((_, i) => i !== index)
+                                      ?.map((item) => item.departmentId)
+                                      ?.filter(Boolean);
+                                    return !selectedDepts.includes(dept.value);
+                                  })
+                                }
+                                value={
+                                  dashboard?.allDept?.find(
+                                    (option) => option?.value === values?.patternList?.[index]?.departmentId
+                                  ) || null
+                                }
+                                onChange={(selectedOption) => handleDepartmentChange(index, selectedOption)}
+                                placeholder="Select Department"
+                              />
+
+                              {/* Error message */}
+                              {errors?.patternList?.[index]?.departmentId && (
+                                <div className="invalid-feedback">
+                                  {errors.patternList[index].departmentId}
                                 </div>
                               )}
-                          </td>
-
-                          {/* Department */}
-                          <td>
-                            <SearchSelect
-                              name={`patternList[${index}].departmentId`}
-                              className={
-                                errors.patternList?.[index]?.departmentId && touched.patternList?.[index]?.departmentId
-                                  ? "form-control is-invalid"
-                                  : "form-control"
-                              }
-                              isDisabled={isdataForRead || values.patternList?.[index]?.isFromDesignationMap}
-                              options={
-                                (dashboard?.allDept || []).filter((dept) => {
-                                  // already selected departments (excluding current row)
-                                  const selectedDepts = values.patternList
-                                    ?.filter((_, i) => i !== index)
-                                    ?.map((item) => item.departmentId)
-                                    ?.filter(Boolean);
-                                  return !selectedDepts.includes(dept.value);
-                                })
-                              }
-                              value={
-                                dashboard?.allDept?.find(
-                                  (option) => option?.value === values?.patternList?.[index]?.departmentId
-                                ) || null
-                              }
-                              onChange={(selectedOption) => handleDepartmentChange(index, selectedOption)}
-                              placeholder="Select Department"
-                            />
-
-                            {/* Error message */}
-                            {errors?.patternList?.[index]?.departmentId && (
-                              <div className="invalid-feedback">
-                                {errors.patternList[index].departmentId}
-                              </div>
-                            )}
-                          </td>
+                            </td>
 
 
-                          <td>
-                            <SearchSelect
-                              name={`patternList[${index}].approverEmployeeId`}
-                              className={
-                                errors.patternList?.[index]?.approverEmployeeId && touched.patternList?.[index]?.approverEmployeeId
-                                  ? "form-control is-invalid"
-                                  : "form-control"
-                              }
-                              isDisabled={isdataForRead || !values.patternList?.[index]?.departmentId}
-                              // options={dashboard?.allEmployeesWithNoPermissionList}
-                              options={[
-                                { value: null, label: "Select" },
-                                ...employeeList.filter(
-                                  (x) => {
+                            <td>
+                              <SearchSelect
+                                name={`patternList[${index}].approverEmployeeId`}
+                                className={
+                                  errors.patternList?.[index]?.approverEmployeeId && touched.patternList?.[index]?.approverEmployeeId
+                                    ? "form-control is-invalid"
+                                    : "form-control"
+                                }
+                                isDisabled={isdataForRead || !values.patternList?.[index]?.departmentId || isHOD}
+                                // options={dashboard?.allEmployeesWithNoPermissionList}
+                                options={[
+                                  { value: null, label: "Select" },
+                                  ...employeeList.filter(
+                                    (x) => {
 
 
-                                    return (
-                                      x.departmentId === values.patternList?.[index]?.departmentId &&
-                                      x.value !== values.employeeId
-                                    );
+                                      return (
+                                        x.departmentId === values.patternList?.[index]?.departmentId &&
+                                        x.value !== values.employeeId
+                                      );
 
-                                  }
-                                ),
-                              ]}
-                              value={
-                                employeeList.find(
-                                  (option) => option?.value === values?.patternList?.[index]?.approverEmployeeId
-                                ) || null
-                              }
-                              onChange={(selectedOption) => {
+                                    }
+                                  ),
+                                ]}
+                                value={
+                                  employeeList.find(
+                                    (option) => option?.value === values?.patternList?.[index]?.approverEmployeeId
+                                  ) || null
+                                }
+                                onChange={(selectedOption) => {
 
-                                const value = selectedOption ? selectedOption.value : "";
-                                setFieldValue(`patternList[${index}].approverEmployeeId`, value);
-                                setFieldValue(`patternList[${index}].designationId`, selectedOption?.designationId);
-                              }}
-                              placeholder="Select Employee"
-                            />
-                            {errors?.patternList?.[index]?.approverEmployeeId && (
-                              <div className="invalid-feedback">
-                                {errors.patternList[index].approverEmployeeId}
-                              </div>
-                            )}
-                          </td>
+                                  const value = selectedOption ? selectedOption.value : "";
+                                  setFieldValue(`patternList[${index}].approverEmployeeId`, value);
+                                  setFieldValue(`patternList[${index}].designationId`, selectedOption?.designationId);
+                                }}
+                                placeholder="Select Employee"
+                              />
+                              {errors?.patternList?.[index]?.approverEmployeeId && (
+                                <div className="invalid-feedback">
+                                  {errors.patternList[index].approverEmployeeId}
+                                </div>
+                              )}
+                            </td>
 
-                          <td>
-                            <SearchSelect
-                              name={`patternList[${index}].designationId`}
-                              className={
-                                errors.patternList?.[index]?.designationId && touched.patternList?.[index]?.designationId
-                                  ? "form-control is-invalid"
-                                  : "form-control"
-                              }
-                              isDisabled={true}
-                              options={dashboard?.allDesignations || []}
-                              value={
-                                dashboard?.allDesignations?.find(
-                                  (option) => option?.value === values?.patternList?.[index]?.designationId
-                                ) || null
-                              }
-                              onChange={(selectedOption) => {
-                                // if SearchSelect returns the full object { value, label }
-                                const value = selectedOption ? selectedOption.value : "";
-                                setFieldValue(`patternList[${index}].designationId`, value);
-                              }}
-                              placeholder="Select designation"
-                            />
+                            <td>
+                              <SearchSelect
+                                name={`patternList[${index}].designationId`}
+                                className={
+                                  errors.patternList?.[index]?.designationId && touched.patternList?.[index]?.designationId
+                                    ? "form-control is-invalid"
+                                    : "form-control"
+                                }
+                                isDisabled={true}
+                                options={dashboard?.allDesignations || []}
+                                value={
+                                  dashboard?.allDesignations?.find(
+                                    (option) => option?.value === values?.patternList?.[index]?.designationId
+                                  ) || null
+                                }
+                                onChange={(selectedOption) => {
+                                  // if SearchSelect returns the full object { value, label }
+                                  const value = selectedOption ? selectedOption.value : "";
+                                  setFieldValue(`patternList[${index}].designationId`, value);
+                                }}
+                                placeholder="Select designation"
+                              />
 
-                            {/* Error message */}
-                            {errors?.patternList?.[index]?.designationId && (
-                              <div className="invalid-feedback">
-                                {errors.patternList[index].designationId}
-                              </div>
-                            )}
-                          </td>
+                              {/* Error message */}
+                              {errors?.patternList?.[index]?.designationId && (
+                                <div className="invalid-feedback">
+                                  {errors.patternList[index].designationId}
+                                </div>
+                              )}
+                            </td>
 
-                          <td>
-                            <SearchSelect
-                              name={`patternList[${index}].isClearanceProvided`}
-                              className={
-                                errors.patternList?.[index]?.isClearanceProvided && touched.patternList?.[index]?.isClearanceProvided
-                                  ? "form-control is-invalid"
-                                  : "form-control"
-                              }
-                              isDisabled={isdataForRead || !values.patternList?.[index]?.departmentId}
-                              options={
-                                clearanceProvidedOptions?.map(opt =>
-                                  !values.patternList?.[index]?.isFromDesignationMap && opt.value === 2
-                                    ? { ...opt, isDisabled: true } // ya disabled: true (depend karta hai component pe)
-                                    : opt
-                                )
-                              }
-                              // value={
+                            <td>
+                              <SearchSelect
+                                name={`patternList[${index}].isClearanceProvided`}
+                                className={
+                                  errors.patternList?.[index]?.isClearanceProvided && touched.patternList?.[index]?.isClearanceProvided
+                                    ? "form-control is-invalid"
+                                    : "form-control"
+                                }
+                                isDisabled={isdataForRead || !values.patternList?.[index]?.departmentId}
+                                options={
+                                  clearanceProvidedOptions?.map(opt =>
+                                    !values.patternList?.[index]?.isFromDesignationMap && opt.value === 2
+                                      ? { ...opt, isDisabled: true } // ya disabled: true (depend karta hai component pe)
+                                      : opt
+                                  )
+                                }
+                                // value={
 
-                              //   clearanceProvidedOptions?.find(
-                              //     (option) => option?.value === values?.patternList?.[index]?.isClearanceProvided
-                              //   ) || null
+                                //   clearanceProvidedOptions?.find(
+                                //     (option) => option?.value === values?.patternList?.[index]?.isClearanceProvided
+                                //   ) || null
+                                // }
+
+                                value={
+                                  clearanceProvidedOptions.find(
+                                    (option) => Number(option.value) === Number(values?.patternList?.[index]?.isClearanceProvided)
+                                  ) || clearanceProvidedOptions.find(opt => opt.value === 0)
+                                }
+                                onChange={(selectedOption) => {
+                                  // if SearchSelect returns the full object { value, label }
+                                  const value = selectedOption ? selectedOption.value : "";
+                                  setFieldValue(`patternList[${index}].isClearanceProvided`, value);
+                                  setFieldValue(`patternList[${index}].clearanceDate`, "");
+                                }}
+                                placeholder="Select Department"
+                              />
+
+                              {/* Error message */}
+                              {errors?.patternList?.[index]?.isClearanceProvided && (
+                                <div className="invalid-feedback">
+                                  {errors.patternList[index].isClearanceProvided}
+                                </div>
+                              )}
+                            </td>
+
+                            <td className="max-w-18">
+                              <DatePicker
+                                className="form-control"
+                                placeholderText="Select Date"
+                                disabled={isdataForRead || values.patternList?.[index]?.isClearanceProvided != 1}
+                                selected={
+                                  values?.patternList?.[index]?.clearanceDate
+                                    ? new Date(values.patternList[index].clearanceDate)
+                                    : null
+                                }
+                                onChange={(date) => {
+                                  const selectedDate = formatDates(date, "yyyy-MM-dd");
+                                  setFieldValue(`patternList[${index}].clearanceDate`, selectedDate);
+                                }}
+                                dateFormat="dd-MMM-yyyy"
+                                name={`patternList[${index}].clearanceDate`}
+                                autoComplete="off"
+                                showPopperArrow={false}
+
+                                minDate={
+                                  clearanceDate?.resignationDate
+                                    ? new Date(clearanceDate?.resignationDate)
+                                    : new Date()
+                                }
+                              // maxDate={
+                              //   appraisalPeriod?.endDate
+                              //     ? new Date(appraisalPeriod?.endDate)
+                              //     : new Date()
                               // }
 
-                              value={
-                                clearanceProvidedOptions.find(
-                                  (option) => Number(option.value) === Number(values?.patternList?.[index]?.isClearanceProvided)
-                                ) || clearanceProvidedOptions.find(opt => opt.value === 0)
-                              }
-                              onChange={(selectedOption) => {
-                                // if SearchSelect returns the full object { value, label }
-                                const value = selectedOption ? selectedOption.value : "";
-                                setFieldValue(`patternList[${index}].isClearanceProvided`, value);
-                                setFieldValue(`patternList[${index}].clearanceDate`, "");
-                              }}
-                              placeholder="Select Department"
-                            />
+                              />
 
-                            {/* Error message */}
-                            {errors?.patternList?.[index]?.isClearanceProvided && (
-                              <div className="invalid-feedback">
-                                {errors.patternList[index].isClearanceProvided}
-                              </div>
-                            )}
-                          </td>
+                              {errors.patternList?.[index]?.clearanceDate && (
+                                <div className="text-danger">{errors.patternList[index].clearanceDate}</div>
+                              )}
+                            </td>
 
-                          <td className="max-w-18">
-                            <DatePicker
-                              className="form-control"
-                              placeholderText="Select Date"
-                              disabled={isdataForRead || values.patternList?.[index]?.isClearanceProvided != 1}
-                              selected={
-                                values?.patternList?.[index]?.clearanceDate
-                                  ? new Date(values.patternList[index].clearanceDate)
-                                  : null
-                              }
-                              onChange={(date) => {
-                                const selectedDate = formatDates(date, "yyyy-MM-dd");
-                                setFieldValue(`patternList[${index}].clearanceDate`, selectedDate);
-                              }}
-                              dateFormat="dd-MMM-yyyy"
-                              name={`patternList[${index}].clearanceDate`}
-                              autoComplete="off"
-                              showPopperArrow={false}
-
-                              minDate={
-                                clearanceDate?.resignationDate
-                                  ? new Date(clearanceDate?.resignationDate)
-                                  : new Date()
-                              }
-                            // maxDate={
-                            //   appraisalPeriod?.endDate
-                            //     ? new Date(appraisalPeriod?.endDate)
-                            //     : new Date()
-                            // }
-
-                            />
-
-                            {errors.patternList?.[index]?.clearanceDate && (
-                              <div className="text-danger">{errors.patternList[index].clearanceDate}</div>
-                            )}
-                          </td>
-
-                          <td>
-                            <Field
-                              name={`patternList[${index}].remarks`}
-                              className={
-                                errors.patternList?.[index]?.remarks && touched.patternList?.[index]?.remarks
-                                  ? "form-control is-invalid"
-                                  : "form-control"
-                              }
+                            <td>
+                              <Field
+                                name={`patternList[${index}].remarks`}
+                                className={
+                                  errors.patternList?.[index]?.remarks && touched.patternList?.[index]?.remarks
+                                    ? "form-control is-invalid"
+                                    : "form-control"
+                                }
 
 
 
-                              onChange={(e) => {
+                                onChange={(e) => {
 
 
-                                setFieldValue(`patternList[${index}].remarks`, e.target.value);
-                              }}
-                              placeholder="Enter remarks"
-                            />
+                                  setFieldValue(`patternList[${index}].remarks`, e.target.value);
+                                }}
+                                placeholder="Enter remarks"
+                              />
 
-                            {/* Error message */}
-                            {errors?.patternList?.[index]?.remarks && (
-                              <div className="invalid-feedback">
-                                {errors.patternList[index].remarks}
-                              </div>
-                            )}
-                          </td>
+                              {/* Error message */}
+                              {errors?.patternList?.[index]?.remarks && (
+                                <div className="invalid-feedback">
+                                  {errors.patternList[index].remarks}
+                                </div>
+                              )}
+                            </td>
 
-                          {
-                            !values.patternList?.[index]?.isFromDesignationMap && (
-                              <td className="text-right">
-                                <button
-                                  disabled={isdataForRead}
-                                  className="border-none bg-transparent"
-                                  type="button"
-                                  onClick={() => remove(index)}
-                                >
-                                  <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                </button>
-                              </td>
-                            )
-                          }
+                            {
+                              !values.patternList?.[index]?.isFromDesignationMap && (
+                                <td className="text-right">
+                                  <button
+                                    disabled={isdataForRead}
+                                    className="border-none bg-transparent"
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                  >
+                                    <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                  </button>
+                                </td>
+                              )
+                            }
 
 
-                          {/* )} */}
+                            {/* )} */}
 
-                        </tr>
-                      ))}
+                          </tr>)
+                      })}
                     </tbody>
                   </table>
                 </div>
