@@ -1100,7 +1100,7 @@ export function FormEditForm({
 
                   <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
-                    {(!formData.isSelf) && (
+                    {/* {(!formData.isSelf) && ( */}
 
                       <div className="col-span-3">
                         <Field
@@ -1122,7 +1122,7 @@ export function FormEditForm({
 
                       </div>
 
-                    )}
+                    {/* )} */}
 
                     <div className="">
                       <label htmlFor="ticketStatus">
