@@ -57,10 +57,12 @@ export function FormPage() {
   );
 
   const FormUIEvents = {
-    newFormButtonClick: (Id) => {
+    
+    newFormButtonClick: (Id,subsidiaryId) => {
+       console.log("subsidiaryId:", subsidiaryId);
       history.push(
         `/final_settlement/read-all-final-settlement/new${
-          typeof Id != "Object" ? `?Id=${btoa(Id)}` : ""
+          typeof Id != "Object" ? `?Id=${btoa(Id)}&subsidiaryId=${btoa(subsidiaryId)}` : ""
         }`
       );
     },
