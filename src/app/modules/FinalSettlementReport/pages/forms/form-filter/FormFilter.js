@@ -185,49 +185,68 @@ export function FormFilter({
           handleReset,
           errors,
           touched,
-        }) => (
-          <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              <Form className="form form-label-right">
-                <fieldset>
-                  <h6 className="font-bold mb-0 text-primary">Employee</h6>
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-                    {/* Subsidiary Field Start */}
-                    <div className="">
+        }) => {
+          const selectedSubsidiary = allSubsidiaryMap.get(
+            Number(values?.subsidiaryId)
+          );
 
-                      <SearchSelect
-                        name="subsidiaryId"
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
+          const isTaxConfigurationExist =
+            !!selectedSubsidiary?.isTaxConfigurationExist;
 
-                          dispatch(FetchAllApprovedFSEmp({ subsidiaryId: value, departmentId: values?.departmentId }));
-                          setFieldValue("employeeId", "");
-                          setFieldValue("departmentId", "");
-                          dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
+          const isGratuityConfigurationExist =
+            !!selectedSubsidiary?.isGratuityConfigurationExist;
 
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        error={errors?.subsidiaryId}
-                        touched={touched?.subsidiaryId}
-                        value={
-                          allSubsidiaryList?.find(
-                            (el) => el?.value === values?.subsidiaryId
-                          ) || null
-                        }
-                        options={allSubsidiaryList}
-                      />
-                    </div>
+          const isProvidentFund =
+            !!selectedSubsidiary?.isProvidentFund;
+
+          const isPensionAllowance =
+            !!selectedSubsidiary?.isPensionAllowance;
 
 
-                    {/* <div className="">
+
+          return (
+            <>
+              <Modal.Body className="overlay overlay-block cursor-default">
+                <Form className="form form-label-right">
+                  <fieldset>
+                    <h6 className="font-bold mb-0 text-primary">Employee</h6>
+                    <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+                      {/* Subsidiary Field Start */}
+                      <div className="">
+
+                        <SearchSelect
+                          name="subsidiaryId"
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "--Select--" ? "" : Number(e.value);
+                            setFieldValue("subsidiaryId", value);
+
+                            dispatch(FetchAllApprovedFSEmp({ subsidiaryId: value, departmentId: values?.departmentId }));
+                            setFieldValue("employeeId", "");
+                            setFieldValue("departmentId", "");
+                            dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
+
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Subsidiary<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          error={errors?.subsidiaryId}
+                          touched={touched?.subsidiaryId}
+                          value={
+                            allSubsidiaryList?.find(
+                              (el) => el?.value === values?.subsidiaryId
+                            ) || null
+                          }
+                          options={allSubsidiaryList}
+                        />
+                      </div>
+
+
+                      {/* <div className="">
                       <Field
                         name="departmentId"
                         component={SearchSelect}
@@ -248,7 +267,7 @@ export function FormFilter({
                         options={departmentBySubIdsList}
                       />
                     </div> */}
-                    {/* 
+                      {/* 
 <div className="">
   <Field
     name="departmentId"
@@ -285,281 +304,296 @@ export function FormFilter({
     ]}
   />
 </div> */}
-                    <div className="">
-                      <Field
-                        name="departmentId"
-                        component={SearchSelect}
-                        isDisabled={!values.subsidiaryId}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value === "--Select--" ||
-                              e.value === "All" ||
-                              e.value === ""
-                              ? ""
-                              : Number(e.value);
+                      <div className="">
+                        <Field
+                          name="departmentId"
+                          component={SearchSelect}
+                          isDisabled={!values.subsidiaryId}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value === "--Select--" ||
+                                e.value === "All" ||
+                                e.value === ""
+                                ? ""
+                                : Number(e.value);
 
-                          setFieldValue("departmentId", value);
-                          setFieldValue("employeeId", "");
+                            setFieldValue("departmentId", value);
+                            setFieldValue("employeeId", "");
 
-                          dispatch(
-                            FetchAllApprovedFSEmp({
-                              subsidiaryId: values?.subsidiaryId,
-                              departmentId: value,
-                            })
-                          );
-                        }}
-                        label={<span>Department</span>}
-                        value={
-                          values?.departmentId === ""
-                            ? { value: "", label: "All" }
-                            : allDeptMap?.get(values?.departmentId) || ""
-                        }
-                        autoComplete="off"
-                        options={[
-                          { value: "", label: "All" },
-                          ...departmentBySubIdsList,
-                        ]}
-                      />
-                    </div>
-                    <div className="">
-                      <Field
-                        name="employeeId"
-                        component={SearchSelect}
-                        isDisabled={!values.subsidiaryId}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("employeeId", value);
-                        }}
-                        label={<span> Employee <span style={{ color: "red" }}>*</span></span>}
-                        error={errors.employeeId}
-                        touched={touched.employeeId}
-                        value={
-                          allFSApprovedEmpMap?.get(values?.employeeId || "") || ""
-                        }
-                        autoComplete="off"
-                        options={allFSApprovedEmp}
-                      />
-                    </div>
-
-                  </div>
-
-                  <hr></hr>
-
-                  <h6 className="font-bold mb-0 text-primary ">
-                    Payable Slip
-                  </h6>
-
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-
-
-
-                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
-
-                      <button
-                        onClick={() => {
-                          getPdf(values);
-                        }}
-                        disabled={
-
-                          pdfLoading ||
-                          !values.subsidiaryId || !values.employeeId
-
-                        }
-                        type="button"
-                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
-                      >
-                        Payable Slip
-
-                        <Download className="w-4 h-4 ml-2" />
-
-                        {payableSlip && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
-
+                            dispatch(
+                              FetchAllApprovedFSEmp({
+                                subsidiaryId: values?.subsidiaryId,
+                                departmentId: value,
+                              })
+                            );
+                          }}
+                          label={<span>Department</span>}
+                          value={
+                            values?.departmentId === ""
+                              ? { value: "", label: "All" }
+                              : allDeptMap?.get(values?.departmentId) || ""
+                          }
+                          autoComplete="off"
+                          options={[
+                            { value: "", label: "All" },
+                            ...departmentBySubIdsList,
+                          ]}
+                        />
+                      </div>
+                      <div className="">
+                        <Field
+                          name="employeeId"
+                          component={SearchSelect}
+                          isDisabled={!values.subsidiaryId}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("employeeId", value);
+                          }}
+                          label={<span> Employee <span style={{ color: "red" }}>*</span></span>}
+                          error={errors.employeeId}
+                          touched={touched.employeeId}
+                          value={
+                            allFSApprovedEmpMap?.get(values?.employeeId || "") || ""
+                          }
+                          autoComplete="off"
+                          options={allFSApprovedEmp}
+                        />
+                      </div>
 
                     </div>
-                  </div>
 
-                  <hr></hr>
+                    <hr></hr>
 
+                    <h6 className="font-bold mb-0 text-primary ">
+                      Payable Slip
+                    </h6>
 
-                  <h6 className="font-bold mb-0 text-primary ">
-                    Income Tax Computation Slip
-                  </h6>
-
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+                    <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
 
 
 
-                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+                      <div className="md:col-start-3 md:col-end-5 flex justify-end ">
 
-                      <button
-                        onClick={() => {
-                          getIncomeTaxCompPdf(values);
-                        }}
-                        disabled={
+                        <button
+                          onClick={() => {
+                            getPdf(values);
+                          }}
+                          disabled={
 
-                          pdfLoading ||
-                          !values.subsidiaryId || !values.employeeId
+                            pdfLoading ||
+                            !values.subsidiaryId || !values.employeeId
 
-                        }
-                        type="button"
-                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
-                      >
-                        Income Tax Computation Slip
+                          }
+                          type="button"
+                          className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
+                        >
+                          Payable Slip
 
-                        <Download className="w-4 h-4 ml-2" />
+                          <Download className="w-4 h-4 ml-2" />
 
-                        {incomeTaxComputationSlip && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
+                          {payableSlip && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
 
 
+                      </div>
                     </div>
-                  </div>
+
+                    <hr></hr>
+
+                    {isTaxConfigurationExist && (
+                      <>
+
+                        <h6 className="font-bold mb-0 text-primary ">
+                          Income Tax Computation Slip
+                        </h6>
+
+                        <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
 
 
-                  <hr></hr>
+
+                          <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
+                            <button
+                              onClick={() => {
+                                getIncomeTaxCompPdf(values);
+                              }}
+                              disabled={
+
+                                pdfLoading ||
+                                !values.subsidiaryId || !values.employeeId
+
+                              }
+                              type="button"
+                              className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
+                            >
+                              Income Tax Computation Slip
+
+                              <Download className="w-4 h-4 ml-2" />
+
+                              {incomeTaxComputationSlip && (
+                                <span className="ml-3 mr-3 spinner spinner-white"></span>
+                              )}
+                            </button>
 
 
-                  <h6 className="font-bold mb-0 text-primary ">
-                    Gratuity Slip
-                  </h6>
-
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+                          </div>
+                        </div>
 
 
+                        <hr></hr>
+                      </>
 
-                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+                    )}
 
-                      <button
-                        onClick={() => {
-                          getGratuityPdf(values);
-                        }}
-                        disabled={
+                    {isGratuityConfigurationExist && (
+                      <>
+                        <h6 className="font-bold mb-0 text-primary ">
+                          Gratuity Slip
+                        </h6>
 
-                          pdfLoading ||
-                          !values.subsidiaryId || !values.employeeId
-
-                        }
-                        type="button"
-                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
-                      >
-                        Gratuity Slip
-
-                        <Download className="w-4 h-4 ml-2" />
-
-                        {gratuitySlip && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
+                        <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
 
 
+
+                          <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
+                            <button
+                              onClick={() => {
+                                getGratuityPdf(values);
+                              }}
+                              disabled={
+
+                                pdfLoading ||
+                                !values.subsidiaryId || !values.employeeId
+
+                              }
+                              type="button"
+                              className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
+                            >
+                              Gratuity Slip
+
+                              <Download className="w-4 h-4 ml-2" />
+
+                              {gratuitySlip && (
+                                <span className="ml-3 mr-3 spinner spinner-white"></span>
+                              )}
+                            </button>
+
+
+                          </div>
+                        </div>
+                        <hr></hr>
+
+                      </>
+                    )}
+
+
+                    {isProvidentFund && (
+                      <>
+                        <h6 className="font-bold mb-0 text-primary ">
+                          Provident Fund Slip
+                        </h6>
+
+                        <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+                          <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
+                            <button
+                              onClick={() => {
+                                getProvidentFundPdf(values);
+                              }}
+                              disabled={
+
+                                pdfLoading ||
+                                !values.subsidiaryId || !values.employeeId
+
+                              }
+                              type="button"
+                              className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
+                            >
+                              Provident Fund Slip
+
+                              <Download className="w-4 h-4 ml-2" />
+
+                              {providentFundSlip && (
+                                <span className="ml-3 mr-3 spinner spinner-white"></span>
+                              )}
+                            </button>
+
+
+                          </div>
+                        </div>
+
+                        <hr></hr>
+
+                      </>
+                    )}
+
+
+                    <h6 className="font-bold mb-0 text-primary ">
+                      Acknowledgment Letter
+                    </h6>
+
+                    <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+                      <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
+                        <button
+                          onClick={() => {
+                            getAcknowledgmentLetterPdf(values);
+                          }}
+                          disabled={
+
+                            pdfLoading ||
+                            !values.subsidiaryId || !values.employeeId
+
+                          }
+                          type="button"
+                          className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
+                        >
+                          Final Settlement Acknowledgement
+
+                          <Download className="w-4 h-4 ml-2" />
+
+                          {acknowledgementLetter && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+
+
+                      </div>
                     </div>
-                  </div>
-                  <hr></hr>
 
 
-                  <h6 className="font-bold mb-0 text-primary ">
-                    Provident Fund Slip
-                  </h6>
-
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-
-
-
-                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
-
-                      <button
-                        onClick={() => {
-                          getProvidentFundPdf(values);
-                        }}
-                        disabled={
-
-                          pdfLoading ||
-                          !values.subsidiaryId || !values.employeeId
-
-                        }
-                        type="button"
-                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
-                      >
-                        Provident Fund Slip
-
-                        <Download className="w-4 h-4 ml-2" />
-
-                        {providentFundSlip && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
+                  </fieldset>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  type="button"
+                  onClick={() => {
+                    applyFilter(initialFilter.filter);
+                    handleReset();
+                  }}
+                  className="btn btn-light btn-elevate"
+                >
+                  Cancel
+                </button>
 
 
-                    </div>
-                  </div>
-
-                  <hr></hr>
-
-
-                  <h6 className="font-bold mb-0 text-primary ">
-                    Acknowledgment Letter
-                  </h6>
-
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-
-
-
-                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
-
-                      <button
-                        onClick={() => {
-                          getAcknowledgmentLetterPdf(values);
-                        }}
-                        disabled={
-
-                          pdfLoading ||
-                          !values.subsidiaryId || !values.employeeId
-
-                        }
-                        type="button"
-                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
-                      >
-                        Final Settlement Acknowledgement
-
-                        <Download className="w-4 h-4 ml-2" />
-
-                        {acknowledgementLetter && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
-
-
-                    </div>
-                  </div>
-
-
-                </fieldset>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                type="button"
-                onClick={() => {
-                  applyFilter(initialFilter.filter);
-                  handleReset();
-                }}
-                className="btn btn-light btn-elevate"
-              >
-                Cancel
-              </button>
-
-
-            </Modal.Footer>
-          </>
-        )}
+              </Modal.Footer>
+            </>
+          )
+        }}
       </Formik>
     </>
   );
