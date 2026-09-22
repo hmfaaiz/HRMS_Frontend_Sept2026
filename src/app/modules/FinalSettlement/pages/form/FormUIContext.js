@@ -31,7 +31,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   }, []);
 const initUser = {
   Id: "",
-
+  subsidiaryId:"",
   employeeId:"",
   paidDays:"",
   earning_list:[],

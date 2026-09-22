@@ -182,7 +182,14 @@ export function FormEditForm({
   const [finalizeModal, setFinalizeModal] = useState(false);
   const [data, setData] = useState({});
   const [localizationId, setLocalizationId] = useState(null);
+  const [subsidiaryConfig, setSubsidiaryConfig] = useState({
+    isLoanManagementActive: false,
+    isProvidentFund: false,
+    isPensionAllowance: false,
+    isGratuityConfigurationExist: false,
+  });
   //drop down
+  console.log("formData1111", formData);
   useEffect(() => {
     if (formData.employeeId) {
       dispatch(fetchAllEarningList(1, "", formData.employeeId, true));
@@ -297,7 +304,7 @@ export function FormEditForm({
 
     // Calculate total PF Amount (ensure all numeric)
     const netFinalSettlementAmount =
-      netSalary + Number(values.gratuityAmount || 0) + Number(values.totalPFAmount || 0)  + Number(values.totalPensionAmount || 0) - Number(values.loanBalance || 0);
+      netSalary + Number(values.gratuityAmount || 0) + Number(values.totalPFAmount || 0) + Number(values.totalPensionAmount || 0) - Number(values.loanBalance || 0);
 
     setFieldValue("netFinalSettlementAmount", netFinalSettlementAmount.toFixed(2));
     setToBeCalculated(false)
@@ -324,10 +331,28 @@ export function FormEditForm({
     const matchedSubsidiary = dashboard.allSubsidiaryList?.find(
       (item) => item.value === formData.subsidiaryId
     );
+    console.log("matchedSubsidiary111", formData.subsidiaryId, matchedSubsidiary)
     if (matchedSubsidiary) {
       setLocalizationId(matchedSubsidiary?.localizationId);
     }
-  }, [formData?.subsidiaryId]);
+    setSubsidiaryConfig({
+      isLoanManagementActive: matchedSubsidiary?.isLoanManagementActive ?? false,
+      isProvidentFund: matchedSubsidiary?.isProvidentFund ?? false,
+      isPensionAllowance: matchedSubsidiary?.isPensionAllowance ?? false,
+      isGratuityConfigurationExist: matchedSubsidiary?.isGratuityConfigurationExist ?? false,
+
+
+    });
+
+    console.log("FINAL FLAGS:", {
+      loan: matchedSubsidiary?.isLoanManagementActive,
+      gratuity: matchedSubsidiary?.isGratuityConfigurationExist,
+      providentFund: matchedSubsidiary?.isProvidentFund,
+      pension: matchedSubsidiary?.isPensionAllowance,
+      localizationId: matchedSubsidiary?.localizationId,
+    });
+    console.log("formData.subsidiaryId11111", formData.subsidiaryId)
+  }, [formData?.subsidiaryId, dashboard.allSubsidiaryList]);
   return (
     <Formik
       enableReinitialize={true}
@@ -640,7 +665,7 @@ export function FormEditForm({
                         <button
                           type="button"
                           className="btn btn-primary btn-elevate"
-                          disabled={!values.employeeId || isdataForRead 
+                          disabled={!values.employeeId || isdataForRead
                             // || !payrollMonthEligibility
                           }
                           onClick={() => {
@@ -1391,192 +1416,205 @@ export function FormEditForm({
                 </div>
                 <hr></hr>
 
+                {subsidiaryConfig.isLoanManagementActive && (
+                  <>
+                    <div >
 
-                <div >
+                      <h6 className="font-bold mb-0 text-primary">
+                        Loan Detail
+                      </h6>
 
-                  <h6 className="font-bold mb-0 text-primary">
-                    Loan Detail
-                  </h6>
+                      <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                        <div className="">
+                          <Field
+                            name="loanBalance"
+                            component={Input}
+                            value={Number(values.loanBalance || 0).toFixed(2)}
+                            placeholder="Auto total loan outstanding"
+                            label={
+                              <span>
+                                Total Loan Outstanding
+                              </span>
+                            }
 
-                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-                    <div className="">
-                      <Field
-                        name="loanBalance"
-                        component={Input}
-                        value={Number(values.loanBalance || 0).toFixed(2)}
-                        placeholder="Auto total loan outstanding"
-                        label={
-                          <span>
-                            Total Loan Outstanding
-                          </span>
-                        }
+                            autoComplete="off"
+                            type="text"
+                            disabled
+                          />
 
-                        autoComplete="off"
-                        type="text"
-                        disabled
+                        </div>
+
+                        <div className="mt-6">
+
+
+
+                          {loanPanel ? (
+                            <button
+                              type="button"
+                              className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                              onClick={() => setLoanPanel(!loanPanel)}
+                            >
+                              <XCircle className="w-3 h-3 text-black" />
+                              Cancel
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="btn btn-primary d-flex align-items-center gap-2"
+                              onClick={() => setLoanPanel(!loanPanel)}
+                              disabled={!values?.employeeId}
+                            >
+
+
+                              <Eye className="w-4 h-4 text-white" />
+                              View Details
+                            </button>
+                          )}
+
+
+
+
+                        </div>
+
+
+                      </div>
+                      <ViewLoans
+                        employeeId={values?.employeeId || formData?.employeeId}
+                        panelMode={loanPanel}
+                        values={values}
+                        errors={errors}
                       />
 
-                    </div>
-
-                    <div className="mt-6">
-
-
-
-                      {loanPanel ? (
-                        <button
-                          type="button"
-                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
-                          onClick={() => setLoanPanel(!loanPanel)}
-                        >
-                          <XCircle className="w-3 h-3 text-black" />
-                          Cancel
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="btn btn-primary d-flex align-items-center gap-2"
-                          onClick={() => setLoanPanel(!loanPanel)}
-                          disabled={!values?.employeeId}
-                        >
-
-
-                          <Eye className="w-4 h-4 text-white" />
-                          View Details
-                        </button>
-                      )}
-
-
-
 
                     </div>
 
 
-                  </div>
-                  <ViewLoans
-                    employeeId={values?.employeeId || formData?.employeeId}
-                    panelMode={loanPanel}
-                    values={values}
-                    errors={errors}
-                  />
+                    <hr></hr>
+
+                  </>
+
+                )}
 
 
-                </div>
+                {subsidiaryConfig.isGratuityConfigurationExist && (
+                  <>
+                    <div >
+
+                      <h6 className="font-bold mb-0 text-primary">
+                        Gratuity Detail
+                      </h6>
+
+                      <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                        <div className="">
+                          <Field
+                            name="gratuityAmount"
+                            component={Input}
+                            value={Number(values.gratuityAmount || 0).toFixed(2)}
+                            placeholder="Auto gratuity amount"
+                            label={
+                              <span>
+                                Gratuity Amount
+                              </span>
+                            }
+
+                            autoComplete="off"
+                            type="text"
+                            disabled
+                          />
+
+                        </div>
 
 
-                <hr></hr>
+
+                      </div>
+
+                    </div>
 
 
-                <div >
+                    <hr></hr>
+                  </>
+                )}
 
-                  <h6 className="font-bold mb-0 text-primary">
-                    Gratuity Detail
-                  </h6>
+                {subsidiaryConfig.isProvidentFund && (
+                  <>
+                    <div >
 
-                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-                    <div className="">
-                      <Field
-                        name="gratuityAmount"
-                        component={Input}
-                        value={Number(values.gratuityAmount || 0).toFixed(2)}
-                        placeholder="Auto gratuity amount"
-                        label={
-                          <span>
-                            Gratuity Amount
-                          </span>
-                        }
+                      <h6 className="font-bold mb-0 text-primary">
+                        Provident Fund Detail
+                      </h6>
 
-                        autoComplete="off"
-                        type="text"
-                        disabled
-                      />
+                      <div className="flex justify-between items-center gap-4 mt-1 mb-2 w-full">
+                        <div className="min-w-[260px]">
+                          <Field
+                            name="totalPFAmount"
+                            component={Input}
+                            value={Number(values.totalPFAmount || 0).toFixed(2)}
+                            placeholder="Enter provident fund contribution"
+                            disabled
+                            label={
+                              <span>
+                                Total Provident Fund Contribution
+                              </span>
+                            }
+
+                            autoComplete="off"
+                            type="text"
+
+                          />
+
+                        </div>
+
+                        <div className="min-w-[260px]">
+                          <Field
+                            name="pf_employer_amount"
+                            component={Input}
+                            placeholder="Enter employer contribution"
+                            disabled
+                            value={Number(values.pf_employer_amount || 0).toFixed(2)}
+                            label={
+                              <span>
+                                Employer Contribution
+                              </span>
+                            }
+
+                            autoComplete="off"
+                            type="text"
+
+                          />
+
+                        </div>
+
+                        <div className="min-w-[260px]">
+                          <Field
+                            name="pf_employee_amount"
+                            component={Input}
+                            placeholder="Enter employee contribution"
+                            value={Number(values.pf_employee_amount || 0).toFixed(2)}
+                            disabled
+                            label={
+                              <span>
+                                Employee Contribution
+                              </span>
+                            }
+
+                            autoComplete="off"
+                            type="text"
+
+                          />
+
+                        </div>
+
+                      </div>
 
                     </div>
 
 
-
-                  </div>
-
-                </div>
+                    <hr></hr></>
+                )}
 
 
-                <hr></hr>
 
-
-                <div >
-
-                  <h6 className="font-bold mb-0 text-primary">
-                    Provident Fund Detail
-                  </h6>
-
-                  <div className="flex justify-between items-center gap-4 mt-1 mb-2 w-full">
-                    <div className="min-w-[260px]">
-                      <Field
-                        name="totalPFAmount"
-                        component={Input}
-                        value={Number(values.totalPFAmount || 0).toFixed(2)}
-                        placeholder="Enter provident fund contribution"
-                        disabled
-                        label={
-                          <span>
-                            Total Provident Fund Contribution
-                          </span>
-                        }
-
-                        autoComplete="off"
-                        type="text"
-
-                      />
-
-                    </div>
-
-                    <div className="min-w-[260px]">
-                      <Field
-                        name="pf_employer_amount"
-                        component={Input}
-                        placeholder="Enter employer contribution"
-                        disabled
-                        value={Number(values.pf_employer_amount || 0).toFixed(2)}
-                        label={
-                          <span>
-                            Employer Contribution
-                          </span>
-                        }
-
-                        autoComplete="off"
-                        type="text"
-
-                      />
-
-                    </div>
-
-                    <div className="min-w-[260px]">
-                      <Field
-                        name="pf_employee_amount"
-                        component={Input}
-                        placeholder="Enter employee contribution"
-                        value={Number(values.pf_employee_amount || 0).toFixed(2)}
-                        disabled
-                        label={
-                          <span>
-                            Employee Contribution
-                          </span>
-                        }
-
-                        autoComplete="off"
-                        type="text"
-
-                      />
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-                <hr></hr>
-
-                {localizationId == 1 && (
+                {localizationId == 1 && subsidiaryConfig?.isPensionAllowance && (
                   <>
 
 
@@ -1812,7 +1850,7 @@ export function FormEditForm({
 
                     <button
                       type="button"
-                      disabled={!values.exitClearence || isdataForRead || values.settlementFinalized || values.netFinalSettlementAmount < 0 
+                      disabled={!values.exitClearence || isdataForRead || values.settlementFinalized || values.netFinalSettlementAmount < 0
                         // || !payrollMonthEligibility
                       }
                       onClick={() => {
@@ -1829,9 +1867,9 @@ export function FormEditForm({
 
                     <button
                       type="submit"
-                      disabled={values.settlementFinalized || isdataForRead 
+                      disabled={values.settlementFinalized || isdataForRead
                         // || !payrollMonthEligibility
-                        }
+                      }
 
                       onClick={() => {
                         handleSubmit();

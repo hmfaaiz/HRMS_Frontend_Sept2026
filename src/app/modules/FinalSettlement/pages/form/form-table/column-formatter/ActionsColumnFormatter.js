@@ -70,7 +70,7 @@ export function ActionsColumnFormatter(
           <button
             style={{ background: "none", border: "none", padding: 0 }}
             type="button"
-            onClick={() => newFormButtonClick(row.employeeId)}
+            onClick={() => newFormButtonClick(row?.employeeId,row?.Employee?.subsidiaryId)}
           >
             <Plus className="w-4 h-4 text-black cursor-pointer" />
           </button>
