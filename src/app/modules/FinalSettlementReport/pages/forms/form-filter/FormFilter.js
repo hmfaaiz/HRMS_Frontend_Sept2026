@@ -155,6 +155,7 @@ export function FormFilter({
     if (!findDefaultSubs) return;
 
     dispatch(fetchAllDepartmentBySubsidiaryIds([findDefaultSubs?.value]));
+     dispatch(FetchAllApprovedFSEmp({ subsidiaryId: findDefaultSubs?.value,departmentId: null, }));
   }, [allSubsidiaryList]);
 
 
