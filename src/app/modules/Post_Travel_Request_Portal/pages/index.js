@@ -10,10 +10,10 @@ export default function PostTravelRequestPortalManagement() {
         <Redirect
           exact
           from="/post_travel_request"
-          to="/post_travel_request/read-all-post-travel-request"
+          to="/post_travel_request/read-all-post-travel-request-portal"
         />
         <ContentRoute
-          path="/post_travel_request/read-all-post-travel-request"
+          path="/post_travel_request/read-all-post-travel-request-portal"
           component={FormPage}
         />
       </Switch>

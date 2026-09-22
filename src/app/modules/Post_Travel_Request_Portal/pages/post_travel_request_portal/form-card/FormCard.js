@@ -57,9 +57,8 @@ export function FormCard({ onRegisterReset }) {
 
   const accessUser = userAccess?.find(
     (item) =>
-      item.componentName === "CreatePostTravelRequest" ||
-      item.componentName === "CreatePostApprovalTravelRequest",
-  );
+      item.componentName === "CreatePostTravelRequestPortal");
+
 
   useEffect(() => {
     dispatch(actions.fetchApprovedTravelRequestsByEmployee());
@@ -189,6 +188,7 @@ export function FormCard({ onRegisterReset }) {
           el?.isResourceShow,
       ),
     },
+   
   ];
   // const menuOptions = [
   //   {

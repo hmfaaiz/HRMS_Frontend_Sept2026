@@ -81,7 +81,7 @@ export const MenuOption = ({ isDashboard }) => {
   );
   const PostTravelRequest = travel?.find(
     (el) =>
-      el?.componentName === "ReadAllPostTravelRequest" &&
+      el?.componentName === "ReadAllPostTravelRequestPortal" &&
       el?.isResourceShow &&
       el?.portalType == 2,
   );
@@ -246,7 +246,7 @@ export const MenuOption = ({ isDashboard }) => {
             name: "Travel Request",
           },
           {
-            link: "/post_travel_request/read-all-post-travel-request",
+            link: "/post_travel_request/read-all-post-travel-request-portal",
             show: PostTravelRequest,
             name: "Post Travel Request",
           },

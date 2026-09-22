@@ -839,25 +839,7 @@ function FormInner({
             )}
           </div>
 
-          {!isReadOnly && Number(user?.approved_status) === 0 && (
-            <div className="col-span-12 md:col-span-2 flex items-center gap-2 mt-5">
-              <input
-                type="checkbox"
-                id="fullySettled"
-                checked={values.fullySettled || false}
-                onChange={(e) =>
-                  setFieldValue("fullySettled", e.target.checked)
-                }
-                className="w-4 h-4 cursor-pointer flex-shrink-0"
-              />
-              <label
-                htmlFor="fullySettled"
-                className=" cursor-pointer mb-0"
-              >
-                Travel Expense fully settled by the employee
-              </label>
-            </div>
-          )}
+
         </div>
 
         {/* Row 2 — Remarks */}
@@ -883,6 +865,29 @@ function FormInner({
 
       {/* FORM ACTIONS */}
       <div className="mt-4 border-t pt-4">
+        <div className="flex justify-end  mb-4 gap-x-3">
+
+          {!isReadOnly && Number(user?.approved_status) === 0 && (
+            <div className="col-span-12 md:col-span-2 flex items-center gap-2 mt-5">
+              <input
+                type="checkbox"
+                id="fullySettled"
+                checked={values.fullySettled || false}
+                onChange={(e) =>
+                  setFieldValue("fullySettled", e.target.checked)
+                }
+                className="w-4 h-4 cursor-pointer flex-shrink-0"
+              />
+              <label
+                htmlFor="fullySettled"
+                className=" cursor-pointer mb-0"
+              >
+                Travel Expense fully settled by the employee
+              </label>
+            </div>
+          )}
+
+        </div>
         <div className="flex justify-end gap-x-3">
           <button
             type="button"
