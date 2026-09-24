@@ -654,7 +654,7 @@ export function FormFilter({
                            value={
                           [
                             ALL_OPTION,
-                            ...(Array.isArray(allEmployeesMap) ? allEmployeesMap : []),
+                            ...(Array.isArray(allEmployees) ? allEmployees : []),
                           ]?.find(
                             (opt) => opt.value === values?.employeeId,
                           ) || ALL_OPTION
