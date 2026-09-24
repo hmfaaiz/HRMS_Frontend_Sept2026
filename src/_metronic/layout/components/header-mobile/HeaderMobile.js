@@ -35,28 +35,26 @@ export function HeaderMobile() {
 
         {/*begin::Toolbar*/}
         <div className="d-flex align-items-center">
-          {layoutProps.asideDisplay && (
-            <>
-              {/*begin::Aside Mobile Toggle*/}
-              <button
-                className="btn p-0 burger-icon burger-icon-left"
-                id="kt_aside_mobile_toggle"
-              >
-                <span />
-              </button>
-              {/*end::Aside Mobile Toggle*/}
-            </>
-          )}
+          {/*
+{layoutProps.asideDisplay && (
+  <>
+    <button
+      className="btn p-0 burger-icon burger-icon-left"
+      id="kt_aside_mobile_toggle"
+    >
+      <span />
+    </button>
+  </>
+)}
 
-          {layoutProps.headerMenuSelfDisplay && (
-            <>
-              {/*begin::Header Menu Mobile Toggle*/}
-              {/* <button className="btn p-0 burger-icon ml-4" id="kt_header_mobile_toggle">
-                    <span/>
-                  </button> */}
-              {/*end::Header Menu Mobile Toggle*/}
-            </>
-          )}
+{layoutProps.headerMenuSelfDisplay && (
+  <>
+    <button className="btn p-0 burger-icon ml-4" id="kt_header_mobile_toggle">
+      <span/>
+    </button>
+  </>
+)}
+*/}
 
           {/*begin::Topbar Mobile Toggle*/}
           <button

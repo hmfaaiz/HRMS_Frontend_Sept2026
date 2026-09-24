@@ -11,7 +11,7 @@ import { MyCartDropdown } from "../extras/dropdowns/MyCartDropdown";
 import { LanguageSelectorDropdown } from "../extras/dropdowns/LanguageSelectorDropdown";
 import { QuickUserToggler } from "../extras/QuiclUserToggler";
 
-export function Topbar() {
+export function Topbar({ isCollapsed }) {
   const uiService = useHtmlClassService();
   const layoutProps = useMemo(() => {
     return {
@@ -79,7 +79,7 @@ export function Topbar() {
 
       {/* {layoutProps.viewLanguagesDisplay && <LanguageSelectorDropdown />} */}
 
-      {layoutProps.viewUserDisplay && <QuickUserToggler />}
+      {layoutProps.viewUserDisplay && <QuickUserToggler isCollapsed={isCollapsed} />}
     </div>
   );
 }

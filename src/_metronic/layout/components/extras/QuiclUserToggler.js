@@ -7,7 +7,7 @@ import objectPath from "object-path"
 import { useHtmlClassService } from "../../_core/MetronicLayout"
 import { UserProfileDropdown } from "./dropdowns/UserProfileDropdown"
 
-export function QuickUserToggler() {
+export function QuickUserToggler({ isCollapsed }) {
   const { user } = useSelector((state) => state.auth, shallowEqual)
   const uiService = useHtmlClassService()
   const layoutProps = useMemo(() => {
@@ -30,12 +30,16 @@ export function QuickUserToggler() {
               id="kt_quick_user_toggle"
             >
               <>
-                <span className="text-muted text-white font-normal d-none d-md-inline mr-1">
-                  Hi,
-                </span>
-                <span className="text-dark-50 font-weight-bolder font-size-xs d-none d-md-inline mr-3">
-                  {user.fullname}
-                </span>
+                {!isCollapsed && (
+                  <>
+                    <span className="text-muted text-white font-normal d-none d-md-inline mr-1">
+                      Hi,
+                    </span>
+                    <span className="text-dark-50 text-white font-weight-bolder font-size-xs d-none d-md-inline mr-3 truncate max-w-[100px]">
+                      {user.fullname}
+                    </span>
+                  </>
+                )}
                 <span className="symbol symbol-35 symbol-light-success">
                   <span className="symbol-label font-size-h5 font-weight-bold">
                     {user.fullname[0]}
@@ -47,7 +51,7 @@ export function QuickUserToggler() {
         </OverlayTrigger>
       )}
 
-      {!layoutProps.offcanvas && <UserProfileDropdown />}
+      {!layoutProps.offcanvas && <UserProfileDropdown isCollapsed={isCollapsed} />}
     </>
   )
 }
