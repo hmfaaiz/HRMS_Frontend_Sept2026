@@ -161,17 +161,29 @@ export function FormTable({ ticketStatuses, ticketTypes, priorityLevels, showTic
   );
 
   const { currentState } = useSelector(
-    (state) => ({ currentState: state.task_assignment_timeline }),
+    (state) => ({ currentState: state.task_group_report }),
     shallowEqual
   );
 
   const { totalCount, entities, listLoading } = currentState || {};
 
+  // useEffect(() => {
+  //   if (uiProps.queryParams.isFiltered) {
+  //     dispatch(actions.fetchTaskAssignmentTimeline(uiProps.queryParams));
+  //   }
+  // }, [dispatch, uiProps.queryParams]);
+
   useEffect(() => {
-    if (uiProps.queryParams.isFiltered) {
-      dispatch(actions.fetchTaskAssignmentTimeline(uiProps.queryParams));
-    }
-  }, [dispatch, uiProps.queryParams]);
+  if (!uiProps.queryParams.isFiltered) return;
+
+  dispatch(
+    actions.fetchTaskAssignmentTimeline(uiProps.queryParams)
+  );
+}, [
+  uiProps.queryParams.pageNumber,
+  uiProps.queryParams.pageSize,
+  dispatch,
+]);
 
   useEffect(() => {
     uiContext.setHasRecords(

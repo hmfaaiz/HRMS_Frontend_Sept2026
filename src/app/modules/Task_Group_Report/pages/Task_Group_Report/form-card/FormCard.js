@@ -7,8 +7,10 @@ import { FormTable } from "../form-table/FormTable";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
-import { fetchTaskAssignmentTimeline } from "../../../_redux/redux-Actions";
-import {  fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAttendance, fetchTaskAssignmentTimeline } from "../../../_redux/redux-Actions";
+import { fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
+import { AttendanceTable } from "../form-table/AttendanceTable";
 export function FormCard() {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const dispatch = useDispatch();
@@ -17,7 +19,7 @@ export function FormCard() {
   // Extract a bare ticket-code segment from the URL, e.g. /read-all-.../TK-001
   // Must NOT match sub-modal routes like /TK-001/detail, /TK-001/timelog, etc.
   const ticketCodeMatch = location.pathname.match(
-    /^\/task_assignment_timeline\/read-all-task-assignment-timeline\/([^/]+)$/,
+    /^\/task_group_report\/read-all-task-assignment-timeline\/([^/]+)$/,
   );
   const ticketCodeFromUrl = ticketCodeMatch
     ? decodeURIComponent(ticketCodeMatch[1])
@@ -27,9 +29,9 @@ export function FormCard() {
   const [currentStatusToggle, setCurrentStatusToggle] = useState(false);
 
   const [expandedMasterIds, setExpandedMasterIds] = useState([]);
-
+  const [reportType, setReportType] = useState(0);
   const {
-    
+
     allEmployees,
     ticketTypes,
     ticketStatuses,
@@ -44,42 +46,56 @@ export function FormCard() {
       ticketTypes: state.dashboard?.allMasterTicketType || [],
       ticketStatuses: state.dashboard?.allTicketStatus || [],
       priorityLevels: state.dashboard?.priorityLevelList || [],
-      listLoading: state.task_assignment_timeline?.listLoading,
-      pdfLoading: state.task_assignment_timeline?.pdfLoading,
-      csvLoading: state.task_assignment_timeline?.csvLoading,
-      excelLoading: state.task_assignment_timeline?.excelLoading,
+      listLoading: state.task_group_report?.listLoading,
+      pdfLoading: state.task_group_report?.pdfLoading,
+      csvLoading: state.task_group_report?.csvLoading,
+      excelLoading: state.task_group_report?.excelLoading,
     }),
     shallowEqual
   );
 
-  const print = async (type) => {
-    let updatedQueryParams = {
-      ...uiContext.queryParams,
-      pdf: false,
-      csv: false,
-      excel: false,
-      [type]: true,
-      showTicketDetails,
-      expandedMasterIds: showTicketDetails ? expandedMasterIds : [],
-    };
-    await dispatch(fetchTaskAssignmentTimeline(updatedQueryParams));
-    uiContext.setQueryParams({
-      ...uiContext.queryParams,
-      pdf: false,
-      csv: false,
-      excel: false,
-    });
-  };
+  // const print = async (type) => {
+  //   let updatedQueryParams = {
+  //     ...uiContext.queryParams,
+  //     pdf: false,
+  //     csv: false,
+  //     excel: false,
+  //     [type]: true,
+  //     showTicketDetails,
+  //     expandedMasterIds: showTicketDetails ? expandedMasterIds : [],
+  //   };
+  //   await dispatch(fetchTaskAssignmentTimeline(updatedQueryParams));
+  //   uiContext.setQueryParams({
+  //     ...uiContext.queryParams,
+  //     pdf: false,
+  //     csv: false,
+  //     excel: false,
+  //   });
+  // };
 
-  useEffect(() => {
-    dispatch(actions.FetchAllFacilitatorEmployee());
-    dispatch(fetchMasterTicketType());
-     dispatch(actions.fetchAllTicketStatus());
-    dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
-  }, [dispatch]);
+useEffect(() => {
+  dispatch(actions.FetchAllFacilitatorEmployee());
+  dispatch(fetchMasterTicketType());
+  dispatch(actions.fetchAllTicketStatus());
+  dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
+}, [dispatch]);
+
+// useEffect(() => {
+//   const queryParams = uiContext.queryParams;
+// console.log("queryParams1111");
+//   if (!queryParams?.isFiltered) return;
+
+//   const type = queryParams?.filter?.reportType ?? 0;
+
+//   if (type === 0) {
+//     dispatch(fetchTaskAssignmentTimeline(queryParams));
+//   } else if (type === 1) {
+//     dispatch(fetchAttendance(queryParams));
+//   }
+// }, [uiContext.queryParams, dispatch]);
 
   return (
-    <TCard name="Task Assignment Timeline">
+    <TCard name={CurrentModuleName()}>
       <FormFilter
         loading={listLoading || pdfLoading || csvLoading || excelLoading}
         employees={allEmployees}
@@ -92,16 +108,23 @@ export function FormCard() {
         setCurrentStatusToggle={setCurrentStatusToggle}
         currentStatusToggle={currentStatusToggle}
         ticketCodeFromUrl={ticketCodeFromUrl}
+        reportType={reportType}
+        setReportType={setReportType}
       />
-      <FormTable
-        ticketStatuses={ticketStatuses}
-        ticketTypes={ticketTypes}
-        priorityLevels={priorityLevels}
-        showTicketDetails={showTicketDetails}
-        // FormTable calls this whenever a row is expanded/collapsed
-        onExpandedRowsChange={setExpandedMasterIds}
-        currentStatusToggle={currentStatusToggle}
-      />
+      {reportType === 0 && (
+        <FormTable
+          ticketStatuses={ticketStatuses}
+          ticketTypes={ticketTypes}
+          priorityLevels={priorityLevels}
+          showTicketDetails={showTicketDetails}
+          // FormTable calls this whenever a row is expanded/collapsed
+          onExpandedRowsChange={setExpandedMasterIds}
+          currentStatusToggle={currentStatusToggle}
+        />
+      )}
+      {reportType === 1 && (
+        <AttendanceTable />
+      )}
     </TCard>
   );
 }

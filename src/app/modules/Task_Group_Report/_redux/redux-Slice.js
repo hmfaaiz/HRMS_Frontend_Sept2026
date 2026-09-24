@@ -9,8 +9,10 @@ const initialState = {
   csvLoading: false,
   excelLoading: false,
   timeLogForEdit: undefined,
-   timeLogsTotalCount: 0,
-    timelogsEntities: null,
+  timeLogsTotalCount: 0,
+  timelogsEntities: null,
+  listLoading:false,
+  attendanceEntities: [],
 };
 
 export const callTypes = {
@@ -20,8 +22,8 @@ export const callTypes = {
   xlsx: "xlsx",
 };
 
-export const taskAssignmentTimelineSlice = createSlice({
-  name: "task_assignment_timeline",
+export const taskGroupReportSlice = createSlice({
+  name: "task_group_report",
   initialState,
   reducers: {
     startCall: (state, action) => {
@@ -31,6 +33,13 @@ export const taskAssignmentTimelineSlice = createSlice({
       else if (action.payload.callType === callTypes.csv) state.csvLoading = true;
       else if (action.payload.callType === callTypes.xlsx) state.excelLoading = true;
     },
+      startLoader: (state, action) => {
+    state.error = null;
+    if (action.payload.callType === callTypes.list) {
+
+      state.listLoading = true;
+    }
+  },
     catchError: (state, action) => {
       state.lastError = action.payload.error;
       if (action.payload.callType === callTypes.list) state.listLoading = false;
@@ -39,6 +48,7 @@ export const taskAssignmentTimelineSlice = createSlice({
       else if (action.payload.callType === callTypes.xlsx) state.excelLoading = false;
     },
     timelineFetched: (state, action) => {
+      state.attendanceEntities = [];
       state.listLoading = false;
       state.entities = action.payload?.rows || [];
       state.totalCount = action.payload?.totalResults || 0;
@@ -46,6 +56,7 @@ export const taskAssignmentTimelineSlice = createSlice({
     },
     timelineCleared: (state) => {
       state.entities = [];
+      state.attendanceEntities = [];
       state.totalCount = 0;
       state.listLoading = false;
       state.pdfLoading = false;
@@ -54,32 +65,43 @@ export const taskAssignmentTimelineSlice = createSlice({
       state.lastError = null;
     },
 
-      TimeLogFetchedForEdit: (state, action) => {
+    TimeLogFetchedForEdit: (state, action) => {
 
 
-            state.actionsLoading = false;
-            state.timeLogForEdit = action.payload.timeLogForEdit;
-            state.error = null;
-        },
+      state.actionsLoading = false;
+      state.timeLogForEdit = action.payload.timeLogForEdit;
+      state.error = null;
+    },
 
 
-          FacilitatorTimeLogDetailFetched: (state, action) => {
-            state.listLoading = false;
-            state.error = null;
+    FacilitatorTimeLogDetailFetched: (state, action) => {
+      state.listLoading = false;
+      state.error = null;
+state.attendanceEntities = [];
+      // Backend se data aa raha hai (single object OR array)
+      const data = action.payload;
 
-            // Backend se data aa raha hai (single object OR array)
-            const data = action.payload;
 
-
-            state.listLoading = false;
-            state.error = null;
-            state.timelogsEntities = data.rows || [];
-            state.timeLogsTotalCount = data.totalResults || 0; // total number of details
-        },
+      state.listLoading = false;
+      state.error = null;
+      state.timelogsEntities = data.rows || [];
+      state.timeLogsTotalCount = data.totalResults || 0; // total number of details
+    },
+    AttendanceFetched: (state, action) => {
+       state.entities = [];
+      const entities = action.payload.data?.data.rows;
+      const totalResult = action.payload.data?.data.totalResults;
+      state.listLoading = false;
+      state.error = null;
+      state.attendanceEntities = entities;
+      state.totalCount = totalResult;
+    },
     pdfFetched: (state) => { state.pdfLoading = false; },
     csvFetched: (state) => { state.csvLoading = false; },
     excelFetched: (state) => { state.excelLoading = false; },
   },
+
+
 });
 
-export const { actions } = taskAssignmentTimelineSlice;
+export const { actions } = taskGroupReportSlice;

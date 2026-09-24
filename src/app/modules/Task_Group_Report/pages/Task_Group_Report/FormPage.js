@@ -14,16 +14,16 @@ export function FormPage({ history }) {
   const taskAssignmentTimelineUIEvents = {
     openDetailGridData: (masterId) => {
       history.push(
-        `/task_assignment_timeline/read-all-task-assignment-timeline/${masterId}/detail`
+        `/task_group_report/read-all-task-group-report/${masterId}/detail`
       );
     },
     openDetailTimeLog: (detailId) => {
       history.push(
-        `/task_assignment_timeline/read-all-task-assignment-timeline/${detailId}/detailtimelog`
+        `/task_group_report/read-all-task-group-report/${detailId}/detailtimelog`
       );
     },
         openTicketTimeLog: (detailId, isUserRead) => {
-      history.push(`/task_assignment_timeline/read-all-task-assignment-timeline/${detailId}/timelog`);
+      history.push(`/task_group_report/read-all-task-group-report/${detailId}/timelog`);
     },
     addNewTicket: () => {
       window.open(
@@ -51,48 +51,48 @@ export function FormPage({ history }) {
       taskAssignmentTimelineUIEvents={taskAssignmentTimelineUIEvents}
     >
       {/* Detail modal route */}
-      <Route path="/task_assignment_timeline/read-all-task-assignment-timeline/:masterId/detail">
+      <Route path="/task_group_report/read-all-task-group-report/:masterId/detail">
         {({ history, match }) => (
           <DetailData
             show={match != null}
             detailId={match && match.params.masterId}
             onHide={() =>
-              history.push("/task_assignment_timeline/read-all-task-assignment-timeline")
+              history.push("/task_group_report/read-all-task-group-report")
             }
           />
         )}
       </Route>
 
       {/* Detail Time Log modal route */}
-      {/* <Route path="/task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
+      {/* <Route path="/task_group_report/read-all-task-group-report/:detailId/detailtimelog">
         {({ history, match }) => (
           <FormUIProvider FormUIEvents={facilitatorFormUIEvents}>
             <DetailTimeLog
               show={match != null}
               detailId={match && match.params.detailId}
               onHide={() =>
-                history.push("/task_assignment_timeline/read-all-task-assignment-timeline")
+                history.push("/task_group_report/read-all-task-group-report")
               }
             />
           </FormUIProvider>
         )}
       </Route> */}
 
-          <Route path="/task_assignment_timeline/read-all-task-assignment-timeline/:detailId/timelog">
+          <Route path="/task_group_report/read-all-task-group-report/:detailId/timelog">
         {({ history, match }) => (
           <TimeLog
             show={match != null}
             detailId={match && match.params.detailId}
             status={match && match.params.status}
             onHide={() => {
-              history.push("/task_assignment_timeline/read-all-task-assignment-timeline");
+              history.push("/task_group_report/read-all-task-group-report");
             }}
           />
         )}
       </Route>
 
 
-<Route path="/task_assignment_timeline/read-all-task-assignment-timeline/:detailId/detailtimelog">
+<Route path="/task_group_report/read-all-task-group-report/:detailId/detailtimelog">
   {({ history, match }) => {
     const show = match != null;
     const detailId = match?.params.detailId;
@@ -102,7 +102,7 @@ export function FormPage({ history }) {
         show={show}
         detailId={detailId}
         onHide={() =>
-          history.push("/task_assignment_timeline/read-all-task-assignment-timeline")
+          history.push("/task_group_report/read-all-task-group-report")
         }
       />
     );

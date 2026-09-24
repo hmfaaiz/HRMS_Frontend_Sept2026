@@ -1,8 +1,8 @@
 import { toast } from "react-toastify";
-import { taskAssignmentTimelineSlice, callTypes } from "./redux-Slice";
+import { taskGroupReportSlice, callTypes } from "./redux-Slice";
 import * as requestFromServer from "./redux-Crud";
 
-const { actions } = taskAssignmentTimelineSlice;
+const { actions } = taskGroupReportSlice;
 
 // Fetch Task Assignment Timeline with filters, pagination & downloads
 export const fetchTaskAssignmentTimeline = (queryParams) => async (dispatch) => {
@@ -16,7 +16,7 @@ export const fetchTaskAssignmentTimeline = (queryParams) => async (dispatch) => 
         const pdfUrl = URL.createObjectURL(pdfBlob);
         const link = document.createElement("a");
         link.href = pdfUrl;
-        link.setAttribute("download", "task_assignment_timeline.pdf");
+        link.setAttribute("download", "task_group_report.pdf");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -39,7 +39,7 @@ export const fetchTaskAssignmentTimeline = (queryParams) => async (dispatch) => 
         const csvUrl = URL.createObjectURL(csvBlob);
         const link = document.createElement("a");
         link.href = csvUrl;
-        link.setAttribute("download", "task_assignment_timeline.csv");
+        link.setAttribute("download", "task_group_report.csv");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -64,7 +64,7 @@ export const fetchTaskAssignmentTimeline = (queryParams) => async (dispatch) => 
         const excelUrl = URL.createObjectURL(excelBlob);
         const link = document.createElement("a");
         link.href = excelUrl;
-        link.setAttribute("download", "task_assignment_timeline.xlsx");
+        link.setAttribute("download", "task_group_report.xlsx");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -115,3 +115,19 @@ export const fetchAllFacilitatorTimeLogDetail = (body) => (dispatch) => {
     });
 };
 
+export const fetchAttendance = (queryparm) => async (dispatch) => {
+console.log("fetchAttendance11111")
+  dispatch(actions.startCall({ callType: callTypes.list }));
+  dispatch(actions.startLoader({ callType: callTypes.list }));
+  console.log("bbbbbb")
+  return requestFromServer.getAllAttendanceSetup(queryparm)
+    .then((response) => {
+      console.log("response1111")
+      dispatch(actions.AttendanceFetched(response));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Attendances";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+  // }
+};

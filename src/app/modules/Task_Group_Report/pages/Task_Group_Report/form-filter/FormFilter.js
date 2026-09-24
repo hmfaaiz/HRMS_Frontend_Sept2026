@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
@@ -9,6 +9,11 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { fetchAllEmployeesWithNoPermissionData } from "../../../../../../_metronic/redux/dashboardActions";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth } from "../../../../../utils/common";
+import {
+  fetchTaskAssignmentTimeline,
+  fetchAttendance,
+} from "../../../_redux/redux-Actions";
+
 export function FormFilter({
   employees = [],
   ticketTypes = [],
@@ -21,6 +26,8 @@ export function FormFilter({
   ticketCodeFromUrl,
   setCurrentStatusToggle,
   currentStatusToggle,
+  reportType,
+  setReportType,
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const { hasRecords, queryParams } = uiContext;
@@ -48,8 +55,17 @@ export function FormFilter({
 
   ];
 
+
+  const reportReportTypeOptions = [
+    { value: 0, label: "Ticket Wise" },
+    { value: 1, label: "Date Wise" },
+    { value: 2, label: "Employee Wise" },
+
+  ];
+
   const applyFilter = (values) => {
     const cleanFilter = { ...values };
+
     Object.keys(cleanFilter).forEach((k) => {
       if (
         cleanFilter[k] === null ||
@@ -59,22 +75,42 @@ export function FormFilter({
         delete cleanFilter[k];
       }
     });
-    uiProps.setQueryParams({
+
+    const updatedQueryParams = {
       ...uiProps.queryParams,
       filter: {
         ...cleanFilter,
         ticketStatusIds:
-          cleanFilter.ticketStatus != null ? [cleanFilter.ticketStatus] : [],
+          cleanFilter.ticketStatus != null
+            ? [cleanFilter.ticketStatus]
+            : [],
       },
       pageNumber: 1,
       isFiltered: true,
       pdf: false,
       csv: false,
       excel: false,
-    });
-    uiContext.setShowFilter(true);
-  };
+    };
 
+    console.log("========== FILTER API CALL ==========");
+    console.log("Report Type:", cleanFilter.reportType);
+    console.log("Query Params:", updatedQueryParams);
+    console.log("Filter:", updatedQueryParams.filter);
+    console.log("=====================================");
+
+    // Update filters in UI context
+    uiProps.setQueryParams(updatedQueryParams);
+    uiContext.setShowFilter(true);
+
+    // Call API according to Group Type
+    if (Number(cleanFilter.reportType) === 0) {
+      dispatch(fetchTaskAssignmentTimeline(updatedQueryParams));
+    } else if (Number(cleanFilter.reportType) === 1) {
+      dispatch(fetchAttendance(updatedQueryParams));
+
+      console.log("aaaaa1111111111111")
+    }
+  };
   const handleExport = (type) => {
     if (!queryParams.isFiltered) {
       alert("Please apply filter before downloading.");
@@ -134,6 +170,7 @@ export function FormFilter({
       innerRef={formikRef}
       enableReinitialize
       initialValues={{
+        reportType: uiProps.queryParams?.filter?.reportType ?? 0,
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
         // ticketStatus: uiProps.queryParams?.filter?.ticketStatus || null,
         employeeId: uiProps.queryParams?.filter?.employeeId || "",
@@ -141,8 +178,8 @@ export function FormFilter({
         ticketStatus: uiProps.queryParams?.isFiltered
           ? uiProps.queryParams.filter.ticketStatus ?? null
           : 1,
-        priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
-        ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
+        // priorityLevelIds: uiProps.queryParams?.filter?.priorityLevelIds || [],
+        // ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
 
         ticketDateFrom: uiProps.queryParams?.isFiltered
           ? uiProps.queryParams.filter.ticketDateFrom ?? null
@@ -158,7 +195,7 @@ export function FormFilter({
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
 
         priorityLevelIds: priorityLevels?.map(pl => pl.value) || [],
-        ticketTypeIds: ticketTypes.map(pl => pl.value) || []
+        ticketTypeIds: ticketTypes?.map(pl => pl.value) || []
       }}
       onSubmit={applyFilter}
     >
@@ -169,10 +206,10 @@ export function FormFilter({
               <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
               <div className="grid grid-cols-12 gap-4 mb-2 ">
 
-
                 <div className="col-span-6 sm:col-span-2">
                   <MultiSelect
                     name="ticketTypeIds"
+                    isDisabled={reportType != 0}
                     label="Ticket Type"
                     value={ticketTypes?.filter((tt) =>
                       values.ticketTypeIds.includes(tt.value),
@@ -186,9 +223,11 @@ export function FormFilter({
                     }
                   />
                 </div>
+
                 <div className="col-span-6 sm:col-span-2">
                   <MultiSelect
                     name="priorityLevelIds"
+                    isDisabled={reportType != 0}
                     label="Priority Level"
                     value={priorityLevels.filter((pl) =>
                       values.priorityLevelIds.includes(pl.value),
@@ -205,6 +244,7 @@ export function FormFilter({
                 <div className="col-span-6 sm:col-span-2">
                   <SearchSelect
                     name="ticketStatus"
+                    isDisabled={reportType != 0}
                     label="Ticket Status"
                     value={
                       ticketStatusOptions.find(
@@ -215,18 +255,20 @@ export function FormFilter({
                       { label: "All", value: null },
                       ...ticketStatusOptions,
                     ]}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setFieldValue(
                         "ticketStatus",
-                        e?.value === null ? null : e.value,
-                      )
-                    }
+                        e?.value === null ? null : e.value
+                      );
+                    }}
+
                   />
                 </div>
                 <div className="col-span-6 sm:col-span-2">
                   <label className="form-label">Ticket Description</label>
                   <Field
                     name="ticketDescription"
+                    disabled={reportType != 0}
                     type="text"
                     className="form-control"
                     placeholder="Ticket Description"
@@ -236,6 +278,7 @@ export function FormFilter({
                   <Field
                     name="employeeId"
                     component={SearchSelect}
+
 
                     onChange={(e) => {
                       const value = e.value == "All" ? "" : e.value;
@@ -266,7 +309,7 @@ export function FormFilter({
                   <SearchSelect
                     name="assignment_type"
                     label="Assignment Type"
-                    isDisabled={!values.employeeId}
+                    isDisabled={!values.employeeId || reportType != 0}
                     value={
                       assignmentTypeOptions.find(
                         (o) => o.value === values.assignment_type
@@ -284,6 +327,8 @@ export function FormFilter({
                     }
                   />
                 </div>
+
+
 
               </div>
               <div className="grid grid-cols-12 gap-4">
@@ -329,20 +374,47 @@ export function FormFilter({
                     <Field
                       name="dueDateFrom"
                       component={DatePickerField}
+                      disabled={reportType != 0}
                       dateFormat="dd-MMM-yyyy"
                       label="From"
                       onChange={(d) => setFieldValue("dueDateFrom", d || null)}
                     />
                     <Field
                       name="dueDateTo"
+                      disabled={reportType != 0}
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="To"
                       onChange={(d) => setFieldValue("dueDateTo", d || null)}
                     />
 
+
                   </div>
                 </div>
+
+                <div className="col-span-6 sm:col-span-2 mt-5">
+                  <SearchSelect
+                    name="reportType"
+                    label="Group Type"
+                    // isDisabled={!values.employeeId}
+                    value={
+                      reportReportTypeOptions.find(
+                        (o) => o.value === values.reportType
+                      ) || null
+                    }
+                    options={[
+
+                      ...reportReportTypeOptions,
+                    ]}
+                    onChange={(e) => {
+                      const value = e?.value ?? 0;
+
+                      setFieldValue("reportType", value);
+                      setReportType(value);
+                    }}
+                  />
+                </div>
+
               </div>
             </fieldset>
           </Form>
@@ -398,6 +470,7 @@ export function FormFilter({
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
+                  disabled={reportType != 0}
                   id="ticketDetailsToggle"
                   checked={showTicketDetails}
                   onChange={(e) => onTicketDetailsChange(e.target.checked)}
@@ -412,15 +485,10 @@ export function FormFilter({
                 </label>
               </div>
 
-
-            </div>
-
-
-            <div className="flex flex-col items-end gap-2">
-              {/* Show Current Status */}
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
+                  disabled={reportType != 0}
                   id="currentStatusToggle"
                   checked={currentStatusToggle}
                   onChange={(e) => setCurrentStatusToggle(e.target.checked)}
@@ -435,6 +503,14 @@ export function FormFilter({
                   Show Ticket Current Status
                 </label>
               </div>
+
+
+            </div>
+
+
+            <div className="flex flex-col items-end gap-2">
+              {/* Show Current Status */}
+
               {/* Action buttons */}
               <div className="flex justify-end gap-2 flex-wrap">
 
@@ -472,9 +548,9 @@ export function FormFilter({
                 >
                   Cancel
                 </button>
-                {onPrint && (
+                {/* {onPrint && (
                   <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
-                    {/* PDF */}
+                   
                     <OverlayTrigger
                       overlay={
                         <Tooltip id="export-pdf-tooltip">Export PDF</Tooltip>
@@ -489,7 +565,7 @@ export function FormFilter({
                       </button>
                     </OverlayTrigger>
 
-                    {/* CSV */}
+               
                     <OverlayTrigger
                       overlay={
                         <Tooltip id="export-csv-tooltip">Export CSV</Tooltip>
@@ -504,7 +580,7 @@ export function FormFilter({
                       </button>
                     </OverlayTrigger>
 
-                    {/* Excel */}
+                 
                     <OverlayTrigger
                       overlay={
                         <Tooltip id="export-excel-tooltip">Export Excel</Tooltip>
@@ -519,7 +595,7 @@ export function FormFilter({
                       </button>
                     </OverlayTrigger>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>

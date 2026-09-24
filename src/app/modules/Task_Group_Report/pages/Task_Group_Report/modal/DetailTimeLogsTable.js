@@ -49,7 +49,7 @@ export function DetailTimeLogsTable() {
 
   const { currentState } = useSelector(
     (state) => ({
-      currentState: state.task_assignment_timeline,
+      currentState: state.task_group_report,
     }),
     shallowEqual
   );
