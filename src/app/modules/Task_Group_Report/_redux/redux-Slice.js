@@ -11,8 +11,10 @@ const initialState = {
   timeLogForEdit: undefined,
   timeLogsTotalCount: 0,
   timelogsEntities: null,
-  listLoading:false,
+  listLoading: false,
   attendanceEntities: [],
+  logTimeSummaryEntities: [],
+  summaryTotalCount: 0,
 };
 
 export const callTypes = {
@@ -33,13 +35,13 @@ export const taskGroupReportSlice = createSlice({
       else if (action.payload.callType === callTypes.csv) state.csvLoading = true;
       else if (action.payload.callType === callTypes.xlsx) state.excelLoading = true;
     },
-      startLoader: (state, action) => {
-    state.error = null;
-    if (action.payload.callType === callTypes.list) {
+    startLoader: (state, action) => {
+      state.error = null;
+      if (action.payload.callType === callTypes.list) {
 
-      state.listLoading = true;
-    }
-  },
+        state.listLoading = true;
+      }
+    },
     catchError: (state, action) => {
       state.lastError = action.payload.error;
       if (action.payload.callType === callTypes.list) state.listLoading = false;
@@ -57,6 +59,7 @@ export const taskGroupReportSlice = createSlice({
     timelineCleared: (state) => {
       state.entities = [];
       state.attendanceEntities = [];
+      state.logTimeSummaryEntities = [];
       state.totalCount = 0;
       state.listLoading = false;
       state.pdfLoading = false;
@@ -77,7 +80,8 @@ export const taskGroupReportSlice = createSlice({
     FacilitatorTimeLogDetailFetched: (state, action) => {
       state.listLoading = false;
       state.error = null;
-state.attendanceEntities = [];
+      state.attendanceEntities = [];
+      state.logTimeSummaryEntities = [];
       // Backend se data aa raha hai (single object OR array)
       const data = action.payload;
 
@@ -88,7 +92,8 @@ state.attendanceEntities = [];
       state.timeLogsTotalCount = data.totalResults || 0; // total number of details
     },
     AttendanceFetched: (state, action) => {
-       state.entities = [];
+      state.entities = [];
+      state.logTimeSummaryEntities = [];
       const entities = action.payload.data?.data.rows;
       const totalResult = action.payload.data?.data.totalResults;
       state.listLoading = false;
@@ -99,6 +104,19 @@ state.attendanceEntities = [];
     pdfFetched: (state) => { state.pdfLoading = false; },
     csvFetched: (state) => { state.csvLoading = false; },
     excelFetched: (state) => { state.excelLoading = false; },
+
+    logTimeSummaryDataFetched: (state, action) => {
+      state.attendanceEntities = [];
+      state.entities = [];
+      state.summaryTotalCount = action.payload?.data?.data.totalResults || 0;
+      state.listLoading = false;
+      state.error = null;
+      console.log("action.payload?.data?11111",action.payload?.data)
+      state.logTimeSummaryEntities = action.payload?.data?.data?.rows || [];
+
+
+    },
+
   },
 
 

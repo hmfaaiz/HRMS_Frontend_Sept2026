@@ -12,6 +12,7 @@ import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth } from
 import {
   fetchTaskAssignmentTimeline,
   fetchAttendance,
+  fetchLogTimewSummaryData,
 } from "../../../_redux/redux-Actions";
 
 export function FormFilter({
@@ -108,7 +109,8 @@ export function FormFilter({
     } else if (Number(cleanFilter.reportType) === 1) {
       dispatch(fetchAttendance(updatedQueryParams));
 
-      console.log("aaaaa1111111111111")
+    } else if (Number(cleanFilter.reportType) === 2) {
+      dispatch(fetchLogTimewSummaryData(updatedQueryParams));
     }
   };
   const handleExport = (type) => {

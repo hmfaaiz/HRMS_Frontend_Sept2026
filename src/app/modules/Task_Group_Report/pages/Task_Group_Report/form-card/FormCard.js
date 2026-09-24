@@ -11,6 +11,7 @@ import { fetchAttendance, fetchTaskAssignmentTimeline } from "../../../_redux/re
 import { fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { AttendanceTable } from "../form-table/AttendanceTable";
+import LogtimeSummaryTable from "../form-table/LogtimeSummaryTable";
 export function FormCard() {
   const uiContext = useTaskAssignmentTimelineUIContext();
   const dispatch = useDispatch();
@@ -124,6 +125,9 @@ useEffect(() => {
       )}
       {reportType === 1 && (
         <AttendanceTable />
+      )}  
+      {reportType === 2 && (
+        <LogtimeSummaryTable />
       )}
     </TCard>
   );

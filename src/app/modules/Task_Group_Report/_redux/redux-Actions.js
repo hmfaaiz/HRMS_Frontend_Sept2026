@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { taskGroupReportSlice, callTypes } from "./redux-Slice";
 import * as requestFromServer from "./redux-Crud";
+import { SERVER_MESSAGES } from "../../../utils/constants";
 
 const { actions } = taskGroupReportSlice;
 
@@ -106,7 +107,7 @@ export const fetchAllFacilitatorTimeLogDetail = (body) => (dispatch) => {
     .getAllFacilitatorTimeLogDetail(body)
     .then((response) => {
       const entities = response.data.data;
-    
+
       dispatch(actions.FacilitatorTimeLogDetailFetched(entities));
     })
     .catch((error) => {
@@ -116,7 +117,7 @@ export const fetchAllFacilitatorTimeLogDetail = (body) => (dispatch) => {
 };
 
 export const fetchAttendance = (queryparm) => async (dispatch) => {
-console.log("fetchAttendance11111")
+  console.log("fetchAttendance11111")
   dispatch(actions.startCall({ callType: callTypes.list }));
   dispatch(actions.startLoader({ callType: callTypes.list }));
   console.log("bbbbbb")
@@ -130,4 +131,28 @@ console.log("fetchAttendance11111")
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
   // }
+};
+
+export const fetchLogTimewSummaryData = (body) => async (dispatch) => {
+  dispatch(actions.logTimeSummaryDataFetched(undefined));
+  if (new Date(body?.from_date) > new Date(body?.to_date)) {
+    toast.error(SERVER_MESSAGES.correctDateRange)
+
+    return;
+  }
+
+  return requestFromServer.getAllLogTimeSummaryData(body)
+
+    .then((response) => {
+
+
+      dispatch(actions.logTimeSummaryDataFetched(response));
+
+    })
+    .catch((error) => {
+
+      dispatch(actions.logTimeSummaryDataFetched(undefined));
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+      toast.error(error.response?.data?.message);
+    });
 };

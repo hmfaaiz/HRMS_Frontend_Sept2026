@@ -17,18 +17,17 @@ export function getAllFacilitatorTimeLogDetail(body) {
 }
 
 export async function getAllAttendanceSetup(body) {
-  console.log("CRUD FUNCTION CALLED");
-  console.log("API_URL:", API_URL);
-  console.log("BODY:", body);
-
-  console.log("BEFORE AXIOS");
 
   const response = axios.post(
     `${API_URL}/task_group_report/read-all-attendance`,
     body
   );
 
-  console.log("AFTER AXIOS", response);
-
   return response;
 }
+
+export function getAllLogTimeSummaryData(body) {
+
+  return axios.post(`${API_URL}/task_group_report/read-all-employee-logtime-summary`, body);
+}
+
