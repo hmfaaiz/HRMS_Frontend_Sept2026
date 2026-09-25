@@ -53,12 +53,12 @@ export function LogtimeSummaryTable({ data, fromDate, toDate }) {
 
 
   const {
-    summaryTotalCount ,
+    summaryTotalCount,
     logTimeSummaryEntities,
     listLoading,
   } = currentState;
 
-console.log("logTimeSummaryEntities11111",logTimeSummaryEntities)
+  console.log("logTimeSummaryEntities11111", logTimeSummaryEntities)
   const dispatch = useDispatch();
 
 
@@ -108,31 +108,31 @@ console.log("logTimeSummaryEntities11111",logTimeSummaryEntities)
       },
     },
 
-    {
-      dataField: "designation",
-      text: "Designation",
-      sort: true,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        textAlign: "left",
-        whiteSpace: "normal",
-        overflowWrap: "anywhere",
-      },
-    },
+    // {
+    //   dataField: "designation",
+    //   text: "Designation",
+    //   sort: true,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     textAlign: "left",
+    //     whiteSpace: "normal",
+    //     overflowWrap: "anywhere",
+    //   },
+    // },
 
-    {
-      dataField: "department",
-      text: "Department",
-      sort: true,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        textAlign: "left",
-        whiteSpace: "normal",
-        overflowWrap: "anywhere",
-      },
-    },
+    // {
+    //   dataField: "department",
+    //   text: "Department",
+    //   sort: true,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     textAlign: "left",
+    //     whiteSpace: "normal",
+    //     overflowWrap: "anywhere",
+    //   },
+    // },
 
     {
       dataField: "legalHours",
@@ -142,6 +142,9 @@ console.log("logTimeSummaryEntities11111",logTimeSummaryEntities)
       headerSortingClasses,
       style: {
         textAlign: "right",
+      },
+      headerStyle: {
+        textAlign: "center",
       },
       formatter: (cell) => formatNumber(cell),
     },
@@ -155,6 +158,9 @@ console.log("logTimeSummaryEntities11111",logTimeSummaryEntities)
       style: {
         textAlign: "right",
       },
+      headerStyle: {
+        textAlign: "center",
+      },
       formatter: (cell) => formatNumber(cell),
     },
 
@@ -166,6 +172,10 @@ console.log("logTimeSummaryEntities11111",logTimeSummaryEntities)
       headerSortingClasses,
       style: {
         textAlign: "right",
+         minWidth: "10px",
+      },
+      headerStyle: {
+        textAlign: "center",
       },
       formatter: (cell) => formatNumber(cell),
     },
@@ -179,6 +189,9 @@ console.log("logTimeSummaryEntities11111",logTimeSummaryEntities)
       style: {
         textAlign: "right",
       },
+      headerStyle: {
+        textAlign: "center",
+      },
       formatter: (cell) => formatNumber(cell),
     },
 
@@ -189,6 +202,9 @@ console.log("logTimeSummaryEntities11111",logTimeSummaryEntities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
+        textAlign: "right",
+      },
+      headerStyle: {
         textAlign: "center",
       },
       formatter: (cell) =>
