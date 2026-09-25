@@ -107,7 +107,7 @@ export function FormCard() {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-      <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+      {/* <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
         <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
@@ -117,9 +117,10 @@ export function FormCard() {
           />
         </div>
         <EmployeeProfile />
-      </div>
+      </div> */}
 
-      <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+      {/* <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4"> */}
+      <div className="md:col-span-1 xl:col-span-12 flex flex-col gap-4">
         <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}

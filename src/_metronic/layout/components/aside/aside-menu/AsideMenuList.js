@@ -1,242 +1,200 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, ChevronRight, LayoutDashboard, ChevronLeft, ChevronRight as ChevronRightIcon, ChevronsLeft, ChevronsRight } from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import {
+  LayoutDashboard,
+  ChevronRight,
+  ChevronLeft,
+  CalendarDays,
+  Palmtree,
+  Banknote,
+  Plane,
+  Receipt,
+  BriefcaseBusiness,
+  TrendingUpDown,
+  UserRoundX,
+  HeartHandshake,
+  PanelsTopLeft,
+  FolderCheck,
+  Settings,
+  Users,
+  FileText,
+  Layers,
+  ChevronDown,
+  ChevronUp,
+  Building2,
+  UserCheck,
+  ClipboardList,
+  BarChart3,
+  Shield,
+  Package,
+  Truck,
+  DollarSign,
+  Target,
+  BookOpen,
+  Wrench,
+  NotebookTabs,
+  Luggage,
+  BanknoteArrowUp,
+  Minus,
+  SquareArrowOutUpRight,
+  CircleArrowOutUpRight,
+  CircleArrowOutUpLeft,
+  Sparkles,
+} from "lucide-react";
 import { useLocation } from "react-router";
 import { checkIsActive } from "../../../../_helpers";
-import { shallowEqual, useSelector } from "react-redux";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import * as dashboardActions from "../../../../../app/modules/Dashboard/_redux/dashboardActions";
 import "./navigation_menu.css";
 import { Header } from "../../header/Header";
-import { Link } from "react-router-dom";
-import ReactDOM from 'react-dom';
+import { Topbar } from "../../header/Topbar";
+import ReactDOM from "react-dom";
+
+// Icon map for dynamic menu parent keys from backend
+const ICON_MAP = {
+  // Attendance
+  Attendance: CalendarDays,
+  "Attendance Management": CalendarDays,
+  // Leave
+  Leave: Palmtree,
+  // Payroll
+  Payroll: Banknote,
+  // Travel
+  Travel: Plane,
+  // Reimbursement
+  Reimbursement: Receipt,
+  "Reimbursement Claim": Receipt,
+  // Recruitment
+  Recruitment: BriefcaseBusiness,
+  "Job Requisition Vacancy": BriefcaseBusiness,
+  "Interview Recommendations": BriefcaseBusiness,
+  // Appraisal
+  Appraisal: TrendingUpDown,
+  "Appraisal Evaluation": TrendingUpDown,
+  // Separation / Resignation
+  Resignation: UserRoundX,
+  Separation: UserRoundX,
+  // Help Desk
+  "Help Desk": HeartHandshake,
+  Task: HeartHandshake,
+  // Project Management
+  "Project Management": PanelsTopLeft,
+  // Documents
+  Documents: FolderCheck,
+  "Company Documents": FolderCheck,
+  company_doc_portal: FolderCheck,
+  // Budget
+  "Manpower Budget": BanknoteArrowUp,
+  Budget: BanknoteArrowUp,
+  // Employee
+  Employee: Users,
+  "Employee Task": ClipboardList,
+  // Settings
+  Settings: Settings,
+  // Roster
+  Roster: NotebookTabs,
+  "Attendance Roster": NotebookTabs,
+  // Loan
+  Loan: DollarSign,
+  // Reports
+  Reports: BarChart3,
+  // Compliance
+  Compliance: Shield,
+  // Inventory
+  Inventory: Package,
+  // Logistics
+  Logistics: Truck,
+  // Goals
+  Goals: Target,
+  // Training
+  Training: BookOpen,
+  // Maintenance
+  Maintenance: Wrench,
+  // Organization
+  Organization: Building2,
+  // Fleet
+  Fleet: Truck,
+};
+
+const getIcon = (key) => {
+  // Direct match first
+  if (ICON_MAP[key]) return ICON_MAP[key];
+  // Case-insensitive partial match
+  const lower = key.toLowerCase();
+  for (const [mapKey, Icon] of Object.entries(ICON_MAP)) {
+    if (lower.includes(mapKey.toLowerCase()) || mapKey.toLowerCase().includes(lower)) {
+      return Icon;
+    }
+  }
+  return Layers; // fallback
+};
+
+const SIDEBAR_EXPANDED_WIDTH = 260;
+const SIDEBAR_COLLAPSED_WIDTH = 64;
 
 export function AsideMenuList({ layoutProps }) {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
   const menu = auth?.menu;
-
   const user = auth?.user;
-  const Settings = auth?.userAccess?.Settings;
+  const Settings_access = auth?.userAccess?.Settings;
 
-  const [isVisible, setIsVisible] = useState(false);
-  const menuRef = useRef(null);
-  const dropdownContainerRef = useRef(null);
-  const scrollContainerRef = useRef(null);
-  const headerRef = useRef(null);
+  const [isBelowLg, setIsBelowLg] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false
+  );
+  const [userCollapsed, setUserCollapsed] = useState(false);
 
-  // State for scroll position
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-  const [itemWidth, setItemWidth] = useState(0);
+  useEffect(() => {
+    const handleResize = () => {
+      const small = window.innerWidth < 1024;
+      setIsBelowLg(small);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  // Hide menu when clicked outside
+  const isCollapsed = isBelowLg || userCollapsed;
+
+  // Fly-out dropdown state (which parent is open)
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const dropdownPortalRef = useRef(null);
+  const sidebarRef = useRef(null);
+
+  // Sub-menu fly-out state
+  const [openSubMenu, setOpenSubMenu] = useState({});
+  const [subMenuPosition, setSubMenuPosition] = useState({ top: 0, left: 0 });
   const subMenuPortalRef = useRef(null);
 
-  // Add state for dropdown anchor rect to handle scroll updates
-  const [dropdownAnchorRect, setDropdownAnchorRect] = useState(null);
-  // Add state for submenu anchor rect to handle scroll updates
-  const [subMenuAnchorRect, setSubMenuAnchorRect] = useState(null);
+  // Shared close timer ref — cancelled whenever any hover begins
+  const closeTimerRef = useRef(null);
+  const isMouseInFlyout = useRef(false);
+  const isMouseInSubMenu = useRef(false);
 
-  const handleDropdown = (index, event) => {
-    if (event && event.currentTarget) {
-      const rect = event.currentTarget.getBoundingClientRect();
-      // Store the rect for scroll position updates
-      setDropdownAnchorRect(rect);
-      // Use viewport coordinates (no scroll offset)
-      setDropdownPosition({
-        top: rect.bottom,
-        left: rect.left
-      });
-    }
-    setDropdownOpen(dropdownOpen === index ? null : index);
-    closeSubMenu()
-  };
-
-  // Toggle visibility of the menu
-  const toggleMenuVisibility = () => {
-    setIsVisible((prevState) => !prevState);
-  };
-
-  // Check scroll position and update arrow visibility
-  const updateScrollButtons = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      setCanScrollLeft(scrollLeft > 10);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+  const cancelCloseTimer = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
     }
   };
 
-  // Calculate item width
-  const calculateItemWidth = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const firstItem = container.querySelector('.menu-item');
-      if (firstItem) {
-        const width = firstItem.offsetWidth + 24; // width + gap (space-x-6 = 24px)
-        setItemWidth(width);
-      }
-    }
-  };
-
-  // Scroll functions - scroll by 8 items
-  const scrollLeft = () => {
-      setDropdownOpen(null);
-        setOpenSubMenu({});
-    if (scrollContainerRef.current && itemWidth > 0) {
-      scrollContainerRef.current.scrollBy({ left: -(itemWidth * 8), behavior: 'smooth' });
-    } else {
-      scrollContainerRef.current.scrollBy({ left: -240, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-      setDropdownOpen(null);
-        setOpenSubMenu({});
-    if (scrollContainerRef.current && itemWidth > 0) {
-      scrollContainerRef.current.scrollBy({ left: itemWidth * 8, behavior: 'smooth' });
-    } else {
-      scrollContainerRef.current.scrollBy({ left: 240, behavior: 'smooth' });
-    }
-  };
-
-  // Add scroll event listener
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', updateScrollButtons);
-      setTimeout(() => {
-        updateScrollButtons();
-        calculateItemWidth();
-      }, 100);
-      window.addEventListener('resize', () => {
-        updateScrollButtons();
-        calculateItemWidth();
-      });
-
-      return () => {
-        scrollContainer.removeEventListener('scroll', updateScrollButtons);
-        window.removeEventListener('resize', updateScrollButtons);
-      };
-    }
-  }, [menu]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      const clickedInsideMain = dropdownContainerRef.current &&
-        dropdownContainerRef.current.contains(event.target);
-      const clickedInsideDropdownPortal = dropdownPortalRef.current &&
-        dropdownPortalRef.current.contains(event.target);
-      const clickedInsideSubMenuPortal = subMenuPortalRef.current &&
-        subMenuPortalRef.current.contains(event.target);
-
-      if (!clickedInsideMain && !clickedInsideDropdownPortal && !clickedInsideSubMenuPortal) {
+  const scheduleClose = (delay = 120) => {
+    cancelCloseTimer();
+    closeTimerRef.current = setTimeout(() => {
+      if (!isMouseInFlyout.current && !isMouseInSubMenu.current) {
         setDropdownOpen(null);
         setOpenSubMenu({});
-        setDropdownAnchorRect(null);
-        setSubMenuAnchorRect(null);
       }
-    }
-    if (dropdownOpen !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownOpen]);
-
-  // Update dropdown position on scroll - ALWAYS use viewport coordinates
-  useEffect(() => {
-    if (dropdownOpen !== null && dropdownAnchorRect) {
-      const updateDropdownPosition = () => {
-        // Get the current position of the sticky header
-        const headerElement = document.querySelector('.sticky-header');
-        if (headerElement) {
-          const headerRect = headerElement.getBoundingClientRect();
-          // Position dropdown right below the header using viewport coordinates
-          setDropdownPosition({
-            top: headerRect.bottom,
-            left: dropdownAnchorRect.left
-          });
-        } else {
-          // Fallback: use the stored viewport coordinates
-          setDropdownPosition({
-            top: dropdownAnchorRect.bottom,
-            left: dropdownAnchorRect.left
-          });
-        }
-      };
-
-      // Initial update
-      updateDropdownPosition();
-
-      // Update on scroll and resize
-      window.addEventListener('scroll', updateDropdownPosition, true);
-      window.addEventListener('resize', updateDropdownPosition);
-
-      return () => {
-        window.removeEventListener('scroll', updateDropdownPosition, true);
-        window.removeEventListener('resize', updateDropdownPosition);
-      };
-    }
-  }, [dropdownOpen, dropdownAnchorRect]);
-
-  // Update submenu position on scroll
-  useEffect(() => {
-    if (Object.keys(openSubMenu).length > 0 && subMenuAnchorRect) {
-      const updateSubMenuPosition = () => {
-        // Get the current position of the sticky header
-        const headerElement = document.querySelector('.sticky-header');
-        if (headerElement) {
-          const headerRect = headerElement.getBoundingClientRect();
-          // Position submenu relative to the header using viewport coordinates
-          setSubMenuPosition({
-            top: headerRect.bottom + 5,
-            left: subMenuAnchorRect.right + 5
-          });
-        } else {
-          // Fallback: use the stored viewport coordinates
-          setSubMenuPosition({
-            top: subMenuAnchorRect.top + 5,
-            left: subMenuAnchorRect.right + 5
-          });
-        }
-      };
-
-      // Initial update
-      updateSubMenuPosition();
-
-      // Update on scroll and resize
-      window.addEventListener('scroll', updateSubMenuPosition, true);
-      window.addEventListener('resize', updateSubMenuPosition);
-
-      return () => {
-        window.removeEventListener('scroll', updateSubMenuPosition, true);
-        window.removeEventListener('resize', updateSubMenuPosition);
-      };
-    }
-  }, [openSubMenu, subMenuAnchorRect]);
-
-  const isDashboardAccess = Settings?.some((obj) =>
-    Object.values(obj).includes("read-all-vehicles-dashboard")
-  );
-
-  const location = useLocation();
-  const getMenuItemActive = (url, hasSubmenu = false) => {
-    return checkIsActive(location, url)
-      ? ` ${!hasSubmenu &&
-      "menu-item-active"} menu-item-open menu-item-not-hightlighted`
-      : "";
+    }, delay);
   };
 
-  const res = Object.values(UserAccess).flatMap((items) => items);
+  const location = useLocation();
 
+  // Portal/access logic (unchanged from original)
+  const res = Object.values(UserAccess || {}).flatMap((items) =>
+    Array.isArray(items) ? items : []
+  );
   const portalRoutesLength = res.filter(
     (e) => e?.isResourceShow && e.portalType === 2
   ).length;
@@ -253,330 +211,543 @@ export function AsideMenuList({ layoutProps }) {
       : "1"
     : HRMSRoutesLength > 0
       ? "1"
-      : "2";
+      : portalRoutesLength > 0
+        ? "2"
+        : "1";
 
+  const isDashboardAccess = Settings_access?.some((obj) =>
+    Object.values(obj).includes("read-all-vehicles-dashboard")
+  );
 
-  const [openSubMenu, setOpenSubMenu] = useState({});
-  const [subMenuPosition, setSubMenuPosition] = useState({ top: 0, left: 0 });
+  const isAIChatbotPage = window.location.pathname.includes("/ask/ai-chatbot");
 
-  const toggleSubMenu = (parentKey, childHeading, event) => {
-    if (event && event.currentTarget) {
-      const rect = event.currentTarget.getBoundingClientRect();
-      // Store the rect for scroll position updates
-      setSubMenuAnchorRect(rect);
-      // Use viewport coordinates (no scroll offset)
-      setSubMenuPosition({
-        top: rect.top + 5,
-        left: rect.right + 5
-      });
+  const dispatch = useDispatch();
+
+  // Portal 2 menu items matching Associated Modules ordering and logic
+  const moduleRights = useSelector((state) => state?.dashboard?.moduleRights, shallowEqual);
+  const portalInfo = useSelector((state) => state?.dashboard?.portalInfo, shallowEqual);
+
+  useEffect(() => {
+    if (isEmployeePortal === "2") {
+      if (!moduleRights || moduleRights.length === 0) {
+        dispatch(dashboardActions.fetchModuleRights());
+      }
+      if (!portalInfo) {
+        dispatch(dashboardActions.getEmployeePortalInfo(() => { }, "1"));
+      }
     }
-    setOpenSubMenu((prev) => {
-      // Close all other submenus
-      const newState = {};
-      // If clicking the same item, toggle it
-      if (prev[parentKey]?.[childHeading]) {
-        return {};
-      }
-      // Open the clicked submenu
-      return {
-        [parentKey]: {
-          [childHeading]: true
-        }
-      };
-    });
-  };
+  }, [dispatch, isEmployeePortal, moduleRights, portalInfo]);
 
-  const closeSubMenu = () => {
+  const employeeProfileWorkflowItem = UserAccess?.["Employee"]?.find(
+    (el) => el?.componentName === "ReadAllEmployeeProfileWorkflow" && el?.isResourceShow && el?.portalType == 2
+  );
+  const attendanceRequest = UserAccess?.["Attendance"]?.find(
+    (el) => el?.componentName === "ReadAllAttendanceRequest" && el?.isResourceShow && el?.portalType == 2
+  );
+  const leaveRequest = UserAccess?.["Leave"]?.find(
+    (el) => el?.componentName === "ReadAllLeaveRequest" && el?.isResourceShow && el?.portalType == 2
+  );
+  const loanRequest = UserAccess?.["Payroll"]?.find(
+    (el) => el?.componentName === "ReadAllLoanRequest" && el?.isResourceShow && el?.portalType == 2
+  );
+  const AttendanceRosterRequest = UserAccess?.["Attendance Management"]?.find(
+    (el) => el?.componentName === "ReadAllAttendanceRosterRequest" && el?.isResourceShow && el?.portalType == 2
+  );
+  const TravelRequest = UserAccess?.["Travel"]?.find(
+    (el) => el?.componentName === "ReadAllTravelRequest" && el?.isResourceShow && el?.portalType == 2
+  );
+  const claimRequest = UserAccess?.["Payroll"]?.find(
+    (el) => el?.componentName === "ReadAllReimbursementClaimRequest" && el?.isResourceShow && el?.portalType == 2
+  );
+  const jobRequest = UserAccess?.["Job Requisition Vacancy"]?.find(
+    (el) => el?.componentName === "ReadAllRequisitionJobVacancy" && el?.isResourceShow && el?.portalType == 2
+  );
+  const appraisalGoalSetup = UserAccess?.["Appraisal"]?.find(
+    (el) => el?.componentName === "ReadAllEmployeeGoalSetup" && el?.isResourceShow && el?.portalType == 2
+  );
+  const resignRequest = UserAccess?.["Resignation"]?.find(
+    (el) => el?.componentName === "ReadAllResignation" && el?.isResourceShow && el?.portalType == 2
+  );
+  const taskCreation = UserAccess?.["Help Desk"]?.find(
+    (el) => el?.componentName === "ReadAllFacilitatorTicketCreation" && el?.isResourceShow && el?.portalType == 2
+  );
+  const ticketCreation = UserAccess?.["Task"]?.find(
+    (el) => el?.componentName === "ReadAllTicketSetup" && el?.isResourceShow && el?.portalType == 2
+  );
+  const docSection = UserAccess?.["company_doc_portal"]?.find(
+    (el) => el?.componentName === "ReadAllCompanyDocPortal" && el?.isResourceShow && el?.portalType == 2
+  );
+  const portalDepartmentWiseBudget = UserAccess?.["Manpower Budget"]?.find(
+    (el) => el?.componentName === "ReadAllPortalDepartmentWiseBudget" && el?.isResourceShow && el?.portalType == 2
+  );
+
+  const portal2MenuItems = useMemo(() => {
+    return [
+      {
+        name: "Employee Profile Request",
+        link: "/employee_profile_workflow/read-all-employee-profile-workflow",
+        icon: Users,
+        show: !!employeeProfileWorkflowItem,
+      },
+      {
+        name: "Attendance Request",
+        link: "/attendance_request/read-all-attendance-request",
+        icon: CalendarDays,
+        show: moduleRights?.find((e) => e?.value == 3)?.allow && !!attendanceRequest,
+      },
+      {
+        name: "Leave Request",
+        link: "/leave-request/read-all-leave-request",
+        icon: Palmtree,
+        show: moduleRights?.find((e) => e?.value == 2)?.allow && !!leaveRequest,
+      },
+      {
+        name: "Loan Request",
+        link: "/loan_request/read-all-loan-request",
+        icon: DollarSign,
+        show: moduleRights?.find((e) => e?.value == 4)?.allow && !!loanRequest,
+      },
+      {
+        name: "Roster Request",
+        link: "/attendance_roster_request/read-all-attendance-roster-request",
+        icon: NotebookTabs,
+        show: moduleRights?.find((e) => e?.value == 3)?.allow && !!AttendanceRosterRequest,
+      },
+      {
+        name: "Travel Request",
+        link: "/travel_request/read-all-travel-request",
+        icon: Luggage,
+        show: moduleRights?.find((e) => e?.value == 4)?.allow && !!TravelRequest,
+      },
+      {
+        name: "Reimbursement Request",
+        link: "/reimbursement_claim_request/read-all-reimbursement-claim-request",
+        icon: Receipt,
+        show: moduleRights?.find((e) => e?.value == 4)?.allow && !!claimRequest,
+      },
+      {
+        name: "Recruitment Request",
+        link: "/requisition_job_vacancy/read-all-requisition-job-vacancy",
+        icon: BriefcaseBusiness,
+        show: moduleRights?.find((e) => e?.value == 5)?.allow && !!jobRequest,
+      },
+      {
+        name: "Appraisal Feedback",
+        link: "/appraisal_evaluation/read-all-appraisal-evaluation",
+        icon: TrendingUpDown,
+        show: moduleRights?.find((e) => e?.value == 6)?.allow && !!appraisalGoalSetup,
+      },
+      {
+        name: "Resignation Request",
+        link: "/employee_resignation/read-all-resignation",
+        icon: UserRoundX,
+        show:
+          moduleRights?.find((e) => e?.value == "separation")?.allow &&
+          !!resignRequest &&
+          portalInfo?.allowResignationRequest,
+      },
+      {
+        name: "Help Desk Task",
+        link: "/portal_ticket_creation/read-all-facilitator-ticket-creation",
+        icon: HeartHandshake,
+        show: moduleRights?.find((e) => e?.value == 7)?.allow && !!taskCreation,
+      },
+      {
+        name: "Project Management",
+        link: "/ticket_setup_portal/read-all-ticket-setup",
+        icon: PanelsTopLeft,
+        show: moduleRights?.find((e) => e?.value == 7)?.allow && !!ticketCreation,
+      },
+      {
+        name: "Employee Documents",
+        link: "/company_doc_portal/read-all-company-doc-portal",
+        icon: FolderCheck,
+        show: moduleRights?.find((e) => e?.value == 1)?.allow && !!docSection,
+      },
+      {
+        name: "Budget Request",
+        link: "/portal_department_wise_budget/read-all-portal-department-wise-budget",
+        icon: BanknoteArrowUp,
+        show: moduleRights?.find((e) => e?.value == 8)?.allow && !!portalDepartmentWiseBudget,
+      },
+    ];
+  }, [
+    moduleRights,
+    portalInfo,
+    employeeProfileWorkflowItem,
+    attendanceRequest,
+    leaveRequest,
+    loanRequest,
+    AttendanceRosterRequest,
+    TravelRequest,
+    claimRequest,
+    jobRequest,
+    appraisalGoalSetup,
+    resignRequest,
+    taskCreation,
+    ticketCreation,
+    docSection,
+    portalDepartmentWiseBudget,
+  ]);
+
+  const getMenuItemActive = useCallback(
+    (url) => {
+      return checkIsActive(location, url) ? "sidebar-item-active" : "";
+    },
+    [location]
+  );
+
+  // ─── Open dropdown fly-out ───────────────────────────────────────────────
+  const handleParentHover = (parentKey, event) => {
+    if (!event?.currentTarget) return;
+    // Cancel any pending close — we are hovering a new item
+    cancelCloseTimer();
+    const rect = event.currentTarget.getBoundingClientRect();
+    setDropdownPosition({
+      top: rect.top,
+      left: isCollapsed ? SIDEBAR_COLLAPSED_WIDTH + 4 : SIDEBAR_EXPANDED_WIDTH + 4,
+    });
+    setDropdownOpen(parentKey);
     setOpenSubMenu({});
+    isMouseInFlyout.current = false;
+    isMouseInSubMenu.current = false;
   };
 
-  // Update scroll buttons when menu changes
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     updateScrollButtons();
-  //     calculateItemWidth();
-  //   }, 200);
-  // }, [menu, isEmployeePortal, isVisible]);
-
-
-  // Update scroll buttons when menu / portal changes
-useEffect(() => {
-  const resetAndCalculate = () => {
-    if (!scrollContainerRef.current) return;
-
-    const container = scrollContainerRef.current;
-
-    // Reset scroll position whenever portal changes
-    container.scrollLeft = 0;
-
-    // Recalculate item width
-    calculateItemWidth();
-
-    // Recalculate arrow visibility
-    updateScrollButtons();
+  const handleParentLeave = () => {
+    // Schedule close — will be cancelled if mouse enters the flyout portal
+    scheduleClose(120);
   };
 
-  // Run after DOM has updated
-  const timer = setTimeout(() => {
-    resetAndCalculate();
-  }, 300);
-
-  return () => clearTimeout(timer);
-}, [menu, isEmployeePortal, isVisible]);
-
-  // Get visible menu items
-  const getVisibleMenuItems = () => {
-    if (!menu) return [];
-    const visibleItems = [];
-    Object.keys(menu).forEach((parentKey) => {
-      const parentItems = menu[parentKey];
-      const hasVisible = Object.values(parentItems).some((childGroup) =>
-        childGroup.some((item) => item.isResourceShow && item?.portalType == 1)
-      );
-      if (hasVisible) {
-        visibleItems.push(parentKey);
-      }
+  // ─── Sub-menu fly-out ────────────────────────────────────────────────────
+  const toggleSubMenu = (parentKey, childHeading, event) => {
+    if (!event?.currentTarget) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    setSubMenuPosition({
+      top: rect.top,
+      left: rect.right + 4,
     });
-    return visibleItems;
+    setOpenSubMenu((prev) => {
+      if (prev[parentKey]?.[childHeading]) return {};
+      return { [parentKey]: { [childHeading]: true } };
+    });
   };
 
+  // Close everything when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      const inSidebar = sidebarRef.current?.contains(e.target);
+      const inDropdown = dropdownPortalRef.current?.contains(e.target);
+      const inSubMenu = subMenuPortalRef.current?.contains(e.target);
+      if (!inSidebar && !inDropdown && !inSubMenu) {
+        setDropdownOpen(null);
+        setOpenSubMenu({});
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Re-sync sidebar width CSS variable
+  const sidebarWidth = isCollapsed
+    ? SIDEBAR_COLLAPSED_WIDTH
+    : SIDEBAR_EXPANDED_WIDTH;
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--sidebar-width",
+      `${sidebarWidth}px`
+    );
+  }, [sidebarWidth]);
+
+  // ─── Render ──────────────────────────────────────────────────────────────
   return (
-    <div 
-      ref={headerRef} 
-      className="sticky-header" 
-      style={{ 
-        zIndex: "999", 
-        position: 'sticky', 
-        top: 0, 
-        width: '100%',
-        backgroundColor: '#0093dd'
-      }}
-    >
-      <Header
-        isEmployeePortal={isEmployeePortal}
-        company={user?.Company}
-        toggleMenuVisibility={toggleMenuVisibility}
-      />
-      {isEmployeePortal === "1" && (
-        <div
-          className="w-full flex container-fluid"
-          style={{ display: "flex", width: "100%", position: "relative" }}
-          ref={dropdownContainerRef}
-        >
-          <nav className="w-full flex items-center py-1 px-2" style={{ position: 'relative' }}>
-
-            <div className="flex-shrink-0 mr-4" style={{ flexShrink: 0 }}>
-              <a
-                className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl whitespace-nowrap"
-                href="/dashboard"
-              >
-                <LayoutDashboard className="w-4 h-4 stroke-2 rounded-md inline-block text-white" />
-                <span className="ml-2">Dashboard</span>
-              </a>
-            </div>
-
-            <div className="flex items-center w-200 mr-2 ml-1" style={{ position: 'relative' }}>
-              {/* Left Arrow */}
-              {canScrollLeft && (
-                <button
-                  onClick={scrollLeft}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 ml-1 mr-4 transition-all duration-200"
-                  style={{
-                    width: '25px',
-                    height: '25px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid #e5e7eb',
-                    marginRight: '16px'
-                  }}
-                >
-                  <ChevronsLeft size={16} className="w-4 h-4 text-gray-700" />
-                </button>
-              )}
-
-              {/* Scrollable Menu Items */}
-              <div
-                className="overflow-x-auto scroll-smooth ml-1 mr-16"
-                style={{
-                  scrollbarWidth: 'none',
-                  msOverflowStyle: 'none',
-                  paddingLeft: canScrollLeft ? '45px' : '0',
-                  paddingRight: canScrollRight ? '45px' : '0',
-                  overflowY: 'visible',
-                  width: itemWidth > 0 ? `${itemWidth * 8}px` : 'auto',
-                  maxWidth: '100%',
-                  flex: '0 0 auto'
-                }}
-                ref={scrollContainerRef}
-              >
-                <style>{`
-                  .menu-scroll-container::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
-
-                <ul className="flex flex-row items-center space-x-6 list-none mb-1 whitespace-nowrap" style={{ overflow: 'visible' }}>
-                  {menu &&
-                    Object.keys(menu).map((parentKey, idx) => {
-                      const parentItems = menu[parentKey];
-
-                      const hasVisible = Object.values(parentItems).some((childGroup) =>
-                        childGroup.some((item) => item.isResourceShow && item?.portalType == 1)
-                      );
-                      if (!hasVisible) return null;
-
-                      return (
-                        <li className="relative menu-item" key={parentKey} style={{ position: 'relative', flexShrink: 0 }}>
-                          <button
-                            className="p-0 bg-transparent border-none font-bold text-white focus:outline-none capitalize flex items-center whitespace-nowrap hover:text-gray-200 transition-colors text-sm"
-                            onClick={(e) => handleDropdown(idx, e)}
-                            onMouseEnter={(e) => handleDropdown(idx, e)}
-                          >
-                            {parentKey.replace(/_/g, " ")}
-                            <ChevronDown
-                              className={`ml-1 w-4 h-4 stroke-2 transition-transform duration-200 ${dropdownOpen === idx ? "rotate-180" : "rotate-0"
-                                }`}
-                            />
-                          </button>
-                        </li>
-                      );
-                    })}
-                </ul>
-
-           
-              </div>
-                   {canScrollRight && (
-                  <button
-                    onClick={scrollRight}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 z-30 bg-white hover:bg-gray-100 rounded-full shadow-lg p-1 ml-1 transition-all duration-200"
-                    style={{
-                      width: '25px',
-                      height: '25px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '1px solid #e5e7eb'
-                    }}
-                  >
-                    <ChevronsRight size={16} className="w-4 h-4 text-gray-700" />
-                  </button>
-                )}
-            </div>
-          </nav>
+    <>
+      {/* ── Sidebar panel ─────────────────────────────────── */}
+      <aside
+        ref={sidebarRef}
+        className="sidebar-panel"
+        style={{
+          width: sidebarWidth,
+          minWidth: sidebarWidth,
+        }}
+      >
+        {/* Brand / Header row */}
+        <div className="sidebar-brand">
+          <Header
+            isEmployeePortal={isEmployeePortal}
+            company={user?.Company}
+            isCollapsed={isCollapsed}
+          />
         </div>
-      )}
 
-      {/* Dropdown Portal - Rendered outside the overflow container */}
-      {dropdownOpen !== null && menu && Object.keys(menu).map((parentKey, idx) => {
-        if (idx !== dropdownOpen) return null;
-        const parentItems = menu[parentKey];
+        {/* Scrollable nav list */}
+        <nav className="sidebar-nav">
+          {isEmployeePortal === "1" ? (
+            <ul className="sidebar-menu-list">
+              {/* Dashboard */}
+              <li className={`sidebar-item ${getMenuItemActive("/dashboard")}`}>
+                <a href="/dashboard" className="sidebar-link">
+                  <span className="sidebar-icon">
+                    <LayoutDashboard size={20} />
+                  </span>
+                  {!isCollapsed && (
+                    <span className="sidebar-label">Dashboard</span>
+                  )}
+                </a>
+                {isCollapsed && (
+                  <div className="sidebar-tooltip">Dashboard</div>
+                )}
+              </li>
 
-        return ReactDOM.createPortal(
-          <div
-            ref={dropdownPortalRef}
-            className="bg-white border rounded shadow-lg"
-            style={{
-              position: 'fixed',
-              top: dropdownPosition.top + 'px',
-              left: dropdownPosition.left + 'px',
-              zIndex: 99999,
-              minWidth: '200px',
-              maxHeight: '80vh',
-              overflowY: 'auto'
+              {/* Dynamic menu items */}
+              {menu &&
+                Object.keys(menu).map((parentKey) => {
+                  const parentItems = menu[parentKey];
+                  const hasVisible = Object.values(parentItems).some(
+                    (childGroup) =>
+                      childGroup.some(
+                        (item) =>
+                          item.isResourceShow && item?.portalType == 1
+                      )
+                  );
+                  if (!hasVisible) return null;
+
+                  const Icon = getIcon(parentKey);
+                  const isOpen = dropdownOpen === parentKey;
+
+                  return (
+                    <li
+                      key={parentKey}
+                      className={`sidebar-item ${isOpen ? "sidebar-item-open" : ""}`}
+                      onMouseEnter={(e) => handleParentHover(parentKey, e)}
+                      onMouseLeave={handleParentLeave}
+                    >
+                      <div className="sidebar-link sidebar-link-parent">
+                        <span className="sidebar-icon">
+                          <Icon size={20} />
+                        </span>
+                        {!isCollapsed && (
+                          <>
+                            <span className="sidebar-label">
+                              {parentKey.replace(/_/g, " ")}
+                            </span>
+                            <ChevronRight
+                              size={14}
+                              className="sidebar-chevron ml-auto"
+                            />
+                          </>
+                        )}
+                      </div>
+                      {isCollapsed && (
+                        <div className="sidebar-tooltip">
+                          {parentKey.replace(/_/g, " ")}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+            </ul>
+          ) : (
+            <ul className="sidebar-menu-list">
+              {/* Dashboard for Portal 2 */}
+              <li className={`sidebar-item ${getMenuItemActive("/dashboard")}`}>
+                <a href="/dashboard" className="sidebar-link">
+                  <span className="sidebar-icon">
+                    <LayoutDashboard size={20} />
+                  </span>
+                  {!isCollapsed && (
+                    <span className="sidebar-label">Dashboard</span>
+                  )}
+                </a>
+                {isCollapsed && (
+                  <div className="sidebar-tooltip">Dashboard</div>
+                )}
+              </li>
+
+              {/* Direct registered items for Portal 2 */}
+              {portal2MenuItems
+                .filter((item) => item.show)
+                .map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li
+                      key={item.name}
+                      className={`sidebar-item ${getMenuItemActive(item.link)}`}
+                    >
+                      <a href={item.link} className="sidebar-link">
+                        <span className="sidebar-icon">
+                          <Icon size={20} />
+                        </span>
+                        {!isCollapsed && (
+                          <span className="sidebar-label">{item.name}</span>
+                        )}
+                      </a>
+                      {isCollapsed && (
+                        <div className="sidebar-tooltip">{item.name}</div>
+                      )}
+                    </li>
+                  );
+                })}
+            </ul>
+          )}
+        </nav>
+
+        {/* Bottom Actions: AI Assistant & Topbar */}
+        <div className="sidebar-bottom-actions flex flex-col gap-1 pt-2 border-t border-white/10 mt-auto">
+          {user?.allowAIChatbot && !isAIChatbotPage ? (
+            <div className={`flex ${isCollapsed ? "justify-center px-0 py-1" : "px-[10px] py-1"}`}>
+              <button
+                style={{ border: "1.5px solid #0093dd" }}
+                onClick={() => window.open("/ask/ai-chatbot/new", "_blank")}
+                className={`text-tprimary bg-white rounded-3xl text-sm shadow-[0_0_10px_#FFFFFF] flex items-center justify-center transition-all ${isCollapsed ? "p-2 w-10 h-10" : "px-3 py-1.5 w-full gap-1"
+                  }`}
+                title="AI Assistant"
+              >
+                {!isCollapsed && <span>AI Assistant</span>}
+                <Minus
+                  className="w-4 h-4 rotate-90 text-tprimary hidden md:block"
+                />
+                <Sparkles className="w-6 h-6 md:w-4 md:h-4 text-tprimary" />
+              </button>
+            </div>
+          ) : null}
+
+          <div className={`flex items-center w-full ${isCollapsed ? "justify-center" : ""}`}
+               style={{ minHeight: 36, padding: isCollapsed ? "7px 0" : "7px 10px" }}>
+            <Topbar isCollapsed={isCollapsed} />
+          </div>
+        </div>
+
+        {/* Toggle collapse button */}
+        {!isBelowLg && (
+          <button
+            className={`sidebar-toggle-btn ${isCollapsed ? "justify-center" : "justify-between"}`}
+            onClick={() => {
+              setUserCollapsed((v) => !v);
+              setDropdownOpen(null);
+              setOpenSubMenu({});
             }}
-            onMouseLeave={() => {
-              setTimeout(() => {
-                if (!document.querySelector('.sub-menu-open')) {
-                  setOpenSubMenu({});
-                }
-              }, 200);
-            }}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {Object.keys(parentItems)
-              .map((childHeading) => {
-                const visibleItems = [...parentItems[childHeading]].filter(
-                  (item) => item.isResourceShow && item?.portalType == Number(isEmployeePortal)
+            {!isCollapsed && <span className="text-[#a3e0ff] text-xs font-medium">Collapse</span>}
+            {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          </button>
+        )}
+      </aside>
+
+      {/* ── Fly-out dropdown portal (Level 1: child groups) ── */}
+      {dropdownOpen !== null &&
+        menu &&
+        (() => {
+          const parentItems = menu[dropdownOpen];
+          if (!parentItems) return null;
+
+          const visibleGroups = Object.keys(parentItems).filter((heading) =>
+            parentItems[heading].some(
+              (item) =>
+                item.isResourceShow &&
+                item?.portalType == Number(isEmployeePortal)
+            )
+          );
+          if (visibleGroups.length === 0) return null;
+
+          return ReactDOM.createPortal(
+            <div
+              ref={dropdownPortalRef}
+              className="flyout-dropdown"
+              style={{
+                top: dropdownPosition.top,
+                left: dropdownPosition.left,
+              }}
+              onMouseEnter={() => {
+                cancelCloseTimer();
+                isMouseInFlyout.current = true;
+              }}
+              onMouseLeave={() => {
+                isMouseInFlyout.current = false;
+                scheduleClose(120);
+              }}
+            >
+
+              {visibleGroups.map((childHeading) => {
+                const visibleItems = parentItems[childHeading].filter(
+                  (item) =>
+                    item.isResourceShow &&
+                    item?.portalType == Number(isEmployeePortal)
                 );
-
-                if (visibleItems.length === 0) return null;
-
-                const hasChild = visibleItems.length > 0;
+                const isSubOpen =
+                  openSubMenu[dropdownOpen]?.[childHeading] === true;
 
                 return (
-                  <div key={childHeading} className="relative" style={{ position: 'relative' }}>
-                    <div
-                      className="px-4 py-2 font-semibold text-gray-700 uppercase text-xs cursor-pointer flex justify-between items-center hover:bg-gray-50"
-                      onClick={(e) => {
-                        if (hasChild) {
-                          toggleSubMenu(parentKey, childHeading, e);
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        if (hasChild) {
-                          toggleSubMenu(parentKey, childHeading, e);
-                        }
-                      }}
-                    >
+                  <div
+                    key={childHeading}
+                    className={`flyout-group ${isSubOpen ? "flyout-group-open" : ""}`}
+                    onMouseEnter={(e) =>
+                      toggleSubMenu(dropdownOpen, childHeading, e)
+                    }
+                  >
+                    <div className="flyout-group-header">
                       <span>{childHeading.replace(/_/g, " ")}</span>
-                      {hasChild && (
-                        <ChevronRight className="h-3 w-3 ml-2" />
-                      )}
+                      <ChevronRight size={13} className="flyout-chevron" />
                     </div>
                   </div>
                 );
               })}
-          </div>,
-          document.body
-        );
-      })}
-
-      {/* Sub-menu Portal */}
-      {openSubMenu && Object.keys(openSubMenu).map((parentKey) => {
-        return Object.keys(openSubMenu[parentKey]).map((childHeading) => {
-          if (!openSubMenu[parentKey][childHeading]) return null;
-
-          const parentItems = menu[parentKey];
-          const visibleItems = parentItems[childHeading].filter(
-            (item) => item.isResourceShow && item?.portalType == Number(isEmployeePortal)
+            </div>,
+            document.body
           );
+        })()}
+
+      {/* ── Sub-menu portal (Level 2: actual links) ─────── */}
+      {Object.keys(openSubMenu).map((parentKey) =>
+        Object.keys(openSubMenu[parentKey]).map((childHeading) => {
+          if (!openSubMenu[parentKey][childHeading]) return null;
+          const parentItems = menu?.[parentKey];
+          if (!parentItems) return null;
+
+          const visibleItems = (parentItems[childHeading] || [])
+            .filter(
+              (item) =>
+                item.isResourceShow &&
+                item?.portalType == Number(isEmployeePortal)
+            )
+            .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
           if (visibleItems.length === 0) return null;
 
           return ReactDOM.createPortal(
             <div
+              key={`${parentKey}-${childHeading}`}
               ref={subMenuPortalRef}
-              className="bg-white border rounded shadow-lg sub-menu-open"
+              className="flyout-submenu"
               style={{
-                position: 'fixed',
-                top: subMenuPosition.top + 'px',
-                left: subMenuPosition.left + 'px',
-                zIndex: 999999,
-                minWidth: '200px',
-                maxHeight: '80vh',
-                overflowY: 'auto'
+                top: subMenuPosition.top,
+                left: subMenuPosition.left,
+              }}
+              onMouseEnter={() => {
+                cancelCloseTimer();
+                isMouseInSubMenu.current = true;
               }}
               onMouseLeave={() => {
-                setTimeout(() => setOpenSubMenu({}), 150);
+                isMouseInSubMenu.current = false;
+                scheduleClose(120);
               }}
             >
-              {visibleItems
-                .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
-                .map((item) => (
-                  <a
-                    key={item.url}
-                    href={`/${item.url}`}
-                    className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap text-sm"
-                  >
-                    {item.name}
-                  </a>
-                ))}
+
+              {visibleItems.map((item) => (
+                <a
+                  key={item.url}
+                  href={`/${item.url}`}
+                  className={`flyout-link ${getMenuItemActive(`/${item.url}`)}`}
+                >
+                  {item.name}
+                </a>
+              ))}
             </div>,
             document.body
           );
-        });
-      })}
-      {/* end::Menu Nav */}
-    </div>
+        })
+      )}
+    </>
   );
 }

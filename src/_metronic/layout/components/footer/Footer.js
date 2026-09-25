@@ -19,9 +19,9 @@ export function Footer() {
       style={{ position: 'fixed', bottom: 0, left: 0, right: 0}}
     >
       <div
-        className={`${layoutProps.footerContainerClasses} d-flex flex-columnf flex-md-row align-items-center justify-content-between`}
+        className={`${layoutProps.footerContainerClasses} d-flex flex-column flex-md-row align-items-center justify-content-end`}
       >
-        <div className="text-gray-500 text-sm order-2 order-md-1">
+        <div className="text-gray-500 text-sm ml-auto">
           <span className="font-weight-bold">{today.toString()}</span> &copy;{" "}
           <a
             href="https://dynasoftcloud.com/"

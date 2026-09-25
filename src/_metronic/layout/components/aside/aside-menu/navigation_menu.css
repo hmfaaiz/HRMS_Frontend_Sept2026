@@ -1,184 +1,336 @@
-/* .navbar {
-    overflow: hidden;
-    background-color: #333;
-  }
-  
-  .navbar a {
-    float: left;
-    font-size: 16px;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-  
-  
-  .dropdown .dropbtn {
-    font-size: 16px;  
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-    font-family: inherit;
-    margin: 0;
-  }
-  
-  .navbar a:hover, .dropdown:hover .dropbtn {
-    color:#fff !important
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-  
-  .dropdown-content a {
-    float: none;
-    color: #fff;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-  .colorText {
+/* ============================================================
+   Sidebar Panel — navigation_menu.css
+   Metronic HRMS — Vertical Collapsible Sidebar
+   Colors: tprimary #0093DD | tprimarydark #006294 | tsecondary #E6F8FF
+   ============================================================ */
 
-    color:#fff !important;
-    margin-right: 20px;
-  }
-  
-  .dropdown-content a:hover {
-    background-color: #ddd;
-  }
-  
-  
-  .dropdown:hover .dropdown-content {
-    display: block;
-  } */
-
-
-  .custom-nav-dropdown .nav-link {
-    color: #ffffff !important; /* Example: Change color to orange-red */
-    font-weight: bold;
-    font-size: 15px;
-  }
-  
-  .custom-nav-dropdown .nav-link:hover {
-    color: #000000 !important; 
-
-  }
-
-/* Responsive Navigation Styles */
-@media (max-width: 1024px) {
-  .nav-container {
-    padding: 0 1rem;
-  }
-  
-  .nav-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: #0093dd;
-    border-top: 1px solid #0078b3;
-    z-index: 50;
-  }
-  
-  .nav-menu ul {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .nav-menu li {
-    width: 100%;
-    border-bottom: 1px solid #0078b3;
-  }
-  
-  .nav-menu button {
-    width: 100%;
-    text-align: left;
-    padding: 1rem;
-  }
-  
-  .nav-menu .dropdown-content {
-    position: static;
-    width: 100%;
-    box-shadow: none;
-    border: none;
-    background-color: #0078b3;
-  }
-  
-  .nav-menu .dropdown-content a {
-    color: white;
-    padding: 0.75rem 2rem;
-    border-bottom: 1px solid #006699;
-  }
-  
-  .nav-menu .dropdown-content a:hover {
-    background-color: #006699;
-  }
+:root {
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 64px;
+  --sidebar-bg: #0093DD;
+  --sidebar-bg-dark: #006294;
+  --sidebar-text: #ffffff;
+  --sidebar-text-muted: rgba(255, 255, 255, 0.65);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.12);
+  --sidebar-active-bg: rgba(255, 255, 255, 0.2);
+  --sidebar-active-border: #ffffff;
+  --sidebar-icon-size: 20px;
+  --sidebar-transition: 0.25s ease;
+  --flyout-bg: #ffffff;
+  --flyout-border: #e5e7eb;
+  --flyout-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  --flyout-hover: #f0f9ff;
+  --flyout-active: #E6F8FF;
+  --flyout-text: #1a1a2e;
+  --flyout-header-text: #0093DD;
 }
 
-@media (min-width: 1025px) {
-  .nav-menu {
-    position: relative;
-  }
-  
-  .nav-menu ul {
-    flex-direction: row;
-  }
-  
-  .nav-menu li {
-    position: relative;
-  }
-  
-  .nav-menu .dropdown-content {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 200px;
-    background-color: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.375rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .nav-menu .dropdown-content a {
-    color: #374151;
-    padding: 0.75rem 1rem;
-  }
-  
-  .nav-menu .dropdown-content a:hover {
-    background-color: #f3f4f6;
-  }
+/* ── Sidebar Panel ─────────────────────────────────────────── */
+.sidebar-panel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  background: linear-gradient(180deg, #0093DD 0%, #006294 100%);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Brand and Header Responsive Styles */
-.brand-container {
+/* ── Brand / Header area ───────────────────────────────────── */
+.sidebar-brand {
+  flex-shrink: 0;
+  padding: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+/* When sidebar is used, override Header's container padding */
+.sidebar-brand .container-fluid,
+.sidebar-brand [class*="headerContainerClasses"] {
+  padding: 8px 12px !important;
+}
+
+/* ── Nav scroll container ──────────────────────────────────── */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
+}
+
+/* ── Menu list ─────────────────────────────────────────────── */
+.sidebar-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px;
+}
+
+/* ── Single sidebar item ───────────────────────────────────── */
+.sidebar-item {
+  position: relative;
+  border-radius: 8px;
+  margin-bottom: 1px;
+  transition: background var(--sidebar-transition);
+}
+
+.sidebar-item:hover,
+.sidebar-item.sidebar-item-open {
+  background: var(--sidebar-hover-bg);
+}
+
+.sidebar-item.sidebar-item-active > .sidebar-link {
+  background: var(--sidebar-active-bg);
+  border-left: 3px solid var(--sidebar-active-border);
+}
+
+/* ── Sidebar link ──────────────────────────────────────────── */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  text-decoration: none !important;
+  color: var(--sidebar-text) !important;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  min-height: 36px;
+  user-select: none;
+}
+
+.sidebar-link:hover {
+  color: var(--sidebar-text) !important;
+  text-decoration: none !important;
+}
+
+.sidebar-link-parent {
+  cursor: default;
+}
+
+/* ── Icon ──────────────────────────────────────────────────── */
+.sidebar-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  opacity: 0.92;
+}
+
+/* ── Label ─────────────────────────────────────────────────── */
+.sidebar-label {
+  font-size: 11.25px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  opacity: 1;
+  transition: opacity var(--sidebar-transition);
+}
+
+/* ── Chevron (right arrow on parent) ──────────────────────── */
+.sidebar-chevron {
+  flex-shrink: 0;
+  opacity: 0.55;
+  transition: opacity var(--sidebar-transition);
+}
+
+.sidebar-item:hover .sidebar-chevron,
+.sidebar-item.sidebar-item-open .sidebar-chevron {
+  opacity: 1;
+}
+
+/* ── Tooltip (collapsed icon-only mode) ───────────────────── */
+.sidebar-tooltip {
+  display: none;
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1a1a2e;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.sidebar-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: #1a1a2e;
+}
+
+.sidebar-item:hover .sidebar-tooltip {
+  display: block;
+}
+
+/* ── Toggle button at bottom ───────────────────────────────── */
+.sidebar-toggle-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--sidebar-text);
+  cursor: pointer;
+  font-size: 11.25px;
+  font-weight: 500;
+  width: 100%;
+  transition: background var(--sidebar-transition);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-toggle-label {
+  opacity: 1;
+  transition: opacity var(--sidebar-transition);
+}
+
+/* ============================================================
+   Fly-out Dropdown (Level 1 — child groups)
+   ============================================================ */
+.flyout-dropdown {
+  position: fixed;
+  background: var(--flyout-bg);
+  border: 1px solid var(--flyout-border);
+  border-radius: 8px;
+  box-shadow: var(--flyout-shadow);
+  min-width: 180px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 99999;
+  padding: 4px 0;
+  animation: flyoutIn 0.15s ease;
+}
+
+@keyframes flyoutIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* flyout-header removed — no heading shown */
+
+.flyout-group {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  border-radius: 6px;
+  margin: 0 4px;
+}
+
+.flyout-group-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
+  padding: 6px 8px;
+  font-size: 9.75px;
+  font-weight: 500;
+  color: var(--flyout-text);
+  border-radius: 6px;
+  transition: background 0.15s ease;
 }
 
-@media (max-width: 1024px) {
-  .brand-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .brand-container > div {
-    width: 100%;
-    text-align: center;
-  }
+.flyout-group:hover .flyout-group-header,
+.flyout-group.flyout-group-open .flyout-group-header {
+  background: var(--flyout-hover);
+  color: #0093DD;
 }
 
-@media (min-width: 1025px) {
-  .brand-container {
-    flex-direction: row;
-  }
+.flyout-chevron {
+  flex-shrink: 0;
+  opacity: 0.4;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.flyout-group:hover .flyout-chevron,
+.flyout-group.flyout-group-open .flyout-chevron {
+  opacity: 1;
+  color: #0093DD;
+}
+
+/* ============================================================
+   Fly-out Sub-menu (Level 2 — actual nav links)
+   ============================================================ */
+.flyout-submenu {
+  position: fixed;
+  background: var(--flyout-bg);
+  border: 1px solid var(--flyout-border);
+  border-radius: 8px;
+  box-shadow: var(--flyout-shadow);
+  min-width: 175px;
+  max-height: 70vh;
+  overflow-y: auto;
+  z-index: 999999;
+  padding: 4px 0;
+  animation: flyoutIn 0.15s ease;
+}
+
+.flyout-link {
+  display: block;
+  padding: 5px 10px;
+  font-size: 9.75px;
+  color: var(--flyout-text) !important;
+  text-decoration: none !important;
+  transition: background 0.12s ease, color 0.12s ease;
+  margin: 0 4px;
+  border-radius: 5px;
+}
+
+.flyout-link:hover {
+  background: var(--flyout-hover);
+  color: #0093DD !important;
+  text-decoration: none !important;
+}
+
+.flyout-link.sidebar-item-active {
+  background: var(--flyout-active);
+  color: #0093DD !important;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Layout: push content area right of sidebar
+   ============================================================ */
+#kt_wrapper {
+  margin-left: var(--sidebar-width) !important;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  min-height: 100vh;
 }

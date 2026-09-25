@@ -67,10 +67,10 @@ const formSchema = Yup.object().shape({
   TIN: Yup.string()
     .nullable()
     .matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
-hrms_portal_link: Yup.string()
-  .nullable()
-  .notRequired()
-  .url('Invalid URL format')
+  hrms_portal_link: Yup.string()
+    .nullable()
+    .notRequired()
+    .url('Invalid URL format')
 });
 
 export const EditForm = ({
@@ -208,7 +208,7 @@ export const EditForm = ({
                       label={
                         <span>
                           {" "}
-                          Comapny Code<span style={{ color: "red" }}>*</span>
+                          Company Code<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       onInput={(e) => {
@@ -225,7 +225,7 @@ export const EditForm = ({
                       label={
                         <span>
                           {" "}
-                          Comapny Name<span style={{ color: "red" }}>*</span>
+                          Company Name<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       onInput={(e) => {
@@ -412,9 +412,9 @@ export const EditForm = ({
                         e.target.value = amountLimitDynamic(e.target.value, 20);
                       }}
                     />
-                  </div> 
-                  
-                   <div>
+                  </div>
+
+                  <div>
                     <Field
                       name="hrms_portal_link"
                       component={Input}

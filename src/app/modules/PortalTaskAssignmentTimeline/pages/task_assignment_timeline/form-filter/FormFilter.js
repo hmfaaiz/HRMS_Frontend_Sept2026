@@ -117,8 +117,8 @@ export function FormFilter({
         dueDateFrom: uiProps.queryParams?.filter?.dueDateFrom || null,
         dueDateTo: uiProps.queryParams?.filter?.dueDateTo || null,
 
-        priorityLevelIds: priorityLevels.map(pl => pl.value) || [],
-        ticketTypeIds: ticketTypes.map(pl => pl.value) || []
+        priorityLevelIds: Array.isArray(priorityLevels) ? priorityLevels.map((pl) => pl.value) : [],
+        ticketTypeIds: Array.isArray(ticketTypes) ? ticketTypes.map((tt) => tt.value) : [],
       }}
       onSubmit={applyFilter}
     >
@@ -135,10 +135,14 @@ export function FormFilter({
                   <MultiSelect
                     name="ticketTypeIds"
                     label="Ticket Type"
-                    value={ticketTypes?.filter((tt) =>
-                      values.ticketTypeIds.includes(tt.value),
-                    )}
-                    options={ticketTypes}
+                    value={
+                      Array.isArray(ticketTypes)
+                        ? ticketTypes.filter((tt) =>
+                            values.ticketTypeIds?.includes(tt.value),
+                          )
+                        : []
+                    }
+                    options={ticketTypes || []}
                     onChange={(items = []) =>
                       setFieldValue(
                         "ticketTypeIds",
@@ -151,10 +155,14 @@ export function FormFilter({
                   <MultiSelect
                     name="priorityLevelIds"
                     label="Priority Level"
-                    value={priorityLevels.filter((pl) =>
-                      values.priorityLevelIds.includes(pl.value),
-                    )}
-                    options={priorityLevels}
+                    value={
+                      Array.isArray(priorityLevels)
+                        ? priorityLevels.filter((pl) =>
+                            values.priorityLevelIds?.includes(pl.value),
+                          )
+                        : []
+                    }
+                    options={priorityLevels || []}
                     onChange={(items = []) =>
                       setFieldValue(
                         "priorityLevelIds",

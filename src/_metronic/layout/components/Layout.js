@@ -47,17 +47,12 @@ export function Layout({ children }) {
   return layoutProps.selfLayout !== "blank" ? (
     <>
       {/*begin::Main*/}
-      {/* <HeaderMobile /> */}
-
-      {/* <div className="d-flex flex-column flex-root"> */}
-        {/*begin::Page*/}
-        {/* <div className="d-flex flex-row flex-column-fluid page"> */}
-
+      {/* Fixed sidebar sits outside the flow; #kt_wrapper gets margin-left via CSS variable */}
           {layoutProps.asideDisplay && <Aside />}
           {/*begin::Wrapper*/}
           <div
-            className="flex-column flex-row-fluid"
             id="kt_wrapper"
+            style={{ minHeight: "100vh" }}
           >
 
             {/*begin::Content*/}

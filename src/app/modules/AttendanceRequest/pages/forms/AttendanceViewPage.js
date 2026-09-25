@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FormUIProvider, useFormUIContext } from "./FormUIContext"; 
+import { FormUIProvider, useFormUIContext } from "./FormUIContext";
 import { FormTable } from "./form-table/FormTable";
 import { FormFilter } from "./form-filter/FormFilter";
 import { Route } from "react-router-dom";
@@ -12,7 +12,7 @@ import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalCompone
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import { useSelector, shallowEqual } from "react-redux";
 
-import { AttendanceWorkflowModal } from "./form-table/AttendanceWorkflowModal"; 
+import { AttendanceWorkflowModal } from "./form-table/AttendanceWorkflowModal";
 import { LogsDialog } from "../../../../utils/common-modules/LogsDialog";
 
 function AttendanceWorkflowModalWrapper() {
@@ -64,7 +64,7 @@ export function AttendanceViewPage({ history }) {
         {({ history, match, location }) => (
           <LogsDialog
             show={!!match}
-    
+
             onHide={() => {
               history.push("/attendance_request/read-all-attendance-request");
             }}
@@ -79,7 +79,8 @@ export function AttendanceViewPage({ history }) {
         <WorkflowAuthortiesTable />
       </Card> */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-        <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+        {/* Sidebar with Logged-in User Profile */}
+        {/* <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
           <div className="xl:hidden block">
             <EmployeePortalMenu
               name="Attendance Request"
@@ -127,8 +128,11 @@ export function AttendanceViewPage({ history }) {
             />
           </div>
           <EmployeeProfile />
-        </div>
-        <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+        </div> */}
+
+        {/* Main Content Area */}
+        {/* <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4"> */}
+        <div className="md:col-span-1 xl:col-span-12 flex flex-col gap-4">
           <div className="hidden xl:block">
             <EmployeePortalMenu
               name="Attendance Request"

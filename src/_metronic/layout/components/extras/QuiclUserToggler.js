@@ -7,7 +7,7 @@ import objectPath from "object-path"
 import { useHtmlClassService } from "../../_core/MetronicLayout"
 import { UserProfileDropdown } from "./dropdowns/UserProfileDropdown"
 
-export function QuickUserToggler() {
+export function QuickUserToggler({ isCollapsed }) {
   const { user } = useSelector((state) => state.auth, shallowEqual)
   const uiService = useHtmlClassService()
   const layoutProps = useMemo(() => {
@@ -24,30 +24,32 @@ export function QuickUserToggler() {
           placement="bottom"
           overlay={<Tooltip id="quick-user-tooltip">View</Tooltip>}
         >
-          <div className="topbar-item">
-            <div
-              className="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2"
-              id="kt_quick_user_toggle"
-            >
-              <>
-                <span className="text-muted text-white font-normal d-none d-md-inline mr-1">
-                  Hi,
+          <div className={`sidebar-link w-full ${isCollapsed ? "justify-center px-0" : ""}`}
+               style={{ minHeight: 36, padding: isCollapsed ? "7px 0" : "7px 10px", gap: 10 }}
+               id="kt_quick_user_toggle"
+          >
+            <>
+              <span className="symbol symbol-35 symbol-light-success flex-shrink-0">
+                <span className="symbol-label font-size-h5 font-weight-bold">
+                  {user.fullname[0]}
                 </span>
-                <span className="text-dark-50 font-weight-bolder font-size-xs d-none d-md-inline mr-3">
-                  {user.fullname}
-                </span>
-                <span className="symbol symbol-35 symbol-light-success">
-                  <span className="symbol-label font-size-h5 font-weight-bold">
-                    {user.fullname[0]}
+              </span>
+              {!isCollapsed && (
+                <>
+                  <span className="text-white font-normal d-none d-md-inline" style={{ fontSize: "11.25px", fontWeight: 500 }}>
+                    Hi,
                   </span>
-                </span>
-              </>
-            </div>
+                  <span className="text-white font-weight-bolder d-none d-md-inline" style={{ fontSize: "11.25px", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {user.fullname}
+                  </span>
+                </>
+              )}
+            </>
           </div>
         </OverlayTrigger>
       )}
 
-      {!layoutProps.offcanvas && <UserProfileDropdown />}
+      {!layoutProps.offcanvas && <UserProfileDropdown isCollapsed={isCollapsed} />}
     </>
   )
 }
