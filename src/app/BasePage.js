@@ -719,6 +719,9 @@ import ("./modules/Bonus_Register/pages/index"))
 const cpl_approval = lazy (() =>
 import ("./modules/CPL_Approval/pages/index"))
 
+const task_group_report = lazy (() =>
+import ("./modules/Task_Group_Report/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -961,6 +964,7 @@ const ROUTES = {
   bonus_process: bonus_process,
   bonus_register: bonus_register,
   cpl_approval: cpl_approval,
+  task_group_report: task_group_report,
 
 };
 

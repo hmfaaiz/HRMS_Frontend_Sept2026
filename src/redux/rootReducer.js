@@ -254,6 +254,7 @@ import { CPLLeaveSlice  } from "../app/modules/CPL_Leave/_redux/redux-Slice";
 import { bonus_processSlice } from "../app/modules/Bonus_Process/_redux/redux-Slice";
 import { BonusRegisterSlice } from "../app/modules/Bonus_Register/_redux/redux-Slice"
 import { CPLApprovalSlice  } from "../app/modules/CPL_Approval/_redux/redux-Slice";
+import { taskGroupReportSlice  } from "../app/modules/Task_Group_Report/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -505,6 +506,7 @@ export const rootReducer = combineReducers({
   bonus_process: bonus_processSlice.reducer,
   bonus_register: BonusRegisterSlice.reducer,
   cpl_approval: CPLApprovalSlice.reducer,
+  task_group_report: taskGroupReportSlice.reducer,
 
 });
 
