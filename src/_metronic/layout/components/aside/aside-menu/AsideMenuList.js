@@ -40,6 +40,7 @@ import {
   SquareArrowOutUpRight,
   CircleArrowOutUpRight,
   CircleArrowOutUpLeft,
+  Sparkles,
 } from "lucide-react";
 import { useLocation } from "react-router";
 import { checkIsActive } from "../../../../_helpers";
@@ -592,9 +593,9 @@ export function AsideMenuList({ layoutProps }) {
         </nav>
 
         {/* Bottom Actions: AI Assistant & Topbar */}
-        <div className="sidebar-bottom-actions flex flex-col gap-2 p-2 border-t border-white/10 mt-auto">
+        <div className="sidebar-bottom-actions flex flex-col gap-1 pt-2 border-t border-white/10 mt-auto">
           {user?.allowAIChatbot && !isAIChatbotPage ? (
-            <div className="flex justify-center">
+            <div className={`flex ${isCollapsed ? "justify-center px-0 py-1" : "px-[10px] py-1"}`}>
               <button
                 style={{ border: "1.5px solid #0093dd" }}
                 onClick={() => window.open("/ask/ai-chatbot/new", "_blank")}
@@ -606,12 +607,13 @@ export function AsideMenuList({ layoutProps }) {
                 <Minus
                   className="w-4 h-4 rotate-90 text-tprimary hidden md:block"
                 />
-                <SquareArrowOutUpRight className="w-3.5 h-3.5 text-tprimary" />
+                <Sparkles className="w-6 h-6 md:w-4 md:h-4 text-tprimary" />
               </button>
             </div>
           ) : null}
 
-          <div className={`flex items-center justify-center ${isCollapsed ? "w-10 h-10 mx-auto" : "w-full"}`}>
+          <div className={`flex items-center w-full ${isCollapsed ? "justify-center" : ""}`}
+               style={{ minHeight: 36, padding: isCollapsed ? "7px 0" : "7px 10px" }}>
             <Topbar isCollapsed={isCollapsed} />
           </div>
         </div>
