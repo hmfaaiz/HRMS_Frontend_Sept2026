@@ -141,7 +141,7 @@ export function LogtimeSummaryTable({ data, fromDate, toDate }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
       headerStyle: {
         textAlign: "center",
@@ -156,7 +156,7 @@ export function LogtimeSummaryTable({ data, fromDate, toDate }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
       headerStyle: {
         textAlign: "center",
@@ -171,7 +171,7 @@ export function LogtimeSummaryTable({ data, fromDate, toDate }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        textAlign: "right",
+        textAlign: "center",
          minWidth: "10px",
       },
       headerStyle: {
@@ -187,7 +187,7 @@ export function LogtimeSummaryTable({ data, fromDate, toDate }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
       headerStyle: {
         textAlign: "center",
@@ -202,7 +202,7 @@ export function LogtimeSummaryTable({ data, fromDate, toDate }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        textAlign: "right",
+        textAlign: "center",
       },
       headerStyle: {
         textAlign: "center",

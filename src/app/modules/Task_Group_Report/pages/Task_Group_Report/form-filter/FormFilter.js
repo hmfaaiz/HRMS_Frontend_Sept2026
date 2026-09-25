@@ -288,6 +288,10 @@ export function FormFilter({
                       if (e?.value === "All" || e?.value === "") {
                         setFieldValue("assignment_type", 0);
                       }
+                       else if(reportType == 0) {
+                        // Employee selected → default Assign To
+                        setFieldValue("assignment_type", 2);
+                      }
                     }}
                     label={<span>Employee</span>}
 
@@ -413,6 +417,10 @@ export function FormFilter({
 
                       setFieldValue("reportType", value);
                       setReportType(value);
+                      if(value != 0) {
+                        // Employee selected → default Assign To
+                        setFieldValue("assignment_type", 0);
+                      }
                     }}
                   />
                 </div>
