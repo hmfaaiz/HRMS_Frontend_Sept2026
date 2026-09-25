@@ -9,7 +9,7 @@ import {
   Select,
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { FlashOnRounded, KeyboardArrowDown } from "@material-ui/icons";
 
@@ -57,7 +57,7 @@ const cnicRegExp = /^[0-9]{5}-[0-9]{7}-[0-9]$/;
 // Password Regex
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Validation schema
-const profileValidation = (localizationId) =>
+const profileValidation = (localizationId,attendance) =>
   Yup.object().shape({
     deligationId: Yup.string().when("requireDeligation", {
       is: true, // Condition: when 'requireDeligation' is true
@@ -136,7 +136,10 @@ const profileValidation = (localizationId) =>
       .min(currentDate, "ID Card Expiry must be a future date")
       .typeError("ID Card Expiry must be a valid date")
       .when("nic_no", {
-        is: (val) => !!val, // jab nic_no ho (null/empty na ho)
+        // is: (val) => !!val, // jab nic_no ho (null/empty na ho)
+           is: (nic_no, attendance) =>
+      !!nic_no && attendance !== true,
+
         then: (schema) => schema.required("Required*"),
         otherwise: (schema) => schema.nullable(),
       }),
@@ -313,9 +316,20 @@ const profileValidation = (localizationId) =>
     // .max(minDate, 'You must be at least 18 years old')
     // .min(minYearDate, 'Date of birth cannot be earlier than January 1, 1900'),
 
-    defaultShiftId: Yup.string()
-      .nullable()
-      .required("Required*"),
+  //   defaultShiftId: Yup.string()
+  //     .nullable()
+  //     // .required("Required*"),
+  //      .when("attendance", {
+  //   is: true,
+  //   then: (schema) => schema.nullable().notRequired(),
+  //   otherwise: (schema) =>
+  //     schema
+  //       .required("Required*"),
+  // }),
+
+  defaultShiftId: attendance
+  ?Yup.string().nullable().required("Required*")
+   :Yup.string().nullable().notRequired(),
 
     departmentId: Yup.string()
       .nullable()
@@ -351,14 +365,29 @@ const profileValidation = (localizationId) =>
         otherwise: (schema) => schema.notRequired(),
       }),
 
-    geoLocationIds: Yup.array()
+    // geoLocationIds: Yup.array()
+    //   .nullable()
+    //  .when(["allowedAnywhere", "attendance"], {
+    //     // is: false, // when not allowed anywhere
+    //      is: (allowedAnywhere, attendance) =>
+    //   allowedAnywhere === false && attendance !== true,
+    //     then: (schema) =>
+    //       schema.min(1, "At least one location selection is required"),
+    //     otherwise: (schema) => schema.notRequired().nullable(),
+    //   }),
+
+    geoLocationIds: attendance
+     ? Yup.array()
       .nullable()
       .when("allowedAnywhere", {
-        is: false, // when not allowed anywhere
+        is: false,
         then: (schema) =>
           schema.min(1, "At least one location selection is required"),
         otherwise: (schema) => schema.notRequired().nullable(),
-      }),
+      })
+
+  :Yup.array().nullable().notRequired(),
+ 
 
     additional_summary: Yup.string()
       .nullable()
@@ -464,6 +493,15 @@ export function DesignationEditForm({
     };
   }, [designationUIContext]);
 
+
+    const {attendance} = useSelector(
+      (state) => ({
+        attendance: state?.auth?.user?.Company?.attendance
+        
+      }),
+      shallowEqual
+    );
+  console.log("user111111", attendance);
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -2102,6 +2140,7 @@ export function DesignationEditForm({
     }
     return false;
   };
+  console.log("user", user);
 
 
   return (
@@ -2121,7 +2160,7 @@ export function DesignationEditForm({
         }}
 
         // validationSchema={profileValidation}
-        validationSchema={profileValidation(localizationId)}
+        validationSchema={profileValidation(localizationId,attendance)}
         onSubmit={async (values) => {
           //const t =  handleSubmit();
           const validationErrors = validate();
@@ -2223,6 +2262,7 @@ export function DesignationEditForm({
           formik,
         }) => (
           <>
+          {console.log("aaaaaa",errors)}
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
                 <div className="spinner spinner-lg spinner-success" />
@@ -2983,6 +3023,10 @@ export function DesignationEditForm({
                       />
                     </div>
 
+                    {attendance && (
+                      
+                   
+
                     <div>
                       {/* <label>Default Shift<span style={{ color: 'red' }}>*</span></label>
                         <Select
@@ -3036,7 +3080,7 @@ export function DesignationEditForm({
                         )}
                       />
                     </div>
-
+ )}
                     <div>
                       <div className="flex items-center gap-1">
                         <label>Report To</label>
@@ -3535,6 +3579,10 @@ export function DesignationEditForm({
                   </div>
                 </div>
                 <hr />
+                {attendance && (
+                  <>
+                  
+              
                 <h6 className="font-bold mb-0 text-primary mt-2">
                   Geo Location Configuration (for Attendance App)
                 </h6>
@@ -3734,6 +3782,7 @@ export function DesignationEditForm({
 
                   </div>
                 </div>
+                </>  )}
                 <hr />
                 <div>
                   <h6 className="font-bold mb-0 text-primary mt-2">
@@ -3741,6 +3790,9 @@ export function DesignationEditForm({
                   </h6>
 
                   <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-x-3 gap-y-1 mt-2">
+                    {localizationId==1 && (<>
+
+               
                     <div>
                       <Field
                         name="nic_no"
@@ -3823,7 +3875,7 @@ export function DesignationEditForm({
                         component="div"
                       />
                     </div>
-
+</>)}
                     <div>
                       <Field
                         name="email_official"
@@ -4467,7 +4519,7 @@ export function DesignationEditForm({
                               maxLength="20"
                               component={Input}
                               placeholder="Enter Emirates ID No."
-                              label={<span> Emirates Emirates ID No.</span>}
+                              label={<span>Emirates ID No.</span>}
                               autoComplete="off"
                             />
                             {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
