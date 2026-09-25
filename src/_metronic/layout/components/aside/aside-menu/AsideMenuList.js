@@ -166,6 +166,28 @@ export function AsideMenuList({ layoutProps }) {
   const [subMenuPosition, setSubMenuPosition] = useState({ top: 0, left: 0 });
   const subMenuPortalRef = useRef(null);
 
+  // Shared close timer ref — cancelled whenever any hover begins
+  const closeTimerRef = useRef(null);
+  const isMouseInFlyout = useRef(false);
+  const isMouseInSubMenu = useRef(false);
+
+  const cancelCloseTimer = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+
+  const scheduleClose = (delay = 120) => {
+    cancelCloseTimer();
+    closeTimerRef.current = setTimeout(() => {
+      if (!isMouseInFlyout.current && !isMouseInSubMenu.current) {
+        setDropdownOpen(null);
+        setOpenSubMenu({});
+      }
+    }, delay);
+  };
+
   const location = useLocation();
 
   // Portal/access logic (unchanged from original)
@@ -377,6 +399,8 @@ export function AsideMenuList({ layoutProps }) {
   // ─── Open dropdown fly-out ───────────────────────────────────────────────
   const handleParentHover = (parentKey, event) => {
     if (!event?.currentTarget) return;
+    // Cancel any pending close — we are hovering a new item
+    cancelCloseTimer();
     const rect = event.currentTarget.getBoundingClientRect();
     setDropdownPosition({
       top: rect.top,
@@ -384,20 +408,13 @@ export function AsideMenuList({ layoutProps }) {
     });
     setDropdownOpen(parentKey);
     setOpenSubMenu({});
+    isMouseInFlyout.current = false;
+    isMouseInSubMenu.current = false;
   };
 
   const handleParentLeave = () => {
-    // Give time to move mouse into the dropdown portal
-    setTimeout(() => {
-      const dropEl = dropdownPortalRef.current;
-      const subEl = subMenuPortalRef.current;
-      if (
-        dropEl && dropEl.matches(":hover")
-      ) return;
-      if (subEl && subEl.matches(":hover")) return;
-      setDropdownOpen(null);
-      setOpenSubMenu({});
-    }, 80);
+    // Schedule close — will be cancelled if mouse enters the flyout portal
+    scheduleClose(120);
   };
 
   // ─── Sub-menu fly-out ────────────────────────────────────────────────────
@@ -640,12 +657,13 @@ export function AsideMenuList({ layoutProps }) {
                 top: dropdownPosition.top,
                 left: dropdownPosition.left,
               }}
+              onMouseEnter={() => {
+                cancelCloseTimer();
+                isMouseInFlyout.current = true;
+              }}
               onMouseLeave={() => {
-                setTimeout(() => {
-                  if (subMenuPortalRef.current?.matches(":hover")) return;
-                  setDropdownOpen(null);
-                  setOpenSubMenu({});
-                }, 80);
+                isMouseInFlyout.current = false;
+                scheduleClose(120);
               }}
             >
 
@@ -704,11 +722,13 @@ export function AsideMenuList({ layoutProps }) {
                 top: subMenuPosition.top,
                 left: subMenuPosition.left,
               }}
+              onMouseEnter={() => {
+                cancelCloseTimer();
+                isMouseInSubMenu.current = true;
+              }}
               onMouseLeave={() => {
-                setTimeout(() => {
-                  if (dropdownPortalRef.current?.matches(":hover")) return;
-                  setOpenSubMenu({});
-                }, 80);
+                isMouseInSubMenu.current = false;
+                scheduleClose(120);
               }}
             >
 
