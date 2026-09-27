@@ -1,0 +1,28 @@
+//Playlab
+
+REACT_APP_API_URL = "http://144.225.146.201:3006/apis"
+SKIP_PREFLIGHT_CHECK = true
+PORT = 3007
+NODE_ENV = "development"
+REACT_APP_ENV = "server",
+NODE_OPTIONS = "--openssl-legacy-provider",
+REACT_APP_UPLOAD_URL = "http://144.225.146.201:3006/uploads/"
+REACT_APP_PORTAL_URL=http://playlab.cloud:3008/career/
+REACT_APP_CUSTOMER_PORTAL_URL=http://playlab.cloud:3009/customer
+
+//Local
+
+
+REACT_APP_API_URL = "http://localhost:3001/apis"
+REACT_APP_UPLOAD_URL = "http://localhost:3001/uploads/"
+ 
+SKIP_PREFLIGHT_CHECK = true
+PORT = 3002
+NODE_ENV = "development"
+REACT_APP_ENV = "server",
+NODE_OPTIONS = "--openssl-legacy-provider",
+ 
+REACT_APP_PORTAL_URL=http://localhost:3008/career/
+ 
+ 
+# //REACT_APP_ENV = "mock"
